@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.6"
+install:
+  - pip install -r requirements.txt
+  - pip install pep8 pyflakes
+script:
+  - pyflakes .
+  - pep8 --ignore E265,E266,E501 .
+  - pytest

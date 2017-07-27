@@ -4,7 +4,7 @@ A comprehensive, central, and accessible calendar for public government meetings
 
 ## Prerequisites
 
-You'll need a standard Python install. If you're on OS X, the [NPR Visuals guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is pretty good. You'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
+You'll need a standard Python install. If you're on OS X, the [NPR Visuals guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
 
 ### Requirements
 

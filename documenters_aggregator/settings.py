@@ -16,10 +16,26 @@ NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'documenters_aggregator (+http://www.yourdomain.com)'
+USER_AGENT = 'Documenters Aggregator (learn more and say hello at https://TKTK)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+
+# Disable cookies (enabled by default)
+COOKIES_ENABLED = False
+
+# Configure item pipelines
+#
+# One of:
+# * documenters_aggregator.pipelines.DocumentersAggregatorLoggingPipeline,
+# * documenters_aggregator.pipelines.DocumentersAggregatorSQLAlchemyPipeline,
+# * documenters_aggregator.pipelines.DocumentersAggregatorAirtablePipeline
+#
+# Or define your own.
+# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
+ITEM_PIPELINES = {
+    'documenters_aggregator.pipelines.DocumentersAggregatorLoggingPipeline': 300,
+}
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -31,9 +47,6 @@ ROBOTSTXT_OBEY = True
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
-
-# Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -62,11 +75,6 @@ ROBOTSTXT_OBEY = True
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
-# Configure item pipelines
-# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'documenters_aggregator.pipelines.DocumentersAggregatorPipeline': 300,
-#}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
