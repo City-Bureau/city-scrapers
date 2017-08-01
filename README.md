@@ -63,3 +63,4 @@ class IdphSpider(scrapy.Spider):
         yield self._get_next(response)
 ```
 
+The returned data should follow [the OpenCivicData event model](http://docs.opencivicdata.org/en/latest/data/event.html).
