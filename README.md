@@ -64,3 +64,5 @@ class IdphSpider(scrapy.Spider):
 ```
 
 The returned data should follow [the OpenCivicData event model](http://docs.opencivicdata.org/en/latest/data/event.html).
+
+More coming soon.
