@@ -37,7 +37,7 @@ Additional instructions to come.
 
 ## Spider architecture
 
-
+This is what a basic HTML spider looks like:
 
 ```python
 class IdphSpider(scrapy.Spider):
