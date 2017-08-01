@@ -35,4 +35,31 @@ Let's take the Chicago Public School Board of Education as an example. Assuming 
 
 Additional instructions to come.
 
+## Spider architecture
+
+
+
+```python
+class IdphSpider(scrapy.Spider):
+    name = 'idph'
+    allowed_domains = ['www.dph.illinois.gov']
+    start_urls = ['http://www.dph.illinois.gov/events']
+    domain_root = 'http://www.dph.illinois.gov'
+
+    def parse(self, response):
+        for item in response.css('.eventspage'):
+            yield {
+                '_type': 'event',
+                'id': self._get_event_id(item),
+                'name': self._get_event_name(item),
+                'description': self._get_event_description(item),
+                'classification': self._get_classification(item),
+                'start_time': self._get_event_start(item),
+                'end_time': self._get_event_end(item),
+                'all_day': self._get_all_day(item),
+                'status': self._get_status(item),
+                'location': self._get_location(item),
+            }
+        yield self._get_next(response)
+```
 
