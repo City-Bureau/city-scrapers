@@ -29,7 +29,7 @@ If using a fork, replace `City-Bureau` above with your Github username.
 
 _These instructions are a work-in-progress and completely provisional._
 
-First, find an unclaimed event source in the [spreadsheet of event sources](http://www.cpsboe.org/meetings/planning-calendar).
+First, find an unclaimed event source in the [spreadsheet of event sources](https://docs.google.com/spreadsheets/d/1L1lbWj89wt8b2DIZhjxERJ5FCAWPDWd0nMibtc01sZk/edit#gid=0).
 
 Let's take the Chicago Public School Board of Education as an example. Assuming the status is "needs evaluation", you can start building a scraper.
 
