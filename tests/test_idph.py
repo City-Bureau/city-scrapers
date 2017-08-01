@@ -38,7 +38,7 @@ def test_id():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
-    assert item['all_day'] == False
+    assert item['all_day'] is False
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -52,7 +52,7 @@ def test_status(item):
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_status(item):
+def test_location(item):
     assert item['location'] == {
         'url': '',
         'name': 'See description',

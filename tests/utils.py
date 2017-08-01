@@ -24,8 +24,6 @@ def file_response(file_name, url=None):
         file_path = file_name
 
     file_content = open(file_path, 'r').read()
+    body = str.encode(file_content)
 
-    response = HtmlResponse(url=url,
-        request=request,
-        body=str.encode(file_content))
-    return response
+    return HtmlResponse(url=url, request=request, body=body)
