@@ -4,6 +4,7 @@ import scrapy
 from datetime import datetime
 from pytz import timezone
 
+
 class IdphSpider(scrapy.Spider):
     name = 'idph'
     allowed_domains = ['www.dph.illinois.gov']
