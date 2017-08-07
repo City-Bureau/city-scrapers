@@ -5,6 +5,7 @@ import re
 from datetime import datetime
 from pytz import timezone
 
+
 # The RTA's Board and other meetings are are displayed on their
 # website via an iframe from a different domain.
 class RtaSpider(scrapy.Spider):
@@ -39,7 +40,7 @@ class RtaSpider(scrapy.Spider):
 
         url = response.css('iframe::attr(src)').extract_first()
 
-        request = scrapy.Request(url, callback = self.parse_iframe)
+        request = scrapy.Request(url, callback=self.parse_iframe)
         request.meta['description'] = description
 
         yield request

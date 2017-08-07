@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-import types
 
 from tests.utils import file_response
 from documenters_aggregator.spiders.rta import RtaSpider
@@ -12,6 +11,7 @@ events_response.meta['description'] = "Test Description"
 
 spider = RtaSpider()
 parsed_items = [item for item in spider.parse_iframe(events_response) if isinstance(item, dict)]
+
 
 def test_name():
     assert parsed_items[0]['name'] == 'Board of Directors'
@@ -26,11 +26,11 @@ def test_start_time():
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'] == None
+    assert parsed_items[0]['end_time'] is None
 
 
 def test_id():
-    assert parsed_items[0]['id'] == None
+    assert parsed_items[0]['id'] is None
 
 
 @pytest.mark.parametrize('item', parsed_items)
