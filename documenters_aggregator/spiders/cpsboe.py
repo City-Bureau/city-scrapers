@@ -14,7 +14,8 @@ class CpsboeSpider(scrapy.Spider):
         for item in response.css('#content-primary tr')[1:]:
             yield {
                 '_type': 'event',
-                'id': self._parse_id(item)
+                'id': self._parse_id(item),
+                'name': 'Chicago Board of Education Monthly Meeting'
             }
 
     def _parse_id(self, item):

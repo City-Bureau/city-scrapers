@@ -16,3 +16,7 @@ def test_type(item):
 
 def test_id():
     assert parsed_items[0]['id'] == '20170726'
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_name(item):
+    assert item['name'] == 'Chicago Board of Education Monthly Meeting'
