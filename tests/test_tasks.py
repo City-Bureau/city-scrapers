@@ -1,4 +1,3 @@
-import pytest
 import tasks
 
 from tests.utils import read_test_file_content

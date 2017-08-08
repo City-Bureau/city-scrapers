@@ -36,7 +36,6 @@ def _gen_spider(name, domain):
 
 
 def _gen_tests(name, domain):
-    template = env.get_template('test.tmpl')
     filename = '{0}/test_{1}.py'.format(TESTS_DIR, name)
     with open(filename, 'w') as f:
         content = _render_content(name, domain, 'test.tmpl')
@@ -48,4 +47,3 @@ def _render_content(name, domain, template):
     jinja_template = env.get_template(template)
     classname = _make_classname(name)
     return jinja_template.render(name=name, domain=domain, classname=classname)
-
