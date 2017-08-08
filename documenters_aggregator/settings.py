@@ -14,7 +14,6 @@ BOT_NAME = 'documenters_aggregator'
 SPIDER_MODULES = ['documenters_aggregator.spiders']
 NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
 
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Documenters Aggregator (learn more and say hello at https://TKTK)'
 
