@@ -20,3 +20,10 @@ def test_id():
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
     assert item['name'] == 'Chicago Board of Education Monthly Meeting'
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_description(item):
+    assert item['description'] == """CPS Loop Office
+42 W. Madison Street, Garden Level
+Chicago, IL 60602
+Board Room"""

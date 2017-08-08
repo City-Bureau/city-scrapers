@@ -15,7 +15,8 @@ class CpsboeSpider(scrapy.Spider):
             yield {
                 '_type': 'event',
                 'id': self._parse_id(item),
-                'name': 'Chicago Board of Education Monthly Meeting'
+                'name': 'Chicago Board of Education Monthly Meeting',
+                'description': self._parse_description(item)
             }
 
     def _parse_id(self, item):
@@ -34,5 +35,15 @@ class CpsboeSpider(scrapy.Spider):
     def _remove_line_breaks(self, collection):
         while '\n' in collection: collection.remove("\n")
         return collection
+
+    def _parse_description(self, item):
+        """ 
+        Currently every description is the same, but it's
+        unsafe to assume that will always be the case so let's
+        grab it programmatically anyways.
+        """
+        text_list = self._remove_line_breaks(item.css('td')[1].css('::text').extract())
+        description = "\n".join(text_list)
+        return description
 
 
