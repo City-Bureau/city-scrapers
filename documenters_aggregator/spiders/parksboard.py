@@ -52,7 +52,8 @@ class ParksboardSpider(scrapy.Spider):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        raw_cal_string = item.css('td:nth-child(3) a::attr(href)').extract_first()
+        return raw_cal_string.split('&')[1].split('=')[1]
 
     def _parse_classification(self, item):
         """
@@ -75,7 +76,7 @@ class ParksboardSpider(scrapy.Spider):
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitutde and longitude are all
+        Parse or generate location. Url, latitude and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
         return {
