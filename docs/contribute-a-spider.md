@@ -1,8 +1,10 @@
 # Contributing a spider
 
-## Create an issue
+## Find a site to scrape and create an issue
 
-Create a [new issue](https://github.com/City-Bureau/documenters-aggregator/issues/new) with a title like "SPIDER: [name of agency]". Name of agency should be a fairly full name. "Chicago Housing Authority" is preferred over "CHA" in the issue title.
+First, find an unclaimed event source in the [spreadsheet of event sources](https://docs.google.com/spreadsheets/d/1L1lbWj89wt8b2DIZhjxERJ5FCAWPDWd0nMibtc01sZk/edit#gid=0). Any scraper with a status of "needs evaluation" is fair game. If someone has already claimed the scraper, talk with them about joining their efforts.
+
+Assuming you picked out a new one, create a [new issue](https://github.com/City-Bureau/documenters-aggregator/issues/new) with a title like "SPIDER: [name of agency]". Name of agency should be a fairly full name. "Chicago Housing Authority" is preferred over "CHA" in the issue title.
 
 Save and note the issue number.
 
