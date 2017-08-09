@@ -6,7 +6,7 @@ This project is designed to aid [City Bureau](https://www.citybureau.org/)'s [Do
 
 Documenters Aggregator is a community-based open source project with a friendly community that welcomes contributions from everyone.
 
-Want to use or contribute to the project? [Start with the documentation.](https://city-bureau.gitbooks.io/documenters-event-aggregator/)!
+Want to use or contribute to the project? **[Start with the documentation](https://city-bureau.gitbooks.io/documenters-event-aggregator/)**.
 
 ## Support this work
 
