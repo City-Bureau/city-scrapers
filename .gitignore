@@ -60,6 +60,7 @@ instance/
 
 # Scrapy stuff:
 .scrapy
+tutorial/
 
 # Sphinx documentation
 docs/_build/
@@ -99,3 +100,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# cyrus
+json_conversions.md
