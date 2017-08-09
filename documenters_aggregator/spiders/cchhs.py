@@ -35,14 +35,15 @@ class CchhsSpider(scrapy.Spider):
             aria_control = item.xpath("@aria-controls").extract_first()
             item_uncollapsed = item.xpath("//div[@id='{}']//tbody//td[@data-title='Meeting Information']".format(aria_control))
             for subitem in item_uncollapsed:
-                data.update({
-                            'description': self._parse_description(subitem),
-                            'classification': self._parse_classification(subitem),  # not implemented
-                            'start_time': self._parse_start(subitem),
-                            'location': self._parse_location(subitem)
-                            })
-                data['status'] = self._parse_status(subitem, data['start_time'])
-                yield data
+                new_item = {
+                    'description': self._parse_description(subitem),
+                    'classification': self._parse_classification(subitem),  # not implemented
+                    'start_time': self._parse_start(subitem),
+                    'location': self._parse_location(subitem)
+                }
+                new_item['status'] = self._parse_status(subitem, new_item['start_time'])
+                new_item.update(data)
+                yield new_item
 
         yield self._parse_next(response)  # not sure why this doesn't work
 

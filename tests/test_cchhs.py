@@ -19,7 +19,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-01-27T09:00:00-05:00'
+    assert parsed_items[0]['start_time'] == '2017-01-27T09:00:00-06:00'
 
 
 def test_status():
