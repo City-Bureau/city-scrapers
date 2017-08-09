@@ -19,7 +19,9 @@ class CpsboeSpider(scrapy.Spider):
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
                 'start_time': self._parse_start_time(item),
-                'all_day': self._parse_all_day(item)
+                'all_day': self._parse_all_day(item),
+                'status': self._parse_status(item),
+                'location': self._parse_location(item)
 
             }
 
@@ -70,6 +72,22 @@ class CpsboeSpider(scrapy.Spider):
         """
         return False
 
+    def _parse_status(self, item):
+        """
+        @TODO determine correct status
+        """
+        return 'tentative'
+
+
+    def _parse_location(self, item):
+        """
+        @TODO better location
+        """
+        return {
+            'url': '',
+            'name': 'See description',
+            'coordinates': None,
+        }
 
 
 

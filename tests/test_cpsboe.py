@@ -38,3 +38,16 @@ def test_start_time():
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
     assert item['all_day'] is False
+
+    @pytest.mark.parametrize('item', parsed_items)
+    def test_status(item):
+        assert item['status'] == 'tentative'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_location(item):
+    assert item['location'] == {
+        'url': '',
+        'name': 'See description',
+        'coordinates': None,
+    }
