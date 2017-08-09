@@ -27,3 +27,6 @@ def test_description(item):
 42 W. Madison Street, Garden Level
 Chicago, IL 60602
 Board Room"""
+
+def test_time():
+  assert parsed_items[0]['start_time'] == "2017-07-26T10:30:00-05:00"

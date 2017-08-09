@@ -16,7 +16,8 @@ class CpsboeSpider(scrapy.Spider):
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': 'Chicago Board of Education Monthly Meeting',
-                'description': self._parse_description(item)
+                'description': self._parse_description(item),
+                'start_time': self._parse_start_time(item)
             }
 
     def _parse_id(self, item):
@@ -45,5 +46,14 @@ class CpsboeSpider(scrapy.Spider):
         text_list = self._remove_line_breaks(item.css('td')[1].css('::text').extract())
         description = "\n".join(text_list)
         return description
+
+    def _parse_start_time(self, item):
+        date_string = self._remove_line_breaks(item.css('td')[0].css('::text').extract())[0]
+        date_string = date_string.replace(' at', '').replace(',', "").replace(':', " ")
+        date = datetime.strptime(date_string, '%B %d %Y %I %M %p')
+        tz = timezone('America/Chicago')
+        return tz.localize(date).isoformat()
+
+
 
 
