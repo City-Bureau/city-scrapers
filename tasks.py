@@ -17,7 +17,7 @@ env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 def genspider(ctx, name, domain, start_urls=None):
     """
     Make a new HTML scraping spider
-    To download HTML files, use the -s flag 
+    To download HTML files, use the -s flag
     and separate urls with {
     urls cannot end in /
 
