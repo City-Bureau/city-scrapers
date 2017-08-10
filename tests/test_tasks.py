@@ -32,5 +32,16 @@ def test_gen_html():
     rendered_filenames = tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
     assert rendered_filenames == test_filenames
 
+    test_file_content = read_test_file_content('files/testspider_articles.html.example')
+    rendered_content = read_test_file_content('files/testspider_articles.html')
+    assert test_file_content == rendered_content
+
+    test_file_content = read_test_file_content('files/testspider_staff.html.example')
+    rendered_content = read_test_file_content('files/testspider_staff.html')
+    assert test_file_content == rendered_content
+
+    test_file_content = read_test_file_content('files/testspider_is-chicago-any-less-segregated.html.example')
+    rendered_content = read_test_file_content('files/testspider_is-chicago-any-less-segregated.html')
+    assert test_file_content == rendered_content
 
 # @TODO test file open / writing
