@@ -13,10 +13,16 @@ FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/file
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
 
-@task
-def genspider(ctx, name, domain, start_urls=[]):
+@task()
+def genspider(ctx, name, domain, start_urls=None):
     """
     Make a new HTML scraping spider
+    To download HTML files, use the -s flag 
+    and separate urls with {
+    urls cannot end in /
+
+    Example:
+    invoke genspider http://www.citybureau.org -s=http://citybureau.org/articles{http://citybureau.org/staff
     """
     spider_filename = _gen_spider(name, domain)
     print('Created {0}'.format(spider_filename))
@@ -25,6 +31,7 @@ def genspider(ctx, name, domain, start_urls=[]):
     print('Created {0}'.format(test_filename))
 
     if start_urls:
+        start_urls = start_urls.split("{")
         html_filenames = _gen_html(name, start_urls)
         for f in html_filenames:
             print('Created {0}'.format(f))
@@ -71,7 +78,7 @@ def _gen_html(name, start_urls):
         with open(filename, 'w') as f:
             f.write(content)
 
-        files += [filename]
+        files.append(filename)
     return files
 
 

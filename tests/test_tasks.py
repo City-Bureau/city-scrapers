@@ -26,22 +26,18 @@ def test_render_spider():
     assert test_file_content == rendered_content
 
 
-def test_gen_html():
+def test_gen_html_filenames():
     FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
     test_filenames = [FILES_DIR + '/testspider_articles.html', FILES_DIR + '/testspider_staff.html', FILES_DIR + '/testspider_is-chicago-any-less-segregated.html']
     rendered_filenames = tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
     assert rendered_filenames == test_filenames
 
+
+def test_gen_html_content():
+    tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
     test_file_content = read_test_file_content('files/testspider_articles.html.example')
     rendered_content = read_test_file_content('files/testspider_articles.html')
     assert test_file_content == rendered_content
 
-    test_file_content = read_test_file_content('files/testspider_staff.html.example')
-    rendered_content = read_test_file_content('files/testspider_staff.html')
-    assert test_file_content == rendered_content
-
-    test_file_content = read_test_file_content('files/testspider_is-chicago-any-less-segregated.html.example')
-    rendered_content = read_test_file_content('files/testspider_is-chicago-any-less-segregated.html')
-    assert test_file_content == rendered_content
 
 # @TODO test file open / writing
