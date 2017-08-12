@@ -18,11 +18,11 @@ def genspider(ctx, name, domain, start_urls=None):
     """
     Make a new HTML scraping spider
     To download HTML files, use the -s flag
-    and separate urls with {
+    and separate urls with ,
     urls cannot end in /
 
     Example:
-    invoke genspider http://www.citybureau.org -s=http://citybureau.org/articles{http://citybureau.org/staff
+    invoke genspider testspider http://www.citybureau.org -s=http://citybureau.org/articles,http://citybureau.org/staff
     """
     spider_filename = _gen_spider(name, domain)
     print('Created {0}'.format(spider_filename))
