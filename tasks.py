@@ -31,7 +31,9 @@ def genspider(ctx, name, domain, start_urls=None):
     print('Created {0}'.format(test_filename))
 
     if start_urls:
-        start_urls = start_urls.split("{")
+        start_urls = start_urls.split(',http')
+        if len(start_urls) > 1:
+            start_urls = [start_urls[0]] + ['http{0}'.format(x) for x in start_urls[1:]]
         html_filenames = _gen_html(name, start_urls)
         for f in html_filenames:
             print('Created {0}'.format(f))
