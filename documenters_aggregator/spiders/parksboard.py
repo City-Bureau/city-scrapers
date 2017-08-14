@@ -111,7 +111,8 @@ class ParksboardSpider(scrapy.Spider):
         Parse start date and time.
         """
         date = item.css('td:nth-child(2) font::text').extract_first()
-        return date
+        time = item.css('td:nth-child(4) font font::text').extract_first()
+        return date + ' ' + time
 
     def _parse_end(self, item):
         """
