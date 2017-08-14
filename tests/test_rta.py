@@ -61,10 +61,3 @@ def test_location(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert item['_type'] == 'event'
-
-
-# @TODO in the future, could consider passing multiple items + expected values.
-# @pytest.mark.parametrize("parsed_value,expected", [
-    # (parsed_items[0]['name'], 'PANDAS/PANS Advisory Council'),
-    # (parsed_items[2]['name'], 'PAC: Maternal Mortality Review Committee Meeting'),
-# ])
