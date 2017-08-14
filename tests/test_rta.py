@@ -30,7 +30,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] is None
+    assert parsed_items[0]['id'] == '2017-08-24-board-of-directors'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -51,9 +51,10 @@ def test_status(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
     assert item['location'] == {
-        'url': '',
-        'name': 'See description',
+        'url': 'http://www.rtachicago.org/index.php/about-us/contact-us.html',
+        'name': 'RTA Administrative Offices',
         'coordinates': None,
+        'address': '175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604'
     }
 
 

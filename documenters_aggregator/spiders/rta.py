@@ -10,22 +10,24 @@ from pytz import timezone
 # website via an iframe from a different domain.
 class RtaSpider(scrapy.Spider):
     name = 'rta'
-    allowed_domains = ['http://www.rtachicago.org', 'http://rtachicago.granicus.com']
+    allowed_domains = ['www.rtachicago.org', 'rtachicago.granicus.com']
     start_urls = ['http://www.rtachicago.org/about-us/board-meetings']
     domain_root = 'http://www.rtachicago.org'
 
     def parse_iframe(self, response):
         description = response.request.meta['description']
         for item in response.css('#upcoming .row'):
+            start_time = self._parse_start(item)
+            name = self._parse_name(item)
             yield {
                 '_type': 'event',
-                'id': self._parse_id(item),
-                'name': self._parse_name(item),
+                'id': self._generate_id(start_time, name),
+                'name': name,
                 'description': description,
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
-                'all_day': self._parse_all_day(item),
+                'start_time': start_time,
+                'end_time': None,
+                'all_day': False,
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
             }
@@ -43,13 +45,20 @@ class RtaSpider(scrapy.Spider):
         request = scrapy.Request(url, callback=self.parse_iframe)
         request.meta['description'] = description
 
+        # Disable built-in RobotsTxt middleware for this request.
+        request.meta['dont_obey_robotstxt'] = True
+
         yield request
 
-    def _parse_id(self, item):
+    def _generate_id(self, start_time, name):
         """
-        There is no publicly exposed ID.
+        We use the start time to generate an ID since there is no publically
+        exposed meeting ID.
         """
-        return None
+
+        date = start_time.split('T')[0]
+        dashified = re.sub(r'[^a-z]+', '-', name.lower())
+        return '{0}-{1}'.format(date, dashified)
 
     def _parse_classification(self, item):
         """
@@ -64,21 +73,12 @@ class RtaSpider(scrapy.Spider):
         return 'tentative'
 
     def _parse_location(self, item):
-        """
-        @TODO better location
-        """
         return {
-            'url': '',
-            'name': 'See description',
+            'url': 'http://www.rtachicago.org/index.php/about-us/contact-us.html',
+            'name': 'RTA Administrative Offices',
             'coordinates': None,
+            'address': '175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604'
         }
-
-    def _parse_all_day(self, item):
-        """
-        It appears all events have a start and end time on the IPDH website,
-        so this `all_day` is always false.
-        """
-        return False
 
     def _parse_name(self, item):
         """
@@ -87,27 +87,13 @@ class RtaSpider(scrapy.Spider):
         title = item.css('.committee::text').extract_first()
         return title.split(' on ')[0]
 
-    def _parse_description(self, item):
-        """
-        Get event description from `div.event_description`'
-        """
-        lines = item.css('div.event_description p::text').extract()
-        lines = [line.strip() for line in lines]
-        return '\n'.join(lines)
-
     def _parse_start(self, item):
         """
-        Combine start time with year, month, and day.
+        Retrieve the event date, always using 8:30am as the time.
         """
         title = item.css('.committee::text').extract_first()
         m = re.search('(\d{4})-(\d{1,2})-(\d{1,2})', title)
         tz = timezone('America/Chicago')
         naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
-        dt = tz.localize(naive_dt, is_dst=False)
+        dt = tz.localize(naive_dt)
         return dt.isoformat()
-
-    def _parse_end(self, item):
-        """
-        End times are not posted.
-        """
-        return None
