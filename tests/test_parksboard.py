@@ -3,22 +3,13 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.parksboard import ParksboardSpider
 
-def test_tests():
-    print('Please write some tests for this spider or at least disable this one.')
-    assert False
+test_response = file_response('files/parksboard.html')
+spider = ParksboardSpider()
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-"""
-Uncomment below
-"""
-
-# test_response = file_response('files/parksboard.html')
-# spider = ParksboardSpider()
-# parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
-
-
-# def test_name():
-    # assert parsed_items[0]['name'] == 'EXPECTED NAME'
+def test_name():
+    assert parsed_items[0]['name'] == 'Board of Commissioners'
 
 
 # def test_description():
