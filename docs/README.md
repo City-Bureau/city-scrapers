@@ -2,11 +2,8 @@
 
 The Documenters Aggregator a collection of scrapers and utilities to collect and store a comprehensive, central, and accessible calendar for public government meetings in Chicago and Cook County.
 
-This project is designed to aid [City Bureau](https://www.citybureau.org/)'s [Documenters](http://www.citybureau.org/documenters/) program in identifying public meetings, assigning people to document them, and capturing notes and information about the meetings.
-
-Documenters Aggregator is a community-based open source project with a friendly community that welcomes contributions from everyone.
-
-Want to use or contribute to the project? **[Start with the documentation](https://city-bureau.gitbooks.io/documenters-event-aggregator/)**.
+* [Installation](installation.md)
+* [Contributing a spider](contribute-a-spider.md)
 
 ## Support this work
 

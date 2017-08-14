@@ -17,13 +17,17 @@ def file_response(file_name, url=None):
         url = 'http://www.example.com'
 
     request = Request(url=url)
+    file_content = read_test_file_content(file_name)
+    body = str.encode(file_content)
+
+    return HtmlResponse(url=url, request=request, body=body)
+
+
+def read_test_file_content(file_name):
     if not file_name[0] == '/':
         tests_dir = os.path.dirname(os.path.realpath(__file__))
         file_path = os.path.join(tests_dir, file_name)
     else:
         file_path = file_name
 
-    file_content = open(file_path, 'r').read()
-    body = str.encode(file_content)
-
-    return HtmlResponse(url=url, request=request, body=body)
+    return open(file_path, 'r').read()
