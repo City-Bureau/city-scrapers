@@ -73,6 +73,10 @@ class RtaSpider(scrapy.Spider):
         return 'tentative'
 
     def _parse_location(self, item):
+        """
+        The location is hard coded based on the value shown on the meetings page. It
+        is not expected to change often, so this is probably OK.
+        """
         return {
             'url': 'http://www.rtachicago.org/index.php/about-us/contact-us.html',
             'name': 'RTA Administrative Offices',
