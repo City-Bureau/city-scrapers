@@ -1,6 +1,7 @@
 import os
 import tasks
 
+from lxml.html import fromstring
 from tests.utils import read_test_file_content
 
 SPIDER_NAME = 'testspider'
@@ -37,7 +38,11 @@ def test_gen_html_content():
     tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
     test_file_content = read_test_file_content('files/testspider_articles.html.example')
     rendered_content = read_test_file_content('files/testspider_articles.html')
-    assert test_file_content == rendered_content
+    test_dom = fromstring(test_file_content)
+    rendered_dom = fromstring(rendered_content)
+    test_title = test_dom.xpath('//title')[0].text
+    rendered_title = rendered_dom.xpath('//title')[0].text
+    assert test_title == rendered_title
 
 
 # @TODO test file open / writing
