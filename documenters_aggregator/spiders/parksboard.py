@@ -79,9 +79,12 @@ class ParksboardSpider(scrapy.Spider):
         Parse or generate location. Url, latitude and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
+
+        location = item.css('td:nth-child(5) em::text').extract_first()
+
         return {
             'url': None,
-            'name': None,
+            'name': location,
             'coordinates': {
               'latitude': None,
               'longitude': None,
