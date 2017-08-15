@@ -1,4 +1,4 @@
-from invoke import task
+from invoke import task, run
 from jinja2 import Environment, FileSystemLoader
 import requests
 
@@ -37,6 +37,16 @@ def genspider(ctx, name, domain, start_urls=None):
         html_filenames = _gen_html(name, start_urls)
         for f in html_filenames:
             print('Created {0}'.format(f))
+
+
+@task
+def runtests(ctx):
+    """
+    Runs pytest, pyflakes, and pep8.
+    """
+    run('pytest', pty=True)
+    run('pyflakes .', pty=True)
+    run('pep8 --ignore E265,E266,E501 .', pty=True)
 
 
 def _make_classname(name):

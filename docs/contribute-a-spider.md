@@ -43,10 +43,15 @@ scrapy crawl cha
 
 ## Run the automated tests
 
-Run pytest:
+We use the [pytest](https://docs.pytest.org/en/latest/) testing framework to
+verify the behavior of the project's code and 
+[pyflakes](https://docs.pytest.org/en/latest/) and [pep8](https://pypi.python.org/pypi/pep8) to
+check that all code is written in the proper style.
+
+To run these tools, use the `invoke runtests` command:
 
 ```
-pytest
+invoke runtests
 ```
 
 Whoops! The tests fail by default. Here's typical output:
