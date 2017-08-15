@@ -33,9 +33,14 @@ def test_gen_html_filenames():
     rendered_filenames = tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
     assert rendered_filenames == test_filenames
 
+    if rendered_filenames == test_filenames:
+        for f in rendered_filenames:
+            split_f = f.split('/files/')
+            os.rename(f, split_f[0] + '/files/tmp/' + split_f[1])
+
 
 def test_gen_html_content():
-    tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
+    rendered_filenames = tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
     test_file_content = read_test_file_content('files/testspider_articles.html.example')
     rendered_content = read_test_file_content('files/testspider_articles.html')
     test_dom = fromstring(test_file_content)
@@ -43,6 +48,11 @@ def test_gen_html_content():
     test_title = test_dom.xpath('//title')[0].text
     rendered_title = rendered_dom.xpath('//title')[0].text
     assert test_title == rendered_title
+
+    if test_title == rendered_title:
+        for f in rendered_filenames:
+            split_f = f.split('/files/')
+            os.rename(f, split_f[0] + '/files/tmp/' + split_f[1])
 
 
 # @TODO test file open / writing

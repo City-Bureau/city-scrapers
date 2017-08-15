@@ -45,6 +45,8 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+tests/files/tmp/*
+!tests/files/tmp/.gitkeep
 
 # Translations
 *.mo
