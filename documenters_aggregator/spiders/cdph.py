@@ -12,6 +12,7 @@ from time import strptime
 
 
 class CdphSpider(scrapy.Spider):
+
     name = 'cdph'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html']
@@ -40,7 +41,7 @@ class CdphSpider(scrapy.Spider):
             matches = re.match(r'(\w+) +(\d+)', text)
 
             if matches is not None:
-                month = int(strptime(matches.group(1),'%B').tm_mon)
+                month = int(strptime(matches.group(1), '%B').tm_mon)
                 day = int(matches.group(2))
                 tz = timezone('America/Chicago')
 
@@ -62,18 +63,6 @@ class CdphSpider(scrapy.Spider):
                     'status': self._parse_status(item),
                     'location': self._parse_location(item),
                 }
-
-    def _parse_start(self, item):
-        """
-        Retrieve the event date, always using 8:30am as the time.
-        """
-        title = item.css('::text').extract_first()
-
-        import pdb; pdb.set_trace()
-
-        naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
-        dt = tz.localize(naive_dt)
-        return dt.isoformat()
 
     def _parse_classification(self, item):
         """
@@ -102,8 +91,8 @@ class CdphSpider(scrapy.Spider):
             'url': 'https://www.cityofchicago.org/city/en/depts/cdph.html',
             'name': 'DePaul Center',
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
             'address': '2nd Floor Board Room, DePaul Center, 333 S. State Street, Chicago, IL'
         }
