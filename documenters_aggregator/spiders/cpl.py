@@ -21,7 +21,25 @@ PROJECT STATUS AS OF 7/15/17 AT 7:15PM:
         scrapy shell https://www.chipublib.org/board-of-directors/board-meeting-schedule/
             (may need to comment out some random code below to get the interactive
             shell running)
-        and then you can work on it!!! woohoo!!!"""
+        and then you can work on it!!! woohoo!!!
+    
+        LINKS:
+            https://docs.scrapy.org/en/latest/intro/tutorial.html
+            https://docs.scrapy.org/en/latest/topics/selectors.html#topics-selectors
+            http://effbot.org/zone/element-index.htm#documentation
+            http://docs.opencivicdata.org/en/latest/data/event.html
+            https://docs.scrapy.org/en/latest/topics/selectors.html#topics-selectors-ref
+            https://www.chipublib.org/board-of-directors/board-meeting-schedule/
+            https://stackoverflow.com/questions/11252407/xpath-to-extract-text-after-br-tags-in-r
+            https://stackoverflow.com/questions/509211/explain-slice-notation
+            https://github.com/City-Bureau/documenters-aggregator/blob/master/documenters_aggregator/spiders/rta.py
+            https://docs.python.org/2/library/datetime.html
+            https://stackoverflow.com/questions/9750330/how-to-convert-integer-into-date-object-python
+            https://www.google.com/search?q=re.sub+how+to+substitute+multiple+patterns&oq=re.sub+how+to+substitute+multiple+patterns&aqs=chrome..69i57.14519j0j4&sourceid=chrome&ie=UTF-8
+
+
+
+        """
 
 class CplSpider(scrapy.Spider):
     name = 'cpl'
