@@ -27,21 +27,20 @@ class CccSpider(scrapy.Spider):
         """
         for link in response.css('a.Eventslink::attr(href)').extract():
             next_url = "http://www.ccc.edu" + link
-            return scrapy.Request(next_url, callback=self.parse_event_page)
+            return scrapy.Request(next_url, callback=self.parse_event_page())
 
     def parse_event_page(self, response):
-
             yield {
                 '_type': 'event',
-                'id': self._parse_id(item),
-                'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
-                'all_day': self._parse_all_day(item),
-                'status': self._parse_status(item),
-                'location': self._parse_location(item),
+                'id': self._parse_id(),
+                'name': self._parse_name(),
+                'description': self._parse_description(),
+                'classification': self._parse_classification(),
+                'start_time': self._parse_start(),
+                'end_time': self._parse_end(),
+                'all_day': self._parse_all_day(),
+                'status': self._parse_status(),
+                'location': self._parse_location(),
             }
 
         # self._parse_next(response) yields more responses to parse if necessary.
@@ -54,7 +53,7 @@ class CccSpider(scrapy.Spider):
         return a scrapy request.
         """
         next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
+        return None
 
     def _parse_id(self, item):
         """
@@ -105,14 +104,14 @@ class CccSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        title = response.css('h1::text').extract_first()
+        title = item.css('h1::text').extract_first()
         return title
 
     def _parse_description(self, item):
         """
         Parse or generate event name.
         """
-        text_chunks = response.css('div.ms-rtestate-field::text').extract()
+        text_chunks = item.css('div.ms-rtestate-field::text').extract()
 
         return None
 
@@ -120,8 +119,7 @@ class CccSpider(scrapy.Spider):
         """
         Parse start date and time.
         """
-        raw_date_time = response.css('div#formatDateA.required::text')
-                                .extract_first()
+        raw_date_time = item.css('div#formatDateA.required::text').extract_first()
         date_regex = r"(\d+)\/(\d+)\/(\d+)"
         time_regex = r"(\d+):(\d+)"
 
@@ -132,7 +130,7 @@ class CccSpider(scrapy.Spider):
 
         naive_dt = datetime(int(d.group(1)), int(d.group(2)), int(d.group(3)), int(t.group(1)), int(t.group(2)))
         dt = tz.localize(naive_dt)
-        return dt
+        return dt.isoformat()
 
     def _parse_end(self, item):
         """
