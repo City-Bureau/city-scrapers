@@ -3,7 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 import requests
 
 import os
-
+import time
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'documenters_aggregator/spiders')
@@ -44,7 +44,7 @@ def runtests(ctx):
     """
     Runs pytest, pyflakes, and pep8.
     """
-    run('pytest', pty=True)
+    run('pytest -s', pty=True)
     run('pyflakes .', pty=True)
     run('pep8 --ignore E265,E266,E501 .', pty=True)
 
@@ -69,15 +69,32 @@ def _gen_tests(name, domain):
     return filename
 
 
+def _fetch_url(url, attempt=1):
+    """
+    Attempt to fetch the specified url. If the request fails, retry it with an
+    exponential backoff up to 5 times.
+    """
+    try:
+        r = requests.get(url)
+        r.raise_for_status()
+        return r
+    except requests.exceptions.RequestException as e:
+        if attempt >= 5:
+            return None
+        else:
+            print(e)
+            wait = 2 ** attempt
+            print('waiting for {0} seconds'.format(wait))
+            time.sleep(wait)
+            return _fetch_url(url, attempt + 1)
+
+
 def _gen_html(name, start_urls):
     '''urls should not end in /'''
     files = []
     for url in start_urls:
-        try:
-            r = requests.get(url)
-            r.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            print(e)
+        r = _fetch_url(url)
+        if r is None:
             continue
 
         content = r.text.strip()
