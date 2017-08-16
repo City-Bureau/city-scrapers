@@ -21,8 +21,7 @@ PROJECT STATUS AS OF 7/15/17 AT 7:15PM:
         scrapy shell https://www.chipublib.org/board-of-directors/board-meeting-schedule/
             (may need to comment out some random code below to get the interactive
             shell running)
-        and then you can work on it!!! woohoo
-"""
+        and then you can work on it!!! woohoo!!!"""
 
 class CplSpider(scrapy.Spider):
     name = 'cpl'
