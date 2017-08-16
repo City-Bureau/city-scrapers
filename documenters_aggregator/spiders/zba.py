@@ -110,11 +110,19 @@ class ZbaSpider(scrapy.Spider):
         lines = [line.strip() for line in lines]
         return '\n'.join(lines)
 
+#    def _parse_start(self, item):
+#        """
+#        Parse start date and time.
+#        """
+#        return None
+
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        return None
+#        return None
+        return item.css(".date-display-single::attr(content)").extract_first()
+#        return item.css(".views-field-field-date span::attr(content)").extract_first()
 
     def _parse_end(self, item):
         """
