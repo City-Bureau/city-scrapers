@@ -10,10 +10,6 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import time as Time
 
-# @TODO:
-# series event vs single event
-# past events and repeats
-
 
 class CcdphSpider(scrapy.Spider):
     name = 'ccdph'
@@ -94,6 +90,9 @@ class CcdphSpider(scrapy.Spider):
         """
         Parse or generate all-day status. Defaults to false.
         """
+        date_time_extract = self._extract_date_time(response)
+        if 'all day' in date_time_extract:
+            return True
         return False
 
     def _parse_name(self, response):
@@ -110,54 +109,99 @@ class CcdphSpider(scrapy.Spider):
         description = ''.join([x.strip() for x in descrip_list])
         return description
 
-    def _parse_date_time(self, response):
-        """
-        Parse start and end date and time
-        """
+    def _extract_date_time(self, response):
+        '''
+        Extract string with date, start time, end time
+        '''
         event_id = response.url.split('/')[-1]
         date_time_extract = response.xpath("//input[@value='{}']/parent::p/text()".format(event_id)).extract()
-        date_time_str = ''.join([x.strip() for x in date_time_extract])
+        if not date_time_extract:
+            date_time_extract = response.xpath("//div[contains(@id, 'SingleEvent')]/text()").extract()
 
-        match = re.search(r'Date:(.+);', date_time_str)
+        return ''.join([x.strip() for x in date_time_extract])
+
+    def _parse_date_time(self, response):
+        """
+        Parse start-date-time and end-date-time
+        """
+        date_time_extract = self._extract_date_time(response)
+        if (not date_time_extract) or ('all day' in date_time_extract):
+            return {'start': None, 'end': None}
+
+        match = re.search(r'Date:(.+)Time', date_time_extract)
         if not match:
             return {'start': None, 'end': None}
-        date = match.group(1).strip()
+        date = self._clean_date(match.group(1))
 
-        match = re.search(r'Time:(.+)', date_time_str)
+        match = re.search(r'Time:(.+)', date_time_extract)
         if not match:
             return {'start': None, 'end': None}
-        time = match.group(1).strip()
-        start_time, end_time = [x.strip() for x in time.replace('.', '').upper().split('-')]
+        start_end_time = match.group(1)
 
-        start = self._make_date(date, start_time)
-        end = self._make_date(date, end_time)
+        start_end_dict = self._clean_time(start_end_time)
+        start = self._make_date(date, start_end_dict['start'])
+        end = self._make_date(date, start_end_dict['end'])
         return {'start': start, 'end': end}
 
+    def _clean_time(self, start_end_time):
+        '''
+        Clean start time and end time
+        '''
+        start_end_time = ''.join(start_end_time.strip().replace('.', '').upper().split())
+
+        match = re.match(r'(\d+):*(\d*)([APM]*)[-TO–]*(\d*):*(\d*)([APM]*)', start_end_time)
+        if not match:
+            return {'start': None, 'end': None}
+        start_hour, start_min, start_period, end_hour, end_min, end_period = match.groups()
+        if not start_min:
+            start_min = '00'
+        if not end_min:
+            end_min = '00'
+        if not start_period:
+            start_period = end_period
+
+        start = '{hour}:{min}{period}'.format(hour=start_hour, min=start_min, period=start_period)
+        end = '{hour}:{min}{period}'.format(hour=end_hour, min=end_min, period=end_period)
+        return {'start': start, 'end': end}
+
+    def _clean_date(self, date):
+        '''
+        If date == 'Today', 'Tomorrow' or a day of the week like 'Friday'
+        or 'Last Wednesday', replace it with the date in Mmm dd yyyy format
+
+        If the year is missing, add it on
+        '''
+        date = date.strip().replace(';', '').replace(',', '')
+        today = datetime.today()
+        if date == 'Today':
+            return today.strftime("%b %d %Y")
+        if date == 'Tomorrow':
+            tomorrow = today + timedelta(days=1)
+            return tomorrow.strftime("%b %d %Y")
+        if date.endswith('day'):
+            today_wday = today.weekday()
+            date_wday = Time.strptime(date.replace('Last ', ''), "%A").tm_wday
+            if date.startswith('Last '):
+                add_days = (today_wday - date_wday) % 7
+            else:
+                add_days = (date_wday - today_wday) % 7
+            date = today + timedelta(days=add_days)
+            return date.strftime("%b %d %Y")
+        if len(date) <= 6:
+            return '{0} {1}'.format(date, today.year)
+        return date
+
     def _make_date(self, date, time):
-            """
-            Combine year, month, day with variable time and export as timezone-aware,
-            ISO-formatted string.
+        """
+        Combine year, month, day with variable time and export as timezone-aware,
+        ISO-formatted string.
+        """
+        time_string = '{0} {1}'.format(date, time)
 
-            If date == 'Today', 'Tomorrow' or a day of the week like 'Friday',
-            replace it with the date in month-day format
-            """
-            year = datetime.now().year
-            if date == 'Today':
-                date = datetime.now().strftime("%b %d")
-            elif date == 'Tomorrow':
-                tomorrow = datetime.now() + timedelta(days=1)
-                date = tomorrow.strftime("%b %d")
-            elif date.endswith('day'):
-                today = datetime.today().weekday()
-                date_integer = Time.strptime(date, "%A").tm_wday
-                add_days = (date_integer - today) % 7
-                date = datetime.now() + timedelta(days=add_days)
-                date = date.strftime("%b %d")
+        try:
+            naive = datetime.strptime(time_string, '%b %d %Y %I:%M%p')
+        except ValueError:
+            return None
 
-            fmt_string = '{year} {date} {time}'
-            time_string = fmt_string.format(year=year, date=date, time=time)
-
-            naive = datetime.strptime(time_string, '%Y %b %d %I:%M %p')
-
-            tz = timezone('America/Chicago')
-            return tz.localize(naive).isoformat()
+        tz = timezone('America/Chicago')
+        return tz.localize(naive).isoformat()
