@@ -35,8 +35,7 @@ def test_gen_html_filenames():
 
     if rendered_filenames == test_filenames:
         for f in rendered_filenames:
-            split_f = f.split('/files/')
-            os.rename(f, split_f[0] + '/files/tmp/' + split_f[1])
+            os.remove(f)
 
 
 def test_gen_html_content():
@@ -51,8 +50,7 @@ def test_gen_html_content():
 
     if test_title == rendered_title:
         for f in rendered_filenames:
-            split_f = f.split('/files/')
-            os.rename(f, split_f[0] + '/files/tmp/' + split_f[1])
+            os.remove(f)
 
 
 # @TODO test file open / writing
