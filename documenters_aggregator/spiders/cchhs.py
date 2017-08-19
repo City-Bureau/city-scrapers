@@ -26,7 +26,6 @@ class CchhsSpider(scrapy.Spider):
         for item in response.xpath("//a[@class='h2 accordion-toggle collapsed']"):
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item)
@@ -41,27 +40,16 @@ class CchhsSpider(scrapy.Spider):
                     'start_time': self._parse_start(subitem),
                     'location': self._parse_location(subitem)
                 }
-                new_item['status'] = self._parse_status(subitem, new_item['start_time'])
                 new_item.update(data)
+                new_item['status'] = self._parse_status(subitem, new_item['start_time'])
+                new_item['id'] = self._parse_id(new_item['name'], new_item['start_time'])
                 yield new_item
 
-        yield self._parse_next(response)  # not sure why this doesn't work
-
-    def _parse_next(self, response):
+    def _parse_id(self, name, start_time):
         """
-        Get previous year
+        Make id from name and start_time
         """
-        previous_year = response.xpath("//select[@id='meetingYear']/option[@selected='selected']/following-sibling::option/text()").extract_first()
-        if previous_year is not None:
-            return scrapy.Request(response.url + '?meetingSearch=meetingSearch&meetingYear=' + previous_year, callback=self.parse)
-        else:
-            return None
-
-    def _parse_id(self, item):
-        """
-        Not implemented
-        """
-        return None
+        return ''.join('{0}{1}'.format(name, start_time).split())
 
     def _parse_classification(self, item):
         """
