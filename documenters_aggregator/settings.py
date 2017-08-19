@@ -67,7 +67,7 @@ ITEM_PIPELINES = {
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-   'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
+    'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
 }
 
 # Enable or disable extensions

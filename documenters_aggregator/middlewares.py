@@ -48,8 +48,7 @@ class DocumentersAggregatorRobotsTxtMiddleware(object):
         return d
 
     def process_request_2(self, rp, request, spider):
-        if rp is not None and not rp.can_fetch(
-                 to_native_str(self._useragent), request.url):
+        if rp is not None and not rp.can_fetch(to_native_str(self._useragent), request.url):
             logger.debug("Forbidden by robots.txt: %(request)s",
                          {'request': request}, extra={'spider': spider})
             if not self.crawler.settings.get('DOCUMENTERS_AGGREGATOR_ROBOTSTXT_LOGONLY'):
@@ -77,6 +76,7 @@ class DocumentersAggregatorRobotsTxtMiddleware(object):
 
         if isinstance(self._parsers[netloc], Deferred):
             d = Deferred()
+
             def cb(result):
                 d.callback(result)
                 return result
@@ -98,7 +98,7 @@ class DocumentersAggregatorRobotsTxtMiddleware(object):
         body = ''
         if hasattr(response, 'text'):
             body = response.text
-        else: # last effort try
+        else:  # last effort try
             try:
                 body = response.body.decode('utf-8')
             except UnicodeDecodeError:
