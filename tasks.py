@@ -52,15 +52,9 @@ def runtests(ctx):
     """
     Runs pytest, pyflakes, and pep8.
     """
-<<<<<<< windows-runtests
     run('pytest', pty=pty_available)
     run('pyflakes .', pty=pty_available)
     run('pep8 --ignore E265,E266,E501 .', pty=pty_available)
-=======
-    run('pytest -s', pty=True)
-    run('pyflakes .', pty=True)
-    run('pep8 --ignore E265,E266,E501 .', pty=True)
->>>>>>> master
 
 
 def _make_classname(name):
