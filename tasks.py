@@ -38,15 +38,23 @@ def genspider(ctx, name, domain, start_urls=None):
         for f in html_filenames:
             print('Created {0}'.format(f))
 
+# pty is not available on Windows
+try:
+    import pty
+    assert pty  # prevent pyflakes warning about unused import
+    pty_available = True
+except ImportError:
+    pty_available = False
+
 
 @task
 def runtests(ctx):
     """
     Runs pytest, pyflakes, and pep8.
     """
-    run('pytest -s', pty=True)
-    run('pyflakes .', pty=True)
-    run('pep8 --ignore E265,E266,E501 .', pty=True)
+    run('pytest', pty=pty_available)
+    run('pyflakes .', pty=pty_available)
+    run('pep8 --ignore E265,E266,E501 .', pty=pty_available)
 
 
 def _make_classname(name):
