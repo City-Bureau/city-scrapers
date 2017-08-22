@@ -36,6 +36,7 @@ COOKIES_ENABLED = False
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'documenters_aggregator.pipelines.DocumentersAggregatorLoggingPipeline': 300,
+    'documenters_aggregator.pipelines.DocumentersAggregatorAirtablePipeline': 300,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -69,6 +70,8 @@ ITEM_PIPELINES = {
 DOWNLOADER_MIDDLEWARES = {
     'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
 }
+
+FOO = 'BAR'
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
