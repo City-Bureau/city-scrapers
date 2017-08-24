@@ -3,8 +3,9 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy#, requests, json
-
+import scrapy
+import json
+import pytz
 from datetime import datetime
 
 # LOOKUP_URL = "https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/"
@@ -21,7 +22,9 @@ class CapsSpider(scrapy.Spider):
     name = 'caps'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
     start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
-
+    headers = {
+    'User-Agent': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
+    }
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
@@ -30,19 +33,35 @@ class CapsSpider(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
+        response = json.loads(response.body_as_unicode())
+
+        for item in response:
+            print(item)
+
+        for item in response:
             yield {
+                # '_type': 'event',
+                # 'id': self._parse_id(calendarId),
+                # 'name': self._parse_name(title),
+                # 'description': self._parse_description(eventDetails),
+                # 'classification': 'CAPS community event',
+                # 'start_time': self._parse_start(start),
+                # 'end_time': self._parse_end(end),
+                # 'all_day': 'false',
+                # 'status': 'confirmed',
+                # 'location': self._parse_location(location),
+                # 'url': self._parse_url(eventUrl),
                 '_type': 'event',
-                'id': self._parse_id(calendarId),
-                'name': self._parse_name(title),
-                'description': self._parse_description(eventDetails),
+                'id': self._parse_id(item),
+                'name': self._parse_name(item),
+                'description': self._parse_description(item),
                 'classification': 'CAPS community event',
-                'start_time': self._parse_start(start),
-                'end_time': self._parse_end(end),
-                'all_day': 'false',
+                'start_time': self._parse_start(item),
+                'end_time': self._parse_end(item),
+                'all_day': False,
                 'status': 'confirmed',
-                'location': self._parse_location(location),
-                'url': self._parse_url(eventUrl),
+                'location': self._parse_location(item),
+                'url': self._parse_url(item),
             }
 
         # self._parse_next(response) yields more responses to parse if necessary.
@@ -61,7 +80,7 @@ class CapsSpider(scrapy.Spider):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        return item['calendarId']
 
     def _parse_classification(self, item):
         """
@@ -89,7 +108,7 @@ class CapsSpider(scrapy.Spider):
         """
         return {
             'url': None,
-            'name': None,
+            'name': item['location'],
             'coordinates': {
               'latitude': None,
               'longitude': None,
@@ -106,22 +125,32 @@ class CapsSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        return None
+        return item['title']
 
     def _parse_description(self, item):
         """
         Parse or generate event name.
         """
-        return None
+        return item['eventDetails']
+
+    def _format_time(self, time):
+        tz = pytz.timezone('America/Chicago') # 2016-01-05T14:00:00
+        return tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        return None
+        return self._format_time(item['start'])
 
     def _parse_end(self, item):
         """
         Parse end date and time.
         """
-        return None
+        try:
+            return self._format_time(item['end'])
+        except TypeError:
+            return None
+
+    def _parse_url(self,item):
+        return item['eventUrl']
