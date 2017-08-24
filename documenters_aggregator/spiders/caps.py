@@ -8,16 +8,6 @@ import json
 import pytz
 from datetime import datetime
 
-# LOOKUP_URL = "https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/"
-#
-# headers = {
-# 'User-Agent': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
-# }
-#
-# r = requests.get(LOOKUP_URL, headers=headers)
-# response = r.json()
-
-
 class CapsSpider(scrapy.Spider):
     name = 'caps'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
@@ -33,6 +23,7 @@ class CapsSpider(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+
         response = json.loads(response.body_as_unicode())
 
         for item in response:
@@ -40,17 +31,6 @@ class CapsSpider(scrapy.Spider):
 
         for item in response:
             yield {
-                # '_type': 'event',
-                # 'id': self._parse_id(calendarId),
-                # 'name': self._parse_name(title),
-                # 'description': self._parse_description(eventDetails),
-                # 'classification': 'CAPS community event',
-                # 'start_time': self._parse_start(start),
-                # 'end_time': self._parse_end(end),
-                # 'all_day': 'false',
-                # 'status': 'confirmed',
-                # 'location': self._parse_location(location),
-                # 'url': self._parse_url(eventUrl),
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
