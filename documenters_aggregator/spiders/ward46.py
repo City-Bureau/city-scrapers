@@ -7,6 +7,7 @@ import scrapy
 from datetime import datetime
 import pytz
 
+
 class Ward46Spider(scrapy.Spider):
     name = 'ward46'
     allowed_domains = ['www.james46.org']
@@ -95,13 +96,17 @@ class Ward46Spider(scrapy.Spider):
             },
         }
 
-    def _parse_all_day(self, flag):
+    def _parse_all_day(self, item):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        if flag:
+        start_time = item.css('.tribe-event-date-start::text').extract_first()
+
+        try:
+            datetime.strptime(start_time, "%B %d")
             return True
-        return False
+        except ValueError as v:
+            return False
 
     def _parse_name(self, item):
         """
@@ -121,24 +126,32 @@ class Ward46Spider(scrapy.Spider):
         """
         Parse start date and time.
         """
+
         tz = pytz.timezone('America/Chicago')
         start_time = item.css('.tribe-event-date-start::text').extract_first()
 
         try:
             start_time = datetime.strptime(start_time, "%B %d @ %I:%M %p").replace(year=datetime.today().year)
             start_time = tz.localize(start_time, is_dst=None)
+
         except ValueError as e:
-            print('Likely an all day event. Going to try that formatting next.')
+            print('Turns out there is a weird format they use with a comma and such')
             try:
-                start_time = tz.localize(datetime.strptime(start_time, "%B %d")
-                                         .replace(year=datetime.today().year), is_dst=None)
-                self._parse_all_day(True)
-                return start_time
-            except ValueError as v:
-                print(v)
+                start_time = datetime.strptime(start_time, "%B %d, %Y @ %I:%M %p")
+                start_time = tz.localize(start_time, is_dst=None)
+
+            except ValueError:
+                print('Likely an all day event. Going to try that formatting next.')
+
+                try:
+                    start_time = tz.localize(datetime.strptime(start_time, "%B %d")
+                                             .replace(year=datetime.today().year), is_dst=None)
+                    return start_time
+                except ValueError as v:
+                    print(v)
+                    return None
 
         return start_time
-
 
     def _parse_end(self, item):
         """
