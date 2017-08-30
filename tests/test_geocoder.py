@@ -9,6 +9,7 @@ from documenters_aggregator.pipelines.geocoder import GeocoderPipeline
 
 def test_geocoding():
     item = test_item()
+    item['location']['coordinates'] = None
 
     with requests.Session() as session:
         recorder = betamax.Betamax(session)
@@ -17,5 +18,5 @@ def test_geocoding():
         geocoder = GeocoderPipeline(session)
         geocoder.process_item(item, None)
 
-    expected = {'latitude': '41.883868', 'longitude': '-87.631936'}
+    expected = {'latitude': '41.8838677', 'longitude': '-87.6319365'}
     assert item['location']['coordinates'] == expected

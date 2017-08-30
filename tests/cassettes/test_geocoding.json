@@ -1,4 +1,79 @@
 {
-  "http_interactions": [],
+  "http_interactions": [
+    {
+      "recorded_at": "2017-08-30T00:53:17",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": [
+            "*/*"
+          ],
+          "Accept-Encoding": [
+            "gzip, deflate"
+          ],
+          "Connection": [
+            "keep-alive"
+          ],
+          "User-Agent": [
+            "python-requests/2.18.2"
+          ]
+        },
+        "method": "GET",
+        "uri": "https://maps.googleapis.com/maps/api/geocode/json?address=Room+201A%2C+City+Hall%2C+Chicago%2C+IL&language=&components=&bounds=&region="
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAC/62W32+bMBDH3/NXWDyTCgi/sret3bRsWdM1yzR1qiwHLmDN2Mg4qaoq//tskm0E0pJt4QXBfc/+3Pnu4GmAELIkVGumKgu9Qt/NC3097e/GTNJUKyqciKIUHPihsqPfezHBM8xJAUZsuZ5r2R1NlQup+kTqsYTdjtpBSQDtsS6WIC10fyDe2n+FdK33ztGUzAljgK4k3UA/4nXDoYdVirWC/2S8zGlCMoGmQpT9cD3qJhwHmuVLIXMhUstGVikYVdqbnQf4ZNYeTCY0ElWPZ0UU4ge6FGtulu3FfFHcRCVpQTnVBUqUriRMJBDMYAMMe+eknzBGuaBVP/pk+s/E7jmJF5wqSNFcEQUnYC/mPdiJOQ151pIIndDx+tGekzXpSlEpwvSsTLu9/+fpvrGItRKyIErnCO8n7a9hiJrTxkb7lrHRZIpqFBst5q+bPFYGogCTHL3CYdB1KykqeNdUW4kyBt+9iONRHEZRN0rGMyMZxtFFOHLHo9Af766XMv97W2ySVAd2O5u9+zK7aeXR2lB4KHW6j/NxM6yBVMfN7QgCzw3D2PHGbtCJoxOKE8RR4I4jJ/bjtnh7pCb0WM8f4EQSL3DjqF78BJKRFwd+je2POyTPlVIT0SoZSQDTdD9iJx+GXwNn8+bb7MrPboeLT3fq7u368/uDNmyU7+GJJHrw4lyXX/uodPBkyWiVF/pnoG2sRzbOxAYkN3YsViuatD+tuk9obcP6BtKks9Edg0aUu1bRX36i1rvOmH20BtvBTzm0vly7CAAA",
+          "encoding": "UTF-8"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": [
+            "*"
+          ],
+          "Alt-Svc": [
+            "quic=\":443\"; ma=2592000; v=\"39,38,37,35\""
+          ],
+          "Cache-Control": [
+            "public, max-age=86400"
+          ],
+          "Content-Encoding": [
+            "gzip"
+          ],
+          "Content-Length": [
+            "594"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Wed, 30 Aug 2017 00:53:17 GMT"
+          ],
+          "Expires": [
+            "Thu, 31 Aug 2017 00:53:17 GMT"
+          ],
+          "Server": [
+            "mafe"
+          ],
+          "Vary": [
+            "Accept-Language"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-XSS-Protection": [
+            "1; mode=block"
+          ]
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://maps.googleapis.com/maps/api/geocode/json?address=Room+201A%2C+City+Hall%2C+Chicago%2C+IL&language=&components=&bounds=&region="
+      }
+    }
+  ],
   "recorded_with": "betamax/0.8.0"
 }

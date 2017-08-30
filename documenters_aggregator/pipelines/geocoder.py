@@ -14,11 +14,11 @@ class GeocoderPipeline(object):
         coordinates.
         """
         if item['location']['coordinates'] is None:
-            item['location']['coordinates'] = self._geocode_address(item.location.name)
+            item['location']['coordinates'] = self._geocode_address(item['location']['name'])
             return item
 
     def _geocode_address(self, address):
-        g = geocoder.google(address)
+        g = geocoder.google(address, session=self.session)
         coords = g.latlng
-        return {'latitude': coords[0],
-                'longitude': coords[1]}
+        return {'latitude': str(coords[0]),
+                'longitude': str(coords[1])}
