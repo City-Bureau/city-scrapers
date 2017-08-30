@@ -32,6 +32,7 @@ def read_test_file_content(file_name):
 
     return open(file_path, 'r').read()
 
+
 def test_item():
     return {
         '_type': 'event',
@@ -45,18 +46,18 @@ def test_item():
         'status': 'tentative',
 
         'location': {
-          'url': '',
-          'name': 'Room 201A, City Hall, Chicago, IL',
-          'coordinates': {
-            'latitude': '41.883868',
-            'longitude': '-87.631936'
-          }
+            'url': '',
+            'name': 'Room 201A, City Hall, Chicago, IL',
+            'coordinates': {
+                'latitude': '41.883868',
+                'longitude': '-87.631936'
+            }
         },
 
         'sources': [
-          {
-            'url': '',
-            'note': ''
-          }
+            {
+                'url': '',
+                'note': ''
+            }
         ]
     }
