@@ -5,6 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
 
+import re
 from datetime import datetime, timedelta
 from pytz import timezone
 
@@ -30,26 +31,38 @@ class IlrbSpider(scrapy.Spider):
 
         # There's not a lot of structure on this page, so this selector is pretty fragile
         for item in response.css('.soi-article-content .row-fluid .span12>p:nth-child(odd)'):
-            if self._is_no_meeting(item):
+            """
+            Some monthly meetings are skipped. Instead of providing a date,
+            there's text that says 'No /name/ meeting in month'.
+            If the date/time info can't be parsed, assume that it is a `no meeting`
+            notice.
+            """
+            start_datetime = self._parse_start(item)
+            if start_datetime is None:
                 continue
+            name = self._parse_name(item)
             yield {
                 '_type': 'event',
-                'id': self._parse_id(item),
-                'name': self._parse_name(item),
+                'id': self._generate_id(self._format_date(start_datetime), name),
+                'name': name,
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
+                'start_time': self._format_date(start_datetime),
+                'end_time': self._calc_end(start_datetime, hours=1),
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
             }
 
-    def _parse_id(self, item):
+    def _generate_id(self, start_time, name):
         """
-        @TODO No id provided. Should we create one?
+        We use the start time to generate an ID since there is no publically
+        exposed meeting ID.
         """
-        return None
+
+        date = start_time.split('T')[0]
+        dashified = re.sub(r'[^a-z]+', '-', name.lower())
+        return '{0}-{1}'.format(date, dashified)
 
     def _parse_classification(self, item):
         """
@@ -112,31 +125,18 @@ class IlrbSpider(scrapy.Spider):
         Parse start date and time from the second `<strong>`
         """
         time_string = item.css('strong:nth-of-type(2)::text').extract_first()
-        naive = datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
-        return self._format_date(naive)
+        try:
+            naive = datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
+        except ValueError:
+            return None
 
-    def _parse_end(self, item):
+        return naive
+
+    def _calc_end(self, start, hours):
         """
         No end time specified, so hard code an hour duration.
         """
-        time_string = item.css('strong:nth-of-type(2)::text').extract_first()
-        naive = datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
-        return self._format_date(naive + timedelta(hours=1))
-
-    def _is_no_meeting(self, item):
-        """
-        Some monthly meetings are skipped. Instead of providing a date,
-        there's text that says 'No /name/ meeting in month'.
-        If the date/time info can't be parsed, assume that it is a `no meeting`
-        notice.
-        """
-        time_string = item.css('strong:nth-of-type(2)::text').extract_first()
-        try:
-            datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
-        except ValueError:
-            return True
-
-        return False
+        return self._format_date(start + timedelta(hours=hours))
 
     def _format_date(self, time):
         """

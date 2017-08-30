@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pytest
 
 from tests.utils import file_response
@@ -27,9 +28,8 @@ def test_end_time():
     assert parsed_items[0]['end_time'] == '2017-09-07T11:00:00-05:00'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_id(item):
-    assert item['id'] is None
+def test_id():
+    assert parsed_items[1]['id'] == '2017-09-12-state-panel-meeting'
 
 
 @pytest.mark.parametrize('item', parsed_items)
