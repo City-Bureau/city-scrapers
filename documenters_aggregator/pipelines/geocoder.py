@@ -1,6 +1,12 @@
 import geocoder
+import requests
 
 class GeocoderPipeline(object):
+    def __init__(self, session=None):
+        if session is None:
+            session = requests.Session()
+        self.session = session
+
     """
     Performs geocoding of an event if it doesn't already have
     coordinates.
