@@ -11,8 +11,8 @@ def test_geocoding():
     item = test_item()
     item['location']['coordinates'] = None
 
-    with requests.Session() as session:
-        recorder = betamax.Betamax(session)
+    session = requests.Session()
+    recorder = betamax.Betamax(session)
 
     with recorder.use_cassette('test_geocoding'):
         geocoder = GeocoderPipeline(session)
