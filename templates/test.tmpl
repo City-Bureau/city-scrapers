@@ -37,20 +37,23 @@ Uncomment below
     # assert parsed_items[0]['id'] == 'EXPECTED ID'
 
 
+@pytest.mark.parametrize('item', parsed_items)
 # def test_all_day(item):
-    # assert parsed_items[0]['all_day'] is False
+    # assert item['all_day'] is False
 
 
+@pytest.mark.parametrize('item', parsed_items)
 # def test_classification(item):
-    # assert parsed_items[0]['classification'] == None
+    # assert item['classification'] == None
 
 
+@pytest.mark.parametrize('item', parsed_items)
 # def test_status(item):
-    # assert parsed_items[0]['status'] == 'tentative'
+    # assert item['status'] == 'tentative'
 
 
-# def test_location(item):
-    # assert item['location'] == {
+# def test_location():
+    # assert parsed_items[0]['location'] == {
         # 'url': 'EXPECTED URL',
         # 'name': 'EXPECTED NAME',
         # 'coordinates': {
@@ -59,7 +62,7 @@ Uncomment below
         # },
     # }
 
-
+@pytest.mark.parametrize('item', parsed_items)
 # def test__type(item):
     # assert parsed_items[0]['_type'] == 'event'
 
