@@ -33,6 +33,15 @@ Created /Users/eads/projects/documenters-aggregator/documenters_aggregator/spide
 Created /Users/eads/projects/documenters-aggregator/tests/test_cha.py
 ```
 
+If you would also like to download some pages for local testing, run:
+
+```
+invoke genspider cha www.thecha.org -s=http://www.thecha.org/events/property_damage_prevention_and_clean-u-9-6-2017,http://www.thecha.org/events/property_management_business_basic-9-13-2017
+```
+
+This will download the two sites passed to the `-s` parameter and save them as html files in `tests/files`.
+
+
 ## Test crawling
 
 You now have a spider named `cha`. To run it (admittedly, not much will happen until you start editing the scraper), run:
