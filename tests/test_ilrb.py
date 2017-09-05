@@ -26,7 +26,7 @@ def test_start_time():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end_time(item):
-    assert item['end_time'] == None
+    assert item['end_time'] is None
 
 
 def test_id():
