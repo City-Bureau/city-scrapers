@@ -5,14 +5,14 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
 
-import re
 from datetime import datetime, timedelta
 from pytz import timezone
+from slugify import slugify
 
 
 class IlrbSpider(scrapy.Spider):
     name = 'ilrb'
-    allowed_domains = ['https://www.illinois.gov']
+    allowed_domains = ['www.illinois.gov']
     start_urls = ['https://www.illinois.gov/ilrb/meetings/Pages/default.aspx']
 
     """
@@ -43,12 +43,12 @@ class IlrbSpider(scrapy.Spider):
             name = self._parse_name(item)
             yield {
                 '_type': 'event',
-                'id': self._generate_id(self._format_date(start_datetime), name),
+                'id': self._generate_id(start_datetime, name),
                 'name': name,
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
                 'start_time': self._format_date(start_datetime),
-                'end_time': self._calc_end(start_datetime, hours=1),
+                'end_time': None,
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
@@ -59,16 +59,14 @@ class IlrbSpider(scrapy.Spider):
         We use the start time to generate an ID since there is no publically
         exposed meeting ID.
         """
-
-        date = start_time.split('T')[0]
-        dashified = re.sub(r'[^a-z]+', '-', name.lower())
-        return '{0}-{1}'.format(date, dashified)
+        return slugify(start_time.strftime('%Y-%m-%d-') + name)
 
     def _parse_classification(self, item):
         """
-        @TODO determine allowed classifications
+        These are `board meetings`, but set to `committee meeting` as specified
+        in event schema
         """
-        return 'board meeting'
+        return 'committee-meeting'
 
     def _parse_status(self, item):
         """
@@ -79,9 +77,10 @@ class IlrbSpider(scrapy.Spider):
         * confirmed
         * passed
 
-        @TODO: All meetings with dates are seemingly confirmed. OK?
+        These meetings seem confirmed, but to follow default of other scrapers,
+        set to `tentative`
         """
-        return 'confirmed'
+        return 'tentative'
 
     def _parse_location(self, item):
         """
@@ -131,12 +130,6 @@ class IlrbSpider(scrapy.Spider):
             return None
 
         return naive
-
-    def _calc_end(self, start, hours):
-        """
-        No end time specified, so hard code an hour duration.
-        """
-        return self._format_date(start + timedelta(hours=hours))
 
     def _format_date(self, time):
         """
