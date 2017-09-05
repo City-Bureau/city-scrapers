@@ -24,8 +24,9 @@ def test_start_time():
     assert parsed_items[1]['start_time'] == '2017-09-12T13:00:00-05:00'
 
 
-def test_end_time():
-    assert parsed_items[0]['end_time'] == '2017-09-07T11:00:00-05:00'
+@pytest.mark.parametrize('item', parsed_items)
+def test_end_time(item):
+    assert item['end_time'] == None
 
 
 def test_id():
@@ -39,12 +40,12 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'board meeting'
+    assert item['classification'] == 'committee-meeting'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):
-    assert item['status'] == 'confirmed'
+    assert item['status'] == 'tentative'
 
 
 def test_location():
