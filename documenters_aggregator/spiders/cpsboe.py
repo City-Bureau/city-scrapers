@@ -28,16 +28,24 @@ class CpsboeSpider(scrapy.Spider):
 
     def _parse_id(self, item):
         """
-        Generate an ID by converting the date to an integer.
-        i.e. 'July 27, 2016' becomes '20170726'
+        Generate an ID by converting the date and time to an integer.
+        i.e. 'July 27, 2016 at 10:30am' becomes '201707261030'
         """
         text_list = self._remove_line_breaks(item.css('::text').extract())
-        split_date_string = text_list[0].split()[:3]
+        split_date_string = text_list[0].split()
         split_date_string[0] = split_date_string[0][:3]
         split_date_string[1] = split_date_string[1][:-1]
+        split_date_string[3] = ''
         date_string = " ".join(split_date_string)
-        date = datetime.strptime(date_string, '%b %d %Y')
-        return str(10000*date.year + 100*date.month + date.day)
+        date_string = date_string.replace(':', ' ')
+        date = datetime.strptime(date_string, '%b %d %Y %I %M %p')
+        return str(
+            100000000*date.year +
+            1000000*date.month +
+            10000*date.day +
+            100*date.hour +
+            date.minute
+            )
 
     def _remove_line_breaks(self, collection):
         while '\n' in collection:

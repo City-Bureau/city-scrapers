@@ -17,7 +17,7 @@ def test_type(item):
     assert item['_type'] == 'event'
 
 def test_id():
-    assert parsed_items[0]['id'] == '20170726'
+    assert parsed_items[0]['id'] == '201707261030'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
