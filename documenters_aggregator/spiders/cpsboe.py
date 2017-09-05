@@ -4,6 +4,7 @@ import scrapy
 from datetime import datetime
 from pytz import timezone
 
+
 class CpsboeSpider(scrapy.Spider):
     name = 'cpsboe'
     allowed_domains = ['www.cpsboe.org']
@@ -39,16 +40,18 @@ class CpsboeSpider(scrapy.Spider):
         return str(10000*date.year + 100*date.month + date.day)
 
     def _remove_line_breaks(self, collection):
-        while '\n' in collection: collection.remove("\n")
+        while '\n' in collection:
+            collection.remove("\n")
         return collection
 
     def _parse_description(self, item):
-        """ 
+        """
         Currently every description is the same, but it's
         unsafe to assume that will always be the case so let's
         grab it programmatically anyways.
         """
-        text_list = self._remove_line_breaks(item.css('td')[1].css('::text').extract())
+        raw_text_list = item.css('td')[1].css('::text').extract()
+        text_list = self._remove_line_breaks(raw_text_list)
         description = "\n".join(text_list)
         return description
 
@@ -59,8 +62,10 @@ class CpsboeSpider(scrapy.Spider):
         return 'Not classified'
 
     def _parse_start_time(self, item):
-        date_string = self._remove_line_breaks(item.css('td')[0].css('::text').extract())[0]
-        date_string = date_string.replace(' at', '').replace(',', "").replace(':', " ")
+        raw_strings = item.css('td')[0].css('::text').extract()
+        date_string = self._remove_line_breaks(raw_strings)[0]
+        date_string = date_string.replace(' at', '')
+        date_string = date_string.replace(',', "").replace(':', " ")
         date = datetime.strptime(date_string, '%B %d %Y %I %M %p')
         tz = timezone('America/Chicago')
         return tz.localize(date).isoformat()
@@ -78,7 +83,6 @@ class CpsboeSpider(scrapy.Spider):
         """
         return 'tentative'
 
-
     def _parse_location(self, item):
         """
         @TODO better location
@@ -88,6 +92,3 @@ class CpsboeSpider(scrapy.Spider):
             'name': 'See description',
             'coordinates': None,
         }
-
-
-
