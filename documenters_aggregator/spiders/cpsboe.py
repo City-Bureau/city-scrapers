@@ -40,10 +40,10 @@ class CpsboeSpider(scrapy.Spider):
         date_string = date_string.replace(':', ' ')
         date = datetime.strptime(date_string, '%b %d %Y %I %M %p')
         return str(
-            100000000*date.year +
-            1000000*date.month +
-            10000*date.day +
-            100*date.hour +
+            100000000 * date.year +
+            1000000 * date.month +
+            10000 * date.day +
+            100 * date.hour +
             date.minute
             )
 
