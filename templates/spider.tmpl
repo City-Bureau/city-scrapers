@@ -10,8 +10,14 @@ from datetime import datetime
 
 class {{ classname }}(scrapy.Spider):
     name = '{{ name }}'
-    allowed_domains = ['{{ domain }}']
-    start_urls = ['http://{{ domain }}']
+    allowed_domains = ['{{ domain.split('://')[-1] }}']
+    start_urls = [
+    {%- if start_urls %}
+        '{{ start_urls.split(',')|join("',\n        '") }}'
+    {%- else %}
+        '{{ domain }}'
+    {%- endif %}
+    ]
 
     def parse(self, response):
         """
