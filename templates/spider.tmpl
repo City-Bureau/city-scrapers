@@ -13,9 +13,11 @@ class {{ classname }}(scrapy.Spider):
     allowed_domains = ['{{ domain.split('://')[-1] }}']
     start_urls = [
     {%- if start_urls %}
-        '{{ start_urls.split(',')|join("',\n        '") }}'
+        {%- for url in start_urls.split(',') %}
+        '{{ url.split('://')[-1] }}'{{ ',' if not loop.last }}
+        {%- endfor %}
     {%- else %}
-        '{{ domain }}'
+        '{{ domain.split('://')[-1] }}'
     {%- endif %}
     ]
 

@@ -12,9 +12,9 @@ class TestspiderSpider(scrapy.Spider):
     name = 'testspider'
     allowed_domains = ['citybureau.org']
     start_urls = [
-        'http://www.citybureau.org/articles',
-        'http://www.citybureau.org/staff',
-        'http://www.citybureau.org/is-chicago-any-less-segregated'
+        'www.citybureau.org/articles',
+        'www.citybureau.org/staff',
+        'www.citybureau.org/is-chicago-any-less-segregated'
     ]
 
     def parse(self, response):
