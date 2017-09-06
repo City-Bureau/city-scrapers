@@ -1,3 +1,8 @@
+"""
+To use this pipeline, you must `export MAPQUEST_API_KEY=<SECRET KEY>`;
+see http://geocoder.readthedocs.io/providers/MapQuest.html for more
+information.
+"""
 import geocoder
 import requests
 
@@ -18,7 +23,7 @@ class GeocoderPipeline(object):
             return item
 
     def _geocode_address(self, address):
-        g = geocoder.google(address, session=self.session)
+        g = geocoder.mapquest(address, session=self.session)
         coords = g.latlng
         return {'latitude': str(coords[0]),
                 'longitude': str(coords[1])}

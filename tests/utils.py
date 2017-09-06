@@ -47,7 +47,7 @@ def test_item():
 
         'location': {
             'url': '',
-            'name': 'Room 201A, City Hall, Chicago, IL',
+            'name': '121 N. Lasalle, Chicago, IL',
             'coordinates': {
                 'latitude': '41.883868',
                 'longitude': '-87.631936'
