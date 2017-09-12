@@ -21,7 +21,7 @@ env.filters["quote_list"] = quote_list
 
 
 @task()
-def genspider(ctx, name, domain, start_urls=None):
+def genspider(ctx, name, start_urls=None):
     """
     Make a new HTML scraping spider
     To download HTML files, use the -s flag
@@ -31,19 +31,19 @@ def genspider(ctx, name, domain, start_urls=None):
     Example:
     invoke genspider testspider http://www.citybureau.org -s=http://citybureau.org/articles,http://citybureau.org/staff
     """
-    spider_filename = _gen_spider(name, domain, start_urls)
-    print('Created {0}'.format(spider_filename))
+    start_urls = start_urls.split(',')
+    domains = []
+    for url in start_urls:
+        parsed = urlparse(url)
+        if parsed.netloc not in domains:
+            domains.append(parsed.netloc)
 
-    test_filename = _gen_tests(name, domain)
-    print('Created {0}'.format(test_filename))
+    _gen_spider(name, domains, start_urls)
+    _gen_tests(name)
 
     if start_urls:
-        start_urls = start_urls.split(',http')
-        if len(start_urls) > 1:
-            start_urls = [start_urls[0]] + ['http{0}'.format(x) for x in start_urls[1:]]
         html_filenames = _gen_html(name, start_urls)
-        for f in html_filenames:
-            print('Created {0}'.format(f))
+
 
 # pty is not available on Windows
 try:
@@ -68,19 +68,23 @@ def _make_classname(name):
     return '{0}Spider'.format(name.capitalize())
 
 
-def _gen_spider(name, domain, start_urls):
+def _gen_spider(name, domains, start_urls):
     filename = '{0}/{1}.py'.format(SPIDERS_DIR, name)
+
     with open(filename, 'w') as f:
-        content = _render_content(name, domain, 'spider.tmpl', start_urls)
+        content = _render_content('spider.tmpl', name=name, domains=domains, start_urls=start_urls)
         f.write(content)
+
+    print('Created {0}'.format(filename))
     return filename
 
 
-def _gen_tests(name, domain):
+def _gen_tests(name):
     filename = '{0}/test_{1}.py'.format(TESTS_DIR, name)
     with open(filename, 'w') as f:
-        content = _render_content(name, domain, 'test.tmpl')
+        content = _render_content('test.tmpl', name=name)
         f.write(content)
+    print('Created {0}'.format(filename))
     return filename
 
 
@@ -122,12 +126,14 @@ def _gen_html(name, start_urls):
         with open(filename, 'w') as f:
             f.write(content)
 
+        print('Created {0}'.format(filename))
         files.append(filename)
+
     return files
 
 
-def _render_content(name, domain, template, start_urls=None):
+def _render_content(template, name, domains=None, start_urls=None):
     jinja_template = env.get_template(template)
     classname = _make_classname(name)
     return jinja_template.render(
-        name=name, domain=domain, classname=classname, start_urls=start_urls)
+        name=name, domains=domains, classname=classname, start_urls=start_urls)
