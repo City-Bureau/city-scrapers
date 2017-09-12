@@ -21,32 +21,23 @@ env.filters["quote_list"] = quote_list
 
 
 @task()
-def genspider(ctx, name, start_urls=None):
+def genspider(ctx, name, start_urls):
     """
-    Make a new HTML scraping spider
-    To download HTML files, use the -s flag
-    and separate urls with ,
-    urls cannot end in /
+    Make a new HTML scraping spider. Specify urls separated by commas.
 
     Example:
-    invoke genspider testspider http://www.citybureau.org -s=http://citybureau.org/articles,http://citybureau.org/staff
+    ```
+    invoke genspider testspider http://citybureau.org/articles,http://citybureau.org/staff
+    ```
+
+    URLs cannot end in `/`.
+
     """
     start_urls = start_urls.split(',')
     domains = _get_domains(start_urls)
     _gen_spider(name, domains, start_urls)
     _gen_tests(name)
-
-    if start_urls:
-        html_filenames = _gen_html(name, start_urls)
-
-
-# pty is not available on Windows
-try:
-    import pty
-    assert pty  # prevent pyflakes warning about unused import
-    pty_available = True
-except ImportError:
-    pty_available = False
+    _gen_html(name, start_urls)
 
 
 @task
