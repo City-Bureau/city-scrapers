@@ -11,7 +11,13 @@ SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'document
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/files')
 
+
+def quote_list(the_list):
+    return ['"%s"' % element for element in the_list]
+
+
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+env.filters["quote_list"] = quote_list
 
 
 @task()
