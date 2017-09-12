@@ -24,7 +24,7 @@ def genspider(ctx, name, domain, start_urls=None):
     Example:
     invoke genspider testspider http://www.citybureau.org -s=http://citybureau.org/articles,http://citybureau.org/staff
     """
-    spider_filename = _gen_spider(name, domain)
+    spider_filename = _gen_spider(name, domain, start_urls)
     print('Created {0}'.format(spider_filename))
 
     test_filename = _gen_tests(name, domain)
@@ -61,10 +61,10 @@ def _make_classname(name):
     return '{0}Spider'.format(name.capitalize())
 
 
-def _gen_spider(name, domain):
+def _gen_spider(name, domain, start_urls):
     filename = '{0}/{1}.py'.format(SPIDERS_DIR, name)
     with open(filename, 'w') as f:
-        content = _render_content(name, domain, 'spider.tmpl')
+        content = _render_content(name, domain, 'spider.tmpl', start_urls)
         f.write(content)
     return filename
 
@@ -119,7 +119,8 @@ def _gen_html(name, start_urls):
     return files
 
 
-def _render_content(name, domain, template):
+def _render_content(name, domain, template, start_urls=None):
     jinja_template = env.get_template(template)
     classname = _make_classname(name)
-    return jinja_template.render(name=name, domain=domain, classname=classname)
+    return jinja_template.render(
+        name=name, domain=domain, classname=classname, start_urls=start_urls)
