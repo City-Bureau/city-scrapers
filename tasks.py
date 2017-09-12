@@ -1,9 +1,10 @@
-from invoke import task, run
-from jinja2 import Environment, FileSystemLoader
 import requests
-
 import os
 import time
+
+from invoke import task, run
+from jinja2 import Environment, FileSystemLoader
+from urllib.parse import urlparse
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'documenters_aggregator/spiders')
