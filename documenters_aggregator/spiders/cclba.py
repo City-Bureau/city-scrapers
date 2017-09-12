@@ -17,24 +17,24 @@ import pytz
 class CclbaSpider(scrapy.Spider):
     """
     Rather than scraping a site, I'm making iterated AJAX requests.
-    This means setting up a list of dates to poll for events, setting up a dict of data
-    to request and overriding the default start_requests() to make
-    the request. This should give me all the data I need to scrape, 
-    so there's no callback to parse().
-    Returns dict for dates with events.
+    This means setting up a list of dates to poll for events, 
+    setting up a dict of data to POST and running parse()
+    as a callback on the Response.
+    Yields dict for dates with events.
     """
     name = 'cclba'
     allowed_domains = ['www.cookcountylandbank.org']
     start_urls = ['http://www.cookcountylandbank.org/wp-admin/admin-ajax.php']
 
     """
-    Set 90 day time horizon by default
+    Set 90 day time horizon
     ie, will poll all dates 90 days from today for events.
     """
-    time_horizon = 14
+    time_horizon = 90
 
     """
-    A little concerned about getting banned :( so being very conservative; downloading one at a time
+    A little concerned about getting banned :( so being very conservative; downloading one at a time;
+    One second per request. The rest - I believe - is copied from project settings.
     """
     custom_settings = {
         'DOWNLOAD_DELAY': 1,
@@ -223,6 +223,12 @@ class CclbaSpider(scrapy.Spider):
         # end_date = item.css('[itemprop=\'endDate\']')[0].get('datetime')
 
         return None
+
+    """
+    Was trying to parse the Agenda, but it's pretty irregularly structured.
+    The source_url goes straight to all the info and also includes an embedded
+    PDF that could potentially be scraped. Didn't bother with that here.
+    """
 
     # def _parse_agenda(self, item):
     #     agenda = []
