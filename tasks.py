@@ -13,7 +13,7 @@ FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/file
 
 
 def quote_list(the_list):
-    return ['"%s"' % element for element in the_list]
+    return ["'%s'" % element for element in the_list]
 
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
@@ -32,12 +32,7 @@ def genspider(ctx, name, start_urls=None):
     invoke genspider testspider http://www.citybureau.org -s=http://citybureau.org/articles,http://citybureau.org/staff
     """
     start_urls = start_urls.split(',')
-    domains = []
-    for url in start_urls:
-        parsed = urlparse(url)
-        if parsed.netloc not in domains:
-            domains.append(parsed.netloc)
-
+    domains = _get_domains(start_urls)
     _gen_spider(name, domains, start_urls)
     _gen_tests(name)
 
@@ -109,7 +104,9 @@ def _fetch_url(url, attempt=1):
 
 
 def _gen_html(name, start_urls):
-    '''urls should not end in /'''
+    """
+    urls should not end in /
+    """
     files = []
     for url in start_urls:
         r = _fetch_url(url)
@@ -137,3 +134,12 @@ def _render_content(template, name, domains=None, start_urls=None):
     classname = _make_classname(name)
     return jinja_template.render(
         name=name, domains=domains, classname=classname, start_urls=start_urls)
+
+
+def _get_domains(start_urls):
+    domains = []
+    for url in start_urls:
+        parsed = urlparse(url)
+        if parsed.netloc not in domains:
+            domains.append(parsed.netloc)
+    return domains
