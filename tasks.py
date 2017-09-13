@@ -11,6 +11,14 @@ SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'document
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/files')
 
+# pty is not available on Windows
+try:
+    import pty
+    assert pty  # prevent pyflakes warning about unused import
+    pty_available = True
+except ImportError:
+    pty_available = False
+
 
 def quote_list(the_list):
     return ["'%s'" % element for element in the_list]
