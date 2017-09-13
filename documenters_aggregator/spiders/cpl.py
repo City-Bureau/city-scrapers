@@ -4,10 +4,10 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
-import re
-#import requests #maybe not necessary if i use pandas
-import pandas as pd
 
+import re
+import pandas as pd
+from pytz import timezone
 from datetime import datetime
 
 class CplSpider(scrapy.Spider):
@@ -52,13 +52,13 @@ class CplSpider(scrapy.Spider):
             
             yield {
                 '_type': 'event',
-                'id': self._parse_id(item), #TODO
+                'id': self._generate_id(item), #TODO
                 'name': 'Chicago Public Library Board Meeting',
                 'description': description_str,
                 'classification': 'Board meeting',
                 'start_time': self._parse_start(item), #TODO turn date into correct format
-                'end_time': self._parse_end(item), #no end time listed
-                'all_day': self._parse_all_day(item), #default is false
+                'end_time': None, #no end time listed
+                'all_day': False, #default is false
                 'status': self._parse_status(item), #default is tentative, but there is no status info on site
                 'location': self._parse_location(item),
             }
@@ -75,12 +75,13 @@ class CplSpider(scrapy.Spider):
         next_url = None
         return scrapy.Request(next_url, callback=self.parse)
 
-    def _parse_id(self, item):
+    def _generate_id(self, start_time, name):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
-        #TODO: figure out unique ID-assigning mechanism
+        date = start_time.split('T')[0]
+        dashified = re.sub(r'[^a-z]+', '-', name.lower())
+        return '{0}-{1}'.format(date, dashified)
 
     def _parse_classification(self, item):
         """
@@ -146,23 +147,23 @@ class CplSpider(scrapy.Spider):
         ev_zero.address + ', ' + ev_zero.city + ' ' + ev_zero.state + ' ' + str(ev_zero.zip)
         """
 
-    def _parse_all_day(self, item):
+    #def _parse_all_day(self, item):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        return False
+        #return False
 
-    def _parse_name(self, item):
+    #def _parse_name(self, item):
         """
         Parse or generate event name.
         """
-        return None
+        #return None
 
-    def _parse_description(self, item):
+    #def _parse_description(self, item):
         """
         Parse or generate event name.
         """
-        return None
+        #return None
 
     def _parse_start(self, item):
         """
@@ -172,9 +173,14 @@ class CplSpider(scrapy.Spider):
         #tz = timezone('America/Chicago')
         #TODO: turn every event array's first string into correct date format
 
+        date = item[0]
+        date = date.replace(',', '')
+        date = date.replace('.', '')
+        datetime_object = datetime.strptime(date, '%A %B %d %I %p')
+        return datetime_object.isoformat()
 
-    def _parse_end(self, item):
+    #def _parse_end(self, item):
         """
         Parse end date and time.
         """
-        return None
+        #return None
