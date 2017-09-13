@@ -24,14 +24,14 @@ class CpbSpider(scrapy.Spider):
         needs.
         """
         data = {
-                '_type': 'event',
-                'name': self._parse_name(response), # done
-                'description': self._parse_description(response), # done
-                'classification': self._parse_classification(response), # done
-                'end_time': self._parse_end(response), # done
-                'all_day': self._parse_all_day(response), # done
-                'location': self._parse_location(response) # done
-               }
+            '_type': 'event',
+            'name': self._parse_name(response),
+            'description': self._parse_description(response),
+            'classification': self._parse_classification(response),
+            'end_time': self._parse_end(response),
+            'all_day': self._parse_all_day(response),
+            'location': self._parse_location(response)
+        }
         universal_start_time = self._parse_universal_start(response)
 
         for item in response.xpath('//p[contains(@style,"padding-left")]'):
@@ -84,8 +84,8 @@ class CpbSpider(scrapy.Spider):
             'url': None,
             'name': location_name,
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
         }
 
@@ -117,9 +117,9 @@ class CpbSpider(scrapy.Spider):
         """
         all_content = response.xpath("//h1[@class='page-heading']/following-sibling::*")
         all_text = all_content.xpath("text()").extract()
-        cutoff = [i for i,s in enumerate(all_text) if 'Regular Meetings' in s][0]
+        cutoff = [i for i, s in enumerate(all_text) if 'Regular Meetings' in s][0]
         description = all_text[:cutoff]
-        return ' '.join([x.strip() for x in description])
+        return ''.join([x.strip() for x in description])
 
     def _parse_start(self, item, time):
         """
