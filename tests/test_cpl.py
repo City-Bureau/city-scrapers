@@ -3,42 +3,37 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cpl import CplSpider
 
-def test_tests():
-    print('Please write some tests for this spider or at least disable this one.')
-    assert False
+# def test_tests():
+#     print('Please write some tests for this spider or at least disable this one.')
+#     assert False
+
+test_response = file_response('files/cpl.html')
+spider = CplSpider()
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-"""
-Uncomment below
-"""
-
-# test_response = file_response('files/cpl.html')
-# spider = CplSpider()
-# parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+def test_name():
+    assert parsed_items[0]['name'] == 'Chicago Public Library Board Meeting'
 
 
-# def test_name():
-    # assert parsed_items[0]['name'] == 'EXPECTED NAME'
+def test_description():
+    assert parsed_items[0]['description'] == 'There are no meetings in February, July and August. Entry into these meetings is permitted at 8:45 a.m.'
 
 
-# def test_description():
-    # assert parsed_items[0]['description'] == 'EXPECTED DESCRIPTION'
+def test_start_time():
+    assert parsed_items[0]['start_time'] == '1900-01-17T09:00:00'
 
 
-# def test_start_time():
-    # assert parsed_items[0]['start_time'] == 'EXPECTED START DATE AND TIME'
+def test_end_time():
+    assert parsed_items[0]['end_time'] == None
 
 
-# def test_end_time():
-    # assert parsed_items[0]['end_time'] == 'EXPECTED END DATE AND TIME'
+def test_id():
+    assert parsed_items[0]['id'] == '1900-01-17-cpl'
 
 
-# def test_id():
-    # assert parsed_items[0]['id'] == 'EXPECTED ID'
-
-
-# def test_all_day(item):
-    # assert parsed_items[0]['all_day'] is False
+def test_all_day(item):
+    assert parsed_items[0]['all_day'] is False
 
 
 # def test_classification(item):

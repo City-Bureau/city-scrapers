@@ -15,7 +15,7 @@ class CplSpider(scrapy.Spider):
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
     #query = ('https://data.cityofchicago.org/resource/psqp-6rmg.json')
-    lib_info = pd.read_json('https://data.cityofchicago.org/resource/psqp-6rmg.json')
+    #lib_info = pd.read_json('https://data.cityofchicago.org/resource/psqp-6rmg.json')
 
     def parse(self, response):
         """
@@ -49,10 +49,11 @@ class CplSpider(scrapy.Spider):
         events_only = all_clean_events[2:]
 
         for item in events_only:
-            
+            start_time = self._parse_start(item)
+            lib_info = pd.read_json('https://data.cityofchicago.org/resource/psqp-6rmg.json')
             yield {
                 '_type': 'event',
-                'id': self._generate_id(item), #TODO
+                'id': self._generate_id(start_time),
                 'name': 'Chicago Public Library Board Meeting',
                 'description': description_str,
                 'classification': 'Board meeting',
@@ -60,7 +61,7 @@ class CplSpider(scrapy.Spider):
                 'end_time': None, #no end time listed
                 'all_day': False, #default is false
                 'status': self._parse_status(item), #default is tentative, but there is no status info on site
-                'location': self._parse_location(item),
+                'location': self._parse_location(item, lib_info),
             }
 
         # self._parse_next(response) yields more responses to parse if necessary.
@@ -75,12 +76,12 @@ class CplSpider(scrapy.Spider):
         next_url = None
         return scrapy.Request(next_url, callback=self.parse)
 
-    def _generate_id(self, start_time, name):
+    def _generate_id(self, start_time):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
         date = start_time.split('T')[0]
-        dashified = re.sub(r'[^a-z]+', '-', name.lower())
+        dashified = re.sub(r'[^a-z]+', '-', 'cpl')
         return '{0}-{1}'.format(date, dashified)
 
     def _parse_classification(self, item):
@@ -102,16 +103,18 @@ class CplSpider(scrapy.Spider):
         """
         return 'tentative'
 
-    def _parse_location(self, item):
-        """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
-        """
-        def find_name(li):
+
+    def find_name(self, li):
             if len(li) == 4:
                 return ', '.join(li[1:3])
             else:
                 return li[1]
+
+    def _parse_location(self, item, lib_info):
+        """
+        Parse or generate location. Url, latitutde and longitude are all
+        optional and may be more trouble than they're worth to collect.
+        """
 
         return {
             'url': None,
@@ -121,10 +124,10 @@ class CplSpider(scrapy.Spider):
                 'longitude': None,
             },
             #'coordinates': None,
-            'address': self._parse_address(item)
+            'address': self._parse_address(item, lib_info)
         }
 
-    def _parse_address(self, item):
+    def _parse_address(self, item, lib_info):
 
         """
             compare item's address line to library API addresses until you find the match,
