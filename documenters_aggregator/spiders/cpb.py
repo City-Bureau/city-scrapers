@@ -12,7 +12,8 @@ import re
 
 class CpbSpider(scrapy.Spider):
     name = 'cpb'
-    allowed_domains = ['www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
+    long_name = 'Chicago Police Board'
+    allowed_domains = ['www.cityofchicago.org']
     start_urls = ['http://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
 
     def parse(self, response):
