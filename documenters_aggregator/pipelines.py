@@ -36,54 +36,30 @@ class DocumentersAggregatorAirtablePipeline(object):
     Stub pipeline to save to AirTable.
     """
     def __init__(self):
-        self.session = requests.Session()
-        self.session.headers.update({
-            'Authorization': 'Bearer {0}'.format(AIRTABLE_API_KEY),
-            'Content-type': 'application/json',
-        })
+        self.airtable = Airtable('appYfsu9CjuuZt7sF', 'Raw data')
 
     def process_item(self, item, spider):
-        # import ipdb; ipdb.set_trace();
         item['id'] = self._make_id(item, spider)
-        item['location'] = 'how to encode?'
+        item['location'] = 'tk'
         item['all_day'] = 'false'
-
         self.save_item(item, spider)
-        # raise CloseSpider('testing')
         return item
 
     def save_item(self, item, spider):
-
-        # https://api.airtable.com/v0/appYfsu9CjuuZt7sF/Raw%20data?maxRecords=3&view=Grid%20view
-
-        url = 'https://api.airtable.com/v0/appYfsu9CjuuZt7sF/Raw data'
-        params = {
-            'view': 'Grid view',
-            'filterByFormula': "{{id}} = '{0}'".format(item['id']),
-        }
-
-        resp = self.session.get(url, params=params)
-        records = resp.json().get('records', [])
-
-        if len(records) == 1:
+        airtable_item = self.airtable.match('id', item['id'])
+        if airtable_item:
             # update
-            item['name'] = 'bored of directors'
-            update_url = '{0}/{1}'.format(url, records[0]['id'])
-            save_resp = self.session.patch(update_url, json={'fields': item})
-            # import ipdb; ipdb.set_trace();
-            pass
-        elif len(records) > 1:
-            # data validation error
-            pass
+            spider.logger.debug('AIRTABLE PIPELINE: Updating {0}'.format(item['id']))
+            self.airtable.update(airtable_item['id'], item)
         else:
             # create
-            save_resp = self.session.post(url, json={'fields': item})
-            pass
-
-        pass
+            spider.logger.debug('AIRTABLE PIPELINE: Creating {0}'.format(item['id']))
+            self.airtable.insert(item)
 
     def _make_id(self, item, spider):
-        return '{0}-{1}'.format(
+        return '{3} {2} ({0}-{1})'.format(
                                 spider.name,
                                 item['id'],
+                                item['name'],
+                                spider.long_name
                             )
