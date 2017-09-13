@@ -14,6 +14,7 @@ from time import strptime
 class CdphSpider(scrapy.Spider):
 
     name = 'cdph'
+    long_name = 'Chicago Department of Public Health'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html']
 

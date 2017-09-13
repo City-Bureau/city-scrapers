@@ -14,7 +14,8 @@ from pytz import timezone
 
 class CchhsSpider(scrapy.Spider):
     name = 'cchhs'
-    allowed_domains = ['http://www.cookcountyhhs.org']
+    long_name = 'Cook County Health and Hospitals System'
+    allowed_domains = ['www.cookcountyhhs.org']
     start_urls = ['http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/']
     domain_root = 'http://www.cookcountyhhs.org'
 
