@@ -8,10 +8,10 @@
 import os
 import requests
 
-from scrapy.exceptions import CloseSpider
+from airtable import Airtable
 
-AIRTABLE_API_KEY = os.environ.get('AIRTABLE_API_KEY')
-
+AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
+AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
 
 class DocumentersAggregatorLoggingPipeline(object):
     """
@@ -36,7 +36,7 @@ class DocumentersAggregatorAirtablePipeline(object):
     Stub pipeline to save to AirTable.
     """
     def __init__(self):
-        self.airtable = Airtable('appYfsu9CjuuZt7sF', 'Raw data')
+        self.airtable = Airtable(AIRTABLE_BASE_KEY, AIRTABLE_DATA_TABLE)
 
     def process_item(self, item, spider):
         item['id'] = self._make_id(item, spider)
