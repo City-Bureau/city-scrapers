@@ -32,7 +32,7 @@ def test_id():
     assert parsed_items[0]['id'] == '1900-01-17-cpl'
 
 
-def test_all_day(item):
+def test_all_day():
     assert parsed_items[0]['all_day'] is False
 
 
