@@ -6,7 +6,8 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import scrapy
 
 import re
-import pandas as pd
+import urllib.request
+import json 
 from pytz import timezone
 from datetime import datetime
 
@@ -14,8 +15,6 @@ class CplSpider(scrapy.Spider):
     name = 'cpl'
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
-    #query = ('https://data.cityofchicago.org/resource/psqp-6rmg.json')
-    #lib_info = pd.read_json('https://data.cityofchicago.org/resource/psqp-6rmg.json')
 
     def parse(self, response):
         """
@@ -50,7 +49,8 @@ class CplSpider(scrapy.Spider):
 
         for item in events_only:
             start_time = self._parse_start(item)
-            lib_info = pd.read_json('https://data.cityofchicago.org/resource/psqp-6rmg.json')
+            with urllib.request.urlopen("https://data.cityofchicago.org/resource/psqp-6rmg.json") as url:
+                lib_info = json.loads(url.read().decode())
             yield {
                 '_type': 'event',
                 'id': self._generate_id(start_time),
@@ -139,9 +139,9 @@ class CplSpider(scrapy.Spider):
             addr = 2
 
         for i in range(len(lib_info)):
-            if item[addr] == lib_info.iloc[i].address:
-                match = lib_info.iloc[i]
-                return match.address + ', ' + match.city + ' ' + match.state + ' ' + str(match.zip)
+            if item[addr] == lib_info[i]['address']:
+                match = lib_info[i]
+                return match['address'] + ', ' + match['city'] + ' ' + match['state'] + ' ' + match['zip']
         """
             def test(item):
                 for i in range(len(lib_info)):
