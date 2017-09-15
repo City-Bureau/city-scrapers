@@ -7,12 +7,14 @@ import scrapy
 
 import re
 import urllib.request
-import json 
-from pytz import timezone
+import json
+#from pytz import timezone
 from datetime import datetime
+
 
 class CplSpider(scrapy.Spider):
     name = 'cpl'
+    long_name = 'Chicago Public Library'
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
 
@@ -25,7 +27,7 @@ class CplSpider(scrapy.Spider):
         needs.
         """
 
-        #the following code turns the HTML glob into an array of lists of strings, one list 
+        #the following code turns the HTML glob into an array of lists of strings, one list
         #per event. The first line is *always* the date, the last line is *always* the address.
         #IF the event has 3 lines, then line 2 and 3 should be concatenated to be the location.
         #Otherwise, the event has 3 lines and the middle line is the location.
@@ -57,24 +59,12 @@ class CplSpider(scrapy.Spider):
                 'name': 'Chicago Public Library Board Meeting',
                 'description': description_str,
                 'classification': 'Board meeting',
-                'start_time': self._parse_start(item), #TODO turn date into correct format
-                'end_time': None, #no end time listed
-                'all_day': False, #default is false
-                'status': self._parse_status(item), #default is tentative, but there is no status info on site
+                'start_time': self._parse_start(item),
+                'end_time': None,  # no end time listed
+                'all_day': False,  # default is false
+                'status': self._parse_status(item),  # default is tentative, but there is no status info on site
                 'location': self._parse_location(item, lib_info),
             }
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None
-        return scrapy.Request(next_url, callback=self.parse)
 
     def _generate_id(self, start_time):
         """
@@ -103,19 +93,17 @@ class CplSpider(scrapy.Spider):
         """
         return 'tentative'
 
-
     def find_name(self, li):
-            if len(li) == 4:
-                return ', '.join(li[1:3])
-            else:
-                return li[1]
+        if len(li) == 4:
+            return ', '.join(li[1:3])
+        else:
+            return li[1]
 
     def _parse_location(self, item, lib_info):
         """
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
-
         return {
             'url': None,
             'name': self.find_name(item),
@@ -123,7 +111,6 @@ class CplSpider(scrapy.Spider):
                 'latitude': None,
                 'longitude': None,
             },
-            #'coordinates': None,
             'address': self._parse_address(item, lib_info)
         }
 
@@ -146,27 +133,9 @@ class CplSpider(scrapy.Spider):
             def test(item):
                 for i in range(len(lib_info)):
                     print (i, lib_info.iloc[i])
-        
+
         ev_zero.address + ', ' + ev_zero.city + ' ' + ev_zero.state + ' ' + str(ev_zero.zip)
         """
-
-    #def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to false.
-        """
-        #return False
-
-    #def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
-        #return None
-
-    #def _parse_description(self, item):
-        """
-        Parse or generate event name.
-        """
-        #return None
 
     def _parse_start(self, item):
         """
@@ -181,9 +150,3 @@ class CplSpider(scrapy.Spider):
         date = date.replace('.', '')
         datetime_object = datetime.strptime(date, '%A %B %d %I %p')
         return datetime_object.isoformat()
-
-    #def _parse_end(self, item):
-        """
-        Parse end date and time.
-        """
-        #return None

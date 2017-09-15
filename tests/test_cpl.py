@@ -1,5 +1,3 @@
-import pytest
-
 from tests.utils import file_response
 from documenters_aggregator.spiders.cpl import CplSpider
 
@@ -25,7 +23,7 @@ def test_start_time():
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'] == None
+    assert parsed_items[0]['end_time'] is None
 
 
 def test_id():
@@ -46,12 +44,12 @@ def test_all_day():
 
 # def test_location(item):
     # assert item['location'] == {
-        # 'url': 'EXPECTED URL',
-        # 'name': 'EXPECTED NAME',
-        # 'coordinates': {
-            # 'latitude': 'EXPECTED LATITUDE',
-            # 'longitude': 'EXPECTED LONGITUDE',
-        # },
+    #     'url': 'EXPECTED URL',
+    #     'name': 'EXPECTED NAME',
+    #     'coordinates': {
+    #         'latitude': 'EXPECTED LATITUDE',
+    #         'longitude': 'EXPECTED LONGITUDE',
+    #     },
     # }
 
 
