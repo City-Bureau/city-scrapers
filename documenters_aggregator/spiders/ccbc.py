@@ -9,6 +9,7 @@ from datetime import datetime
 from pytz import timezone
 from legistar.events import LegistarEventsScraper
 
+
 class CcbcSpider(scrapy.Spider):
     name = 'ccbc'
     long_name = 'Cook County Board of Commissioners'
@@ -23,12 +24,18 @@ class CcbcSpider(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+        events = self._make_legistar_call()
+        return self._parse_events(events)
+
+    def _make_legistar_call(self, since=None):
         les = LegistarEventsScraper(jurisdiction=None, datadir=None)
         les.EVENTSPAGE = 'https://cook-county.legistar.com/Calendar.aspx'
         les.BASE_URL = 'https://cook-county.legistar.com'
-        year = datetime.today().year
-        events = les.events(since=year)
+        if not since:
+            since = datetime.today().year
+        return les.events(since=since)
 
+    def _parse_events(self, events):
         for item, _ in events:
             data = {
                 '_type': 'event',
@@ -65,8 +72,6 @@ class CcbcSpider(scrapy.Spider):
         """
         if datetime.now().isoformat() > start_time:
             return 'passed'
-        
-        agenda = item['Agenda']
         if 'url' in item['Agenda']:
             return 'confirmed'
         return 'tentative'

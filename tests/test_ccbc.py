@@ -1,67 +1,66 @@
 import pytest
+import json
 
-from tests.utils import file_response
 from documenters_aggregator.spiders.ccbc import CcbcSpider
 
-def test_tests():
-    print('Please write some tests for this spider or at least disable this one.')
-    assert False
+
+test_response = []
+with open('tests/files/ccbc.txt') as f:
+    for line in f:
+        test_response.append(json.loads(line))
+spider = CcbcSpider()
+parsed_items = [item for item in spider._parse_events(test_response)]
 
 
-"""
-Uncomment below
-"""
-
-# test_response = file_response('files/ccbc.html')
-# spider = CcbcSpider()
-# parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+def test_name():
+    assert parsed_items[25]['name'] == 'Board of Commissioners'
 
 
-# def test_name():
-    # assert parsed_items[0]['name'] == 'EXPECTED NAME'
+def test_description():
+    expected_description = ('https://cook-county.legistar.com/'
+                            'View.ashx?M=A&ID=521583&GUID=EA23CB0D'
+                            '-2E10-47EA-B4E2-EC7BA3CB8D76')
+    assert parsed_items[25]['description'] == expected_description
 
 
-# def test_description():
-    # assert parsed_items[0]['description'] == 'EXPECTED DESCRIPTION'
+def test_start_time():
+    assert parsed_items[25]['start_time'] == '2017-09-13T11:00:00-05:00'
 
 
-# def test_start_time():
-    # assert parsed_items[0]['start_time'] == 'EXPECTED START DATE AND TIME'
+@pytest.mark.parametrize('item', parsed_items)
+def test_end_time(item):
+    assert item['end_time'] is None
 
 
-# def test_end_time():
-    # assert parsed_items[0]['end_time'] == 'EXPECTED END DATE AND TIME'
+def test_id():
+    assert parsed_items[25]['id'] == 'BoardofCommissioners9132017'
 
 
-# def test_id():
-    # assert parsed_items[0]['id'] == 'EXPECTED ID'
+@pytest.mark.parametrize('item', parsed_items)
+def test_all_day(item):
+    assert item['all_day'] is False
 
 
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_all_day(item):
-    # assert item['all_day'] is False
+@pytest.mark.parametrize('item', parsed_items)
+def test_classification(item):
+    assert item['classification'] == 'Not classified'
 
 
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_classification(item):
-    # assert item['classification'] is None
+def test_status():
+    assert parsed_items[25]['status'] == 'passed'
 
 
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_status(item):
-    # assert item['status'] == 'tentative'
+def test_location():
+    assert parsed_items[25]['location'] == {
+        'url': None,
+        'name': 'Cook County Building, Board Room, 118 North Clark Street, Chicago, Illinois',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        },
+    }
 
 
-# def test_location():
-    # assert parsed_items[0]['location'] == {
-        # 'url': 'EXPECTED URL',
-        # 'name': 'EXPECTED NAME',
-        # 'coordinates': {
-            # 'latitude': 'EXPECTED LATITUDE',
-            # 'longitude': 'EXPECTED LONGITUDE',
-        # },
-    # }
-
-# @pytest.mark.parametrize('item', parsed_items)
-# def test__type(item):
-    # assert parsed_items[0]['_type'] == 'event'
+@pytest.mark.parametrize('item', parsed_items)
+def test__type(item):
+    assert parsed_items[0]['_type'] == 'event'
