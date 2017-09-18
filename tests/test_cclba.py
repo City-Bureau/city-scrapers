@@ -14,9 +14,11 @@ Uncomment below
 
 file = file_response('files/cclba.json')
 spider = CclbaSpider()
-data = json.loads(file.text)
-test_response = scrapy.Selector(text=data['content'], type="html")
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+
+# import pdb; pdb.set_trace()
+
+test_response = file
+parsed_items = list(spider.parse(test_response))
 
 
 def test_name():
@@ -39,20 +41,20 @@ def test_id():
     assert parsed_items[0]['id'] == '3381'
 
 
-def test_all_day(item):
+def test_all_day():
     assert parsed_items[0]['all_day'] is False
 
 
-def test_classification(item):
+def test_classification():
     assert parsed_items[0]['classification'] == 'Not classified'
 
 
-def test_status(item):
-    assert parsed_items[0]['status'] == 'tentative'
+def test_status():
+    assert parsed_items[0]['status'] == 'passed'
 
 
-def test_location(item):
-    assert item['location'] == {
+def test_location():
+    assert parsed_items[0]['location'] == {
         'url': 'http://www.cookcountylandbank.org/',
         'name': "Cook County Administration Building, 69 W. Washington St., 22nd Floor, Conference Room 'A', Chicago, IL 60602",
         'coordinates': {
@@ -61,11 +63,11 @@ def test_location(item):
         },
     }
 
-def test_sources(item):
-    assert item['location'] == {
+def test_sources():
+    assert parsed_items[0]['sources'] == {
         'url': 'http://www.cookcountylandbank.org/events/cclba-finance-committee-meeting-09132017/',
         'note': "Event Page",
     }
 
-def test__type(item):
+def test__type():
     assert parsed_items[0]['_type'] == 'event'
