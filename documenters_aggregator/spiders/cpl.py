@@ -10,6 +10,7 @@ import urllib.request
 import json
 #from pytz import timezone
 from datetime import datetime
+import slugify
 
 
 class CplSpider(scrapy.Spider):
@@ -26,12 +27,12 @@ class CplSpider(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-
         #the following code turns the HTML glob into an array of lists of strings, one list
         #per event. The first line is *always* the date, the last line is *always* the address.
         #IF the event has 3 lines, then line 2 and 3 should be concatenated to be the location.
         #Otherwise, the event has 3 lines and the middle line is the location.
         events = response.css('div.entry-content p').extract()
+        year = response.css('div.entry-content h2').extract()
 
         def cleanhtml(raw_html):
             cleanr = re.compile('<.*?>')
@@ -48,9 +49,11 @@ class CplSpider(scrapy.Spider):
         description_str = ' '.join(all_clean_events[0] + all_clean_events[1])
         #remove first two informational lines from events array
         events_only = all_clean_events[2:]
+        #gets year of events
 
         for item in events_only:
-            start_time = self._parse_start(item)
+            yr = cleanhtml(year[0])
+            start_time = self._parse_start(item, yr)
             with urllib.request.urlopen("https://data.cityofchicago.org/resource/psqp-6rmg.json") as url:
                 lib_info = json.loads(url.read().decode())
             yield {
@@ -59,7 +62,7 @@ class CplSpider(scrapy.Spider):
                 'name': 'Chicago Public Library Board Meeting',
                 'description': description_str,
                 'classification': 'Board meeting',
-                'start_time': self._parse_start(item),
+                'start_time': self._parse_start(item, yr),
                 'end_time': None,  # no end time listed
                 'all_day': False,  # default is false
                 'status': self._parse_status(item),  # default is tentative, but there is no status info on site
@@ -137,16 +140,16 @@ class CplSpider(scrapy.Spider):
         ev_zero.address + ', ' + ev_zero.city + ' ' + ev_zero.state + ' ' + str(ev_zero.zip)
         """
 
-    def _parse_start(self, item):
+    def _parse_start(self, item, year):
         """
         Parse start date and time.
         """
         #s = response.css('strong::text').extract()
         #tz = timezone('America/Chicago')
         #TODO: turn every event array's first string into correct date format
-
         date = item[0]
         date = date.replace(',', '')
         date = date.replace('.', '')
-        datetime_object = datetime.strptime(date, '%A %B %d %I %p')
+        date = date + ' ' + year
+        datetime_object = datetime.strptime(date, '%A %B %d %I %p %Y')
         return datetime_object.isoformat()

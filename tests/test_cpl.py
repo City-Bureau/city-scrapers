@@ -19,7 +19,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '1900-01-17T09:00:00'
+    assert parsed_items[0]['start_time'] == '2017-01-17T09:00:00'
 
 
 def test_end_time():
@@ -27,7 +27,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == '1900-01-17-cpl'
+    assert parsed_items[0]['id'] == '2017-01-17-cpl'
 
 
 def test_all_day():
