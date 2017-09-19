@@ -12,7 +12,7 @@ import pytz
 class CclbaSpider(scrapy.Spider):
     """
     Rather than scraping a site, I'm making iterated AJAX requests.
-    This means setting up a list of dates to poll for events, 
+    This means setting up a list of dates to poll for events,
     setting up a dict of data to POST and running parse()
     as a callback on the Response.
     Yields dict for dates with events.
@@ -61,34 +61,34 @@ class CclbaSpider(scrapy.Spider):
             'action':'the_ajax_hook',
             'current_month': str(date.month),
             'current_year': str(date.year),
-            'event_count':'0',
+            'event_count': '0',
             'fc_focus_day': str(date.day),
-            'filters[0][filter_type]':'tax',
-            'filters[0][filter_name]':'event_type',
-            'filters[0][filter_val]':'9, 16, 17, 18, 19, 20, 26, 27',
-            'direction':'none',
-            'shortcode[hide_past]':'no',
-            'shortcode[show_et_ft_img]':'no',
-            'shortcode[event_order]':'DESC',
-            'shortcode[ft_event_priority]':'no',
-            'shortcode[lang]':'L1',
-            'shortcode[month_incre]':'0',
-            'shortcode[evc_open]':'no',
-            'shortcode[show_limit]':'no',
-            'shortcode[etc_override]':'no',
-            'shortcode[tiles]':'no',
-            'shortcode[tile_height]':'0',
-            'shortcode[tile_bg]':'0',
-            'shortcode[tile_count]':'2'
+            'filters[0][filter_type]': 'tax',
+            'filters[0][filter_name]': 'event_type',
+            'filters[0][filter_val]': '9, 16, 17, 18, 19, 20, 26, 27',
+            'direction': 'none',
+            'shortcode[hide_past]': 'no',
+            'shortcode[show_et_ft_img]': 'no',
+            'shortcode[event_order]': 'DESC',
+            'shortcode[ft_event_priority]': 'no',
+            'shortcode[lang]': 'L1',
+            'shortcode[month_incre]': '0',
+            'shortcode[evc_open]': 'no',
+            'shortcode[show_limit]': 'no',
+            'shortcode[etc_override]': 'no',
+            'shortcode[tiles]': 'no',
+            'shortcode[tile_height]': '0',
+            'shortcode[tile_bg]': '0',
+            'shortcode[tile_count]': '2'
         }
 
         # Making the post request
         return scrapy.FormRequest(
-            url = self.start_urls[0],
+            url=self.start_urls[0],
             formdata=request_body,
-            callback = self.parse, # Does this by default, but making it explicit
-            errback = self.request_err
-            )
+            callback=self.parse,  # Does this by default, but making it explicit
+            errback=self.request_err
+        )
 
     def parse(self, response):
         # import pdb; pdb.set_trace()
@@ -117,11 +117,10 @@ class CclbaSpider(scrapy.Spider):
         else:
             yield
 
-
     # Getting dates and setting up AJAX Request
 
     def daterange(self, start_date, end_date):
-        for n in range(int ((end_date - start_date).days)):
+        for n in range(int((end_date - start_date).days)):
             yield start_date + dt.timedelta(n)
 
     def stack_dates(self, time_horizon):
@@ -131,11 +130,8 @@ class CclbaSpider(scrapy.Spider):
         dates = [date for date in self.daterange(min_date, max_date)]
         return dates
 
-    def request_err(self, failure): # If Request throws an error
+    def request_err(self, failure):  # If Request throws an error
         self.logger.error(repr(failure))
-
-
-
 
     # Event element parsers
 
@@ -193,7 +189,7 @@ class CclbaSpider(scrapy.Spider):
 
     def _parse_description(self, item):
         """
-        No real 'description' field to parse. Leaving None. 
+        No real 'description' field to parse. Leaving None.
         """
         return None
 
@@ -236,4 +232,3 @@ class CclbaSpider(scrapy.Spider):
             'url': source_url,
             'note': 'Event Page'
         }
-

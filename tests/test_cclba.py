@@ -19,7 +19,7 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == None
+    assert parsed_items[0]['description'] is None
 
 
 def test_start_time():
@@ -28,7 +28,8 @@ def test_start_time():
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'] == None
+    assert parsed_items[0]['end_time'] is None
+
 
 def test_id():
     assert parsed_items[0]['id'] == '3381'
@@ -56,11 +57,13 @@ def test_location():
         },
     }
 
+
 def test_sources():
     assert parsed_items[0]['sources'] == {
         'url': 'http://www.cookcountylandbank.org/events/cclba-finance-committee-meeting-09132017/',
         'note': "Event Page",
     }
+
 
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
