@@ -232,4 +232,3 @@ class CclbaSpider(scrapy.Spider):
             'url': source_url,
             'note': 'Event Page'
         }
-        
