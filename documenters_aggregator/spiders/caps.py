@@ -8,13 +8,16 @@ import json
 import pytz
 from datetime import datetime
 
+
 class CapsSpider(scrapy.Spider):
     name = 'caps'
+    long_name = 'Chicago Police'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
     start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
     headers = {
-    'User-Agent': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
+        'User-Agent': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
     }
+
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
@@ -90,8 +93,8 @@ class CapsSpider(scrapy.Spider):
             'url': None,
             'name': item['location'],
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
         }
 
@@ -114,7 +117,7 @@ class CapsSpider(scrapy.Spider):
         return item['eventDetails']
 
     def _format_time(self, time):
-        tz = pytz.timezone('America/Chicago') # 2016-01-05T14:00:00
+        tz = pytz.timezone('America/Chicago')  # 2016-01-05T14:00:00
         return tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
 
     def _parse_start(self, item):
@@ -132,5 +135,5 @@ class CapsSpider(scrapy.Spider):
         except TypeError:
             return None
 
-    def _parse_url(self,item):
+    def _parse_url(self, item):
         return item['eventUrl']

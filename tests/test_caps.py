@@ -1,8 +1,7 @@
-import pytest
-
 from tests.utils import file_response
 from documenters_aggregator.spiders.caps import CapsSpider
 from datetime import datetime
+
 
 def test_tests():
     print('Please write some tests for this spider or at least disable this one.')
@@ -19,7 +18,7 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-     assert isinstance(parsed_items[0]['name'], str)
+    assert isinstance(parsed_items[0]['name'], str)
 
 
 def test_description():
@@ -28,6 +27,7 @@ def test_description():
 
 def test_end_time():
     assert isinstance(parsed_items[0]['end_time'], datetime)
+
 
 def test_id():
     assert isinstance(parsed_items[0]['id'], int)
