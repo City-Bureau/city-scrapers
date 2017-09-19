@@ -67,3 +67,4 @@ def test_sources():
 
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
+    
