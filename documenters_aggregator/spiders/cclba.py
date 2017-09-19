@@ -58,7 +58,7 @@ class CclbaSpider(scrapy.Spider):
         the dict to POST. I copied what was coming from the website. Maybe most is unnecessary?
         """
         request_body = {
-            'action':'the_ajax_hook',
+            'action': 'the_ajax_hook',
             'current_month': str(date.month),
             'current_year': str(date.year),
             'event_count': '0',
@@ -176,7 +176,7 @@ class CclbaSpider(scrapy.Spider):
                 'longitude': None,
             },
         }
-        
+
     def _parse_all_day(self, item):
         """
         No reliable indicator here. Leaving None
