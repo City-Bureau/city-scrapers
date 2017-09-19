@@ -56,7 +56,7 @@ def test_classification(item):
 
 
 def test_status():
-    assert parsed_items[8]['status'] == 'tentative'
+    assert parsed_items[8]['status'] == 'passed'
 
 
 @pytest.mark.parametrize('item', parsed_items)
