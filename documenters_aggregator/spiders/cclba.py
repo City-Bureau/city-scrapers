@@ -5,11 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
 
-from datetime import datetime
 import json
-import time
-from lxml.html import fromstring
-import cssselect
 import datetime as dt
 import pytz
 # import requests
