@@ -6,12 +6,13 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import scrapy
 
 from datetime import datetime
+from pytz import timezone
 
 
-class TestspiderSpider(scrapy.Spider):
-    name = 'testspider'
-    allowed_domains = ['www.citybureau.org']
-    start_urls = ['http://www.citybureau.org/articles', 'http://www.citybureau.org/staff', 'http://www.citybureau.org/is-chicago-any-less-segregated']
+class CcebSpider(scrapy.Spider):
+    name = 'cceb'
+    allowed_domains = ['http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx']
+    start_urls = ['http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx']
 
     def parse(self, response):
         """
@@ -21,37 +22,27 @@ class TestspiderSpider(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
+        row_names = response.xpath('//tr/@class').re(r'row\d+')
+        for name in row_names:
+            item = response.css('tr[class="{}"]'.format(name))
             yield {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
+                'description': self._parse_description(item, response),
+                'classification': self._parse_classification(item),  # not implemented
                 'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
+                'end_time': self._parse_end(item),  # not implemented
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
             }
 
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
-
     def _parse_id(self, item):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        return item.css('::attr(class)').extract_first()
 
     def _parse_classification(self, item):
         """
@@ -61,16 +52,13 @@ class TestspiderSpider(scrapy.Spider):
 
     def _parse_status(self, item):
         """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
+        If there is a link to case documents, return confirmed.
+        Otherwise, return tentative.
         """
-        return 'tentative'
+        if item.css('td > a::attr(href)').extract():
+            return 'confirmed'
+        else:
+            return 'tentative'
 
     def _parse_location(self, item):
         """
@@ -79,7 +67,7 @@ class TestspiderSpider(scrapy.Spider):
         """
         return {
             'url': None,
-            'name': None,
+            'name': item.css('td::text').extract()[-2].split('/')[1].strip(),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -96,22 +84,43 @@ class TestspiderSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        return None
+        texts = item.css('td::text').extract()
+        contest = texts[2].strip()
+        objector = texts[3].strip()
+        candidate = texts[4].strip()
+        name = ('Cook County Electoral Board Case; '
+                'Contest: {0}; Objector: {1}; Candidate: {2}'.format(contest, objector, candidate))
+        return name
 
-    def _parse_description(self, item):
+    def _parse_description(self, item, response):
         """
         Parse or generate event name.
         """
-        return None
+        url_base = 'http://cookcountyclerk.com/elections/electoralboard/'
+        return item.css('td > a::attr(href)').extract_first().replace('../', url_base)
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        return None
+        start_string = ''.join(item.css('td > div::text').extract_first().strip().split())
+        return self._make_date(start_string)
 
     def _parse_end(self, item):
         """
         Parse end date and time.
         """
         return None
+
+    def _make_date(self, datestring):
+        """
+        Combine year, month, day with variable time and export as timezone-aware,
+        ISO-formatted string.
+        """
+        try:
+            naive = datetime.strptime(datestring, '%m/%d/%Y%I:%M%p')
+        except ValueError:
+            return None
+
+        tz = timezone('America/Chicago')
+        return tz.localize(naive).isoformat()
