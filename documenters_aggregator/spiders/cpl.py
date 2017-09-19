@@ -8,9 +8,7 @@ import scrapy
 import re
 import urllib.request
 import json
-#from pytz import timezone
 from datetime import datetime
-import slugify
 
 
 class CplSpider(scrapy.Spider):
