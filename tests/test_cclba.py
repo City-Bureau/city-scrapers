@@ -1,12 +1,5 @@
-import pytest
-import scrapy
-
 from tests.utils import file_response
 from documenters_aggregator.spiders.cclba import CclbaSpider
-
-import json
-import datetime as dt
-import pytz
 
 """
 Uncomment below
