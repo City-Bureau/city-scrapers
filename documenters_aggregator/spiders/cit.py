@@ -8,6 +8,7 @@ import re
 import datetime as dt
 import pytz
 
+
 class CitSpider(scrapy.Spider):
     name = 'cit'
     allowed_domains = ['chicagoinfrastructure.org']
@@ -39,19 +40,6 @@ class CitSpider(scrapy.Spider):
                 'status': 'tentative',
                 'location': None,
             }
-
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    # def _parse_next(self, response):
-    #     """
-    #     Get next page. You must add logic to `next_url` and
-    #     return a scrapy request.
-    #     """
-    #     next_url = None  # What is next URL?
-    #     return scrapy.Request(next_url, callback=self.parse)
 
     def _parse_id(self, item):
         """
