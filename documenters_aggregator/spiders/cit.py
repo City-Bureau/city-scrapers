@@ -3,9 +3,7 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy, re, datetime as dt, pytz
-
-from datetime import date
+import scrapy, re, datetime as dt, 
 
 
 class CitSpider(scrapy.Spider):
