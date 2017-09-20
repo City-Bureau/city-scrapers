@@ -4,16 +4,19 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/master
 import json
 import datetime as dt
 import pytz
-# import requests
+
 
 class CclbaSpider(scrapy.Spider):
     """
     Rather than scraping a site, I'm making iterated AJAX requests.
-    This means setting up a list of dates to poll for events, 
+    This means setting up a list of dates to poll for events,
     setting up a dict of data to POST and running parse()
     as a callback on the Response.
     Yields dict for dates with events.
@@ -36,11 +39,11 @@ class CclbaSpider(scrapy.Spider):
         'DOWNLOAD_DELAY': 1,
         'CONCURRENT_REQUESTS_PER_UP': 1,
         'LOG_ENABLED': True,
-        'BOT_NAME': 'documenters_aggregator', 
-        'COOKIES_ENABLED': False, 
-        'NEWSPIDER_MODULE': 'documenters_aggregator.spiders', 
-        'ROBOTSTXT_OBEY': True, 
-        'SPIDER_MODULES': ['documenters_aggregator.spiders'], 
+        'BOT_NAME': 'documenters_aggregator',
+        'COOKIES_ENABLED': False,
+        'NEWSPIDER_MODULE': 'documenters_aggregator.spiders',
+        'ROBOTSTXT_OBEY': True,
+        'SPIDER_MODULES': ['documenters_aggregator.spiders'],
         'USER_AGENT': 'Documenters Aggregator (learn more and say hello at https://TKTK)'
     }
 
@@ -59,87 +62,80 @@ class CclbaSpider(scrapy.Spider):
         the dict to POST. I copied what was coming from the website. Maybe most is unnecessary?
         """
         request_body = {
-        'action':'the_ajax_hook',
-        'current_month': str(date.month),
-        'current_year': str(date.year),
-        'event_count':'0',
-        'fc_focus_day': str(date.day),
-
-        'filters[0][filter_type]':'tax',
-        'filters[0][filter_name]':'event_type',
-        'filters[0][filter_val]':'9, 16, 17, 18, 19, 20, 26, 27',
-        'direction':'none',
-        'shortcode[hide_past]':'no',
-        'shortcode[show_et_ft_img]':'no',
-        'shortcode[event_order]':'DESC',
-        'shortcode[ft_event_priority]':'no',
-        'shortcode[lang]':'L1',
-        'shortcode[month_incre]':'0',
-        'shortcode[evc_open]':'no',
-        'shortcode[show_limit]':'no',
-        'shortcode[etc_override]':'no',
-        'shortcode[tiles]':'no',
-        'shortcode[tile_height]':'0',
-        'shortcode[tile_bg]':'0',
-        'shortcode[tile_count]':'2'
+            'action': 'the_ajax_hook',
+            'current_month': str(date.month),
+            'current_year': str(date.year),
+            'event_count': '0',
+            'fc_focus_day': str(date.day),
+            'filters[0][filter_type]': 'tax',
+            'filters[0][filter_name]': 'event_type',
+            'filters[0][filter_val]': '9, 16, 17, 18, 19, 20, 26, 27',
+            'direction': 'none',
+            'shortcode[hide_past]': 'no',
+            'shortcode[show_et_ft_img]': 'no',
+            'shortcode[event_order]': 'DESC',
+            'shortcode[ft_event_priority]': 'no',
+            'shortcode[lang]': 'L1',
+            'shortcode[month_incre]': '0',
+            'shortcode[evc_open]': 'no',
+            'shortcode[show_limit]': 'no',
+            'shortcode[etc_override]': 'no',
+            'shortcode[tiles]': 'no',
+            'shortcode[tile_height]': '0',
+            'shortcode[tile_bg]': '0',
+            'shortcode[tile_count]': '2'
         }
 
         # Making the post request
         return scrapy.FormRequest(
-            url = self.start_urls[0], 
+            url=self.start_urls[0],
             formdata=request_body,
-            callback = self.parse, # Does this by default, but making it explicit
-            errback = self.request_err
-            )
+            callback=self.parse,  # Does this by default, but making it explicit
+            errback=self.request_err
+        )
 
     def parse(self, response):
-
         # import pdb; pdb.set_trace()
-
         data = json.loads(response.text)
         item = scrapy.Selector(text=data['content'], type="html")
 
         if not item.css('div.eventon_list_event p.no_events'):
             self.logger.info('Event scraped from ' + self._parse_start(item))
             yield {
-            '_type': 'event',
-            'id': self._parse_id(item),
-            'name': self._parse_name(item),
-            'description': self._parse_description(item),
-            'classification': self._parse_classification(item),
-            'start_time': self._parse_start(item),
-            'timezone': 'America/Chicago',
-            'street_address': self._parse_street_address(item),
-            'end_time': self._parse_end(item),
-            'all_day': self._parse_all_day(item),
-            'status': self._parse_status(item),
-            'location': self._parse_location(item),
-            # 'agenda': self._parse_agenda(item),
-            'updated_at': dt.date.today().isoformat(),
-            'sources': self._parse_sources(item)
+                '_type': 'event',
+                'id': self._parse_id(item),
+                'name': self._parse_name(item),
+                'description': self._parse_description(item),
+                'classification': self._parse_classification(item),
+                'start_time': self._parse_start(item),
+                'timezone': 'America/Chicago',
+                'street_address': self._parse_street_address(item),
+                'end_time': self._parse_end(item),
+                'all_day': self._parse_all_day(item),
+                'status': self._parse_status(item),
+                'location': self._parse_location(item),
+                # 'agenda': self._parse_agenda(item),
+                'updated_at': dt.date.today().isoformat(),
+                'sources': self._parse_sources(item)
             }
         else:
             yield
 
-
     # Getting dates and setting up AJAX Request
 
     def daterange(self, start_date, end_date):
-        for n in range(int ((end_date - start_date).days)):
+        for n in range(int((end_date - start_date).days)):
             yield start_date + dt.timedelta(n)
 
     def stack_dates(self, time_horizon):
         # min_date = dt.datetime.strptime('2017-09-08', '%Y-%m-%d') # Change in production - just for testing
-        min_date = dt.date.today() 
+        min_date = dt.date.today()
         max_date = min_date + dt.timedelta(days=time_horizon)
         dates = [date for date in self.daterange(min_date, max_date)]
         return dates
 
-    def request_err(self, failure): # If Request throws an error
+    def request_err(self, failure):  # If Request throws an error
         self.logger.error(repr(failure))
-
-
-
 
     # Event element parsers
 
@@ -163,7 +159,6 @@ class CclbaSpider(scrapy.Spider):
             status = 'passed'
         else:
             status = 'tentative'
-
         return status
 
     def _parse_street_address(self, item):
@@ -176,18 +171,16 @@ class CclbaSpider(scrapy.Spider):
         optional and may be more trouble than they're worth to collect.
         """
         street_address = self._parse_street_address(item)
-
         location_detail = item.css('span[class=\'evcal_desc evo_info \']::attr(data-location_name)').extract_first()
-
         return {
             'url': 'http://www.cookcountylandbank.org/',
             'name': location_detail + ", " + street_address,
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
         }
-        
+
     def _parse_all_day(self, item):
         """
         No reliable indicator here. Leaving None
@@ -200,7 +193,7 @@ class CclbaSpider(scrapy.Spider):
 
     def _parse_description(self, item):
         """
-        No real 'description' field to parse. Leaving None. 
+        No real 'description' field to parse. Leaving None.
         """
         return None
 
@@ -210,7 +203,6 @@ class CclbaSpider(scrapy.Spider):
         start_date_time = dt.datetime.strptime(start_date + ' ' + start_time, '%Y-%m-%d %I:%M %p')
         start_date_time = pytz.timezone('US/Central').localize(start_date_time)
         start_date_time = start_date_time.astimezone(pytz.utc).isoformat()
-
         return start_date_time
 
     def _parse_end(self, item):
@@ -219,7 +211,6 @@ class CclbaSpider(scrapy.Spider):
         Left commented the code to pull the end date if you want to include later.
         """
         # end_date = item.css('[itemprop=\'endDate\']')[0].get('datetime')
-
         return None
 
     """
@@ -227,7 +218,6 @@ class CclbaSpider(scrapy.Spider):
     The source_url goes straight to all the info and also includes an embedded
     PDF that could potentially be scraped. Didn't bother with that here.
     """
-
     # def _parse_agenda(self, item):
     #     agenda = []
     #     for item in item.css('div[class=\'eventon_desc_in\'] h4'):
@@ -238,7 +228,6 @@ class CclbaSpider(scrapy.Spider):
     #             agenda.append(description)
     #         else:
     #             continue
-
     #     return agenda
 
     def _parse_sources(self, item):
@@ -247,4 +236,3 @@ class CclbaSpider(scrapy.Spider):
             'url': source_url,
             'note': 'Event Page'
         }
-

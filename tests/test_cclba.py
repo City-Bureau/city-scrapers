@@ -1,6 +1,12 @@
 from tests.utils import file_response
 from documenters_aggregator.spiders.cclba import CclbaSpider
 
+<<<<<<< HEAD
+=======
+"""
+Uncomment below
+"""
+>>>>>>> upstream/master
 
 file = file_response('files/cclba.json')
 spider = CclbaSpider()
@@ -16,7 +22,7 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == None
+    assert parsed_items[0]['description'] is None
 
 
 def test_start_time():
@@ -25,7 +31,8 @@ def test_start_time():
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'] == None
+    assert parsed_items[0]['end_time'] is None
+
 
 def test_id():
     assert parsed_items[0]['id'] == '3381'
@@ -53,11 +60,19 @@ def test_location():
         },
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
 def test_sources():
     assert parsed_items[0]['sources'] == {
         'url': 'http://www.cookcountylandbank.org/events/cclba-finance-committee-meeting-09132017/',
         'note': "Event Page",
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
