@@ -4,14 +4,19 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
-
+import json
+import pytz
 from datetime import datetime
 
 
-class TestspiderSpider(scrapy.Spider):
-    name = 'testspider'
-    allowed_domains = ['www.citybureau.org']
-    start_urls = ['http://www.citybureau.org/articles', 'http://www.citybureau.org/staff', 'http://www.citybureau.org/is-chicago-any-less-segregated']
+class CapsSpider(scrapy.Spider):
+    name = 'caps'
+    long_name = 'Chicago Police'
+    allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
+    start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
+    }
 
     def parse(self, response):
         """
@@ -21,18 +26,25 @@ class TestspiderSpider(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
+
+        response = json.loads(response.body_as_unicode())
+
+        for item in response:
+            print(item)
+
+        for item in response:
             yield {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
+                'classification': 'CAPS community event',
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
-                'all_day': self._parse_all_day(item),
-                'status': self._parse_status(item),
+                'all_day': False,
+                'status': 'confirmed',
                 'location': self._parse_location(item),
+                'url': self._parse_url(item),
             }
 
         # self._parse_next(response) yields more responses to parse if necessary.
@@ -51,7 +63,7 @@ class TestspiderSpider(scrapy.Spider):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        return item['calendarId']
 
     def _parse_classification(self, item):
         """
@@ -79,7 +91,7 @@ class TestspiderSpider(scrapy.Spider):
         """
         return {
             'url': None,
-            'name': None,
+            'name': item['location'],
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -96,22 +108,32 @@ class TestspiderSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        return None
+        return item['title']
 
     def _parse_description(self, item):
         """
         Parse or generate event name.
         """
-        return None
+        return item['eventDetails']
+
+    def _format_time(self, time):
+        tz = pytz.timezone('America/Chicago')  # 2016-01-05T14:00:00
+        return tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        return None
+        return self._format_time(item['start'])
 
     def _parse_end(self, item):
         """
         Parse end date and time.
         """
-        return None
+        try:
+            return self._format_time(item['end'])
+        except TypeError:
+            return None
+
+    def _parse_url(self, item):
+        return item['eventUrl']
