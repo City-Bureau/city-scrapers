@@ -1,11 +1,6 @@
 from tests.utils import file_response
 from documenters_aggregator.spiders.cit import CitSpider
 
-
-"""
-Uncomment below
-"""
-
 test_response = file_response('files/cit.html')
 spider = CitSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]

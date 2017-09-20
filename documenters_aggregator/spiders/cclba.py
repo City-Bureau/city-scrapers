@@ -4,10 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
-<<<<<<< HEAD
 
-=======
->>>>>>> upstream/master
 import json
 import datetime as dt
 import pytz

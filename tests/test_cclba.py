@@ -1,17 +1,8 @@
 from tests.utils import file_response
 from documenters_aggregator.spiders.cclba import CclbaSpider
 
-<<<<<<< HEAD
-=======
-"""
-Uncomment below
-"""
->>>>>>> upstream/master
-
 file = file_response('files/cclba.json')
 spider = CclbaSpider()
-
-# import pdb; pdb.set_trace()
 
 test_response = file
 parsed_items = list(spider.parse(test_response))
@@ -60,19 +51,13 @@ def test_location():
         },
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> upstream/master
 def test_sources():
     assert parsed_items[0]['sources'] == {
         'url': 'http://www.cookcountylandbank.org/events/cclba-finance-committee-meeting-09132017/',
         'note': "Event Page",
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> upstream/master
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
