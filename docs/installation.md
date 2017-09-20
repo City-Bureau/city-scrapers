@@ -9,6 +9,20 @@
 
 You'll need a fairly standard Python development stack. If you're on OS X, the [NPR Visuals guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
 
+## Alternative Installation: Docker
+
+If you've got Docker installed on your machine, the process becomes pretty simple.
+
+1. ``` git clone git@github.com:City-Bureau/documenters-aggregator.git ```
+2. ``` docker build -t easherma/documenters-aggregator . ```
+
+Then you can run commands on the container. For instance, to run tests:
+
+``` 
+docker run easherma/documenters-aggregator invoke runtests
+```
+
+
 ## Installation
 
 The following assumes you're using `virtualenv` and `virtualenv-wrapper`. Adjust accordingly if you aren't using these tools.
