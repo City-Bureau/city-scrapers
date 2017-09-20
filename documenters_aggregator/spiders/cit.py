@@ -3,8 +3,10 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy, re, datetime as dt, pytz
-
+import scrapy
+import re
+import datetime as dt
+import pytz
 
 class CitSpider(scrapy.Spider):
     name = 'cit'
@@ -59,7 +61,7 @@ class CitSpider(scrapy.Spider):
         match = re.search(r'([a-zA-Z]*),\s{1}([a-zA-Z]+)\s([0-9]{1,2})', extracted)
 
         start_date_obj = dt.datetime.strptime(match.group(0), "%A, %B %d")
-        start_date = start_date_obj.replace(year = self.year)
+        start_date = start_date_obj.replace(year=self.year)
         id_date = start_date.date().isoformat()
         return id_date
 
@@ -124,9 +126,7 @@ class CitSpider(scrapy.Spider):
         start_date_obj = dt.datetime.strptime(match.group(0), "%A, %B %d")
         start_date = pytz.timezone('US/Central').localize(start_date_obj)
         start_date = start_date.astimezone(pytz.utc)
-        start_date = start_date.replace(year = self.year,
-                                                   hour = 0,
-                                                   minute = 0)
+        start_date = start_date.replace(year=self.year, hour=0, minute=0)
         start_date_str = start_date.isoformat()
 
         return start_date_str

@@ -5,6 +5,7 @@ test_response = file_response('files/cit.html')
 spider = CitSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
+
 def test_name():
     assert parsed_items[0]['name'] == 'Chicago Infrastructure Trust'
 
