@@ -38,3 +38,5 @@ Unidecode==0.4.21
 urllib3==1.22
 w3lib==1.17.0
 zope.interface==4.4.2
+https://github.com/opencivicdata/python-legistar-scraper/zipball/master
+https://github.com/opencivicdata/pupa/zipball/master
