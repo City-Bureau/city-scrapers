@@ -11,6 +11,7 @@ import pytz
 
 class CitSpider(scrapy.Spider):
     name = 'cit'
+    long_name = 'Chicago Infrastructure Trust'
     allowed_domains = ['chicagoinfrastructure.org']
     start_urls = ['http://chicagoinfrastructure.org/public-records/scheduled-meetings/']
 

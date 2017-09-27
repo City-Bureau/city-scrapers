@@ -19,6 +19,7 @@ class CclbaSpider(scrapy.Spider):
     Yields dict for dates with events.
     """
     name = 'cclba'
+    long_name = 'Cook County Land Bank'
     allowed_domains = ['www.cookcountylandbank.org']
     start_urls = ['http://www.cookcountylandbank.org/wp-admin/admin-ajax.php']
 
