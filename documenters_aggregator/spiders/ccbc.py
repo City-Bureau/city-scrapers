@@ -6,13 +6,15 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import scrapy
 
 from datetime import datetime
+from pytz import timezone
+from legistar.events import LegistarEventsScraper
 
 
-class {{ classname }}(scrapy.Spider):
-    name = '{{ name }}'
-    long_name = '{{ long_name }}'
-    allowed_domains = [{{ domains|quote_list|join(', ') }}]
-    start_urls = [{{ start_urls|quote_list|join(', ') }}]
+class CcbcSpider(scrapy.Spider):
+    name = 'ccbc'
+    long_name = 'Cook County Board of Commissioners'
+    allowed_domains = ['cook-county.legistar.com']
+    start_urls = ['https://www.cook-county.legistar.com']  # use LegistarEventsScraper instead
 
     def parse(self, response):
         """
@@ -22,8 +24,20 @@ class {{ classname }}(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
-            yield {
+        events = self._make_legistar_call()
+        return self._parse_events(events)
+
+    def _make_legistar_call(self, since=None):
+        les = LegistarEventsScraper(jurisdiction=None, datadir=None)
+        les.EVENTSPAGE = 'https://cook-county.legistar.com/Calendar.aspx'
+        les.BASE_URL = 'https://cook-county.legistar.com'
+        if not since:
+            since = datetime.today().year
+        return les.events(since=since)
+
+    def _parse_events(self, events):
+        for item, _ in events:
+            data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
@@ -32,27 +46,17 @@ class {{ classname }}(scrapy.Spider):
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
-                'status': self._parse_status(item),
                 'location': self._parse_location(item),
             }
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
+            data['status'] = self._parse_status(item, data['start_time'])
+            yield data
 
     def _parse_id(self, item):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        new_id = item['Name']['label'] + item['Meeting Date']
+        return ''.join(ch for ch in new_id if ch.isalnum())
 
     def _parse_classification(self, item):
         """
@@ -60,17 +64,16 @@ class {{ classname }}(scrapy.Spider):
         """
         return 'Not classified'
 
-    def _parse_status(self, item):
+    def _parse_status(self, item, start_time):
         """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
+        passed = meeting already started
+        tentative = no agenda posted
+        confirmed = agenda posted
         """
+        if datetime.now().isoformat() > start_time:
+            return 'passed'
+        if 'url' in item['Agenda']:
+            return 'confirmed'
         return 'tentative'
 
     def _parse_location(self, item):
@@ -80,7 +83,7 @@ class {{ classname }}(scrapy.Spider):
         """
         return {
             'url': None,
-            'name': None,
+            'name': item.get('Meeting Location', None),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -97,18 +100,29 @@ class {{ classname }}(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        return None
+        return item['Name']['label']
 
     def _parse_description(self, item):
         """
         Parse or generate event name.
         """
-        return None
+        agenda = item['Agenda']
+        try:
+            return agenda['url']
+        except:
+            return agenda
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
+        time = item.get('Meeting Time', None)
+        date = item.get('Meeting Date', None)
+        if date and time:
+            time_string = '{0} {1}'.format(date, time)
+            naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
+            tz = timezone('America/Chicago')
+            return tz.localize(naive).isoformat()
         return None
 
     def _parse_end(self, item):
@@ -116,4 +130,3 @@ class {{ classname }}(scrapy.Spider):
         Parse end date and time.
         """
         return None
-

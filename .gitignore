@@ -60,6 +60,7 @@ instance/
 
 # Scrapy stuff:
 .scrapy
+tutorial/
 
 # Sphinx documentation
 docs/_build/
@@ -100,3 +101,8 @@ documenters-aggregator/
 
 # mypy
 .mypy_cache/
+
+# cyrus
+json_conversions.md
+.citybureau/
+documenters_aggregator/caps.py
