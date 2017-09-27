@@ -1,14 +1,8 @@
 from tests.utils import file_response
 from documenters_aggregator.spiders.cclba import CclbaSpider
 
-"""
-Uncomment below
-"""
-
 file = file_response('files/cclba.json')
 spider = CclbaSpider()
-
-# import pdb; pdb.set_trace()
 
 test_response = file
 parsed_items = list(spider.parse(test_response))
