@@ -13,7 +13,8 @@ import time as Time
 
 class CcdphSpider(scrapy.Spider):
     name = 'ccdph'
-    allowed_domains = ['http://www.cookcountypublichealth.org']
+    long_name = 'Cook County Department of Public Health'
+    allowed_domains = ['www.cookcountypublichealth.org']
     start_urls = ['http://www.cookcountypublichealth.org/event-registration']
 
     def parse(self, response):

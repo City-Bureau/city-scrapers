@@ -10,6 +10,7 @@ from pytz import timezone
 # website via an iframe from a different domain.
 class RtaSpider(scrapy.Spider):
     name = 'rta'
+    long_name = 'Regional Transportation Authority'
     allowed_domains = ['www.rtachicago.org', 'rtachicago.granicus.com']
     start_urls = ['http://www.rtachicago.org/about-us/board-meetings']
     domain_root = 'http://www.rtachicago.org'

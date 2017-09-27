@@ -10,6 +10,7 @@ from datetime import datetime
 
 class TestspiderSpider(scrapy.Spider):
     name = 'testspider'
+    long_name = 'Test Spider Board Of Trade And Englightenment'
     allowed_domains = ['www.citybureau.org']
     start_urls = ['http://www.citybureau.org/articles', 'http://www.citybureau.org/staff', 'http://www.citybureau.org/is-chicago-any-less-segregated']
 
