@@ -6,12 +6,13 @@
 # of these pipelines.
 
 import os
-import requests
 
 from airtable import Airtable
+from documenters_aggregator.utils import get_key
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
+
 
 class DocumentersAggregatorLoggingPipeline(object):
     """
@@ -39,10 +40,27 @@ class DocumentersAggregatorAirtablePipeline(object):
         self.airtable = Airtable(AIRTABLE_BASE_KEY, AIRTABLE_DATA_TABLE)
 
     def process_item(self, item, spider):
-        item['id'] = self._make_id(item, spider)
-        item['location'] = 'tk'
-        item['all_day'] = 'false'
-        self.save_item(item, spider)
+        # copy item; airtable-specific munging is happening here that breaks
+        # opencivicdata standard
+        new_item = item.copy()
+
+        # make id
+        new_item['id'] = self._make_id(new_item, spider)
+
+        # flatten location
+        new_item['location_url'] = get_key(new_item, 'location.url')
+        new_item['location_name'] = get_key(new_item, 'location.name')
+        new_item['location_address'] = get_key(new_item, 'location.address')
+        new_item['location_latitude'] = get_key(new_item, 'location.coordinates.latitude')
+        new_item['location_longitude'] = get_key(new_item, 'location.coordinates.longitude')
+
+        new_item['all_day'] = 'false'
+
+        del(new_item['location'])
+        del(new_item['_type'])
+
+        self.save_item(new_item, spider)
+
         return item
 
     def save_item(self, item, spider):
@@ -57,9 +75,4 @@ class DocumentersAggregatorAirtablePipeline(object):
             self.airtable.insert(item)
 
     def _make_id(self, item, spider):
-        return '{3} {2} ({0}-{1})'.format(
-                                spider.name,
-                                item['id'],
-                                item['name'],
-                                spider.long_name
-                            )
+        return '{item_name} ({spider_long_name}, {spider_name}-{item_id})'.format(spider_name=spider.name, spider_long_name=spider.long_name, item_id=item['id'], item_name=item['name'])
