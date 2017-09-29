@@ -36,7 +36,6 @@ COOKIES_ENABLED = False
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'documenters_aggregator.pipelines.DocumentersAggregatorLoggingPipeline': 300,
-    'documenters_aggregator.pipelines.DocumentersAggregatorAirtablePipeline': 300,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
