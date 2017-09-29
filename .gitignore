@@ -106,3 +106,10 @@ documenters-aggregator/
 json_conversions.md
 .citybureau/
 documenters_aggregator/caps.py
+
+# legistar cache
+_cache/
+
+# deployment
+deploy/*.sh
+deploy/*.py
