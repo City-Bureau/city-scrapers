@@ -26,7 +26,7 @@ class CcdphSpider(scrapy.Spider):
         needs.
         """
         for item in response.css('div[class="event-item"] a::attr(href)').extract():
-            next_url = self.allowed_domains[0] + '/' + item
+            next_url = 'http://{0}/{1}'.format(self.allowed_domains[0], item)
             yield scrapy.Request(next_url, callback=self.parse_event_page,
                                  dont_filter=True)  # code doesn't work without this. idk why
 

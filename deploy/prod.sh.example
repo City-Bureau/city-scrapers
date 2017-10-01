@@ -1,0 +1,19 @@
+# Environment
+
+## Get parent dir
+DIR="$( cd "$( dirname `dirname "${BASH_SOURCE[0]}"` )" && pwd )"
+
+## Force parent dir into python search path
+export PYTHONPATH=$PYTHONPATH:$DIR
+
+# Config
+
+## Scrapy
+export SCRAPY_SETTINGS_MODULE='deploy.prod_settings'
+
+## Airtable API key (generate/view at https://airtable.com/account)
+export AIRTABLE_API_KEY='<YOURAIRTABLE_API_KEY>'
+
+## Airtable database/table identifiers (click your database at https://airtable.com/api)
+export DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY='<YOUR BASE KEY>'
+export DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE='Events'
