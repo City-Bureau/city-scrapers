@@ -8,4 +8,4 @@ ENV PYTHONPATH=/usr/src/app
 
 WORKDIR /usr/src/app
 
-CMD ['/usr/src/app/deploy/crawl.sh']
+CMD ["./deploy/crawl.sh"]

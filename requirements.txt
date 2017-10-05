@@ -30,7 +30,7 @@ python-dateutil==2.6.1
 python-slugify==1.2.4
 pytz==2017.2
 queuelib==1.4.2
-requests==2.18.2
+requests==2.18.4
 Scrapy==1.4.0
 service-identity==17.0.0
 six==1.10.0
@@ -41,3 +41,4 @@ w3lib==1.17.0
 zope.interface==4.4.2
 https://github.com/opencivicdata/python-legistar-scraper/zipball/master
 https://github.com/opencivicdata/pupa/zipball/master
+

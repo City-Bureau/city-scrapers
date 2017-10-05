@@ -32,6 +32,8 @@ class DocumentersAggregatorSQLAlchemyPipeline(object):
         return item
 
 
+from scrapy.exceptions import DropItem
+
 class DocumentersAggregatorAirtablePipeline(object):
     """
     Stub pipeline to save to AirTable.
@@ -59,7 +61,10 @@ class DocumentersAggregatorAirtablePipeline(object):
         del(new_item['location'])
         del(new_item['_type'])
 
-        self.save_item(new_item, spider)
+        try:
+            self.save_item(new_item, spider)
+        except:
+            raise DropItem('Could not save {0}'.format(item['id']))
 
         return item
 
@@ -73,6 +78,7 @@ class DocumentersAggregatorAirtablePipeline(object):
             # create
             spider.logger.debug('AIRTABLE PIPELINE: Creating {0}'.format(item['id']))
             self.airtable.insert(item)
+
 
     def _make_id(self, item, spider):
         return '{item_name} ({spider_long_name}, {spider_name}-{item_id})'.format(spider_name=spider.name, spider_long_name=spider.long_name, item_id=item['id'], item_name=item['name'])
