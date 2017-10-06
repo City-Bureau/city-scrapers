@@ -6,6 +6,7 @@
 # of these pipelines.
 
 import os
+import dateutil.parser
 
 from airtable import Airtable
 from documenters_aggregator.utils import get_key
@@ -57,13 +58,18 @@ class DocumentersAggregatorAirtablePipeline(object):
 
         new_item['all_day'] = 'false'
 
+        new_item['agency_name'] = spider.long_name
+
+        new_item['start_time_formatted'] = self._transform_date(new_item['start_time'])
+        new_item['end_time_formatted'] = self._transform_date(new_item['end_time'])
+
         del(new_item['location'])
         del(new_item['_type'])
 
         try:
             self.save_item(new_item, spider)
         except:
-            raise DropItem('Could not save {0}'.format(item['id']))
+            raise DropItem('Could not save {0}'.format(new_item['id']))
 
         return item
 
@@ -79,4 +85,16 @@ class DocumentersAggregatorAirtablePipeline(object):
             self.airtable.insert(item)
 
     def _make_id(self, item, spider):
-        return '{item_name} ({spider_long_name}, {spider_name}-{item_id})'.format(spider_name=spider.name, spider_long_name=spider.long_name, item_id=item['id'], item_name=item['name'])
+        return '{spider_long_name} {item_name} ({spider_name}-{item_id})'.format(spider_name=spider.name, spider_long_name=spider.long_name, item_id=item['id'], item_name=item['name'])
+
+    def _transform_date(self, timestring):
+        """
+        Parse to friendly format for Zapier integration.
+        """
+        try:
+            dt = dateutil.parser.parse(timestring)
+        except TypeError:
+            return None
+
+        return dt.strftime('%a %B %d, %Y, %I:%M%p')
+
