@@ -32,7 +32,7 @@ class CitSpider(scrapy.Spider):
             yield {
                 '_type': 'event',
                 'id': self._parse_id(item),
-                'name': 'Chicago Infrastructure Trust',
+                'name': 'Board Meeting',
                 'description': None,
                 'classification': 'Board Meeting',
                 'start_time': self._parse_start(item),
