@@ -15,7 +15,7 @@ SPIDER_MODULES = ['documenters_aggregator.spiders']
 NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Documenters Aggregator (learn more and say hello at https://TKTK)'
+USER_AGENT = 'Documenters Aggregator [development mode]. Learn more and say hello at https://city-bureau.gitbooks.io/documenters-event-aggregator/'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -69,8 +69,6 @@ ITEM_PIPELINES = {
 DOWNLOADER_MIDDLEWARES = {
     'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
 }
-
-FOO = 'BAR'
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
