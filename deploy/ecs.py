@@ -69,12 +69,6 @@ def register_task_definitions(ctx):
         ctx.run('aws ecs register-task-definition --family {0}-{1} --network-mode host --container-definitions "{2}"'.format(PROJECT_SLUG, cls.name, definitions))
 
 
-@task(build, push, create_logs, register_task_definitions)
-def deploy(ctx):
-    """Build, tag, push, and deploy to Elastic Container Service."""
-    print("Deployed.")
-
-
 @task(login)
 def enable_rules(ctx):
     # @TODO this offset mechanism is mega-dumb
@@ -109,6 +103,12 @@ def disable_rules(ctx):
     for cls in spider_classes:
         rule_definition = get_event_rule_definition(cls, state="DISABLED", cron_offset=cron_offset)
         ctx.run('aws events put-rule --cli-input-json "{0}"'.format(rule_definition))
+
+
+@task(build, push, create_logs, register_task_definitions, enable_rules)
+def deploy(ctx):
+    """Build, tag, push, and deploy to Elastic Container Service."""
+    print("Deployed.")
 
 
 def get_event_rule_definition(cls, state="ENABLED", cron_offset=0):
