@@ -27,12 +27,9 @@ class CapsSpider(scrapy.Spider):
         needs.
         """
 
-        response = json.loads(response.body_as_unicode())
+        data = json.loads(response.body_as_unicode())
 
-        for item in response:
-            print(item)
-
-        for item in response:
+        for item in data:
             yield {
                 '_type': 'event',
                 'id': self._parse_id(item),
@@ -44,7 +41,7 @@ class CapsSpider(scrapy.Spider):
                 'all_day': False,
                 'status': 'confirmed',
                 'location': self._parse_location(item),
-                'url': self._parse_url(item),
+                'url': self._parse_url(response),
             }
 
         # self._parse_next(response) yields more responses to parse if necessary.
@@ -118,7 +115,8 @@ class CapsSpider(scrapy.Spider):
 
     def _format_time(self, time):
         tz = pytz.timezone('America/Chicago')  # 2016-01-05T14:00:00
-        return tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
+        dt = tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
+        return dt.isoformat()
 
     def _parse_start(self, item):
         """
@@ -135,5 +133,8 @@ class CapsSpider(scrapy.Spider):
         except TypeError:
             return None
 
-    def _parse_url(self, item):
-        return item['eventUrl']
+    def _parse_url(self, response):
+        """
+        Parse url.
+        """
+        return response.url

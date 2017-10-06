@@ -1,16 +1,5 @@
 from tests.utils import file_response
 from documenters_aggregator.spiders.caps import CapsSpider
-from datetime import datetime
-
-
-def test_tests():
-    print('Please write some tests for this spider or at least disable this one.')
-    assert True
-
-
-"""
-Uncomment below
-"""
 
 test_response = file_response('files/caps.json')
 spider = CapsSpider()
@@ -25,8 +14,12 @@ def test_description():
     assert isinstance(parsed_items[0]['description'], str)
 
 
+def test_start_time():
+    assert parsed_items[0]['start_time'] == '2017-12-28T18:30:00-06:00'
+
+
 def test_end_time():
-    assert isinstance(parsed_items[0]['end_time'], datetime)
+    assert parsed_items[0]['end_time'] == '2017-12-28T19:30:00-06:00'
 
 
 def test_id():
