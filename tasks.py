@@ -2,7 +2,8 @@ import requests
 import os
 import time
 
-from invoke import task, run
+from deploy import tasks as deploy_tasks
+from invoke import Collection, task, run
 from jinja2 import Environment, FileSystemLoader
 from urllib.parse import urlparse
 
@@ -21,9 +22,10 @@ except ImportError:
 
 
 def quote_list(the_list):
+    """Jinja helper to quote list items"""
     return ["'%s'" % element for element in the_list]
 
-
+# Jinja env
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 env.filters["quote_list"] = quote_list
 
@@ -149,3 +151,11 @@ def _get_domains(start_urls):
         if parsed.netloc not in domains:
             domains.append(parsed.netloc)
     return domains
+
+
+# Python invoke namespace (http://docs.pyinvoke.org/en/0.11.0/concepts/namespaces.html#nesting-collections)
+ns = Collection()
+ns.add_task(genspider)
+ns.add_task(runtests)
+ns.add_collection(deploy_tasks, 'ecs')
+
