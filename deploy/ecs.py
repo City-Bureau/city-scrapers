@@ -27,6 +27,7 @@ def delete_logs(ctx):
     for cls in spider_classes:
         ctx.run('aws logs delete-log-group --log-group-name "{0}-{1}"'.format(PROJECT_SLUG, cls.name))
 
+
 @task
 def build(ctx):
     """Build Docker container."""
@@ -86,11 +87,11 @@ def enable_rules(ctx):
                     "Input": "{}",
                     "RoleArn": "arn:aws:iam::647111127395:role/ecsEventsRole",
                     "EcsParameters": {
-                        "TaskDefinitionArn": "arn:aws:ecs:us-east-1:647111127395:task-definition/documenters_aggregator-{0}".format(cls.name), # @TODO hardcoded :/
+                        "TaskDefinitionArn": "arn:aws:ecs:us-east-1:647111127395:task-definition/documenters_aggregator-{0}".format(cls.name),  # @TODO hardcoded :/
                         "TaskCount": 1
                     },
                     "Id": "documenters_aggregator-rta",
-                    "Arn": "arn:aws:ecs:us-east-1:647111127395:cluster/documenters-aggregator" # @TODO hardcoded :/
+                    "Arn": "arn:aws:ecs:us-east-1:647111127395:cluster/documenters-aggregator"  # @TODO hardcoded :/
                 }
             ]
         }
@@ -101,7 +102,7 @@ def enable_rules(ctx):
 @task(login)
 def disable_rules(ctx):
     for cls in spider_classes:
-        rule_definition = get_event_rule_definition(cls, state="DISABLED", cron_offset=cron_offset)
+        rule_definition = get_event_rule_definition(cls, state="DISABLED")
         ctx.run('aws events put-rule --cli-input-json "{0}"'.format(rule_definition))
 
 
@@ -183,4 +184,3 @@ def get_env():
 
 # [ ] Create email on error alert
 # [ ] Delete email on error alert
-

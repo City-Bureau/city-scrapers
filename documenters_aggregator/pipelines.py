@@ -9,6 +9,7 @@ import os
 
 from airtable import Airtable
 from documenters_aggregator.utils import get_key
+from scrapy.exceptions import DropItem
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
@@ -31,8 +32,6 @@ class DocumentersAggregatorSQLAlchemyPipeline(object):
     def process_item(self, item, spider):
         return item
 
-
-from scrapy.exceptions import DropItem
 
 class DocumentersAggregatorAirtablePipeline(object):
     """
@@ -78,7 +77,6 @@ class DocumentersAggregatorAirtablePipeline(object):
             # create
             spider.logger.debug('AIRTABLE PIPELINE: Creating {0}'.format(item['id']))
             self.airtable.insert(item)
-
 
     def _make_id(self, item, spider):
         return '{item_name} ({spider_long_name}, {spider_name}-{item_id})'.format(spider_name=spider.name, spider_long_name=spider.long_name, item_id=item['id'], item_name=item['name'])
