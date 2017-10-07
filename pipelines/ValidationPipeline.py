@@ -8,10 +8,9 @@ SCHEMA = {
     'id': {'required': True},
     'name': {'required': True, 'type': str},
     'description': {'required': False, 'type': str},
-    'classification': {'required': True, 'values': ['committee-meeting', 'hearing']},
-    'start_time': {'required': True, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'},
-    'end_time': {'required': False, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z'},
-    'timezone': {'required': True, 'values': ['America/Chicago']},
+    'classification': {'required': True},
+    'start_time': {'required': True, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
+    'end_time': {'required': False, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
     'all_day': {'required': True, 'type': bool},
     'status': {'required': True, 'values': ['cancelled', 'tentative', 'confirmed', 'passed']},
     'location': {'required': True, 'type': dict}
@@ -19,9 +18,9 @@ SCHEMA = {
 
 LOCATION_SCHEMA = {
     'url': {'required': False},
-    'name': {'required': True, 'type': str},
-    'latitude': {'required': True, 'type': str},
-    'longitude': {'required': True, 'type': str}
+    'name': {'required': False, 'type': str},  # actually required
+    'latitude': {'required': False, 'type': str},  # actually required
+    'longitude': {'required': False, 'type': str}  # actually required
 }
 
 
@@ -47,6 +46,8 @@ class ValidationPipeline(object):
         schema=LOCATION_SCHEMA, extract the location dictionaries from
         the items, and run validate_batch on the location dicts.
         '''
+        if not batch:
+            return
         missing_ids = [item for item in batch if 'id' not in item]
         if missing_ids:
             print("Can't log. Some items are missing id's.")
@@ -94,7 +95,8 @@ class ValidationPipeline(object):
             if field in self.required_fields:
                 bad_items = [item for item in batch if type(item.get(field, None)) != valid_type]
             else:
-                bad_items = [item for item in batch if (field in item) and (type(item.get(field, None)) != valid_type)]
+                bad_items = [item for item in batch if (field in item) and (not item.get(field, None) in NULL_VALUES) and
+                             (type(item.get(field, None)) != valid_type)]
             if bad_items:
                 message = "{0} items contain invalid types for {1}. Valid types for {1} are: {2}\n".format(len(bad_items), field, str(valid_type))
                 print(message)
@@ -109,9 +111,11 @@ class ValidationPipeline(object):
         for field in self.format_str:
             pattern = re.compile(self.schema[field]['format_str'])
             if field in self.required_fields:
-                bad_items = [item for item in batch if not re.match(pattern, item.get(field, None))]
+                bad_items = [item for item in batch if (item.get(field, None) in NULL_VALUES) or
+                             (not re.match(pattern, item.get(field, '')))]
             else:
-                bad_items = [item for item in batch if (field in item) and (not re.match(pattern, item.get(field, None)))]
+                bad_items = [item for item in batch if (field in item) and (not item.get(field, None) in NULL_VALUES) and
+                             (not re.match(pattern, item.get(field, '')))]
             if bad_items:
                 message = "{0} items contain invalid string formatting for {1}. Valid formats for {1} are: {2}\n".format(len(bad_items), field, str(pattern))
                 print(message)
@@ -131,17 +135,21 @@ class ValidationPipeline(object):
 
 
 if __name__ == "__main__":
-    # Read in output from scrapy crawl cchhs
-    with open('tests/files/cchhs.json', 'r') as f:
+    # Read in output from scrapy crawl SPIDER_NAME
+    SPIDER_NAME = 'ccbc'
+    with open('{0}.json'.format(SPIDER_NAME), 'r') as f:
         batch = json.loads(f.read())
 
     # Validate items against events schema
-    vp = ValidationPipeline(logfile='tests/files/log_cchhs.txt')
-    vp.validate_batch(batch)  # creates log_cchhs.txt
+    vp = ValidationPipeline(logfile='log.txt')
+    vp.validate_batch(batch)  # creates log.txt
 
     # Validate items against schema for location dictionary
     location_batch = [item.get('location', {}) for item in batch]
-    for idx, item in enumerate(location_batch):
-        item.update({'id': batch[idx].get('id', None)})
-    vp_location = ValidationPipeline(schema=LOCATION_SCHEMA, logfile='tests/files/log_cchhs_location.txt')
-    vp_location.validate_batch(location_batch)  # creates log_cchhs_location.txt
+    for idx, item in reversed(list(enumerate(location_batch))):
+        if item:
+            item.update({'id': batch[idx].get('id', None)})
+        else:
+            del location_batch[idx]
+    vp_location = ValidationPipeline(schema=LOCATION_SCHEMA, logfile='log_location.txt')
+    vp_location.validate_batch(location_batch)  # creates log_location.txt
