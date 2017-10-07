@@ -5,7 +5,7 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cchhs import CchhsSpider
 
-test_response = file_response('files/cchhs.html')
+test_response = file_response('files/cchhs.html', url='http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/')
 spider = CchhsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -56,3 +56,8 @@ def test_classification(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert item['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test__type(item):
+    assert item['sources'] == [{'url': 'http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/', 'note': ''}]

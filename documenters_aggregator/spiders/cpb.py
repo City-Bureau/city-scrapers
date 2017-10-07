@@ -31,7 +31,8 @@ class CpbSpider(scrapy.Spider):
             'classification': self._parse_classification(response),
             'end_time': self._parse_end(response),
             'all_day': self._parse_all_day(response),
-            'location': self._parse_location(response)
+            'location': self._parse_location(response),
+            'sources': self._parse_sources(response)
         }
         universal_start_time = self._parse_universal_start(response)
 
@@ -160,3 +161,9 @@ class CpbSpider(scrapy.Spider):
         Parse end date and time.
         """
         return None
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

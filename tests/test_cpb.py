@@ -3,7 +3,7 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cpb import CpbSpider
 
-test_response = file_response('files/cpb_public_meetings.html')
+test_response = file_response('files/cpb_public_meetings.html', url='https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html')
 spider = CpbSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -74,3 +74,9 @@ def test_location(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert item['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test__type(item):
+    assert item['sources'] == [{'url': 'https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html',
+    'note': ''}]

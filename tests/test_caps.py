@@ -1,3 +1,4 @@
+import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.caps import CapsSpider
 
@@ -44,3 +45,10 @@ def test_location():
 
 def test__type():
     assert isinstance(parsed_items[0]['_type'], str)
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    EXPECTED_SOURCES = [{'url': 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
+    'note': ''}]
+    assert item['sources'] == EXPECTED_SOURCES

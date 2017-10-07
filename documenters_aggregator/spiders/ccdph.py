@@ -42,6 +42,7 @@ class CcdphSpider(scrapy.Spider):
             'all_day': self._parse_all_day(response),
             'status': self._parse_status(response),
             'location': self._parse_location(response),
+            'sources': self._parse_sources(response)
         }
 
     def _parse_id(self, response):
@@ -206,3 +207,9 @@ class CcdphSpider(scrapy.Spider):
 
         tz = timezone('America/Chicago')
         return tz.localize(naive).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

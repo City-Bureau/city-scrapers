@@ -5,10 +5,8 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.rta import RtaSpider
 
-page_response = file_response('files/rta.html')
-events_response = file_response('files/rta_calendar.html')
+events_response = file_response('files/rta_calendar.html', url='http://www.rtachicago.org/about-us/board-meetings')
 events_response.meta['description'] = "Test Description"
-
 spider = RtaSpider()
 parsed_items = [item for item in spider.parse_iframe(events_response) if isinstance(item, dict)]
 
@@ -61,3 +59,9 @@ def test_location(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert item['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test__type(item):
+    assert item['sources'] == [{'url': 'http://www.rtachicago.org/about-us/board-meetings',
+        'note': ''}]
