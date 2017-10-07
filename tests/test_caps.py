@@ -50,5 +50,5 @@ def test__type():
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
     EXPECTED_SOURCES = [{'url': 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
-    'note': ''}]
+                         'note': ''}]
     assert item['sources'] == EXPECTED_SOURCES

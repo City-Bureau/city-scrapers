@@ -77,6 +77,6 @@ def test__type(item):
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
+def test_sources(item):
     assert item['sources'] == [{'url': 'https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html',
-    'note': ''}]
+                                'note': ''}]

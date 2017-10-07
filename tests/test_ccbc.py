@@ -64,8 +64,7 @@ def test_location():
 def test_sources():
     assert parsed_items[25]['sources'] == [{
         'url': 'https://cook-county.legistar.com/DepartmentDetail.aspx?ID=20924&GUID=B78A790A-5913-4FBF-8FBF-ECEE445B7796',
-        'note': ''
-        }]
+        'note': ''}]
 
 
 @pytest.mark.parametrize('item', parsed_items)

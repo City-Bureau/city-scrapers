@@ -59,5 +59,5 @@ def test__type(item):
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
+def test_sources(item):
     assert item['sources'] == [{'url': 'http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/', 'note': ''}]

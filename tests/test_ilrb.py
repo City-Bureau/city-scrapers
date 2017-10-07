@@ -73,5 +73,5 @@ def test__type(item):
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
+def test_sources(item):
     assert item['sources'] == [{'url': 'https://www.illinois.gov/ilrb/meetings/Pages/default.aspx', 'note': ''}]

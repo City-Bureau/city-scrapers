@@ -58,5 +58,5 @@ def test_all_day():
     # assert parsed_items[0]['_type'] == 'event'
 
 @pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
+def test_sources(item):
     assert item['sources'] == [{'url': 'https://www.chipublib.org/board-of-directors/board-meeting-schedule/', 'note': ''}]

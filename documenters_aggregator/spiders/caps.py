@@ -125,6 +125,6 @@ class CapsSpider(scrapy.Spider):
         """
         Parse sources.
         """
-        return [{'url': 
-        'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
-        'note': ''}]
+        return [{'url':
+                 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
+                 'note': ''}]
