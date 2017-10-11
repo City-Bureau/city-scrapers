@@ -12,25 +12,27 @@ from documenters_aggregator.spiders.ccc import CccSpider
 Uncomment below
 """
 
-test_response = file_response('files/ccc.html')
+test_response = file_response('files/ccc_event.html')
 spider = CccSpider()
+item = list(spider.parse_event_page(test_response))
+# write your tests as usual using item instead of parsed_items[0]
 
-instance = spider.parse()
-#parsed_items = [item for item in instance if isinstance(item, dict)]
+#instance = spider.parse(item)
+#parsed_items = list(item)
 
 def test_test():
-    print(instance)
+    print(item)
 
-#def test_name():
-#     assert parsed_items[0]['name'] == 'October 2017 Regular Board Meeting'
-
-
-# def test_description():
-    # assert parsed_items[0]['description'] == 'EXPECTED DESCRIPTION'
+def test_name():
+    assert item[0]['name'] == 'November 2017 Regular Board Meeting'
 
 
-# def test_start_time():
-    # assert parsed_items[0]['start_time'] == 'EXPECTED START DATE AND TIME'
+#def test_description():
+    #assert item[0]['description'] == 'EXPECTED DESCRIPTION'
+
+
+def test_start_time():
+    assert item[0]['start_time'] == '2017-11-02T09:00:00'
 
 
 # def test_end_time():
@@ -64,5 +66,5 @@ def test_test():
     # }
 
 
-# def test__type(item):
-    # assert parsed_items[0]['_type'] == 'event'
+def test__type():
+    assert item[0]['_type'] == 'event'
