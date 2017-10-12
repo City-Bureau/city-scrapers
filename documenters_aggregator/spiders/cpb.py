@@ -117,8 +117,7 @@ class CpbSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        all_content = response.xpath("//h1[@class='page-heading']/following-sibling::*")
-        all_text = all_content.xpath("text()").extract()
+        all_text = response.css('div.page-full-description > div > div > *::text').extract()
         cutoff = [i for i, s in enumerate(all_text) if 'Regular Meetings' in s][0]
         description = all_text[:cutoff]
         return ''.join([x.strip() for x in description])
