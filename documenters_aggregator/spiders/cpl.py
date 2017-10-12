@@ -9,6 +9,7 @@ import re
 import urllib.request
 import json
 from datetime import datetime
+from pytz import timezone
 
 
 class CplSpider(scrapy.Spider):
@@ -151,7 +152,8 @@ class CplSpider(scrapy.Spider):
         date = date.replace('.', '')
         date = date + ' ' + year
         datetime_object = datetime.strptime(date, '%A %B %d %I %p %Y')
-        return datetime_object.isoformat()
+        tz = timezone('America/Chicago')
+        return tz.localize(datetime_object).isoformat()
 
     def _parse_sources(self, response):
         """
