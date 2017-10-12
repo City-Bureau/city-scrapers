@@ -39,15 +39,16 @@ def test_status():
     assert parsed_items[0]['status'] == 'tentative'
 
 
-# def test_location(item):
-#     assert item['location'] == {
-#         'url': 'EXPECTED URL',
-#         'name': 'EXPECTED NAME',
-#         'coordinates': {
-#             'latitude': 'EXPECTED LATITUDE',
-#             'longitude': 'EXPECTED LONGITUDE',
-#         },
-#     }
+@pytest.mark.parametrize('item', parsed_items)
+def test_location(item):
+    assert item['location'] == {
+        'url': None,
+        'name': None,
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        },
+    }
 
 
 def test__type():
