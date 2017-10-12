@@ -27,12 +27,9 @@ class CapsSpider(scrapy.Spider):
         needs.
         """
 
-        response = json.loads(response.body_as_unicode())
+        data = json.loads(response.body_as_unicode())
 
-        for item in response:
-            print(item)
-
-        for item in response:
+        for item in data:
             yield {
                 '_type': 'event',
                 'id': self._parse_id(item),
@@ -44,20 +41,8 @@ class CapsSpider(scrapy.Spider):
                 'all_day': False,
                 'status': 'confirmed',
                 'location': self._parse_location(item),
-                'url': self._parse_url(item),
+                'sources': self._parse_sources(item)
             }
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
 
     def _parse_id(self, item):
         """
@@ -118,7 +103,8 @@ class CapsSpider(scrapy.Spider):
 
     def _format_time(self, time):
         tz = pytz.timezone('America/Chicago')  # 2016-01-05T14:00:00
-        return tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
+        dt = tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
+        return dt.isoformat()
 
     def _parse_start(self, item):
         """
@@ -135,5 +121,10 @@ class CapsSpider(scrapy.Spider):
         except TypeError:
             return None
 
-    def _parse_url(self, item):
-        return item['eventUrl']
+    def _parse_sources(self, item):
+        """
+        Parse sources.
+        """
+        return [{'url':
+                 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
+                 'note': ''}]

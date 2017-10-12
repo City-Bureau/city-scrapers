@@ -63,6 +63,7 @@ class CdphSpider(scrapy.Spider):
                     'all_day': False,
                     'status': self._parse_status(item),
                     'location': self._parse_location(item),
+                    'sources': self._parse_sources(response)
                 }
 
     def _parse_classification(self, item):
@@ -113,3 +114,9 @@ class CdphSpider(scrapy.Spider):
         date = start_time.split('T')[0]
         dashified = re.sub(r'[^a-z]+', '-', name.lower())
         return '{0}-{1}'.format(date, dashified)
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

@@ -47,6 +47,7 @@ class CcbcSpider(scrapy.Spider):
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(item)
             }
             data['status'] = self._parse_status(item, data['start_time'])
             yield data
@@ -130,3 +131,13 @@ class CcbcSpider(scrapy.Spider):
         Parse end date and time.
         """
         return None
+
+    def _parse_sources(self, item):
+        """
+        Parse sources.
+        """
+        try:
+            url = item['Name']['url']
+        except:
+            url = 'https://cook-county.legistar.com/Calendar.aspx'
+        return [{'url': url, 'note': ''}]
