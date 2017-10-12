@@ -106,10 +106,6 @@ class CclbaSpider(scrapy.Spider):
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
                 'start_time': self._parse_start(item),
-<<<<<<< HEAD
-=======
-                'street_address': self._parse_street_address(item),
->>>>>>> bd429e0b5c469a4989595e377cbb2ebfcf6d8d9f
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
