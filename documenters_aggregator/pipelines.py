@@ -17,6 +17,7 @@ from scrapy.exceptions import DropItem
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
+FIELDS_WHITELIST = ['id', 'name', 'description', 'classification', 'start_time', 'start_time_formatted', 'end_time', 'end_time_formatte', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude']
 
 
 class DocumentersAggregatorLoggingPipeline(object):
@@ -66,10 +67,7 @@ class DocumentersAggregatorAirtablePipeline(object):
         new_item['start_time_formatted'] = self._transform_date(new_item['start_time'])
         new_item['end_time_formatted'] = self._transform_date(new_item['end_time'])
 
-        # @TODO whitelist/blacklist?
-        del(new_item['location'])
-        del(new_item['_type'])
-        del(new_item['sources'])
+        new_item = { k:v for k,v in new_item.items() if k in FIELDS_WHITELIST }
 
         try:
             self.save_item(new_item, spider)
