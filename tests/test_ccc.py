@@ -14,17 +14,14 @@ Uncomment below
 
 test_response = file_response('files/ccc_event.html')
 spider = CccSpider()
-item = list(spider.parse_event_page(test_response))
+item = spider.parse_event_page(test_response)
 # write your tests as usual using item instead of parsed_items[0]
 
 #instance = spider.parse(item)
 #parsed_items = list(item)
 
-def test_test():
-    print(item)
-
 def test_name():
-    assert item[0]['name'] == 'November 2017 Regular Board Meeting'
+    assert item['name'] == 'November 2017 Regular Board Meeting'
 
 
 #def test_description():
@@ -32,7 +29,7 @@ def test_name():
 
 
 def test_start_time():
-    assert item[0]['start_time'] == '2017-11-02T09:00:00'
+    assert item['start_time'] == '2017-11-02T09:00:00-05:00'
 
 
 # def test_end_time():
@@ -67,4 +64,4 @@ def test_start_time():
 
 
 def test__type():
-    assert item[0]['_type'] == 'event'
+    assert item['_type'] == 'event'

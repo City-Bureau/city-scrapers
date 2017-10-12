@@ -13,7 +13,7 @@ from pytz import timezone
 class CccSpider(scrapy.Spider):
     name = 'ccc'
     allowed_domains = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
-    start_urls = ['http://http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
+    start_urls = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
 
     # for each link
     #   parse 
@@ -27,16 +27,16 @@ class CccSpider(scrapy.Spider):
         """
         for link in response.css('a.Eventslink::attr(href)').extract():
             next_url = "http://www.ccc.edu" + link
-            return scrapy.Request(next_url, callback=self.parse_event_page())
+            yield scrapy.Request(next_url, callback=self.parse_event_page, dont_filter=True)
 
     def parse_event_page(self, response):
-            yield {
+            return {
                 '_type': 'event',
                 'id': self._parse_id(),
-                'name': self._parse_name(),
-                'description': self._parse_description(),
+                'name': self._parse_name(response),
+                'description': self._parse_description(response),
                 'classification': self._parse_classification(),
-                'start_time': self._parse_start(),
+                'start_time': self._parse_start(response),
                 'end_time': self._parse_end(),
                 'all_day': self._parse_all_day(),
                 'status': self._parse_status(),
@@ -55,19 +55,19 @@ class CccSpider(scrapy.Spider):
         next_url = None  # What is next URL?
         return None
 
-    def _parse_id(self, item):
+    def _parse_id(self):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
         return None
 
-    def _parse_classification(self, item):
+    def _parse_classification(self):
         """
         Parse or generate classification (e.g. town hall).
         """
         return 'Not classified'
 
-    def _parse_status(self, item):
+    def _parse_status(self):
         """
         Parse or generate status of meeting. Can be one of:
 
@@ -80,7 +80,7 @@ class CccSpider(scrapy.Spider):
         """
         return 'tentative'
 
-    def _parse_location(self, item):
+    def _parse_location(self):
         """
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
@@ -94,32 +94,32 @@ class CccSpider(scrapy.Spider):
             },
         }
 
-    def _parse_all_day(self, item):
+    def _parse_all_day(self):
         """
         Parse or generate all-day status. Defaults to false.
         """
         return False
 
-    def _parse_name(self, item):
+    def _parse_name(self, response):
         """
         Parse or generate event name.
         """
-        title = item.css('h1::text').extract_first()
+        title = response.css('h1::text').extract_first()
         return title
 
-    def _parse_description(self, item):
+    def _parse_description(self, response):
         """
         Parse or generate event name.
         """
-        text_chunks = item.css('div.ms-rtestate-field::text').extract()
+        text_chunks = response.css('div.ms-rtestate-field::text').extract()
 
         return None
 
-    def _parse_start(self, item):
+    def _parse_start(self, response):
         """
         Parse start date and time.
         """
-        raw_date_time = item.css('div#formatDateA.required::text').extract_first()
+        raw_date_time = response.css('div#formatDateA.required::text').extract_first()
         date_regex = r"(\d+)\/(\d+)\/(\d+)"
         time_regex = r"(\d+):(\d+)"
 
@@ -128,11 +128,11 @@ class CccSpider(scrapy.Spider):
         d = re.search(date_regex, raw_date_time)
         t = re.search (time_regex, raw_date_time)
 
-        naive_dt = datetime(int(d.group(1)), int(d.group(2)), int(d.group(3)), int(t.group(1)), int(t.group(2)))
+        naive_dt = datetime(month=int(d.group(1)), day=int(d.group(2)), year=int(d.group(3)), hour=int(t.group(1)), minute=int(t.group(2)))
         dt = tz.localize(naive_dt)
         return dt.isoformat()
 
-    def _parse_end(self, item):
+    def _parse_end(self):
         """
         Parse end date and time.
         """
