@@ -8,9 +8,11 @@
 import os
 import datetime
 import dateutil.parser
+import json
 
 from airtable import Airtable
 from documenters_aggregator.utils import get_key
+from requests.exceptions import HTTPError
 from scrapy.exceptions import DropItem
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
@@ -64,16 +66,22 @@ class DocumentersAggregatorAirtablePipeline(object):
         new_item['start_time_formatted'] = self._transform_date(new_item['start_time'])
         new_item['end_time_formatted'] = self._transform_date(new_item['end_time'])
 
+        # @TODO whitelist/blacklist?
         del(new_item['location'])
         del(new_item['_type'])
+        del(new_item['sources'])
 
         try:
             self.save_item(new_item, spider)
-        except Exception as e:
-            spider.logger.exception("message")
+            return item
+        except HTTPError as e:
+            spider.logger.error('HTTP error')
+            spider.logger.error(e.response.content)
+            spider.logger.exception('Original message')
+            spider.logger.error(json.dumps(new_item, indent=4, sort_keys=True))
             raise DropItem('Could not save {0}'.format(new_item['id']))
-
-        return item
+        except Exception as e:
+            spider.logger.exception('Unknown error')
 
     def save_item(self, item, spider):
         now = datetime.datetime.now().isoformat()
@@ -103,4 +111,3 @@ class DocumentersAggregatorAirtablePipeline(object):
             return None
 
         return dt.strftime('%a %B %d, %Y, %I:%M%p')
-

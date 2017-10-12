@@ -106,14 +106,10 @@ class CclbaSpider(scrapy.Spider):
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
                 'start_time': self._parse_start(item),
-                'timezone': 'America/Chicago',
-                'street_address': self._parse_street_address(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
-                # 'agenda': self._parse_agenda(item),
-                'updated_at': dt.date.today().isoformat(),
                 'sources': self._parse_sources(item)
             }
         else:
