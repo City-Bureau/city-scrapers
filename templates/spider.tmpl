@@ -10,8 +10,9 @@ from datetime import datetime
 
 class {{ classname }}(scrapy.Spider):
     name = '{{ name }}'
-    allowed_domains = ['{{ domain }}']
-    start_urls = ['http://{{ domain }}']
+    long_name = '{{ long_name }}'
+    allowed_domains = [{{ domains|quote_list|join(', ') }}]
+    start_urls = [{{ start_urls|quote_list|join(', ') }}]
 
     def parse(self, response):
         """
@@ -81,8 +82,8 @@ class {{ classname }}(scrapy.Spider):
             'url': None,
             'name': None,
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
         }
 

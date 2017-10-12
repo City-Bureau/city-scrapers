@@ -20,17 +20,18 @@ git checkout -b XXXX-spider-NAMEOFAGENCY
 
 ## Create a spider
 
-Run the `genspider` task with a spider name and domain to scrape. Following the previous example:
+Run the `genspider` task with a spider slug, spider name, and URLs to start scraping. Following the previous example:
 
 ```
-invoke genspider cha www.thecha.org
+invoke genspider cha "Chicago Housing Authority" http://www.thecha.org
 ```
 
 You should see some output like:
 
 ```
-Created /Users/eads/projects/documenters-aggregator/documenters_aggregator/spiders/cha.py
-Created /Users/eads/projects/documenters-aggregator/tests/test_cha.py
+Created /Users/eads/Code/documenters-aggregator/documenters_aggregator/spiders/cha.py
+Created /Users/eads/Code/documenters-aggregator/tests/test_cha.py
+Created /Users/eads/Code/documenters-aggregator/tests/files/cha_thecha.html
 ```
 
 ## Test crawling
@@ -40,6 +41,8 @@ You now have a spider named `cha`. To run it (admittedly, not much will happen u
 ```
 scrapy crawl cha
 ```
+
+First, let's take a quick detour and look at testing.
 
 ## Run the automated tests
 
@@ -177,4 +180,53 @@ class ChaSpider(scrapy.Spider):
 
 ## Write tests
 
-TK TK writing tests
+Our general approach to writing tests is to save a copy of a site's HTML in
+`tests/files` and then use that HTML to verify the behavior of each spider. In
+this way, we avoid needing a network connection to run tests and our tests
+don't break every time a site's content is updated.
+
+Here is the test setup and an example test from the Idph spider:
+
+```python
+import pytest
+
+from tests.utils import file_response
+from documenters_aggregator.spiders.idph import IdphSpider
+
+test_response = file_response('files/idph.html')
+spider = IdphSpider()
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+
+
+def test_name():
+    assert parsed_items[2]['name'] == 'PAC: Maternal Mortality Review Committee Meeting'
+```
+
+It is also possible to execute a function over every element in the `parsed_items` list. In the following example, the `test_classification` function will be invoked once for each element in `parsed_items` list.
+
+```python
+@pytest.mark.parametrize('item', parsed_items)
+def test_classification(item):
+    assert item['classification'] == 'Not classified'
+```
+
+Parameterized test functions are best used to assert something about every event such as the existence of a field or a value all events will share.
+
+You can read more about parameterized test functions [in the pytest docs](https://docs.pytest.org/en/latest/parametrize.html#pytest-mark-parametrize).
+
+You generally want to verify that a spider:
+
+* Extracts the correct number of events from a page.
+* Extracts the correct values from a single event.
+* Parses any date and time values, combining them as needed.
+
+## Create a Pull Request
+
+If your ready to submit your code to the project, you should create a pull
+request on GitHub. You can do this as early as you would like in order to get
+feedback from others working on the project. In this case, please prefix your
+pull request name with `WIP` so that everyone knows what kind of feedback you
+are looking for.
+
+Additionally, please use the pull request description to explain anything you'd
+like a reviewer to know about the code.

@@ -4,17 +4,11 @@ import scrapy
 from datetime import datetime
 from pytz import timezone
 
-##########
-# To Do:
-#
-# (1) Step through past years--not sure why this doesn't work
-# (2) do we need to geocode location? implement classification? hard/fixed end time?
-##########
-
 
 class CchhsSpider(scrapy.Spider):
     name = 'cchhs'
-    allowed_domains = ['http://www.cookcountyhhs.org']
+    long_name = 'Cook County Health and Hospitals System'
+    allowed_domains = ['www.cookcountyhhs.org']
     start_urls = ['http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/']
     domain_root = 'http://www.cookcountyhhs.org'
 
@@ -26,10 +20,10 @@ class CchhsSpider(scrapy.Spider):
         for item in response.xpath("//a[@class='h2 accordion-toggle collapsed']"):
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'end_time': self._parse_end(item),
-                'all_day': self._parse_all_day(item)
+                'all_day': self._parse_all_day(item),
+                'sources': self._parse_sources(response)
             }
 
             aria_control = item.xpath("@aria-controls").extract_first()
@@ -41,27 +35,16 @@ class CchhsSpider(scrapy.Spider):
                     'start_time': self._parse_start(subitem),
                     'location': self._parse_location(subitem)
                 }
-                new_item['status'] = self._parse_status(subitem, new_item['start_time'])
                 new_item.update(data)
+                new_item['status'] = self._parse_status(subitem, new_item['start_time'])
+                new_item['id'] = self._parse_id(new_item['name'], new_item['start_time'])
                 yield new_item
 
-        yield self._parse_next(response)  # not sure why this doesn't work
-
-    def _parse_next(self, response):
+    def _parse_id(self, name, start_time):
         """
-        Get previous year
+        Make id from name and start_time
         """
-        previous_year = response.xpath("//select[@id='meetingYear']/option[@selected='selected']/following-sibling::option/text()").extract_first()
-        if previous_year is not None:
-            return scrapy.Request(response.url + '?meetingSearch=meetingSearch&meetingYear=' + previous_year, callback=self.parse)
-        else:
-            return None
-
-    def _parse_id(self, item):
-        """
-        Not implemented
-        """
-        return None
+        return ''.join('{0}{1}'.format(name, start_time).split())
 
     def _parse_classification(self, item):
         """
@@ -148,3 +131,9 @@ class CchhsSpider(scrapy.Spider):
 
         tz = timezone('America/Chicago')
         return tz.localize(naive).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

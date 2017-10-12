@@ -5,7 +5,7 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cchhs import CchhsSpider
 
-test_response = file_response('files/cchhs.html')
+test_response = file_response('files/cchhs.html', url='http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/')
 spider = CchhsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -22,6 +22,10 @@ def test_start_time():
     assert parsed_items[0]['start_time'] == '2017-01-27T09:00:00-06:00'
 
 
+def test_id():
+    assert parsed_items[0]['id'] == 'MeetingsoftheBoardofDirectors2017-01-27T09:00:00-06:00'
+
+
 def test_status():
     assert parsed_items[0]['status'] == 'passed'
 
@@ -32,11 +36,6 @@ def test_location():
         'name': '1900 W. Polk, Second Floor Conference Room, Chicago, Illinois',
         'coordinates': None,
     }
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_id(item):
-    assert item['id'] is None
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -59,8 +58,6 @@ def test__type(item):
     assert item['_type'] == 'event'
 
 
-# @TODO in the future, could consider passing multiple items + expected values.
-# @pytest.mark.parametrize("parsed_value,expected", [
-    # (parsed_items[0]['name'], 'PANDAS/PANS Advisory Council'),
-    # (parsed_items[2]['name'], 'PAC: Maternal Mortality Review Committee Meeting'),
-# ])
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == [{'url': 'http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/', 'note': ''}]

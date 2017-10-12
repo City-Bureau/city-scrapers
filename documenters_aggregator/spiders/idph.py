@@ -7,6 +7,7 @@ from pytz import timezone
 
 class IdphSpider(scrapy.Spider):
     name = 'idph'
+    long_name = 'Illinois Department of Public Health'
     allowed_domains = ['www.dph.illinois.gov']
     start_urls = ['http://www.dph.illinois.gov/events']
     domain_root = 'http://www.dph.illinois.gov'
@@ -28,6 +29,7 @@ class IdphSpider(scrapy.Spider):
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(response)
             }
 
         # self._parse_next(response) yields more responses to parse if necessary.
@@ -122,3 +124,9 @@ class IdphSpider(scrapy.Spider):
 
         tz = timezone('America/Chicago')
         return tz.localize(naive).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]
