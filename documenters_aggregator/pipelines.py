@@ -68,7 +68,8 @@ class DocumentersAggregatorAirtablePipeline(object):
 
         try:
             self.save_item(new_item, spider)
-        except:
+        except e:
+            spider.logger.exception("message")
             raise DropItem('Could not save {0}'.format(new_item['id']))
 
         return item
