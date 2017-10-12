@@ -6,6 +6,7 @@
 # of these pipelines.
 
 import os
+import datetime
 import dateutil.parser
 
 from airtable import Airtable
@@ -68,21 +69,25 @@ class DocumentersAggregatorAirtablePipeline(object):
 
         try:
             self.save_item(new_item, spider)
-        except e:
+        except Exception as e:
             spider.logger.exception("message")
             raise DropItem('Could not save {0}'.format(new_item['id']))
 
         return item
 
     def save_item(self, item, spider):
+        now = datetime.datetime.now().isoformat()
         airtable_item = self.airtable.match('id', item['id'])
         if airtable_item:
             # update
             spider.logger.debug('AIRTABLE PIPELINE: Updating {0}'.format(item['id']))
+            item['scrape_date_updated'] = now
             self.airtable.update(airtable_item['id'], item)
         else:
             # create
             spider.logger.debug('AIRTABLE PIPELINE: Creating {0}'.format(item['id']))
+            item['scrape_date_updated'] = now
+            item['scrape_date_initial'] = now
             self.airtable.insert(item)
 
     def _make_id(self, item, spider):
