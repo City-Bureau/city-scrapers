@@ -12,6 +12,7 @@ from pytz import timezone
 
 class CccSpider(scrapy.Spider):
     name = 'ccc'
+    long_name = 'City College of Chicago'
     allowed_domains = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
     start_urls = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
 
