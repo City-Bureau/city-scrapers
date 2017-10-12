@@ -158,8 +158,8 @@ def get_definitions(classname):
 
 
 def quote_for_awscli(data):
-    jsonstring = json.dumps(data)
     # The following is an ugly but functional way of getting right quoting that aws cli wants.
+    jsonstring = json.dumps(data)
     return jsonstring.replace("\"", r"\"")
 
 
