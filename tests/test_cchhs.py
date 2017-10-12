@@ -40,7 +40,7 @@ def test_location():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end_time(item):
-    assert item['end_time'] == 'See description'
+    assert item['end_time'] is None
 
 
 @pytest.mark.parametrize('item', parsed_items)

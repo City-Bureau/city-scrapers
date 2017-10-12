@@ -61,14 +61,11 @@ class CitSpider(scrapy.Spider):
         """
         extracted = item.extract()
         match = re.search(r'([a-zA-Z]*),\s{1}([a-zA-Z]+)\s([0-9]{1,2})', extracted)
+        date_string = '{0} {1}'.format(match.group(0), str(dt.datetime.now().year))
 
-        start_date_obj = dt.datetime.strptime(match.group(0), "%A, %B %d")
-        start_date = pytz.timezone('US/Central').localize(start_date_obj)
-        start_date = start_date.astimezone(pytz.utc)
-        start_date = start_date.replace(year=self.year, hour=0, minute=0)
-        start_date_str = start_date.isoformat()
-
-        return start_date_str
+        start_date_obj = dt.datetime.strptime(date_string, "%A, %B %d %Y")
+        tz = pytz.timezone('America/Chicago')
+        return tz.localize(start_date_obj).isoformat()
 
     def _parse_sources(self, response):
         """

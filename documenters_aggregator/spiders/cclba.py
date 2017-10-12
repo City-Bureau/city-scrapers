@@ -7,7 +7,7 @@ import scrapy
 
 import json
 import datetime as dt
-import pytz
+from pytz import timezone
 
 
 class CclbaSpider(scrapy.Spider):
@@ -106,7 +106,6 @@ class CclbaSpider(scrapy.Spider):
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
                 'start_time': self._parse_start(item),
-                'timezone': 'America/Chicago',
                 'street_address': self._parse_street_address(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
@@ -199,9 +198,8 @@ class CclbaSpider(scrapy.Spider):
         start_date = item.css('[itemprop=\'startDate\']::attr(datetime)').extract_first()
         start_time = item.css('em.evo_time span[class=\'start\']::text').extract_first()
         start_date_time = dt.datetime.strptime(start_date + ' ' + start_time, '%Y-%m-%d %I:%M %p')
-        start_date_time = pytz.timezone('US/Central').localize(start_date_time)
-        start_date_time = start_date_time.astimezone(pytz.utc).isoformat()
-        return start_date_time
+        tz = timezone('America/Chicago')
+        return tz.localize(start_date_time).isoformat()
 
     def _parse_end(self, item):
         """
