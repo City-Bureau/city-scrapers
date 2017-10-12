@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-from datetime import datetime
-from pytz import timezone
-
 
 class IdphSpider(scrapy.Spider):
     name = 'idph'
@@ -97,29 +94,16 @@ class IdphSpider(scrapy.Spider):
         """
         Combine start time with year, month, and day.
         """
-        start_time = item.css('div.start_end_time span::text').extract()[0]
-        return self._make_date(item=item, time=start_time)
+        try:
+            return item.css('div span.date-display-start::attr(content)').extract()[0]
+        except IndexError:
+            return item.css('div span.date-display-single::attr(content)').extract()[0]
 
     def _parse_end(self, item):
         """
         Combine end time with year, month, and day.
         """
-        end_time = item.css('div.start_end_time span::text').extract()[1]
-        return self._make_date(item=item, time=end_time)
-
-    def _make_date(self, item, time):
-        """
-        Combine year, month, day with variable time and export as timezone-aware,
-        ISO-formatted string.
-        """
-        year = datetime.now().year
-        month = item.css('div.start_month span::text').extract_first()
-        day = item.css('div.start_date_only span::text').extract_first()
-
-        fmt_string = '{year} {month} {day} {time}'
-        time_string = fmt_string.format(year=year, month=month, day=day, time=time)
-
-        naive = datetime.strptime(time_string, '%Y %b %d %I:%M%p')
-
-        tz = timezone('America/Chicago')
-        return tz.localize(naive).isoformat()
+        try:
+            return item.css('div span.date-display-end::attr(content)').extract()[0]
+        except IndexError:
+            return None
