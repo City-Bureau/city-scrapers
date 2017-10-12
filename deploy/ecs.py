@@ -65,6 +65,9 @@ def push(ctx):
 
 @task(login)
 def register_task_definitions(ctx):
+    """
+    Register all task definitions.
+    """
     for cls in spider_classes:
         definitions = get_definitions(cls.name)
         ctx.run('aws ecs register-task-definition --family {0}-{1} --network-mode host --container-definitions "{2}"'.format(PROJECT_SLUG, cls.name, definitions))
@@ -72,6 +75,10 @@ def register_task_definitions(ctx):
 
 @task(login)
 def enable_rules(ctx):
+    """
+    Enable cron rules for all scrapers.
+    """
+
     # @TODO this offset mechanism is mega-dumb
     cron_offset = 0
     for i, cls in enumerate(spider_classes):
@@ -101,14 +108,17 @@ def enable_rules(ctx):
 
 @task(login)
 def disable_rules(ctx):
+    """
+    Disable cron rules for all spiders.
+    """
     for cls in spider_classes:
         rule_definition = get_event_rule_definition(cls, state="DISABLED")
         ctx.run('aws events put-rule --cli-input-json "{0}"'.format(rule_definition))
 
 
-@task(build, push, create_logs, register_task_definitions, enable_rules)
+@task(create_logs, register_task_definitions, build, tag, push, enable_rules)
 def deploy(ctx):
-    """Build, tag, push, and deploy to Elastic Container Service."""
+    """Build, tag, push, and deploy to Elastic Container Service. (Creates logs and task definitions if they don't exist)."""
     print("Deployed.")
 
 
