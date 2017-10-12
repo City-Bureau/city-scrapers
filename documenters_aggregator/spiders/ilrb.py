@@ -53,6 +53,7 @@ class IlrbSpider(scrapy.Spider):
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(response)
             }
 
     def _generate_id(self, start_time, name):
@@ -139,3 +140,9 @@ class IlrbSpider(scrapy.Spider):
         """
         tz = timezone('America/Chicago')
         return tz.localize(time).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

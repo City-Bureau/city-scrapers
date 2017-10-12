@@ -3,7 +3,7 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cdph import CdphSpider
 
-test_response = file_response('files/cdph.html')
+test_response = file_response('files/cdph.html', url='https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html')
 spider = CdphSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -59,3 +59,8 @@ def test_location(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert parsed_items[0]['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == [{'url': 'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html', 'note': ''}]

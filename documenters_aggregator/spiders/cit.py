@@ -40,6 +40,7 @@ class CitSpider(scrapy.Spider):
                 'all_day': False,
                 'status': 'tentative',
                 'location': None,
+                'sources': self._parse_sources(response)
             }
 
     def _parse_id(self, item):
@@ -53,57 +54,6 @@ class CitSpider(scrapy.Spider):
         start_date = start_date_obj.replace(year=self.year)
         id_date = start_date.date().isoformat()
         return id_date
-
-    # def _parse_classification(self, item):
-    #     """
-    #     Parse or generate classification (e.g. town hall).
-    #     """
-    #     return 'Not classified'
-
-    # def _parse_status(self, item):
-    #     """
-    #     Parse or generate status of meeting. Can be one of:
-
-    #     * cancelled
-    #     * tentative
-    #     * confirmed
-    #     * passed
-
-    #     By default, return "tentative"
-    #     """
-    #     return 'tentative'
-
-    # def _parse_location(self, item):
-    #     """
-    #     Parse or generate location. Url, latitutde and longitude are all
-    #     optional and may be more trouble than they're worth to collect.
-    #     """
-    #     return {
-    #         'url': None,
-    #         'name': None,
-    #         'coordinates': {
-    #           'latitude': None,
-    #           'longitude': None,
-    #         },
-    #     }
-
-    # def _parse_all_day(self, item):
-    #     """
-    #     Parse or generate all-day status. Defaults to false.
-    #     """
-    #     return False
-
-    # def _parse_name(self, item):
-    #     """
-    #     Parse or generate event name.
-    #     """
-    #     return None
-
-    # def _parse_description(self, item):
-    #     """
-    #     Parse or generate event name.
-    #     """
-    #     return None
 
     def _parse_start(self, item):
         """
@@ -120,8 +70,8 @@ class CitSpider(scrapy.Spider):
 
         return start_date_str
 
-    # def _parse_end(self, item):
-    #     """
-    #     Parse end date and time.
-    #     """
-    #     return None
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

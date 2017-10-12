@@ -4,13 +4,6 @@ import scrapy
 from datetime import datetime
 from pytz import timezone
 
-##########
-# To Do:
-#
-# (1) Step through past years--not sure why this doesn't work
-# (2) do we need to geocode location? implement classification? hard/fixed end time?
-##########
-
 
 class CchhsSpider(scrapy.Spider):
     name = 'cchhs'
@@ -29,7 +22,8 @@ class CchhsSpider(scrapy.Spider):
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'end_time': self._parse_end(item),
-                'all_day': self._parse_all_day(item)
+                'all_day': self._parse_all_day(item),
+                'sources': self._parse_sources(response)
             }
 
             aria_control = item.xpath("@aria-controls").extract_first()
@@ -137,3 +131,9 @@ class CchhsSpider(scrapy.Spider):
 
         tz = timezone('America/Chicago')
         return tz.localize(naive).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]
