@@ -19,6 +19,7 @@ AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
 FIELDS_WHITELIST = ['id', 'name', 'description', 'classification', 'start_time', 'start_time_formatted', 'end_time', 'end_time_formatte', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude']
 
+{'_type': 'event', 'id': '15851', 'name': 'PAC: Hospital Facilities Designation Sub-Committee', 'description': 'CONFERENCE ROOMS\n69 West Washington St., 35th Floor, Chicago\n535 West Jefferson St., 5th Floor, Springfield\nConference Call Information\nConference Call-In#: 888.494.4032\nAccess Code: 6819028741\nInterested persons may contact the Office of Women’s Health at 312-814-4035 for information', 'classification': 'Not classified', 'start_time': '2017-12-14T09:30:00-06:00', 'end_time': '2017-12-14T12:00:00-06:00', 'all_day': False, 'status': 'tentative', 'location': {'url': '', 'name': 'See description', 'coordinates': None}}
 
 class DocumentersAggregatorLoggingPipeline(object):
     """
