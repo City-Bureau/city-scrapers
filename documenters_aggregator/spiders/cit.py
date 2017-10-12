@@ -39,7 +39,7 @@ class CitSpider(scrapy.Spider):
                 'end_time': None,
                 'all_day': False,
                 'status': 'tentative',
-                'location': None,
+                'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
 
@@ -72,3 +72,16 @@ class CitSpider(scrapy.Spider):
         Parse sources.
         """
         return [{'url': response.url, 'note': ''}]
+
+    def _parse_location(self, item):
+        """
+        No location provided
+        """
+        return {
+            'url': None,
+            'name': None,
+            'coordinates': {
+                'latitude': None,
+                'longitude': None,
+            }
+        }

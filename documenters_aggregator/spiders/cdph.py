@@ -70,7 +70,7 @@ class CdphSpider(scrapy.Spider):
         """
         Parse or generate classification (e.g. town hall).
         """
-        return None
+        return 'committee-meeting'
 
     def _parse_status(self, item):
         """
@@ -91,12 +91,11 @@ class CdphSpider(scrapy.Spider):
         """
         return {
             'url': 'https://www.cityofchicago.org/city/en/depts/cdph.html',
-            'name': 'DePaul Center',
+            'name': '2nd Floor Board Room, DePaul Center, 333 S. State Street, Chicago, IL',
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
-            },
-            'address': '2nd Floor Board Room, DePaul Center, 333 S. State Street, Chicago, IL'
+            }
         }
 
     def _parse_all_day(self, item):
