@@ -174,23 +174,3 @@ def get_env():
         'DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY': os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY'),
         'DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE': os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
     }
-
-
-# @TODO
-# [ ] Create ecs service
-# [ ] Delete ecs service
-# (ecs services seem hard, for now might leave up to user)
-
-# [✔️] Docker build
-
-# [✔️] Create cloudfront log groups
-# [✔️] Delete cloudfront log groups
-
-# [✔️] Create ecs task definitions
-# [ ] Delete ecs task definition (you basically can't, and that's basically ok!)
-
-# [✔️] Create scheduled tasks (may need to create lambda fn?)
-# [✔️] Delete scheduled tasks (may need to delete lamba fn?)
-
-# [ ] Create email on error alert
-# [ ] Delete email on error alert
