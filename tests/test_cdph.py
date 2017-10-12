@@ -3,7 +3,7 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cdph import CdphSpider
 
-test_response = file_response('files/cdph.html')
+test_response = file_response('files/cdph.html', url='https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html')
 spider = CdphSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -30,32 +30,36 @@ def test_id():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
-    assert parsed_items[0]['all_day'] is False
+    assert item['all_day'] is False
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert parsed_items[0]['classification'] is None
+    assert item['classification'] == 'committee-meeting'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):
-    assert parsed_items[0]['status'] == 'tentative'
+    assert item['status'] == 'tentative'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
     assert item['location'] == {
         'url': 'https://www.cityofchicago.org/city/en/depts/cdph.html',
-        'name': 'DePaul Center',
+        'name': '2nd Floor Board Room, DePaul Center, 333 S. State Street, Chicago, IL',
         'coordinates': {
             'latitude': None,
             'longitude': None,
-        },
-        'address': '2nd Floor Board Room, DePaul Center, 333 S. State Street, Chicago, IL'
+        }
     }
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
+    assert item['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == [{'url': 'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html', 'note': ''}]

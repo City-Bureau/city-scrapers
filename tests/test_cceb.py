@@ -1,7 +1,8 @@
+import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cceb import CcebSpider
 
-test_response = file_response('files/cceb_default.html')
+test_response = file_response('files/cceb_default.html', url='http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx')
 spider = CcebSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -56,3 +57,8 @@ def test_location():
 
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == [{'url': 'http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx', 'note': ''}]

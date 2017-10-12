@@ -9,6 +9,7 @@ import re
 import urllib.request
 import json
 from datetime import datetime
+from pytz import timezone
 
 
 class CplSpider(scrapy.Spider):
@@ -65,6 +66,7 @@ class CplSpider(scrapy.Spider):
                 'all_day': False,  # default is false
                 'status': self._parse_status(item),  # default is tentative, but there is no status info on site
                 'location': self._parse_location(item, lib_info),
+                'sources': self._parse_sources(response)
             }
 
     def _generate_id(self, start_time):
@@ -150,4 +152,11 @@ class CplSpider(scrapy.Spider):
         date = date.replace('.', '')
         date = date + ' ' + year
         datetime_object = datetime.strptime(date, '%A %B %d %I %p %Y')
-        return datetime_object.isoformat()
+        tz = timezone('America/Chicago')
+        return tz.localize(datetime_object).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]
