@@ -18,7 +18,7 @@ spider_classes = [crawler_process.spider_loader.load(spidername) for spidername 
 def create_logs(ctx):
     """Create log groups for each scraper."""
     for cls in spider_classes:
-        ctx.run('aws logs create-log-group --log-group-name "{0}-{1}"'.format(PROJECT_SLUG, cls.name), warn=True)
+        ctx.run('aws logs create-log-group --log-group-name "{0}-{1}"'.format(PROJECT_SLUG, cls.name), warn=True, hide=True)
 
 
 @task
