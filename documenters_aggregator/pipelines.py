@@ -51,6 +51,13 @@ class DocumentersAggregatorAirtablePipeline(object):
         # copy item; airtable-specific munging is happening here that breaks
         # opencivicdata standard
 
+        if item.get('start_time'):
+            dt = dateutil.parser.parse(item['start_time'])
+            if dt < datetime.datetime.now(dt.tzinfo):
+                return item
+        else:
+            return item
+
         time.sleep(randint(0, 3))
 
         new_item = item.copy()
