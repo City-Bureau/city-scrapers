@@ -9,9 +9,11 @@ import os
 import datetime
 import dateutil.parser
 import json
+import time
 
 from airtable import Airtable
 from documenters_aggregator.utils import get_key
+from random import randint
 from requests.exceptions import HTTPError
 from scrapy.exceptions import DropItem
 
@@ -49,6 +51,9 @@ class DocumentersAggregatorAirtablePipeline(object):
     def process_item(self, item, spider):
         # copy item; airtable-specific munging is happening here that breaks
         # opencivicdata standard
+
+        time.sleep(randint(0, 3))
+
         new_item = item.copy()
 
         # make id
