@@ -11,7 +11,7 @@ from datetime import datetime
 
 class CapsSpider(scrapy.Spider):
     name = 'caps'
-    long_name = 'Chicago Police'
+    long_name = 'Chicago Police Department'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
     start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
     headers = {

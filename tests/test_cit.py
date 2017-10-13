@@ -8,7 +8,7 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Chicago Infrastructure Trust'
+    assert parsed_items[0]['name'] == 'Board Meeting'
 
 
 def test_description():
