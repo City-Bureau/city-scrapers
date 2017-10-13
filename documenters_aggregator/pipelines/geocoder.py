@@ -25,8 +25,8 @@ class GeocoderPipeline(object):
             geocode = self.client.search(location, boundary_country='US', format='keys')
             coordinates = geocode['features'][0]['geometry']['coordinates']
             item['location']['coordinates'] = {
-                'latitude': coordinates[0],
-                'longitude': coordinates[1],
+                'longitude': str(coordinates[0]),
+                'latitude': str(coordinates[1]),
             }
             item['geocode'] = json.dumps(geocode, indent=4, sort_keys=True)
         except Exception as e:
@@ -34,5 +34,4 @@ class GeocoderPipeline(object):
             spider.logger.error(json.dumps(item, indent=4, sort_keys=True))
             raise DropItem('Could not geocode {0}'.format(item['id']))
 
-        spider.logger.debug(json.dumps(item, indent=4, sort_keys=True))
         return item
