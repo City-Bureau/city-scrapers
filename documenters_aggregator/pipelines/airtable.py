@@ -12,7 +12,7 @@ from scrapy.exceptions import DropItem
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
-FIELDS_WHITELIST = ['id', 'name', 'description', 'classification', 'start_time', 'start_time_formatted', 'end_time', 'end_time_formatted', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude', 'geocode', 'url']
+FIELDS_WHITELIST = ['id', 'name', 'description', 'classification', 'start_time', 'start_time_formatted', 'end_time', 'end_time_formatted', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude', 'geocode', 'url', 'scrape_date_initial', 'scrape_date_update']
 
 
 class AirtablePipeline(object):
