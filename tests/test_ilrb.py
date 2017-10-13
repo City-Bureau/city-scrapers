@@ -8,7 +8,6 @@ from documenters_aggregator.spiders.ilrb import IlrbSpider
 test_response = file_response('files/ilrb.html')
 spider = IlrbSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
-print(parsed_items)
 
 
 def test_name():

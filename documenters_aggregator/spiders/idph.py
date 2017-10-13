@@ -7,6 +7,7 @@ from pytz import timezone
 
 class IdphSpider(scrapy.Spider):
     name = 'idph'
+    long_name = 'Illinois Department of Public Health'
     allowed_domains = ['www.dph.illinois.gov']
     start_urls = ['http://www.dph.illinois.gov/events']
     domain_root = 'http://www.dph.illinois.gov'

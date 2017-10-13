@@ -12,6 +12,7 @@ from slugify import slugify
 
 class IlrbSpider(scrapy.Spider):
     name = 'ilrb'
+    long_name = 'Illinois Labor Relations Board'
     allowed_domains = ['www.illinois.gov']
     start_urls = ['https://www.illinois.gov/ilrb/meetings/Pages/default.aspx']
 

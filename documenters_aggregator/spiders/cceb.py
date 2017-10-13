@@ -11,7 +11,8 @@ from pytz import timezone
 
 class CcebSpider(scrapy.Spider):
     name = 'cceb'
-    allowed_domains = ['http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx']
+    long_name = 'Cook County Electoral Board'
+    allowed_domains = ['cookcountyclerk.com']
     start_urls = ['http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx']
 
     def parse(self, response):

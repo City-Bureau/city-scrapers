@@ -1,3 +1,4 @@
+airtable-python-wrapper==0.5.0
 asn1crypto==0.22.0
 attrs==17.2.0
 Automat==0.6.0
@@ -21,8 +22,8 @@ MarkupSafe==1.0
 parsel==1.2.0
 pep8==1.7.0
 py==1.4.34
-pyasn1==0.2.3
 pyasn1-modules==0.0.9
+pyasn1==0.2.3
 pycparser==2.18
 PyDispatcher==2.0.5
 pyflakes==1.5.0
@@ -41,3 +42,5 @@ Unidecode==0.4.21
 urllib3==1.22
 w3lib==1.17.0
 zope.interface==4.4.2
+https://github.com/opencivicdata/python-legistar-scraper/zipball/master
+https://github.com/opencivicdata/pupa/zipball/master

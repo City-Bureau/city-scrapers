@@ -1,42 +1,15 @@
-from invoke import task, run
-from jinja2 import Environment, FileSystemLoader
 import requests
-
 import os
 import time
+
+from invoke import task, run
+from jinja2 import Environment, FileSystemLoader
+from urllib.parse import urlparse
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'documenters_aggregator/spiders')
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/files')
-
-env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
-
-
-@task()
-def genspider(ctx, name, domain, start_urls=None):
-    """
-    Make a new HTML scraping spider
-    To download HTML files, use the -s flag
-    and separate urls with ,
-    urls cannot end in /
-
-    Example:
-    invoke genspider testspider http://www.citybureau.org -s=http://citybureau.org/articles,http://citybureau.org/staff
-    """
-    spider_filename = _gen_spider(name, domain)
-    print('Created {0}'.format(spider_filename))
-
-    test_filename = _gen_tests(name, domain)
-    print('Created {0}'.format(test_filename))
-
-    if start_urls:
-        start_urls = start_urls.split(',http')
-        if len(start_urls) > 1:
-            start_urls = [start_urls[0]] + ['http{0}'.format(x) for x in start_urls[1:]]
-        html_filenames = _gen_html(name, start_urls)
-        for f in html_filenames:
-            print('Created {0}'.format(f))
 
 # pty is not available on Windows
 try:
@@ -45,6 +18,41 @@ try:
     pty_available = True
 except ImportError:
     pty_available = False
+
+
+def quote_list(the_list):
+    return ["'%s'" % element for element in the_list]
+
+
+env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+env.filters["quote_list"] = quote_list
+
+
+@task()
+def genspider(ctx, name, long_name, start_urls):
+    """
+    Make a new HTML scraping spider.
+
+    Specify:
+
+        1. Slug / shortname for spider (typically an agency acronym, e.g. `cpl`
+           for the Chicago Public Libary).
+        2. Long name for spider (e.g. "Chicago Public Library").
+        3. URLs to start scraping, separated by commas.
+
+    Example:
+    ```
+    invoke genspider testspider 'Test Spider Board Of Directors' http://citybureau.org/articles,http://citybureau.org/staff
+    ```
+
+    URLs cannot end in `/`.
+
+    """
+    start_urls = start_urls.split(',')
+    domains = _get_domains(start_urls)
+    _gen_spider(name, long_name, domains, start_urls)
+    _gen_tests(name)
+    _gen_html(name, start_urls)
 
 
 @task
@@ -61,19 +69,23 @@ def _make_classname(name):
     return '{0}Spider'.format(name.capitalize())
 
 
-def _gen_spider(name, domain):
+def _gen_spider(name, long_name, domains, start_urls):
     filename = '{0}/{1}.py'.format(SPIDERS_DIR, name)
+
     with open(filename, 'w') as f:
-        content = _render_content(name, domain, 'spider.tmpl')
+        content = _render_content('spider.tmpl', name=name, long_name=long_name, domains=domains, start_urls=start_urls)
         f.write(content)
+
+    print('Created {0}'.format(filename))
     return filename
 
 
-def _gen_tests(name, domain):
+def _gen_tests(name):
     filename = '{0}/test_{1}.py'.format(TESTS_DIR, name)
     with open(filename, 'w') as f:
-        content = _render_content(name, domain, 'test.tmpl')
+        content = _render_content('test.tmpl', name=name)
         f.write(content)
+    print('Created {0}'.format(filename))
     return filename
 
 
@@ -99,8 +111,10 @@ def _fetch_url(url, attempt=1, session=requests.Session()):
             return _fetch_url(url, attempt + 1)
 
 
-def _gen_html(name, start_urls, session=requests.Session()):
-    '''urls should not end in /'''
+def _gen_html(name, start_urls):
+    """
+    urls should not end in /
+    """
     files = []
     for url in start_urls:
         r = _fetch_url(url, session=session)
@@ -117,11 +131,23 @@ def _gen_html(name, start_urls, session=requests.Session()):
         with open(filename, 'w') as f:
             f.write(content)
 
+        print('Created {0}'.format(filename))
         files.append(filename)
+
     return files
 
 
-def _render_content(name, domain, template):
+def _render_content(template, name, long_name=None, domains=None, start_urls=None):
     jinja_template = env.get_template(template)
     classname = _make_classname(name)
-    return jinja_template.render(name=name, domain=domain, classname=classname)
+    return jinja_template.render(
+        name=name, long_name=long_name, domains=domains, classname=classname, start_urls=start_urls)
+
+
+def _get_domains(start_urls):
+    domains = []
+    for url in start_urls:
+        parsed = urlparse(url)
+        if parsed.netloc not in domains:
+            domains.append(parsed.netloc)
+    return domains

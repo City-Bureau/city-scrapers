@@ -1,29 +1,34 @@
 """
-To use this pipeline, you must `export MAPQUEST_API_KEY=<SECRET KEY>`;
-see http://geocoder.readthedocs.io/providers/MapQuest.html for more
-information.
+Geocoder.
 """
-import geocoder
-import requests
+import json
+import os
+
+from mapzen.api import MapzenAPI
 
 
 class GeocoderPipeline(object):
     def __init__(self, session=None):
-        if session is None:
-            session = requests.Session()
-        self.session = session
+        self.client = MapzenAPI('mapzen-WKDW883')
 
     def process_item(self, item, spider):
         """
         Performs geocoding of an event if it doesn't already have
         coordinates.
         """
-        if item['location']['coordinates'] is None:
-            item['location']['coordinates'] = self._geocode_address(item['location']['name'])
-            return item
+        try:
+            location = item['location'].get('address') or item['location']['name']
+            geocode = self.client.search(location, boundary_country='US', format='keys')
+            coordinates = geocode['features'][0]['geometry']['coordinates']
+            item['location']['coordinates'] = {
+                'latitude': coordinates[0],
+                'longitude': coordinates[1],
+            }
+            item['geocode'] = json.dumps(geocode, indent=4, sort_keys=True)
+        except Exception as e:
+            spider.logger.exception('Message')
+            spider.logger.error(json.dumps(item, indent=4, sort_keys=True))
+            raise DropItem('Could not geocode {0}'.format(item['id']))
 
-    def _geocode_address(self, address):
-        g = geocoder.mapquest(address, session=self.session)
-        coords = g.latlng
-        return {'latitude': str(coords[0]),
-                'longitude': str(coords[1])}
+        spider.logger.debug(json.dumps(item, indent=4, sort_keys=True))
+        return item
