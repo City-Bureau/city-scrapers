@@ -3,13 +3,17 @@ Geocoder.
 """
 import json
 import os
+import requests
 
 from mapzen.api import MapzenAPI
 
 
 class GeocoderPipeline(object):
     def __init__(self, session=None):
-        self.client = MapzenAPI('mapzen-WKDW883')
+        if session is None:
+            session = requests.Session()
+        self.session = session
+        self.client = MapzenAPI(os.environ.get('MAPZEN_API_KEY'))
 
     def process_item(self, item, spider):
         """

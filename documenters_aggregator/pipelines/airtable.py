@@ -1,4 +1,13 @@
-class DocumentersAggregatorAirtablePipeline(object):
+import os
+
+from airtable import Airtable
+from documenters_aggregator.utils import get_key
+
+AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
+AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
+
+
+class AirtablePipeline(object):
     """
     Stub pipeline to save to AirTable.
     """
