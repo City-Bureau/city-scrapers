@@ -30,8 +30,7 @@ class GeocoderPipeline(object):
             }
             item['geocode'] = json.dumps(geocode, indent=4, sort_keys=True)
         except Exception as e:
-            spider.logger.exception('Message')
+            spider.logger.exception('Geocoding error, skipping. Message:')
             spider.logger.error(json.dumps(item, indent=4, sort_keys=True))
-            raise DropItem('Could not geocode {0}'.format(item['id']))
 
         return item
