@@ -79,7 +79,7 @@ class DocumentersAggregatorAirtablePipeline(object):
         new_item['start_time_formatted'] = self._transform_date(new_item['start_time'])
         new_item['end_time_formatted'] = self._transform_date(new_item['end_time'])
 
-        new_item = { k:v for k,v in new_item.items() if k in FIELDS_WHITELIST }
+        new_item = {k: v for k, v in new_item.items() if k in FIELDS_WHITELIST}
 
         try:
             self.save_item(new_item, spider)
