@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Pipelines to store scraped items using SQLAlchemy, AirTable, or a dummy logger.
-#
-# Set the ITEM_PIPELINES setting in settings.py to use one or more
-# of these pipelines.
-
 import os
 import datetime
 import dateutil.parser
@@ -22,25 +15,7 @@ AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE
 FIELDS_WHITELIST = ['id', 'name', 'description', 'classification', 'start_time', 'start_time_formatted', 'end_time', 'end_time_formatte', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude']
 
 
-class DocumentersAggregatorLoggingPipeline(object):
-    """
-    Dummy logging pipeline. Enabled by default, it reminds developers to
-    turn on some kind of backend storage pipeline.
-    """
-    def process_item(self, item, spider):
-        spider.logger.info('Processing {0} ({1}-{2}). Enable a database pipeline to save items.'.format(item.get('name'), spider.name, item.get('id')))
-        return item
-
-
-class DocumentersAggregatorSQLAlchemyPipeline(object):
-    """
-    Stub pipeline to save to SQLAlchemy.
-    """
-    def process_item(self, item, spider):
-        return item
-
-
-class DocumentersAggregatorAirtablePipeline(object):
+class AirtablePipeline(object):
     """
     Stub pipeline to save to AirTable.
     """

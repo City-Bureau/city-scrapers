@@ -62,7 +62,7 @@ def runtests(ctx):
     """
     Runs pytest, pyflakes, and pep8.
     """
-    run('pytest', pty=pty_available)
+    run('pytest -s', pty=pty_available)
     run('pyflakes .', pty=pty_available)
     run('pep8 --ignore E265,E266,E501 .', pty=pty_available)
 
@@ -91,13 +91,15 @@ def _gen_tests(name):
     return filename
 
 
-def _fetch_url(url, attempt=1):
+def _fetch_url(url, attempt=1, session=requests.Session()):
     """
     Attempt to fetch the specified url. If the request fails, retry it with an
     exponential backoff up to 5 times.
     """
     try:
-        r = requests.get(url)
+        # Without this, citybureau.org throttles the first request.
+        headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36'}
+        r = session.get(url, headers=headers)
         r.raise_for_status()
         return r
     except requests.exceptions.RequestException as e:
@@ -111,13 +113,13 @@ def _fetch_url(url, attempt=1):
             return _fetch_url(url, attempt + 1)
 
 
-def _gen_html(name, start_urls):
+def _gen_html(name, start_urls, session):
     """
     urls should not end in /
     """
     files = []
     for url in start_urls:
-        r = _fetch_url(url)
+        r = _fetch_url(url, session=session)
         if r is None:
             continue
 

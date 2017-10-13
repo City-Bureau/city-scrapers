@@ -2,12 +2,15 @@ airtable-python-wrapper==0.5.0
 asn1crypto==0.22.0
 attrs==17.2.0
 Automat==0.6.0
+betamax==0.8.0
+betamax_serializers==0.2.0
 certifi==2017.7.27.1
 cffi==1.10.0
 chardet==3.0.4
 constantly==15.1.0
 cryptography==2.0
 cssselect==1.0.1
+geocoder==1.30.1
 hyperlink==17.3.0
 icalendar==3.11.5
 idna==2.5

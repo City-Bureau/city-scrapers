@@ -64,8 +64,8 @@ class IdphSpider(scrapy.Spider):
         @TODO better location
         """
         return {
-            'url': '',
-            'name': 'See description',
+            'url': None,
+            'name': None,
             'coordinates': None,
         }
 

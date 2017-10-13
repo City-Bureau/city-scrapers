@@ -1,6 +1,8 @@
 import os
 import tasks
 
+import requests
+import betamax
 from lxml.html import fromstring
 from tests.utils import read_test_file_content
 
@@ -10,6 +12,10 @@ SPIDER_DOMAINS = ['www.citybureau.org']
 SPIDER_START_URLS = ['http://www.citybureau.org/articles',
                      'http://www.citybureau.org/staff',
                      'http://www.citybureau.org/is-chicago-any-less-segregated']
+
+
+session = requests.Session()
+recorder = betamax.Betamax(session)
 
 
 def test_classname():
@@ -35,7 +41,8 @@ def test_render_spider():
 def test_gen_html_filenames():
     FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
     test_filenames = [FILES_DIR + '/testspider_articles.html', FILES_DIR + '/testspider_staff.html', FILES_DIR + '/testspider_is-chicago-any-less-segregated.html']
-    rendered_filenames = tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
+    with recorder.use_cassette('test_gen_html_filenames'):
+        rendered_filenames = tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS, session=session)
     assert rendered_filenames == test_filenames
 
     if rendered_filenames == test_filenames:
@@ -44,7 +51,8 @@ def test_gen_html_filenames():
 
 
 def test_gen_html_content():
-    rendered_filenames = tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS)
+    with recorder.use_cassette('test_gen_html_content'):
+        rendered_filenames = tasks._gen_html(SPIDER_NAME, SPIDER_START_URLS, session=session)
     test_file_content = read_test_file_content('files/testspider_articles.html.example')
     rendered_content = read_test_file_content('files/testspider_articles.html')
     test_dom = fromstring(test_file_content)
