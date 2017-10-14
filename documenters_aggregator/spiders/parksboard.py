@@ -5,8 +5,6 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
 
-from datetime import datetime
-
 
 class ParksboardSpider(scrapy.Spider):
     name = 'parksboard'
@@ -17,7 +15,8 @@ class ParksboardSpider(scrapy.Spider):
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
+        event standard
+        <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
@@ -36,7 +35,8 @@ class ParksboardSpider(scrapy.Spider):
                 'location': self._parse_location(item),
             }
 
-        # self._parse_next(response) yields more responses to parse if necessary.
+        # self._parse_next(response) yields more responses to parse
+        # if necessary.
         # uncomment to find a "next" url
         # yield self._parse_next(response)
 
@@ -52,7 +52,8 @@ class ParksboardSpider(scrapy.Spider):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        raw_cal_string = item.css('td:nth-child(3) a::attr(href)').extract_first()
+        selector = 'td:nth-child(3) a::attr(href)'
+        raw_cal_string = item.css(selector).extract_first()
         return raw_cal_string.split('&')[1].split('=')[1]
 
     def _parse_classification(self, item):
