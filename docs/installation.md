@@ -1,12 +1,27 @@
 # Installing the Event Aggregator
 
-## Prerequisites
-
-You'll need a standard Python install. If you're on OS X, the [NPR Visuals guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
-
 ### Requirements
 
 * Python 3
+* Working internet connection
+
+## Prerequisites
+
+You'll need a fairly standard Python development stack. If you're on OS X, the [NPR Visuals guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
+
+## Alternative Installation: Docker
+
+If you've got Docker installed on your machine, the process becomes pretty simple.
+
+1. ``` git clone git@github.com:City-Bureau/documenters-aggregator.git ```
+2. ``` docker build -t easherma/documenters-aggregator . ```
+
+Then you can run commands on the container. For instance, to run tests:
+
+``` 
+docker run easherma/documenters-aggregator invoke runtests
+```
+
 
 ## Installation
 
@@ -23,46 +38,27 @@ pip install -r requirements.txt
 
 If using a fork, replace `City-Bureau` above with your Github username.
 
-## Creating a spider
+### If not using `virtualenv-wrapper`
+`virtualenv-wrapper` gives some useful terminal commands for working with virtual environments. If you aren't using it, you just need to know which files to source for to run the commands.
 
-_These instructions are a work-in-progress and completely provisional._
+Set-up:
+If using a fork, replace `City-Bureau` below with your Github username.
 
-First, find an unclaimed event source in the [spreadsheet of event sources](https://docs.google.com/spreadsheets/d/1L1lbWj89wt8b2DIZhjxERJ5FCAWPDWd0nMibtc01sZk/edit#gid=0).
-
-Let's take the Chicago Public School Board of Education as an example. Assuming the status is "needs evaluation", you can start building a scraper.
-
-Additional instructions to come.
-
-## Spider architecture
-
-This is what a basic HTML spider looks like:
-
-```python
-class IdphSpider(scrapy.Spider):
-    name = 'idph'
-    allowed_domains = ['www.dph.illinois.gov']
-    start_urls = ['http://www.dph.illinois.gov/events']
-    domain_root = 'http://www.dph.illinois.gov'
-
-    def parse(self, response):
-        for item in response.css('.eventspage'):
-            yield {
-                '_type': 'event',
-                'id': self._get_event_id(item),
-                'name': self._get_event_name(item),
-                'description': self._get_event_description(item),
-                'classification': self._get_classification(item),
-                'start_time': self._get_event_start(item),
-                'end_time': self._get_event_end(item),
-                'all_day': self._get_all_day(item),
-                'status': self._get_status(item),
-                'location': self._get_location(item),
-            }
-        yield self._get_next(response)
+```bash
+git clone git@github.com:City-Bureau/documenters-aggregator.git
+cd documenters-aggregator
+virtualenv -p python3 documenters-aggregator
+pip install -r requirements.txt
 ```
 
-The returned data should follow [the OpenCivicData event model](http://docs.opencivicdata.org/en/latest/data/event.html).
+The third line above will create a folder for your virtual environment called `documenters-aggregator`. (So, there will be a parent and a child folder called `documenters-aggregator`.) The child folder has already been added to the .gitignore. To turn on the virtual environment (assuming you're in the parent `documenters-aggregator` folder):
 
-More coming soon.
+```bash
+source documenters-aggregator/bin/activate
+```
 
+To turn off the virtual environment:
 
+```bash
+deactivate
+```
