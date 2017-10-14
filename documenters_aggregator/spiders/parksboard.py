@@ -86,8 +86,8 @@ class ParksboardSpider(scrapy.Spider):
             'url': None,
             'name': location,
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
         }
 
