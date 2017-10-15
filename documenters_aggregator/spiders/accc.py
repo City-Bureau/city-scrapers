@@ -4,7 +4,6 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
-from datetime import datetime
 from dateutil.parser import parse as dateparse
 
 
@@ -54,7 +53,10 @@ class AcccSpider(scrapy.Spider):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        return "{}-{}".format(
+            self.name,
+            str(dateparse(item).date())
+        )
 
     def _parse_classification(self, item):
         """
