@@ -7,12 +7,20 @@ file
 test_response = file
 parsed_items = list(spider.parse(test_response))
 
+for item in parsed_items[0]:
+    print(item)
+    print(parsed_items[0][item])
+print(parsed_items[0]['sources'][0])
+print(parsed_items[0]['description']=='')
+print(parsed_items[0]['location'])
+
+
 def test_name():
     assert parsed_items[0]['name'] == 'Joint Committee: Finance; Transportation and Public Way'
 
 
 def test_description():
-    assert parsed_items[0]['description'] is None
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start_time():
@@ -20,7 +28,7 @@ def test_start_time():
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'] is None
+    assert parsed_items[0]['end_time'] == ''
 
 
 def test_id():
@@ -42,7 +50,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]['location'] == {
         "name": "Council Chambers ,  City Hall ",
-        "coordinates": null,
+        "coordinates": None,
         "url": ""
     }
 
@@ -50,7 +58,7 @@ def test_location():
 def test_sources():
     assert parsed_items[0]['sources'] == [
     {"note": "ocd-api",
-     "url": "https://ocd.datamade.us/ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12/"},
+     "url": "https://ocd.datamade.us/ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12"},
     {"note": "api",
      "url": "http://webapi.legistar.com/v1/chicago/events/4954"},
     {"note": "web",
