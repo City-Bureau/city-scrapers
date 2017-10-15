@@ -115,18 +115,29 @@ class PbccSpider(scrapy.Spider):
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
 
-        TODO: Location details are inconsistent across event types, addresses
-        are mixed up with names and neither are reliably in the same place.
-        Could make manual exceptions for board meetings, or go to sub-page
+        All board meetings and special board meetings are required to be
+        held at the same location, so hard-coding that here with Mapzen
+        Search coordinates included. Otherwise location information is too
+        inconsistent for a reliable format.
         """
-        return {
-            'url': None,
-            'name': None,
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
-        }
+        if 'Board Meeting' in self._parse_classification(item):
+            return {
+                'url': 'https://thedaleycenter.com',
+                'name': 'Second Floor Board Room, Richard J. Daley Center, 50 W. Washington Street',
+                'coordinates': {
+                    'latitude': 41.884089,
+                    'longitude': -87.630191,
+                },
+            }
+        else:
+            return {
+                'url': None,
+                'name': None,
+                'coordinates': {
+                    'latitude': None,
+                    'longitude': None,
+                },
+            }
 
     def _parse_all_day(self, item):
         """
@@ -156,11 +167,14 @@ class PbccSpider(scrapy.Spider):
         """
         Parse or generate event name.
 
-        Other than the page-long info on AFBs, there isn't much of a description for
-        events outside of the classification and name, so returning None. Could be
-        implemented later for AFBs
+        Returning None for events that are not AFBs, otherwise
+        return a description with the detail link included
         """
-        return None
+        if self._parse_classification(item) == 'Advertisement for Bids':
+            detail_url = self._parse_sources(item)[0]['url']
+            return 'Details on advertisement for bids at: {}'.format(detail_url)
+        else:
+            return None
 
     def _parse_start(self, item, cal_date):
         """

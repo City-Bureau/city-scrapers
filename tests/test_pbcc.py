@@ -17,9 +17,12 @@ def test_afb_name():
     assert parsed_items[3]['name'] == 'Advertisement for Bids - Ebinger Elementary School Annex'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_description(item):
-    assert item['description'] is None
+def test_description():
+    assert parsed_items[0]['description'] is None
+
+
+def test_afb_description():
+    assert parsed_items[3]['description'] == 'Details on advertisement for bids at: http://www.pbcchicago.com/content/working/opening_display.asp?BID_ID=503'
 
 
 def test_start_time():
@@ -60,14 +63,24 @@ def test_status(item):
     assert item['status'] == 'tentative'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_location(item):
-    assert item['location'] == {
+def test_location():
+    assert parsed_items[0]['location'] == {
         'url': None,
         'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,
+        },
+    }
+
+
+def test_board_meeting_location():
+    assert parsed_items[9]['location'] == {
+        'url': 'https://thedaleycenter.com',
+        'name': 'Second Floor Board Room, Richard J. Daley Center, 50 W. Washington Street',
+        'coordinates': {
+            'latitude': 41.884089,
+            'longitude': -87.630191,
         },
     }
 
