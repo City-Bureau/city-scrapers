@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head id="ctl00_Head1"><script type="text/javascript">window.NREUM||(NREUM={});NREUM.info = {"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"2fdd6b8d1a","applicationID":"50175531","transactionName":"YwdbYEZTVxYHABALW1pNeGdkHV0AAAIRDkAaA0pETA==","queueTime":0,"applicationTime":9,"agent":"","atts":"T0BYFg5JGwsUTRAQXUQrXRYOEA0jVFcnUnZyVX1yBXR7UyBBGR8="}</script><script type="text/javascript">window.NREUM||(NREUM={}),__nr_require=function(e,n,t){function r(t){if(!n[t]){var o=n[t]={exports:{}};e[t][0].call(o.exports,function(n){var o=e[t][1][n];return r(o||n)},o,o.exports)}return n[t].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<t.length;o++)r(t[o]);return r}({1:[function(e,n,t){function r(){}function o(e,n,t){return function(){return i(e,[c.now()].concat(u(arguments)),n?null:this,t),n?void 0:this}}var i=e("handle"),a=e(2),u=e(3),f=e("ee").get("tracer"),c=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var p=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],d="api-",l=d+"ixn-";a(p,function(e,n){s[n]=o(d+n,!0,"api")}),s.addPageAction=o(d+"addPageAction",!0),s.setCurrentRouteName=o(d+"routeName",!0),n.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,n){var t={},r=this,o="function"==typeof n;return i(l+"tracer",[c.now(),e,t],r),function(){if(f.emit((o?"":"no-")+"fn-start",[c.now(),r,o],t),o)try{return n.apply(this,arguments)}finally{f.emit("fn-end",[c.now()],t)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,n){m[n]=o(l+n)}),newrelic.noticeError=function(e){"string"==typeof e&&(e=new Error(e)),i("err",[e,c.now()])}},{}],2:[function(e,n,t){function r(e,n){var t=[],r="",i=0;for(r in e)o.call(e,r)&&(t[i]=n(r,e[r]),i+=1);return t}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],3:[function(e,n,t){function r(e,n,t){n||(n=0),"undefined"==typeof t&&(t=e?e.length:0);for(var r=-1,o=t-n||0,i=Array(o<0?0:o);++r<o;)i[r]=e[n+r];return i}n.exports=r},{}],4:[function(e,n,t){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,n,t){function r(){}function o(e){function n(e){return e&&e instanceof r?e:e?f(e,u,i):i()}function t(t,r,o,i){if(!d.aborted||i){e&&e(t,r,o);for(var a=n(o),u=m(t),f=u.length,c=0;c<f;c++)u[c].apply(a,r);var p=s[y[t]];return p&&p.push([b,t,r,a]),a}}function l(e,n){v[e]=m(e).concat(n)}function m(e){return v[e]||[]}function w(e){return p[e]=p[e]||o(t)}function g(e,n){c(e,function(e,t){n=n||"feature",y[t]=n,n in s||(s[n]=[])})}var v={},y={},b={on:l,emit:t,get:w,listeners:m,context:n,buffer:g,abort:a,aborted:!1};return b}function i(){return new r}function a(){(s.api||s.feature)&&(d.aborted=!0,s=d.backlog={})}var u="nr@context",f=e("gos"),c=e(2),s={},p={},d=n.exports=o();d.backlog=s},{}],gos:[function(e,n,t){function r(e,n,t){if(o.call(e,n))return e[n];var r=t();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return e[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(e,n,t){function r(e,n,t,r){o.buffer([e],r),o.emit(e,n,t)}var o=e("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(e,n,t){function r(e){var n=typeof e;return!e||"object"!==n&&"function"!==n?-1:e===window?0:a(e,i,function(){return o++})}var o=1,i="nr@id",a=e("gos");n.exports=r},{}],loader:[function(e,n,t){function r(){if(!x++){var e=h.info=NREUM.info,n=d.getElementsByTagName("script")[0];if(setTimeout(s.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&n))return s.abort();c(y,function(n,t){e[n]||(e[n]=t)}),f("mark",["onload",a()+h.offset],null,"api");var t=d.createElement("script");t.src="https://"+e.agent,n.parentNode.insertBefore(t,n)}}function o(){"complete"===d.readyState&&i()}function i(){f("mark",["domContent",a()+h.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(u=Math.max((new Date).getTime(),u))-h.offset}var u=(new Date).getTime(),f=e("handle"),c=e(2),s=e("ee"),p=window,d=p.document,l="addEventListener",m="attachEvent",w=p.XMLHttpRequest,g=w&&w.prototype;NREUM.o={ST:setTimeout,SI:p.setImmediate,CT:clearTimeout,XHR:w,REQ:p.Request,EV:p.Event,PR:p.Promise,MO:p.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1059.min.js"},b=w&&g&&g[l]&&!/CriOS/.test(navigator.userAgent),h=n.exports={offset:u,now:a,origin:v,features:{},xhrWrappable:b};e(1),d[l]?(d[l]("DOMContentLoaded",i,!1),p[l]("load",r,!1)):(d[m]("onreadystatechange",o),p[m]("onload",r)),f("mark",["firstbyte",u],null,"api");var x=0,E=e(4)},{}]},{},["loader"]);</script><link href="CalendarControl.css" rel="stylesheet" type="text/css" /><link href="Skins/Tacoma/TabStrip.Tacoma.css" rel="Stylesheet" type="text/css" /><title>
+	Chicago Park District - Guide
+</title>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="CalendarControl.js" language="javascript"></script>
+    <script type="text/javascript">
+        var addthis_config = {
+            ui_cobrand: "powered by Legistar",
+            ui_header_color: "#660000",
+            ui_header_background: "#f7eecd",
+            ui_508_compliant: true,
+            data_track_clickback: true
+        }
+    </script>
+    <script type="text/javascript" src="https://s7.addthis.com/js/300/addthis_widget.js#username=legistarinsite" async="async"></script>
+    <script type="text/javascript">
+        window.name = "MasterWindow";
+        var first = true;
+        var first2 = true;
+        function OpenTelerikWindow(url) {
+            var w = radopen(url, 'RadWindow1')
+            if (first) {
+                //w.togglePin(); 
+                first = false;
+            }
+        }
+        function OpenTelerikWindow2(url) {
+            var w = radopen(url, 'RadWindow2')
+            if (first2) {
+                //w.togglePin(); 
+                first2 = false;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-24823355-1']);
+        _gaq.push(['_setDomainName', '.legistar.com']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+    <meta name="author" content="Granicus, Inc." /><link href="/WebResource.axd?d=HkmiNSkKJcp9zYO7iQ4LQQpJ-9NguH7p7FdF-OU2-4aq141S_D95NrhROniPmDpu97QINH74wHMgveycWNkRPc4aamYaSVoegLGoQ3kJqejVv0UhrHiril7BDIp8g1E3mZ5_E3gdp-uxVqyvwnVv7w2&amp;t=636411173902543242" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=uMHMJgpmGPen0kzqrN8LWWHaae0ApKF7a5DXngHzU5Eh0rzaLV9DhcfVSyUrXBUtXTnUlnfyIVoTI5bKMpkUxWizK2xOAhIu9yMRMz1dqevDgNjtUM03OY-5iIj4vVeOVi9aBJAsJyXRCCUvfErWln7RJGZwHXJUVcQTc0y4u1o1&amp;t=636411173902543242" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /></head>
+<body id="ctl00_body1" style="margin: 0px; border: 0px;">
+    <form name="aspnetForm" method="post" action="./" id="aspnetForm" style="direction:ltr;">
+<div>
+<input type="hidden" name="ctl00_RadScriptManager1_TSM" id="ctl00_RadScriptManager1_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="Yur/K2WM68Sg98XFvL48CBL2EA7q1wcGH7LCdoBwptTxoe/C9zYJqoproDto8jvlnpO66rGQjZnZpfpXGuT2bMSY55kqW34RAyR2xCfyu4zhijrn2vmsP+5UXeZGv3mGXMsvwskGpNRMcofad9GlEuW2qUtQfEy1GBXHpAaMXaY7VicuzH8BlPETFls6eXQYRnu2Ppp+g75CGT1HbimOhRZDKwWloB7yAK0bnrU487n40ScuudXlV14oPCZlaK2/IpG8GUveruq/kWBlxPhUQjKVppUj8uKzWl9OF5l9westp8xEzkpW9+mRW8rneP3lojHqeLnUZJrevFHwWMN/mcwMwKp7eKsE32uXqYWRtI4irerewzIyyzle3Yxn8cJZAzcOTutkXJr4JS44FYQ/EKYU5So88+cNoHphuBQROtzqVhTretwhuYEKCVXztYiGjtfEHmMU8CdOCccdVc8zJAKgnhXptfBFVE6JHOomk/5hO/iXQCc0RUzF/3vVxyyYbLPFXijMtFkllf5rhL5g8cxRg1ntLDa3OJidul6TzzH8dW6w/rcHLdVrtHootSgMjrtqvQXIHBBzUey9B0Au3PQXn9Bo+OyPd/IW+DEa7VW6qtqRijKCNPCdKmGDnJkmpNmzyaKNU5XG+m5aHL4cepbJ4MkP9CzTC3ySXLZH9LHQ08ZKp9ATn06PxDP2l8rdGGz50VbMX6rlbmpWHZDBDqFTsP/8oSNjJMHNfr3a7KP/8Loy+Gp7tNLtIgOmvOZ4qz14i3fxRBZsCDDrAthXTInCAY6pXVQbnwfV1KiLB+qMScLAsjRryCnUvM/H68t5jytX7xmVmNOspybplWDg1BPo8lddxRvsQ18Ix/fuqisulxbYuIrWTwfypPmI2Ym6lMRZG9nf1P3GFRTQ5h61aRJWXOkzJHkSgp5KqnLD+8LmmpHg5AjlNg77VrKWbIqqCI8cnE8FlVupZqTJ/2Oiy2ubZpmAU0EzCmnbdpbxAmmmFJBlx4uF3GsbrXTdG1d3GukEAou8KvoPAmV5XkyOH9AcQO/kMibjPE25Va2DFDVLJYOVYRqqtqbHN7KtjJdDYulfACNUa7Q5t0jXm/IsH2LTCtUbV01hvPDmIf/WYXNROWdQ1RsYzf+tiKcUyNyx94FORwxoOOfifQ/p0LqBydXggRuYuXkgc4KaAPeTGxe3Ycmn6qVlfu8nIaPfU7GFXkg9QvgCI48qwGjSwCaz99sPOm3wk8u0kkQ+Xcj/5Qu8DCS7L4Y5CoQHAXf5k9nB9CPFXvThcuak8kzrwGvbJa45WCrWEOJV9ANRKsLrK6RVPQXYjtQxfU82989l0kcVPlb4SOwiTo66+5BH5gSRRBAhr5SKaKV5fpF1RFmWG1xkCPkllol+mRJzTDaoAkhQvcBoGlywYKszXZD6Vv3pww1Xam1QNYQNWeBcNlQIRiC6W49DB6UFvlxm9ej7pNAsOpfN4zKtDPcUOJ49tjbfYBChyLvzCWhcp+rtrdj7xKlXJkFzsMPyWNKJMtK+4bQezkfsY/IF2X90cCVylT6fpW0/oBNbI69j+gIZ9ASvParpWrYIRc6MlUe/UJ1PTDQVfh6lcTXaCN7fZTTdKJlZW9bvAmf16l/1/L3AEXQ/frCfHAN4ViyCzqT1g9CBTfkeqdcB+O8dEEqpbkZiFscJlZjWuRght8ZZ4gB+Wj7V3LLtlIWtbMwb1ZP5OIDcwJ0FVG757xJV8z4NVuItoBkT248c+dytpAxbE9U5jEe32jHxk+LFz63v1Q8cxIWoIEv3Lav4MEm8VPYpvGTLuevmqenK3x4Td7RViiitk4K48eTa3aJooNqJfZ7kuEPioXQlpiuFnSfXc+/TSnVRbQW1Sa5Af4dBPaKdhfyj1PyJgid9O1KyWmKG4/XdTw8TXVMky1owJpli0zAE4YS+CqGufxxZvVBc7wwYBSjJyRzFrRQW/Gj8nXhd5U4WOP3mU9Z78jryOolafTqHU8QikwP2gEfBywgLnpqvDfmU3zMSJ4b0yP5ASQP6qHYqLym2YFKaePJIlfIDUnG4dG9FggpyUS4SbWkOb7E6qh3nhjCBA9WpI0o4ePNbgKKKcxjr9fhdbuLxze+bH8A4VSYstbvyCs1lYApGUIURhDmGUOnDoznDe1DGWAvEF4sCq7DPnPOC7u3cUbEeECcxfh8sAm/ugk5gL0wbn1NsXZwk13W5k/A/Zv8+hdf7gpRMjVJYf4JBqKq1RDImaYA2SxfAdHoX6uJhVxPwxQGx3tH+tO6D4KQlUzVjQLWoHVBMWlPyKN5iIiW+B1Enpx0fAEA1PQ/jjY3d9OqzChUJLJHBzGAfF60d9u5O0WJYY3tRGTHPhWpxstjUVM02lrHxuGdp+0nmxbpG/ysCCnhnYdw0CsG/rYeM2k6MqQipJvA+FnBYhwAuXY3wz/T5AlsywBtO5rpW8MJ/Ew7IunIoZ9Sjljd0nOfRsMNRVeTmDxQyL4nbWRnuhkd10KB+NwEoR7RD+QA+EkmnL/2Z7A6VO002pPAC4HbK7QPAHVU6GHLPvC35zSme+fUkY+2xzDnEz572J8k6d/ldmoY3DHBZDL4vk3A5RCg1G0MNFKVluIRLG9GHHPJts7KHB6FISJ3Cck8QYv8IrdcjjR/SUD9+l95M1UjoiDR0H1mzCSrK7DRhEgR/SXoMykC2LteeF1bLp3FILMo2WB7n8B5JOfE/SX7UQ4B2DiN6cAxTMyGp8OG/U/Gzemqxa8qWeC1+onjRF3Ufu945oFS8ncOhj46CLn8GRZup9/XEyCv1CuBQWUI0tSl4qUi8Vgud8KdQZbz8m0Y/1O7U0CdWiRKJR0X7Aa9JYJa4mFMDlEAFy9brkZdi8z54DHUIISGEDpehPfRTniVeNh5je4yP3lbSVKOLvtmaKEz9czKb7MfrN98BFNgvTnaLr5zSWEOBpc8URBijUbAVVn7IEO2kx2rJhoG0LfN6iHrCOJt5y3t4sucMV+HgfJJwUxzMLZ3kfrSass3qD7pv7ABs75YM9v7y4uKhtJtGc7t9hEx8/Kd5RT9RqPc5CMMHKTvL/VN8p6K01tQExhPpEGmZvqnys/f4Bv4lqtrjm7Ead4egMZgdCDly1dUApVDrOrQWxha1N9dtdz7SRTYq+F8URqWhH0VMbUEwhl3i2QA8LLjfV3JwaxjB2g0/Z5tg+vyx1/vkynFMr3Txya3M0+Hn5l5iE2tc5iLA6WRdlumWXo7ttXr8Ny+zWn1wppxQcAYDmb+27N6SQ8sb98Bc965Mjuz/JvGc664EnixZzOsmeR4EZz0uRhRtd2NtAwjCJJr7Bi6gszmchzDYkKH3cTyVG8px7kYV9CaOwLtStoWp4lrlZ8eB43Q/7DeTwAn/80YuW82OAp1xgXdMnpkV50+ui5ZHF6Y0KPAwgpSqEC/MTNffSMznSa/bU/HnaoLTmHPEmFGhbXZs2FgLT2Un3UWCx3J13wlnmykEK+LhgZ589WXqVa89zmc01jXnSiGA+JlJHynABzpkC4HHRamLuR9oz6ugw8RSrZemAhCw1wJFSPJu0j+4VQ2xVo/Zp4FIDUtLX/a5ehpYUvIBvPqntCwxZgBJe/Z92chdQlg+dz5gtcim+JgUH3UsFC+W7GU2oFbnqHN5fpmrIu8cX6OD8KXgZCKyyLvk47CgOBIuBUbo/jU9fhtTULsb7ynVxZx0tuLtU7T0CHyOFogrFlzGNQeswi7BQSQkUEOB+Es4QbHwgxTkMk3grVJfdLIaEma4lzaBR8SWxV+kl6IGVOY6m7Hnf/gt2zzZulkrnml+MhY20TNlXUg29h/3xm8y1mVl+ZAUglCoirp/lH1/Gs91gZItUoL7F/Wlb6e4NJKmvXQOOfSAOZJOSOyFAf2/bcAIURyLZT6jV7Pc8gRh9Giq3a6Zkbkql0Wk/ptiukBsO4krZnyA+lF5coj/H/F0iME9G6mHgdQXJ8eQUAd9mt0HhR4HibrDHPABPUSxcrp2zW9Y7mN5kQRK+Qq3ZTJdO74kdd+yfSxQHweghKrQHA5WXhUsy763Id3olZjlF4aWRIbc0YtXITIFlmdm1uYtxQDmjMNiFTxtIWmRchqgUfa1IcpIz/cEeVa4HiQVm3nzL2r76WFFRSGb1tTlz8i77okI2+qXh18qN0t9CPHmoOQgr5BHJlbu+ts+EnymRixEsfFXpAb6GPbYjXy0lLmvf0dVe272vbmfWAVrJB6H46Rc3IpJe0AxyLxy3/1bT2ZPYbNEYbDSH5pfTEZpaeB5vk+wGL2341/LlToP1i3SvQlhLI9ou3fOSX43vRz+t5jdzrDpJgPNVRcSm1Ajt2wU9at0WKmFT7x5UPJYtWRP8ni3vJtygGKHhxQbHE7Owe9y5saYX4fKq/kRApLjqRhXnPLR9cPnYPvxHElBVe7FNt7APLuFqzN9dUG1ndLBZmrA2lpFXnJIjnqdGe5SpV3xT6Mo6I7MSfW54ggcL0JJIYYVmGRFImCIxb/hT/J2sQm9YXPfVX9Me9ci4cQRI3mjxGt4oGi8nhGmUFQUZigVbeLVHMhlfJ4zEJn/8YEytDx+rn1Axv7D1dEWRyFDFSGhHuyM/GL4WXcerkOfADt+mmlNTKRb7krMJQHlJz4ffem7aLO0bU1mwuPNF0z8nfO0pmlUb9PhCq4K9cGJGzcA1KnsM1hvzTY+dJfL5lpZYIoNKJdl4qg22POOdxWxCi+vJ6SEyo+HuWieOy0toysA2TyILnlmrxlQMwZS4fmwb1A4pE7AFPH60aP4WGbclKy41DdC5+XEa93REqFjvoyT3ZSREuRzwqLSgI1PdqyKwijiKLX0yX2TtFj1uyHvAFMZeDylNpRceglCnQl7wBpzVN+Qnta5YK0ejYs+YgOfiFO1dSFwXyBW0GKug8+nycd/Pf1iCVdxR+H+SJ941Qg626C5pqDazOOn7aD5Fy7BihPSeBHun+f/2VAmFJs8mECPizZY4+IEPtbznvrYiN60mbDH6ND06BjdTxEJjMZhfnD8Ue4S9O/55tlikD+uY5S/i3+Be4KoNZ+P+npliYtu7dFo9bwcnZM9tZ1U/t/+CAIvgABsG6otT3IA20DJbixhoa4KYKOUWOPIM4XqM9HmUAPawffSq9ZXDJ431QQCQi0Ciixhsts6A3ewBhHiOiZaVAjnjyjj71hszNWQ2Z6P8JMmbUDxK/l8+QJzUdqPCCyMF3tcce+nvRWbhwXJiLgbVE8Hz6+3KGPGvMlc7xcJVXqI75+lb/buC+MMvWMrEDXkiQkYaS+tU2D18v9mFEbc+lliQZvwhE80R93150P8eym1z1xToLi0prdmN6mJnqxt/QV5F7ksdhfEceE0DOSVY5d1jZy8zxsHvFvA1v33x1kjX9jOclHLFf2Ofcq9HeeB7M+en7F6lESSZVT8wQ8Wz8KPW//ajaWtEGLQnUBQZTLMjD/4aC6lFF5AWhts7/XdGfSrlwhOQ2XMLA5XSe9GfJqfETyuv9kE7Egdzd2dKFcImB2NfeOBwadU5hje0VGzrGUJpcRsan34FYxdkGodd4Wlg+FtTrgFjUK8l89DsWzuxUf+ZMvqhTUchXLu76dpEjPG5q/dWKdbxTMdeJ1noDRFpCt4IWtFQ+T6AtpDkzvZsnMl+SJy/zO0cQme9SD3eDX2vUeei5YsADHbSufgyj/KbThBgKTB8yW+l8Te7tv0DSkHKLePxy5GwMDsIyC5xHkFq5fX06IQv8AfdTzAbBVgTXgOUcoplqDnm6QNumt/3kIUjh5otiWA7JzdyQ1ck12RcNCzf5uFKE7BZdHL5OzXApKf06tWgiFbU4ZJlyH4oaiN8Pjanxj5ECEKpX3PJX6Fln0PKsV1ITQp9ykL0aVAi+59dvNliPi28KCjtxmKlJnfAB9zp/2cGuKz2DIzdPhRCt7Adkd7FfH1u6yZwLLx5LsQchwtl914acNfxfuGpZZBfiq15PrNq7DcHc85/pXh9Ge+PFcxoGkktRbiwLuEspvNq5NKcRb9QMqs9EkdmrWDPQ5vLxRtiHMw5CFozY7gsLM681wIghtxVPT8MJuP5x1dPvlNX6bZY5T8QWr8H7q9BizxN7o0S63KehMnmXw9dXxCPSPGkJIsq0GsrAZ7nRTg8IH3Y9IOPHbMh34fVcEhlf6/FC5SYvtdYG5dI0mWz4dC7PIwAE+siE3i5IA8TpDjRtiqWtrKa6YCHOaOM9R4s0igxYUYcTUPzLKjrXIDB9mSGyFQU9XOB41CpF3zHQqcz1M52tQJ/vgoPIvk7Mm/TV4844nZR/FXi8iICcmKvr4U3WnhCsWn5gnlgmao57fCUgsRi8O0r8RhynN5YmLLSgsaM/IXygkeljJVdKgDoggBd4msxo3Kjj7r0CenQTbn8ISnRQV01o+jJ6kowkc3YVChiLo8iSrp3kEu6Fx8MeAc/sJc6Cx7+VQW1GAVwnFKyUVQyxTHRKL8hY1lC95EPxKRf4uPnYRScqc4yJTPNRkFglHTra7OVJb+jUk7OApsKfiWUG7HGl1Ck5ozmVQmMafnFSIWVV0fKaCod2D1MwXaXvPO1vpfHt4tgDHI4mvfbB/qywpuej+28GWKq3Yr9yl5a9Tas0DGzFwVdN451vzLJM88FpArtVKqDi/vXPhRWi++RzH2x0fp1ZjdscxlS+/eWtodaMlX4+XoSXV0QhwBA/w4DLey+hf3r4VJvG47xCnspr0POlfjyb8o/4Afb66cQPEfqZyvANLZUQnBRtD/WDchjLfgErYQU2AEYGnSVXKDCqOXLGiOSjFhx5mh0k6v1ANGXgqhSQzNs3CiKaXbAaU9sg4zJBZsFR8phefk90PVzpBCYqLdzgDWQzRDJHRFqv5zM6yPaiNrFMb7nJbmyBfNI30GIfj3TGhHGXozJphirC5FHkbeV0hedyhT2647kgkorwWn0qcvJVnRpfcn34OyWHc/CpIHfUynLF0eg+d248rmZWXWTiYz4GxKQwKt+8hxDcfDDgLH2MnbLkR6WFVbReDFnYStVa8CRjWNO3MCDpGsej2c4N4FSKs8PXaODoCtrCQKpX5ag087tbGCmQUAuhQfJqRjBD9Oj+bmSjj/y/ku3MyJwKBYR3FvbHSZTmsZJjsMJ2eTcY2HT7s4Cn8Jea/fohY8u1OSUO7VPLMG6pp54+tmEbmh/rqZpnuaFywIG/9K0G6S3ddAoyacLQftC6jRkqZeyoNIIzj9nfqWbC82Atft8cbWL6Cn9tei7DFQdiiIa2qcqBrIqWmcYsWnqhKDjnlcN79I0gJ5V3b+i1UPUJ7oJx/wf12Cx8jYTtqOLG0uALM43aUSf17FvkwLaGEtqfINeSRPwJCUzOZrZdYEUh89CpBTW3ZLGlusEMjWauQzkfUV6r9qtyTm8U9wCSZIGT8bvLYdDPe/Qf8dP1KCjoN9SC6wz0RF5bRTzNYjbUZJQ8IMd8iT+etSvnVu4G2YH21qZuuBGbMyzTzKETdJixnzNWi7iHBYmwVOBqUPG3L6mCcXpxl/rJ+LAXxGd39vzYktTOKhT8kOvf4fD5AtLM7uTskOdiPIVt7XqUK0UEhECOb8ExmpIhN1PsVskOBsTgHOTp0+hfeL346DGrYHc2L7MQPNdK1+REMmKwV7+fWsQpcl0a3llyzLou8tA4xjVGSLN2ZZoNvf/TdD9JZHvFAbrMeWs+/qPhC75ZF1/XaYQMHO+o6Do/J9vDze2+A32HQui+T3P76U3Ymn/esObdEbN3VAsYeoamW/clgRnMyDr1f2M1ObUOxiT/zfOhBRULhP9wHK8t8DoGg3iSz/wGNsXtRTsvNG2Vkk9Zxa5k4VlGakI5okZStBgXSM65QalTEK+GVinetbDJ1L7N+JwoCCVY8yuDsxCSGbGSrvHc/Ngeg71rA2yciL8l1EyAHrca15UA6PnswMO5/Qexp2mnQLFOtQ6IefXsZnxlKGPHiWEm8B04CQ1m8pJ2UFwSWkPLh9CRt7zAX5ipSE+KNfNUgtR2Q61IhFg6dhiTARm696/UZBd76v7L53Pe6V41wO2yfUtmy0b7pKpHkIuF5PKCW8NcoV13ZvDEXxguhrH25v+rWd719R5rlSeUYSZk5VSRoiG8xHARbB71LG/MZkKHfe63Gmz4yIs31vePXtNjTRZonDJchmjsm9RvT7fVVc1bE2MMr+t/T3yuwd3A4itViRBd8kX/0QrZhP4llIUGWHQBEwnmrD7p+PwBVh217G8LFzIXZLavvtcmP60Ht+KPb7kKoye2tYD6nArwibOQTGVNNETgpRXI+og7m4slTkedsqBiK0q/EQogVRTemKcnmMTqCyzuc80aR8xwa3TZ6MXGczpngMSEw7tjad8CZRlZBCVhICH9RkT3TPwDkeYXbIjLDZPPjSyYJm0hgpfPf2KFUDKYrFd3dFVJ4/3pzDjgPmlcuQNoTKdxYY4RVP/cVK9PxQCpjBB0jXQ9dFTvNpX7duyPm5Ok5IWWiM6wmZVj3fzxE2RKrgubCX2MSI+IBRXi7ixlVGcAQHbzkkzKrYO9axazM1aTsNsjuA/+3Jh2XGYW6Vm6y2Z5xDAZnONu7Xw+QfjaFidRltus+p+GvNeUmsezVV7oHzHh+wWBe22B5Sq/ilbuk1l8IfVa6LrmiCesHidX/jKUTQt7ujlOiQs6UMLGY+wQKVMXH+ZGy4Re3YuEg/c79x3y+5xuNF9IbWv1qwb9w6gF55jty7+AhboMQoLOY1IE6mKtAcYJR5LU8XB2SDpQ0ZZdsDglpfdJAcZOJV6mX74bhjsas8wdwJx3cwdYbZb0v+QSxYzp4ecVdCEwa8X7mX+CIilCb01td7F4ukaNT/cI02fKTuCjWP7dWqN0wwsPBJP+N0fgdawd0qCKayDjq3/7iQhWyAudXLABS/mXzynUYZ9ii4FTXjkZtKEHzzWu3S9sje1+DttVlil0ZdADV8yrSFyZiL/NIt3S7t964MbRCZZJCteJrgegxIFhuGEmR3uHp1OBnm06NfFvJomvklD9+/zZ6VgChPKCINeEEw9MnI5gGK2Z6wIOHZUgSjAmlzMIbzNS38wUnJFlqo6bQwwkFt3lZvFsIyyf59KzNRLoa6FszGGz3nuoujXyjZFsdfYmfrebiZH0ShF4183TDk9JJJOT3VlrajMzzPu34a4MgE1xUCc3yOrz8zDL9EEG2kD9T1r+8cd5EdTEO8tidO2DluxmC2pJc1dt7wrm3rdcVg5cKjgsicJtJwHFZC4+BsTYvwuGz7w2X2UX99oGK1+pxotptvWMEnT5hM2VsdLvLHbPoPhzYwK5LJYZBi4dOGTtJDp2vY+hB4mNqNomOybXwOf5yFbL/s9UfdGNg8Om+LRTTxRLQu7XnR7IIq7Aa6cjep7tzKTH5N35iHJLudxEeYMdDkEuhI7IQOZie+qxP/FbQgUhCpaPbzJ3dmx/0SzdmT/tggfbEMmDRsOtUPQupzXjb/jw0zvjdr89rMTgFBzJNXsal3XYxCg9Bw10bjECxAELn/ow2YkFiQMbDp42sLxRs38ZOmS2rBRHe9nisIcp8zSXTVZbQZKFWXBgqdvBfBrwIA9dYIpvUbwHSYxCyA/5+Ho4huMQ5bNSHw2hPLplK0SDMuclXGmlbjy1J3SCOjkpXPUZRf0QK8q289Q+ZlMOK+Kgap3eONBjMW76xBuYMICgnzkNcjc4rS993MfQf5FE4kIbKFZzg3eTg7DyTQ5YVbfA4euyTq1RmUJeGJ/isvoJW+p/BSJB93waXcl0lypRyApfU7pTBHhc5ILLtvFNDQO+zT+K7hu4bjp+k7LswRQAl0G4IRke8VR2iJ/3SA5mRKb+6N+lcRUNY8dkxlBpA5BmPIC7uTTjuk39sM7+rtLGk8xeDBy225XJPhM9ZKc/Gs+5rtur9TQUJyD9x0by06hHTbvTnyfhzjfAFDY/EA86Ds0ALmWp2k6sk5KjBaHJCd4T5ZuPoXn4QGBlY7qOPdSWatIn8Gzd5wswUAej8IjdKH0CYKVaZUEhLYpOBAuyWXuNxc2SVJ2NCpkVL/86yy853YSlOpNzb8ej//upmVghwDmkq6HpVZXNBRC9fUy8q6r0HMWxWCcS9axzhmiDQ9D84wDeogvys7lPr4dswtpIw2n/Gbg8HzhADi1sjBNbpfVCHsP0rsbzfX0z6QibSMtiCeu/jsM/5dlg5aTfeCcszr2ou+Z6ihgZZpdVNibwxym8KVi7AuUygTBV9WymY6feU8k9qZI0oDWY7ekEURkGBYjkjjlvHK3sBCb3Lbox6ufa0ef1ZIGu92jph3Wma3bvpfRjrIvTtsv3fuWmMn9B7GkHSgcsfNst25t/KHetG/Pv8F5YlfXYJMXoaoKRxnM03CuqaYmUPD8bMTT4Abjwnvvsj3tSBjzpH+wsN2W6Xeb7ygSNmWzaqS/DIbT8bh5MfEGDPdZP9gZ2LTXOENEzjiQwsigBsrpTdClxF/V7kODySGeVooLftH2QPYFv4DmipI8xRI4KM15zfhRM6d8nRXFcqI3heoEx/SF26sa97k4bDX4a8UUOXaRMNqG2ueEDZ229vql2HWRFZukKSFqs84qUaugP9TSahYYU7wbdxynRw2JGziwIobKn0bRsvPXWEGpTbGkr9P6hZO6Rucd8RWSgnrbLEgHsbEarkACAaOP/c1SwEhlYX6oVgSnNun/Yv7ftXsdn0Jg37sbe5HI+esJKJWRrxE2e40up7pJAFFVyyli785y8SfFLkjhWQva9NUPJCUi3/4T4G9gtDFX8Y9d4KXMY0EZtQ3kco+srnAw/A6/MhhQjqxWoEPfoQXamkrs8U5+QTcjjqt8WF3IcX4hPFesw4hEAJaVgQ59AmckLDg6DaYgxRmvdI/QtKOfJTXB51EBXNwCMeLnCVrCiWDhYMSfHDxTv/nsbAvrbiYUF3A2TJqG+JRLrkSv+CzzvrEPG0p30X9PqislI0WsQ2nC59VIGzq8WC/KJKvW+1GnC/qdvlM3adDll/bgY4YtUacjnD+5FfB6L1W2GyvB6YMOPA1bAs/b0zb1sQjNTwREeOVSGvmtDz10bRAHbPNjUy4ebVgcKwLDSkMcguyeibujzV3r95sdvDtgCrHa70TU58bQ+796sNaCcspvdDHrVQJCZNq5v80pjDp2ltvYePN0ttXfj5jz5oEsm4fZCjPHvPV7vIXq11N5gID2pd/uNL6fJF0d6zV9DkmrqbjZ/leIG9AjrauMEg6KcfhzChosbgLcvO10QwZ4H5pOiRTSattCn+Kdd+CsFrfCf0aR0J+2ulua4fQXGnbGRlWvdXZQnZk0iCgu9samZuY2+p25XTaJXMg7AREPuvH8cHaeNIYqX5febuRxNqLyQ5iz/2Pd6r1cdlJMEVUUtbgLnV/iFPzh2N3yGHpG+GWd/9KUYqABGau9XFKJiS0kbhUX6DZh6HyfoWTu1bEoWG6qfa5sPaspTrlD6me1fbMZGUg3BoYAOq3ut46JtW8+wJ8S371yHyN+oD/TUMRgxwZPRj5PdjJPrlSKtl+s8sDwQz2GEb+s36YH8o7VrhKIGhnkUksihPjAURRP5gJ9KphqT31EO2aCwvMYIroeS6xfWYeJon0SBeJAENaPQoh/a2KEa0Mde0g/IoUjm6wtHwCb2UW21ja+rQ0QC4L+SmuA52bQG510wHVsS3oYlMv2ikQDBw1PN1BFehH5SSgQIIObmbcd6vmYH+SREFU7bzYk/RRgjyDRfoKY8xKgp+zT68CYXfZiXQkJlDFc7hwMKr8llRYMLlaf6Y3ck/2+JaTYMoclezPUdQIizsNnl70HwN7qLAmzFk7B0/VM5wWt7O42RiCgY0feh3qnKsMTldFpJmT5igLrU0n/gVXVibPC5OShq7N51GEKVDzEKlRV8OGQs/cNs+0bQ3ymt6UMznjA9w7tV+ZGXbTXLtTlwqE80djsi1rjJpMS3E0tofmw7qPOEJWyYyqWGfV+gnM6/yxGcI+GTCfRDUp5UlGD2DnE85Jyl8R23Yradb/CdtUuptGZZBqQuzpiaLYz1dhGa35+xw81yF2tw/s4Z9orLgRVw4VDM0Dv2hGkDFMbE4XPK2N80rxzoZCLtR8I6wJoSkyAni0+0JoQsEGQiz8QIuKsQNkTGOwC7iGaZvNa7cJR9OApoOentVdhOl9PMX5ZcAJQd/s63UX6yMZSvkl93095PEFU+xAEfHZfbY7UfkG9engKwzxWTx20XY1CwnijGm4kkIuwNLkbSNm/iN5ysGZxGkpahatunRWHmxkaTPmQJ1HjU5D0ISnLgj38ASlKg1f7STDccoKUD4b72p6qr+m9dlroKEaySfZpM7HRvrUK/SRBXgPgI7J89RW33VvTeHMpt00shcAo1JHKjo0Tn2LNsvlNiZvIhg4AHa1UlzfLValnvQiq05pDDkIOFXUiUD2my5ExJ4MWJ/BDHHu7YN5irEoikND1nEtrxRCMBp0MQKAI2AhE6VGnrNYP4crc9hj4UuJTEYu1qnFY6sE/esiz+SoiyKGrL8h8lau5Vdbxvg3GcGHs0BPRkfxqiq9Up12UTYtNaE3pnF7m2PkiYcIR8HU3CzLy9hHxnpdChEtnwYl40oo06tv/8o7raMOmNYSSvk6kdj0HSzRhwgTOb1VsqTP60RPcZY2oxIR4jV+6IN375WyI4NUHMzlvBNpHnJvBWF0ONH3rqoCIetRopPEFQqJCdTV44fKUQjmqdAp7rqnffMKGEXOxUne/6OlW4uOuHhVeASqY9F4RJmVhKgUTK7doXjZ+Egsn43bs9yLWmUmr2q9mCWPtitoKfS/MR8aLrKT0hV8yRTjijPIIKdXwWodXUAafAhVa+wlNpEApV6zv7GJM2Aj7NvjXx5u5fb3N2umSoR+2XIMmkiBZZKUiFrD0ELnGGtnWG5rWkSOwuV/oZs+orxGbkiJxO9KCs+V8sQTPJ/+iHn/25rd6tOyrMM8ijoGVWTt/xd6thpX3IrlT7XCfesBI5E2wDxK2e2EeuGkI0KhXLNsMGABNwTwAUZjdKH2HelN17tsdTg9n0KPsh3rzYQc6ZYrKQgwVY2PQ/bileo9N83z5EEUqrye4SZSExh1PbvunY66axkzAEe7vYk3eIsbd/wo/MB1UdjZSG6r73fY+kVCAj1X29F4YHf/2y+Vet3cKkxEp+pboZdRBUvHPPGRNTB0ip4h/miJ0HC+oUL3pi+LB/+n0DmaQure0Bt7xRYPcDS1R2mtH7rjNqbCTI5K2rZNxjphvN3tld+GoSLnvtCuw2RGBoKwKGGUvh7jW4V3iYKn46jn65GP/IP5sFB4AYcb990CWLX+/qNv1lTXVB82dgHhBxmNFvj3bx7OJeMQh+/v6N1GW99WmJsLZ9i9QwSszOAFD+ayM4pKj51pMqFHcbLt6VfkU/I+ZCNGmTcGZODXuGU1H9A7A0PhLzVIbSh5WazcgJ9K29LbHBwf6DwDD4HX7yvilNlhLZ0Vgjkp0M0cjHgcWJdFdVPbuzS2PirB0HH8r+EauZN469iFMpGejhv9+xVyYY/Awlo/n1GI6qpLpRCSPBlp+tHzCTuG+LmeaJohL7DFDdwRfvxVrfLAK3cynsCzZMZKektmFiulSMWS/9GcmbkjGp8+An+u6UXx/4NnVbOThhY+RiykvrCNbEMIpsjTCg6/YCGGI9js4sPtk8zSL1eQL4Nhon3jPbccfgkGaWIJJ5HzkTKaumPST10utdymFPkx0eGTKm+PTQzEesYC0qpFe2Xoap9VSKtIYzHp//yquMuiWRr0Prjokba9ZFf50ulKccjckS+bd2NytF1bdFVlnTztYfDHRe3aMObVex8tFZldacZ8q3oP4/wV0EItxfBg+Z/+HC4OxV+tidyl6GC9XBXLj/M8E03HE4e7lpaISXqY980g7WBorwnQNUgSd1dfjSITB+B2Ae4EEqW7pqvtMcdY9f4HeVeKfyWtl24lIWstzfEL+orhGAgGkFqQ0aprrq2ppwnDtUQLElrWxQOfWf1URQ5dMm0U/jHpgaz0k1Qfa2xIUSFWNcAn67ulfkgULI4g2Ok3bq28a9pVU113kYePZ+F0ePIldOn5/nAcO4C/bGYNFtPl9vUS7wpbYkgo5DYPXJbSSTB8Zmq0gb1aMn7c3mLbzWGxYmdLDnVt/awojk+HJQEfhZApbmmD0dIn/0hph0RXAOrnthCCU/c/gseRRctNq880OlEjb9TwSJ7us+b9d3aQhFu4z7rgLac+mkMrGSeONjyQ9jy7TAWu80iQW+513uvNZUywluNVfcglS+g/Hvnt9cyplL14GJmrmfxgCCRpnyUKXAyVFh3uwFCIb41stha8HGIitTT7lzoPqTwqVZeJHFh50r7ONSKBpEumtDtFuQlwIsx23MGUPnuOs+KZHuR9nKMADeJCeirJ5+E4rrn/0G86UTBu7G6mjIUke+2HyhkFR28XkiGOor6IFOKcNqKY1gSP0fh621H6UhfadV60nTyJM3JnrYz9zpJi/+RwkNCYj9Rmx2+x3fvSjWtZ1Kn7xg9zw6/jjTUqo+m2QMfHeyVvHWeMi3oj3A3eencuYZMK/kjXX4LJYrgshR9JRykirkeWZMIh64ohs85+QdY3oNmqOfXD5GLGvXvTOIPlzOHDmvKG6kxE0VdqBMHbN6n3JwjlCX9l0WFBw0oInt1Sz9taOiHsw1HLo6VpjGTRS/UFstl1CeFUF97uhq7viKDywAO0SO0LyfoCs6M57VhJBlkPD3rEzNNTAbeOm3JvbvcFjyEUE/1OXjlqA1ZPjHcyFuu8ONNN2iFZ1qtnrDalhs0qgEDXzGsa3f9vkByU7Ce0nz1l+UnbHeq0N/Cnp5qail4MwqKy8+MCoSNpaWDnZEVqE7oympuw254A2yTuKQ+962ZnJLKTl8uHLYhwIWAaJRzW7gQ4Ehg4Ho9r4/1CffNtUBFR7wbrP3ekd8vyPH1JMX+w1lstZzjhl2LdB4zx8JzL2AdXjKGQAoLHCMkgvQDLb1+aBBRm0WGWuaLDwKkYLVdF1iW3b9yZfSfJUahCNyeaTN265T8va3huZ0/kFk8LvzDwJebC9pXvc3+4p2K48dnBj7pfSyiuP/y685BjgkNXEbx6wIdOfiPqXQ9PJUwoMtwuz7x8g0PFOq6wGUhzwTblHl60j9zpiBEnN6P00bl/XE89PIABH22mBSg6/uiuuxXPdPXmnmdEfcvFfLGGFnCMdBjNka/GRko/J2IzcVgaEl9kqqvGhqbHIyTHfhOiBbUUMjDcuN84zU7zNZcLieKWvi2J4HgMECIJchqw9EMqaA6Ta1RQSnNuC2KjRxh8GavLmeEo1lH2ASHgDz4cv2LFQvxZNaK2axPbQ/H25VVyw5Cyzwd7iQNq5knpPBSY6RhCXhqrwt+YaVFtpVqqXy2A4ThN6nwEwWlUOtEUhfbarVWcuSNlnQuXKk/SAV2Ipr87bv7YQWnmy5Q4UGTW5XW9azY04Zl8g3HyFiPozfQqv0Iypeu5dDzMMw78v5Y1651qBaPBRwj9Iupk46hISRTLdEYrN7pkNirgFkYeOanKLS0/h6YGm1NNCRdUdNvRWX5ZyWnukftZzLdqtFuV2WsNu0/3CkwR8hyTVHMsOZBsLfXi0DyYvabG3vjYi3RNMTEm//s3RrQlakB3tT7JR5PSiaSojwldwkdaDquKIw4S1Q0ZzjUoqDOrotbk5TPLy0aziWP3gfGA0SBnwdTovhFTRBTcQydxpM4qh66I6j5OydhjJ0YVqzxbZ1seEvhDbmXE/Qnwks24veiCLGrJtwR69wxM2mT2yAW+A11gnxA5YkFfuRX3psLnEK2UzkHSbcUaEZ8Qc1SKgied/iF4GPFdD5LLnQCK6Z7gxhx8KhEPepTkVKc/8YcQ+R9Oh5bVdl1/tnvXHVo+RNP8Ocy0NGZTWArnR2c1kD4UmBna91mM99VtTWO6u0NNPcvzPUt+l4TQvjyNbdmsAQ/4HjCfWG9BAKXEGW/PA8d26F4ikb6ERazJuDszSXUd2AhX+da/sJW8FMC3KaF97k5wnjinIyeUm2jOtE8h17T39tMFTCuhGrzkC9r6IvsRXHhSFieGhj63XO369MhkbafA1ABYa8S4QkzY84bONXLVTBNleMEeO919bvDac7WJuwkp7yxrUsySQkpn+MiEFQfZCXd007t+biB1b0KOVomkOGTuO6gqKA03ugFlN9xUkmJA4t4cCNrXnmYngAKYmGlhfBpabANZPJd+nkFf2VlYzLRBG+y3RJw7PKt5yXL4Xw71yZJj+Ld+2W0gvnV/W3gWuPEHDhNf9aTkvLtHcZMgXZHJ6fQWbmk9VnC3ajXmMBGNIAGk6lOWNRthOdFWG7O5nikWwmW+iMJ+q54COBM1Nj5LgHZ3Xhpmp32VoZR51rMUw6UGGV7ETgLSLOrPKBP83yWc49tQ3NVLbjwdDM2hVcFXqCqAdvd7bMbF3G7Z9mPC4qVmEin/Z+aBE4O3nZBoQgh1lDzimCZgGpTC+VDO16OGh9SOmJ/uDjq8vVBxX0Wzec3FsOqYeSBm9Rlt3Lu6bJGeus7xJ68DuSwJdCUT5Ga8J+IbPWrInUFXW+Jw47jf8ytZJDHrU/b/jrTrz2FWYxdX31qT5kErVrmOt41dLqTtzzDYgpt199EYe7bx2r/6W58d7gaqwjbrmAT/J13eK5pAJK07Rlu/LpYeaMog5VoI5AjMwGO2PCxbQQsEr6U74hagoK120Gca2UD9slWCrMXE5OLkBqwGbRvgeuWyoUBIZtZVqoEC23HNnYvVnZPzjjUxkTb2JRkt/kM6QxlNyWYWmz06AwSkH7pxG1wjw4/ONIyZIG5VwmooJYk9Iy2YRoxqpqIj3jxIW7HicgrU5vkbb5LHKj2SaKtrI8IN5KHN50ug4UeFoKrAvydtxpZSSCInScKuXn7CHIml2ej+oT5sq/ca7pH0F2ex+03BgN4JnppCskuwBicH4RK3oW8Cc97ysRGeeNrYvPbL/NGwO2ObfZQzmjiol4fHeHkr/gRI7ofpyw0gT0FxzFvekic9Ld4cp+ksBFnTewh8KFavT2VrTaAUlSj7cVs1INcKldkSnvCGeTWN1i+iapveh1I0+RzqgEaLAsxVu9D7dBMvtl4QOt3t1bOPuwSZQ9oUlCS3ImQBp01kBQGqJ5pYZNCvvUqoB5hEZlLzB0G7T1zm294ceKDLkTRdum19vhfEZWioaPTOr28ZcI2otLVCROap1b1DCjhQ680an3TfyyGHvINcR7jQSBKCi+PJBDtjow+xLCCrUrz3W/CIw7miBMNb5K2bY1QzNWz77Gns1XY8Hm91ZmIHJAx/F+7yhQgtTcHiAUEc3zm30iwkmujKVNVgO4+saMf3ykI06S1oW+a9BpLFQeKcLPGXmU1RSf+DaJJcQckkgNZ8nfdPug1/t7lfBW5OpnQ=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZIY2I7udQD379MGVlHO9SH7TGtWx3KMkrQCx5kOfMn3hg9Z1XUW3fDJH3YwDxxzdDg2&amp;t=636403334294818574" type="text/javascript"></script>
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl00_RadScriptManager1_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-US%3a8f95decb-d716-4257-bc42-c772df7173e5%3aea597d4b%3ab25378d2%3bTelerik.Web.UI%2c+Version%3d2014.1.403.45%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-US%3a68d9452f-f268-45b2-8db7-8c3bbf305b8d%3a16e4e7cd%3af7645509%3a24ee1bba%3ae330518b%3a88144a7a%3a1e771326%3a8e6f0d33" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="CA0B0334" />
+</div>
+        <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$RadScriptManager1', 'aspnetForm', [], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+        <div id="ctl00_divBody">
+            <div id="ctl00_divMyAccountOut" style="position: absolute; right: 5px; top: 5px;">
+                <a id="ctl00_hypSignIn" href="SignIn.aspx?ReturnUrl=TXlBY2NvdW50LmFzcHg%3d" style="color:Blue;font-family:Tahoma;font-size:10pt;">Sign In</a>
+            </div>
+            
+            <div id="ctl00_divTop"><table width="100%" cellspacing="0" cellpadding="0" border="0" style="background-image: url('https://chicagoparkdistrict.legistar.com/Images/CHPD/repeat1.png'); background-repeat: repeat repeat;">
+    <tbody>
+        <tr>
+            <td><img alt="" src="/Images/CHPD/chicgo-banner.png" /><br />
+            </td>
+        </tr>
+    </tbody>
+</table>
+<iframe width="100%" scrolling="no" height="30px" frameborder="0" src="https://chicagoparkdistrict.granicus.com/ViewPublisher.php?view_id=3" border="none" name="contentframe">Content Hosted by Granicus</iframe>
+<br /></div>
+            
+            <div id="ctl00_divTabs">
+                <div id="ctl00_tabTop" class="RadTabStrip RadTabStrip_Default RadTabStripTop_Default" style="font-family:Tahoma;font-size:10pt;width:100%;">
+	<!-- 2014.1.403.45 --><div class="rtsLevel rtsLevel1">
+		<ul class="rtsUL"><li class="rtsLI rtsFirst"><a class="rtsLink rtsBefore" href="http://www.chicagoparkdistrict.com"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Home</span></span></span></a></li><li class="rtsLI"><a class="rtsLink rtsSelected" href="Default.aspx"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Guide</span></span></span></a></li><li class="rtsLI"><a class="rtsLink rtsAfter" href="Legislation.aspx"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Legislation</span></span></span></a></li><li class="rtsLI"><a class="rtsLink" href="Calendar.aspx"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Calendar</span></span></span></a></li><li class="rtsLI"><a class="rtsLink" href="People.aspx"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Commissioners</span></span></span></a></li><li class="rtsLI rtsLast"><a class="rtsLink" href="http://www.chicagoparkdistrict.com/assets/1/23/CPD_Code_Chpt_7.pdf"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Park Renaming</span></span></span></a></li></ul>
+	</div><input id="ctl00_tabTop_ClientState" name="ctl00_tabTop_ClientState" type="hidden" />
+</div>
+            </div>
+            <div id="ctl00_divLeft">
+            </div>
+            
+            <div id="ctl00_Div1">
+                <div id="ctl00_Div2">
+                    <div id="ctl00_divMiddle">
+                        
+    <div id="ctl00_ContentPlaceHolder1_divWelcome"><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Office of the Chicago City Clerk | Legislative Information Center</title>
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            body {
+            font-family: "Segoe UI",Arial,sans-serif;
+            text-align: center;
+            background: url('https://chicagoparkdistrict.legistar.com/Images/CHPD/repeat1.png') repeat;
+            }
+            body, p {
+            margin: 0;
+            padding: 0;
+            }
+            .container {
+            width: 900px;
+            height: 100%;
+            margin: 0 auto;
+            }
+            h3 {
+            font-size: 16px;
+            color: #2c20ea;
+            margin: 5px 0;
+            }
+            h3 a {
+            color: #2c20ea;
+            }
+            p {
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: left;
+            }
+            #content {
+            position: relative;
+            width: 880px;
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 20px auto 0 auto;
+            background: #fff;
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            }
+            a {
+            font-size: 15px;
+            }
+            a:visited {
+            color: #2c20ea;
+            }
+            #lic-guide {
+            padding: 5px;
+            }
+            #lic-guide div {
+            margin-bottom: 25px;
+            }
+            #lic-guide h3 {
+            text-align: left;
+            font-family: "Segoe UI",Arial,sans-serif;
+            font-weight: 800;
+            }
+            #lic-guide h3 a {
+            display: block;
+            text-transform: uppercase;
+            font-size: 24px;
+            height: 24px;
+            margin: 0 0 10px 0;
+            padding: 0;
+            line-height: 1;
+            }
+            #lic-guide h3 a:hover {
+            color: #3073be;
+            text-decoration: underline;
+            }
+            #lic-guide h3 a:hover {
+            background-position: left bottom;
+            }
+            #lic-guide h3 a, #lic-guide h3 a:visited {
+            color: #3073be !important;
+            }
+        </style>
+    </head>
+    <body style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; overflow: hidden;">
+        <div class="container">
+        <div style="clear: both;">&nbsp;</div>
+        <div id="content">
+        <div id="lic-guide">
+        <img src="https://chicagoparkdistrict.legistar.com/Images/CHPD/LegislativeInformationCenter.jpg" alt="Legislative Information Center" width="800" />
+        <p>The Chicago Park District&rsquo;s Legislative Information Center provides online access to Chicago Park District&rsquo;s records between 2013 and present. Past Journals of Proceedings may also be accessed from 1933 until present. Here you can search for and browse:</p>
+        <div id="legislation">
+        <h3><a class="lic-legis" href="https://chicagoparkdistrict.legistar.com/Legislation.aspx" target="_blank">LEGISLATIVE</a></h3>
+        <p>Search agendas, proposed and approved Items, resolutions, ordinances and Minority and Women Owned Participation information presented before the Board of Commissioners. Legislative records contain detailed information including action taken, passage/ failure status, and full text of the legislation. (Please click the Legislative tab above to browse
+        Legislative Records)</p>
+        </div>
+        <div id="meetings">
+        <h3><a class="lic-meet" href="https://chicagoparkdistrict.legistar.com/Calendar.aspx" target="_blank">MEETING CALENDAR</a></h3>
+        <p>Browse the District&rsquo;s Meeting Calendar, posted agendas, and videos. Click <a style="font-weight: bold;" href="https://chicagoparkdistrict.legistar.com/Calendar.aspx"> here</a> to view current calendar dates and agendas. A Meeting record will contain the date, time and location of the meeting for the year, a list of all proposed items being considered by the Board of Commissioners, the notice, agenda and the meeting minutes. (Please click the Meeting Calendar tab above to browse calendar)</p>
+        </div>
+        <div id="comments">
+        <h3><a class="lic-comm" href="http://www.chicagoparkdistrict.com/departments/board-of-commissioners/speaking-at-board-meetings/" target="_blank">SIGN UP TO SPEAK AT A MEETING</a></h3>
+        <p>Those interested in addressing the Board of Commissioners may do so by signing up to speak through our dedicated
+        email at <a style="font-weight: bold;" href="mailto:signuptospeak@chicagoparkdistrict.com">signuptospeak@chicagoparkdistrict.com</a> . Members of the public will have the opportunity to address the
+        Board and have their concerns heard during the &ldquo;People in the Parks,&rdquo; section of the meeting. You may also upload
+        materials you wish to submit to the Board . Do not have an email? Sign up via telephone at <strong>(312) 742-4299. <span style="text-decoration: underline;">Sign-up is
+        open to the public and must be received no later than 4:00 PM on the day prior to the meeting.</span>
+        </strong> In-person sign-up
+        will take place the Tuesday before the Meeting from 1:00-4:00 PM on the 3rd floor at the Administration Building at
+        541 N. Fairbanks Court. Those addressing the Board are limited to 2 minutes. Click <a style="font-weight: bold;" href="https://chicagoparkdistrict.legistar.com/LegislationDetail.aspx?ID=2400074&amp;GUID=E715BFB5-5ED5-4136-BB33-D36BAE0B8D85&amp;Options=&amp;Search=&amp;FullText=1">here</a> to read our public participation rules.</p>
+        </div>
+        <div id="video">
+        <h3><a class="lic-vid" href="http://www.chicagoparkdistrict.com/departments/board-of-commissioners/watch-a-board-meeting/" target="_blank">VIDEO</a></h3>
+        <p>View the Board Meetings online by clicking on the video link found on the meeting calendar page. Meetings may be
+        viewed while in progress or at a later time. Meetings for the current year are also available on the Chicago Park District
+        website. Past videos may be accessed on YouTube. (Please click the Video link above to view live/current Board Meetings
+        for the year or click <a style="font-weight: bold;" target="_blank" href="https://www.youtube.com/results?search_query=Chicago+PArk+District+Board+Meetings">here</a> to view past meetings on YouTube)</p>
+        </div>
+        <div id="naming">
+        <h3><a class="lic-name" href="https://chicagoparkdistrict.granicusideas.com/projects" target="_blank">PARK NAMING</a></h3>
+        <p>Requests to name or rename parks and features within parks (including buildings and facilities within parks) may be
+        found by clicking on Park Namings. There you can view which parks are in the 45-Day Notice Period and submit
+        comments as well as upload supporting documents. Your public input is greatly appreciated and will be reviewed by
+        the Board. Please click <a href="http://www.chicagoparkdistrict.com/assets/1/23/CPD_Code_Chpt_7.pdf" target="_blank" style="font-weight: bold;">here</a> to view the Park District&rsquo;s policy for park namings. (Please click the Park Naming link
+        above to view proposed Park Namings.)</p>
+        </div>
+        </div>
+        </div>
+        </div>
+    </body>
+</html></div>
+
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <div id="ctl00_divRight">
+            </div>
+            <div id="ctl00_divBottom">
+                
+            </div>
+        </div>
+        
+        
+    
+
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadTabStrip, {"_selectedIndex":1,"_skin":"Default","causesValidation":false,"clickSelectedTab":true,"clientStateFieldID":"ctl00_tabTop_ClientState","selectedIndexes":["1"],"tabData":[{"value":"Home"},{"value":"Welcome"},{"value":"Legislation"},{"value":"Calendar"},{"value":"People"},{"value":"End"}]}, null, null, $get("ctl00_tabTop"));
+});
+//]]>
+</script>
+</form>
+</body>
+</html>
