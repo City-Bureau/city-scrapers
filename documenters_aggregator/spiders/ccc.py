@@ -12,8 +12,15 @@ import datetime as dt
 class CccSpider(scrapy.Spider):
     name = 'ccc'
     long_name = "Chicago City Clerk"
-    allowed_domains = ['https://ocd.datamade.us/']
-    start_urls = ['https://ocd.datamade.us/events/?start_date__gt='+str(dt.date.today())+'&sort=start_date&jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government']
+    ocd_url = 'https://ocd.datamade.us/'
+    ocd_tp = 'events/?'
+    ocd_d = 'start_date__gt='+str(dt.date.today()) + '&'
+    ocd_srt = 'sort=start_date&'
+    ocd_jur = 'jurisdiction=ocd-jurisdiction/'
+    ocd_loc = 'country:us/state:il/place:chicago/government'
+
+    allowed_domains = [ocd_url]
+    start_urls = [ocd_url + ocd_tp + ocd_d + ocd_srt + ocd_jur + ocd_loc]
 
     def parse(self, response):
         """
@@ -40,7 +47,7 @@ class CccSpider(scrapy.Spider):
                 'sources': self._parse_sources(item)
             }
 
-        # self._parse_next(response) yields more (responses to parse if necessary.
+        # self._parse_next(response) yields more (responses to parse
         max_page = data['meta']['max_page']
         page = data['meta']['page']
         while page < max_page:
@@ -51,7 +58,7 @@ class CccSpider(scrapy.Spider):
         Get next page.
         """
         pgnum = pgnum + 1
-        next_url = 'https://ocd.datamade.us/events/?start_date__gt='+str(dt.date.today())+'&sort=start_date&jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government&page='+pgnum  
+        next_url = 'https://ocd.datamade.us/events/?start_date__gt=' + str(dt.date.today())+'&sort=start_date&jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government&page='+pgnum
         return scrapy.Request(next_url, callback=self.parse, dont_filter=True)
 
     def _parse_location(self, item):
