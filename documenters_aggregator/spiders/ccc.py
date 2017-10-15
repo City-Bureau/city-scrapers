@@ -12,13 +12,8 @@ import datetime as dt
 class CccSpider(scrapy.Spider):
     name = 'ccc'
     long_name = "Chicago City Clerk"
-    ocd_url = 'https://ocd.datamade.us/'
-    ocd_type = 'events/'
-    ocd_dfilter = 'start_date__gt='+str(dt.date.today())
-    ocd_sort = 'sort=start_date'
-    ocd_juris = 'jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government'
-    allowed_domains = [ocd_url]
-    start_urls = [ocd_url+ocd_type+'?'+ocd_dfilter+'&'+ocd_sort+'&'+ocd_juris]
+    allowed_domains = ['https://ocd.datamade.us/']
+    start_urls = ['https://ocd.datamade.us/events/?start_date__gt='+str(dt.date.today())+'&sort=start_date&jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government']
 
     def parse(self, response):
         """
@@ -42,18 +37,18 @@ class CccSpider(scrapy.Spider):
                 'all_day': item['all_day'],
                 'status': item['status'],
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(item)
             }
 
         # self._parse_next(response) yields more (responses to parse if necessary.
         max_page = data['meta']['max_page']
         page = data['meta']['page']
-        while page <= max_page:
+        while page < max_page:
             yield self._parse_next(response, page)
 
     def _parse_next(self, response, pgnum):
         """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
+        Get next page.
         """
         pgnum = pgnum + 1
         next_url = start_urls[0]+'&page='+pgnum  # What is next URL?
@@ -61,9 +56,20 @@ class CccSpider(scrapy.Spider):
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
+        Grab location from the event detail page.
         """
+        e_pg = requests.get('https://ocd.datamade.us/' + item['id'])
+        d_pg = json.loads(e_pg.content)
+        return d_pg['location']
 
-        e_pg = requests.get(ocd_url + item['id'])
-        return e_pg.content['location']
+    def _parse_sources(self, item):
+        """
+        Grab sources from event detail page.
+        """
+        pgurl = 'https://ocd.datamade.us/' + item['id']
+        e_pg = requests.get(pgurl)
+        d_pg = json.loads(e_pg.content)
+        sourcelist = d_pg['sources']
+        sourcelist.append({'note': 'ocd-api', 'url': pgurl})
+        sourcelist[0], sourcelist[2] = sourcelist[2], sourcelist[0]
+        return sourcelist
