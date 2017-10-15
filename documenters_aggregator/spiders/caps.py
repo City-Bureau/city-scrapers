@@ -11,7 +11,7 @@ from datetime import datetime
 
 class CapsSpider(scrapy.Spider):
     name = 'caps'
-    long_name = 'Chicago Police'
+    long_name = 'Chicago Police Department'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
     start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
     headers = {
@@ -41,20 +41,8 @@ class CapsSpider(scrapy.Spider):
                 'all_day': False,
                 'status': 'confirmed',
                 'location': self._parse_location(item),
-                'url': self._parse_url(response),
+                'sources': self._parse_sources(item)
             }
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
 
     def _parse_id(self, item):
         """
@@ -133,8 +121,10 @@ class CapsSpider(scrapy.Spider):
         except TypeError:
             return None
 
-    def _parse_url(self, response):
+    def _parse_sources(self, item):
         """
-        Parse url.
+        Parse sources.
         """
-        return response.url
+        return [{'url':
+                 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
+                 'note': ''}]

@@ -1,3 +1,4 @@
+import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cpl import CplSpider
 
@@ -5,7 +6,7 @@ from documenters_aggregator.spiders.cpl import CplSpider
 #     print('Please write some tests for this spider or at least disable this one.')
 #     assert False
 
-test_response = file_response('files/cpl.html')
+test_response = file_response('files/cpl.html', url='https://www.chipublib.org/board-of-directors/board-meeting-schedule/')
 spider = CplSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -19,7 +20,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-01-17T09:00:00'
+    assert parsed_items[0]['start_time'] == '2017-01-17T09:00:00-06:00'
 
 
 def test_end_time():
@@ -55,3 +56,7 @@ def test_all_day():
 
 # def test__type(item):
     # assert parsed_items[0]['_type'] == 'event'
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == [{'url': 'https://www.chipublib.org/board-of-directors/board-meeting-schedule/', 'note': ''}]

@@ -53,6 +53,7 @@ class IlrbSpider(scrapy.Spider):
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(response)
             }
 
     def _generate_id(self, start_time, name):
@@ -124,7 +125,7 @@ class IlrbSpider(scrapy.Spider):
         """
         Parse start date and time from the second `<strong>`
         """
-        time_string = item.css('strong:nth-of-type(2)::text').extract_first()
+        time_string = item.css('strong:nth-of-type(2)::text').extract_first().replace('.', '')
         try:
             naive = datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
         except ValueError:
@@ -139,3 +140,9 @@ class IlrbSpider(scrapy.Spider):
         """
         tz = timezone('America/Chicago')
         return tz.localize(time).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

@@ -31,7 +31,8 @@ class CpbSpider(scrapy.Spider):
             'classification': self._parse_classification(response),
             'end_time': self._parse_end(response),
             'all_day': self._parse_all_day(response),
-            'location': self._parse_location(response)
+            'location': self._parse_location(response),
+            'sources': self._parse_sources(response)
         }
         universal_start_time = self._parse_universal_start(response)
 
@@ -116,11 +117,12 @@ class CpbSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        all_content = response.xpath("//h1[@class='page-heading']/following-sibling::*")
-        all_text = all_content.xpath("text()").extract()
-        cutoff = [i for i, s in enumerate(all_text) if 'Regular Meetings' in s][0]
-        description = all_text[:cutoff]
-        return ''.join([x.strip() for x in description])
+        all_text = response.xpath("normalize-space(//div[@class='container-fluid page-full-description'])").extract_first()
+
+        intro, meetings = all_text.split('Regular Meetings')
+
+        # Strip 5 characters ("2017 ") off end.
+        return intro[:-5].strip()
 
     def _parse_start(self, item, time):
         """
@@ -160,3 +162,9 @@ class CpbSpider(scrapy.Spider):
         Parse end date and time.
         """
         return None
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]
