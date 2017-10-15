@@ -1,4 +1,4 @@
-from .airtable import AirtablePipline
+from .airtable import AirtablePipeline
 from .geocoder import GeocoderPipeline
 from .logging import DocumentersAggregatorLoggingPipeline
 from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
