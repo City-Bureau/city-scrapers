@@ -4,15 +4,14 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
+from dateutil.parser import parse as dateparse
 
-from datetime import datetime
 
-
-class TestspiderSpider(scrapy.Spider):
-    name = 'testspider'
-    long_name = 'Test Spider Board Of Trade And Englightenment'
-    allowed_domains = ['www.citybureau.org']
-    start_urls = ['http://www.citybureau.org/articles', 'http://www.citybureau.org/staff', 'http://www.citybureau.org/is-chicago-any-less-segregated']
+class AcccSpider(scrapy.Spider):
+    name = 'accc'
+    long_name = 'Animal Care and Control Commission'
+    allowed_domains = ['www.cityofchicago.org']
+    start_urls = ['https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html']
 
     def parse(self, response):
         """
@@ -22,37 +21,42 @@ class TestspiderSpider(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
+        for item in response.css('.page-full-description').css("ul").css("li"):
+            # Pull the string
+            try:
+                text = item.xpath("text()").extract()[0]
+            except IndexError:
+                continue
+
+            # Strip it
+            text = text.strip()
+
+            # Pass if there's nothing left
+            if not text:
+                continue
+
+            # Parse the item
             yield {
                 '_type': 'event',
-                'id': self._parse_id(item),
-                'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
-                'all_day': self._parse_all_day(item),
-                'status': self._parse_status(item),
-                'location': self._parse_location(item),
+                'id': self._parse_id(text),
+                'name': self._parse_name(text),
+                'description': self._parse_description(text),
+                'classification': self._parse_classification(text),
+                'start_time': self._parse_start(text),
+                'end_time': self._parse_end(text),
+                'all_day': self._parse_all_day(text),
+                'status': self._parse_status(text),
+                'location': self._parse_location(text),
             }
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
 
     def _parse_id(self, item):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        return "{}-{}".format(
+            self.name,
+            str(dateparse(item).date())
+        )
 
     def _parse_classification(self, item):
         """
@@ -80,7 +84,7 @@ class TestspiderSpider(scrapy.Spider):
         """
         return {
             'url': None,
-            'name': None,
+            'name': "David R. Lee Animal Care Center, 2741 S. Western Ave, Chicago, IL  60608",
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -97,7 +101,7 @@ class TestspiderSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        return None
+        return 'Commission meeting'
 
     def _parse_description(self, item):
         """
@@ -109,7 +113,7 @@ class TestspiderSpider(scrapy.Spider):
         """
         Parse start date and time.
         """
-        return None
+        return dateparse(item).date()
 
     def _parse_end(self, item):
         """
