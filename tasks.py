@@ -113,7 +113,7 @@ def _fetch_url(url, attempt=1, session=requests.Session()):
             return _fetch_url(url, attempt + 1)
 
 
-def _gen_html(name, start_urls, session):
+def _gen_html(name, start_urls, session=requests.Session()):
     """
     urls should not end in /
     """

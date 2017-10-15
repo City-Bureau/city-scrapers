@@ -75,7 +75,7 @@ class TestspiderSpider(scrapy.Spider):
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitutde and longitude are all
+        Parse or generate location. Url, latitude and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
         return {
