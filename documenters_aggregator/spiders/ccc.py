@@ -51,7 +51,7 @@ class CccSpider(scrapy.Spider):
         Get next page.
         """
         pgnum = pgnum + 1
-        next_url = start_urls[0]+'&page='+pgnum  # What is next URL?
+        next_url = 'https://ocd.datamade.us/events/?start_date__gt='+str(dt.date.today())+'&sort=start_date&jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government&page='+pgnum  
         return scrapy.Request(next_url, callback=self.parse, dont_filter=True)
 
     def _parse_location(self, item):
