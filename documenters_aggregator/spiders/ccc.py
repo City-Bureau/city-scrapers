@@ -41,11 +41,10 @@ class CccSpider(scrapy.Spider):
                 'end_time': item['end_date'],
                 'all_day': item['all_day'],
                 'status': item['status'],
-                #'location': self._parse_location(item),
+                'location': self._parse_location(item),
             }
 
         # self._parse_next(response) yields more (responses to parse if necessary.
-        # uncomment to find a "next" url
         max_page = data['meta']['max_page']
         page = data['meta']['page']
         while page <= max_page:
@@ -58,7 +57,7 @@ class CccSpider(scrapy.Spider):
         """
         pgnum = pgnum + 1
         next_url = start_urls[0]+'&page='+pgnum  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse, dont_filter=True))
+        return scrapy.Request(next_url, callback=self.parse, dont_filter=True)
 
     def _parse_location(self, item):
         """
