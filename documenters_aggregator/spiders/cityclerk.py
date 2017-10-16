@@ -9,8 +9,8 @@ import json
 import datetime as dt
 
 
-class CccSpider(scrapy.Spider):
-    name = 'ccc'
+class CityclerkSpider(scrapy.Spider):
+    name = 'cityclerk'
     long_name = "Chicago City Clerk"
     ocd_url = 'https://ocd.datamade.us/'
     ocd_tp = 'events/?'
