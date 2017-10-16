@@ -2,6 +2,7 @@ import json
 import re
 
 NULL_VALUES = [None, '']
+FIELD_NOT_FOUND = 'ValidationPipeline: field not found'
 
 SCHEMA = {
     '_type': {'required': True, 'values': ['event']},
@@ -18,24 +19,23 @@ SCHEMA = {
 
 LOCATION_SCHEMA = {
     'url': {'required': False},
-    'name': {'required': False, 'type': str},  # actually required
+    'name': {'required': True, 'type': str},
     'latitude': {'required': False, 'type': str},  # actually required
     'longitude': {'required': False, 'type': str}  # actually required
 }
 
 
 class ValidationPipeline(object):
-    def __init__(self, schema=SCHEMA, logfile=''):
+    def __init__(self, schema=SCHEMA):
         '''
         Give a path for logfile if you want to log the
         items that don't conform to the schema.
         '''
-        self.logfile = logfile
         self.schema = schema
-        self.required_fields = [x for x in self.schema if self.schema[x]['required']]
-        self.requires_values = [x for x in self.schema if 'values' in self.schema[x]]
-        self.required_types = [x for x in self.schema if 'type' in self.schema[x]]
-        self.format_str = [x for x in self.schema if 'format_str' in self.schema[x]]
+        self.required_fields_noncompliance = {field: {} for field in self.schema if self.schema[field]['required']}
+        self.required_values_noncompliance = {field: {} for field in self.schema if 'values' in self.schema[field]}
+        self.required_types_noncompliance = {field: {} for field in self.schema if 'type' in self.schema[field]}
+        self.format_str_noncompliance = {field: {} for field in self.schema if 'format_str' in self.schema[field]}
 
     def validate_batch(self, batch):
         '''
@@ -48,101 +48,111 @@ class ValidationPipeline(object):
         '''
         if not batch:
             return
+
         missing_ids = [item for item in batch if 'id' not in item]
         if missing_ids:
-            print("Can't log. Some items are missing id's.")
-            self.logfile = ''
-        else:
-            with open(self.logfile, 'w') as f:
-                f.write('LOGGING BAD ITEMS...')
+            print("Can't validate. Some items are missing id's.")  # log this instead
+            return
 
-        self.check_required_fields(batch)
-        self.check_required_values(batch)
-        self.check_required_types(batch)
-        self.check_format_str(batch)
+        for item in batch:
+            self.check_required_fields(item)
+            self.check_required_values(item)
+            self.check_required_types(item)
+            self.check_format_str(item)
 
-    def check_required_fields(self, batch):
-        '''
-        Checks that a batch of items has the required fields
-        '''
-        for field in self.required_fields:
-            bad_items = [item for item in batch if item.get(field, None) in NULL_VALUES]
-            if bad_items:
-                message = "{} items are missing {}.\n".format(len(bad_items), field)
-                print(message)
-                if self.logfile:
-                    self._log_bad_items(field, bad_items, message, self.logfile)
+        noncompliance_list = [
+            (self.required_fields_noncompliance, '{} items are missing {}.'),
+            (self.required_values_noncompliance, '{} items have the wrong values for {}.'),
+            (self.required_types_noncompliance, '{} items have the wrong types for {}.'),
+            (self.format_str_noncompliance, '{} items have the wrong string formatting for {}.')
+        ]
 
-    def check_required_values(self, batch):
+        for noncompliance, message in noncompliance_list:
+            self._log_noncompliance(noncompliance, message)
+
+    def _log_noncompliance(self, noncompliance, message):
+        for field in noncompliance:
+            num_items = len(noncompliance[field])
+            if num_items > 0:
+                # log this instead
+                print('\n====================\n')
+                print(message.format(str(num_items), field))
+                print('Noncompliant items: ')
+                print(noncompliance[field])
+                print('\n====================\n')
+
+    def check_required_fields(self, item):
         '''
-        Checks that a batch of items has the required values
+        If an item does not have a required field,
+        add the item id to the set of noncompliant item ids
+        in the ValidationPipeline.
         '''
-        for field in self.requires_values:
+        for field in self.required_fields_noncompliance:
+            if item.get(field, None) in NULL_VALUES:
+                noncompliant_item = {item['id']: item.get(field, FIELD_NOT_FOUND)}
+                self.required_fields_noncompliance[field].update(noncompliant_item)
+
+    def check_required_values(self, item):
+        '''
+        If an item does not have a required value,
+        add the item to the dict of noncompliant items.
+        '''
+        for field in self.required_values_noncompliance:
             valid_values = self.schema[field]['values']
-            bad_items = [item for item in batch if item.get(field, None) not in valid_values]
-            if bad_items:
-                message = "{0} items contain invalid values for {1}. Valid values for {1} are: {2}\n".format(len(bad_items), field, str(valid_values))
-                print(message)
-                if self.logfile:
-                    self._log_bad_items(field, bad_items, message, self.logfile)
+            if item.get(field, None) not in valid_values:
+                noncompliant_item = {item['id']: item.get(field, FIELD_NOT_FOUND)}
+                self.required_values_noncompliance[field].update(noncompliant_item)
 
-    def check_required_types(self, batch):
+    def check_required_types(self, item):
         '''
-        Checks that a batch of items has the required types
+        If an item does not have a required type,
+        add the item to the dict of noncompliant items.
+
+        If the field is required, all items with the wrong type are noncompliant.
+        If the field is not required, items with missing values
+        are still compliant.
         '''
-        for field in self.required_types:
+        for field in self.required_types_noncompliance:
             valid_type = self.schema[field]['type']
-            if field in self.required_fields:
-                bad_items = [item for item in batch if type(item.get(field, None)) != valid_type]
-            else:
-                bad_items = [item for item in batch if (field in item) and (not item.get(field, None) in NULL_VALUES) and
-                             (type(item.get(field, None)) != valid_type)]
-            if bad_items:
-                message = "{0} items contain invalid types for {1}. Valid types for {1} are: {2}\n".format(len(bad_items), field, str(valid_type))
-                print(message)
-                if self.logfile:
-                    self._log_bad_items(field, bad_items, message, self.logfile)
+            if type(item.get(field, None)) != valid_type:
+                if field in self.required_fields_noncompliance:
+                    noncompliant_item = {item['id']: item.get(field, FIELD_NOT_FOUND)}
+                    self.required_types_noncompliance[field].update(noncompliant_item)
+                elif not item.get(field, None) in NULL_VALUES:
+                    noncompliant_item = {item['id']: item.get(field, FIELD_NOT_FOUND)}
+                    self.required_types_noncompliance[field].update(noncompliant_item)
 
-    def check_format_str(self, batch):
+    def check_format_str(self, item):
         '''
-        Checks that a batch of items has strings formatted
-        according to the schema
+        If a string item is not formatted correctly as a string,
+        add the item to the dict of noncompliant items.
+
+        If the field is required, all items with the wrong format are noncompliant.
+        If the field is not required, items with missing values
+        are still compliant.
         '''
-        for field in self.format_str:
+        for field in self.format_str_noncompliance:
             pattern = re.compile(self.schema[field]['format_str'])
-            if field in self.required_fields:
-                bad_items = [item for item in batch if (item.get(field, None) in NULL_VALUES) or
-                             (not re.match(pattern, item.get(field, '')))]
-            else:
-                bad_items = [item for item in batch if (field in item) and (not item.get(field, None) in NULL_VALUES) and
-                             (not re.match(pattern, item.get(field, '')))]
-            if bad_items:
-                message = "{0} items contain invalid string formatting for {1}. Valid formats for {1} are: {2}\n".format(len(bad_items), field, str(pattern))
-                print(message)
-                if self.logfile:
-                    self._log_bad_items(field, bad_items, message, self.logfile)
-
-    def _log_bad_items(self, field, bad_items, message, logfile):
-        '''
-        Write bad_items (id: field) to logfile
-        '''
-        bad_dict = {item['id']: item.get(field, 'ValidationPipeline: FIELD NOT FOUND') for item in bad_items}
-        with open(logfile, 'a') as f:
-            f.write('\n====================\n')
-            f.write(message)
-            json.dump(bad_dict, f)
-            f.write('\n====================\n')
+            test_string = item.get(field, '')
+            if test_string:
+                match = re.match(pattern, item.get(field, ''))
+                if not match:
+                    noncompliant_item = {item['id']: item.get(field, FIELD_NOT_FOUND)}
+                    self.format_str_noncompliance[field].update(noncompliant_item)
+            elif field in self.required_fields_noncompliance:
+                noncompliant_item = {item['id']: item.get(field, FIELD_NOT_FOUND)}
+                self.format_str_noncompliance[field].update(noncompliant_item)
 
 
 if __name__ == "__main__":
     # Read in output from scrapy crawl SPIDER_NAME
-    SPIDER_NAME = 'cchhs'
+    SPIDER_NAME = 'ccdph'
     with open('{0}.json'.format(SPIDER_NAME), 'r') as f:
         batch = json.loads(f.read())
 
     # Validate items against events schema
-    vp = ValidationPipeline(logfile='log.txt')
-    vp.validate_batch(batch)  # creates log.txt
+    vp = ValidationPipeline()
+    vp.validate_batch(batch)
 
     # Validate items against schema for location dictionary
     location_batch = [item.get('location', {}) for item in batch]
@@ -151,5 +161,5 @@ if __name__ == "__main__":
             item.update({'id': batch[idx].get('id', None)})
         else:
             del location_batch[idx]
-    vp_location = ValidationPipeline(schema=LOCATION_SCHEMA, logfile='log_location.txt')
-    vp_location.validate_batch(location_batch)  # creates log_location.txt
+    vp_location = ValidationPipeline(schema=LOCATION_SCHEMA)
+    vp_location.validate_batch(location_batch)
