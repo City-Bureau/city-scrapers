@@ -58,12 +58,12 @@ def test_location():
 def test_sources():
     assert parsed_items[0]['sources'] == [
                                          {"note": "ocd-api",
-                                         "url": "https://ocd.datamade.us/ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12"},
+                                          "url": "https://ocd.datamade.us/ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12"},
                                          {"note": "api",
-                                         "url": "http://webapi.legistar.com/v1/chicago/events/4954"},
+                                          "url": "http://webapi.legistar.com/v1/chicago/events/4954"},
                                          {"note": "web",
-                                         "url": "https://chicago.legistar.com/MeetingDetail.aspx?ID=565455&GUID=B5103C52-1793-4B07-9F28-E0A1223E1540&Options=info&Search="}
-                                         ]
+                                          "url": "https://chicago.legistar.com/MeetingDetail.aspx?ID=565455&GUID=B5103C52-1793-4B07-9F28-E0A1223E1540&Options=info&Search="}
+    ]
 
 
 def test__type():
