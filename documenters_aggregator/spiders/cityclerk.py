@@ -14,7 +14,7 @@ class CityclerkSpider(scrapy.Spider):
     long_name = "Chicago City Clerk"
     ocd_url = 'https://ocd.datamade.us/'
     ocd_tp = 'events/?'
-    ocd_d = 'start_date__gt='+str(dt.date.today()) + '&'
+    ocd_d = 'start_date__gt=' + str(dt.date.today()) + '&'
     ocd_srt = 'sort=start_date&'
     ocd_jur = 'jurisdiction=ocd-jurisdiction/'
     ocd_loc = 'country:us/state:il/place:chicago/government'
@@ -58,14 +58,14 @@ class CityclerkSpider(scrapy.Spider):
         Get next page.
         """
         pgnum = pgnum + 1
-        next_url = 'https://ocd.datamade.us/events/?start_date__gt=' + str(dt.date.today())+'&sort=start_date&jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government&page='+pgnum
+        next_url = self.allowed_domains[0] + '&page=' + pgnum
         return scrapy.Request(next_url, callback=self.parse, dont_filter=True)
 
     def _parse_location(self, item):
         """
         Grab location from the event detail page.
         """
-        e_pg = requests.get('https://ocd.datamade.us/' + item['id'])
+        e_pg = requests.get(self.ocd_url + item['id'])
         d_pg = json.loads(e_pg.content)
         return d_pg['location']
 
@@ -73,7 +73,7 @@ class CityclerkSpider(scrapy.Spider):
         """
         Grab sources from event detail page.
         """
-        pgurl = 'https://ocd.datamade.us/' + item['id']
+        pgurl = self.ocd_url + item['id']
         e_pg = requests.get(pgurl)
         d_pg = json.loads(e_pg.content)
         sourcelist = d_pg['sources']
