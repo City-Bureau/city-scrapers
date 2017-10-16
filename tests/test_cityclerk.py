@@ -1,8 +1,8 @@
 from tests.utils import file_response
-from documenters_aggregator.spiders.ccc import CccSpider
+from documenters_aggregator.spiders.cityclerk import CityclerkSpider
 
-file = file_response('files/ccc.json')
-spider = CccSpider()
+file = file_response('files/cityclerk.json')
+spider = CityclerkSpider()
 file
 test_response = file
 parsed_items = list(spider.parse(test_response))
