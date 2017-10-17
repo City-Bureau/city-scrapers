@@ -1,6 +1,8 @@
+import sys
 import json
 import re
 import logging
+import copy
 
 NULL_VALUES = [None, '']
 FIELD_NOT_FOUND = 'ValidationPipeline: field not found'
@@ -14,13 +16,18 @@ SCHEMA = {
     'end_time': {'required': False, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
     'all_day': {'required': True, 'type': bool},
     'status': {'required': True, 'values': ['cancelled', 'tentative', 'confirmed', 'passed']},
-    'location': {'required': True, 'type': dict}
+    'location': {'required': True, 'type': dict},
+    'sources': {'required': True, 'type': list}
 }
 LOCATION_SCHEMA = {
     'url': {'required': False},
     'name': {'required': True, 'type': str},
     'latitude': {'required': False, 'type': str},  # actually required
     'longitude': {'required': False, 'type': str}  # actually required
+}
+SOURCES_SCHEMA = {
+    'url': {'required': True, 'type': str},
+    'note': {'required': False, 'type': str}
 }
 VALIDATION_LOGFILE = 'logs/validation.log'
 logging.basicConfig(filename=VALIDATION_LOGFILE, level=logging.DEBUG)
@@ -29,8 +36,9 @@ logging.basicConfig(filename=VALIDATION_LOGFILE, level=logging.DEBUG)
 class ValidationPipeline(object):
     def __init__(self, schema=SCHEMA):
         '''
-        Give a path for logfile if you want to log the
-        items that don't conform to the schema.
+        Initialize a ValidationPipeline object.
+        The noncompliance attributes keep track of which
+        items are noncompliant for which fields.
         '''
         self.schema = schema
         self.required_fields_noncompliance = {field: {} for field in self.schema if self.schema[field]['required']}
@@ -41,7 +49,9 @@ class ValidationPipeline(object):
     def validate_batch(self, batch):
         '''
         Validates a batch of items (e.g., all the items from one spider)
-        against the events schema.
+        against the events schema. Keep track of the noncompliant items
+        in ValidationPipeline.required_fields_noncompliance,
+        ValidationPipeline.required_values_noncompliance, etc.
 
         To validate the locations, initialize a ValidationPipeline with
         schema=LOCATION_SCHEMA, extract the location dictionaries from
@@ -73,6 +83,11 @@ class ValidationPipeline(object):
             self._log_noncompliance(noncompliance, message)
 
     def _log_noncompliance(self, noncompliance, message):
+        '''
+        Writes noncompliant items to logs. Formats the
+        logs by grouping similarly-noncompliant items
+        together to make fixing the spiders easier.
+        '''
         logger = logging.getLogger(__name__)
         for field in noncompliance:
             num_items = len(noncompliance[field])
@@ -144,21 +159,35 @@ class ValidationPipeline(object):
 
 
 if __name__ == "__main__":
+    logger = logging.getLogger(__name__)
+
     # Read in output from scrapy crawl SPIDER_NAME
-    SPIDER_NAME = 'ccdph'
+    SPIDER_NAME = sys.argv[1]
     with open('{0}.json'.format(SPIDER_NAME), 'r') as f:
         batch = json.loads(f.read())
 
     # Validate items against events schema
+    logger.info("VALIDATING AGAINST ==EVENTS== SCHEMA")
     vp = ValidationPipeline()
     vp.validate_batch(batch)
 
     # Validate items against schema for location dictionary
-    location_batch = [item.get('location', {}) for item in batch]
-    for idx, item in reversed(list(enumerate(location_batch))):
-        if item:
-            item.update({'id': batch[idx].get('id', None)})
-        else:
-            del location_batch[idx]
+    location_batch = []
+    for item in batch:
+        location_item = copy.deepcopy(item['location'])
+        location_item.update({'id': item.get('id', None)})
+        location_batch.append(location_item)
+    logger.info("VALIDATING AGAINST ==LOCATION== SCHEMA")
     vp_location = ValidationPipeline(schema=LOCATION_SCHEMA)
     vp_location.validate_batch(location_batch)
+
+    # Validate items against schema for sources dictionary
+    sources_batch = []
+    for item in batch:
+        for source in item.get('sources', [{}]):
+            source_item = copy.deepcopy(source)
+            source_item.update({'id': item.get('id', None)})
+            sources_batch.append(source_item)
+    logger.info("VALIDATING AGAINST ==SOURCES== SCHEMA")
+    vp_sources = ValidationPipeline(schema=SOURCES_SCHEMA)
+    vp_sources.validate_batch(sources_batch)
