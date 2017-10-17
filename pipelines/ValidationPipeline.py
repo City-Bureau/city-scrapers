@@ -1,9 +1,9 @@
 import json
 import re
+import logging
 
 NULL_VALUES = [None, '']
 FIELD_NOT_FOUND = 'ValidationPipeline: field not found'
-
 SCHEMA = {
     '_type': {'required': True, 'values': ['event']},
     'id': {'required': True},
@@ -16,13 +16,14 @@ SCHEMA = {
     'status': {'required': True, 'values': ['cancelled', 'tentative', 'confirmed', 'passed']},
     'location': {'required': True, 'type': dict}
 }
-
 LOCATION_SCHEMA = {
     'url': {'required': False},
     'name': {'required': True, 'type': str},
     'latitude': {'required': False, 'type': str},  # actually required
     'longitude': {'required': False, 'type': str}  # actually required
 }
+VALIDATION_LOGFILE = 'logs/validation.log'
+logging.basicConfig(filename=VALIDATION_LOGFILE, level=logging.DEBUG)
 
 
 class ValidationPipeline(object):
@@ -46,13 +47,14 @@ class ValidationPipeline(object):
         schema=LOCATION_SCHEMA, extract the location dictionaries from
         the items, and run validate_batch on the location dicts.
         '''
+        logger = logging.getLogger(__name__)
         if not batch:
             return
 
         missing_ids = [item for item in batch if 'id' not in item]
         if missing_ids:
-            print("Can't validate. Some items are missing id's.")  # log this instead
-            return
+            logger.error("Can't validate. Some items are missing id's.")
+            raise KeyError("Can't validate. Some items are missing id's.")
 
         for item in batch:
             self.check_required_fields(item)
@@ -71,15 +73,12 @@ class ValidationPipeline(object):
             self._log_noncompliance(noncompliance, message)
 
     def _log_noncompliance(self, noncompliance, message):
+        logger = logging.getLogger(__name__)
         for field in noncompliance:
             num_items = len(noncompliance[field])
             if num_items > 0:
-                # log this instead
-                print('\n====================\n')
-                print(message.format(str(num_items), field))
-                print('Noncompliant items: ')
-                print(noncompliance[field])
-                print('\n====================\n')
+                logger.warning(message.format(str(num_items), field))
+                logger.info('Noncompliant items: {}'.format(str(noncompliance[field])))
 
     def check_required_fields(self, item):
         '''
