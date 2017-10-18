@@ -29,9 +29,9 @@ class GeocoderPipeline(object):
                 'latitude': str(coordinates[1]),
             }
             item['geocode'] = json.dumps(geocode, indent=4, sort_keys=True)
-        except ValueError as e:
+        except ValueError:
             spider.logger.warn('Could not geocode {0}-{1}, skipping.'.format(spider.name, item['id']))
-        except Exception as e:
+        except Exception:
             spider.logger.exception('Unknown error when geocoding, skipping. Message:')
             spider.logger.error(json.dumps(item, indent=4, sort_keys=True))
 
