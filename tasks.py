@@ -25,6 +25,7 @@ def quote_list(the_list):
     """Jinja helper to quote list items"""
     return ["'%s'" % element for element in the_list]
 
+
 # Jinja env
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 env.filters["quote_list"] = quote_list
@@ -63,8 +64,7 @@ def runtests(ctx):
     Runs pytest, pyflakes, and pep8.
     """
     run('pytest -s', pty=pty_available)
-    run('pyflakes .', pty=pty_available)
-    run('pep8 --ignore E265,E266,E501 .', pty=pty_available)
+    run('flake8 --ignore E265,E266,E501 --exclude src', pty=pty_available)
 
 
 def _make_classname(name):
