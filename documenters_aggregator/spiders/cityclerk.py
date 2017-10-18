@@ -58,7 +58,7 @@ class CityclerkSpider(scrapy.Spider):
         Get next page.
         """
         pgnum = pgnum + 1
-        next_url = self.allowed_domains[0] + '&page=' + pgnum
+        next_url = self.start_urls[0] + '&page=' + pgnum
         return scrapy.Request(next_url, callback=self.parse, dont_filter=True)
 
     def _parse_location(self, item):
