@@ -79,8 +79,8 @@ def test_board_meeting_location():
         'url': 'https://thedaleycenter.com',
         'name': 'Second Floor Board Room, Richard J. Daley Center, 50 W. Washington Street',
         'coordinates': {
-            'latitude': 41.884089,
-            'longitude': -87.630191,
+            'latitude': '41.884089',
+            'longitude': '-87.630191',
         },
     }
 
