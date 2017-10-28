@@ -116,3 +116,6 @@ src/
 # deployment
 deploy/*.sh
 deploy/*.py
+
+# validation logs
+logs/*.log
