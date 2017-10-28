@@ -6,13 +6,16 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import scrapy
 
 from datetime import datetime
+from pytz import timezone
+from legistar.events import LegistarEventsScraper
 
 
 class ParkdistrictSpider(scrapy.Spider):
     name = 'parkdistrict'
     long_name = 'Chicago Park District'
+    START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
-    start_urls = ['https://chicagoparkdistrict.legistar.com']
+    start_urls = [START_URL]
 
     def parse(self, response):
         """
@@ -22,8 +25,20 @@ class ParkdistrictSpider(scrapy.Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
-            yield {
+        events = self._make_legistar_call()
+        return self._parse_events(events)
+
+    def _make_legistar_call(self, since=None):
+        les = LegistarEventsScraper(jurisdiction=None, datadir=None)
+        les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
+        les.BASE_URL = self.START_URL
+        if not since:
+            since = datetime.today().year
+        return les.events(since=since)
+
+    def _parse_events(self, events):
+        for item, _ in events:
+            data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
@@ -32,27 +47,18 @@ class ParkdistrictSpider(scrapy.Spider):
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
-                'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(item)
             }
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
+            data['status'] = self._parse_status(item, data['start_time'])
+            yield data
 
     def _parse_id(self, item):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        new_id = item['Name'] + item['Meeting Date']
+        return ''.join(ch for ch in new_id if ch.isalnum())
 
     def _parse_classification(self, item):
         """
@@ -60,27 +66,26 @@ class ParkdistrictSpider(scrapy.Spider):
         """
         return 'Not classified'
 
-    def _parse_status(self, item):
+    def _parse_status(self, item, start_time):
         """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
+        passed = meeting already started
+        tentative = no agenda posted
+        confirmed = agenda posted
         """
+        if datetime.now().isoformat() > start_time:
+            return 'passed'
+        if 'url' in item['Agenda']:
+            return 'confirmed'
         return 'tentative'
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitude and longitude are all
+        Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
         return {
             'url': None,
-            'name': None,
+            'name': item.get('Meeting Location', None),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -97,18 +102,29 @@ class ParkdistrictSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        return None
+        return item['Name']
 
     def _parse_description(self, item):
         """
         Parse or generate event name.
         """
-        return None
+        agenda = item['Agenda']
+        try:
+            return agenda['url']
+        except:
+            return agenda
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
+        time = item.get('Meeting Time', None)
+        date = item.get('Meeting Date', None)
+        if date and time:
+            time_string = '{0} {1}'.format(date, time)
+            naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
+            tz = timezone('America/Chicago')
+            return tz.localize(naive).isoformat()
         return None
 
     def _parse_end(self, item):
@@ -116,3 +132,13 @@ class ParkdistrictSpider(scrapy.Spider):
         Parse end date and time.
         """
         return None
+
+    def _parse_sources(self, item):
+        """
+        Parse sources.
+        """
+        try:
+            url = item['Name']['url']
+        except:
+            url = self.START_URL + '/Calendar.aspx'
+        return [{'url': url, 'note': ''}]
