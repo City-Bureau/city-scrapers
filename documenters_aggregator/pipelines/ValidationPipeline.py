@@ -29,7 +29,7 @@ SOURCES_SCHEMA = {
     'url': {'required': True, 'type': str},
     'note': {'required': False, 'type': str}
 }
-VALIDATION_LOGFILE = 'logs/validation.log'
+VALIDATION_LOGFILE = '../../logs/validation.log'
 logging.basicConfig(filename=VALIDATION_LOGFILE, level=logging.DEBUG)
 
 
