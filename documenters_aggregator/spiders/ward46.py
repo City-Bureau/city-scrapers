@@ -91,8 +91,8 @@ class Ward46Spider(scrapy.Spider):
             'url': None,
             'name': location,
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
         }
 

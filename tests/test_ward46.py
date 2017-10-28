@@ -1,5 +1,3 @@
-import pytest
-
 from tests.utils import file_response
 from documenters_aggregator.spiders.ward46 import Ward46Spider
 import datetime
