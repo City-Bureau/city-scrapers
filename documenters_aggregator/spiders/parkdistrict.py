@@ -3,6 +3,7 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
+import re
 import scrapy
 
 from datetime import datetime
@@ -85,7 +86,7 @@ class ParkdistrictSpider(scrapy.Spider):
         """
         return {
             'url': None,
-            'name': item.get('Meeting Location', None),
+            'name': self.clean_html(item.get('Meeting Location', None)),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -142,3 +143,14 @@ class ParkdistrictSpider(scrapy.Spider):
         except:
             url = self.START_URL + '/Calendar.aspx'
         return [{'url': url, 'note': ''}]
+
+    @staticmethod
+    def clean_html(html):
+        """
+        Clean up HTML artifacts.
+        """
+        if html is None:
+            return None
+        else:
+            clean = re.sub(r'\s*(\r|\n|(--em--))+\s*', ' ', html)
+            return clean.strip()

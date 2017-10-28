@@ -26,10 +26,17 @@ def test_description():
 
 def test_start_time():
     assert parsed_items[0]['start_time'] == '2017-12-13T15:30:00-06:00'
+    assert parsed_items[1]['start_time'] == '2017-12-06T15:30:00-06:00'
+    assert parsed_items[2]['start_time'] == '2017-11-08T15:30:00-06:00'
+    assert parsed_items[3]['start_time'] == '2017-10-20T13:30:00-05:00'
+    assert parsed_items[4]['start_time'] == '2017-10-11T15:30:00-05:00'
 
 
 def test_id():
     assert parsed_items[0]['id'] == 'BoardofCommissioners12132017'
+    assert parsed_items[1]['id'] == 'PublicHearing1262017'
+    assert parsed_items[3]['id'] == 'SpecialMeeting10202017'
+    assert parsed_items[6]['id'] == 'BudgetForum9192017'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -54,9 +61,65 @@ def test_status(item):
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
+    assert parsed_items[1]['location'] == {
         'url': None,
-        'name': '8TH FLOOR BOARD ROOM\n--em--ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, \r\nCHICAGO, ILLINOIS 60611 \r\n8TH FLOOR BOARD ROOM--em--',
+        'name': 'Board Room ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        }
+    }
+    assert parsed_items[2]['location'] == {
+        'url': None,
+        'name': '8TH FLOOR BOARD ROOM ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        }
+    }
+    assert parsed_items[3]['location'] == {
+        'url': None,
+        'name': 'DRINKER, BIDDLE & REATH LLP 191 N. UPPER WACKER DR. STE 3700 CHICAGO, ILLINOIS 60606',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        }
+    }
+    assert parsed_items[4]['location'] == {
+        'url': None,
+        'name': '2401 N Lake Shore Dr, Chicago, IL 60614 THEATER ON THE LAKE',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        }
+    }
+    assert parsed_items[5]['location'] == {
+        'url': None,
+        'name': '8TH FLOOR BOARD ROOM',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        }
+    }
+    assert parsed_items[6]['location'] == {
+        'url': None,
+        'name': 'FOSCO PARK 1312 S. Racine Ave. Chicago, Illinois 60608',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        }
+    }
+    assert parsed_items[7]['location'] == {
+        'url': None,
+        'name': 'ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        }
+    }
+    assert parsed_items[8]['location'] == {
+        'url': None,
+        'name': 'Test Training 2',
         'coordinates': {
             'latitude': None,
             'longitude': None,
