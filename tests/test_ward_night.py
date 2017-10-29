@@ -1,7 +1,8 @@
 import pytest
+from datetime import date
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.ward_night import WardNightSpider
+from documenters_aggregator.spiders.ward_night import WardNightSpider, Calendar
 
 test_response = file_response('files/ward_night.json')
 spider = WardNightSpider()
@@ -20,8 +21,8 @@ def test_description():
     assert parsed_items[0]['description'] == 'first come first served, one-on-one meetings usually about 10-20 minutes'
 
 
-# def test_start_time():
-#     assert parsed_items[0]['start_time'] == ''
+#def test_start_time():
+    #assert parsed_items[0]['start_time'] == ''
 
 
 # def test_end_time():
@@ -58,3 +59,29 @@ def test_status(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert parsed_items[0]['_type'] == 'event'
+
+
+# Calendar tests
+
+def test_third_thursday():
+    cal = Calendar(date(2017, 10, 15))
+    days = cal.nth_weekday(3, 'thursday', 4)
+
+    assert days == [date(2017, 10, 19), date(2017, 11, 16), date(2017, 12, 21),
+                    date(2018, 1, 18)]
+
+
+def test_every_monday():
+    cal = Calendar(date(2017, 10, 15))
+    days = cal.weekday('monday', 4)
+
+    assert days == [date(2017, 10, 16), date(2017, 10, 23), date(2017, 10, 30),
+                    date(2017, 11, 6)]
+
+
+def test_last_friday():
+    cal = Calendar(date(2017, 10, 15))
+    days = cal.last_weekday('friday', 4)
+
+    assert days == [date(2017, 10, 27), date(2017, 11, 24), date(2017, 12, 29),
+                    date(2018, 1, 26)]
