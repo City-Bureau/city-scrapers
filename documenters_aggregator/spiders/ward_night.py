@@ -23,7 +23,8 @@ class Calendar(object):
     much simpler interface that can handle our limited set of use cases.
     """
 
-    DAYS = {'monday': MO, 'tuesday': TU, 'wednesday': WE, 'thursday': TH, 'friday': FR, 'saturday': SA, 'sunday': SU}
+    DAYS = {'monday': MO, 'tuesday': TU, 'wednesday': WE, 'thursday': TH,
+            'friday': FR, 'saturday': SA, 'sunday': SU}
 
     def __init__(self, start_date=datetime.today()):
         self.start_date = start_date
@@ -31,8 +32,8 @@ class Calendar(object):
     def nth_weekday(self, n, day_of_week, count=3):
         """
         Return a list of datetime.date objects representing the next instances of
-        the specified weekday in a month. This is used, for example, to get a list of
-        the upcoming "third Thursdays of the month":
+        the specified weekday in a month. This is used, for example, to get a list
+        of the upcoming "third Thursdays of the month":
 
         `cal.nth_weekday(3, 'thursday')`
 
@@ -51,8 +52,8 @@ class Calendar(object):
     def last_weekday(self, day_of_week, count=3):
         """
         Return a list of datetime.date objects representing the next instances of
-        the last specified weekday in a month. This is used, for example, to get a list of
-        the upcoming "last Fridays of the month":
+        the last specified weekday in a month. This is used, for example, to get a
+        list of the upcoming "last Fridays of the month":
 
         `cal.last_weekday('friday')`
 
@@ -75,7 +76,8 @@ class Calendar(object):
         self._assert_day_of_week(day_of_week)
 
         day = self.DAYS[day_of_week]
-        datetimes = list(rrule(WEEKLY, count=count, byweekday=day, dtstart=self.start_date))
+        datetimes = list(rrule(WEEKLY, count=count, byweekday=day,
+                         dtstart=self.start_date))
         return [datetime.date(d) for d in datetimes]
 
     def _assert_day_of_week(self, day_of_week):
@@ -95,10 +97,10 @@ class Row(IntEnum):
     ADDRESS = 5             # Text
     HAS_WARD_NIGHTS = 6     # Yes, No
     FREQUENCY = 7           # Weekly, Monthly (1st occurrence), Monthly (2nd occurrence),
-    #                       # Monthly (3rd occurrence), Monthly (4th occurrence),
-    #                       # Monthly (last occurrence), Irregularly
+    #                         Monthly (3rd occurrence), Monthly (4th occurrence),
+    #                         Monthly (last occurrence), Irregularly
     DAY_OF_WEEK = 8         # Monday, Tuesday, Wednesday, Thursday, Friday,
-    #                       # Saturday, Sunday
+    #                         Saturday, Sunday
     START_TIME = 9          # [h]h:mm am
     END_TIME = 10           # [h]h:mm am
     SIGN_UP_REQUIRED = 11   # Yes, No
@@ -124,7 +126,8 @@ class WardNightSpider(scrapy.Spider):
 
         for row in rows:
             # The JSON omits values for trailing columns with no values. By padding
-            # the rows out, the rest of the code can assume there will always be 10 columns.
+            # the rows out, the rest of the code can assume there will always be 14
+            # columns.
             missing_values = 14 - len(row)
             row.extend([''] * missing_values)
             yield self._parse_row(row)
@@ -145,7 +148,8 @@ class WardNightSpider(scrapy.Spider):
 
     def _parse_id(self, row):
         """
-        Generate ID. We are assuming that there will only be a single event in a each ward in a single day.
+        Generate ID. We are assuming that there will only be a single event in each
+        ward in a single day.
         """
 
         values = {
