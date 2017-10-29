@@ -1,5 +1,4 @@
 import os
-import urllib3
 from scrapy.http import HtmlResponse, Request, TextResponse
 
 
@@ -16,7 +15,6 @@ def file_response(file_name, url=None):
     if not url:
         url = 'http://www.example.com'
 
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     request = Request(url=url)
     file_content = read_test_file_content(file_name)
 

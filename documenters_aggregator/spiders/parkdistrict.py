@@ -5,6 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
 import scrapy
+import urllib3
 
 from datetime import datetime
 from pytz import timezone
@@ -30,6 +31,7 @@ class ParkdistrictSpider(scrapy.Spider):
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         les = LegistarEventsScraper(jurisdiction=None, datadir=None)
         les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
         les.BASE_URL = self.START_URL
