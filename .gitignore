@@ -116,3 +116,6 @@ src/
 # deployment
 deploy/*.sh
 deploy/*.py
+
+# OS files
+.DS_Store
