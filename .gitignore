@@ -117,5 +117,9 @@ src/
 deploy/*.sh
 deploy/*.py
 
+# OS files
+.DS_Store
+
 # validation logs
 logs/*.log
+
