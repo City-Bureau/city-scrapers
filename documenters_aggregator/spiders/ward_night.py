@@ -94,8 +94,8 @@ class Row(IntEnum):
     WEBSITE = 2             # Text
     WARD = 3                # Text
     DOCUMENTER = 4          # Text
-    ADDRESS = 5             # Text
-    HAS_WARD_NIGHTS = 6     # Yes, No
+    HAS_WARD_NIGHTS = 5     # Yes, No, Unknown
+    ADDRESS = 6             # Text
     FREQUENCY = 7           # Weekly, Monthly (1st occurrence), Monthly (2nd occurrence),
     #                         Monthly (3rd occurrence), Monthly (4th occurrence),
     #                         Monthly (last occurrence), Irregularly
@@ -133,17 +133,30 @@ class WardNightSpider(scrapy.Spider):
             yield self._parse_row(row)
 
     def _parse_row(self, row):
+
+        if row[Row.HAS_WARD_NIGHTS] != 'Yes':
+            return None
+
+        try:
+            assert len(row[Row.START_TIME]) > 0, 'start time must have a value'
+            assert len(row[Row.END_TIME]) > 0, 'end time must have a value'
+        except:
+            # TODO: replace this with the correct logging
+            print('bad data!')
+            return None
+
+        day = datetime.today()
         return {
             '_type': 'event',
             'id': self._parse_id(row),
             'name': self._parse_name(row),
             'description': self._parse_description(row),
             'classification': self._parse_classification(row),
-            # 'start_time': self._parse_date_time(row)['start'],
-            # 'end_time': self._parse_date_time(row)['end'],
+            'start_time': self._parse_date_time(row, day)['start'],
+            'end_time': self._parse_date_time(row, day)['end'],
             'all_day': self._parse_all_day(row),
             'status': self._parse_status(row),
-            # 'location': self._parse_location(row),
+            'location': self._parse_location(row),
         }
 
     def _parse_id(self, row):
@@ -198,7 +211,7 @@ class WardNightSpider(scrapy.Spider):
         """
         return {
             'url': None,
-            'name': '',
+            'name': row[Row.ADDRESS].strip(),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -219,27 +232,17 @@ class WardNightSpider(scrapy.Spider):
 
         return row[Row.INFO]
 
-    def _extract_date_time(self, row):
-        '''
-        Extract string with date, start time, end time
-        '''
-
-    def _parse_date_time(self, row):
+    def _parse_date_time(self, row, day):
         """
         Parse start-date-time and end-date-time
         """
-
-    def _make_date(self, date, time):
-        """
-        Combine year, month, day with variable time and export as timezone-aware,
-        ISO-formatted string.
-        """
-        time_string = '{0} {1}'.format(date, time)
-
-        try:
-            naive = datetime.strptime(time_string, '%b %d %Y %I:%M%p')
-        except ValueError:
-            return None
-
         tz = timezone('America/Chicago')
-        return tz.localize(naive).isoformat()
+
+        start_time = datetime.strptime(row[Row.START_TIME], '%I:%M %p')
+        start_datetime = datetime.combine(day, start_time.time())
+
+        end_time = datetime.strptime(row[Row.END_TIME], '%I:%M %p')
+        end_datetime = datetime.combine(day, end_time.time())
+
+        return { 'start': tz.localize(start_datetime).isoformat(),
+                 'end': tz.localize(end_datetime).isoformat() }

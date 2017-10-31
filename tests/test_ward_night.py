@@ -21,24 +21,23 @@ def test_description():
     assert parsed_items[0]['description'] == 'first come first served, one-on-one meetings usually about 10-20 minutes'
 
 
-#def test_start_time():
-    #assert parsed_items[0]['start_time'] == ''
+def test_start_time():
+    assert parsed_items[0]['start_time'] == '2017-10-30T16:00:00-05:00'
 
 
-# def test_end_time():
-#     assert parsed_items[0]['end_time'] == ''
+def test_end_time():
+    assert parsed_items[0]['end_time'] == '2017-10-30T18:00:00-05:00'
 
 
-# def test_location():
-#     assert parsed_items[0]['location'] == {
-#         'url': '',
-#         'name': '',
-#         'coordinates': {
-#             'latitude': None,
-#             'longitude': None,
-#         },
-#         'address': ''
-#     }
+def test_location():
+    assert parsed_items[0]['location'] == {
+        'url': None,
+        'name': '2740 W North Ave, Chicago',
+        'coordinates': {
+            'latitude': None,
+            'longitude': None,
+        }
+    }
 
 
 @pytest.mark.parametrize('item', parsed_items)
