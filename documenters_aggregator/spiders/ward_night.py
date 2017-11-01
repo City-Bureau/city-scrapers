@@ -273,6 +273,6 @@ class WardNightSpider(scrapy.Spider):
         end_time = datetime.strptime(row[Row.END_TIME], '%I:%M %p')
         end_datetime = datetime.combine(day, end_time.time())
 
-        return { 'start': tz.localize(start_datetime).isoformat(),
-                 'end': tz.localize(end_datetime).isoformat(),
-                 'datetime': tz.localize(start_datetime)}
+        return {'start': tz.localize(start_datetime).isoformat(),
+                'end': tz.localize(end_datetime).isoformat(),
+                'datetime': tz.localize(start_datetime)}

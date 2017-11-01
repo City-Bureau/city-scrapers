@@ -5,7 +5,7 @@ from tests.utils import file_response
 from documenters_aggregator.spiders.ward_night import WardNightSpider, Calendar
 
 test_response = file_response('files/ward_night.json')
-spider = WardNightSpider(start_date = date(2017, 11, 1))
+spider = WardNightSpider(start_date=date(2017, 11, 1))
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
@@ -64,20 +64,20 @@ def test__type(item):
 
 def test_weekly_generation():
     row = [
-      "Gregory Mitchell",
-      "773.731.7777",
-      "https://www.gregmitchell7thward.org/",
-      "7",
-      "Bridget Newsham",
-      "Yes",
-      "2249 E 95th St. Chicago ",
-      "Weekly",
-      "Monday",
-      "3:00 PM",
-      "7:00 PM",
-      "No",
-      "",
-      "First come first served "
+        'Gregory Mitchell',
+        '773.731.7777',
+        'https://www.gregmitchell7thward.org/',
+        '7',
+        'Bridget Newsham',
+        'Yes',
+        '2249 E 95th St. Chicago ',
+        'Weekly',
+        'Monday',
+        '3:00 PM',
+        '7:00 PM',
+        'No',
+        '',
+        'First come first served '
     ]
 
     spider = WardNightSpider()
@@ -95,22 +95,23 @@ def test_weekly_generation():
     assert events[2]['end_time'] == '2017-11-20T19:00:00-06:00'
     assert events[2]['id'] == 'ward7-2017-11-20'
 
+
 def test_monthly_generation():
     row = [
-      "Leslie Hairston",
-      "773.324.5555",
-      "http://leslieahairston.com/",
-      "5",
-      "Bridget Newsham",
-      "Yes",
-      "Rotating locations",
-      "Monthly (4th occurrence)",
-      "Tuesday",
-      "6:00 PM",
-      "8:00 PM",
-      "",
-      "",
-      "Every fourth Tuesday, no meeting in November or December, group meetings rather than one-on-one"
+        'Leslie Hairston',
+        '773.324.5555',
+        'http://leslieahairston.com/',
+        '5',
+        'Bridget Newsham',
+        'Yes',
+        'Rotating locations',
+        'Monthly (4th occurrence)',
+        'Tuesday',
+        '6:00 PM',
+        '8:00 PM',
+        '',
+        '',
+        'Every fourth Tuesday, no meeting in November or December, group meetings rather than one-on-one'
     ]
 
     spider = WardNightSpider()
@@ -127,6 +128,7 @@ def test_monthly_generation():
     assert events[2]['start_time'] == '2018-01-23T18:00:00-06:00'
     assert events[2]['end_time'] == '2018-01-23T20:00:00-06:00'
     assert events[2]['id'] == 'ward5-2018-01-23'
+
 
 # Calendar tests
 
