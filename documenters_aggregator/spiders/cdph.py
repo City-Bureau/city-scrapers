@@ -14,6 +14,7 @@ from time import strptime
 class CdphSpider(scrapy.Spider):
 
     name = 'cdph'
+    long_name = 'Chicago Department of Public Health'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html']
 
@@ -62,13 +63,14 @@ class CdphSpider(scrapy.Spider):
                     'all_day': False,
                     'status': self._parse_status(item),
                     'location': self._parse_location(item),
+                    'sources': self._parse_sources(response)
                 }
 
     def _parse_classification(self, item):
         """
         Parse or generate classification (e.g. town hall).
         """
-        return None
+        return 'committee-meeting'
 
     def _parse_status(self, item):
         """
@@ -89,12 +91,11 @@ class CdphSpider(scrapy.Spider):
         """
         return {
             'url': 'https://www.cityofchicago.org/city/en/depts/cdph.html',
-            'name': 'DePaul Center',
+            'name': '2nd Floor Board Room, DePaul Center, 333 S. State Street, Chicago, IL',
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
-            },
-            'address': '2nd Floor Board Room, DePaul Center, 333 S. State Street, Chicago, IL'
+            }
         }
 
     def _parse_all_day(self, item):
@@ -112,3 +113,9 @@ class CdphSpider(scrapy.Spider):
         date = start_time.split('T')[0]
         dashified = re.sub(r'[^a-z]+', '-', name.lower())
         return '{0}-{1}'.format(date, dashified)
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

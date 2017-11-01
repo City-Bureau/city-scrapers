@@ -1,6 +1,5 @@
 import os
-
-from scrapy.http import HtmlResponse, Request
+from scrapy.http import HtmlResponse, Request, TextResponse
 
 
 def file_response(file_name, url=None):
@@ -18,8 +17,12 @@ def file_response(file_name, url=None):
 
     request = Request(url=url)
     file_content = read_test_file_content(file_name)
-    body = str.encode(file_content)
 
+    if file_name[-5:] == '.json':
+        body = file_content
+        return TextResponse(url=url, body=body, encoding='utf-8')
+
+    body = str.encode(file_content)
     return HtmlResponse(url=url, request=request, body=body)
 
 
@@ -31,3 +34,33 @@ def read_test_file_content(file_name):
         file_path = file_name
 
     return open(file_path, 'r').read()
+
+
+def test_item():
+    return {
+        '_type': 'event',
+        'name': 'Committee on Pedestrian Safety',
+        'description': 'A longer description',
+        'classification': 'committee-meeting',
+        'start_time': '2017-08-30T17:30:00Z',
+        'end_time': None,
+        'timezone': 'America/Chicago',
+        'all_day': False,
+        'status': 'tentative',
+
+        'location': {
+            'url': '',
+            'name': '121 N. Lasalle, Chicago, IL',
+            'coordinates': {
+                'latitude': '41.883868',
+                'longitude': '-87.631936'
+            }
+        },
+
+        'sources': [
+            {
+                'url': '',
+                'note': ''
+            }
+        ]
+    }

@@ -20,17 +20,18 @@ git checkout -b XXXX-spider-NAMEOFAGENCY
 
 ## Create a spider
 
-Run the `genspider` task with a spider name and domain to scrape. Following the previous example:
+Run the `genspider` task with a spider slug, spider name, and URLs to start scraping. Following the previous example:
 
 ```
-invoke genspider cha www.thecha.org
+invoke genspider cha "Chicago Housing Authority" http://www.thecha.org
 ```
 
 You should see some output like:
 
 ```
-Created /Users/eads/projects/documenters-aggregator/documenters_aggregator/spiders/cha.py
-Created /Users/eads/projects/documenters-aggregator/tests/test_cha.py
+Created /Users/eads/Code/documenters-aggregator/documenters_aggregator/spiders/cha.py
+Created /Users/eads/Code/documenters-aggregator/tests/test_cha.py
+Created /Users/eads/Code/documenters-aggregator/tests/files/cha_thecha.html
 ```
 
 ## Test crawling
@@ -40,6 +41,8 @@ You now have a spider named `cha`. To run it (admittedly, not much will happen u
 ```
 scrapy crawl cha
 ```
+
+First, let's take a quick detour and look at testing.
 
 ## Run the automated tests
 

@@ -10,6 +10,7 @@ from pytz import timezone
 # website via an iframe from a different domain.
 class RtaSpider(scrapy.Spider):
     name = 'rta'
+    long_name = 'Regional Transportation Authority'
     allowed_domains = ['www.rtachicago.org', 'rtachicago.granicus.com']
     start_urls = ['http://www.rtachicago.org/about-us/board-meetings']
     domain_root = 'http://www.rtachicago.org'
@@ -30,6 +31,7 @@ class RtaSpider(scrapy.Spider):
                 'all_day': False,
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(response)
             }
 
     def parse(self, response):
@@ -101,3 +103,9 @@ class RtaSpider(scrapy.Spider):
         naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
         dt = tz.localize(naive_dt)
         return dt.isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

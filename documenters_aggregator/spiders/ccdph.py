@@ -13,7 +13,8 @@ import time as Time
 
 class CcdphSpider(scrapy.Spider):
     name = 'ccdph'
-    allowed_domains = ['http://www.cookcountypublichealth.org']
+    long_name = 'Cook County Department of Public Health'
+    allowed_domains = ['www.cookcountypublichealth.org']
     start_urls = ['http://www.cookcountypublichealth.org/event-registration']
 
     def parse(self, response):
@@ -25,7 +26,7 @@ class CcdphSpider(scrapy.Spider):
         needs.
         """
         for item in response.css('div[class="event-item"] a::attr(href)').extract():
-            next_url = self.allowed_domains[0] + '/' + item
+            next_url = 'http://{0}/{1}'.format(self.allowed_domains[0], item)
             yield scrapy.Request(next_url, callback=self.parse_event_page,
                                  dont_filter=True)  # code doesn't work without this. idk why
 
@@ -41,6 +42,7 @@ class CcdphSpider(scrapy.Spider):
             'all_day': self._parse_all_day(response),
             'status': self._parse_status(response),
             'location': self._parse_location(response),
+            'sources': self._parse_sources(response)
         }
 
     def _parse_id(self, response):
@@ -205,3 +207,9 @@ class CcdphSpider(scrapy.Spider):
 
         tz = timezone('America/Chicago')
         return tz.localize(naive).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

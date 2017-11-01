@@ -10,8 +10,9 @@ from datetime import datetime
 
 class TestspiderSpider(scrapy.Spider):
     name = 'testspider'
-    allowed_domains = ['citybureau.org']
-    start_urls = ['http://citybureau.org']
+    long_name = 'Test Spider Board Of Trade And Englightenment'
+    allowed_domains = ['www.citybureau.org']
+    start_urls = ['http://www.citybureau.org/articles', 'http://www.citybureau.org/staff', 'http://www.citybureau.org/is-chicago-any-less-segregated']
 
     def parse(self, response):
         """
@@ -74,15 +75,15 @@ class TestspiderSpider(scrapy.Spider):
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitutde and longitude are all
+        Parse or generate location. Url, latitude and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
         return {
             'url': None,
             'name': None,
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
         }
 

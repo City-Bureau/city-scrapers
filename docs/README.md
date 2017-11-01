@@ -4,6 +4,7 @@ The Documenters Aggregator a collection of scrapers and utilities to collect and
 
 * [Installation](installation.md)
 * [Contributing a spider](contribute-a-spider.md)
+* [Storing data](data-storage.md)
 
 ## Support this work
 
