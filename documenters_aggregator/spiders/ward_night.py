@@ -23,8 +23,8 @@ class Calendar(object):
     much simpler interface that can handle our limited set of use cases.
     """
 
-    DAYS = {'monday': MO, 'tuesday': TU, 'wednesday': WE, 'thursday': TH,
-            'friday': FR, 'saturday': SA, 'sunday': SU}
+    DAYS = {'Monday': MO, 'Tuesday': TU, 'Wednesday': WE, 'Thursday': TH,
+            'Friday': FR, 'Saturday': SA, 'Sunday': SU}
 
     def __init__(self, start_date=datetime.today()):
         self.start_date = start_date
@@ -35,7 +35,7 @@ class Calendar(object):
         the specified weekday in a month. This is used, for example, to get a list
         of the upcoming "third Thursdays of the month":
 
-        `cal.nth_weekday(3, 'thursday')`
+        `cal.nth_weekday(3, 'Thursday')`
 
         `n` should be which day to return.
         `day_of_week` should be one of the keys in DAYS.
@@ -55,7 +55,7 @@ class Calendar(object):
         the last specified weekday in a month. This is used, for example, to get a
         list of the upcoming "last Fridays of the month":
 
-        `cal.last_weekday('friday')`
+        `cal.last_weekday('Friday')`
 
         `day_of_week` should be one of the keys in DAYS.
         `count` is option and is the number of dates to return.
@@ -68,7 +68,7 @@ class Calendar(object):
         the specified weekday. This is used, for example, to get a list of
         the upcoming Tuesdays:
 
-        `cal.weekday('tuesday')`
+        `cal.weekday('Tuesday')`
 
         `day_of_week` should be one of the keys in DAYS.
         `count` is option and is the number of dates to return.
@@ -81,7 +81,7 @@ class Calendar(object):
         return [datetime.date(d) for d in datetimes]
 
     def _assert_day_of_week(self, day_of_week):
-        assert day_of_week in self.DAYS, 'n must be one of {0}'.format(' '.join(self.DAYS.values))
+        assert day_of_week in self.DAYS, '{0} must be one of {1}'.format(day_of_week, ', '.join(self.DAYS.keys()))
 
 
 class Row(IntEnum):
@@ -112,10 +112,13 @@ class WardNightSpider(scrapy.Spider):
     name = 'ward_night'
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = []  # assigned in __init__
+    start_date = datetime.today()
 
-    def __init__(self, google_api_key=GOOGLE_API_KEY, spreadsheet_url=SPREADSHEET_URL, *args, **kwargs):
+    def __init__(self, google_api_key=GOOGLE_API_KEY, spreadsheet_url=SPREADSHEET_URL,
+                 start_date=datetime.today(), *args, **kwargs):
         super(WardNightSpider, self).__init__(*args, **kwargs)
         self.start_urls = [spreadsheet_url + '/values/A3:N100?key=' + google_api_key]
+        self.start_date = start_date
 
     def parse(self, response):
         """
@@ -125,17 +128,38 @@ class WardNightSpider(scrapy.Spider):
         rows = json.loads(response.body.decode('utf-8'))['values']
 
         for row in rows:
+            # Strip leading or trailing whitespace from all values
+            for i in range(len(row)):
+                row[i] = row[i].strip()
+
             # The JSON omits values for trailing columns with no values. By padding
             # the rows out, the rest of the code can assume there will always be 14
             # columns.
             missing_values = 14 - len(row)
             row.extend([''] * missing_values)
-            yield self._parse_row(row)
+            for result in self._parse_row(row):
+                yield result
+
+    def _days_for_frequency(self, frequency, day_of_week):
+        calendar = Calendar(self.start_date)
+        occurance_map = ['Monthly (1st occurrence)', 'Monthly (2nd occurrence)',
+                         'Monthly (3rd occurrence)', 'Monthly (4th occurrence)']
+
+        if frequency in occurance_map:
+            n = occurance_map.index(frequency) + 1
+            return calendar.nth_weekday(n, day_of_week)
+        elif frequency == 'Weekly':
+            return calendar.weekday(day_of_week)
+        elif frequency == 'Monthly (last occurrence)':
+            return calendar.last_weekday(day_of_week)
+        else:
+            # also handles 'Irregularly'
+            return []
 
     def _parse_row(self, row):
 
         if row[Row.HAS_WARD_NIGHTS] != 'Yes':
-            return None
+            return []
 
         try:
             assert len(row[Row.START_TIME]) > 0, 'start time must have a value'
@@ -143,23 +167,28 @@ class WardNightSpider(scrapy.Spider):
         except:
             # TODO: replace this with the correct logging
             print('bad data!')
-            return None
+            print(row)
+            return []
 
-        day = datetime.today()
-        return {
-            '_type': 'event',
-            'id': self._parse_id(row),
-            'name': self._parse_name(row),
-            'description': self._parse_description(row),
-            'classification': self._parse_classification(row),
-            'start_time': self._parse_date_time(row, day)['start'],
-            'end_time': self._parse_date_time(row, day)['end'],
-            'all_day': self._parse_all_day(row),
-            'status': self._parse_status(row),
-            'location': self._parse_location(row),
-        }
+        def build_event(day):
+            dates = self._parse_date_time(row, day)
+            return {
+                '_type': 'event',
+                'id': self._parse_id(row, dates['datetime']),
+                'name': self._parse_name(row),
+                'description': self._parse_description(row),
+                'classification': self._parse_classification(row),
+                'start_time': dates['start'],
+                'end_time': dates['end'],
+                'all_day': self._parse_all_day(row),
+                'status': self._parse_status(row),
+                'location': self._parse_location(row),
+            }
 
-    def _parse_id(self, row):
+        days = self._days_for_frequency(row[Row.FREQUENCY], row[Row.DAY_OF_WEEK])
+        return [build_event(day) for day in days]
+
+    def _parse_id(self, row, date):
         """
         Generate ID. We are assuming that there will only be a single event in each
         ward in a single day.
@@ -167,7 +196,7 @@ class WardNightSpider(scrapy.Spider):
 
         values = {
             'ward': row[Row.WARD],
-            'date': '2017-01-01'
+            'date': date.strftime('%Y-%m-%d')
         }
         id = 'ward{ward}-{date}'.format(**values)
         return id
@@ -245,4 +274,5 @@ class WardNightSpider(scrapy.Spider):
         end_datetime = datetime.combine(day, end_time.time())
 
         return { 'start': tz.localize(start_datetime).isoformat(),
-                 'end': tz.localize(end_datetime).isoformat() }
+                 'end': tz.localize(end_datetime).isoformat(),
+                 'datetime': tz.localize(start_datetime)}
