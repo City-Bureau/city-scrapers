@@ -1,11 +1,13 @@
 import pytest
 
+from datetime import datetime
 from tests.utils import file_response
 from documenters_aggregator.spiders.pbcc import PbccSpider
 
 
 test_response = file_response('files/pbcc.html')
 spider = PbccSpider()
+spider.calendar_date = datetime(2017, 10, 17)
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
