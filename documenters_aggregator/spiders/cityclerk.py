@@ -65,9 +65,17 @@ class CityclerkSpider(scrapy.Spider):
         """
         Grab location from the event detail page.
         """
-        e_pg = requests.get(self.ocd_url + item['id'])
-        d_pg = json.loads(e_pg.content)
-        return d_pg['location']
+        pgurl = self.ocd_url + item['id']
+        e_pg = requests.get(pgurl)
+        if e_pg.status_code != 200:
+            loc = {'url': '',
+                   'name': '',
+                   'coordinates': None,
+                   }
+        else:
+            d_pg = e_pg.json()
+            loc = d_pg['location']
+        return loc
 
     def _parse_sources(self, item):
         """
@@ -75,8 +83,11 @@ class CityclerkSpider(scrapy.Spider):
         """
         pgurl = self.ocd_url + item['id']
         e_pg = requests.get(pgurl)
-        d_pg = json.loads(e_pg.content)
-        sourcelist = d_pg['sources']
-        sourcelist.append({'note': 'ocd-api', 'url': pgurl})
-        sourcelist[0], sourcelist[2] = sourcelist[2], sourcelist[0]
+        if e_pg.status_code != 200:
+            sourcelist = [{'note': 'ocd-api', 'url': pgurl}]
+        else:
+            d_pg = e_pg.json()
+            sourcelist = d_pg['sources']
+            sourcelist.append({'note': 'ocd-api', 'url': pgurl})
+            sourcelist[0], sourcelist[2] = sourcelist[2], sourcelist[0]
         return sourcelist

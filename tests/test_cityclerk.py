@@ -3,16 +3,9 @@ from documenters_aggregator.spiders.cityclerk import CityclerkSpider
 
 file = file_response('files/cityclerk.json')
 spider = CityclerkSpider()
-file
 test_response = file
-parsed_items = list(spider.parse(test_response))
 
-for item in parsed_items[0]:
-    print(item)
-    print(parsed_items[0][item])
-print(parsed_items[0]['sources'][0])
-print(parsed_items[0]['description'] == '')
-print(parsed_items[0]['location'])
+parsed_items = list(spider.parse(test_response))
 
 
 def test_name():
