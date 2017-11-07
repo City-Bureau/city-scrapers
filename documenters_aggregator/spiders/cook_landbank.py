@@ -7,7 +7,7 @@ import scrapy
 
 import json
 import datetime as dt
-from pytz import timezoook_
+from pytz import timezone
 
 
 class Cook_landbankSpider(scrapy.Spider):
