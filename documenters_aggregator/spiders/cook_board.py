@@ -15,11 +15,11 @@ class Cook_boardSpider(scrapy.Spider):
     long_name = 'Cook County Board of Commissioners'
     allowed_domains = ['cook-county.legistar.com']
     start_urls = ['https://www.cook-county.legistar.com']  # use LegistarEventsScraper instead
-cook_
+
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
+        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`.
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.

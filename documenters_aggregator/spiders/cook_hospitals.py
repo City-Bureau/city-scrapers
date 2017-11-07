@@ -11,7 +11,7 @@ class Cook_hospitalsSpider(scrapy.Spider):
     allowed_domains = ['www.cookcountyhhs.org']
     start_urls = ['http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/']
     domain_root = 'http://www.cookcountyhhs.org'
-ook_
+
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data

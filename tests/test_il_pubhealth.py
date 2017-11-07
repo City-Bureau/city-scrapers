@@ -3,10 +3,10 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.il_pubhealth import Il-pubhealthSpider
+from documenters_aggregator.spiders.il_pubhealth import Il_pubhealthSpider
 
 test_response = file_response('files/il_pubhealth.html')
-spider = Il-pubhealthSpider()
+spider = Il_pubhealthSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 

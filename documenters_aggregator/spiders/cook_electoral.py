@@ -12,7 +12,7 @@ from pytz import timezone
 class Cook_electoralSpider(scrapy.Spider):
     name = 'cook_electoral'
     long_name = 'Cook County Electoral Board'
-    allowed_domains = [ook_countyclerk.com']
+    allowed_domains = ['cookcountyclerk.com']
     start_urls = ['http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx']
 
     def parse(self, response):
