@@ -19,7 +19,7 @@ class Cook_pubhealthSpider(scrapy.Spider):
 
     def parse(self, response):
         """
-        `parse` should ook_s `yield` a dict that follows the `Open Civic Data
+        `parse` should always `yield` a dict that follows the `Open Civic Data
         event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
