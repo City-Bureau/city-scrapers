@@ -19,7 +19,7 @@ def test_type(item):
 
 
 def test_id():
-    assert parsed_items[0]['id'] == '201707261030'
+    assert parsed_items[0]['id'] == 'July26,2017at10:30am'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -29,10 +29,7 @@ def test_name(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['description'] == """CPS Loop Office
-42 W. Madison Street, Garden Level
-Chicago, IL 60602
-Board Room"""
+    assert item['description'] is None
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -57,7 +54,8 @@ def test_status(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
     assert item['location'] == {
-        'url': '',
-        'name': 'See description',
-        'coordinates': None,
+        'url': None,
+        'name': 'CPS Loop Office 42 W. Madison Street, Garden Level Chicago, IL 60602 Board Room', 
+        'coordinates': {'latitude': None, 'longitude': None},
     }
+

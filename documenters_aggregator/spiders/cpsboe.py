@@ -13,18 +13,20 @@ class CpsboeSpider(scrapy.Spider):
 
     def parse(self, response):
         for item in response.css('#content-primary tr')[1:]:
-            yield {
-                '_type': 'event',
-                'id': self._parse_id(item),
-                'name': 'Chicago Board of Education Monthly Meeting',
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start_time': self._parse_start_time(item),
-                'all_day': self._parse_all_day(item),
-                'status': self._parse_status(item),
-                'location': self._parse_location(item)
+            start_time = self._parse_start_time(item)
+            if start_time is not None:
+                yield {
+                    '_type': 'event',
+                    'id': self._parse_id(item),
+                    'name': 'Chicago Board of Education Monthly Meeting',
+                    'description': self._parse_description(item),
+                    'classification': self._parse_classification(item),
+                    'start_time': self._parse_start_time(item),
+                    'all_day': self._parse_all_day(item),
+                    'status': self._parse_status(item),
+                    'location': self._parse_location(item)
 
-            }
+                }
 
     def _parse_id(self, item):
         """
@@ -32,25 +34,10 @@ class CpsboeSpider(scrapy.Spider):
         i.e. 'July 27, 2016 at 10:30am' becomes '201707261030'
         """
         text_list = self._remove_line_breaks(item.css('::text').extract())
-        split_date_string = text_list[0].split()
-        split_date_string[0] = split_date_string[0][:3]
-        split_date_string[1] = split_date_string[1][:-1]
-        split_date_string[3] = ''
-        date_string = " ".join(split_date_string)
-        date_string = date_string.replace(':', ' ')
-        date = datetime.strptime(date_string, '%b %d %Y %I %M %p')
-        return str(
-            100000000 * date.year +
-            1000000 * date.month +
-            10000 * date.day +
-            100 * date.hour +
-            date.minute
-            )
+        return text_list[0].replace(' ', '')
 
     def _remove_line_breaks(self, collection):
-        while '\n' in collection:
-            collection.remove("\n")
-        return collection
+        return [x.strip() for x in collection if x.strip() != '']
 
     def _parse_description(self, item):
         """
@@ -58,10 +45,7 @@ class CpsboeSpider(scrapy.Spider):
         unsafe to assume that will always be the case so let's
         grab it programmatically anyways.
         """
-        raw_text_list = item.css('td')[1].css('::text').extract()
-        text_list = self._remove_line_breaks(raw_text_list)
-        description = "\n".join(text_list)
-        return description
+        return None
 
     def _parse_classification(self, item):
         """
@@ -70,13 +54,16 @@ class CpsboeSpider(scrapy.Spider):
         return 'Not classified'
 
     def _parse_start_time(self, item):
-        raw_strings = item.css('td')[0].css('::text').extract()
+        raw_strings = item.css('::text').extract()
         date_string = self._remove_line_breaks(raw_strings)[0]
         date_string = date_string.replace(' at', '')
         date_string = date_string.replace(',', "").replace(':', " ")
-        date = datetime.strptime(date_string, '%B %d %Y %I %M %p')
-        tz = timezone('America/Chicago')
-        return tz.localize(date).isoformat()
+        try:
+            date = datetime.strptime(date_string, '%B %d %Y %I %M %p')
+            tz = timezone('America/Chicago')
+            return tz.localize(date).isoformat()
+        except:
+            return None
 
     def _parse_all_day(self, item):
         """
@@ -95,8 +82,14 @@ class CpsboeSpider(scrapy.Spider):
         """
         @TODO better location
         """
+        raw_text_list = item.css('::text').extract()
+        text_list = self._remove_line_breaks(raw_text_list)[1:]
+        text_list = [x for x in text_list if '(' not in x and ')' not in x]
+        name = " ".join(text_list)
         return {
-            'url': '',
-            'name': 'See description',
-            'coordinates': None,
+            'url': None,
+            'name': name,
+            'coordinates': {
+                'longitude': None,
+                'latitude': None}
         }
