@@ -17,3 +17,16 @@ export AIRTABLE_API_KEY='<YOURAIRTABLE_API_KEY>'
 ## Airtable database/table identifiers (click your database at https://airtable.com/api)
 export DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY='<YOUR BASE KEY>'
 export DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE='Events'
+
+## Mapzen
+export MAPZEN_API_KEY=''
+
+# AWS
+export ECS_REPOSITORY_URI=''
+
+export AWS_DEFAULT_REGION='us-east-1'
+
+## These credentials should be for a user limited to only the resources required
+## by this virtual machine
+export AWS_ACCESS_KEY_ID=''
+export AWS_SECRET_ACCESS_KEY=''

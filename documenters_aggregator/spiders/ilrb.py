@@ -125,7 +125,7 @@ class IlrbSpider(scrapy.Spider):
         """
         Parse start date and time from the second `<strong>`
         """
-        time_string = item.css('strong:nth-of-type(2)::text').extract_first()
+        time_string = item.css('strong:nth-of-type(2)::text').extract_first().replace('.', '')
         try:
             naive = datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
         except ValueError:
