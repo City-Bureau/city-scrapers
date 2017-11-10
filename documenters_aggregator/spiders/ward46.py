@@ -10,6 +10,7 @@ import pytz
 
 class Ward46Spider(scrapy.Spider):
     name = 'ward46'
+    long_name = 'Ward 46 Ward Nights'
     allowed_domains = ['www.james46.org']
     start_urls = ['http://www.james46.org/calendar/list/']
 
