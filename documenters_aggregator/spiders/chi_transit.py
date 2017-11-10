@@ -16,7 +16,7 @@ class ChiTransitSpider(scrapy.Spider):
     long_name = 'Chicago Transit Authority'
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
-    start_urls = ['http://www.transitchicago.com/agendaminute/default.aspx?F_OrderBy=MeetingDate+DESC']
+    start_urls = ['http://www.transitchicago.com/agendaminute/default.aspx?F_OrderBy=MeetingDate+DESC&All=y']
 
     def parse(self, response):
         """
@@ -27,8 +27,11 @@ class ChiTransitSpider(scrapy.Spider):
         needs.
         """
         today = datetime.now()
-        for item in response.css('.datatbl tr:not(:first-child)'):
-            item_start = self._parse_start(item)
+        response_items = response.css('.datatbl tr:not(:first-child)')
+        for idx, item in enumerate(response_items):
+            # Including previous item for meetings where it's needed
+            prev_item = response_items[idx - 1] if idx > 0 else None
+            item_start = self._parse_start(item, prev_item)
             if today < item_start:
                 item_name = self._parse_name(item)
                 item_class = self._parse_classification(item)
@@ -120,7 +123,7 @@ class ChiTransitSpider(scrapy.Spider):
 
         return description
 
-    def _parse_start(self, item):
+    def _parse_start(self, item, prev_item=None):
         """
         Parse start date and time.
         """
@@ -131,9 +134,10 @@ class ChiTransitSpider(scrapy.Spider):
         time_str = time_str.replace('.', '')
         if re.match(r'\d{1,2}:\d{2} (AM|PM)', time_str):
             return datetime.strptime(date_str + time_str, '%m/%d/%Y%I:%M %p')
-        # "Immediately after" specific meeting used frequently, just returning midnight
-        else:
-            return datetime.strptime(date_str, '%m/%d/%Y')
+        # "Immediately after" specific meeting used frequently, return the
+        # start time of the previous meeting
+        elif prev_item is not None:
+            return self._parse_start(prev_item)
 
     def _format_datetime(self, time):
         """
