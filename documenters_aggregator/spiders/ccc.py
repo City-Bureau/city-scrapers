@@ -33,7 +33,7 @@ class CccSpider(scrapy.Spider):
     def parse_event_page(self, response):
             return {
                 '_type': 'event',
-                'id': self._parse_id(),
+                'id': self._parse_id(response),
                 'name': self._parse_name(response),
                 'description': self._parse_description(response),
                 'classification': self._parse_classification(),
@@ -41,26 +41,15 @@ class CccSpider(scrapy.Spider):
                 'end_time': self._parse_end(),
                 'all_day': self._parse_all_day(),
                 'status': self._parse_status(),
-                'location': self._parse_location(),
+                'location': self._parse_location(response),
             }
 
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return None
-
-    def _parse_id(self):
+    def _parse_id(self, response):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return None
+        title = response.css('h1::text').extract_first()
+        return title.replace(" ", "")
 
     def _parse_classification(self):
         """
@@ -81,14 +70,14 @@ class CccSpider(scrapy.Spider):
         """
         return 'tentative'
 
-    def _parse_location(self):
+    def _parse_location(self, response):
         """
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
         return {
             'url': None,
-            'name': None,
+            'name': response.xpath('//span[@class="content required address"]/text()').extract_first(),
             'coordinates': {
               'latitude': None,
               'longitude': None,
@@ -114,7 +103,7 @@ class CccSpider(scrapy.Spider):
         """
         text_chunks = response.css('div.ms-rtestate-field::text').extract()
 
-        return None
+        return ' '.join(text_chunks)
 
     def _parse_start(self, response):
         """
