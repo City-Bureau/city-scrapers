@@ -60,6 +60,7 @@ instance/
 
 # Scrapy stuff:
 .scrapy
+tutorial/
 
 # Sphinx documentation
 docs/_build/
@@ -86,6 +87,7 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
+documenters-aggregator/
 
 # Spyder project settings
 .spyderproject
@@ -99,3 +101,25 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# cyrus
+json_conversions.md
+.citybureau/
+documenters_aggregator/caps.py
+
+# legistar cache
+_cache/
+
+# src dir from git commit packages in requirements.txt
+src/
+
+# deployment
+deploy/*.sh
+deploy/*.py
+
+# OS files
+.DS_Store
+
+# validation logs
+logs/*.log
+

@@ -14,12 +14,13 @@ BOT_NAME = 'documenters_aggregator'
 SPIDER_MODULES = ['documenters_aggregator.spiders']
 NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
 
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Documenters Aggregator (learn more and say hello at https://TKTK)'
+USER_AGENT = 'Documenters Aggregator [development mode]. Learn more and say hello at https://city-bureau.gitbooks.io/documenters-event-aggregator/'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
+DOCUMENTERS_AGGREGATOR_ROBOTSTXT_OBEY = True
+DOCUMENTERS_AGGREGATOR_ROBOTSTXT_LOGONLY = True
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
@@ -65,9 +66,11 @@ ITEM_PIPELINES = {
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'documenters_aggregator.middlewares.MyCustomDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
+}
+
+COMMANDS_MODULE = 'documenters_aggregator.commands'
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -75,6 +78,11 @@ ITEM_PIPELINES = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
+EXTENSIONS = {
+    'scrapy.extensions.closespider.CloseSpider': None,
+}
+
+CLOSESPIDER_ERRORCOUNT = 5
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
