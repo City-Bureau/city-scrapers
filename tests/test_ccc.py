@@ -6,6 +6,7 @@ test_response = file_response('files/ccc_event.html')
 spider = CccSpider()
 item = spider.parse_event_page(test_response)
 
+
 def test_name():
     assert item['name'] == 'November 2017 Regular Board Meeting'
 

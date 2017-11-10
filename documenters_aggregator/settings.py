@@ -70,12 +70,19 @@ DOWNLOADER_MIDDLEWARES = {
     'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
 }
 
+COMMANDS_MODULE = 'documenters_aggregator.commands'
+
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
+EXTENSIONS = {
+    'scrapy.extensions.closespider.CloseSpider': None,
+}
+
+CLOSESPIDER_ERRORCOUNT = 5
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

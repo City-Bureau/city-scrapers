@@ -117,11 +117,12 @@ class CpbSpider(scrapy.Spider):
         """
         Parse or generate event name.
         """
-        all_content = response.xpath("//h1[@class='page-heading']/following-sibling::*")
-        all_text = all_content.xpath("text()").extract()
-        cutoff = [i for i, s in enumerate(all_text) if 'Regular Meetings' in s][0]
-        description = all_text[:cutoff]
-        return ''.join([x.strip() for x in description])
+        all_text = response.xpath("normalize-space(//div[@class='container-fluid page-full-description'])").extract_first()
+
+        intro, meetings = all_text.split('Regular Meetings')
+
+        # Strip 5 characters ("2017 ") off end.
+        return intro[:-5].strip()
 
     def _parse_start(self, item, time):
         """

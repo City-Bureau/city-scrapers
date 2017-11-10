@@ -16,8 +16,6 @@ class CccSpider(scrapy.Spider):
     allowed_domains = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
     start_urls = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
 
-    # for each link
-    #   parse 
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
@@ -79,8 +77,8 @@ class CccSpider(scrapy.Spider):
             'url': None,
             'name': response.xpath('//span[@class="content required address"]/text()').extract_first(),
             'coordinates': {
-              'latitude': None,
-              'longitude': None,
+                'latitude': None,
+                'longitude': None,
             },
         }
 
@@ -116,7 +114,7 @@ class CccSpider(scrapy.Spider):
         tz = timezone('America/Chicago')
 
         d = re.search(date_regex, raw_date_time)
-        t = re.search (time_regex, raw_date_time)
+        t = re.search(time_regex, raw_date_time)
 
         naive_dt = datetime(month=int(d.group(1)), day=int(d.group(2)), year=int(d.group(3)), hour=int(t.group(1)), minute=int(t.group(2)))
         dt = tz.localize(naive_dt)

@@ -109,7 +109,7 @@ class CchhsSpider(scrapy.Spider):
         """
         End times vary depending on the agenda
         """
-        return "See description"
+        return None
 
     def _make_date(self, start_time):
         """

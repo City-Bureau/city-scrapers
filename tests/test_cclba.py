@@ -17,8 +17,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-09-13T15:00:00+00:00'
-    # Make a string in zulu time
+    assert parsed_items[0]['start_time'] == '2017-09-13T10:00:00-05:00'
 
 
 def test_end_time():
