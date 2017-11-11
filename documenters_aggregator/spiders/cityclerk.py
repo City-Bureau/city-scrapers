@@ -34,8 +34,7 @@ class CityclerkSpider(scrapy.Spider):
 
         for item in data['results']:
             parsed_item = self._parse_item(item)
-            item.update({'location': self._parse_location(item),
-                'sources': self._parse_sources(item)})
+            parsed_item.update({'location': self._parse_location(item), 'sources': self._parse_sources(item)})
             yield item
 
         # self._parse_next(response) yields more (responses to parse
