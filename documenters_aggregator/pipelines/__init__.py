@@ -1,6 +1,6 @@
 from .airtable import AirtablePipeline
 from .geocoder import GeocoderPipeline
-from .logging import DocumentersAggregatorLoggingPipeline
+from .LoggingPipeline import DocumentersAggregatorLoggingPipeline
 from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 
 
