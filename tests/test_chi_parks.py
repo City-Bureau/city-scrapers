@@ -49,11 +49,10 @@ def test_classification(item):
     assert item['classification'] == 'Not classified'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_status(item):
+def test_status():
     assert parsed_items[0]['status'] == 'tentative'
     assert parsed_items[1]['status'] == 'tentative'
-    assert parsed_items[2]['status'] == 'tentative'
+    assert parsed_items[2]['status'] == 'confirmed'
     assert parsed_items[3]['status'] == 'confirmed'
     assert parsed_items[4]['status'] == 'confirmed'
     assert parsed_items[5]['status'] == 'passed'
@@ -71,7 +70,7 @@ def test_location():
     }
     assert parsed_items[2]['location'] == {
         'url': None,
-        'name': '8TH FLOOR BOARD ROOM ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'name': '8TH FLOOR BOARD ROOM ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611',
         'coordinates': {
             'latitude': None,
             'longitude': None,
