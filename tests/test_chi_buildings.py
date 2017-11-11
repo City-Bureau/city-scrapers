@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime
 
 from tests.utils import file_response
 from documenters_aggregator.spiders.chi_buildings import Chi_buildingsSpider
@@ -6,6 +7,8 @@ from documenters_aggregator.spiders.chi_buildings import Chi_buildingsSpider
 
 test_response = file_response('files/chi_buildings.html')
 spider = Chi_buildingsSpider()
+# Setting spider date to time test files were generated
+spider.calendar_date = datetime(2017, 10, 15)
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
