@@ -2,7 +2,6 @@ import pytest
 import json
 
 from freezegun import freeze_time
-from tests.utils import file_response
 from documenters_aggregator.spiders.chi_parks import Chi_parksSpider
 
 freezer = freeze_time('2017-10-10 12:00:01')
