@@ -1,11 +1,13 @@
+import json
 from tests.utils import file_response
 from documenters_aggregator.spiders.cityclerk import CityclerkSpider
 
-file = file_response('files/cityclerk.json')
+test_response = []
+with open('tests/files/cityclerk.json') as f:
+    for line in f:
+        test_response.append(json.loads(line))
 spider = CityclerkSpider()
-test_response = file
-
-parsed_items = list(spider.parse(test_response))
+parsed_items = [spider._parse_item(item) for item in test_response[0]]
 
 
 def test_name():
@@ -38,25 +40,6 @@ def test_classification():
 
 def test_status():
     assert parsed_items[0]['status'] == 'cancelled'
-
-
-def test_location():
-    assert parsed_items[0]['location'] == {
-        "name": "Council Chambers ,  City Hall ",
-        "coordinates": None,
-        "url": ""
-    }
-
-
-def test_sources():
-    assert parsed_items[0]['sources'] == [
-        {"note": "ocd-api",
-         "url": "https://ocd.datamade.us/ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12"},
-        {"note": "api",
-         "url": "http://webapi.legistar.com/v1/chicago/events/4954"},
-        {"note": "web",
-         "url": "https://chicago.legistar.com/MeetingDetail.aspx?ID=565455&GUID=B5103C52-1793-4B07-9F28-E0A1223E1540&Options=info&Search="}
-    ]
 
 
 def test__type():
