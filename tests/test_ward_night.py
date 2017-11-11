@@ -81,6 +81,7 @@ def test_weekly_generation():
     ]
 
     spider = WardNightSpider()
+    spider.start_date = date(2017, 10, 31)
     events = spider._parse_row(row)
 
     assert events[0]['start_time'] == '2017-11-06T15:00:00-06:00'
