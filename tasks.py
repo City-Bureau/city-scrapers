@@ -61,7 +61,7 @@ def genspider(ctx, name, long_name, start_urls):
 @task
 def runtests(ctx):
     """
-    Runs pytest, pyflakes, and pep8.
+    Runs pytest and flake8.
     """
     run('pytest -s', pty=pty_available)
     run('flake8 --ignore E265,E266,E501 --exclude src', pty=pty_available)
