@@ -1,7 +1,6 @@
 import pytest
 import json
 from freezegun import freeze_time
-from tests.utils import file_response
 from documenters_aggregator.spiders.parkdistrict import ParkdistrictSpider
 
 

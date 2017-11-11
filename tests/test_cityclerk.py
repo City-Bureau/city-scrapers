@@ -1,5 +1,4 @@
 import json
-from tests.utils import file_response
 from documenters_aggregator.spiders.cityclerk import CityclerkSpider
 
 test_response = []
