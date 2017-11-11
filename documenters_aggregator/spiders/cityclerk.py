@@ -33,25 +33,29 @@ class CityclerkSpider(scrapy.Spider):
         data = json.loads(response.text)
 
         for item in data['results']:
-            yield {
-                '_type': 'event',
-                'id': item['id'],
-                'name': item['name'],
-                'description': item['description'],
-                'classification': item['classification'],
-                'start_time': item['start_date'],
-                'end_time': item['end_date'],
-                'all_day': item['all_day'],
-                'status': item['status'],
-                'location': self._parse_location(item),
-                'sources': self._parse_sources(item)
-            }
+            parsed_item = self._parse_item(item)
+            item.update({'location': self._parse_location(item),
+                'sources': self._parse_sources(item)})
+            yield item
 
         # self._parse_next(response) yields more (responses to parse
         max_page = data['meta']['max_page']
         page = data['meta']['page']
         while page < max_page:
             yield self._parse_next(response, page)
+
+    def _parse_item(self, item):
+        return {
+            '_type': 'event',
+            'id': item['id'],
+            'name': item['name'],
+            'description': item['description'],
+            'classification': item['classification'],
+            'start_time': item['start_date'],
+            'end_time': item['end_date'],
+            'all_day': item['all_day'],
+            'status': item['status']
+        }
 
     def _parse_next(self, response, pgnum):
         """

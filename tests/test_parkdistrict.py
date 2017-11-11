@@ -1,5 +1,5 @@
 import pytest
-
+import json
 from freezegun import freeze_time
 from tests.utils import file_response
 from documenters_aggregator.spiders.parkdistrict import ParkdistrictSpider
@@ -7,9 +7,12 @@ from documenters_aggregator.spiders.parkdistrict import ParkdistrictSpider
 
 freezer = freeze_time('2017-10-10 12:00:01')
 freezer.start()
-test_response = file_response('files/parkdistrict.html')
+test_response = []
+with open('tests/files/parkdistrict.txt') as f:
+    for line in f:
+        test_response.append(json.loads(line))
 spider = ParkdistrictSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider._parse_events(test_response)]
 freezer.stop()
 
 
