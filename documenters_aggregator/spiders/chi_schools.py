@@ -5,7 +5,7 @@ from datetime import datetime
 from pytz import timezone
 
 
-class CpsboeSpider(scrapy.Spider):
+class Chi_schoolsSpider(scrapy.Spider):
     name = 'cpsboe'
     long_name = 'Chicago Public Schools Board of Education'
     allowed_domains = ['www.cpsboe.org']

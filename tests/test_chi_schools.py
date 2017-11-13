@@ -2,10 +2,10 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.cpsboe import CpsboeSpider
+from documenters_aggregator.spiders.chi_schools import Chi_schoolsSpider
 
 test_response = file_response('files/cpsboe.html')
-spider = CpsboeSpider()
+spider = Chi_schoolsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
