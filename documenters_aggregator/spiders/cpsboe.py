@@ -7,6 +7,7 @@ from pytz import timezone
 
 class CpsboeSpider(scrapy.Spider):
     name = 'cpsboe'
+    long_name = 'Chicago Public Schools Board of Education'
     allowed_domains = ['www.cpsboe.org']
     start_urls = ['http://www.cpsboe.org/meetings/planning-calendar']
     domain_url = 'http://www.cpsboe.org'
