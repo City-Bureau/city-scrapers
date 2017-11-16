@@ -4,20 +4,23 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-import scrapy
 import urllib3
 
 from datetime import datetime
 from pytz import timezone
 from legistar.events import LegistarEventsScraper
+from inflector import Inflector, English
 
+from documenters_aggregator.spider import Spider
 
-class Chi_parksSpider(scrapy.Spider):
+class Chi_parksSpider(Spider):
     name = 'chi_parks'
     long_name = 'Chicago Park District'
     START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = [START_URL]
+
+    inflector = Inflector(English)
 
     def parse(self, response):
         """
@@ -41,27 +44,21 @@ class Chi_parksSpider(scrapy.Spider):
 
     def _parse_events(self, events):
         for item, _ in events:
+            start_time, end_time, start_time_str, end_time_str = self._parse_time(item)
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
+                'start_time': start_time_str,
+                'end_time': end_time_str,
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item)
+                'sources': self._parse_sources(item),
             }
+            data['id'] = self._generate_id(item, data, start_time)
             data['status'] = self._parse_status(item, data['start_time'])
             yield data
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-        """
-        new_id = item['Name'] + item['Meeting Date']
-        return ''.join(ch for ch in new_id if ch.isalnum())
 
     def _parse_classification(self, item):
         """
@@ -117,7 +114,7 @@ class Chi_parksSpider(scrapy.Spider):
         except:
             return agenda
 
-    def _parse_start(self, item):
+    def _parse_time(self, item):
         """
         Parse start date and time.
         """
@@ -127,14 +124,9 @@ class Chi_parksSpider(scrapy.Spider):
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
             tz = timezone('America/Chicago')
-            return tz.localize(naive).isoformat()
-        return None
-
-    def _parse_end(self, item):
-        """
-        Parse end date and time.
-        """
-        return None
+            tz_time = tz.localize(naive)
+            return (tz_time, None, tz_time.isoformat(), None)
+        return (None, None, None, None)
 
     def _parse_sources(self, item):
         """
@@ -146,6 +138,7 @@ class Chi_parksSpider(scrapy.Spider):
             url = self.START_URL + '/Calendar.aspx'
         return [{'url': url, 'note': ''}]
 
+    # TODO move to parent class?
     @staticmethod
     def clean_html(html):
         """
