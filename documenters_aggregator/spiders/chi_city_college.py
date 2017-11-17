@@ -9,8 +9,9 @@ import re
 from datetime import datetime
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Chi_cityCollegeSpider(scrapy.Spider):
+class Chi_cityCollegeSpider(Spider):
     name = 'chi_city_college'
     long_name = 'City College of Chicago'
     allowed_domains = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
@@ -29,25 +30,20 @@ class Chi_cityCollegeSpider(scrapy.Spider):
             yield scrapy.Request(next_url, callback=self.parse_event_page, dont_filter=True)
 
     def parse_event_page(self, response):
-            return {
-                '_type': 'event',
-                'id': self._parse_id(response),
-                'name': self._parse_name(response),
-                'description': self._parse_description(response),
-                'classification': self._parse_classification(),
-                'start_time': self._parse_start(response),
-                'end_time': self._parse_end(),
-                'all_day': self._parse_all_day(),
-                'status': self._parse_status(),
-                'location': self._parse_location(response),
-            }
-
-    def _parse_id(self, response):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-        """
-        title = response.css('h1::text').extract_first()
-        return title.replace(" ", "")
+        start_time, start_time_str = self._parse_start(response)
+        data = {
+            '_type': 'event',
+            'name': self._parse_name(response),
+            'description': self._parse_description(response),
+            'classification': self._parse_classification(),
+            'start_time': start_time_str,
+            'end_time': self._parse_end(),
+            'all_day': self._parse_all_day(),
+            'status': self._parse_status(),
+            'location': self._parse_location(response),
+        }
+        data['id'] = self._generate_id(response, data, start_time)
+        return data
 
     def _parse_classification(self):
         """
@@ -118,7 +114,7 @@ class Chi_cityCollegeSpider(scrapy.Spider):
 
         naive_dt = datetime(month=int(d.group(1)), day=int(d.group(2)), year=int(d.group(3)), hour=int(t.group(1)), minute=int(t.group(2)))
         dt = tz.localize(naive_dt)
-        return dt.isoformat()
+        return (dt, dt.isoformat())
 
     def _parse_end(self):
         """
