@@ -12,7 +12,7 @@ from scrapy.exceptions import DropItem
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
-FIELDS_WHITELIST = ['id', 'name', 'description', 'classification', 'start_time', 'start_time_formatted', 'end_time', 'end_time_formatted', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude', 'geocode', 'url', 'scrape_date_initial', 'scrape_date_update']
+FIELDS_WHITELIST = ['id', 'name', 'description', 'classification', 'start_time', 'end_time', 'timezone', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude', 'geocode', 'url', 'scrape_date_initial', 'scrape_date_update']
 
 
 class AirtablePipeline(object):
@@ -33,12 +33,9 @@ class AirtablePipeline(object):
         else:
             return item
 
-        time.sleep(randint(0, 3))
+        time.sleep(randint(0, 3)) # to avoid rate limiting?
 
         new_item = item.copy()
-
-        # make id
-        new_item['id'] = self._make_id(new_item, spider)
 
         # flatten location
         new_item['location_url'] = get_key(new_item, 'location.url')
@@ -46,13 +43,9 @@ class AirtablePipeline(object):
         new_item['location_address'] = get_key(new_item, 'location.address')
         new_item['location_latitude'] = get_key(new_item, 'location.coordinates.latitude')
         new_item['location_longitude'] = get_key(new_item, 'location.coordinates.longitude')
-
+        new_item['timezone'] = 'America/Chicago' # TODO have this passed in by the spiders
         new_item['all_day'] = 'false'
-
         new_item['agency_name'] = spider.long_name
-
-        new_item['start_time_formatted'] = self._transform_date(new_item['start_time'])
-        new_item['end_time_formatted'] = self._transform_date(new_item['end_time'])
 
         new_item = {k: v for k, v in new_item.items() if k in FIELDS_WHITELIST}
 
@@ -72,27 +65,11 @@ class AirtablePipeline(object):
         now = datetime.datetime.now().isoformat()
         airtable_item = self.airtable.match('id', item['id'])
         if airtable_item:
-            # update
             spider.logger.debug('AIRTABLE PIPELINE: Updating {0}'.format(item['id']))
             item['scrape_date_updated'] = now
             self.airtable.update(airtable_item['id'], item)
         else:
-            # create
             spider.logger.debug('AIRTABLE PIPELINE: Creating {0}'.format(item['id']))
             item['scrape_date_updated'] = now
             item['scrape_date_initial'] = now
             self.airtable.insert(item)
-
-    def _make_id(self, item, spider):
-        return '{spider_long_name} {item_name} ({spider_name}-{item_id})'.format(spider_name=spider.name, spider_long_name=spider.long_name, item_id=item['id'], item_name=item['name'])
-
-    def _transform_date(self, timestring):
-        """
-        Parse to friendly format for Zapier integration.
-        """
-        try:
-            dt = dateutil.parser.parse(timestring)
-        except TypeError:
-            return None
-
-        return dt.strftime('%a %B %d, %Y, %I:%M%p')
