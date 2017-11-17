@@ -16,5 +16,5 @@ class Spider(scrapy.Spider):
         """
         name = self.inflector.underscore(data['name'])
         id = data.get('id', 'x')
-        parts = [self.name, datetime.strftime(start_time, '%Y%m%d%H%M'), 'x', name]
+        parts = [self.name, datetime.strftime(start_time, '%Y%m%d%H%M'), id, name]
         return '/'.join(parts)
