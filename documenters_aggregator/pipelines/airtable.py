@@ -26,14 +26,16 @@ class AirtablePipeline(object):
         # copy item; airtable-specific munging is happening here that breaks
         # opencivicdata standard
 
-        if item.get('start_time'):
-            dt = dateutil.parser.parse(item['start_time'])
-            if dt < datetime.datetime.now(dt.tzinfo):
-                return item
-        else:
+        if item.get('start_time') is None:
+            spider.logger.debug('AIRTABLE PIPELINE: Ignoring event without start_time {0}'.format(item['id']))
             return item
 
-        time.sleep(randint(0, 3)) # to avoid rate limiting?
+        dt = dateutil.parser.parse(item['start_time'])
+        if dt < datetime.datetime.now(dt.tzinfo):
+            spider.logger.debug('AIRTABLE PIPELINE: Ignoring past event {0}'.format(item['id']))
+            return item
+
+        time.sleep(randint(0, 3))  # to avoid rate limiting?
 
         new_item = item.copy()
 
@@ -67,7 +69,7 @@ class AirtablePipeline(object):
         if airtable_item:
             spider.logger.debug('AIRTABLE PIPELINE: Updating {0}'.format(item['id']))
             item['scrape_date_updated'] = now
-            self.airtable.update(airtable_item['id'], item)
+            self.airtable.update_by_field('id', airtable_item['id'], item)
         else:
             spider.logger.debug('AIRTABLE PIPELINE: Creating {0}'.format(item['id']))
             item['scrape_date_updated'] = now
