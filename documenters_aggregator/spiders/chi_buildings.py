@@ -5,12 +5,12 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
 import pytz
-import scrapy
-
 from datetime import date, datetime, timedelta
 
+import scrapy
+from documenters_aggregator.spider import Spider
 
-class Chi_buildingsSpider(scrapy.Spider):
+class Chi_buildingsSpider(Spider):
     name = 'chi_buildings'
     long_name = 'Public Building Commission of Chicago'
     allowed_domains = ['www.pbcchicago.com']
@@ -36,19 +36,22 @@ class Chi_buildingsSpider(scrapy.Spider):
             for item in cal_day.xpath("./div[not(contains(@class, 'calnumber'))]"):
                 # Ignore holidays added to calendar
                 if item.css('a b::text').extract_first().strip() != 'Holiday':
-                    yield {
+                    start_time, start_time_str = self._parse_start(item, cal_date)
+                    data = {
                         '_type': 'event',
                         'id': self._parse_id(item),
                         'name': self._parse_name(item, cal_date),
                         'description': self._parse_description(item),
                         'classification': self._parse_classification(item),
-                        'start_time': self._parse_start(item, cal_date),
+                        'start_time': start_time_str,
                         'end_time': None,
                         'all_day': self._parse_all_day(item),
                         'status': self._parse_status(item),
                         'location': self._parse_location(item),
                         'sources': self._parse_sources(item)
                     }
+                    data['id'] = self._generate_id(item, data, start_time)
+                    yield data
 
         # Add 30 days to the current date, stop if more than 180 days (~6 months) ahead
         self.calendar_date += timedelta(days=30)
@@ -83,7 +86,7 @@ class Chi_buildingsSpider(scrapy.Spider):
             id_suffix = event_link.split('?BID_ID=')[-1]
         else:
             raise ValueError('ID is required and not present in eID or BID_ID params')
-        return 'PBCC{}'.format(id_suffix)
+        return id_suffix
 
     def _parse_classification(self, item):
         """
@@ -188,7 +191,9 @@ class Chi_buildingsSpider(scrapy.Spider):
         else:
             start_datetime = datetime.combine(cal_date, datetime.min.time())
         tz = pytz.timezone('America/Chicago')
-        return tz.localize(start_datetime).isoformat()
+        tz_datetime = tz.localize(start_datetime)
+
+        return (tz_datetime, tz_datetime.isoformat())
 
     def _parse_start_time(self, item):
         """
