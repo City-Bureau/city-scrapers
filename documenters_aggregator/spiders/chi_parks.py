@@ -9,7 +9,6 @@ import urllib3
 from datetime import datetime
 from pytz import timezone
 from legistar.events import LegistarEventsScraper
-from inflector import Inflector, English
 
 from documenters_aggregator.spider import Spider
 
@@ -19,8 +18,6 @@ class Chi_parksSpider(Spider):
     START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = [START_URL]
-
-    inflector = Inflector(English)
 
     def parse(self, response):
         """
