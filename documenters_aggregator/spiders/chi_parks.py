@@ -12,6 +12,7 @@ from legistar.events import LegistarEventsScraper
 
 from documenters_aggregator.spider import Spider
 
+
 class Chi_parksSpider(Spider):
     name = 'chi_parks'
     long_name = 'Chicago Park District'

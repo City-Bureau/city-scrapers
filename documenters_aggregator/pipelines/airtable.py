@@ -43,7 +43,7 @@ class AirtablePipeline(object):
         new_item['location_address'] = get_key(new_item, 'location.address')
         new_item['location_latitude'] = get_key(new_item, 'location.coordinates.latitude')
         new_item['location_longitude'] = get_key(new_item, 'location.coordinates.longitude')
-        new_item['timezone'] = 'America/Chicago' # TODO have this passed in by the spiders
+        new_item['timezone'] = 'America/Chicago'  # TODO have this passed in by the spiders
         new_item['all_day'] = 'false'
         new_item['agency_name'] = spider.long_name
 

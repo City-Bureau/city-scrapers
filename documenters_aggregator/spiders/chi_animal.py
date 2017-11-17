@@ -8,6 +8,7 @@ from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
+
 class Chi_animalSpider(Spider):
     name = 'chi_animal'
     long_name = 'Animal Care and Control Commission'

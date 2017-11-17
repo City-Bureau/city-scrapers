@@ -10,6 +10,7 @@ from datetime import date, datetime, timedelta
 import scrapy
 from documenters_aggregator.spider import Spider
 
+
 class Chi_buildingsSpider(Spider):
     name = 'chi_buildings'
     long_name = 'Public Building Commission of Chicago'
