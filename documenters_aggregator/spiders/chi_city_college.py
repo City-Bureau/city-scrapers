@@ -11,6 +11,7 @@ from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
+
 class Chi_cityCollegeSpider(Spider):
     name = 'chi_city_college'
     long_name = 'City College of Chicago'

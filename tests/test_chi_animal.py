@@ -1,4 +1,3 @@
-from datetime import date
 from tests.utils import file_response
 from documenters_aggregator.spiders.chi_animal import Chi_animalSpider
 
