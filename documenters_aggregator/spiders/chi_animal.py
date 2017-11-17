@@ -3,11 +3,12 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 from dateutil.parser import parse as dateparse
+from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Chi_animalSpider(scrapy.Spider):
+class Chi_animalSpider(Spider):
     name = 'chi_animal'
     long_name = 'Animal Care and Control Commission'
     allowed_domains = ['www.cityofchicago.org']
@@ -36,27 +37,21 @@ class Chi_animalSpider(scrapy.Spider):
                 continue
 
             # Parse the item
-            yield {
+            start_time, start_time_str = self._parse_start(text)
+            data = {
                 '_type': 'event',
-                'id': self._parse_id(text),
                 'name': self._parse_name(text),
                 'description': self._parse_description(text),
                 'classification': self._parse_classification(text),
-                'start_time': self._parse_start(text),
+                'start_time': start_time_str,
                 'end_time': self._parse_end(text),
                 'all_day': self._parse_all_day(text),
                 'status': self._parse_status(text),
                 'location': self._parse_location(text),
             }
+            data['id'] = self._generate_id(item, data, start_time)
 
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-        """
-        return "{}-{}".format(
-            self.name,
-            str(dateparse(item).date())
-        )
+            yield data
 
     def _parse_classification(self, item):
         """
@@ -84,7 +79,8 @@ class Chi_animalSpider(scrapy.Spider):
         """
         return {
             'url': None,
-            'name': "David R. Lee Animal Care Center, 2741 S. Western Ave, Chicago, IL  60608",
+            'name': 'David R. Lee Animal Care Center',
+            'address': '2741 S. Western Ave, Chicago, IL 60608',
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -113,7 +109,12 @@ class Chi_animalSpider(scrapy.Spider):
         """
         Parse start date and time.
         """
-        return dateparse(item).date()
+        naive_date = dateparse(item)
+        tz = timezone('America/Chicago')
+        date = tz.localize(naive_date)
+        date_str = date.isoformat()
+
+        return (date, date_str)
 
     def _parse_end(self, item):
         """
