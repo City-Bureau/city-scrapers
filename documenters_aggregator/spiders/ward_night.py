@@ -170,9 +170,8 @@ class WardNightSpider(Spider):
 
         def build_event(day):
             dates = self._parse_date_time(row, day)
-            return {
+            data = {
                 '_type': 'event',
-                'id': self._parse_id(row, dates['datetime']),
                 'name': self._parse_name(row),
                 'description': self._parse_description(row),
                 'classification': self._parse_classification(row),
@@ -182,22 +181,11 @@ class WardNightSpider(Spider):
                 'status': self._parse_status(row),
                 'location': self._parse_location(row),
             }
+            data['id'] = self._generate_id({}, data, dates['datetime'])
+            return data
 
         days = self._days_for_frequency(row[Row.FREQUENCY], row[Row.DAY_OF_WEEK])
         return [build_event(day) for day in days]
-
-    def _parse_id(self, row, date):
-        """
-        Generate ID. We are assuming that there will only be a single event in each
-        ward in a single day.
-        """
-
-        values = {
-            'ward': row[Row.WARD],
-            'date': date.strftime('%Y-%m-%d')
-        }
-        id = 'ward{ward}-{date}'.format(**values)
-        return id
 
     def _parse_name(self, row):
         """
@@ -208,7 +196,7 @@ class WardNightSpider(Spider):
             'ward': row[Row.WARD],
             'alderman': row[Row.ALDERMAN],
         }
-        name = 'Ward Night with Alderman {alderman} (Ward {ward})'.format(**values)
+        name = 'Ward Night: Ward {ward}'.format(**values)
         return name
 
     def _parse_classification(self, row):
@@ -257,7 +245,13 @@ class WardNightSpider(Spider):
         Parse or generate event name.
         """
 
-        return row[Row.INFO]
+        values = {
+            'ward': row[Row.WARD],
+            'alderman': row[Row.ALDERMAN],
+        }
+        template = 'Ward Night with Alderman {alderman} (Ward {ward}).\n'
+        summary = template.format(**values)
+        return summary + row[Row.INFO]
 
     def _parse_date_time(self, row, day):
         """
