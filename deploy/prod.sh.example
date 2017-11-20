@@ -22,6 +22,8 @@ export DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE='Events'
 export MAPZEN_API_KEY=''
 
 # AWS
+export AWS_ACCOUNT_ID=''
+
 export ECS_REPOSITORY_URI=''
 
 export AWS_DEFAULT_REGION='us-east-1'

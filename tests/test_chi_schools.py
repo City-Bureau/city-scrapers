@@ -2,10 +2,10 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.cpsboe import CpsboeSpider
+from documenters_aggregator.spiders.chi_schools import Chi_schoolsSpider
 
 test_response = file_response('files/cpsboe.html')
-spider = CpsboeSpider()
+spider = Chi_schoolsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
@@ -19,12 +19,12 @@ def test_type(item):
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'July26,2017at10:30am'
+    assert parsed_items[0]['id'] == 'chi_schools/201707261030/x/monthly_board_meeting'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Chicago Board of Education Monthly Meeting'
+    assert item['name'] == 'Monthly Board Meeting'
 
 
 @pytest.mark.parametrize('item', parsed_items)

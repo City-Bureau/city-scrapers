@@ -1,9 +1,9 @@
 from tests.utils import file_response
-from documenters_aggregator.spiders.ccc import CccSpider
+from documenters_aggregator.spiders.chi_city_college import Chi_cityCollegeSpider
 
 
 test_response = file_response('files/ccc_event.html')
-spider = CccSpider()
+spider = Chi_cityCollegeSpider()
 item = spider.parse_event_page(test_response)
 
 
@@ -20,7 +20,7 @@ def test_end_time():
 
 
 def test_id():
-    assert item['id'] == 'November2017RegularBoardMeeting'
+    assert item['id'] == 'chi_city_college/201711020900/x/november_2017_regular_board_meeting'
 
 
 def test_all_day():
