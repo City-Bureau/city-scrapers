@@ -10,8 +10,9 @@ from datetime import datetime
 from pytz import timezone
 from enum import IntEnum
 
-import scrapy
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
+
+from documenters_aggregator.spider import Spider
 
 GOOGLE_API_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_GOOGLE_API_KEY') or 'test-token'
 SPREADSHEET_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1xnt4kZI9Ruinw91wM-nnWftsFD-ZaKaozepdNXeIrpo'
@@ -108,16 +109,13 @@ class Row(IntEnum):
     INFO = 13               # Text
 
 
-class WardNightSpider(scrapy.Spider):
+class WardNightSpider(Spider):
     name = 'ward_night'
     allowed_domains = ['sheets.googleapis.com/v4/']
-    start_urls = []  # assigned in __init__
-    start_date = datetime.today()
+    start_urls = [SPREADSHEET_URL + '/values/A3:N100?key=' + GOOGLE_API_KEY]
 
-    def __init__(self, google_api_key=GOOGLE_API_KEY, spreadsheet_url=SPREADSHEET_URL,
-                 start_date=datetime.today(), *args, **kwargs):
+    def __init__(self, start_date=datetime.today(), *args, **kwargs):
         super(WardNightSpider, self).__init__(*args, **kwargs)
-        self.start_urls = [spreadsheet_url + '/values/A3:N100?key=' + google_api_key]
         self.start_date = start_date
 
     def parse(self, response):
