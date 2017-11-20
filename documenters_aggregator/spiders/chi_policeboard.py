@@ -3,14 +3,15 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 
 from datetime import datetime
 from pytz import timezone
 import re
 
+from documenters_aggregator.spider import Spider
 
-class Chi_policeboardSpider(scrapy.Spider):
+
+class Chi_policeboardSpider(Spider):
     name = 'chi_policeboard'
     long_name = 'Chicago Police Board'
     allowed_domains = ['www.cityofchicago.org']
@@ -37,22 +38,14 @@ class Chi_policeboardSpider(scrapy.Spider):
         universal_start_time = self._parse_universal_start(response)
 
         for item in response.xpath('//p[contains(@style,"padding-left")]'):
+            start_time, start_time_str = self._parse_start(item, universal_start_time)
             new_item = {
-                'id': self._parse_id(item),
-                'start_time': self._parse_start(item, universal_start_time)
+                'start_time': start_time_str,
+                'id': self._generate_id(item, data, start_time)
             }
             new_item.update(data)
             new_item['status'] = self._parse_status(new_item['start_time'])
             yield new_item
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-        Use start date
-        """
-        start_date = self._parse_start_date(item)
-        item_id = 'CPB{0}'.format(start_date).replace(' ', '')
-        return item_id
 
     def _parse_classification(self, response):
         """
@@ -131,7 +124,12 @@ class Chi_policeboardSpider(scrapy.Spider):
         date = self._parse_start_date(item)
         year = str(datetime.now().year)
         datestring = '{0}, {1} {2}'.format(date, year, time)
-        return self._make_date(datestring)
+        date = self._make_date(datestring)
+
+        if date:
+            return (date, date.isoformat())
+        else:
+            return (None, None)
 
     def _parse_start_date(self, item):
         """
@@ -155,7 +153,7 @@ class Chi_policeboardSpider(scrapy.Spider):
             return None
 
         tz = timezone('America/Chicago')
-        return tz.localize(naive).isoformat()
+        return tz.localize(naive)
 
     def _parse_end(self, response):
         """

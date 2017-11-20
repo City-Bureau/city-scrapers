@@ -42,7 +42,7 @@ def test_end_time(item):
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'PBCC2176'
+    assert parsed_items[0]['id'] == 'chi_buildings/201710160000/2176/daley_plaza_italian_exhibit'
 
 
 def test_all_day():

@@ -81,6 +81,7 @@ def enable_rules(ctx):
 
     # @TODO this offset mechanism is mega-dumb
     cron_offset = 0
+    aws_account_id = os.environ.get('AWS_ACCOUNT_ID')
     for i, cls in enumerate(spider_classes):
         rule_definition = get_event_rule_definition(cls, cron_offset=cron_offset)
         ctx.run('aws events put-rule --cli-input-json "{0}"'.format(rule_definition))
@@ -92,13 +93,13 @@ def enable_rules(ctx):
             "Targets": [
                 {
                     "Input": "{}",
-                    "RoleArn": "arn:aws:iam::647111127395:role/ecsEventsRole",
+                    "RoleArn": "arn:aws:iam::{0}:role/ecsEventsRole".format(aws_account_id),
                     "EcsParameters": {
-                        "TaskDefinitionArn": "arn:aws:ecs:us-east-1:647111127395:task-definition/documenters_aggregator-{0}".format(cls.name),  # @TODO hardcoded :/
+                        "TaskDefinitionArn": "arn:aws:ecs:us-east-1:{0}:task-definition/documenters_aggregator-{1}".format(aws_account_id, cls.name),
                         "TaskCount": 1
                     },
                     "Id": "documenters_aggregator-rta",
-                    "Arn": "arn:aws:ecs:us-east-1:647111127395:cluster/documenters-aggregator"  # @TODO hardcoded :/
+                    "Arn": "arn:aws:ecs:us-east-1:{0}:cluster/documenters-aggregator".format(aws_account_id)
                 }
             ]
         }
@@ -125,12 +126,13 @@ def deploy(ctx):
 def get_event_rule_definition(cls, state="ENABLED", cron_offset=0):
     # @TODO this offset mechanism is mega-dumb
     hours = [str(0 + cron_offset), str(12 + cron_offset)]
+    aws_account_id = os.environ.get('AWS_ACCOUNT_ID')
     rule_definition = {
         "State": state,
         "ScheduleExpression": "cron(0 {0} ? * * *)".format(','.join(hours)),
         "Name": "documenters_aggregator-{0}".format(cls.name),
         "Description": "{0} scraper".format(cls.long_name),
-        "RoleArn": "arn:aws:iam::647111127395:role/ecsEventsRole",  # @TODO hardcoded :/
+        "RoleArn": "arn:aws:iam::{0}:role/ecsEventsRole".format(aws_account_id),
     }
     return quote_for_awscli(rule_definition)
 
