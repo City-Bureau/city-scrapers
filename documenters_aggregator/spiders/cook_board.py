@@ -3,14 +3,15 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 
 from datetime import datetime
 from pytz import timezone
 from legistar.events import LegistarEventsScraper
 
+from documenters_aggregator.spider import Spider
 
-class Cook_boardSpider(scrapy.Spider):
+
+class Cook_boardSpider(Spider):
     name = 'cook_board'
     long_name = 'Cook County Board of Commissioners'
     allowed_domains = ['cook-county.legistar.com']

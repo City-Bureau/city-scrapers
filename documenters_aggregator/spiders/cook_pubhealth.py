@@ -10,8 +10,10 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import time as Time
 
+from documenters_aggregator.spider import Spider
 
-class Cook_pubhealthSpider(scrapy.Spider):
+
+class Cook_pubhealthSpider(Spider):
     name = 'cook_pubhealth'
     long_name = 'Cook County Department of Public Health'
     allowed_domains = ['www.cookcountypublichealth.org']

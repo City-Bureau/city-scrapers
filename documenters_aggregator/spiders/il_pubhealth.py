@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
+from documenters_aggregator.spider import Spider
 
-class Il_pubhealthSpider(scrapy.Spider):
+
+class Il_pubhealthSpider(Spider):
     name = 'il_pubhealth'
     long_name = 'Illinois Department of Public Health'
     allowed_domains = ['www.dph.illinois.gov']

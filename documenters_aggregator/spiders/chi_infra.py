@@ -3,13 +3,14 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 import re
 import datetime as dt
 import pytz
 
+from documenters_aggregator.spider import Spider
 
-class Chi_infraSpider(scrapy.Spider):
+
+class Chi_infraSpider(Spider):
     name = 'chi_infra'
     long_name = 'Chicago Infrastructure Trust'
     allowed_domains = ['chicagoinfrastructure.org']

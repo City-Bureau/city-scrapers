@@ -9,8 +9,10 @@ import json
 import datetime as dt
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Cook_landbankSpider(scrapy.Spider):
+
+class Cook_landbankSpider(Spider):
     """
     Rather than scraping a site, I'm making iterated AJAX requests.
     This means setting up a list of dates to poll for events,

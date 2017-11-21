@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-import scrapy
 
 from datetime import datetime
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Cook_hospitalsSpider(scrapy.Spider):
+
+class Cook_hospitalsSpider(Spider):
     name = 'cook_hospitals'
     long_name = 'Cook County Health and Hospitals System'
     allowed_domains = ['www.cookcountyhhs.org']
