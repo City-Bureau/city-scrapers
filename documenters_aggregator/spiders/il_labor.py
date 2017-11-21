@@ -6,7 +6,6 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 
 from datetime import datetime
 from pytz import timezone
-from slugify import slugify
 
 from documenters_aggregator.spider import Spider
 
@@ -39,30 +38,24 @@ class Il_laborSpider(Spider):
             If the date/time info can't be parsed, assume that it is a `no meeting`
             notice.
             """
-            start_datetime = self._parse_start(item)
-            if start_datetime is None:
+            start_time = self._parse_start(item)
+            if start_time is None:
                 continue
             name = self._parse_name(item)
-            yield {
+            data = {
                 '_type': 'event',
-                'id': self._generate_id(start_datetime, name),
                 'name': name,
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': self._format_date(start_datetime),
+                'start_time': start_time.isoformat() if start_time else None,
                 'end_time': None,
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
-
-    def _generate_id(self, start_time, name):
-        """
-        We use the start time to generate an ID since there is no publically
-        exposed meeting ID.
-        """
-        return slugify(start_time.strftime('%Y-%m-%d-') + name)
+            data['id'] = self._generate_id(item, data, start_time)
+            yield data
 
     def _parse_classification(self, item):
         """
@@ -129,18 +122,10 @@ class Il_laborSpider(Spider):
         time_string = item.css('strong:nth-of-type(2)::text').extract_first().replace('.', '')
         try:
             naive = datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
+            tz = timezone('America/Chicago')
+            return tz.localize(naive)
         except ValueError:
             return None
-
-        return naive
-
-    def _format_date(self, time):
-        """
-        Format datetime as timezone-aware,
-        ISO-formatted string.
-        """
-        tz = timezone('America/Chicago')
-        return tz.localize(time).isoformat()
 
     def _parse_sources(self, response):
         """

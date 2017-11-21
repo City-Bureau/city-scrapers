@@ -27,25 +27,21 @@ class Cook_electoralSpider(Spider):
         row_names = response.xpath('//tr/@class').re(r'row\d+')
         for name in row_names:
             item = response.css('tr[class="{}"]'.format(name))
-            yield {
+            start_time = self._parse_start(item)
+            data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item, response),
-                'classification': self._parse_classification(item),  # not implemented
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),  # not implemented
+                'classification': self._parse_classification(item),
+                'start_time': start_time.isoformat() if start_time else None,
+                'end_time': None,
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-        """
-        return item.css('::attr(class)').extract_first()
+            data['id'] = self._generate_id(item, data, start_time)
+            yield data
 
     def _parse_classification(self, item):
         """
@@ -109,12 +105,6 @@ class Cook_electoralSpider(Spider):
         start_string = ''.join(item.css('td > div::text').extract_first().strip().split())
         return self._make_date(start_string)
 
-    def _parse_end(self, item):
-        """
-        Parse end date and time.
-        """
-        return None
-
     def _make_date(self, datestring):
         """
         Combine year, month, day with variable time and export as timezone-aware,
@@ -126,7 +116,7 @@ class Cook_electoralSpider(Spider):
             return None
 
         tz = timezone('America/Chicago')
-        return tz.localize(naive).isoformat()
+        return tz.localize(naive)
 
     def _parse_sources(self, response):
         """

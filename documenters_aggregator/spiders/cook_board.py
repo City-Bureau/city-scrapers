@@ -38,27 +38,21 @@ class Cook_boardSpider(Spider):
 
     def _parse_events(self, events):
         for item, _ in events:
+            start_time = self._parse_start(item)
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
+                'start_time': start_time.isoformat(),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item)
             }
             data['status'] = self._parse_status(item, data['start_time'])
+            data['id'] = self._generate_id(item, data, start_time)
             yield data
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-        """
-        new_id = item['Name']['label'] + item['Meeting Date']
-        return ''.join(ch for ch in new_id if ch.isalnum())
 
     def _parse_classification(self, item):
         """
@@ -124,7 +118,7 @@ class Cook_boardSpider(Spider):
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
             tz = timezone('America/Chicago')
-            return tz.localize(naive).isoformat()
+            return tz.localize(naive)
         return None
 
     def _parse_end(self, item):

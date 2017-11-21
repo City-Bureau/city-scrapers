@@ -29,7 +29,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'row1'
+    assert parsed_items[0]['id'] == 'cook_electoral/201708281400/x/cook_county_electoral_board_case_contest_referendum_objector_esther_carrera_candidate_william_christian_non'
 
 
 def test_all_day():

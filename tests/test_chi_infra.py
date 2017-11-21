@@ -24,7 +24,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == '2017-10-11'
+    assert parsed_items[0]['id'] == 'chi_infra/201710110000/x/board_meeting'
 
 
 def test_all_day():
