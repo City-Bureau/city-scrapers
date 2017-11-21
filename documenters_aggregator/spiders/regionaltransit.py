@@ -22,19 +22,20 @@ class RegionaltransitSpider(Spider):
         for item in response.css('#upcoming .row'):
             start_time = self._parse_start(item)
             name = self._parse_name(item)
-            yield {
+            data = {
                 '_type': 'event',
-                'id': self._generate_id(start_time, name),
                 'name': name,
                 'description': description,
                 'classification': self._parse_classification(item),
-                'start_time': start_time,
+                'start_time': start_time.isoformat() if start_time else None,
                 'end_time': None,
                 'all_day': False,
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
+            data['id'] = self._generate_id(item, data, start_time)
+            yield data
 
     def parse(self, response):
         """
@@ -53,16 +54,6 @@ class RegionaltransitSpider(Spider):
         request.meta['dont_obey_robotstxt'] = True
 
         yield request
-
-    def _generate_id(self, start_time, name):
-        """
-        We use the start time to generate an ID since there is no publically
-        exposed meeting ID.
-        """
-
-        date = start_time.split('T')[0]
-        dashified = re.sub(r'[^a-z]+', '-', name.lower())
-        return '{0}-{1}'.format(date, dashified)
 
     def _parse_classification(self, item):
         """
@@ -103,8 +94,7 @@ class RegionaltransitSpider(Spider):
         m = re.search('(\d{4})-(\d{1,2})-(\d{1,2})', title)
         tz = timezone('America/Chicago')
         naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
-        dt = tz.localize(naive_dt)
-        return dt.isoformat()
+        return tz.localize(naive_dt)
 
     def _parse_sources(self, response):
         """

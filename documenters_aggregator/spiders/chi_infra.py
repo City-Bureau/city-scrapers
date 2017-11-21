@@ -30,31 +30,21 @@ class Chi_infraSpider(Spider):
         self.year = int(year_match.group(1))
 
         for item in response.css('div.entry')[1].css('div.entry p')[1:]:
-            yield {
+            start_time = self._parse_start(item)
+            data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': 'Board Meeting',
                 'description': None,
                 'classification': 'Board Meeting',
-                'start_time': self._parse_start(item),
+                'start_time': start_time.isoformat(),
                 'end_time': None,
                 'all_day': False,
                 'status': 'tentative',
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
-
-    def _parse_id(self, item):
-        """
-        Returns date string for unique ID
-        """
-        extracted = item.extract()
-        match = re.search(r'([a-zA-Z]*),\s{1}([a-zA-Z]+)\s([0-9]{1,2})', extracted)
-
-        start_date_obj = dt.datetime.strptime(match.group(0), "%A, %B %d")
-        start_date = start_date_obj.replace(year=self.year)
-        id_date = start_date.date().isoformat()
-        return id_date
+            data['id'] = self._generate_id(item, data, start_time)
+            yield data
 
     def _parse_start(self, item):
         """
@@ -66,7 +56,7 @@ class Chi_infraSpider(Spider):
 
         start_date_obj = dt.datetime.strptime(date_string, "%A, %B %d %Y")
         tz = pytz.timezone('America/Chicago')
-        return tz.localize(start_date_obj).isoformat()
+        return tz.localize(start_date_obj)
 
     def _parse_sources(self, response):
         """

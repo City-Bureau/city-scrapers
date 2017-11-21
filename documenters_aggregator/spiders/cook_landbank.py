@@ -95,25 +95,26 @@ class Cook_landbankSpider(Spider):
         )
 
     def parse(self, response):
-        # import pdb; pdb.set_trace()
         data = json.loads(response.text)
         item = scrapy.Selector(text=data['content'], type="html")
 
         if not item.css('div.eventon_list_event p.no_events'):
-            self.logger.info('Event scraped from ' + self._parse_start(item))
-            yield {
+            start_time = self._parse_start(item)
+            data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
+                'start_time': start_time.isoformat() if start_time else None,
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item)
             }
+            data['id'] = self._generate_id(item, data, start_time)
+            yield data
         else:
             yield
 
@@ -198,7 +199,7 @@ class Cook_landbankSpider(Spider):
         start_time = item.css('em.evo_time span[class=\'start\']::text').extract_first()
         start_date_time = dt.datetime.strptime(start_date + ' ' + start_time, '%Y-%m-%d %I:%M %p')
         tz = timezone('America/Chicago')
-        return tz.localize(start_date_time).isoformat()
+        return tz.localize(start_date_time)
 
     def _parse_end(self, item):
         """

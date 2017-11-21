@@ -25,7 +25,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == '2017-01-18-board-of-health-meeting'
+    assert parsed_items[0]['id'] == 'chi_pubhealth/201701180900/x/board_of_health_meeting'
 
 
 @pytest.mark.parametrize('item', parsed_items)

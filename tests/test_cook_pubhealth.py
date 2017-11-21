@@ -42,7 +42,7 @@ def test_end_time():
 
 
 def test_id():
-    assert item['id'] == '321'
+    assert item['id'] == 'cook_pubhealth/201709081000/321/fresh_food_market_robbins_health_center'
 
 
 def test_classification():
