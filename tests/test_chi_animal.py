@@ -1,4 +1,3 @@
-from datetime import date
 from tests.utils import file_response
 from documenters_aggregator.spiders.chi_animal import Chi_animalSpider
 
@@ -17,4 +16,4 @@ def test_name():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == date(2017, 9, 21)
+    assert parsed_items[0]['start_time'] == '2017-09-21T00:00:00-05:00'

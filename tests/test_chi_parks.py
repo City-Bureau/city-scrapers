@@ -35,10 +35,10 @@ def test_start_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'BoardofCommissioners12132017'
-    assert parsed_items[1]['id'] == 'PublicHearing1262017'
-    assert parsed_items[3]['id'] == 'SpecialMeeting10202017'
-    assert parsed_items[6]['id'] == 'BudgetForum9192017'
+    assert parsed_items[0]['id'] == 'chi_parks/201712131530/x/board_of_commissioners'
+    assert parsed_items[1]['id'] == 'chi_parks/201712061530/x/public_hearing'
+    assert parsed_items[3]['id'] == 'chi_parks/201710201330/x/special_meeting'
+    assert parsed_items[6]['id'] == 'chi_parks/201709191800/x/budget_forum'
 
 
 @pytest.mark.parametrize('item', parsed_items)
