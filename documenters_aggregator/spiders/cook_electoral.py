@@ -3,13 +3,14 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 
 from datetime import datetime
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Cook_electoralSpider(scrapy.Spider):
+
+class Cook_electoralSpider(Spider):
     name = 'cook_electoral'
     long_name = 'Cook County Electoral Board'
     allowed_domains = ['cookcountyclerk.com']

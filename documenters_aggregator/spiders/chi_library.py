@@ -3,16 +3,16 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
-
 import re
 import urllib.request
 import json
 from datetime import datetime
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Chi_librarySpider(scrapy.Spider):
+
+class Chi_librarySpider(Spider):
     name = 'chi_library'
     long_name = 'Chicago Public Library'
     allowed_domains = ['https://www.chipublib.org/']

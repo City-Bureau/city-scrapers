@@ -3,13 +3,14 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 import json
 import pytz
 from datetime import datetime
 
+from documenters_aggregator.spider import Spider
 
-class Chi_policeSpider(scrapy.Spider):
+
+class Chi_policeSpider(Spider):
     name = 'chi_police'
     long_name = 'Chicago Police Department'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']

@@ -5,10 +5,12 @@ import re
 from datetime import datetime
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
+
 
 # The RTA's Board and other meetings are are displayed on their
 # website via an iframe from a different domain.
-class RegionaltransitSpider(scrapy.Spider):
+class RegionaltransitSpider(Spider):
     name = 'regionaltransit'
     long_name = 'Regional Transportation Authority'
     allowed_domains = ['www.rtachicago.org', 'rtachicago.granicus.com']

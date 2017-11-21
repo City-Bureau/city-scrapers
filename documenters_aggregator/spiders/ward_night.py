@@ -111,6 +111,7 @@ class Row(IntEnum):
 
 class WardNightSpider(Spider):
     name = 'ward_night'
+    long_name = 'Ward Nights'
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = [SPREADSHEET_URL + '/values/A3:N100?key=' + GOOGLE_API_KEY]
 

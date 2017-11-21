@@ -3,14 +3,15 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 
 from datetime import datetime
 from pytz import timezone
 from slugify import slugify
 
+from documenters_aggregator.spider import Spider
 
-class Il_laborSpider(scrapy.Spider):
+
+class Il_laborSpider(Spider):
     name = 'il_labor'
     long_name = 'Illinois Labor Relations Board'
     allowed_domains = ['www.illinois.gov']
