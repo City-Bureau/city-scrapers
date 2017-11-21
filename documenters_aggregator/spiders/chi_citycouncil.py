@@ -12,9 +12,9 @@ from dateutil.parser import parse
 from documenters_aggregator.spider import Spider
 
 
-class CityclerkSpider(Spider):
-    name = 'cityclerk'
-    long_name = "Chicago City Clerk"
+class Chi_citycouncilSpider(Spider):
+    name = 'chi_citycouncil'
+    long_name = "Chicago City Council"
     ocd_url = 'https://ocd.datamade.us/'
     ocd_tp = 'events/?'
     ocd_d = 'start_date__gt=' + str(dt.date.today()) + '&'
