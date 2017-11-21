@@ -163,9 +163,8 @@ class WardNightSpider(Spider):
             assert len(row[Row.START_TIME]) > 0, 'start time must have a value'
             assert len(row[Row.END_TIME]) > 0, 'end time must have a value'
         except:
-            # TODO: replace this with the correct logging
-            print('bad data!')
-            print(row)
+            self.logger.error('event has invalid start or end time:')
+            self.logger.error(row)
             return []
 
         def build_event(day):
