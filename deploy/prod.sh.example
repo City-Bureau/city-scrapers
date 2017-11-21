@@ -32,3 +32,6 @@ export AWS_DEFAULT_REGION='us-east-1'
 ## by this virtual machine
 export AWS_ACCESS_KEY_ID=''
 export AWS_SECRET_ACCESS_KEY=''
+
+## Google - Fetch the Ward Night data from a Google Sheet
+export DOCUMENTERS_AGGREGATOR_GOOGLE_API_KEY=''
