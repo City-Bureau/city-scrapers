@@ -7,9 +7,12 @@ import scrapy
 import requests
 import json
 import datetime as dt
+from dateutil.parser import parse
+
+from documenters_aggregator.spider import Spider
 
 
-class CityclerkSpider(scrapy.Spider):
+class CityclerkSpider(Spider):
     name = 'cityclerk'
     long_name = "Chicago City Clerk"
     ocd_url = 'https://ocd.datamade.us/'
@@ -35,7 +38,7 @@ class CityclerkSpider(scrapy.Spider):
         for item in data['results']:
             parsed_item = self._parse_item(item)
             parsed_item.update({'location': self._parse_location(item), 'sources': self._parse_sources(item)})
-            yield item
+            yield parsed_item
 
         # self._parse_next(response) yields more (responses to parse
         max_page = data['meta']['max_page']
@@ -44,17 +47,34 @@ class CityclerkSpider(scrapy.Spider):
             yield self._parse_next(response, page)
 
     def _parse_item(self, item):
-        return {
+
+        if len(item.get('start_date', '')) > 0:
+            start_time = parse(item['start_date'])
+            start_time_str = start_time.isoformat()
+        else:
+            start_time = None
+            start_time_str = None
+
+        if len(item.get('end_date', '')) > 0:
+            end_time = parse(item['end_date'])
+            end_time_str = end_time.isoformat()
+        else:
+            end_time_str = None
+
+        data = {
             '_type': 'event',
             'id': item['id'],
             'name': item['name'],
             'description': item['description'],
-            'classification': item['classification'],
-            'start_time': item['start_date'],
-            'end_time': item['end_date'],
+            'classification': None,  # this is 'event' in the datamade feed
+            'start_time': start_time_str,
+            'end_time': end_time_str,
             'all_day': item['all_day'],
             'status': item['status']
         }
+
+        data['id'] = self._generate_id(item, data, start_time)
+        return data
 
     def _parse_next(self, response, pgnum):
         """
@@ -68,7 +88,7 @@ class CityclerkSpider(scrapy.Spider):
         """
         Grab location from the event detail page.
         """
-        pgurl = self.ocd_url + item['id']
+        pgurl = self.ocd_url + item['id'] + '/'  # Avoid redirect just to add trailing slash
         e_pg = requests.get(pgurl)
         if e_pg.status_code != 200:
             loc = {'url': '',
@@ -84,7 +104,7 @@ class CityclerkSpider(scrapy.Spider):
         """
         Grab sources from event detail page.
         """
-        pgurl = self.ocd_url + item['id']
+        pgurl = self.ocd_url + item['id'] + '/'  # Avoid redirect just to add trailing slash
         e_pg = requests.get(pgurl)
         if e_pg.status_code != 200:
             sourcelist = [{'note': 'ocd-api', 'url': pgurl}]

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import scrapy
-
 from datetime import datetime
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Chi_schoolsSpider(scrapy.Spider):
-    name = 'cpsboe'
+
+class Chi_schoolsSpider(Spider):
+    name = 'chi_schools'
     long_name = 'Chicago Public Schools Board of Education'
     allowed_domains = ['www.cpsboe.org']
     start_urls = ['http://www.cpsboe.org/meetings/planning-calendar']
@@ -16,26 +16,20 @@ class Chi_schoolsSpider(scrapy.Spider):
         for item in response.css('#content-primary tr')[1:]:
             start_time = self._parse_start_time(item)
             if start_time is not None:
-                yield {
+                start_time, start_time_str = self._parse_start_time(item)
+                data = {
                     '_type': 'event',
-                    'id': self._parse_id(item),
-                    'name': 'Chicago Board of Education Monthly Meeting',
+                    'name': 'Monthly Board Meeting',
                     'description': self._parse_description(item),
                     'classification': self._parse_classification(item),
-                    'start_time': self._parse_start_time(item),
+                    'start_time': start_time_str,
                     'all_day': self._parse_all_day(item),
                     'status': self._parse_status(item),
                     'location': self._parse_location(item)
-
                 }
+                data['id'] = self._generate_id(item, data, start_time)
 
-    def _parse_id(self, item):
-        """
-        Generate an ID by converting the date and time to an integer.
-        i.e. 'July 27, 2016 at 10:30am' becomes '201707261030'
-        """
-        text_list = self._remove_line_breaks(item.css('::text').extract())
-        return text_list[0].replace(' ', '')
+                yield data
 
     def _remove_line_breaks(self, collection):
         return [x.strip() for x in collection if x.strip() != '']
@@ -62,7 +56,8 @@ class Chi_schoolsSpider(scrapy.Spider):
         try:
             date = datetime.strptime(date_string, '%B %d %Y %I %M %p')
             tz = timezone('America/Chicago')
-            return tz.localize(date).isoformat()
+            date_tz = tz.localize(date)
+            return (date_tz, date_tz.isoformat())
         except:
             return None
 
