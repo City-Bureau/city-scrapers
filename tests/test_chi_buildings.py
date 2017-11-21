@@ -1,6 +1,6 @@
 import pytest
-from datetime import datetime
 
+from datetime import datetime
 from tests.utils import file_response
 from documenters_aggregator.spiders.chi_buildings import Chi_buildingsSpider
 
