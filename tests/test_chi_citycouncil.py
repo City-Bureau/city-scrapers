@@ -1,11 +1,11 @@
 import json
-from documenters_aggregator.spiders.cityclerk import CityclerkSpider
+from documenters_aggregator.spiders.chi_citycouncil import Chi_citycouncilSpider
 
 test_response = []
-with open('tests/files/cityclerk.json') as f:
+with open('tests/files/chi_citycouncil.json') as f:
     for line in f:
         test_response.append(json.loads(line))
-spider = CityclerkSpider()
+spider = Chi_citycouncilSpider()
 parsed_items = [spider._parse_item(item) for item in test_response[0]]
 
 
@@ -26,7 +26,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'cityclerk/201710161500/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
+    assert parsed_items[0]['id'] == 'chi_citycouncil/201710161500/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
 
 
 def test_all_day():

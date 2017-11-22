@@ -12,9 +12,9 @@ from dateutil.parser import parse
 from documenters_aggregator.spider import Spider
 
 
-class CityclerkSpider(Spider):
-    name = 'cityclerk'
-    long_name = "Chicago City Clerk"
+class Chi_citycouncilSpider(Spider):
+    name = 'chi_citycouncil'
+    long_name = "Chicago City Council"
     ocd_url = 'https://ocd.datamade.us/'
     ocd_tp = 'events/?'
     ocd_d = 'start_date__gt=' + str(dt.date.today()) + '&'
@@ -37,7 +37,6 @@ class CityclerkSpider(Spider):
 
         for item in data['results']:
             parsed_item = self._parse_item(item)
-            parsed_item.update({'location': self._parse_location(item), 'sources': self._parse_sources(item)})
             yield parsed_item
 
         # self._parse_next(response) yields more (responses to parse
@@ -72,8 +71,10 @@ class CityclerkSpider(Spider):
             'all_day': item['all_day'],
             'status': item['status']
         }
-
-        data['id'] = self._generate_id(item, data, start_time)
+        ocd_response = self._make_ocd_request(data['id'])
+        data.update({'location': self._parse_location(ocd_response),
+                     'sources': self._parse_sources(ocd_response, data['id'])})
+        data['id'] = self._generate_id(item, data, start_time)  # must happen AFTER previous line
         return data
 
     def _parse_next(self, response, pgnum):
@@ -84,33 +85,37 @@ class CityclerkSpider(Spider):
         next_url = self.start_urls[0] + '&page=' + pgnum
         return scrapy.Request(next_url, callback=self.parse, dont_filter=True)
 
-    def _parse_location(self, item):
+    def _make_ocd_request(self, id):
+        """
+        Makes http request to OCD
+        """
+        pgurl = self.ocd_url + id + '/'  # Avoid redirect just to add trailing slash
+        e_pg = requests.get(pgurl)
+        if e_pg.status_code == 200:
+            return e_pg.json()
+        else:
+            return None
+
+    def _parse_location(self, ocd_response):
         """
         Grab location from the event detail page.
         """
-        pgurl = self.ocd_url + item['id'] + '/'  # Avoid redirect just to add trailing slash
-        e_pg = requests.get(pgurl)
-        if e_pg.status_code != 200:
-            loc = {'url': '',
-                   'name': '',
-                   'coordinates': None,
-                   }
+        if ocd_response is None:
+            return {'url': None,
+                    'name': None,
+                    'coordinates': {'longitude': None, 'latitude': None}}
         else:
-            d_pg = e_pg.json()
-            loc = d_pg['location']
-        return loc
+            return ocd_response['location']
 
-    def _parse_sources(self, item):
+    def _parse_sources(self, ocd_response, id):
         """
         Grab sources from event detail page.
         """
-        pgurl = self.ocd_url + item['id'] + '/'  # Avoid redirect just to add trailing slash
-        e_pg = requests.get(pgurl)
-        if e_pg.status_code != 200:
-            sourcelist = [{'note': 'ocd-api', 'url': pgurl}]
+        pgurl = self.ocd_url + id + '/'
+        if ocd_response is None:
+            return [{'note': 'ocd-api', 'url': pgurl}]
         else:
-            d_pg = e_pg.json()
-            sourcelist = d_pg['sources']
+            sourcelist = ocd_response['sources']
             sourcelist.append({'note': 'ocd-api', 'url': pgurl})
             sourcelist[0], sourcelist[2] = sourcelist[2], sourcelist[0]
-        return sourcelist
+            return sourcelist
