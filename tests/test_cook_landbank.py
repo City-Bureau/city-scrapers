@@ -25,7 +25,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == '3381'
+    assert parsed_items[0]['id'] == 'cook_landbank/201709131000/3381/cclba_finance_committee_meeting'
 
 
 def test_all_day():

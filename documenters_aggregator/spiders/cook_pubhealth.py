@@ -10,8 +10,10 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import time as Time
 
+from documenters_aggregator.spider import Spider
 
-class Cook_pubhealthSpider(scrapy.Spider):
+
+class Cook_pubhealthSpider(Spider):
     name = 'cook_pubhealth'
     long_name = 'Cook County Department of Public Health'
     allowed_domains = ['www.cookcountypublichealth.org']
@@ -31,19 +33,22 @@ class Cook_pubhealthSpider(scrapy.Spider):
                                  dont_filter=True)  # code doesn't work without this. idk why
 
     def parse_event_page(self, response):
-        return {
+        times = self._parse_date_time(response)
+        data = {
             '_type': 'event',
             'id': self._parse_id(response),
             'name': self._parse_name(response),
             'description': self._parse_description(response),
             'classification': self._parse_classification(response),
-            'start_time': self._parse_date_time(response)['start'],
-            'end_time': self._parse_date_time(response)['end'],
+            'start_time': times['start'].isoformat() if times['start'] else None,
+            'end_time': times['end'].isoformat() if times['end'] else None,
             'all_day': self._parse_all_day(response),
             'status': self._parse_status(response),
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
+        data['id'] = self._generate_id(response, data, times['start'])
+        return data
 
     def _parse_id(self, response):
         """
@@ -206,7 +211,7 @@ class Cook_pubhealthSpider(scrapy.Spider):
             return None
 
         tz = timezone('America/Chicago')
-        return tz.localize(naive).isoformat()
+        return tz.localize(naive)
 
     def _parse_sources(self, response):
         """

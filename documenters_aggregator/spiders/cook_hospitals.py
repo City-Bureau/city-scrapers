@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-import scrapy
 
 from datetime import datetime
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Cook_hospitalsSpider(scrapy.Spider):
+
+class Cook_hospitalsSpider(Spider):
     name = 'cook_hospitals'
     long_name = 'Cook County Health and Hospitals System'
     allowed_domains = ['www.cookcountyhhs.org']
@@ -29,22 +30,18 @@ class Cook_hospitalsSpider(scrapy.Spider):
             aria_control = item.xpath("@aria-controls").extract_first()
             item_uncollapsed = item.xpath("//div[@id='{}']//tbody//td[@data-title='Meeting Information']".format(aria_control))
             for subitem in item_uncollapsed:
+                start_time = self._parse_start(subitem)
+
                 new_item = {
                     'description': self._parse_description(subitem),
-                    'classification': self._parse_classification(subitem),  # not implemented
-                    'start_time': self._parse_start(subitem),
+                    'classification': self._parse_classification(subitem),
+                    'start_time': start_time.isoformat() if start_time else None,
                     'location': self._parse_location(subitem)
                 }
                 new_item.update(data)
                 new_item['status'] = self._parse_status(subitem, new_item['start_time'])
-                new_item['id'] = self._parse_id(new_item['name'], new_item['start_time'])
+                new_item['id'] = self._generate_id(subitem, data, start_time)
                 yield new_item
-
-    def _parse_id(self, name, start_time):
-        """
-        Make id from name and start_time
-        """
-        return ''.join('{0}{1}'.format(name, start_time).split())
 
     def _parse_classification(self, item):
         """
@@ -130,7 +127,7 @@ class Cook_hospitalsSpider(scrapy.Spider):
         naive = datetime.strptime(time_string, '%Y %B %d %I:%M%p')
 
         tz = timezone('America/Chicago')
-        return tz.localize(naive).isoformat()
+        return tz.localize(naive)
 
     def _parse_sources(self, response):
         """

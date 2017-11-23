@@ -3,13 +3,14 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 import json
 import pytz
 from datetime import datetime
 
+from documenters_aggregator.spider import Spider
 
-class Chi_policeSpider(scrapy.Spider):
+
+class Chi_policeSpider(Spider):
     name = 'chi_police'
     long_name = 'Chicago Police Department'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
@@ -30,25 +31,29 @@ class Chi_policeSpider(scrapy.Spider):
         data = json.loads(response.body_as_unicode())
 
         for item in data:
-            yield {
+            start_time = self._parse_start(item)
+            end_time = self._parse_end(item)
+            data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': 'CAPS community event',
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
+                'start_time': start_time.isoformat() if start_time else None,
+                'end_time': end_time.isoformat() if end_time else None,
                 'all_day': False,
                 'status': 'confirmed',
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item)
             }
+            data['id'] = self._generate_id(item, data, start_time)
+            yield data
 
     def _parse_id(self, item):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        return item['calendarId']
+        return str(item['calendarId'])
 
     def _parse_classification(self, item):
         """
@@ -102,9 +107,8 @@ class Chi_policeSpider(scrapy.Spider):
         return item['eventDetails']
 
     def _format_time(self, time):
-        tz = pytz.timezone('America/Chicago')  # 2016-01-05T14:00:00
-        dt = tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
-        return dt.isoformat()
+        tz = pytz.timezone('America/Chicago')
+        return tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
 
     def _parse_start(self, item):
         """

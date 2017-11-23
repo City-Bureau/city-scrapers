@@ -13,7 +13,7 @@ class Spider(scrapy.Spider):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
-        name = self.inflector.underscore(data['name'])
+        name = self.inflector.underscore(data['name']).strip('_')
         id = data.get('id', 'x').replace('/', '-')
         parts = [self.name, datetime.strftime(start_time, '%Y%m%d%H%M'), id, name]
         return '/'.join(parts)
