@@ -8,8 +8,10 @@ import scrapy
 from datetime import datetime
 from pytz import timezone
 
+from documenters_aggregator.spider import Spider
 
-class Cook_countySpider(scrapy.Spider):
+
+class Cook_countySpider(Spider):
     name = 'cook_county'
     long_name = 'Cook County Government'
     allowed_domains = ['www.cookcountyil.gov']

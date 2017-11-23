@@ -23,7 +23,7 @@ def test_start_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'MeetingsoftheBoardofDirectors2017-01-27T09:00:00-06:00'
+    assert parsed_items[0]['id'] == 'cook_hospitals/201701270900/x/meetings_of_the_board_of_directors'
 
 
 def test_status():

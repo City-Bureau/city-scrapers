@@ -24,7 +24,7 @@ def test_end_time():
 
 
 def test_id():
-    assert isinstance(parsed_items[0]['id'], int)
+    assert parsed_items[0]['id'] == 'chi_police/201712281830/25/2514_beat_meeting'
 
 
 def test_all_day():

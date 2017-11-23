@@ -29,7 +29,7 @@ def test_end_time(item):
 
 
 def test_id():
-    assert parsed_items[1]['id'] == '2017-09-12-state-panel-meeting'
+    assert parsed_items[1]['id'] == 'il_labor/201709121300/x/state_panel_meeting'
 
 
 @pytest.mark.parametrize('item', parsed_items)

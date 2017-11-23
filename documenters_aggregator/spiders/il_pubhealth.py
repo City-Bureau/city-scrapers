@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from dateutil.parser import parse as dateparse
+
+from documenters_aggregator.spider import Spider
 
 
-class Il_pubhealthSpider(scrapy.Spider):
+class Il_pubhealthSpider(Spider):
     name = 'il_pubhealth'
     long_name = 'Illinois Department of Public Health'
     allowed_domains = ['www.dph.illinois.gov']
@@ -15,20 +18,22 @@ class Il_pubhealthSpider(scrapy.Spider):
         event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
         """
         for item in response.css('.eventspage'):
-            yield {
+            start_time = self._parse_start(item)
+            data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
+                'start_time': start_time.isoformat() if start_time else None,
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
             }
+            data['id'] = self._generate_id(item, data, start_time)
+            yield data
 
-        # self._parse_next(response) yields more responses to parse if necessary.
         yield self._parse_next(response)
 
     def _parse_next(self, response):
@@ -94,10 +99,10 @@ class Il_pubhealthSpider(scrapy.Spider):
         """
         Combine start time with year, month, and day.
         """
-        try:
-            return item.css('div span.date-display-start::attr(content)').extract()[0]
-        except IndexError:
-            return item.css('div span.date-display-single::attr(content)').extract()[0]
+        start = item.css('div span.date-display-start::attr(content)').extract_first()
+        if start == '':
+            start = item.css('div span.date-display-single::attr(content)').extract_first()
+        return dateparse(start)
 
     def _parse_end(self, item):
         """

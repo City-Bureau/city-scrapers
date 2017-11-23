@@ -33,7 +33,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[5]['id'] == '16556'
+    assert parsed_items[5]['id'] == 'il_pubhealth/201708100830/16556/levels_of_care_work_group_hospital_designations_redesignations_change_of_networks'
 
 
 @pytest.mark.parametrize('item', parsed_items)

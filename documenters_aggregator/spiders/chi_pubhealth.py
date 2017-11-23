@@ -3,15 +3,16 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 
 import re
 from datetime import datetime
 from pytz import timezone
 from time import strptime
 
+from documenters_aggregator.spider import Spider
 
-class Chi_pubhealthSpider(scrapy.Spider):
+
+class Chi_pubhealthSpider(Spider):
 
     name = 'chi_pubhealth'
     long_name = 'Chicago Department of Public Health'
@@ -47,24 +48,25 @@ class Chi_pubhealthSpider(scrapy.Spider):
                 tz = timezone('America/Chicago')
 
                 naive_start_time = datetime(year, month, day, 9)
-                start_time = tz.localize(naive_start_time).isoformat()
+                start_time = tz.localize(naive_start_time)
 
                 naive_end_time = datetime(year, month, day, 10, 30)
-                end_time = tz.localize(naive_end_time).isoformat()
+                end_time = tz.localize(naive_end_time)
 
-                yield {
+                data = {
                     '_type': 'event',
-                    'id': self._generate_id(start_time, name),
                     'name': name,
                     'description': description,
                     'classification': self._parse_classification(item),
-                    'start_time': start_time,
-                    'end_time': end_time,
+                    'start_time': start_time.isoformat(),
+                    'end_time': end_time.isoformat(),
                     'all_day': False,
                     'status': self._parse_status(item),
                     'location': self._parse_location(item),
                     'sources': self._parse_sources(response)
                 }
+                data['id'] = self._generate_id(item, data, start_time)
+                yield data
 
     def _parse_classification(self, item):
         """
@@ -103,16 +105,6 @@ class Chi_pubhealthSpider(scrapy.Spider):
         Parse or generate all-day status. Defaults to false.
         """
         return False
-
-    def _generate_id(self, start_time, name):
-        """
-        We use the start time to generate an ID since there is no publically
-        exposed meeting ID.
-        """
-
-        date = start_time.split('T')[0]
-        dashified = re.sub(r'[^a-z]+', '-', name.lower())
-        return '{0}-{1}'.format(date, dashified)
 
     def _parse_sources(self, response):
         """
