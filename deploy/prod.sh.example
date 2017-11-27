@@ -17,6 +17,7 @@ export AIRTABLE_API_KEY='<YOURAIRTABLE_API_KEY>'
 ## Airtable database/table identifiers (click your database at https://airtable.com/api)
 export DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY='<YOUR BASE KEY>'
 export DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE='Events'
+export DOCUMENTERS_AGGREGATOR_AIRTABLE_GEOCODE_TABLE='GeocodeDatabase'
 
 ## Mapzen
 export MAPZEN_API_KEY=''
