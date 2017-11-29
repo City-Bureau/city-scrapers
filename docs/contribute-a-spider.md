@@ -1,5 +1,9 @@
 # Contributing a spider
 
+## Familiarize youtself with how we work!
+
+*Please read the project's [CONTRIBUTING.md](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) file to learn about how we use GitHub to manage the project.*
+
 ## Find a site to scrape and create an issue
 
 First, find an unclaimed event source in the [spreadsheet of event sources](https://docs.google.com/spreadsheets/d/1L1lbWj89wt8b2DIZhjxERJ5FCAWPDWd0nMibtc01sZk/edit#gid=0). Any scraper with a status of "needs evaluation" is fair game. If someone has already claimed the scraper, talk with them about joining their efforts.
