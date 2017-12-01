@@ -55,7 +55,7 @@ class ValidationPipeline(object):
             is_valid = True
             is_required = schema[field]['required']
             if not is_required and (item.get(field, None) in self.NULL_VALUES):
-                validation_record[new_key] = True
+                is_valid = True
             else:
                 if is_required:
                     is_valid = is_valid and (field in item)
@@ -70,5 +70,5 @@ class ValidationPipeline(object):
                     match = re.match(pattern, item.get(field, ''))
                     if not match:
                         is_valid = False
-                validation_record[new_key] = is_valid
+            validation_record[new_key] = str(is_valid)  # airtable ignores boolean False's
         return validation_record
