@@ -28,10 +28,7 @@ class GeocoderPipeline(object):
         Performs geocoding of an event if the location is not
         already in the geocode_database.
         """
-        location = item['location'].get('address', '')
-        if not location:
-            location = item['location'].get('name', '')
-        location = location.strip()  # attempt to clean up location, may need to do more
+        location = _get_location(item)
 
         time.sleep(randint(0, 3))  # to avoid rate limiting?
         fetched_item = self._geocodeDB_fetch(location)
@@ -40,8 +37,10 @@ class GeocoderPipeline(object):
                 'longitude': str(fetched_item['longitude']),
                 'latitude': str(fetched_item['latitude'])
             }
-            item['geocode'] = str(fetched_item['geocode'])
-            item ['community_area'] = str(fetched_item['community_area'])
+            item.update({'geocode': str(fetched_item['geocode']),
+                'community_area': fetched_item['community_area'],
+                'name': fetched_item['name'],
+                'address': fetched_item['address']})
             return item
 
         try:
@@ -51,22 +50,39 @@ class GeocoderPipeline(object):
                 'longitude': str(coordinates[0]),
                 'latitude': str(coordinates[1])
             }
-            item['geocode'] = json.dumps(geocode, indent=4, sort_keys=True)
-            item['community_area'] = geocode['features'][0]['properties']['neighbourhood']
+            item.update({'geocode': json.dumps(geocode, indent=4, sort_keys=True),
+                'community_area': geocode['features'][0]['properties']['neighbourhood'],
+                'address': geocode['features'][0]['properties']['label'],
+                'name': geocode['geocoding']['query']['parsed_text'].get('query', '')})
         except ValueError:
             spider.logger.warn('Could not geocode {0}-{1}, skipping.'.format(spider.name, item['id']))
         except Exception:
             spider.logger.exception('Unknown error when geocoding, skipping. Message:')
             spider.logger.error(json.dumps(item, indent=4, sort_keys=True))
         else:
-            write_item = {'location': location,
-                          'longitude': item['location']['coordinates']['longitude'],
-                          'latitude': item['location']['coordinates']['latitude'],
-                          'geocode': item['geocode'],
-                          'community_area': item['community_area']}
+            WRITE_KEYS = ['location', 'geocode', 'community_area', 'name', 'address']
+            write_item = {k: v for k,v in item.iteritems() if k in WRITE_KEYS}
+            write_item.update({'longitude': item['location']['coordinates']['longitude'],
+                          'latitude': item['location']['coordinates']['latitude']})
             self._geocodeDB_write(spider, write_item)
 
         return item
+
+def _get_location(item):
+    """
+    Create and clean the location string.
+    """
+    name = item['location'].get('name', '').strip()
+    address = item['location'].get('address', '').strip()
+    location = ', '.join(name, address).strip(', ')
+    if not location:
+        return ''
+    if 'city hall' in location.lower():
+        return 'Chicago City Hall'
+    if ('chicago' not in location.lower()) and (' il' not in location.lower()):
+        return '{0}, Chicago, IL'.format(location)
+    else:
+        return location
 
     def _geocodeDB_fetch(self, location):
         """
