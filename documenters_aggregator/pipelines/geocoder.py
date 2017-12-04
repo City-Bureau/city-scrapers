@@ -38,9 +38,10 @@ class GeocoderPipeline(object):
         if fetched_item:
             item['location']['coordinates'] = {
                 'longitude': str(fetched_item['longitude']),
-                'latitude': str(fetched_item['latitude']),
-                'geocode': str(fetched_item['geocode'])
+                'latitude': str(fetched_item['latitude'])
             }
+            item['geocode'] = str(fetched_item['geocode'])
+            item ['community_area'] = str(fetched_item['community_area'])
             return item
 
         try:
@@ -51,6 +52,7 @@ class GeocoderPipeline(object):
                 'latitude': str(coordinates[1])
             }
             item['geocode'] = json.dumps(geocode, indent=4, sort_keys=True)
+            item['community_area'] = geocode['features'][0]['properties']['neighbourhood']
         except ValueError:
             spider.logger.warn('Could not geocode {0}-{1}, skipping.'.format(spider.name, item['id']))
         except Exception:
@@ -60,7 +62,8 @@ class GeocoderPipeline(object):
             write_item = {'location': location,
                           'longitude': item['location']['coordinates']['longitude'],
                           'latitude': item['location']['coordinates']['latitude'],
-                          'geocode': item['geocode']}
+                          'geocode': item['geocode'],
+                          'community_area': item['community_area']}
             self._geocodeDB_write(spider, write_item)
 
         return item
