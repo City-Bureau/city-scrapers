@@ -1,54 +1,54 @@
 # Contributing a spider
 
-## Familiarize youtself with how we work!
+## Familiarize yourself with how we work!
 
-*Please read the project's [CONTRIBUTING.md](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) file to learn about how we use GitHub to manage the project.*
+*Please read the project's [CONTRIBUTING.md](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) file to learn about how we use GitHub to manage the project and our pull request policy.*
 
-## Find a site to scrape and create an issue
+## Spider Set-up:
 
-First, find an unclaimed event source in the [spreadsheet of event sources](https://docs.google.com/spreadsheets/d/1L1lbWj89wt8b2DIZhjxERJ5FCAWPDWd0nMibtc01sZk/edit#gid=0). Any scraper with a status of "needs evaluation" is fair game. If someone has already claimed the scraper, talk with them about joining their efforts.
+### 1. Find a site to scrape and create an issue
 
-Assuming you picked out a new one, create a [new issue](https://github.com/City-Bureau/documenters-aggregator/issues/new) with a title like "SPIDER: [name of agency]". Name of agency should be a fairly full name. "Chicago Housing Authority" is preferred over "CHA" in the issue title.
+First, find an unclaimed event source within the project's [issues](https://github.com/City-Bureau/documenters-aggregator/issues). Any unassigned issue is fair game--assign yourself to pick up the work.
 
 Save and note the issue number.
 
-## Create a new branch
+### 2. Create a new branch
 
 Create a new branch in your fork:
 
 ```
-git checkout -b XXXX-spider-NAMEOFAGENCY
+$ git checkout -b XXXX-spider-NAMEOFAGENCY
 ```
 
-`XXXX` is the zero-padded issue number and `NAMEOFAGENCY` should be something like `cha`. For example, for ticket number 53 entitled "SPIDER: Chicago Housing Authority", create a branch named `0053-spider-cha`.
+`XXXX` is the zero-padded issue number and `NAMEOFAGENCY` should be something like `chi_housing`. For example, for ticket number 53 entitled "SPIDER: Chicago Housing Authority", create a branch named `0053-spider-chi_housing`.
 
-## Create a spider
+### 3. Create a spider
 
 Run the `genspider` task with a spider slug, spider name, and URLs to start scraping. Following the previous example:
 
 ```
-invoke genspider cha "Chicago Housing Authority" http://www.thecha.org
+(documenters-aggregator)$ invoke genspider chi_housing "Chicago Housing Authority" http://www.thecha.org
 ```
 
 You should see some output like:
 
 ```
-Created /Users/eads/Code/documenters-aggregator/documenters_aggregator/spiders/cha.py
-Created /Users/eads/Code/documenters-aggregator/tests/test_cha.py
-Created /Users/eads/Code/documenters-aggregator/tests/files/cha_thecha.html
+Created /Users/eads/Code/documenters-aggregator/documenters_aggregator/spiders/chi_housing.py
+Created /Users/eads/Code/documenters-aggregator/tests/test_chi_housing.py
+Created /Users/eads/Code/documenters-aggregator/tests/files/chi_housing_thecha.html
 ```
 
-## Test crawling
+### 4. Test crawling
 
-You now have a spider named `cha`. To run it (admittedly, not much will happen until you start editing the scraper), run:
+You now have a spider named `chi_housing`. To run it (admittedly, not much will happen until you start editing the scraper), run:
 
 ```
-scrapy crawl cha
+(documenters-aggregator)$ scrapy crawl chi_housing
 ```
 
-First, let's take a quick detour and look at testing.
+If there are no error messages, congratulations! You have a barebones spider.
 
-## Run the automated tests
+### 5. Run the automated tests
 
 We use the [pytest](https://docs.pytest.org/en/latest/) testing framework to
 verify the behavior of the project's code and 
@@ -58,10 +58,10 @@ check that all code is written in the proper style.
 To run these tools, use the `invoke runtests` command:
 
 ```
-invoke runtests
+(documenters-aggregator)$ invoke runtests
 ```
 
-Whoops! The tests fail by default. Here's typical output:
+Whoops! The tests for new spiders fail by default. Here's typical output:
 
 ```
 ====================================== test session starts =======================================
@@ -69,7 +69,7 @@ platform darwin -- Python 3.6.2, pytest-3.1.3, py-1.4.34, pluggy-0.4.0
 rootdir: /Users/eads/projects/documenters-aggregator, inifile:
 collected 59 items
 
-tests/test_cha.py F
+tests/test_chi_housing.py F
 tests/test_idph.py .......................................................
 tests/test_tasks.py ...
 
@@ -81,18 +81,22 @@ ___________________________________________ test_tests _________________________
 >       assert False
 E       assert False
 
-tests/test_cha.py:8: AssertionError
+tests/test_chi_housing.py:8: AssertionError
 -------------------------------------- Captured stdout call --------------------------------------
 Please write some tests for this spider or at least disable this one.
 ============================== 1 failed, 58 passed in 0.95 seconds ==============================
 ```
 
-That's OK. Once you have passing tests, you can make a pull request.
+That's OK.
 
-## Write parse methods in the spider
 
-Open `documenters_aggregator/spiders/cha.py` to work on your spider. A simple structure has been
-created for you to use. Let's look at the basics and discuss advanced uses later.
+## To Build a spider:
+
+## A. Write parse methods in the spider
+
+*If you run into any troubles, feel free to reach out on [slack](https://citybureau.slack.com/) or open a pull request so others can take a look at your code. Pull requests don't need to contain perfect code. See [CONTRIBUTING.md](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md).*
+
+Open `documenters_aggregator/spiders/chi_housing.py` to work on your spider. A simple structure has been created for you to use. Let's look at the basics.
 
 The spider should look something like this:
 
@@ -107,15 +111,16 @@ import scrapy
 from datetime import datetime
 
 
-class ChaSpider(scrapy.Spider):
-    name = 'cha'
+class Chi_housingSpider(scrapy.Spider):
+    name = 'chi_housing'
     allowed_domains = ['thecha.org']
     start_urls = ['http://thecha.org']
+    long_name = 'Chicago Housing Authority'
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
+        `parse` should always `yield` a dict that follows the Event Schema
+        <https://city-bureau.gitbooks.io/documenters-event-aggregator/event-schema.html>.
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
@@ -129,9 +134,10 @@ class ChaSpider(scrapy.Spider):
                 'classification': self._parse_classification(item),
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
+                'timezone': self._parse_timezone(item),
                 'all_day': self._parse_all_day(item),
-                'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(item),
             }
 
         # self._parse_next(response) yields more responses to parse if necessary.
@@ -152,29 +158,29 @@ class ChaSpider(scrapy.Spider):
         """
         return None
 
-    def _parse_classification(self, item):
+    def _parse_name(self, item):
         """
-        Parse or generate classification (e.g. town hall).
+        Parse or generate event name.
         """
-        return 'Not classified'
+        return None
 
     # ...
 ```
 
-The `ChaSpider.parse(...)` method is a standard part of Scrapy and handles returning data in the correct format and any subsequent requests to be made.
+The `Chi_housingSpider.parse(...)` method is a standard part of Scrapy and handles returning data in the correct format and any subsequent requests to be made.
 
-There are pre-defined helper methods for every major field in the data. It's your job to fill them in.
+There are pre-defined helper methods for every major field in the data. It's your job to fill them in. **See the [Event Schema](event-schema.md)** to see what is required in each field.
 
 For example, `_parse_classification` could be:
 
 ```python
-class ChaSpider(scrapy.Spider):
+class Chi_housingSpider(scrapy.Spider):
 
     # ...
 
     def _parse_classification(self, item):
         """
-        Parse or generate classification (e.g. town hall).
+        Parse or generate classification.
         """
         classification = item.css('.classification::text').extract_first()
         return classification
@@ -182,7 +188,7 @@ class ChaSpider(scrapy.Spider):
     # ...
 ```
 
-## Write tests
+## B. Write tests
 
 Our general approach to writing tests is to save a copy of a site's HTML in
 `tests/files` and then use that HTML to verify the behavior of each spider. In
@@ -224,7 +230,7 @@ You generally want to verify that a spider:
 * Extracts the correct values from a single event.
 * Parses any date and time values, combining them as needed.
 
-## Create a Pull Request
+## C. Create a Pull Request
 
 If your ready to submit your code to the project, you should create a pull
 request on GitHub. You can do this as early as you would like in order to get
@@ -233,4 +239,4 @@ pull request name with `WIP` so that everyone knows what kind of feedback you
 are looking for.
 
 Additionally, please use the pull request description to explain anything you'd
-like a reviewer to know about the code.
+like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) for more details.
