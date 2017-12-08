@@ -3,6 +3,7 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.testspider import TestspiderSpider
 
+
 def test_tests():
     print('Please write some tests for this spider or at least disable this one.')
     assert False
@@ -37,21 +38,6 @@ Uncomment below
     # assert parsed_items[0]['id'] == 'EXPECTED ID'
 
 
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_all_day(item):
-    # assert item['all_day'] is False
-
-
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_classification(item):
-    # assert item['classification'] is None
-
-
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_status(item):
-    # assert item['status'] == 'tentative'
-
-
 # def test_location():
     # assert parsed_items[0]['location'] == {
         # 'url': 'EXPECTED URL',
@@ -61,6 +47,29 @@ Uncomment below
             # 'longitude': 'EXPECTED LONGITUDE',
         # },
     # }
+
+
+# def test_sources():
+    # assert parsed_items[0]['sources'] == {
+        # 'url': 'EXPECTED URL',
+        # 'note': 'EXPECTED NOTE'
+    # }
+
+
+# @pytest.mark.parametrize('item', parsed_items)
+# def test_timezone(item):
+    # assert item['timezone'] == 'EXPECTED TIMEZONE'
+
+
+# @pytest.mark.parametrize('item', parsed_items)
+# def test_all_day(item):
+    # assert item['all_day'] is False
+
+
+# @pytest.mark.parametrize('item', parsed_items)
+# def test_classification(item):
+    # assert item['classification'] is None
+
 
 # @pytest.mark.parametrize('item', parsed_items)
 # def test__type(item):
