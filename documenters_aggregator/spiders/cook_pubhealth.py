@@ -43,11 +43,12 @@ class Cook_pubhealthSpider(Spider):
             'start_time': times['start'].isoformat() if times['start'] else None,
             'end_time': times['end'].isoformat() if times['end'] else None,
             'all_day': self._parse_all_day(response),
+            'timezone': 'America/Chicago',
             'status': self._parse_status(response),
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
-        data['id'] = self._generate_id(response, data, times['start'])
+        data['id'] = self._generate_id(data, times['start'])
         return data
 
     def _parse_id(self, response):

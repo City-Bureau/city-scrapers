@@ -95,3 +95,8 @@ def test__type(item):
 
 def test_source():
     assert parsed_items[0]['sources'][0]['url'] == 'http://www.pbcchicago.com/content/about/calendar_detail.asp?eID=2176'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'

@@ -44,8 +44,10 @@ class ChiTransitSpider(scrapy.Spider):
                     'start_time': self._format_datetime(item_start),
                     'end_time': None,
                     'all_day': False,
+                    'timezone': 'America/Chicago',
                     'status': self._parse_status(item),
                     'location': self._parse_location(item),
+                    'sources': self._parse_sources(response)
                 }
 
     def _parse_id(self, start_time, name):
@@ -146,3 +148,9 @@ class ChiTransitSpider(scrapy.Spider):
         """
         tz = timezone('America/Chicago')
         return tz.localize(time).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

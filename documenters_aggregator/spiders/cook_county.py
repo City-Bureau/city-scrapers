@@ -38,19 +38,23 @@ class Cook_countySpider(Spider):
         """
         Parse the event page.
         """
-        item = {
+        start_time_object = self._parse_start(response)
+        data = {
             '_type': 'event',
             'name': self._parse_name(response),
             'description': self._parse_description(response),
             'classification': self._parse_classification(response),
-            'start_time': self._parse_start(response),
+            'start_time': timezone('America/Chicago').localize(start_time_object).isoformat(),
             'end_time': self._parse_end(response),
             'all_day': self._parse_all_day(response),
+            'timezone': 'America/Chicago',
             'status': self._parse_status(response),
             'location': self._parse_location(response),
+            'sources': self._parse_sources(response)
         }
-        item.update({'id': self._parse_id(item['name'], item['start_time'])})
-        return item
+        data.update({'id': self._parse_id(data['name'], data['start_time'])})
+        data['id'] = self._generate_id(data, start_time_object)
+        return data
 
     def _get_event_urls(self, response):
         """
@@ -154,9 +158,7 @@ class Cook_countySpider(Spider):
         start = start.split(' TO ')[0].strip()
         start = start.replace('(ALL DAY)', '12:00AM')
 
-        naive = datetime.strptime(start, '%B %d, %Y %I:%M%p')
-        tz = timezone('America/Chicago')
-        return tz.localize(naive).isoformat()
+        return datetime.strptime(start, '%B %d, %Y %I:%M%p')
 
     def _parse_end(self, response):
         """
@@ -176,3 +178,9 @@ class Cook_countySpider(Spider):
         naive = datetime.strptime(end, '%B %d, %Y %I:%M%p')
         tz = timezone('America/Chicago')
         return tz.localize(naive).isoformat()
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

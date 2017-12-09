@@ -51,10 +51,11 @@ class Chi_parksSpider(Spider):
                 'start_time': start_time_str,
                 'end_time': end_time_str,
                 'all_day': self._parse_all_day(item),
+                'timezone': 'America/Chicago',
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item),
             }
-            data['id'] = self._generate_id(item, data, start_time)
+            data['id'] = self._generate_id(data, start_time)
             data['status'] = self._parse_status(item, data['start_time'])
             yield data
 

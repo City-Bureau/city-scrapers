@@ -2,7 +2,8 @@ from tests.utils import file_response
 from documenters_aggregator.spiders.cook_county import Cook_countySpider
 
 
-test_response = file_response('files/cook_county_event.html')
+test_response = file_response('files/cook_county_event.html',
+                              url='https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6')
 spider = Cook_countySpider()
 item = spider._parse_event(test_response)
 
@@ -20,7 +21,7 @@ def test_end_time():
 
 
 def test_id():
-    assert item['id'] == 'ZBAPublicHearing2017-11-15T13:00:00-06:00'
+    assert item['id'] == 'cook_county/201711151300/ZBAPublicHearing2017-11-15T13:00:00-06:00/zba_public_hearing'
 
 
 def test_all_day():
@@ -48,3 +49,12 @@ def test_location():
 
 def test__type():
     assert item['_type'] == 'event'
+
+
+def test_timezone():
+    assert item['timezone'] == 'America/Chicago'
+
+
+def test_sources():
+    assert item['sources'] == [{'url': 'https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6',
+                                'note': ''}]
