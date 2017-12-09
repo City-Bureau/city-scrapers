@@ -58,3 +58,8 @@ def test__type():
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
     assert item['sources'] == [{'url': 'http://chicagoinfrastructure.org/public-records/scheduled-meetings', 'note': ''}]
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'

@@ -131,3 +131,12 @@ def test_location():
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert parsed_items[0]['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
+
+
+def test_sources():
+    assert parsed_items[0]['sources'] == [{'note': '', 'url': 'https://chicagoparkdistrict.legistar.com/Calendar.aspx'}]

@@ -74,3 +74,8 @@ def test_location(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert parsed_items[0]['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'

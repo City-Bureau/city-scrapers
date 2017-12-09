@@ -1,3 +1,4 @@
+import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.ward46 import Ward46Spider
 import datetime
@@ -48,3 +49,8 @@ def test_location():
 
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
