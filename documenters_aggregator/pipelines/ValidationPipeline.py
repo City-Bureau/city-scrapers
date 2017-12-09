@@ -5,20 +5,24 @@ class ValidationPipeline(object):
     NULL_VALUES = [None, '']
     SCHEMA = {
         '_type': {'required': True, 'type': str, 'values': ['event']},
-        'id': {'required': True, 'type': str},
+        'id': {'required': True, 'type': str, 'format_str': '.+/\d{12}/.+/.+'},
         'name': {'required': True, 'type': str},
         'description': {'required': False, 'type': str},
         'classification': {'required': True, 'type': str},
         'start_time': {'required': True, 'type': str, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
         'end_time': {'required': False, 'type': str, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
+        'timezone': {'required': True, 'type': str},
         'all_day': {'required': True, 'type': bool},
-        'status': {'required': True, 'type': str, 'values': ['cancelled', 'tentative', 'confirmed', 'passed']},
         'location': {'required': True, 'type': dict},
         'sources': {'required': True, 'type': list}
     }
     LOCATION_SCHEMA = {
         'url': {'required': False, 'type': str},
         'name': {'required': True, 'type': str},
+        'address': {'required': True, 'type': str},
+        'coordinates': {'required': True, 'type': dict}
+    }
+    COORDINATES_SCHEMA = {
         'latitude': {'required': True, 'type': str},
         'longitude': {'required': True, 'type': str}
     }
@@ -31,14 +35,22 @@ class ValidationPipeline(object):
         '''
         Adds validation fields to an item.
         '''
+        item_location = item.get('location', {})
+        if not isinstance(item_location, dict):
+            item_location = {}
+        item_coordinates = item.get('location', {'coordinates': {}}).get('coordinates', {})
+        if not isinstance(item_coordinates, dict):
+            item_coordinates = {}
+
         validation_record = self._validate_against_schema(item, self.SCHEMA)
-        validation_record.update(self._validate_against_schema(item['location'], self.LOCATION_SCHEMA, 'location'))
+        validation_record.update(self._validate_against_schema(item_location, self.LOCATION_SCHEMA, 'loc'))
+        validation_record.update(self._validate_against_schema(item_coordinates, self.COORDINATES_SCHEMA, 'coord'))
 
         is_sources_valid = validation_record['val_sources']
         for source in item.get('sources', []):
             source_validation = self._validate_against_schema(source, self.SOURCES_SCHEMA)
             is_sources_valid = is_sources_valid and all(source_validation.values())
-        validation_record.update({'val_sources': is_sources_valid})
+        validation_record.update({'val_sources': str(is_sources_valid)})
 
         item.update(validation_record)
         return item
@@ -58,7 +70,7 @@ class ValidationPipeline(object):
                 is_valid = True
             else:
                 if is_required:
-                    is_valid = is_valid and (field in item)
+                    is_valid = not (item.get(field, None) in self.NULL_VALUES)
                 if 'type' in schema[field]:
                     correct_type = isinstance(item.get(field, None), schema[field]['type'])
                     is_valid = is_valid and correct_type
@@ -67,8 +79,12 @@ class ValidationPipeline(object):
                     is_valid = is_valid and in_values
                 if 'format_str' in schema[field]:
                     pattern = re.compile(schema[field]['format_str'])
-                    match = re.match(pattern, item.get(field, ''))
-                    if not match:
+                    try:
+                        match = re.match(pattern, item.get(field, ''))
+                    except TypeError:
                         is_valid = False
+                    else:
+                        if not match:
+                            is_valid = False
             validation_record[new_key] = str(is_valid)  # airtable ignores boolean False's
         return validation_record
