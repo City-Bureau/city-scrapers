@@ -34,7 +34,7 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'url': '',
         'name': '1900 W. Polk, Second Floor Conference Room, Chicago, Illinois',
-        'coordinates': None,
+        'coordinates': {'latitude': '', 'longitude': ''},
     }
 
 
@@ -61,3 +61,8 @@ def test__type(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
     assert item['sources'] == [{'url': 'http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/', 'note': ''}]
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'

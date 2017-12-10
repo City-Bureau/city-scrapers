@@ -64,6 +64,10 @@ def test_all_day():
     assert item['all_day'] is False
 
 
+def test_timezone():
+    assert item['timezone'] == 'America/Chicago'
+
+
 def test_status():
     assert item['status'] == 'tentative'
 
@@ -78,3 +82,7 @@ def test__make_date():
     expected_date = datetime.strptime(expected_date, '%Y-%m-%d %I:%M %p')
     tz = timezone('America/Chicago')
     spider._make_date(today_weekday, "2:00 PM") == tz.localize(expected_date).isoformat()
+
+
+def test_sources():
+    assert item['sources'] == [{'note': '', 'url': 'http://www.cookcountypublichealth.org/events-view/321'}]

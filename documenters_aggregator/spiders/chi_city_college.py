@@ -40,10 +40,12 @@ class Chi_cityCollegeSpider(Spider):
             'start_time': start_time_str,
             'end_time': self._parse_end(),
             'all_day': self._parse_all_day(),
+            'timezone': 'America/Chicago',
             'status': self._parse_status(),
             'location': self._parse_location(response),
+            'sources': self._parse_sources(response)
         }
-        data['id'] = self._generate_id(response, data, start_time)
+        data['id'] = self._generate_id(data, start_time)
         return data
 
     def _parse_classification(self):
@@ -122,3 +124,9 @@ class Chi_cityCollegeSpider(Spider):
         Parse end date and time.
         """
         return None
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

@@ -48,3 +48,7 @@ def test_location():
 
 def test__type():
     assert item['_type'] == 'event'
+
+
+def test_timezone():
+    assert item['timezone'] == 'America/Chicago'

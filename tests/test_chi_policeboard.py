@@ -1,5 +1,4 @@
 import pytest
-
 from tests.utils import file_response
 from documenters_aggregator.spiders.chi_policeboard import Chi_policeboardSpider
 
@@ -66,3 +65,8 @@ def test__type(item):
 def test_sources(item):
     assert item['sources'] == [{'url': 'https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html',
                                 'note': ''}]
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
