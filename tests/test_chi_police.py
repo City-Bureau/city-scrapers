@@ -52,3 +52,8 @@ def test_sources(item):
     EXPECTED_SOURCES = [{'url': 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
                          'note': ''}]
     assert item['sources'] == EXPECTED_SOURCES
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'

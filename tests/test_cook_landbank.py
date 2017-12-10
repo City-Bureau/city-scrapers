@@ -1,3 +1,4 @@
+import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.cook_landbank import Cook_landbankSpider
 
@@ -22,6 +23,11 @@ def test_start_time():
 
 def test_end_time():
     assert parsed_items[0]['end_time'] is None
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
 
 
 def test_id():

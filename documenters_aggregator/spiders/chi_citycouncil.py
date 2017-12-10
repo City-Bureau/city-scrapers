@@ -7,7 +7,7 @@ import scrapy
 import requests
 import json
 import datetime as dt
-from dateutil.parser import parse
+from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
@@ -47,34 +47,35 @@ class Chi_citycouncilSpider(Spider):
 
     def _parse_item(self, item):
 
-        if len(item.get('start_date', '')) > 0:
-            start_time = parse(item['start_date'])
-            start_time_str = start_time.isoformat()
+        if len(item.get('start_date', None)) > 0:
+            start_date = item['start_date'].split('+')[0]
+            start_datetime = dt.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
+            tz = timezone('America/Chicago')
+            start_time = tz.localize(start_datetime).isoformat()
         else:
             start_time = None
-            start_time_str = None
 
         if len(item.get('end_date', '')) > 0:
-            end_time = parse(item['end_date'])
-            end_time_str = end_time.isoformat()
+            end_time = item['end_date'].isoformat()
         else:
-            end_time_str = None
+            end_time = None
 
         data = {
             '_type': 'event',
             'id': item['id'],
             'name': item['name'],
             'description': item['description'],
-            'classification': None,  # this is 'event' in the datamade feed
-            'start_time': start_time_str,
-            'end_time': end_time_str,
+            'classification': 'city council meeting',
+            'start_time': start_time,
+            'end_time': end_time,
             'all_day': item['all_day'],
+            'timezone': 'America/Chicago',
             'status': item['status']
         }
         ocd_response = self._make_ocd_request(data['id'])
         data.update({'location': self._parse_location(ocd_response),
                      'sources': self._parse_sources(ocd_response, data['id'])})
-        data['id'] = self._generate_id(item, data, start_time)  # must happen AFTER previous line
+        data['id'] = self._generate_id(data, start_datetime)  # must happen AFTER previous line
         return data
 
     def _parse_next(self, response, pgnum):
@@ -100,12 +101,19 @@ class Chi_citycouncilSpider(Spider):
         """
         Grab location from the event detail page.
         """
-        if ocd_response is None:
-            return {'url': None,
-                    'name': None,
-                    'coordinates': {'longitude': None, 'latitude': None}}
+        null_location = {
+            'url': None,
+            'name': None,
+            'coordinates': {'longitude': None, 'latitude': None}
+        }
+        try:
+            location = ocd_response.get('location', null_location)
+        except:
+            location = null_location
         else:
-            return ocd_response['location']
+            if not location.get('coordinates', None):
+                location['coordinates'] = {'longitude': None, 'latitude': None}
+        return location
 
     def _parse_sources(self, ocd_response, id):
         """

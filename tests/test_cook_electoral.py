@@ -62,3 +62,8 @@ def test__type():
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
     assert item['sources'] == [{'url': 'http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx', 'note': ''}]
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'

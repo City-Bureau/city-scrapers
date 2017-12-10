@@ -47,10 +47,12 @@ class Chi_animalSpider(Spider):
                 'start_time': start_time_str,
                 'end_time': self._parse_end(text),
                 'all_day': self._parse_all_day(text),
+                'timezone': 'America/Chicago',
                 'status': self._parse_status(text),
                 'location': self._parse_location(text),
+                'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(item, data, start_time)
+            data['id'] = self._generate_id(data, start_time)
 
             yield data
 
@@ -122,3 +124,9 @@ class Chi_animalSpider(Spider):
         Parse end date and time.
         """
         return None
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

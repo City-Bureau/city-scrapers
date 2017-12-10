@@ -32,8 +32,10 @@ class Ward46Spider(scrapy.Spider):
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
+                'timezone': 'America/Chicago',
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(response)
             }
 
         # self._parse_next(response) yields more responses to parse if necessary.
@@ -170,3 +172,9 @@ class Ward46Spider(scrapy.Spider):
             return None
 
         return end_time
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

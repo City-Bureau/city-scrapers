@@ -46,23 +46,28 @@ def test_location():
 
 
 @pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
+
+
+@pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
-    assert parsed_items[0]['all_day'] is False
+    assert item['all_day'] is False
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert parsed_items[0]['classification'] is None
+    assert item['classification'] is None
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):
-    assert parsed_items[0]['status'] == 'tentative'
+    assert item['status'] == 'tentative'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
+    assert item['_type'] == 'event'
 
 
 # Test integration with the Calendar class
