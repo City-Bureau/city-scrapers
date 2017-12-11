@@ -8,21 +8,22 @@ may expand to include meeting notes, agendas, etc.
 ```python
 {
   '_type': 'event',                              # required value
+  'id': 'unique identifier'                      # required string in format:
+                                                 # <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-id>/<underscored-event-name>
   'name': 'Committee on Pedestrian Safety',      # required string
   'description': 'A longer description',         # optional string
-  'classification': 'committee-meeting'          # must be one of committee-meeting or hearing
+  'classification': 'Public Safety'              # general topic of the meeting
   'start_time': '2017-08-30T17:30:00Z',          # required datetime in UTC, using ISO8601 format
   'end_time': None,                              # optional datetime in UTC, using ISO8601 format
   'timezone': 'America/Chicago',                 # required timezone in tzinfo format
   'all_day': False,                              # must be True or False
-  'status': 'tentative',                         # must be one of: cancelled, tentative, confirmed, passed
 
   'location': {                                  # required dictionary
     'url': '',                                   # optional URL of the location, not the event!
     'name': 'Room 201A, City Hall, Chicago, IL', # required address of the location
     'coordinates': {                             # must be: None or object
-      'latitude': '41.883868',                   # as a string!
-      'longitude': '-87.631936'                  # as a string!
+      'latitude': '',                            # empty string; will be filled in by geocoder
+      'longitude': ''                            # empty string; will be filled in by geocoder
     }
   },
 

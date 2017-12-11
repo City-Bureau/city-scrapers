@@ -30,11 +30,12 @@ class RegionaltransitSpider(Spider):
                 'start_time': start_time.isoformat() if start_time else None,
                 'end_time': None,
                 'all_day': False,
+                'timezone': 'America/Chicago',
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(item, data, start_time)
+            data['id'] = self._generate_id(data, start_time)
             yield data
 
     def parse(self, response):
@@ -75,7 +76,7 @@ class RegionaltransitSpider(Spider):
         return {
             'url': 'http://www.rtachicago.org/index.php/about-us/contact-us.html',
             'name': 'RTA Administrative Offices',
-            'coordinates': None,
+            'coordinates': {'longitude': '', 'latitude': ''},
             'address': '175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604'
         }
 

@@ -24,7 +24,8 @@ class Cook_hospitalsSpider(Spider):
                 'name': self._parse_name(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
-                'sources': self._parse_sources(response)
+                'sources': self._parse_sources(response),
+                'timezone': 'America/Chicago'
             }
 
             aria_control = item.xpath("@aria-controls").extract_first()
@@ -40,7 +41,7 @@ class Cook_hospitalsSpider(Spider):
                 }
                 new_item.update(data)
                 new_item['status'] = self._parse_status(subitem, new_item['start_time'])
-                new_item['id'] = self._generate_id(subitem, data, start_time)
+                new_item['id'] = self._generate_id(data, start_time)
                 yield new_item
 
     def _parse_classification(self, item):
@@ -73,7 +74,7 @@ class Cook_hospitalsSpider(Spider):
         return {
             'url': '',
             'name': subitem.xpath('text()').extract()[1].strip(),
-            'coordinates': None,
+            'coordinates': {'longitude': '', 'latitude': ''},
         }
 
     def _parse_all_day(self, item):

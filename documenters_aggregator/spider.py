@@ -9,11 +9,15 @@ import scrapy
 class Spider(scrapy.Spider):
     inflector = Inflector(English)
 
-    def _generate_id(self, item, data, start_time):
+    def _generate_id(self, data, start_time):
         """
         Calulate ID. ID must be unique within the data source being scraped.
         """
         name = self.inflector.underscore(data['name']).strip('_')
         id = data.get('id', 'x').replace('/', '-')
-        parts = [self.name, datetime.strftime(start_time, '%Y%m%d%H%M'), id, name]
+        try:
+            start_time_str = datetime.strftime(start_time, '%Y%m%d%H%M')
+        except TypeError:
+            start_time_str = 'None'
+        parts = [self.name, start_time_str, id, name]
         return '/'.join(parts)
