@@ -12,7 +12,7 @@ from scrapy.exceptions import DropItem
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
-FIELDS_WHITELIST = ['id', 'name', 'description', 'classification', 'start_time', 'end_time', 'timezone', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude', 'geocode', 'url', 'scrape_date_initial', 'scrape_date_update']
+KEEP_FIELDS = ['id', 'name', 'description', 'classification', 'start_time', 'end_time', 'timezone', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude', 'geocode', 'url', 'scrape_date_initial', 'scrape_date_update']
 
 
 class AirtablePipeline(object):
@@ -49,7 +49,7 @@ class AirtablePipeline(object):
         new_item['all_day'] = 'false'
         new_item['agency_name'] = spider.long_name
 
-        new_item = {k: v for k, v in new_item.items() if k in FIELDS_WHITELIST}
+        new_item = {k: self._format_missing_values(v) for k, v in new_item.items() if k in KEEP_FIELDS}
 
         try:
             self.save_item(new_item, spider)
@@ -62,6 +62,11 @@ class AirtablePipeline(object):
             raise DropItem('Could not save {0}'.format(new_item['id']))
         except Exception as e:
             spider.logger.exception('Unknown error')
+
+    def _format_missing_values(self, x):
+        if (x is None) or x == '':
+            return 'n/a'
+        return x
 
     def save_item(self, item, spider):
         now = datetime.datetime.now().isoformat()

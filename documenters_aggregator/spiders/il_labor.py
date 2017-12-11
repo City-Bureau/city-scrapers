@@ -50,11 +50,12 @@ class Il_laborSpider(Spider):
                 'start_time': start_time.isoformat() if start_time else None,
                 'end_time': None,
                 'all_day': self._parse_all_day(item),
+                'timezone': 'America/Chicago',
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(item, data, start_time)
+            data['id'] = self._generate_id(data, start_time)
             yield data
 
     def _parse_classification(self, item):
@@ -85,12 +86,15 @@ class Il_laborSpider(Spider):
         address is in the next sibling `<p>`,
         but it may be nested further down.
         So we select the next node first,
-        then select the first `<p>` within it.
+        then select the first `<p>` or `<div>` within it.
         """
         sibling = item.xpath('following-sibling::*')
+        name = sibling.css('p::text').extract_first()
+        if not name:
+            name = sibling.css('div::text').extract_first()
         return {
             'url': None,
-            'name': sibling.css('p::text').extract_first(),
+            'name': name,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

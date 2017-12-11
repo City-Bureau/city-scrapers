@@ -51,9 +51,14 @@ def test_location(item):
     assert item['location'] == {
         'url': 'http://www.rtachicago.org/index.php/about-us/contact-us.html',
         'name': 'RTA Administrative Offices',
-        'coordinates': None,
+        'coordinates': {'longitude': '', 'latitude': ''},
         'address': '175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604'
     }
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
 
 
 @pytest.mark.parametrize('item', parsed_items)
