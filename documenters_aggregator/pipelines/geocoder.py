@@ -30,7 +30,7 @@ class GeocoderPipeline(object):
             (2) making a mapzen query and adding the result
                 to the cache if (1) is not found
 
-        Mapzen queries are standardized to end with ', Chicago, IL'. 
+        Mapzen queries are standardized to end with ', Chicago, IL'.
 
         If something like '5100 Milwaukee Chicago, IL' is not found,
         '5100 Milwaukee Ave., Chicago, IL' and
@@ -45,14 +45,14 @@ class GeocoderPipeline(object):
             if updated_item:
                 return updated_item
 
-        bad_addresses = ['Chicago, IL, USA', 'Illinois, USA' , '']
+        bad_addresses = ['Chicago, IL, USA', 'Illinois, USA', '']
         for suffix in ['', ' Ave.', ' St.']:
             new_query = query.replace(', Chicago, IL', '{0}, Chicago, IL'.format(suffix))
-            geocoded_item = self._geocode(query, item)
+            geocoded_item = self._geocode(new_query, item, spider)
             address = geocoded_item['location']['address']
             if (address not in bad_addresses) and (address.endswith('Chicago, IL, USA')) and (self._hasDigit(address)):
                 write_item = {
-                    'mapzen_query': query,
+                    'mapzen_query': new_query,
                     'longitude': geocoded_item['location']['coordinates']['longitude'],
                     'latitude': geocoded_item['location']['coordinates']['latitude'],
                     'name': geocoded_item['location']['name'],
@@ -67,7 +67,7 @@ class GeocoderPipeline(object):
         spider.logger.error(json.dumps(item, indent=4, sort_keys=True))
         return item
 
-    def _geocode(self, query, item):
+    def _geocode(self, query, item, spider):
         """
         Makes a Mapzen query and returns results.
         """
