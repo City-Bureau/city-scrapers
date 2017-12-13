@@ -3,6 +3,7 @@ from .geocoder import GeocoderPipeline
 from .LoggingPipeline import DocumentersAggregatorLoggingPipeline
 from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
+from .github import GithubValidationPipeline
 
 
 __all__ = (
@@ -10,5 +11,6 @@ __all__ = (
     'AirtablePipeline',
     'GeocoderPipeline',
     'DocumentersAggregatorSQLAlchemyPipeline',
-    'ValidationPipeline'
+    'ValidationPipeline',
+    'GithubValidationPipeline'
 )
