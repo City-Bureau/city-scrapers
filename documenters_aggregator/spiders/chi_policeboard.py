@@ -32,6 +32,7 @@ class Chi_policeboardSpider(Spider):
             'classification': self._parse_classification(response),
             'end_time': self._parse_end(response),
             'all_day': self._parse_all_day(response),
+            'timezone': 'America/Chicago',
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
@@ -41,7 +42,7 @@ class Chi_policeboardSpider(Spider):
             start_time, start_time_str = self._parse_start(item, universal_start_time)
             new_item = {
                 'start_time': start_time_str,
-                'id': self._generate_id(item, data, start_time)
+                'id': self._generate_id(data, start_time)
             }
             new_item.update(data)
             new_item['status'] = self._parse_status(new_item['start_time'])

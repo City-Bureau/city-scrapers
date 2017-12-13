@@ -109,11 +109,12 @@ class Cook_landbankSpider(Spider):
                 'start_time': start_time.isoformat() if start_time else None,
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
+                'timezone': 'America/Chicago',
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item)
             }
-            data['id'] = self._generate_id(item, data, start_time)
+            data['id'] = self._generate_id(data, start_time)
             yield data
         else:
             yield

@@ -5,7 +5,7 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.il_pubhealth import Il_pubhealthSpider
 
-test_response = file_response('files/il_pubhealth.html')
+test_response = file_response('files/il_pubhealth.html', url='http://www.dph.illinois.gov/events')
 spider = Il_pubhealthSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -56,7 +56,7 @@ def test_location(item):
     assert item['location'] == {
         'url': None,
         'name': None,
-        'coordinates': None,
+        'coordinates': {'latitude': '', 'longitude': ''}
     }
 
 
@@ -64,6 +64,14 @@ def test_location(item):
 def test__type(item):
     assert item['_type'] == 'event'
 
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
+
+
+def test_sources():
+    assert parsed_items[0]['sources'] == [{'url': 'http://www.dph.illinois.gov/events', 'note': ''}]
 
 # @TODO in the future, could consider passing multiple items + expected values.
 # @pytest.mark.parametrize("parsed_value,expected", [

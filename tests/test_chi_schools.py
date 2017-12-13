@@ -4,7 +4,7 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.chi_schools import Chi_schoolsSpider
 
-test_response = file_response('files/cpsboe.html')
+test_response = file_response('files/cpsboe.html', url='http://www.cpsboe.org/meetings/planning-calendar')
 spider = Chi_schoolsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -25,6 +25,16 @@ def test_id():
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
     assert item['name'] == 'Monthly Board Meeting'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == [{'note': '', 'url': 'http://www.cpsboe.org/meetings/planning-calendar'}]
 
 
 @pytest.mark.parametrize('item', parsed_items)
