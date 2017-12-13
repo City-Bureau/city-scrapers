@@ -18,7 +18,7 @@ class ValidationPipeline(object):
     }
     LOCATION_SCHEMA = {
         'url': {'required': False, 'type': str},
-        'name': {'required': True, 'type': str},
+        'name': {'required': False, 'type': str},
         'address': {'required': True, 'type': str},
         'coordinates': {'required': True, 'type': dict}
     }
