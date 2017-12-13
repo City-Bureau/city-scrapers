@@ -35,7 +35,7 @@ COOKIES_ENABLED = False
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'documenters_aggregator.pipelines.ValidationPipeline': 300,
+    'documenters_aggregator.pipelines.GithubValidationPipeline': 300,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
