@@ -19,6 +19,11 @@ def test_description(item):
     assert item['description'] == 'To discuss issues and cases pending before the panel'
 
 
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
+
+
 def test_start_time():
     assert parsed_items[1]['start_time'] == '2017-09-12T13:00:00-05:00'
 

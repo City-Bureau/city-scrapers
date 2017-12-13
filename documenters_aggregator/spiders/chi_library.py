@@ -63,11 +63,12 @@ class Chi_librarySpider(Spider):
                 'start_time': start_time.isoformat(),
                 'end_time': None,  # no end time listed
                 'all_day': False,  # default is false
+                'timezone': 'America/Chicago',
                 'status': self._parse_status(item),  # default is tentative, but there is no status info on site
                 'location': self._parse_location(item, lib_info),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(item, data, start_time)
+            data['id'] = self._generate_id(data, start_time)
             yield data
 
     def _parse_classification(self, item):

@@ -28,10 +28,12 @@ class Il_pubhealthSpider(Spider):
                 'start_time': start_time.isoformat() if start_time else None,
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
+                'timezone': 'America/Chicago',
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(item, data, start_time)
+            data['id'] = self._generate_id(data, start_time)
             yield data
 
         yield self._parse_next(response)
@@ -71,7 +73,7 @@ class Il_pubhealthSpider(Spider):
         return {
             'url': None,
             'name': None,
-            'coordinates': None,
+            'coordinates': {'longitude': '', 'latitude': ''},
         }
 
     def _parse_all_day(self, item):
@@ -112,3 +114,9 @@ class Il_pubhealthSpider(Spider):
             return item.css('div span.date-display-end::attr(content)').extract()[0]
         except IndexError:
             return None
+
+    def _parse_sources(self, response):
+        """
+        Parse sources.
+        """
+        return [{'url': response.url, 'note': ''}]

@@ -42,11 +42,12 @@ class Chi_policeSpider(Spider):
                 'start_time': start_time.isoformat() if start_time else None,
                 'end_time': end_time.isoformat() if end_time else None,
                 'all_day': False,
+                'timezone': 'America/Chicago',
                 'status': 'confirmed',
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item)
             }
-            data['id'] = self._generate_id(item, data, start_time)
+            data['id'] = self._generate_id(data, start_time)
             yield data
 
     def _parse_id(self, item):

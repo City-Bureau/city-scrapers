@@ -178,10 +178,11 @@ class WardNightSpider(Spider):
                 'start_time': dates['start'],
                 'end_time': dates['end'],
                 'all_day': self._parse_all_day(row),
+                'timezone': 'America/Chicago',
                 'status': self._parse_status(row),
                 'location': self._parse_location(row),
             }
-            data['id'] = self._generate_id({}, data, dates['datetime'])
+            data['id'] = self._generate_id(data, dates['datetime'])
             return data
 
         days = self._days_for_frequency(row[Row.FREQUENCY], row[Row.DAY_OF_WEEK])
