@@ -41,24 +41,28 @@ class GeocoderPipeline(object):
         try:
             start_time = datetime.datetime.strptime(item['start_time'][:10], '%Y-%m-%d')
         except:
-            spider.logger.warn('no start time')
+            spider.logger.debug('no start time. not geocoding.')
             return item
         else:
             if start_time < datetime.datetime.now():
-                spider.logger.warn('item in the past...')
+                spider.logger.debug('item in the past. not geocoding.')
                 return item
 
         query = self._get_mapzen_query(item.get('location', {}))
+        if not query:
+            spider.logger.debug('empty query. not geocoding.')
+            return item
 
         for suffix in ['', ' ave.', ' st.']:
             new_query = query.replace(', chicago, il', '{0}, chicago, il'.format(suffix))
             time.sleep(randint(0, 3))  # to avoid rate limiting?
             updated_item = self._update_fromDB(query, item)
             if updated_item:
+                spider.logger.debug('geocoded item from airtable cache.')
                 return updated_item
 
         bad_addresses = ['Chicago, IL, USA', 'Illinois, USA', '']
-        for suffix in ['', ' qve.', ' st.']:
+        for suffix in ['', ' ave.', ' st.']:
             new_query = query.replace(', chicago, il', '{0}, chicago, il'.format(suffix))
             geocoded_item = self._geocode(new_query, item, spider)
             address = geocoded_item['location']['address']
@@ -73,10 +77,10 @@ class GeocoderPipeline(object):
                     'community_area': geocoded_item['community_area']
                 }
                 self._geocodeDB_write(spider, write_item)
+                spider.logger.debug('geocoded item from mapzen.')
                 return geocoded_item
 
         spider.logger.exception("Couldn't geocode using mapzen or airtable cache: {0}".format(query))
-        spider.logger.error(json.dumps(item, indent=4, sort_keys=True))
         return item
 
     def _geocode(self, query, item, spider):
@@ -96,14 +100,14 @@ class GeocoderPipeline(object):
                     'url': item.get('location', {'url': ''}).get('url', '')
                 },
                 'geocode': json.dumps(geocode, indent=4, sort_keys=True),
-                'community_area': geocode['features'][0]['properties']['neighbourhood']
+                'community_area': geocode['features'][0]['properties'].get('neighbourhood', '')
             }
             item.update(new_data)
             return item
         except ValueError:
-            spider.logger.warn('Could not geocode {0}-{1}, skipping.'.format(spider.name, item['id']))
-        except Exception:
-            spider.logger.warn('Unknown error when geocoding, skipping. Message:')
+            spider.logger.debug('Could not geocode, skipping. Query: {0}'.format(query))
+        except Exception as e:
+            spider.logger.info('Unknown error when geocoding, skipping. Query: {0}\nMessage: {1}'.format(query, str(e)))
         return {'location': {'address': ''}}
 
     def _hasDigit(self, string):
@@ -114,13 +118,15 @@ class GeocoderPipeline(object):
 
     def _get_mapzen_query(self, location_dict):
         """
-        Clean and item's location to make a mapzen query
+        Clean and item's location to make a mapzen query.
+        All cleaned queries are lowercase and
+        end with ', chicago, il'.
         """
         name = location_dict.get('name', '').strip()
         address = location_dict.get('address', '').strip()
-        query = ', '.join([name, address]).strip(', ').lower()
-        query = query.replace('-', ' ').replace('/', ' ')
-        query = query.replace('milwukee', 'milwaukee').replace('milwuakee', 'milwaukee')
+        query = ', '.join([name, address]).strip(', ').lower()  # combine '{name}, {address}' and lowercase
+        query = query.replace('-', ' ').replace('/', ' ')  # remove special characters
+        query = query.replace('milwukee', 'milwaukee').replace('milwuakee', 'milwaukee')  # fix misspellings
         query = query.replace('n.', 'n. ').replace('s.', 's. ').replace('e.', 'e. ').replace('w.', 'w. ')
         query = re.sub(r' +', ' ', query)  # remove repeated spaces
         query = re.sub(r',* chicago,*( il)* *\d*$', ', chicago, il', query)  # remove zip code, standardize ', chicago, il'
