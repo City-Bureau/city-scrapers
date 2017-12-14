@@ -14,21 +14,37 @@ You'll need a fairly standard Python development stack. If you're on OS X, the [
 The following assumes you have `virtualenv` and `virtualenv-wrapper` installed.
 
 1. [Fork the repository](https://github.com/City-Bureau/documenters-aggregator/fork) to your own Github account.
+
 2. Clone your fork to your local machine:
-``` $ git clone git@github.com:<your-username>/documenters-aggregator.git ```
+```
+$ git clone git@github.com:<your-username>/documenters-aggregator.git
+```
+
 3. Change directories into the main project folder:
-``` $ cd documenters-aggregator ```
+```
+$ cd documenters-aggregator
+```
+
 4. Create a virtual environment (also called documenters-aggregator) for the project:
-``` $ mkvirtualenv -p `which python3` documenters-aggregator ```
+```
+$ mkvirtualenv -p `which python3` documenters-aggregator
+```
 The virtual environment should now be activated.
+
 5. Install the required packages into the virtual environment:
-``` (documenters-aggregator)$ pip install -r requirements.txt ```
+```
+(documenters-aggregator)$ pip install -r requirements.txt
+```
 
 To activate the virtual environment:
-``` $ workon documenters-aggregator ```
+```
+$ workon documenters-aggregator
+```
 
 To deactivate the virtual environment:
-``` (documenters-aggregator)$ deactivate ```
+```
+(documenters-aggregator)$ deactivate
+```
 
 
 ## Alternative Installation: Docker
@@ -36,12 +52,21 @@ To deactivate the virtual environment:
 Good option for Windows. If you have Docker installed on your machine, the process becomes pretty simple.
 
 1. [Fork the repository](https://github.com/City-Bureau/documenters-aggregator/fork) to your own Github account.
+
 2. Clone your fork to your local machine:
-``` $ git clone git@github.com:<your-username>/documenters-aggregator.git ```
+```
+$ git clone git@github.com:<your-username>/documenters-aggregator.git
+```
+
 3. Change directories into the main project folder:
-``` $ cd documenters-aggregator ```
+```
+$ cd documenters-aggregator
+```
+
 4. Build the docker container:
-``` $ docker build -t easherma/documenters-aggregator . ```
+```
+$ docker build -t easherma/documenters-aggregator . 
+```
 
 Then you can run commands on the container. For instance, to run tests:
 
