@@ -7,6 +7,7 @@ import requests
 import datetime
 import time
 from random import randint
+import re
 
 from mapzen.api import MapzenAPI
 from airtable import Airtable
@@ -36,18 +37,29 @@ class GeocoderPipeline(object):
         '5100 Milwaukee Ave., Chicago, IL' and
         '5100 Milwaukee St., Chicago, IL' are also tried.
         """
+        # skip geocoding if event is in the past
+        try:
+            start_time = datetime.datetime.strptime(item['start_time'][:10], '%Y-%m-%d')
+        except:
+            spider.logger.warn('no start time')
+            return item
+        else:
+            if start_time < datetime.datetime.now():
+                spider.logger.warn('item in the past...')
+                return item
+
         query = self._get_mapzen_query(item.get('location', {}))
 
-        for suffix in ['', ' Ave.', ' St.']:
-            new_query = query.replace(', Chicago, IL', '{0}, Chicago, IL'.format(suffix))
+        for suffix in ['', ' ave.', ' st.']:
+            new_query = query.replace(', chicago, il', '{0}, chicago, il'.format(suffix))
             time.sleep(randint(0, 3))  # to avoid rate limiting?
             updated_item = self._update_fromDB(query, item)
             if updated_item:
                 return updated_item
 
         bad_addresses = ['Chicago, IL, USA', 'Illinois, USA', '']
-        for suffix in ['', ' Ave.', ' St.']:
-            new_query = query.replace(', Chicago, IL', '{0}, Chicago, IL'.format(suffix))
+        for suffix in ['', ' qve.', ' st.']:
+            new_query = query.replace(', chicago, il', '{0}, chicago, il'.format(suffix))
             geocoded_item = self._geocode(new_query, item, spider)
             address = geocoded_item['location']['address']
             if (address not in bad_addresses) and (address.endswith('Chicago, IL, USA')) and (self._hasDigit(address)):
@@ -63,7 +75,7 @@ class GeocoderPipeline(object):
                 self._geocodeDB_write(spider, write_item)
                 return geocoded_item
 
-        spider.logger.exception("Couldn't geocode using mapzen or airtable cache.")
+        spider.logger.exception("Couldn't geocode using mapzen or airtable cache: {0}".format(query))
         spider.logger.error(json.dumps(item, indent=4, sort_keys=True))
         return item
 
@@ -106,20 +118,20 @@ class GeocoderPipeline(object):
         """
         name = location_dict.get('name', '').strip()
         address = location_dict.get('address', '').strip()
-        query = ', '.join([name, address]).strip(', ')
-        query = query.replace('-', ' ').replace(',', ' ').replace('/', ' ')
-        query = query.replace('Milwukee', 'Milwaukee').replace('Milwuakee', 'Milwaukee')
-        query = query.replace('N.', 'N. ').replace('S.', 'S. ').replace('E.', 'E. ').replace('W.', 'W. ')
+        query = ', '.join([name, address]).strip(', ').lower()
+        query = query.replace('-', ' ').replace('/', ' ')
+        query = query.replace('milwukee', 'milwaukee').replace('milwuakee', 'milwaukee')
+        query = query.replace('n.', 'n. ').replace('s.', 's. ').replace('e.', 'e. ').replace('w.', 'w. ')
+        query = re.sub(r' +', ' ', query)  # remove repeated spaces
+        query = re.sub(r',* chicago,*( il)* *\d*$', ', chicago, il', query)  # remove zip code, standardize ', chicago, il'
         if not query:
             return ''
         if 'city hall' in query.lower():
-            return 'Chicago City Hall, Chicago, IL'
-        if query.endswith(', Chicago, IL'):
-            return query
-        if query.endswith(' Chicago'):
-            return '{0}, IL'.format(query)
+            return 'chicago city hall, chicago, il'
+        if not query.endswith(', chicago, il'):
+            return '{0}, chicago, il'.format(query)
         else:
-            return '{0}, Chicago, IL'.format(query)
+            return query
 
     def _update_fromDB(self, query, item):
         """
@@ -127,7 +139,7 @@ class GeocoderPipeline(object):
         with results.
         """
         fetched_item = self._geocodeDB_fetch(query)
-        if fetched_item:
+        try:
             new_data = {
                 'location': {
                     'coordinates': {
@@ -138,12 +150,14 @@ class GeocoderPipeline(object):
                     'address': fetched_item['address'],
                     'url': item.get('location', {'url': ''}).get('url', '')
                 },
-                'geocode': str(fetched_item['geocode']),
-                'community_area': fetched_item['community_area']
+                'geocode': str(fetched_item.get('geocode', '')),
+                'community_area': fetched_item.get('community_area', '')
             }
+        except:
+            return {}
+        else:
             item.update(new_data)
             return item
-        return {}
 
     def _geocodeDB_fetch(self, query):
         """
