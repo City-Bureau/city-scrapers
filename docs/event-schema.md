@@ -5,6 +5,8 @@ Our data model for events is based on the [Event Object](http://docs.opencivicda
 For our initial scrapers, we are focusing on basic event data. Over time, this
 may expand to include meeting notes, agendas, etc.
 
+Empty strings are preferred to Nones.
+
 ```python
 {
   '_type': 'event',                              # required value
