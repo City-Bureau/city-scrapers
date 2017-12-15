@@ -89,6 +89,11 @@ class GeocoderPipeline(object):
         """
         try:
             geocode = self.client.search(query, boundary_country='US', format='keys')
+        except ValueError:
+            spider.logger.debug('Could not geocode, skipping. Query: {0}'.format(query))
+        except Exception as e:
+            spider.logger.info('Unknown error when geocoding, skipping. Query: {0}\nMessage: {1}'.format(query, str(e)))
+        else:
             new_data = {
                 'location': {
                     'coordinates': {
@@ -104,10 +109,6 @@ class GeocoderPipeline(object):
             }
             item.update(new_data)
             return item
-        except ValueError:
-            spider.logger.debug('Could not geocode, skipping. Query: {0}'.format(query))
-        except Exception as e:
-            spider.logger.info('Unknown error when geocoding, skipping. Query: {0}\nMessage: {1}'.format(query, str(e)))
         return {'location': {'address': ''}}
 
     def _hasDigit(self, string):
