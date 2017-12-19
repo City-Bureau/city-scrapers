@@ -14,7 +14,7 @@ That’s why City Bureau and ProPublica Illinois worked together with a team of 
 
 Documenters Aggregator is a community-based open source project with a friendly community that welcomes contributions from everyone.
 
-Want to use or contribute to the project? **[Start with the documentation](https://city-bureau.gitbooks.io/documenters-event-aggregator/)**, and join our [slack channel](https://citybureau.slack.com/).
+Want to use or contribute to the project? **[Start with the documentation](https://github.com/City-Bureau/documenters-aggregator/tree/master/docs)**, and join our [slack channel](https://citybureau.slack.com/).
 
 ## Support this work
 
