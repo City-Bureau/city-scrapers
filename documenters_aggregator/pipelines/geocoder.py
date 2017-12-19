@@ -5,6 +5,7 @@ import json
 import os
 import requests
 import datetime
+import dateutil.parser
 import time
 from random import randint
 import re
@@ -38,19 +39,17 @@ class GeocoderPipeline(object):
         '5100 Milwaukee St., Chicago, IL' are also tried.
         """
         # skip geocoding if event is in the past
-        try:
-            start_time = datetime.datetime.strptime(item['start_time'][:10], '%Y-%m-%d')
-        except:
-            spider.logger.debug('no start time. not geocoding.')
+        if item.get('start_time') is None:
+            spider.logger.debug('GEOCODER PIPELINE: Ignoring event without start_time {0}'.format(item['id']))
             return item
-        else:
-            if start_time < datetime.datetime.now():
-                spider.logger.debug('item in the past. not geocoding.')
-                return item
+        dt = dateutil.parser.parse(item['start_time'])
+        if dt < datetime.datetime.now(dt.tzinfo):
+            spider.logger.debug('GEOCODER PIPELINE: Ignoring past event {0}'.format(item['id']))
+            return item
 
         query = self._get_mapzen_query(item.get('location', {}))
         if not query:
-            spider.logger.debug('empty query. not geocoding.')
+            spider.logger.debug('GEOCODER PIPELINE: Empty query. Not geocoding.')
             return item
 
         for suffix in ['', ' ave.', ' st.']:
@@ -58,7 +57,7 @@ class GeocoderPipeline(object):
             time.sleep(randint(0, 3))  # to avoid rate limiting?
             updated_item = self._update_fromDB(query, item)
             if updated_item:
-                spider.logger.debug('geocoded item from airtable cache.')
+                spider.logger.debug('GEOCODER PIPELINE: Geocoded item from airtable cache.')
                 return updated_item
 
         bad_addresses = ['Chicago, IL, USA', 'Illinois, USA', '']
@@ -77,10 +76,10 @@ class GeocoderPipeline(object):
                     'community_area': geocoded_item['community_area']
                 }
                 self._geocodeDB_write(spider, write_item)
-                spider.logger.debug('geocoded item from mapzen.')
+                spider.logger.debug('GEOCODER PIPELINE: Geocoded item from mapzen.')
                 return geocoded_item
 
-        spider.logger.exception("Couldn't geocode using mapzen or airtable cache: {0}".format(query))
+        spider.logger.exception("GEOCODER PIPELINE: Couldn't geocode using mapzen or airtable cache: {0}".format(query))
         return item
 
     def _geocode(self, query, item, spider):
@@ -90,9 +89,9 @@ class GeocoderPipeline(object):
         try:
             geocode = self.client.search(query, boundary_country='US', format='keys')
         except ValueError:
-            spider.logger.debug('Could not geocode, skipping. Query: {0}'.format(query))
+            spider.logger.debug('GEOCODER PIPELINE: Could not geocode, skipping. Query: {0}'.format(query))
         except Exception as e:
-            spider.logger.info('Unknown error when geocoding, skipping. Query: {0}\nMessage: {1}'.format(query, str(e)))
+            spider.logger.info('GEOCODER PIPELINE: Unknown error when geocoding, skipping. Query: {0}\nMessage: {1}'.format(query, str(e)))
         else:
             new_data = {
                 'location': {
@@ -179,7 +178,7 @@ class GeocoderPipeline(object):
         """
         Write to geocode_database.
         """
-        spider.logger.debug('GEOCODE PIPELINE: Caching {0}'.format(item['mapzen_query']))
+        spider.logger.debug('GEOCODER PIPELINE: Caching {0}'.format(item['mapzen_query']))
         item['geocode_date_updated'] = datetime.datetime.now().isoformat()
         airtable_item = self.geocode_database.match('mapzen_query', item['mapzen_query'])
         if airtable_item:
