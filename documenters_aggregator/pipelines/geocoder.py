@@ -49,13 +49,13 @@ class GeocoderPipeline(object):
 
         query = self._get_mapzen_query(item.get('location', {}))
         if not query:
-            spider.logger.debug('GEOCODER PIPELINE: Empty query. Not geocoding.')
+            spider.logger.debug('GEOCODER PIPELINE: Empty query. Not geocoding {0}'.format(item['id']))
             return item
 
         for suffix in ['', ' ave.', ' st.']:
             new_query = query.replace(', chicago, il', '{0}, chicago, il'.format(suffix))
             time.sleep(randint(0, 3))  # to avoid rate limiting?
-            updated_item = self._update_fromDB(query, item)
+            updated_item = self._update_fromDB(new_query, item)
             if updated_item:
                 spider.logger.debug('GEOCODER PIPELINE: Geocoded item from airtable cache.')
                 return updated_item
@@ -79,7 +79,8 @@ class GeocoderPipeline(object):
                 spider.logger.debug('GEOCODER PIPELINE: Geocoded item from mapzen.')
                 return geocoded_item
 
-        spider.logger.exception("GEOCODER PIPELINE: Couldn't geocode using mapzen or airtable cache: {0}".format(query))
+        spider.logger.exception(("GEOCODER PIPELINE: Couldn't geocode using mapzen or airtable cache. "
+                                 "Query: {0}. Item id: {1}").format(query, item['id']))
         return item
 
     def _geocode(self, query, item, spider):
@@ -89,9 +90,11 @@ class GeocoderPipeline(object):
         try:
             geocode = self.client.search(query, boundary_country='US', format='keys')
         except ValueError:
-            spider.logger.debug('GEOCODER PIPELINE: Could not geocode, skipping. Query: {0}'.format(query))
+            spider.logger.debug(('GEOCODER PIPELINE: Could not geocode, skipping. '
+                                 'Query: {0}. Item id: {1}').format(query, item['id']))
         except Exception as e:
-            spider.logger.info('GEOCODER PIPELINE: Unknown error when geocoding, skipping. Query: {0}\nMessage: {1}'.format(query, str(e)))
+            spider.logger.info(('GEOCODER PIPELINE: Unknown error when geocoding, skipping. '
+                                'Query: {0}. Item id: {1}. Message: {2}').format(query, item['id'], str(e)))
         else:
             new_data = {
                 'location': {
@@ -106,8 +109,9 @@ class GeocoderPipeline(object):
                 'geocode': json.dumps(geocode, indent=4, sort_keys=True),
                 'community_area': geocode['features'][0]['properties'].get('neighbourhood', '')
             }
-            item.update(new_data)
-            return item
+            geocoded_item = item.copy()
+            geocoded_item.update(new_data)
+            return geocoded_item
         return {'location': {'address': ''}}
 
     def _hasDigit(self, string):
@@ -162,8 +166,9 @@ class GeocoderPipeline(object):
         except:
             return {}
         else:
-            item.update(new_data)
-            return item
+            updated_item = item.copy()
+            updated_item.update(new_data)
+            return updated_item
 
     def _geocodeDB_fetch(self, query):
         """
