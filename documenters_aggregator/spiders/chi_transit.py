@@ -4,14 +4,13 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-import scrapy
 
 from datetime import datetime
 from pytz import timezone
-from slugify import slugify
+from documenters_aggregator.spider import Spider
 
 
-class ChiTransitSpider(scrapy.Spider):
+class ChiTransitSpider(Spider):
     name = 'chi_transit'
     long_name = 'Chicago Transit Authority'
     allowed_domains = ['www.transitchicago.com']
@@ -35,9 +34,8 @@ class ChiTransitSpider(scrapy.Spider):
             if item_start and today < item_start:
                 item_name = self._parse_name(item)
                 item_class = self._parse_classification(item)
-                yield {
+                item_data = {
                     '_type': 'event',
-                    'id': self._parse_id(item_start, item_name),
                     'name': item_name,
                     'description': self._parse_description(item, item_class),
                     'classification': item_class,
@@ -49,13 +47,8 @@ class ChiTransitSpider(scrapy.Spider):
                     'location': self._parse_location(item),
                     'sources': self._parse_sources(response)
                 }
-
-    def _parse_id(self, start_time, name):
-        """
-        We use the start time to generate an ID since there is no publically
-        exposed meeting ID.
-        """
-        return slugify(start_time.strftime('%Y-%m-%d-') + name)
+                item_data['id'] = self._generate_id({'name': item_name}, item_start)
+                yield item_data
 
     def _parse_classification(self, item):
         """
@@ -86,7 +79,8 @@ class ChiTransitSpider(scrapy.Spider):
         if re.match(r'567 (W.|W|West) Lake.*', location_str):
             return {
                 'url': self.base_url,
-                'name': '567 West Lake Street, 2nd Floor, Boardroom, Chicago, IL',
+                'name': 'Chicago Transit Authority 2nd Floor Boardroom',
+                'address': '567 West Lake Street Chicago, IL',
                 'coordinates': {
                     'latitude': 41.88528,
                     'longitude': -87.64235,
@@ -95,7 +89,8 @@ class ChiTransitSpider(scrapy.Spider):
         else:
             return {
                 'url': None,
-                'name': location_str,
+                'name': None,
+                'address': location_str,
                 'coordinates': {
                     'latitude': None,
                     'longitude': None
