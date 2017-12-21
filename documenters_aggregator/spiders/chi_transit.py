@@ -32,7 +32,7 @@ class ChiTransitSpider(scrapy.Spider):
             # Including previous item for meetings where it's needed
             prev_item = response_items[idx - 1] if idx > 0 else None
             item_start = self._parse_start(item, prev_item)
-            if today < item_start:
+            if item_start and today < item_start:
                 item_name = self._parse_name(item)
                 item_class = self._parse_classification(item)
                 yield {
