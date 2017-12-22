@@ -122,4 +122,5 @@ deploy/*.py
 
 # validation logs
 logs/*.log
+scripts/*.json
 
