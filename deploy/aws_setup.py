@@ -80,7 +80,7 @@ def create_task_definitions():
 
     for family_name in future_task_families:
         if family_name in existing_task_families:
-            print('task_family {0} exists'.format(family_name))
+            print('task family {0} exists'.format(family_name))
         else:
             print('creating task definition family {0}'.format(family_name))
             definitions = get_definitions(family_name)
