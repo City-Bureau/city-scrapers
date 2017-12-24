@@ -2,10 +2,9 @@ import json
 from subprocess import check_output
 from os import listdir, environ, path
 from os.path import isfile, join
-from datetime import datetime
 
 PROJECT_SLUG = 'documenters_aggregator'
-DEPLOY_TAG = 'latest'  #datetime.now().strftime("%Y%m%d%H%M")
+DEPLOY_TAG = 'latest'  # datetime.now().strftime("%Y%m%d%H%M")
 ECS_URI = environ.get('ECS_REPOSITORY_URI')
 
 SPIDER_PATH = 'documenters_aggregator/spiders'
@@ -14,7 +13,7 @@ spider_names = [
     path.splitext(f)[0]
     for f in listdir(SPIDER_PATH)
     if isfile(join(SPIDER_PATH, f)) and f != '__init__.py'
-    ]
+]
 
 
 def run(command):
@@ -46,14 +45,14 @@ def create_log_groups():
     """Create log groups for each scraper."""
 
     existing_log_groups = [
-            data['logGroupName']
-            for data
-            in json_run('aws logs describe-log-groups')['logGroups']
-            ]
+        data['logGroupName']
+        for data
+        in json_run('aws logs describe-log-groups')['logGroups']
+    ]
 
     future_log_groups = [
         '{0}-{1}'.format(PROJECT_SLUG, name) for name in spider_names
-        ]
+    ]
 
     for log_group_name in future_log_groups:
         if log_group_name in existing_log_groups:
@@ -72,11 +71,11 @@ def create_task_definitions():
         name
         for name
         in json_run('aws ecs list-task-definition-families --status ACTIVE')['families']
-        ]
+    ]
 
     future_task_families = [
         '{0}-{1}'.format(PROJECT_SLUG, name) for name in spider_names
-        ]
+    ]
 
     for family_name in future_task_families:
         if family_name in existing_task_families:
