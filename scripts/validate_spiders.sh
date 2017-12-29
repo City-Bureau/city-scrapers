@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Remove existing output
-rm scripts/*.json
+rm -f scripts/*.json
 
 # Run scrapers that have changed
 git diff --name-only --diff-filter=AM HEAD...$TRAVIS_BRANCH | \
