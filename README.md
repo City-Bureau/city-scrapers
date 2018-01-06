@@ -2,6 +2,8 @@
 
 The Documenters Aggregator a collection of scrapers and utilities to collect and store a comprehensive, central, and accessible calendar for public government meetings in Chicago and Cook County.
 
+![build status](https://api.travis-ci.org/City-Bureau/documenters-aggregator.svg?branch=master)
+
 ## Use Case
 
 Public meetings are important spaces for democracy where any resident can participate and hold public figures accountable. [City Bureau's Documenters program](https://www.citybureau.org/documenters) pays community members an hourly wage to inform and engage their communities by attending and documenting public meetings.
