@@ -2,7 +2,7 @@
 
 The Documenters Aggregator a collection of scrapers and utilities to collect and store a comprehensive, central, and accessible calendar for public government meetings in Chicago and Cook County.
 
-![build status](https://api.travis-ci.org/City-Bureau/documenters-aggregator.svg?branch=master)
+[![Build Status](https://travis-ci.org/City-Bureau/documenters-aggregator.svg?branch=master)](https://travis-ci.org/City-Bureau/documenters-aggregator)
 
 ## Use Case
 
