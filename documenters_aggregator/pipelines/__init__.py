@@ -1,5 +1,5 @@
 from .airtable import AirtablePipeline
-from .geocoder import GeocoderPipeline
+from .geocode import GeocoderPipeline
 from .LoggingPipeline import DocumentersAggregatorLoggingPipeline
 from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
