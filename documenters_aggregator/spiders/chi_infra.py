@@ -16,21 +16,19 @@ class Chi_infraSpider(Spider):
     allowed_domains = ['chicagoinfrastructure.org']
     start_urls = ['http://chicagoinfrastructure.org/public-records/scheduled-meetings/']
 
-    year = dt.date.today().year
-
+    year = str(dt.datetime.now().year)
     def parse(self, response):
         """
         Currently, the meeting page just gives dates, so there's limited info to report.
         The dates have no years, but the list has a year at the top. I pull this
         to add to the datetimes.
         """
-
-        year_item = response.css('div.entry')[1].css('div.entry p')[0].extract()
-        year_match = re.search(r'([0-9]{4})', year_item)
-        self.year = int(year_match.group(1))
-
-        for item in response.css('div.entry')[1].css('div.entry p')[1:]:
+        entries = response.css('div.entry')[0].css('div.entry p').extract()
+        self._parse_year(entries)
+        for item in entries:
             start_time = self._parse_start(item)
+            if not start_time:
+                continue
             data = {
                 '_type': 'event',
                 'name': 'Board Meeting',
@@ -47,17 +45,30 @@ class Chi_infraSpider(Spider):
             data['id'] = self._generate_id(data, start_time)
             yield data
 
+    def _parse_year(self, entries):
+        """
+        Look for a string of 4 numbers to be the year.
+        If not found, use current year.
+        """
+        for entry in entries:
+            year_match = re.search(r'([0-9]{4})', entry)
+            if year_match:
+                self.year = year_match.group(1)
+                break
+
     def _parse_start(self, item):
         """
         No times given; set to Midnight
         """
-        extracted = item.extract()
-        match = re.search(r'([a-zA-Z]*),\s{1}([a-zA-Z]+)\s([0-9]{1,2})', extracted)
-        date_string = '{0} {1}'.format(match.group(0), str(dt.datetime.now().year))
-
-        start_date_obj = dt.datetime.strptime(date_string, "%A, %B %d %Y")
-        tz = pytz.timezone('America/Chicago')
-        return tz.localize(start_date_obj)
+        match = re.search(r'([a-zA-Z]*),\s{1}([a-zA-Z]+)\s([0-9]{1,2})', item)
+        try:
+            date_string = '{0} {1}'.format(match.group(0), self.year)
+        except:
+            return None
+        else:
+            start_date_obj = dt.datetime.strptime(date_string, "%A, %B %d %Y")
+            tz = pytz.timezone('America/Chicago')
+            return tz.localize(start_date_obj)
 
     def _parse_sources(self, response):
         """
