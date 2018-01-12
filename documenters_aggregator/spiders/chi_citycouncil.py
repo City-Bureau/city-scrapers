@@ -36,8 +36,7 @@ class Chi_citycouncilSpider(Spider):
         data = json.loads(response.text)
 
         for item in data['results']:
-            parsed_item = self._parse_item(item)
-            yield parsed_item
+            yield self._parse_item(item)
 
         # self._parse_next(response) yields more (responses to parse
         max_page = data['meta']['max_page']
@@ -46,28 +45,14 @@ class Chi_citycouncilSpider(Spider):
             yield self._parse_next(response, page)
 
     def _parse_item(self, item):
-
-        if len(item.get('start_date', None)) > 0:
-            start_date = item['start_date'].split('+')[0]
-            start_datetime = dt.datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
-            tz = timezone('America/Chicago')
-            start_time = tz.localize(start_datetime).isoformat()
-        else:
-            start_time = None
-
-        if len(item.get('end_date', '')) > 0:
-            end_time = item['end_date'].isoformat()
-        else:
-            end_time = None
-
         data = {
             '_type': 'event',
             'id': item['id'],
             'name': item['name'],
             'description': item['description'],
             'classification': 'city council meeting',
-            'start_time': start_time,
-            'end_time': end_time,
+            'start_time': self._parse_time(item.get('start_date', '')),
+            'end_time': self._parse_time(item.get('end_date', '')),
             'all_day': item['all_day'],
             'timezone': 'America/Chicago',
             'status': item['status']
@@ -75,7 +60,7 @@ class Chi_citycouncilSpider(Spider):
         ocd_response = self._make_ocd_request(data['id'])
         data.update({'location': self._parse_location(ocd_response),
                      'sources': self._parse_sources(ocd_response, data['id'])})
-        data['id'] = self._generate_id(data, start_datetime)  # must happen AFTER previous line
+        data['id'] = self._generate_id(data, data['start_time'])  # must happen AFTER previous line
         return data
 
     def _parse_next(self, response, pgnum):
@@ -96,6 +81,19 @@ class Chi_citycouncilSpider(Spider):
             return e_pg.json()
         else:
             return None
+
+    def _parse_time(self, timestamp):
+        """
+        Parse start or end time.
+        """
+        if len(timestamp) <= 0:
+            return None
+
+        timestamp = timestamp.split('+')[0]
+        datetime_object = dt.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S')
+        utc_tz = timezone('UTC')
+        chicago_tz = timezone('America/Chicago')
+        return utc_tz.localize(datetime_object).astimezone(chicago_tz).isoformat()
 
     def _parse_location(self, ocd_response):
         """
