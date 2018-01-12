@@ -179,3 +179,4 @@ class Chi_policeboardSpider(Spider):
         Parse sources.
         """
         return [{'url': response.url, 'note': ''}]
+
