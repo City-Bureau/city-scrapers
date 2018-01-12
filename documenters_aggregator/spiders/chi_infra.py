@@ -88,3 +88,4 @@ class Chi_infraSpider(Spider):
                 'longitude': None,
             }
         }
+
