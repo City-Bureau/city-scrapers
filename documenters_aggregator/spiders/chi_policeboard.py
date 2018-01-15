@@ -18,6 +18,7 @@ class Chi_policeboardSpider(Spider):
     start_urls = ['http://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
 
     year = str(datetime.now().year)
+
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
@@ -179,4 +180,3 @@ class Chi_policeboardSpider(Spider):
         Parse sources.
         """
         return [{'url': response.url, 'note': ''}]
-
