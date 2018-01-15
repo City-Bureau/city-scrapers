@@ -22,10 +22,10 @@ class ChiSchoolActionsSpider(Spider):
         for school in response.css('#wrapper > table > tr'):
             school_name = school.css('td:first-child span::text').extract_first()
             school_action = school.css('td:nth-child(2) p > span::text').extract_first().strip()
-            ## TODO: Multiple links to documents, is there a place to include those?
+            school_docs = self._parse_documentation(school)
 
             for meeting_section in school.css('#main-body > table > tr > td > table > tr'):
-                meeting_type = self._parse_classification(meeting_section)
+                meeting_type = self._parse_classification(meeting_section, school_action)
                 for meeting in meeting_section.css('td > table'):
                     start_datetime = self._parse_start(meeting)
                     end_datetime = self._parse_end(meeting)
@@ -34,7 +34,7 @@ class ChiSchoolActionsSpider(Spider):
                         '_type': 'event',
                         'id': self._generate_id({'name': item_name}, start_datetime),
                         'name': item_name,
-                        'description': self._parse_description(school_name, school_action, meeting_type),
+                        'description': self._parse_description(school_name, meeting_type, school_docs),
                         'classification': meeting_type,
                         'start_time': self._format_datetime(start_datetime),
                         'end_time': self._format_datetime(end_datetime),
@@ -50,17 +50,20 @@ class ChiSchoolActionsSpider(Spider):
         """
         return '{} {}'.format(school_name, meeting_type)
 
-    def _parse_description(self, school_name, school_action, meeting_type):
+    def _parse_description(self, school_name, meeting_type, docs):
         """
         Parse or generate event description.
         """
-        return '{} {}: {}'.format(school_name, school_action, meeting_type)
+        return '{} {}. {}'.format(school_name, meeting_type, docs)
 
-    def _parse_classification(self, item):
+    def _parse_classification(self, item, school_action):
         """
         Parse or generate classification (e.g. public health, education, etc).
         """
-        return item.css('td > p.sub-title:first-of-type::text').extract_first()
+        return '{}: {}'.format(
+            item.css('td > p.sub-title:first-of-type::text').extract_first(),
+            school_action
+        )
 
     def _parse_date_str(self, item):
         """
@@ -139,3 +142,30 @@ class ChiSchoolActionsSpider(Spider):
         Parse or generate sources.
         """
         return [{'url': self.start_urls[0], 'note': ''}]
+
+    def _parse_documentation(self, school):
+        """
+        Parsing the documentation and meeting note URLs
+        """
+        doc_link_items = school.css('ul.bullets:first-of-type li')
+        doc_link_list = []
+        note_link_items = school.css('ul.bullets:nth-of-type(2) li')
+        note_link_list = []
+
+        for item in doc_link_items:
+            doc_link_list.append('{} http://schoolinfo.cps.edu/SchoolActions/{}'.format(
+                item.css('a::text').extract_first(),
+                item.css('a::attr(href)').extract_first()
+            ))
+        for item in note_link_items:
+            note_link_list.append('{} http://schoolinfo.cps.edu/SchoolActions/{}'.format(
+                item.css('a::text').extract_first(),
+                item.css('a::attr(href)').extract_first()
+            ))
+        doc_link_str = 'Documentation: {}'.format(', '.join(doc_link_list))
+        note_link_str = 'Meeting Notes: {}'.format(', '.join(note_link_list))
+
+        if len(note_link_list) > 0:
+            return ' '.join([doc_link_str, note_link_str])
+        else:
+            return doc_link_str
