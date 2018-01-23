@@ -24,7 +24,7 @@ Want to use or contribute to the project? **[Start with the documentation](https
 ## Ready to code with us?
 
 1. Join our [slack channel](https://citybureau.slack.com/#labs_aggregator).
-2. Read about [how we collaborate](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md)
+2. Read about [how we collaborate](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) and review our [Code of Conduct](https://github.com/City-Bureau/documenters-aggregator/blob/master/CODE_OF_CONDUCT.md).
 3. Get started with [Installation](installation.md) and [Contributing a spider](contribute-a-spider.md).
 
 We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on [slack](https://citybureau.slack.com/) for support if you need it. We also meet up in person to work together regularly. We'll post about upcoming meetups in Slack.
