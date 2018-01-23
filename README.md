@@ -21,6 +21,17 @@ Documenters Aggregator is a community-based open source project with a friendly 
 
 Want to use or contribute to the project? **[Start with the documentation](https://github.com/City-Bureau/documenters-aggregator/tree/master/docs)**, and join our [slack channel](https://citybureau.slack.com/).
 
+# Ways to contribute
+
+There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [slack](https://citybureau.slack.com/) about code and design choices.
+
+The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on [slack](https://citybureau.slack.com/) for support--we can meet up in person to troubleshoot some headaches like virtual environment issues.
+
+* [Installation](installation.md)
+* [Contributing a spider](contribute-a-spider.md)
+
+To contribute infrastructure and utilities, see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+
 ## Support this work
 
 This project is organized and maintained by [City Bureau](http://www.citybureau.org/) and [ProPublica Illinois](https://www.propublica.org/illinois).
