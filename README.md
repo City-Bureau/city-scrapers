@@ -21,16 +21,15 @@ Documenters Aggregator is a community-based open source project with a friendly 
 
 Want to use or contribute to the project? **[Start with the documentation](https://github.com/City-Bureau/documenters-aggregator/tree/master/docs)**, and join our [slack channel](https://citybureau.slack.com/).
 
-# Ways to contribute
+## Ready to code with us?
 
-There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [slack](https://citybureau.slack.com/) about code and design choices.
+1. Join our [slack channel](https://citybureau.slack.com/#labs_aggregator).
+2. Read about [how we collaborate](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md)
+3. Get started with [Installation](installation.md) and [Contributing a spider](contribute-a-spider.md).
 
-The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on [slack](https://citybureau.slack.com/) for support--we can meet up in person to troubleshoot some headaches like virtual environment issues.
+We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on [slack](https://citybureau.slack.com/) for support if you need it. We also meet up in person to work together regularly. We'll post about upcoming meetups in Slack.
 
-* [Installation](installation.md)
-* [Contributing a spider](contribute-a-spider.md)
-
-To contribute infrastructure and utilities, see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+For those familiar with the project, please see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
 
 ## Support this work
 
@@ -46,7 +45,3 @@ This project is organized and maintained by [City Bureau](http://www.citybureau.
   * [Subscribe](http://go.propublica.org/sign-up)
   * [Twitter @propublicail](https://twitter.com/ProPublicaIL)
   * [Facebook](https://www.facebook.com/propublicaillinois/)
-
-
-
-
