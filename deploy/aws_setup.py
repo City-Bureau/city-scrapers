@@ -99,7 +99,7 @@ def get_definitions(family_name):
     definition = {
         'environment': [{'name': k, 'value': v} for k, v in env.items()],
         'name': PROJECT_SLUG,
-        'image': '{0}:{1}-{2}'.format(ECS_URI, PROJECT_SLUG, DEPLOY_TAG),
+        'image': '{0}:{2}'.format(ECS_URI, DEPLOY_TAG),
         'command': ["sh", "-c", 'scrapy crawl {0}'.format(name)],
         'workingDirectory': '/usr/src/app',
         'memory': 512,
