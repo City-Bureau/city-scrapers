@@ -9,7 +9,11 @@ ECS_URI = environ.get('ECS_REPOSITORY_URI')
 
 SPIDER_PATH = 'documenters_aggregator/spiders'
 
-spider_names = []
+spider_names = [
+    path.splitext(f)[0]
+    for f in listdir(SPIDER_PATH)
+    if isfile(join(SPIDER_PATH, f)) and f != '__init__.py'
+]
 
 
 def run(command):
