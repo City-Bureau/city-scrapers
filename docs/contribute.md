@@ -1,4 +1,4 @@
-# Contributing a spider
+# Contribute
 
 ## Familiarize yourself with how we work!
 
@@ -51,7 +51,7 @@ If there are no error messages, congratulations! You have a barebones spider.
 ### 5. Run the automated tests
 
 We use the [pytest](https://docs.pytest.org/en/latest/) testing framework to
-verify the behavior of the project's code and 
+verify the behavior of the project's code and
 [pyflakes](https://docs.pytest.org/en/latest/) and [pep8](https://pypi.python.org/pypi/pep8) to
 check that all code is written in the proper style.
 
