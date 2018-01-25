@@ -34,7 +34,7 @@ For those familiar with the project, please see the [help-wanted Github issues](
 This project is organized and maintained by [City Bureau](http://www.citybureau.org/) and [ProPublica Illinois](https://www.propublica.org/illinois).
 
 * [City Bureau](https://www.citybureau.org/)
-  * [Donate](https://citybureau.squarespace.com/support)
+  * [Donate](https://www.citybureau.org/press-club)
   * [Subscribe](https://citybureau.squarespace.com/newsletter/)
   * [Twitter @city_bureau](https://twitter.com/city_bureau/)
   * [Facebook](https://www.facebook.com/CityBureau/)
