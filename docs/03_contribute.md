@@ -1,4 +1,8 @@
-# Contribute
+---
+title: Contribute
+---
+
+<h1 class="hidden">Contribute</h1>
 
 ## Familiarize yourself with how we work!
 

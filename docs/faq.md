@@ -1,3 +1,6 @@
+---
+---
+
 # FAQ
 
 ## What if the dates I want to scrape are only available inside a PDF or image?
