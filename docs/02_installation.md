@@ -68,7 +68,7 @@ Should you need to deactivate the virtual environment, it is as simple as:
 
 ### Step 2, Option 2: Docker
 
-This is a good option for Windows or a system that doesn't have any of the above prerequisites installed but does have Docker.
+This is a good option for Windows or a system that doesn't have any of the above prerequisites installed but does have Docker. You will first have to install Docker [here](https://docs.docker.com/install/). Older Mac and Windows systems may need to use [Docker Toolbox](https://docs.docker.com/toolbox/overview/) instead.
 
 1. [Fork the repository](https://github.com/City-Bureau/documenters-aggregator/fork) to your own Github account.
 
@@ -82,7 +82,7 @@ $ git clone git@github.com:<your-username>/documenters-aggregator.git
 $ cd documenters-aggregator
 ```
 
-4. Build the docker container:
+4. Build the docker container. Don't forget final ".", which tells Docker to use the Dockerfile in the current directory. The "-t" flag adds a tag to the image so that it gets a nice repository name and tag. This tag matches the [Docker Hub docker repository](https://hub.docker.com/r/easherma/documenters-aggregator), but you can add other tags. For more information, read the [Docker docs.](https://docs.docker.com/)
 ```
 $ docker build -t easherma/documenters-aggregator .
 ```
