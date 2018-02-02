@@ -8,7 +8,6 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-import logging
 
 BOT_NAME = 'documenters_aggregator'
 
@@ -35,7 +34,7 @@ COOKIES_ENABLED = False
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'documenters_aggregator.pipelines.ValidationPipeline': 300,
+    #'documenters_aggregator.pipelines.ValidationPipeline': 300
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -104,4 +103,3 @@ CLOSESPIDER_ERRORCOUNT = 5
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-LOG_LEVEL = logging.INFO
