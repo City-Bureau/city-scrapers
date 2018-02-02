@@ -103,6 +103,7 @@ class TestspiderSpider(scrapy.Spider):
         return {
             'url': '',
             'name': '',
+            'address': '',
             'coordinates': {
                 'latitude': '',
                 'longitude': '',
