@@ -13,6 +13,7 @@ TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templat
 SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'documenters_aggregator/spiders')
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/files')
+SCRIPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scripts')
 
 # pty is not available on Windows
 try:
@@ -158,22 +159,13 @@ def _get_domains(start_urls):
 
 
 @task
-def validate_new_spiders(ctx):
+def validate_spider(ctx, spider):
     """
-    Validates new spiders
+    Validates scraped items from a spider.
+    Passes if >=90% of the scraped items
+    conform to the schema.
     """
-    #new_files = run(('git diff --name-only --diff-filter=AM HEAD...$TRAVIS_BRANCH'
-    #                 '| grep .*documenters_aggregator/spiders/.*\.py')).stdout
-    new_files = run(('git diff --name-only HEAD...test_branch'
-                     '| grep .*documenters_aggregator/spiders/.*\.py')).stdout
-    spider_names = [x.split('/')[-1][:-3] for x in new_files.split('\n') if x]
-    print(spider_names)
-    for spider in spider_names:
-        run('scrapy crawl {0} -o {0}.json --loglevel=ERROR'.format(spider))
-        _validate_spider(spider)
-
-def _validate_spider(spider):
-    scraped_items = json.load(open('{0}.json'.format(spider)))
+    scraped_items = json.load(open(os.path.join(SCRIPTS_DIR, '{0}.json'.format(spider))))
     validated_items = [{k: v for k, v in item.items() if k.startswith('val_')} for item in scraped_items]
     validation_summary = pd.DataFrame(validated_items).mean()
 
@@ -195,5 +187,5 @@ def _validate_spider(spider):
 ns = Collection()
 ns.add_task(genspider)
 ns.add_task(runtests)
-ns.add_task(validate_new_spiders)
+ns.add_task(validate_spider)
 ns.add_collection(ecs, 'ecs')
