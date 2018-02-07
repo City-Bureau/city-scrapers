@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import scrapy
 from datetime import datetime
 from pytz import timezone
 import re
 
 from documenters_aggregator.spider import Spider
+
 
 class Metra_boardSpider(Spider):
     name = 'metra_board'
@@ -116,4 +116,3 @@ class Metra_boardSpider(Spider):
             'url': response.url,
             'note': '',
         }]
-

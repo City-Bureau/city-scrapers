@@ -63,4 +63,3 @@ def test_classification(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert parsed_items[0]['_type'] == 'event'
-
