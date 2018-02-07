@@ -60,10 +60,12 @@ python-slugify==1.2.4
 pytz==2017.2
 queuelib==1.4.2
 ratelim==0.1.6
+raven==6.4.0
 requests==2.18.4
 s3transfer==0.1.11
 scrapelib==1.1.0
 Scrapy==1.4.0
+scrapy-sentry==0.8.0
 service-identity==17.0.0
 simplegeneric==0.8.1
 six==1.11.0

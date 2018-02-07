@@ -17,6 +17,8 @@ class Chi_policeboardSpider(Spider):
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['http://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
 
+    year = str(datetime.now().year)
+
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
@@ -37,6 +39,7 @@ class Chi_policeboardSpider(Spider):
             'sources': self._parse_sources(response)
         }
         universal_start_time = self._parse_universal_start(response)
+        self._parse_year(response)
 
         for item in response.xpath('//p[contains(@style,"padding-left")]'):
             start_time, start_time_str = self._parse_start(item, universal_start_time)
@@ -123,8 +126,7 @@ class Chi_policeboardSpider(Spider):
         Parse start date and time.
         """
         date = self._parse_start_date(item)
-        year = str(datetime.now().year)
-        datestring = '{0}, {1} {2}'.format(date, year, time)
+        datestring = '{0}, {1} {2}'.format(date, self.year, time)
         date = self._make_date(datestring)
 
         if date:
@@ -142,6 +144,17 @@ class Chi_policeboardSpider(Spider):
         if not clean_date_match:
             return None
         return clean_date_match.group(1)
+
+    def _parse_year(self, response):
+        """
+        Look for a string of 4 numbers to be the year.
+        If not found, use current year.
+        """
+        for entry in response.xpath('//h3/text()').extract():
+            year_match = re.search(r'([0-9]{4})', entry)
+            if year_match:
+                self.year = year_match.group(1)
+                break
 
     def _make_date(self, datestring):
         """

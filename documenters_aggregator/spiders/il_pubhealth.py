@@ -71,8 +71,8 @@ class Il_pubhealthSpider(Spider):
         @TODO better location
         """
         return {
-            'url': None,
-            'name': None,
+            'url': '',
+            'name': '',
             'coordinates': {'longitude': '', 'latitude': ''},
         }
 

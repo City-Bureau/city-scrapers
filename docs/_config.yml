@@ -1,0 +1,42 @@
+name: City Bureau Documenters Aggregator
+remote_theme: allejo/jekyll-docs-theme
+
+project:
+    version: 0.1.0
+
+license:
+    software: MIT License
+    software_url: http://opensource.org/licenses/MIT
+
+    docs: CC BY 3.0
+    docs_url: http://creativecommons.org/licenses/by/3.0/
+
+links:
+    header:
+      - title: GitHub
+        url: https://github.com/City-Bureau/documenters-aggregator
+    footer:
+      - title: GitHub
+        url: https://github.com/City-Bureau/documenters-aggregator
+
+ui:
+    header:
+        color1: "#E92320"
+        color2: "#f6ac4c"
+        trianglify: true
+
+social:
+    github:
+        user: City-Bureau
+        repo: documenters-aggregator
+    twitter:
+        enabled: false
+        via:
+        hash:
+        account:
+    facebook:
+        enabled: false
+        profileUrl:
+
+analytics:
+    google: 
