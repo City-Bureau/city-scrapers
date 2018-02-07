@@ -12,7 +12,14 @@ from scrapy.exceptions import DropItem
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
-KEEP_FIELDS = ['id', 'name', 'description', 'classification', 'start_time', 'end_time', 'timezone', 'status', 'agency_name', 'location_name', 'location_url', 'location_name', 'location_address', 'location_latitude', 'location_longitude', 'geocode', 'url', 'scrape_date_initial', 'scrape_date_update']
+KEEP_FIELDS = ['id', 'name', 'description', 'classification', 'start_time', 'end_time',
+               'timezone', 'agency_name', 'location_name', 'location_url',
+               'location_address', 'location_latitude', 'location_longitude',
+               'geocode', 'url', 'community_area', 'scrape_date_initial',
+               'scrape_date_update', 'val_id', 'val_name', 'val_description',
+               'val_classification', 'val_start_time', 'val_end_time',
+               'val_timezone', 'val_loc_name', 'val_loc_url', 'val_loc_address',
+               'val_coord_latitude', 'val_coord_longitude', 'val_sources']
 
 
 class AirtablePipeline(object):
@@ -45,11 +52,10 @@ class AirtablePipeline(object):
         new_item['location_address'] = get_key(new_item, 'location.address')
         new_item['location_latitude'] = get_key(new_item, 'location.coordinates.latitude')
         new_item['location_longitude'] = get_key(new_item, 'location.coordinates.longitude')
-        new_item['timezone'] = 'America/Chicago'  # TODO have this passed in by the spiders
-        new_item['all_day'] = 'false'
         new_item['agency_name'] = spider.long_name
+        new_item['url'] = new_item.get('sources', [{'url': ''}])[0].get('url', '')
 
-        new_item = {k: self._format_missing_values(v) for k, v in new_item.items() if k in KEEP_FIELDS}
+        new_item = {k: self._format_values(k, v) for k, v in new_item.items() if k in KEEP_FIELDS}
 
         try:
             self.save_item(new_item, spider)
@@ -63,10 +69,14 @@ class AirtablePipeline(object):
         except Exception as e:
             spider.logger.exception('Unknown error')
 
-    def _format_missing_values(self, x):
-        if (x is None) or x == '':
-            return 'n/a'
-        return x
+    def _format_values(self, k, v):
+        if ((v is None) or v == '') and (k not in ['start_time', 'end_time']):
+            return 'N/A'
+        if k == 'location_name':
+            return ' '.join([w.capitalize() for w in v.split(' ')])
+        if isinstance(v, bool):
+            return int(v)
+        return v
 
     def save_item(self, item, spider):
         now = datetime.datetime.now().isoformat()
@@ -74,7 +84,7 @@ class AirtablePipeline(object):
         if airtable_item:
             spider.logger.debug('AIRTABLE PIPELINE: Updating {0}'.format(item['id']))
             item['scrape_date_updated'] = now
-            self.airtable.update_by_field('id', airtable_item['id'], item)
+            self.airtable.update_by_field('id', item['id'], item)
         else:
             spider.logger.debug('AIRTABLE PIPELINE: Creating {0}'.format(item['id']))
             item['scrape_date_updated'] = now

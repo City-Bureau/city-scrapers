@@ -54,8 +54,8 @@ def test_status(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
     assert item['location'] == {
-        'url': None,
-        'name': None,
+        'url': '',
+        'name': '',
         'coordinates': {'latitude': '', 'longitude': ''}
     }
 

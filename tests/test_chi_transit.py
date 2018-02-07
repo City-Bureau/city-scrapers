@@ -40,8 +40,8 @@ def test_classification():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == '2017-11-15-committee-on-strategic-planning-service-delivery'
-    assert parsed_items[2]['id'] == '2017-11-15-regular-board-meeting-of-chicago-transit-board'
+    assert parsed_items[0]['id'] == 'chi_transit/201711151400/x/committee_on_strategic_planning_service_delivery'
+    assert parsed_items[2]['id'] == 'chi_transit/201711151430/x/regular_board_meeting_of_chicago_transit_board'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -63,7 +63,8 @@ def test_status(item):
 def test_location(item):
     assert item['location'] == {
         'url': 'http://www.transitchicago.com',
-        'name': '567 West Lake Street, 2nd Floor, Boardroom, Chicago, IL',
+        'name': 'Chicago Transit Authority 2nd Floor Boardroom',
+        'address': '567 West Lake Street Chicago, IL',
         'coordinates': {
             'latitude': 41.88528,
             'longitude': -87.64235,
