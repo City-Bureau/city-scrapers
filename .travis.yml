@@ -6,4 +6,4 @@ install:
   - pip install pytest pep8 pyflakes
 script:
   - invoke runtests
-  - ./scripts/validate_spiders.sh
+  - ./travis/validate_spiders.sh

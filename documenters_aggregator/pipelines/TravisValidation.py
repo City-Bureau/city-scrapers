@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from pytz import timezone
 
-class GithubValidationPipeline(object):
+class TravisValidationPipeline(object):
     NULL_VALUES = [None, '']
     SCHEMA = {
         '_type': {'required': True, 'type': str, 'values': ['event']},
