@@ -28,7 +28,7 @@ class {{ classname }}(Spider):
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'timezone': self._parse_timezone(item),
-                'status': 'self._parse_status(item)',
+                'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item),
