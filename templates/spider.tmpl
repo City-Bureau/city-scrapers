@@ -2,6 +2,7 @@
 import scrapy
 from documenters_aggregator.spider import Spider
 
+
 class {{ classname }}(Spider):
     name = '{{ name }}'
     long_name = '{{ long_name }}'
@@ -18,7 +19,7 @@ class {{ classname }}(Spider):
         """
         for item in response.css('.eventspage'):
 
-        data = {
+            data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
