@@ -178,8 +178,8 @@ def validate_spider(ctx, spider):
         message = ('Less than 90% of the scraped items from {0} passed validation. '
             'See the validation summary printed in stdout, and check that the '
             'scraped items conform to the events schema at: '
-            'https://city-bureau.gitbooks.io/documenters-event-aggregator/'
-            'event-schema.html').format(spider)
+            'https://github.com/City-Bureau/city-scrapers/'
+            'blob/master/docs/06_event_schema.md').format(spider)
         raise Exception(message) from e
 
 
