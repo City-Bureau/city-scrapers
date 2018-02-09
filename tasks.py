@@ -13,7 +13,7 @@ TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templat
 SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'documenters_aggregator/spiders')
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/files')
-SCRIPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scripts')
+TRAVIS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'travis')
 
 # pty is not available on Windows
 try:
@@ -165,7 +165,7 @@ def validate_spider(ctx, spider):
     Passes if >=90% of the scraped items
     conform to the schema.
     """
-    scraped_items = json.load(open(os.path.join(SCRIPTS_DIR, '{0}.json'.format(spider))))
+    scraped_items = json.load(open(os.path.join(TRAVIS_DIR, '{0}.json'.format(spider))))
     validated_items = [{k: v for k, v in item.items() if k.startswith('val_')} for item in scraped_items]
     validation_summary = pd.DataFrame(validated_items).mean()
 
