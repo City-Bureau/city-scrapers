@@ -3,11 +3,11 @@ import scrapy
 from documenters_aggregator.spider import Spider
 
 
-class {{ classname }}(Spider):
-    name = '{{ name }}'
-    long_name = '{{ long_name }}'
-    allowed_domains = [{{ domains|quote_list|join(', ') }}]
-    start_urls = [{{ start_urls|quote_list|join(', ') }}]
+class TestspiderSpider(Spider):
+    name = 'testspider'
+    long_name = 'Test Spider Board Of Trade And Englightenment'
+    allowed_domains = ['www.citybureau.org']
+    start_urls = ['http://www.citybureau.org/articles', 'http://www.citybureau.org/staff', 'http://www.citybureau.org/is-chicago-any-less-segregated']
 
     def parse(self, response):
         """
