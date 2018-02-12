@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 from pytz import timezone
 
+
 class TravisValidationPipeline(object):
     NULL_VALUES = [None, '']
     SCHEMA = {

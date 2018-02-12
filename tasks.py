@@ -175,11 +175,13 @@ def validate_spider(ctx, spider):
     try:
         assert all([x >= 0.9 for x in validation_summary.tolist()])
     except AssertionError as e:
-        message = ('Less than 90% of the scraped items from {0} passed validation. '
+        message = (
+            'Less than 90% of the scraped items from {0} passed validation. '
             'See the validation summary printed in stdout, and check that the '
             'scraped items conform to the events schema at: '
             'https://github.com/City-Bureau/city-scrapers/'
-            'blob/master/docs/06_event_schema.md').format(spider)
+            'blob/master/docs/06_event_schema.md'
+        ).format(spider)
         raise Exception(message) from e
 
 
