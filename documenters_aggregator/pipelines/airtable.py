@@ -9,6 +9,7 @@ from documenters_aggregator.utils import get_key
 from random import randint
 from requests.exceptions import HTTPError
 from scrapy.exceptions import DropItem
+from pytz import utc
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
@@ -76,6 +77,10 @@ class AirtablePipeline(object):
             return ' '.join([w.capitalize() for w in v.split(' ')])
         if isinstance(v, bool):
             return int(v)
+        if isinstance(v, datetime.datetime):
+            # converts '2018-10-14T00:00:00-05:00' into '2018-10-14T05:00:00+00:00'
+            # as required by the Airtable API
+            return v.astimezone(utc).isoformat()
         return v
 
     def save_item(self, item, spider):
