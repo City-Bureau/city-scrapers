@@ -12,12 +12,12 @@ The Documenters-Aggregator is a collection of web-scrapers and utilities to crea
 
 [![Deploy Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZUwxa3FleE42andOVVZhUytOSXFQOE5QMnYwN3Jxa2FmWTBoMk5XZmJTb05OSmtIcXc4SW5ycjZua2x0Zy9SQzN2Q3ZTVW1xRWFrTGRUSVhna2Y3NWtnPSIsIml2UGFyYW1ldGVyU3BlYyI6IklRdldCcXJKMm4zTmFtZXEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://console.aws.amazon.com/codebuild/home?region=us-east-1#/projects/DocumentersAggregator/view)
 
-## Coding Community
+## Community
 
-The City Bureau Labs community welcomes contributions from everyone. We prioritize the coding experiences of under-represented groups in tech and media. 
+The City Bureau Labs community welcomes contributions from everyone. We prioritize the experiences of under-represented groups in tech and media. 
 
 This project provides an opportunity for coders and journalists to build up their technical skills so that they can become leaders and mentors in Chicago’s civic tech and media scene. We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), 
-so that more under-represented folks will become contributors and decision-makers in both City Bureau’s tech community and Chicago’s civic tech scene at large. We encourage folks who have found their grounding with us to continue transforming our communities like starting a breakout group at Chi Hack Night or teaching a class at Blue1647.
+so that more under-represented folks will become contributors and decision-makers in both City Bureau’s community and Chicago’s tech and media scenes at large. We encourage folks who have found their grounding with us to continue transforming our communities with community partners.
 
 ## Ready to code with us?
 
@@ -28,6 +28,12 @@ so that more under-represented folks will become contributors and decision-maker
 We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on [slack](https://citybureau.slack.com/#labs_aggregator) for support if you need it. We also meet up in person to work together regularly, and post about upcoming meetups in slack.
 
 For those familiar with the project, please see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+
+## Don't want to code?
+
+A. We have ongoing conversations about what sort of data we should collect and how it should be collected. Help us make these decisions by commenting on [issues with a non-coding label](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3Anon-coding).
+
+B. Research sources for public meetings. Answer questions like: Are we scraping events from the right websites? Are there local agencies that we're missing? Should events be updated manually or by a scraper? [Triage events sources on these issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22non-coding%3A+triage+events+source%22).
 
 ## Support this work
 
