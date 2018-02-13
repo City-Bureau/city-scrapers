@@ -3,7 +3,7 @@ from .geocoder import GeocoderPipeline
 from .LoggingPipeline import DocumentersAggregatorLoggingPipeline
 from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
-from .output import CsvPipeline
+from .exporter import CsvPipeline
 
 __all__ = (
     'DocumentersAggregatorLoggingPipeline',
