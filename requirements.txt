@@ -38,7 +38,6 @@ lxml==4.0.0
 -e git+https://github.com/duydo/python-mapzen.git@80f59d1f6fcc3a3c1133ead5063fe7562f0180ac#egg=mapzen
 MarkupSafe==1.0
 opencivicdata==2.0.0
-pandas==0.21.0
 parsel==1.2.0
 pexpect==4.2.1
 pickleshare==0.7.4
