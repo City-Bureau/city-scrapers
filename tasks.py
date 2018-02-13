@@ -63,7 +63,7 @@ def runtests(ctx):
     """
     Runs pytest and flake8.
     """
-    run('pytest -s', pty=pty_available)
+    run('pytest -s tests', pty=pty_available)
     run('flake8 --ignore E265,E266,E501 --exclude src', pty=pty_available)
 
 
