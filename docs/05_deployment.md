@@ -1,4 +1,8 @@
-# Deployment
+---
+title: Deployment
+---
+
+<h1 class="hidden">Deployment</h1>
 
 We are using Amazon Elastic Container Service (ECS) to run this project in production. Each of the spiders has its own:
 
@@ -14,7 +18,7 @@ The [GitHub repo](https://github.com/City-Bureau/documenters-aggregator) is conn
   2. Tags the new image with `latest` (Note that this is the tag that all of the ECS Task Definitions will use).
   3. Checks that the tests pass by running `invoke runtests` in the new image
   4. Pushes the Docker image to our ECS Repository
-  5. Runs the script `deploy/setup_aws.py`, which creates the task definitions in ECS, sets up log groups in CloudWatch, etc. for all existing spiders. 
+  5. Runs the script `deploy/setup_aws.py`, which creates the task definitions in ECS, sets up log groups in CloudWatch, etc. for all existing spiders.
 
 The bottom line is this: when everything works, pushing to master will deploy code to production as long as the build passes. If the tests don't pass in step #3, the build is aborted.
 

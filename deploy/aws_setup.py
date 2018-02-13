@@ -68,8 +68,8 @@ def create_task_definitions():
     """
 
     existing_task_families = [
-        name
-        for name
+        family_name
+        for family_name
         in json_run('aws ecs list-task-definition-families --status ACTIVE')['families']
     ]
 
@@ -93,12 +93,13 @@ def create_task_definitions():
                 run('aws ecs deregister-task-definition --task-definition {0}'.format(arn))
 
 
-def get_definitions(name):
+def get_definitions(family_name):
     env = get_env()
+    name = family_name.replace(PROJECT_SLUG + '-', '')
     definition = {
         'environment': [{'name': k, 'value': v} for k, v in env.items()],
         'name': PROJECT_SLUG,
-        'image': '{0}:{1}-{2}'.format(ECS_URI, PROJECT_SLUG, DEPLOY_TAG),
+        'image': '{0}:{1}'.format(ECS_URI, DEPLOY_TAG),
         'command': ["sh", "-c", 'scrapy crawl {0}'.format(name)],
         'workingDirectory': '/usr/src/app',
         'memory': 512,
@@ -107,7 +108,7 @@ def get_definitions(name):
         'logConfiguration': {
             'logDriver': 'awslogs',
             'options': {
-                'awslogs-group': '{0}-{1}'.format(PROJECT_SLUG, name),
+                'awslogs-group': family_name,
                 'awslogs-region': environ.get('AWS_DEFAULT_REGION', 'us-east-1'),
             }
         }

@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
-import scrapy
+from datetime import datetime
+from pytz import timezone
+import re
+
 from documenters_aggregator.spider import Spider
 
 
-class {{ classname }}(Spider):
-    name = '{{ name }}'
-    long_name = '{{ long_name }}'
-    allowed_domains = [{{ domains|quote_list|join(', ') }}]
-    start_urls = [{{ start_urls|quote_list|join(', ') }}]
+class Metra_boardSpider(Spider):
+    name = 'metra_board'
+    long_name = 'Metra Board of Directors'
+    allowed_domains = ['metrarail.com']
+    start_urls = ['https://metrarr.granicus.com/ViewPublisher.php?view_id=5']
 
     def parse(self, response):
         """
@@ -17,54 +20,30 @@ class {{ classname }}(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
+        for item in response.css('.listingTable')[0].css('.listingRow'):
+            start_dt = self._parse_start(item)
 
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
+                'description': '',
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
-                'timezone': self._parse_timezone(item),
-                'status': self._parse_status(item),
-                'all_day': self._parse_all_day(item),
+                'start_time': start_dt.isoformat(),
+                'end_time': None,
+                'timezone': 'America/Chicago',
+                'all_day': False,
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item),
+                'sources': self._parse_sources(response),
             }
 
-        data['id'] = self._generate_id(data, start_time)
-
-        yield data
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique and in the following format:
-        <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-identifier>/<underscored-event-name>
-
-        Example:
-        chi_buildings/201710161230/2176/daley_plaza_italian_exhibit
-        """
-        return ''
+            data['id'] = self._generate_id(data, start_dt)
+            yield data
 
     def _parse_name(self, item):
         """
         Parse or generate event name.
         """
-        return ''
+        return item.css('td[headers=Name]::text').extract_first()
 
     def _parse_description(self, item):
         """
@@ -76,13 +55,25 @@ class {{ classname }}(Spider):
         """
         Parse or generate classification (e.g. public health, education, etc).
         """
-        return ''
+        return 'transit'
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        return ''
+        raw_date_time = item.css('td[headers=Date]::text').extract_first()
+        date_time_str = re.sub(r'\s+', ' ', raw_date_time).strip()
+
+        if not date_time_str:
+            return None
+
+        try:
+            naive = datetime.strptime(date_time_str, '%b %d, %Y - %I:%M %p')
+        except ValueError:
+            return None
+
+        tz = timezone('America/Chicago')
+        return tz.localize(naive)
 
     def _parse_end(self, item):
         """
@@ -110,29 +101,18 @@ class {{ classname }}(Spider):
         return {
             'url': '',
             'name': '',
-            'address': '',
+            'address': '547 West Jackson Boulevard, Chicago, IL',
             'coordinates': {
                 'latitude': '',
                 'longitude': '',
             },
         }
 
-    def _parse_status(self, item):
-        """
-        Parse or generate status of meeting. Can be one of:
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-        By default, return "tentative"
-        """
-        return 'tentative'
-
-    def _parse_sources(self, item):
+    def _parse_sources(self, response):
         """
         Parse or generate sources.
         """
         return [{
-            'url': '',
+            'url': response.url,
             'note': '',
         }]

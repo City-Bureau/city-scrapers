@@ -35,9 +35,10 @@ COOKIES_ENABLED = False
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'documenters_aggregator.pipelines.AirtablePipeline': 300,
+    'documenters_aggregator.pipelines.GeocoderPipeline': 200,
+    'documenters_aggregator.pipelines.ValidationPipeline': 300,
+    'documenters_aggregator.pipelines.AirtablePipeline': 400
 }
-
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
@@ -70,13 +71,16 @@ DOWNLOADER_MIDDLEWARES = {
     'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
 }
 
-FOO = 'BAR'
-
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
+
+EXTENSIONS = {
+    "scrapy_sentry.extensions.Errors": 10,
+    'scrapy.extensions.closespider.CloseSpider': None,
+}
 
 
 # Enable and configure the AutoThrottle extension (disabled by default)

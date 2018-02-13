@@ -12,7 +12,7 @@ Check out the [deployment guide](deployment.md). You'll need to set credentials 
 
 View or generate your Airtable API key at [https://airtable.com/account](https://airtable.com/account).
 
-Click your database at (https://airtable.com/api](https://airtable.com/api) to get your `BASE_KEY` (which will be tacked on to the URL).
+Click your database at [https://airtable.com/api](https://airtable.com/api) to get your `BASE_KEY` (which will be tacked on to the URL).
 
 Now edit `deploy/prod.sh` or your configuration file:
 

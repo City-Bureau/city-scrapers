@@ -1,8 +1,13 @@
-# Documenters Aggregator
+---
+title: Project
+homepage: true
+---
+
+# Project
 
 The Documenters Aggregator is a collection of webscrapers and utilities to collect and store a comprehensive, central, and accessible calendar for public governmental meetings in Chicago and Cook County.
 
-# Ways to contribute
+## Ways to contribute
 
 There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [slack](https://citybureau.slack.com/) about code and design choices.
 
@@ -18,7 +23,7 @@ To contribute infrastructure and utilities, see the [help-wanted Github issues](
 This project is organized and maintained by [City Bureau](http://www.citybureau.org/) and [ProPublica Illinois](https://www.propublica.org/illinois).
 
 * [City Bureau](https://www.citybureau.org/)
-  * [Donate](https://citybureau.squarespace.com/support)
+  * [Donate](https://www.citybureau.org/press-club)
   * [Subscribe](https://citybureau.squarespace.com/newsletter/)
   * [Twitter @city_bureau](https://twitter.com/city_bureau/)
   * [Facebook](https://www.facebook.com/CityBureau/)
@@ -27,7 +32,4 @@ This project is organized and maintained by [City Bureau](http://www.citybureau.
   * [Subscribe](http://go.propublica.org/sign-up)
   * [Twitter @propublicail](https://twitter.com/ProPublicaIL)
   * [Facebook](https://www.facebook.com/propublicaillinois/)
-
-
-
 

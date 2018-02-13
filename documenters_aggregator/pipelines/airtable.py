@@ -71,7 +71,9 @@ class AirtablePipeline(object):
 
     def _format_values(self, k, v):
         if ((v is None) or v == '') and (k not in ['start_time', 'end_time']):
-            return 'n/a'
+            return 'N/A'
+        if k == 'location_name':
+            return ' '.join([w.capitalize() for w in v.split(' ')])
         if isinstance(v, bool):
             return int(v)
         return v

@@ -10,6 +10,7 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build --pull -f deploy/Dockerfile -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG city_scrapers_`date "+%Y%m%d-%H%M%S"| tr -d '\n'`
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:
@@ -20,3 +21,4 @@ phases:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo Syncing log groups and task definitions
       - python deploy/aws_setup.py
+      - 'curl -X POST --data-urlencode "payload={\"channel\": \"#labs_aggregator\", \"username\": \"ecs\", \"text\": \"<https://github.com/City-Bureau/documenters-aggregator/commit/$CODEBUILD_SOURCE_VERSION|Commit $CODEBUILD_SOURCE_VERSION> deployed to production. <https://console.aws.amazon.com/codebuild/home?region=us-east-1#/builds/$CODEBUILD_BUILD_ID/view/new|View build log>.\", \"icon_emoji\": \":ecs:\"}" $SLACK_WEBHOOK_URL'

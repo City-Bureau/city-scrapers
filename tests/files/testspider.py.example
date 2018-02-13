@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from documenters_aggregator.spider import Spider
 
 
-class TestspiderSpider(scrapy.Spider):
+class TestspiderSpider(Spider):
     name = 'testspider'
     long_name = 'Test Spider Board Of Trade And Englightenment'
     allowed_domains = ['www.citybureau.org']
@@ -17,7 +18,8 @@ class TestspiderSpider(scrapy.Spider):
         needs.
         """
         for item in response.css('.eventspage'):
-            yield {
+
+            data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
@@ -26,10 +28,15 @@ class TestspiderSpider(scrapy.Spider):
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'timezone': self._parse_timezone(item),
+                'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item),
             }
+
+        data['id'] = self._generate_id(data, start_time)
+
+        yield data
 
         # self._parse_next(response) yields more responses to parse if necessary.
         # uncomment to find a "next" url
@@ -103,11 +110,23 @@ class TestspiderSpider(scrapy.Spider):
         return {
             'url': '',
             'name': '',
+            'address': '',
             'coordinates': {
                 'latitude': '',
                 'longitude': '',
             },
         }
+
+    def _parse_status(self, item):
+        """
+        Parse or generate status of meeting. Can be one of:
+        * cancelled
+        * tentative
+        * confirmed
+        * passed
+        By default, return "tentative"
+        """
+        return 'tentative'
 
     def _parse_sources(self, item):
         """
