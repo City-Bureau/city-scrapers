@@ -2,7 +2,6 @@ import requests
 import os
 import time
 
-from deploy import ecs
 from invoke import Collection, task, run
 from jinja2 import Environment, FileSystemLoader
 from urllib.parse import urlparse
@@ -159,4 +158,3 @@ def _get_domains(start_urls):
 ns = Collection()
 ns.add_task(genspider)
 ns.add_task(runtests)
-ns.add_collection(ecs, 'ecs')
