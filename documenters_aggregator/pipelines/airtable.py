@@ -38,7 +38,7 @@ class AirtablePipeline(object):
             spider.logger.debug('AIRTABLE PIPELINE: Ignoring event without start_time {0}'.format(item['id']))
             return item
 
-        dt = dateutil.parser.parse(item['start_time'])
+        dt = item['start_time']
         if dt < datetime.datetime.now(dt.tzinfo):
             spider.logger.debug('AIRTABLE PIPELINE: Ignoring past event {0}'.format(item['id']))
             return item
