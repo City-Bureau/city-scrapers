@@ -115,6 +115,10 @@ def get_definitions(family_name):
     }
     return quote_for_awscli([definition])
 
+def update_lambda_function():
+    run('zip -X -r code.zip deploy/scraperScheduler/*')
+    run('aws lambda update-function-code --function-name scraperScheduler --zip-file fileb://code.zip')
+    run('rm code.zip')
 
 def quote_for_awscli(data):
     # The following is an ugly but functional way of creating the quoting
@@ -125,3 +129,4 @@ def quote_for_awscli(data):
 
 create_log_groups()
 create_task_definitions()
+update_lambda_function()
