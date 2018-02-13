@@ -1,6 +1,5 @@
 import os
 import datetime
-import dateutil.parser
 import json
 import time
 

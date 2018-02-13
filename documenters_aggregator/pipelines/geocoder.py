@@ -5,7 +5,6 @@ import json
 import os
 import requests
 import datetime
-import dateutil.parser
 import time
 from random import randint
 import re
