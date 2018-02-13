@@ -1,15 +1,17 @@
-"""
-Alternate geocoding process. Sticks to just geocoding, and uses a python library to make switching geocoding engines easier.
-"""
-import json
-import os
-import requests
-import datetime
-import dateutil.parser
-import time
-from random import randint
-import re
+# import json
+# import os
+# import requests
+# import datetime
+# import dateutil.parser
+# import time
+# from random import randint
+# import re
 import geocoder
+"""
+Alternate geocoding process. Sticks to just geocoding, and uses a
+python library to make switching geocoding engines easier.
+"""
+
 
 class GeocoderPipeline(object):
     """
@@ -23,12 +25,12 @@ class GeocoderPipeline(object):
     "coordinates": {"latitude": null, "longitude": null}
     }
     """
-    provider = 'mapzen'
-    API_key = 'mapzen-RynuoMD'
+
+    # provider = 'arcgis'
     def process_item(self, item, spider):
         if item['location']['coordinates']['latitude'] is None:
-            response = getattr(geocoder, provider)(location['name'], key=API_key)
+            response = geocoder.arcgis(item['location']['name'])
             item['location']['coordinates']['latitude'] = response.lat
             item['location']['coordinates']['longitude'] = response.lng
-            item['location']['url'] = response.url #this line inherently implies a change in schema!
+            item['location']['url'] = response.url
         return item
