@@ -60,7 +60,7 @@ class TravisValidationPipeline(object):
         for source in item.get('sources', []):
             source_validation = self._validate_against_schema(source, self.SOURCES_SCHEMA)
             is_sources_valid = is_sources_valid and all(source_validation.values())
-        validation_record.update({'val_sources': str(is_sources_valid)})
+        validation_record.update({'val_sources': int(is_sources_valid)})
 
         item.update(validation_record)
         return item
