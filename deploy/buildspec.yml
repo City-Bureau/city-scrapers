@@ -10,6 +10,7 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build --pull -f deploy/Dockerfile -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG city_scrapers_`date "+%Y%m%d-%H%M%S"| tr -d '\n'`
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:
