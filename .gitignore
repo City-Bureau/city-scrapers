@@ -124,6 +124,4 @@ deploy/*.py
 # validation logs
 logs/*.log
 
-# output files
-
-
+# output files: local gitignore added to documenters_aggregator/local_outputs/

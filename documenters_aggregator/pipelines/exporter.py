@@ -4,11 +4,11 @@ from scrapy.exporters import CsvItemExporter
 class CsvPipeline(object):
     """
     This is a built in pipeline for scrapy
-    Outputs csv files for local development to the /output/ folder
+    Outputs csv files for local development to the /local_output/ folder
     """
     def __init__(self):
-        self.file = open("documenters_aggregator/outputs/output.csv", 'wb')
-        self.exporter = CsvItemExporter(self.file, unicode)
+        self.file = open("documenters_aggregator/local_outputs/outputtest.csv", 'wb')
+        self.exporter = CsvItemExporter(self.file)
         self.exporter.start_exporting()
   
     def process_item(self, item, spider):
