@@ -21,7 +21,7 @@ class CsvPipeline(object):
         file = open('{}{}_{}.csv'.format(path, spider.name, stamp), 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
-        self.exporter.fields_to_export = ['agency_name'
+        self.exporter.fields_to_export = ['agency_name',
                                           'id', 'name', 'description',
                                           'classification', 'start_time',
                                           'end_time', 'timezone', 'all_day',
