@@ -38,9 +38,6 @@ ITEM_PIPELINES = {
     'documenters_aggregator.pipelines.CsvPipeline': 300,
 }
 
-FEED_EXPORTERS = {
-    'csv': 'documenters_aggregator.pipelines.CsvPipeline',
-}
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
