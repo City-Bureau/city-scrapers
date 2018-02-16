@@ -1,3 +1,0 @@
-[
-{"location": {"name": "David R. Lee Animal Care Center", "url": null, "coordinates": {"latitude": null, "longitude": null}, "address": "2741 S. Western Ave, Chicago, IL 60608"}, "description": null, "end_time": null, "classification": "Not classified", "all_day": false, "name": "Commission meeting", "timezone": "America/Chicago", "sources": [{"url": "https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html", "note": ""}], "id": "chi_animal/201803150830/x/commission_meeting", "_type": "event", "status": "tentative", "start_time": "2018-03-15T08:30:00-05:00"}
-]
