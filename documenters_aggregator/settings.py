@@ -15,7 +15,7 @@ SPIDER_MODULES = ['documenters_aggregator.spiders']
 NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Documenters Aggregator [development mode]. Learn more and say hello at https://github.com/City-Bureau/city-scrapers'
+USER_AGENT = 'Documenters Aggregator [development mode]. Learn more and say hello at https://city-bureau.gitbooks.io/documenters-event-aggregator/'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -34,8 +34,8 @@ COOKIES_ENABLED = False
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-#    'documenters_aggregator.pipelines.DocumentersAggregatorLoggingPipeline': 300,
-    'documenters_aggregator.pipelines.CsvPipeline': 300,
+    #'documenters_aggregator.pipelines.ValidationPipeline': 300,
+    'documenters_aggregator.pipelines.CsvPipeline': 400
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
