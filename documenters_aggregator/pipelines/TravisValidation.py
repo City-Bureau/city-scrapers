@@ -14,14 +14,14 @@ class TravisValidationPipeline(object):
         'start_time': {'required': True, 'type': str, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
         'end_time': {'required': False, 'type': str, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
         'timezone': {'required': True, 'type': str},
-        'all_day': {'required': True, 'type': bool},
+        'all_day': {'required': False, 'type': bool},
         'location': {'required': True, 'type': dict},
         'sources': {'required': True, 'type': list}
     }
     LOCATION_SCHEMA = {
         'url': {'required': False, 'type': str},
-        'name': {'required': True, 'type': str},
-        'address': {'required': False, 'type': str},
+        'name': {'required': False, 'type': str},
+        'address': {'required': True, 'type': str},
         'coordinates': {'required': True, 'type': dict}
     }
     COORDINATES_SCHEMA = {
