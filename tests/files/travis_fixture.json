@@ -6,12 +6,12 @@
         "classification": "Not classified",
         "start_time": "2018-03-01T09:00:00-06:00",
         "end_time": null,
-        "all_day": false,
         "timezone": "America/Chicago",
         "status": "tentative",
         "location": {
             "url": null,
-            "name": "226 West Jackson Boulevard",
+            "name": "",
+            "address": "226 West Jackson Boulevard",
             "coordinates": {
                 "latitude": null,
                 "longitude": null
