@@ -1,0 +1,131 @@
+[
+    {
+        "_type": "event",
+        "name": "March 2018 Regular Board Meeting",
+        "description": "\u200b \r\n",
+        "classification": "Not classified",
+        "start_time": "2018-03-01T09:00:00-06:00",
+        "end_time": null,
+        "all_day": false,
+        "timezone": "America/Chicago",
+        "status": "tentative",
+        "location": {
+            "url": null,
+            "name": "226 West Jackson Boulevard",
+            "coordinates": {
+                "latitude": null,
+                "longitude": null
+            }
+        },
+        "sources": [
+            {
+                "url": "http://www.ccc.edu/events/Pages/March-2018-Regular-Board-Meeting.aspx",
+                "note": ""
+            }
+        ],
+        "id": "chi_city_college/201803010900/x/march_2018_regular_board_meeting",
+        "val__type": 1,
+        "val_id": 1,
+        "val_name": 1,
+        "val_description": 1,
+        "val_classification": 1,
+        "val_start_time": 1,
+        "val_end_time": 1,
+        "val_timezone": 1,
+        "val_all_day": 1,
+        "val_location": 1,
+        "val_sources": 1,
+        "val_loc_url": 1,
+        "val_loc_name": 1,
+        "val_loc_address": 1,
+        "val_loc_coordinates": 1,
+        "val_coord_latitude": 1,
+        "val_coord_longitude": 1
+    },
+    {
+        "_type": "event",
+        "name": "May 2018 Regular Board Meeting",
+        "description": "\u200b \r\n",
+        "classification": "Not classified",
+        "start_time": "2018-05-03T09:00:00-05:00",
+        "end_time": null,
+        "all_day": false,
+        "timezone": "America/Chicago",
+        "status": "tentative",
+        "location": {
+            "url": null,
+            "name": "226 West Jackson Boulevard",
+            "coordinates": {
+                "latitude": null,
+                "longitude": null
+            }
+        },
+        "sources": [
+            {
+                "url": "http://www.ccc.edu/events/Pages/May-2018-Regular-Board-Meeting.aspx",
+                "note": ""
+            }
+        ],
+        "id": "chi_city_college/201805030900/x/may_2018_regular_board_meeting",
+        "val__type": 1,
+        "val_id": 1,
+        "val_name": 1,
+        "val_description": 1,
+        "val_classification": 1,
+        "val_start_time": 1,
+        "val_end_time": 1,
+        "val_timezone": 1,
+        "val_all_day": 1,
+        "val_location": 1,
+        "val_sources": 1,
+        "val_loc_url": 1,
+        "val_loc_name": 1,
+        "val_loc_address": 1,
+        "val_loc_coordinates": 1,
+        "val_coord_latitude": 1,
+        "val_coord_longitude": 1
+    },
+    {
+        "_type": "event",
+        "name": "April 2018 Regular Board Meeting",
+        "description": "\u200b \r\n",
+        "classification": "Not classified",
+        "start_time": "2018-04-05T09:00:00-05:00",
+        "end_time": null,
+        "all_day": false,
+        "timezone": "America/Chicago",
+        "status": "tentative",
+        "location": {
+            "url": null,
+            "name": "226 West Jackson Boulevard",
+            "coordinates": {
+                "latitude": null,
+                "longitude": null
+            }
+        },
+        "sources": [
+            {
+                "url": "http://www.ccc.edu/events/Pages/April-2018-Regular-Board-Meeting.aspx",
+                "note": ""
+            }
+        ],
+        "id": "chi_city_college/201804050900/x/april_2018_regular_board_meeting",
+        "val__type": 1,
+        "val_id": 1,
+        "val_name": 1,
+        "val_description": 1,
+        "val_classification": 1,
+        "val_start_time": 1,
+        "val_end_time": 1,
+        "val_timezone": 1,
+        "val_all_day": 1,
+        "val_location": 1,
+        "val_sources": 1,
+        "val_loc_url": 1,
+        "val_loc_name": 1,
+        "val_loc_address": 1,
+        "val_loc_coordinates": 1,
+        "val_coord_latitude": 1,
+        "val_coord_longitude": 1
+    }
+]
