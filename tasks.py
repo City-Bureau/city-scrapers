@@ -14,7 +14,6 @@ TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templat
 SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'documenters_aggregator/spiders')
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/files')
-TRAVIS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'travis')
 
 # pty is not available on Windows
 try:
@@ -160,13 +159,15 @@ def _get_domains(start_urls):
 
 
 @task
-def validate_spider(ctx, spider):
+def validate_spider(ctx, spider_file):
     """
     Validates scraped items from a spider.
     Passes if >=90% of the scraped items
     conform to the schema.
     """
-    scraped_items = json.load(open(os.path.join(TRAVIS_DIR, '{0}.json'.format(spider))))
+    spider = os.path.basename(spider_file).split('.')[0]
+    with open(spider_file, 'r') as f:
+        scraped_items = json.load(f)
     validated_items = defaultdict(list)
     for item in scraped_items:
         for k, v in item.items():
