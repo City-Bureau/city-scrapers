@@ -10,7 +10,7 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_len():
-    assert len(parsed_items) == 3
+    assert len(parsed_items) == 5
 
 
 def test_name():
@@ -18,7 +18,8 @@ def test_name():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-09-21T00:00:00-05:00'
+    # assert parsed_items[0]['start_time'] == '2017-09-21T00:00:00-05:00'
+    assert parsed_items[0]['start_time'] == '2018-03-15T08:30:00-05:00'
 
 
 @pytest.mark.parametrize('item', parsed_items)
