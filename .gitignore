@@ -123,5 +123,6 @@ deploy/*.py
 
 # validation logs
 logs/*.log
+travis/*.json
 
 # output files: local gitignore added to documenters_aggregator/local_outputs/

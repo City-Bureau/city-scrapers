@@ -1,9 +1,11 @@
 import os
 import tasks
+import pytest
 
 import requests
 import betamax
 from lxml.html import fromstring
+from invoke.context import MockContext
 from tests.utils import read_test_file_content
 
 SPIDER_NAME = 'testspider'
@@ -16,6 +18,7 @@ SPIDER_START_URLS = ['http://www.citybureau.org/articles',
 
 session = requests.Session()
 recorder = betamax.Betamax(session)
+mock_context = MockContext()
 
 
 def test_classname():
@@ -64,6 +67,16 @@ def test_gen_html_content():
     if test_title == rendered_title:
         for f in rendered_filenames:
             os.remove(f)
+
+
+def test_validate_spiders():
+    tasks.validate_spider(mock_context, 'tests/files/validate_spider_fixture.json')
+
+
+def test_validate_failing_spider():
+    with pytest.raises(Exception) as e:
+        tasks.validate_spider(mock_context, 'tests/files/validate_spider_fail_fixture.json')
+    assert 'Less than' in str(e)
 
 
 # @TODO test file open / writing
