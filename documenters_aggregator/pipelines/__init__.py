@@ -5,6 +5,8 @@ from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
 from .TravisValidation import TravisValidationPipeline
 from .localExporter import CsvPipeline
+from .TravisValidation import TravisValidationPipeline
+
 
 __all__ = (
     'DocumentersAggregatorLoggingPipeline',
