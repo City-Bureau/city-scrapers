@@ -5,7 +5,9 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
 import pytz
-from datetime import date, datetime, timedelta
+import json
+import unicodedata
+from datetime import datetime
 
 import scrapy
 from documenters_aggregator.spider import Spider
@@ -15,10 +17,10 @@ class Chi_buildingsSpider(Spider):
     name = 'chi_buildings'
     long_name = 'Public Building Commission of Chicago'
     allowed_domains = ['www.pbcchicago.com']
-    base_url = 'http://www.pbcchicago.com/content/about/calendar.asp'
+    base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     calendar_date = datetime.now()
-    start_urls = ['{}?myDate={}'.format(
-        base_url, calendar_date.strftime('%m/%d/%Y')
+    start_urls = ['{}&start={}'.format(
+        base_url, calendar_date.strftime('%Y-%m-%d')
     )]
 
     def parse(self, response):
@@ -29,78 +31,50 @@ class Chi_buildingsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for cal_day in response.css('td.calday2'):
-            cal_number = cal_day.xpath("./div[contains(@class, 'calnumber')]/text()").extract_first()
-            if not cal_number:
-                continue
-            cal_date = date(self.calendar_date.year, self.calendar_date.month, int(cal_number))
-            for item in cal_day.xpath("./div[not(contains(@class, 'calnumber'))]"):
-                # Ignore holidays added to calendar
-                if item.css('a b::text').extract_first().strip() != 'Holiday':
-                    start_time, start_time_str = self._parse_start(item, cal_date)
-                    data = {
-                        '_type': 'event',
-                        'id': self._parse_id(item),
-                        'name': self._parse_name(item, cal_date),
-                        'description': self._parse_description(item),
-                        'classification': self._parse_classification(item),
-                        'start_time': start_time_str,
-                        'end_time': None,
-                        'all_day': self._parse_all_day(item),
-                        'timezone': 'America/Chicago',
-                        'status': self._parse_status(item),
-                        'location': self._parse_location(item),
-                        'sources': self._parse_sources(item)
-                    }
-                    data['id'] = self._generate_id(data, start_time)
-                    yield data
+        data = json.loads(response.text)
+        for item in data:
+            if item.get('category') and 'holiday' not in item['category']:
+                start_time = self._parse_datetime(item['start'])
+                item_data = {
+                    '_type': 'event',
+                    'id': self._generate_id({'name': item['title']}, start_time),
+                    'name': item['title'],
+                    'classification': self._parse_classification(item),
+                    'start_time': start_time.isoformat(),
+                    'end_time': self._parse_datetime(item['end']).isoformat(),
+                    'all_day': item['allDay'],
+                    'timezone': 'America/Chicago',
+                    'status': self._parse_status(item),
+                    'sources': self._parse_sources(item)
+                }
+                # If it's a board meeting, return description
+                if item['category'][0] in ['board-meeting', 'admin-opp-committee-meeting']:
+                    yield self._board_meeting(item_data)
+                else:
+                    # Request each relevant event page, including current data in meta attr
+                    req = scrapy.Request(item['url'], callback=self._parse_event, dont_filter=True)
+                    req.meta['item'] = item_data
+                    yield req
 
-        # Add 30 days to the current date, stop if more than 180 days (~6 months) ahead
-        self.calendar_date += timedelta(days=30)
-        if (self.calendar_date - datetime.now()).days <= 180:
-            yield self._parse_next(response)
-
-    def _parse_next(self, response):
+    def _parse_event(self, response):
         """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-
-        The parse method updates the calendar_date property,
-        so create a query param from that.
+        Parse event detail page if additional information
         """
-        next_url = '{}?myDate={}'.format(
-            self.base_url,
-            self.calendar_date.strftime('%m/%d/%Y')
-        )
-        return scrapy.Request(next_url, callback=self.parse)
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-
-        All links for PBCC appear to include eID or BID_ID, so raise an error
-        if not found rather than creating a slug.
-        """
-        event_link = item.css('a::attr(href)').extract_first()
-        if '?eID=' in event_link:
-            id_suffix = event_link.split('?eID=')[-1]
-        elif '?BID_ID=' in event_link:
-            id_suffix = event_link.split('?BID_ID=')[-1]
-        else:
-            raise ValueError('ID is required and not present in eID or BID_ID params')
-        return id_suffix
+        item = {
+            'description': self._parse_description(response),
+            'location': self._parse_location(response)
+        }
+        # Merge event details with item data from request meta
+        item.update(response.meta.get('item', {}))
+        return item
 
     def _parse_classification(self, item):
         """
         Parse or generate classification (e.g. town hall).
 
-        PBCC has relatively helpful classifications, expanding the AFB acronym.
+        PBCC has relatively helpful classifications in its WordPress categories.
         """
-        classification = item.css('a b::text').extract_first().strip()
-        if classification == 'AFB':
-            return 'Advertisement for Bids'
-        else:
-            return classification
+        return ' '.join([w.capitalize() for w in item['category'][0].split('-')])
 
     def _parse_status(self, item):
         """
@@ -113,28 +87,40 @@ class Chi_buildingsSpider(Spider):
 
         By default, return "tentative"
         """
-        return 'tentative'
+        tz = pytz.timezone('America/Chicago')
+        local_cal_date = tz.localize(self.calendar_date)
+        if self._parse_datetime(item['start']) < local_cal_date:
+            return 'passed'
+        else:
+            return 'tentative'
+
+    def _board_meeting(self, item):
+        """
+        Return a standard location for board meetings
+        """
+        item_data = {
+            'description': None,
+            'location': {
+                'url': 'https://thedaleycenter.com',
+                'name': 'Second Floor Board Room, Richard J. Daley Center',
+                'address': '50 W. Washington Street Chicago, IL 60602',
+                'coordinates': {
+                    'latitude': '41.884089',
+                    'longitude': '-87.630191',
+                }
+            }
+        }
+        item.update(item_data)
+        return item
 
     def _parse_location(self, item):
         """
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
 
-        All board meetings and special board meetings are required to be
-        held at the same location, so hard-coding that here with Mapzen
-        Search coordinates included. Otherwise location information is too
-        inconsistent for a reliable format.
+        Pulling location from WordPress plugin supplied coordinates if available
         """
-        if 'Board Meeting' in self._parse_classification(item):
-            return {
-                'url': 'https://thedaleycenter.com',
-                'name': 'Second Floor Board Room, Richard J. Daley Center, 50 W. Washington Street',
-                'coordinates': {
-                    'latitude': '41.884089',
-                    'longitude': '-87.630191',
-                },
-            }
-        else:
+        if len(item.css('.eo-event-venue-map')) == 0:
             return {
                 'url': None,
                 'name': None,
@@ -144,76 +130,59 @@ class Chi_buildingsSpider(Spider):
                 },
             }
 
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to false.
-
-        Returns True if _parse_start_time is None
-        """
-        return self._parse_start_time(item) is None
-
-    def _parse_name(self, item, cal_date):
-        """
-        Parse or generate event name.
-        """
-        name_str = ''.join(item.xpath('./text()').extract()).rstrip().strip()
-        # Return without the beginning and end parentheses, additional spaces
-        # inside of them removed as well
-        clean_name_str = name_str[1:-1].strip()
-        if clean_name_str:
-            return '{} - {}'.format(self._parse_classification(item), clean_name_str)
+        event_script = item.css('script:not([src])')[-1].extract()
+        event_search = re.search('var eventorganiser = (.*);', event_script)
+        event_details = json.loads(event_search.group(1))
+        location = event_details['map'][0]['locations'][0]
+        split_tooltip = location['tooltipContent'].split('<br />')
+        if '<strong>' in split_tooltip[0]:
+            location_name = split_tooltip[0][8:-9]
         else:
-            return '{} {}'.format(
-                self._parse_classification(item),
-                cal_date.strftime('%m/%d/%Y')
-            )
+            location_name = split_tooltip[0]
+
+        return {
+            'url': None,
+            'name': location_name,
+            'address': split_tooltip[1],
+            'coordinates': {
+                'latitude': location['lat'],
+                'longitude': location['lng'],
+            },
+        }
 
     def _parse_description(self, item):
         """
-        Parse or generate event name.
-
-        Returning None for events that are not AFBs, otherwise
-        return a description with the detail link included
+        Parse or generate event description.
         """
-        if self._parse_classification(item) == 'Advertisement for Bids':
-            detail_url = self._parse_sources(item)[0]['url']
-            return 'Details on advertisement for bids at: {}'.format(detail_url)
-        else:
+        description_lines = item.css('.entry-content > p')
+        if len(description_lines) == 0:
             return None
 
-    def _parse_start(self, item, cal_date):
-        """
-        Parse start date and time.
+        description = ''
+        for line in description_lines:
+            links = line.css('a')
+            if len(links) > 0:
+                for link in links:
+                    link_text = link.css('*::text').extract_first()
+                    if link_text.endswith('.'):
+                        link_text = link_text[:-1]
+                    description += ' {}: {} '.format(
+                        link_text,
+                        link.xpath('@href').extract_first()
+                    )
+            else:
+                description += ' '.join([l.extract().strip() for l in line.css('*::text')]) + ' '
+        description = unicodedata.normalize('NFKD', description)
+        description = description.replace('\n', ' ').strip().replace(' , ', ', ')
+        return re.sub(r'\s+', ' ', description)
 
-        Returns the date at midnight if no time provided.
-        """
-        start_time = self._parse_start_time(item)
-        if start_time:
-            start_datetime = datetime.combine(cal_date, start_time)
-        else:
-            start_datetime = datetime.combine(cal_date, datetime.min.time())
+    def _parse_datetime(self, time_str):
         tz = pytz.timezone('America/Chicago')
-        tz_datetime = tz.localize(start_datetime)
-
-        return (tz_datetime, tz_datetime.isoformat())
-
-    def _parse_start_time(self, item):
-        """
-        Returns a datetime.time object if found in regex search, otherwise none
-
-        Element structure is inconsistent, so search full text.
-        """
-        item_text = ''.join(item.xpath('.//text()').extract())
-        time_str = re.search(r'\d{1,2}:\d{2}(AM|PM)', item_text)
-        if not time_str:
-            return None
-        else:
-            return datetime.strptime(time_str.group(0), '%I:%M%p').time()
+        parsed_datetime = datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S')
+        return tz.localize(parsed_datetime)
 
     def _parse_sources(self, item):
         """
         Parse source from base URL and event link
         """
-        return [{
-            'url': 'http://www.pbcchicago.com' + item.css('a::attr(href)').extract_first()
-        }]
+        return [{'url': item['url']}]
