@@ -2,9 +2,9 @@ import requests
 import os
 import time
 import json
-import pandas as pd
+from collections import defaultdict
+from functools import reduce
 
-from deploy import ecs
 from invoke import Collection, task, run
 from jinja2 import Environment, FileSystemLoader
 from urllib.parse import urlparse
@@ -13,7 +13,6 @@ TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templat
 SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'documenters_aggregator/spiders')
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/files')
-TRAVIS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'travis')
 
 # pty is not available on Windows
 try:
@@ -66,7 +65,7 @@ def runtests(ctx):
     """
     Runs pytest and flake8.
     """
-    run('pytest -s', pty=pty_available)
+    run('pytest -s tests', pty=pty_available)
     run('flake8 --ignore E265,E266,E501 --exclude src', pty=pty_available)
 
 
@@ -159,27 +158,37 @@ def _get_domains(start_urls):
 
 
 @task
-def validate_spider(ctx, spider):
+def validate_spider(ctx, spider_file):
     """
     Validates scraped items from a spider.
     Passes if >=90% of the scraped items
     conform to the schema.
     """
-    scraped_items = json.load(open(os.path.join(TRAVIS_DIR, '{0}.json'.format(spider))))
-    validated_items = [{k: v for k, v in item.items() if k.startswith('val_')} for item in scraped_items]
-    validation_summary = pd.DataFrame(validated_items).mean()
+    spider = os.path.basename(spider_file).split('.')[0]
+    with open(spider_file, 'r') as f:
+        scraped_items = json.load(f)
+    validated_items = defaultdict(list)
+    for item in scraped_items:
+        for k, v in item.items():
+            if k.startswith('val_'):
+                validated_items[k].append(v)
 
     print('\n------------Validation Summary for: {0}---------------\n'.format(spider))
-    print(validation_summary)
+    validation_summary = {}
+    for item_key, item_list in validated_items.items():
+        validation_summary[item_key] = reduce(lambda x, y: x + y, item_list) / len(item_list)
+        print('{}: {:.0%}'.format(item_key[4:], validation_summary[item_key]))
 
     try:
-        assert all([x >= 0.9 for x in validation_summary.tolist()])
+        assert all([x >= 0.9 for x in validation_summary.values()])
     except AssertionError as e:
-        message = ('Less than 90% of the scraped items from {0} passed validation. '
+        message = (
+            'Less than 90% of the scraped items from {0} passed validation. '
             'See the validation summary printed in stdout, and check that the '
             'scraped items conform to the events schema at: '
             'https://github.com/City-Bureau/city-scrapers/'
-            'blob/master/docs/06_event_schema.md').format(spider)
+            'blob/master/docs/06_event_schema.md'
+        ).format(spider)
         raise Exception(message) from e
 
 
@@ -188,4 +197,3 @@ ns = Collection()
 ns.add_task(genspider)
 ns.add_task(runtests)
 ns.add_task(validate_spider)
-ns.add_collection(ecs, 'ecs')

@@ -112,6 +112,7 @@ class Chi_animalSpider(Spider):
         """
         Parse start date and time.
         """
+        item = '-'.join(item.split('-')[:2]).strip()
         naive_date = dateparse(item)
         tz = timezone('America/Chicago')
         date = tz.localize(naive_date)
