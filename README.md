@@ -17,7 +17,7 @@ The Documenters-Aggregator is a collection of web-scrapers and utilities to crea
 The City Bureau Labs community welcomes contributions from everyone. We prioritize the coding experiences of under-represented groups in tech and media. 
 
 This project provides an opportunity for coders and journalists to build up their technical skills so that they can become leaders and mentors in Chicago’s civic tech and media scene. We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), 
-so that more under-represented folks will become contributors and decision-makers in both City Bureau’s tech community and Chicago’s civic tech scene at large. We encourage folks who have found their grounding with us to continue transforming our communities like starting a breakout group at Chi Hack Night or teaching a class at Blue1647.
+so that more under-represented folks will become contributors and decision-makers in both City Bureau’s tech community and Chicago’s civic tech scene at large. We encourage folks who have found their grounding with us to continue transforming our communities in collaboration with community partners.
 
 ## Ready to code with us?
 
