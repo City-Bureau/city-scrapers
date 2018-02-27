@@ -165,7 +165,7 @@ def validate_spider(ctx, spider_file):
     conform to the schema.
     """
     spider = os.path.basename(spider_file).split('.')[0]
-    with open(spider_file, 'r') as f:
+    with open(spider_file, 'r', encoding='utf-8') as f:
         scraped_items = json.load(f)
     validated_items = defaultdict(list)
     for item in scraped_items:
