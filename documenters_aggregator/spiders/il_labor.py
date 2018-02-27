@@ -15,6 +15,7 @@ class Il_laborSpider(Spider):
     long_name = 'Illinois Labor Relations Board'
     allowed_domains = ['www.illinois.gov']
     start_urls = ['https://www.illinois.gov/ilrb/meetings/Pages/default.aspx']
+    event_timezone = 'America/Chicago'
 
     """
     This page only lists the next upcoming meeting for each of the three boards.
@@ -47,10 +48,10 @@ class Il_laborSpider(Spider):
                 'name': name,
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': start_time.isoformat() if start_time else None,
+                'start_time': start_time if start_time else None,
                 'end_time': None,
                 'all_day': self._parse_all_day(item),
-                'timezone': 'America/Chicago',
+                'timezone': self.event_timezone,
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
@@ -126,7 +127,7 @@ class Il_laborSpider(Spider):
         time_string = item.css('strong:nth-of-type(2)::text').extract_first().replace('.', '')
         try:
             naive = datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
-            tz = timezone('America/Chicago')
+            tz = timezone(self.event_timezone)
             return tz.localize(naive)
         except ValueError:
             return None

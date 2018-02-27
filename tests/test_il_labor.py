@@ -25,7 +25,7 @@ def test_timezone(item):
 
 
 def test_start_time():
-    assert parsed_items[1]['start_time'] == '2017-09-12T13:00:00-05:00'
+    assert parsed_items[1]['start_time'].isoformat() == '2017-09-12T13:00:00-05:00'
 
 
 @pytest.mark.parametrize('item', parsed_items)
