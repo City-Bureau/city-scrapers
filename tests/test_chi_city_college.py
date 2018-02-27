@@ -12,7 +12,7 @@ def test_name():
 
 
 def test_start_time():
-    assert item['start_time'] == '2017-11-02T09:00:00-05:00'
+    assert item['start_time'].isoformat() == '2017-11-02T09:00:00-05:00'
 
 
 def test_end_time():

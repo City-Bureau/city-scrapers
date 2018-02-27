@@ -53,11 +53,11 @@ def test_description(item):
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2018-01-04T13:00:00-06:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2018-01-04T13:00:00-06:00'
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'] == '2018-01-04T14:00:00-06:00'
+    assert parsed_items[0]['end_time'].isoformat() == '2018-01-04T14:00:00-06:00'
 
 
 def test_id():
