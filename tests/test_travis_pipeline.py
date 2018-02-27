@@ -12,11 +12,12 @@ def _str_to_datetime(date_string):
     naive = datetime.strptime(date_string[:-6], '%Y-%m-%dT%H:%M:%S')
     return spider._naive_datetime_to_tz(naive)
 
+
 def load_valid_item():
     fixtures = json.loads(read_test_file_content('files/travis_fixture.json'))
     valid_item = fixtures[0]
     valid_item['start_time'] = _str_to_datetime(valid_item['start_time'])
-    valid_item['end_time'] =  _str_to_datetime(valid_item['end_time'])
+    valid_item['end_time'] = _str_to_datetime(valid_item['end_time'])
     return valid_item
 
 
