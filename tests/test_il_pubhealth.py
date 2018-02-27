@@ -56,6 +56,7 @@ def test_location(item):
     assert item['location'] == {
         'url': '',
         'name': '',
+        'address': '',
         'coordinates': {'latitude': '', 'longitude': ''}
     }
 

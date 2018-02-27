@@ -55,7 +55,8 @@ def test_status(item):
 def test_location():
     assert parsed_items[0]['location'] == {
         'url': None,
-        'name': '160 N. LaSalle Street, Room N-401, Chicago, IL',
+        'name': None,
+        'address': '160 N. LaSalle Street, Room N-401, Chicago, IL',
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -64,7 +65,8 @@ def test_location():
 
     assert parsed_items[1]['location'] == {
         'url': None,
-        'name': 'Conference Room 5A, 801 S. 7th Street, Springfield, IL',
+        'address': 'Conference Room 5A, 801 S. 7th Street, Springfield, IL',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,

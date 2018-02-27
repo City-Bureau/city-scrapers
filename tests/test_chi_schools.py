@@ -65,6 +65,7 @@ def test_status(item):
 def test_location(item):
     assert item['location'] == {
         'url': None,
-        'name': 'CPS Loop Office 42 W. Madison Street, Garden Level Chicago, IL 60602 Board Room',
+        'name': None,
+        'address': 'CPS Loop Office 42 W. Madison Street, Garden Level Chicago, IL 60602 Board Room',
         'coordinates': {'latitude': None, 'longitude': None},
     }

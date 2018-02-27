@@ -38,7 +38,8 @@ def test_status():
 def test_location():
     assert item['location'] == {
         'url': None,
-        'name': '226 West Jackson Boulevard',
+        'name': None,
+        'address': '226 West Jackson Boulevard',
         'coordinates': {
             'latitude': None,
             'longitude': None,

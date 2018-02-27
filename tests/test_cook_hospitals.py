@@ -33,7 +33,8 @@ def test_status():
 def test_location():
     assert parsed_items[0]['location'] == {
         'url': '',
-        'name': '1900 W. Polk, Second Floor Conference Room, Chicago, Illinois',
+        'name': '',
+        'address': '1900 W. Polk, Second Floor Conference Room, Chicago, Illinois',
         'coordinates': {'latitude': '', 'longitude': ''},
     }
 

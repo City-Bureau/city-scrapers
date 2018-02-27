@@ -53,7 +53,8 @@ def test_status():
 def test_location():
     assert parsed_items[25]['location'] == {
         'url': None,
-        'name': 'Cook County Building, Board Room, 118 North Clark Street, Chicago, Illinois',
+        'name': None,
+        'address': 'Cook County Building, Board Room, 118 North Clark Street, Chicago, Illinois',
         'coordinates': {
             'latitude': None,
             'longitude': None,

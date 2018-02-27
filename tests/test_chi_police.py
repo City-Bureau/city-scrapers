@@ -40,7 +40,7 @@ def test_status():
 
 
 def test_location():
-    assert isinstance(parsed_items[0]['location']['name'], str)
+    assert isinstance(parsed_items[0]['location']['address'], str)
 
 
 def test__type():

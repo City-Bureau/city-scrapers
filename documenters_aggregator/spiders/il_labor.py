@@ -90,12 +90,13 @@ class Il_laborSpider(Spider):
         then select the first `<p>` or `<div>` within it.
         """
         sibling = item.xpath('following-sibling::*')
-        name = sibling.css('p::text').extract_first()
-        if not name:
-            name = sibling.css('div::text').extract_first()
+        address = sibling.css('p::text').extract_first()
+        if not address:
+            address = sibling.css('div::text').extract_first()
         return {
             'url': None,
-            'name': name,
+            'address': address,
+            'name': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

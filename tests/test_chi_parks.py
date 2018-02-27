@@ -64,7 +64,8 @@ def test_status():
 def test_location():
     assert parsed_items[1]['location'] == {
         'url': None,
-        'name': 'Board Room ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'address': 'Board Room ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -72,7 +73,8 @@ def test_location():
     }
     assert parsed_items[2]['location'] == {
         'url': None,
-        'name': '8TH FLOOR BOARD ROOM ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611',
+        'address': '8TH FLOOR BOARD ROOM ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -80,7 +82,8 @@ def test_location():
     }
     assert parsed_items[3]['location'] == {
         'url': None,
-        'name': 'DRINKER, BIDDLE & REATH LLP 191 N. UPPER WACKER DR. STE 3700 CHICAGO, ILLINOIS 60606',
+        'address': 'DRINKER, BIDDLE & REATH LLP 191 N. UPPER WACKER DR. STE 3700 CHICAGO, ILLINOIS 60606',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -88,7 +91,8 @@ def test_location():
     }
     assert parsed_items[4]['location'] == {
         'url': None,
-        'name': '2401 N Lake Shore Dr, Chicago, IL 60614 THEATER ON THE LAKE',
+        'address': '2401 N Lake Shore Dr, Chicago, IL 60614 THEATER ON THE LAKE',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -96,7 +100,8 @@ def test_location():
     }
     assert parsed_items[5]['location'] == {
         'url': None,
-        'name': '8TH FLOOR BOARD ROOM',
+        'address': '8TH FLOOR BOARD ROOM',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -104,7 +109,8 @@ def test_location():
     }
     assert parsed_items[6]['location'] == {
         'url': None,
-        'name': 'FOSCO PARK 1312 S. Racine Ave. Chicago, Illinois 60608',
+        'address': 'FOSCO PARK 1312 S. Racine Ave. Chicago, Illinois 60608',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -112,7 +118,8 @@ def test_location():
     }
     assert parsed_items[7]['location'] == {
         'url': None,
-        'name': 'ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'address': 'ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -120,7 +127,8 @@ def test_location():
     }
     assert parsed_items[8]['location'] == {
         'url': None,
-        'name': 'Test Training 2',
+        'address': 'Test Training 2',
+        'name': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,

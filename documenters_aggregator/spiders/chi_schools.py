@@ -80,10 +80,11 @@ class Chi_schoolsSpider(Spider):
         raw_text_list = item.css('::text').extract()
         text_list = self._remove_line_breaks(raw_text_list)[1:]
         text_list = [x for x in text_list if '(' not in x and ')' not in x]
-        name = " ".join(text_list)
+        address = " ".join(text_list)
         return {
             'url': None,
-            'name': name,
+            'address': address,
+            'name': None,
             'coordinates': {
                 'longitude': None,
                 'latitude': None}

@@ -81,7 +81,8 @@ class Cook_boardSpider(Spider):
         """
         return {
             'url': None,
-            'name': item.get('Meeting Location', None),
+            'address': item.get('Meeting Location', None),
+            'name': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

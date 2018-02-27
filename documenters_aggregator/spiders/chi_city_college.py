@@ -73,7 +73,8 @@ class Chi_cityCollegeSpider(Spider):
         """
         return {
             'url': None,
-            'name': response.xpath('//span[@class="content required address"]/text()').extract_first(),
+            'name': None,
+            'address': response.xpath('//span[@class="content required address"]/text()').extract_first(),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

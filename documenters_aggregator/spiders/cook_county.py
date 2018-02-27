@@ -104,12 +104,13 @@ class Cook_countySpider(Spider):
         Parse or generate location. Url, latitude and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
-        name = response.xpath('//div[@class="field event-location"]/descendant::*/text()').extract()
-        name = ' '.join([x.strip() for x in name])
-        name = name.replace('Location:', '').strip()
+        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()').extract()
+        address = ' '.join([x.strip() for x in address])
+        address = address.replace('Location:', '').strip()
         return {
             'url': None,
-            'name': name,
+            'address': address,
+            'name': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

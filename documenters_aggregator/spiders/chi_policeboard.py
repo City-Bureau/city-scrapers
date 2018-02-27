@@ -82,7 +82,8 @@ class Chi_policeboardSpider(Spider):
         location_name = bold_text.split('take place at')[-1].split('.')[0].strip()
         return {
             'url': None,
-            'name': location_name,
+            'address': location_name,
+            'name': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
