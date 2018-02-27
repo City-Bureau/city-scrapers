@@ -16,7 +16,8 @@ class Cook_countySpider(Spider):
     long_name = 'Cook County Government'
     allowed_domains = ['www.cookcountyil.gov']
     start_urls = ['https://www.cookcountyil.gov/calendar?page=0']
-
+    event_timezone = 'America/Chicago'
+    
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
@@ -44,10 +45,10 @@ class Cook_countySpider(Spider):
             'name': self._parse_name(response),
             'description': self._parse_description(response),
             'classification': self._parse_classification(response),
-            'start_time': timezone('America/Chicago').localize(start_time_object).isoformat(),
+            'start_time': timezone(self.event_timezone).localize(start_time_object)
             'end_time': self._parse_end(response),
             'all_day': self._parse_all_day(response),
-            'timezone': 'America/Chicago',
+            'timezone': self.event_timezone,
             'status': self._parse_status(response),
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
@@ -176,8 +177,8 @@ class Cook_countySpider(Spider):
         date = start_end[0][:start_end[0].rindex(' ')]
         end = '{0} {1}'.format(date, end_time)
         naive = datetime.strptime(end, '%B %d, %Y %I:%M%p')
-        tz = timezone('America/Chicago')
-        return tz.localize(naive).isoformat()
+        tz = timezone(self.event_timezone)
+        return tz.localize(naive)
 
     def _parse_sources(self, response):
         """
