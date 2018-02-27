@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
