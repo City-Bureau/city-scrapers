@@ -79,7 +79,8 @@ class Chi_policeSpider(Spider):
         """
         return {
             'url': None,
-            'name': item['location'],
+            'address': item['location'],
+            'name': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

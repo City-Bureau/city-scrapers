@@ -82,7 +82,8 @@ class Chi_parksSpider(Spider):
         """
         return {
             'url': None,
-            'name': self.clean_html(item.get('Meeting Location', None)),
+            'address': self.clean_html(item.get('Meeting Location', None)),
+            'name': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

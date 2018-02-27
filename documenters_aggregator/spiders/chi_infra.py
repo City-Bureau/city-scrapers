@@ -82,6 +82,7 @@ class Chi_infraSpider(Spider):
         return {
             'url': None,
             'name': None,
+            'address': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

@@ -39,7 +39,8 @@ def test_status():
 def test_location():
     assert item['location'] == {
         'url': None,
-        'name': '69 W. Washington Street Chicago , IL  60602',
+        'name': None,
+        'address': '69 W. Washington Street Chicago , IL  60602',
         'coordinates': {
             'latitude': None,
             'longitude': None,

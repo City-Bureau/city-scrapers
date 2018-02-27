@@ -52,7 +52,8 @@ def test_classification():
 def test_location():
     assert item['location'] == {
         'url': None,
-        'name': 'Robbins Health Center 13450 W. Kedzie, Robbins, IL',
+        'name': None,
+        'address': 'Robbins Health Center 13450 W. Kedzie, Robbins, IL',
         'coordinates': {
             'latitude': None,
             'longitude': None,

@@ -86,7 +86,8 @@ class Cook_pubhealthSpider(Spider):
         """
         return {
             'url': None,
-            'name': response.xpath('//input[@type="hidden"][contains(@id, "Location")]/@value').extract_first(),
+            'name': None,
+            'address': response.xpath('//input[@type="hidden"][contains(@id, "Location")]/@value').extract_first(),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

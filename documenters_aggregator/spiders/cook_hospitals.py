@@ -66,11 +66,12 @@ class Cook_hospitalsSpider(Spider):
 
     def _parse_location(self, subitem):
         """
-        @TODO geocode location?
+        Parse location
         """
         return {
             'url': '',
-            'name': subitem.xpath('text()').extract()[1].strip(),
+            'name': '',
+            'address': subitem.xpath('text()').extract()[1].strip(),
             'coordinates': {'longitude': '', 'latitude': ''},
         }
 

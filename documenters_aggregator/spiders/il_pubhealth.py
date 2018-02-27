@@ -73,6 +73,7 @@ class Il_pubhealthSpider(Spider):
         return {
             'url': '',
             'name': '',
+            'address': '',
             'coordinates': {'longitude': '', 'latitude': ''},
         }
 
