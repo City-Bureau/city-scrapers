@@ -18,7 +18,7 @@ def test_name():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-09-21T00:00:00-05:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-09-21T00:00:00-05:00'
 
 
 @pytest.mark.parametrize('item', parsed_items)

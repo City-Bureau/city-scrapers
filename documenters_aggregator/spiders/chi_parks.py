@@ -7,7 +7,6 @@ import re
 import urllib3
 
 from datetime import datetime
-from pytz import timezone
 from legistar.events import LegistarEventsScraper
 
 from documenters_aggregator.spider import Spider
@@ -42,20 +41,19 @@ class Chi_parksSpider(Spider):
 
     def _parse_events(self, events):
         for item, _ in events:
-            start_time, end_time, start_time_str, end_time_str = self._parse_time(item)
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': start_time_str,
-                'end_time': end_time_str,
+                'start_time': self._parse_start(item),
+                'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'timezone': 'America/Chicago',
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item),
             }
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data, data['start_time'])
             data['status'] = self._parse_status(item, data['start_time'])
             yield data
 
@@ -71,7 +69,7 @@ class Chi_parksSpider(Spider):
         tentative = no agenda posted
         confirmed = agenda posted
         """
-        if datetime.now().isoformat() > start_time:
+        if datetime.now().isoformat() > start_time.isoformat():
             return 'passed'
         if 'url' in item['Agenda']:
             return 'confirmed'
@@ -113,7 +111,7 @@ class Chi_parksSpider(Spider):
         except:
             return agenda
 
-    def _parse_time(self, item):
+    def _parse_start(self, item):
         """
         Parse start date and time.
         """
@@ -122,10 +120,14 @@ class Chi_parksSpider(Spider):
         if date and time:
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
-            tz = timezone('America/Chicago')
-            tz_time = tz.localize(naive)
-            return (tz_time, None, tz_time.isoformat(), None)
-        return (None, None, None, None)
+            return self._naive_datetime_to_tz(naive)
+        return None
+
+    def _parse_end(self, item):
+        """
+        No end date.
+        """
+        return None
 
     def _parse_sources(self, item):
         """
