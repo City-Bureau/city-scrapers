@@ -49,7 +49,8 @@ def test_status():
 def test_location():
     assert parsed_items[0]['location'] == {
         'url': 'http://www.cookcountylandbank.org/',
-        'name': "Cook County Administration Building, 69 W. Washington St., 22nd Floor, Conference Room 'A', Chicago, IL 60602",
+        'name': None,
+        'address': "Cook County Administration Building, 69 W. Washington St., 22nd Floor, Conference Room 'A', Chicago, IL 60602",
         'coordinates': {
             'latitude': None,
             'longitude': None,

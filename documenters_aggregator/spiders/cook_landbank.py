@@ -170,7 +170,8 @@ class Cook_landbankSpider(Spider):
         location_detail = item.css('span[class=\'evcal_desc evo_info \']::attr(data-location_name)').extract_first()
         return {
             'url': 'http://www.cookcountylandbank.org/',
-            'name': location_detail + ", " + street_address,
+            'name': None,
+            'address': location_detail + ", " + street_address,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
