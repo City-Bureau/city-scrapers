@@ -5,7 +5,6 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
 from datetime import datetime
-from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
@@ -27,13 +26,12 @@ class Cook_electoralSpider(Spider):
         row_names = response.xpath('//tr/@class').re(r'row\d+')
         for name in row_names:
             item = response.css('tr[class="{}"]'.format(name))
-            start_time = self._parse_start(item)
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'description': self._parse_description(item, response),
                 'classification': self._parse_classification(item),
-                'start_time': start_time.isoformat() if start_time else None,
+                'start_time': self._parse_start(item),
                 'end_time': None,
                 'all_day': self._parse_all_day(item),
                 'timezone': 'America/Chicago',
@@ -41,7 +39,7 @@ class Cook_electoralSpider(Spider):
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data, data['start_time'])
             yield data
 
     def _parse_classification(self, item):
@@ -115,9 +113,8 @@ class Cook_electoralSpider(Spider):
             naive = datetime.strptime(datestring, '%m/%d/%Y%I:%M%p')
         except ValueError:
             return None
-
-        tz = timezone('America/Chicago')
-        return tz.localize(naive)
+        else:
+            self._naive_datetime_to_tz(naive)
 
     def _parse_sources(self, response):
         """
