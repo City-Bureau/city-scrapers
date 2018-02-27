@@ -26,8 +26,7 @@ class CsvPipeline(object):
                                           'classification', 'start_time',
                                           'end_time', 'timezone', 'all_day',
                                           'location_name', 'location_url',
-                                          'location_address', 'location_latitude',
-                                          'location_longitude', 'url',
+                                          'location_address', 'url',
                                           ]
         self.exporter.start_exporting()
 
@@ -43,8 +42,6 @@ class CsvPipeline(object):
         new_item['location_url'] = get_key(new_item, 'location.url')
         new_item['location_name'] = get_key(new_item, 'location.name')
         new_item['location_address'] = get_key(new_item, 'location.address')
-        new_item['location_latitude'] = get_key(new_item, 'location.coordinates.latitude')
-        new_item['location_longitude'] = get_key(new_item, 'location.coordinates.longitude')
         new_item['url'] = new_item.get('sources', [{'url': ''}])[0].get('url', '')
         new_item['agency_name'] = spider.long_name
         new_item = {k: self._format_values(k, v) for k, v in new_item.items() if k in self.exporter.fields_to_export}
