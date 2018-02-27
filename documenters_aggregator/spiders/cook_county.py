@@ -45,7 +45,7 @@ class Cook_countySpider(Spider):
             'name': self._parse_name(response),
             'description': self._parse_description(response),
             'classification': self._parse_classification(response),
-            'start_time': timezone(self.event_timezone).localize(start_time_object)
+            'start_time': timezone(self.event_timezone).localize(start_time_object),
             'end_time': self._parse_end(response),
             'all_day': self._parse_all_day(response),
             'timezone': self.event_timezone,
