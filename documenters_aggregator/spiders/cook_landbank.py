@@ -226,7 +226,7 @@ class Cook_landbankSpider(Spider):
 
     def _parse_sources(self, item):
         source_url = item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)').extract_first()
-        return {
+        return [{
             'url': source_url,
             'note': 'Event Page'
-        }
+        }]

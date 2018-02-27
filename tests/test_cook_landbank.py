@@ -58,10 +58,10 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == {
+    assert parsed_items[0]['sources'] == [{
         'url': 'http://www.cookcountylandbank.org/events/cclba-finance-committee-meeting-09132017/',
         'note': "Event Page",
-    }
+    }]
 
 
 def test__type():
