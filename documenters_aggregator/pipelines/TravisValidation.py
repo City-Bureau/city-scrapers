@@ -37,13 +37,12 @@ class TravisValidationPipeline(object):
         '''
         Adds validation fields to an item.
         '''
-        try:
-            tz = timezone(item['timezone'])
-            start_time = item['start_time']
-            if start_time.isoformat() < tz.localize(datetime.now()).isoformat():
-                return {}
-        except:
-            pass
+        start_time = item['start_time']
+        tz = timezone(item['timezone'])
+        if not start_time:
+            return {}
+        if start_time.isoformat() < tz.localize(datetime.now()).isoformat():
+            return {}
 
         item_location = item.get('location', {})
         if not isinstance(item_location, dict):
