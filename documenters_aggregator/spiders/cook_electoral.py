@@ -33,7 +33,7 @@ class Cook_electoralSpider(Spider):
                 'name': self._parse_name(item),
                 'description': self._parse_description(item, response),
                 'classification': self._parse_classification(item),
-                'start_time': start_time if start_time else None,
+                'start_time': start_time.isoformat() if start_time else None,
                 'end_time': None,
                 'all_day': self._parse_all_day(item),
                 'timezone': 'America/Chicago',
