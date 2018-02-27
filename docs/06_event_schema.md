@@ -15,9 +15,9 @@ Empty strings are preferred to Nones.
   'name': 'Committee on Pedestrian Safety',      # required string
   'description': 'A longer description',         # optional string
   'classification': 'Public Safety'              # general topic of the meeting
-  'start_time': '2017-08-30T17:30:00-06:00',     # required datetime, using ISO8601 format
+  'start_time': datetime(2018, 1, 10, 11, ...),  # required datetime object
                                                  # '17:30:00-06:00' means 5:30PM Chicago (UTC-6) time
-  'end_time': None,                              # optional datetime in UTC, using ISO8601 format
+  'end_time': None,                              # optional datetime object
   'timezone': 'America/Chicago',                 # required timezone in tzinfo format
   'all_day': False,                              # must be True or False
 
