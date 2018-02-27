@@ -99,6 +99,7 @@ class Chi_citycouncilSpider(Spider):
         """
         null_location = {
             'url': None,
+            'address': None,
             'name': None,
             'coordinates': {'longitude': None, 'latitude': None}
         }
@@ -109,6 +110,9 @@ class Chi_citycouncilSpider(Spider):
         else:
             if not location.get('coordinates', None):
                 location['coordinates'] = {'longitude': None, 'latitude': None}
+            if not location.get('address', None):
+                location['address'] = location.get('name', None)
+                location['name'] = None
         return location
 
     def _parse_sources(self, ocd_response, id):
