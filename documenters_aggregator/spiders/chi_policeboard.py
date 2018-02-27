@@ -5,8 +5,9 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
 from datetime import datetime
-from pytz import timezone
 import re
+
+from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
@@ -42,9 +43,9 @@ class Chi_policeboardSpider(Spider):
         self._parse_year(response)
 
         for item in response.xpath('//p[contains(@style,"padding-left")]'):
-            start_time, start_time_str = self._parse_start(item, universal_start_time)
+            start_time = self._parse_start(item, universal_start_time)
             new_item = {
-                'start_time': start_time_str,
+                'start_time': start_time,
                 'id': self._generate_id(data, start_time)
             }
             new_item.update(data)
@@ -68,7 +69,7 @@ class Chi_policeboardSpider(Spider):
 
         By default, return "tentative"
         """
-        if datetime.now().isoformat() > start_time:
+        if datetime.now().replace(tzinfo=timezone('America/Chicago')) > start_time:
             return 'passed'
         return 'tentative'
 
@@ -130,9 +131,8 @@ class Chi_policeboardSpider(Spider):
         date = self._make_date(datestring)
 
         if date:
-            return (date, date.isoformat())
-        else:
-            return (None, None)
+            return date
+        return None
 
     def _parse_start_date(self, item):
         """
@@ -166,8 +166,7 @@ class Chi_policeboardSpider(Spider):
         except ValueError:
             return None
 
-        tz = timezone('America/Chicago')
-        return tz.localize(naive)
+        return self._naive_datetime_to_tz(naive, 'America/Chicago')
 
     def _parse_end(self, response):
         """

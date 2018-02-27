@@ -25,7 +25,7 @@ class ChiTransitSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        today = datetime.now()
+        today = datetime.now().replace(tzinfo=timezone('America/Chicago'))
         response_items = response.css('.datatbl tr:not(:first-child)')
         for idx, item in enumerate(response_items):
             # Including previous item for meetings where it's needed
@@ -39,7 +39,7 @@ class ChiTransitSpider(Spider):
                     'name': item_name,
                     'description': self._parse_description(item, item_class),
                     'classification': item_class,
-                    'start_time': self._format_datetime(item_start),
+                    'start_time': item_start,
                     'end_time': None,
                     'all_day': False,
                     'timezone': 'America/Chicago',
@@ -130,19 +130,12 @@ class ChiTransitSpider(Spider):
         # A.M. and AM formats are used inconsistently, remove periods
         time_str = time_str.replace('.', '')
         if re.match(r'\d{1,2}:\d{2} (AM|PM)', time_str):
-            return datetime.strptime(date_str + time_str, '%m/%d/%Y%I:%M %p')
+            naive = datetime.strptime(date_str + time_str, '%m/%d/%Y%I:%M %p')
+            return self._naive_datetime_to_tz(naive, 'America/Chicago')
         # "Immediately after" specific meeting used frequently, return the
         # start time of the previous meeting
         elif prev_item is not None:
             return self._parse_start(prev_item)
-
-    def _format_datetime(self, time):
-        """
-        Format datetime as timezone-aware,
-        ISO-formatted string.
-        """
-        tz = timezone('America/Chicago')
-        return tz.localize(time).isoformat()
 
     def _parse_sources(self, response):
         """

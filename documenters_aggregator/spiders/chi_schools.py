@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
@@ -16,13 +15,13 @@ class Chi_schoolsSpider(Spider):
         for item in response.css('#content-primary tr')[1:]:
             start_time = self._parse_start_time(item)
             if start_time is not None:
-                start_time, start_time_str = self._parse_start_time(item)
+                start_time = self._parse_start_time(item)
                 data = {
                     '_type': 'event',
                     'name': 'Monthly Board Meeting',
                     'description': self._parse_description(item),
                     'classification': self._parse_classification(item),
-                    'start_time': start_time_str,
+                    'start_time': start_time,
                     'all_day': self._parse_all_day(item),
                     'timezone': 'America/Chicago',
                     'status': self._parse_status(item),
@@ -57,9 +56,7 @@ class Chi_schoolsSpider(Spider):
         date_string = date_string.replace(',', "").replace(':', " ")
         try:
             date = datetime.strptime(date_string, '%B %d %Y %I %M %p')
-            tz = timezone('America/Chicago')
-            date_tz = tz.localize(date)
-            return (date_tz, date_tz.isoformat())
+            return self._naive_datetime_to_tz(date, 'America/Chicago')
         except:
             return None
 
