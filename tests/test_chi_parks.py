@@ -27,11 +27,11 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-12-13T15:30:00-06:00'
-    assert parsed_items[1]['start_time'] == '2017-12-06T15:30:00-06:00'
-    assert parsed_items[2]['start_time'] == '2017-11-08T15:30:00-06:00'
-    assert parsed_items[3]['start_time'] == '2017-10-20T13:30:00-05:00'
-    assert parsed_items[4]['start_time'] == '2017-10-11T15:30:00-05:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-12-13T15:30:00-06:00'
+    assert parsed_items[1]['start_time'].isoformat() == '2017-12-06T15:30:00-06:00'
+    assert parsed_items[2]['start_time'].isoformat() == '2017-11-08T15:30:00-06:00'
+    assert parsed_items[3]['start_time'].isoformat() == '2017-10-20T13:30:00-05:00'
+    assert parsed_items[4]['start_time'].isoformat() == '2017-10-11T15:30:00-05:00'
 
 
 def test_id():
