@@ -17,7 +17,7 @@ class Cook_countySpider(Spider):
     allowed_domains = ['www.cookcountyil.gov']
     start_urls = ['https://www.cookcountyil.gov/calendar?page=0']
     event_timezone = 'America/Chicago'
-    
+
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
@@ -53,7 +53,6 @@ class Cook_countySpider(Spider):
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
-        data.update({'id': self._parse_id(data['name'], data['start_time'])})
         data['id'] = self._generate_id(data, start_time_object)
         return data
 
@@ -75,14 +74,6 @@ class Cook_countySpider(Spider):
             return '{0}page={1}'.format(split_url[0], next_number)
         else:
             return None
-
-    def _parse_id(self, name, start_time):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-        Combine name and start time to make a unique ID.
-        """
-
-        return "{0}{1}".format(name, start_time).replace(' ', '')
 
     def _parse_classification(self, response):
         """
