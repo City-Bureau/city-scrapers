@@ -15,7 +15,7 @@ SPIDER_MODULES = ['documenters_aggregator.spiders']
 NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Documenters Aggregator [production mode]. Learn more and say hello at https://city-bureau.gitbooks.io/documenters-event-aggregator/'
+USER_AGENT = 'Documenters Aggregator [development mode]. Learn more and say hello at https://city-bureau.gitbooks.io/documenters-event-aggregator/'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -28,14 +28,13 @@ COOKIES_ENABLED = False
 # Configure item pipelines
 #
 # One of:
-# * documenters_aggregator.pipelines.DocumentersAggregatorLoggingPipeline,
-# * documenters_aggregator.pipelines.DocumentersAggregatorSQLAlchemyPipeline,
+# * documenters_aggregator.pipelines.ValidationPipeline,
 # * documenters_aggregator.pipelines.AirtablePipeline
 #
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'documenters_aggregator.pipelines.AirtablePipeline': 300,
+    'documenters_aggregator.pipelines.TravisValidationPipeline': 300,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -70,7 +69,7 @@ DOWNLOADER_MIDDLEWARES = {
     'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
 }
 
-FOO = 'BAR'
+COMMANDS_MODULE = 'documenters_aggregator.commands'
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -78,6 +77,11 @@ FOO = 'BAR'
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
+EXTENSIONS = {
+    'scrapy.extensions.closespider.CloseSpider': None,
+}
+
+CLOSESPIDER_ERRORCOUNT = 5
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
