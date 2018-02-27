@@ -40,7 +40,7 @@ class TravisValidationPipeline(object):
         try:
             tz = timezone(item['timezone'])
             start_time = item['start_time']
-            if start_time < tz.localize(datetime.now()).isoformat():
+            if start_time.isoformat() < tz.localize(datetime.now()).isoformat():
                 return {}
         except:
             pass
