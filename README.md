@@ -1,16 +1,19 @@
-## Purpose of the Documenters-Aggregator project
+[![Build Status](https://travis-ci.org/City-Bureau/documenters-aggregator.svg?branch=master)](https://travis-ci.org/City-Bureau/documenters-aggregator)
+
+[![Deploy Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZUwxa3FleE42andOVVZhUytOSXFQOE5QMnYwN3Jxa2FmWTBoMk5XZmJTb05OSmtIcXc4SW5ycjZua2x0Zy9SQzN2Q3ZTVW1xRWFrTGRUSVhna2Y3NWtnPSIsIml2UGFyYW1ldGVyU3BlYyI6IklRdldCcXJKMm4zTmFtZXEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://console.aws.amazon.com/codebuild/home?region=us-east-1#/projects/DocumentersAggregator/view)
+
+
+## What are the City Scrapers?
+
+The City Scrapers collect information about public meetings posted online. Everyday, the City Scrapers go out and fetch information about new meetings from Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them. Community members are also welcome to use this code to set up their own databases.
+
+## Who are the City Bureau Documenters, and why do they want to scrape websites?
 
 Public meetings are important spaces for democracy where any resident can participate and hold public figures accountable. [City Bureau's Documenters program](https://www.citybureau.org/documenters) pays community members an hourly wage to inform and engage their communities by attending and documenting public meetings.
 
 How does the Documenters program know when meetings are happening? It isn’t easy! These events are spread across dozens of websites, rarely in useful data formats.
 
-That’s why City Bureau and ProPublica Illinois is working together with a team of civic coders to develop and coordinate a community open source project to scrape and store these meetings in a central Documenters calendar.
-
-The Documenters-Aggregator is a collection of web-scrapers and utilities to create a comprehensive and accessible database of public government meetings in Chicago and Cook County.
-
-[![Build Status](https://travis-ci.org/City-Bureau/documenters-aggregator.svg?branch=master)](https://travis-ci.org/City-Bureau/documenters-aggregator)
-
-[![Deploy Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZUwxa3FleE42andOVVZhUytOSXFQOE5QMnYwN3Jxa2FmWTBoMk5XZmJTb05OSmtIcXc4SW5ycjZua2x0Zy9SQzN2Q3ZTVW1xRWFrTGRUSVhna2Y3NWtnPSIsIml2UGFyYW1ldGVyU3BlYyI6IklRdldCcXJKMm4zTmFtZXEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://console.aws.amazon.com/codebuild/home?region=us-east-1#/projects/DocumentersAggregator/view)
+That’s why City Bureau and ProPublica Illinois is working together with a team of civic coders to develop and coordinate a community open source project to scrape and store these meetings in a central database.
 
 ## Community
 
