@@ -13,7 +13,7 @@ Public meetings are important spaces for democracy where any resident can partic
 
 How does the Documenters program know when meetings are happening? It isn’t easy! These events are spread across dozens of websites, rarely in useful data formats.
 
-That’s why City Bureau and ProPublica Illinois is working together with a team of civic coders to develop and coordinate a community open source project to scrape and store these meetings in a central database.
+That’s why City Bureau and ProPublica Illinois are working together with a team of civic coders to develop and coordinate a community open source project to scrape and store these meetings in a central database.
 
 ## Community
 
@@ -33,6 +33,8 @@ We ask all new contributors to start by writing a spider and its documentation o
 For those familiar with the project, please see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
 
 ## Don't want to code?
+
+[Join our slack channel](https://airtable.com/shrsdRcYVzp019U22) (chatroom) to discuss ideas and meet the community!
 
 A. We have ongoing conversations about what sort of data we should collect and how it should be collected. Help us make these decisions by commenting on [issues with a non-coding label](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3Anon-coding).
 
