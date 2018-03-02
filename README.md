@@ -28,12 +28,11 @@ How does the Documenters program know when meetings are happening? It isn’t ea
 
 That’s why City Bureau and ProPublica Illinois are working together with a team of civic coders to develop and coordinate a community open source project to scrape and store these meetings in a central database.
 
-## Community
+## Community Mission
 
-The City Bureau Labs community welcomes contributions from everyone. We prioritize the experiences of under-represented groups in tech and media. 
-
-This project provides an opportunity for coders and journalists to build up their technical skills so that they can become leaders and mentors in Chicago’s civic tech and media scene. We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), 
-so that more under-represented folks will become decision-makers in both City Bureau’s community and Chicago’s tech and media scenes at large.
+The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for racial and gender minorities.
+ 
+We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both our community and Chicago’s tech and media scenes at large.
 
 ## Ready to code with us?
 
