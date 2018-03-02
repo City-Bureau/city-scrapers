@@ -33,15 +33,15 @@ That’s why City Bureau and ProPublica Illinois are working together with a tea
 The City Bureau Labs community welcomes contributions from everyone. We prioritize the experiences of under-represented groups in tech and media. 
 
 This project provides an opportunity for coders and journalists to build up their technical skills so that they can become leaders and mentors in Chicago’s civic tech and media scene. We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), 
-so that more under-represented folks will become contributors and decision-makers in both City Bureau’s community and Chicago’s tech and media scenes at large. We encourage folks who have found their grounding with us to continue transforming our communities with community partners.
+so that more under-represented folks will become decision-makers in both City Bureau’s community and Chicago’s tech and media scenes at large.
 
 ## Ready to code with us?
 
-1. [Fill out this form](https://airtable.com/shrsdRcYVzp019U22) to join our [slack channel](https://citybureau.slack.com/#labs_aggregator) and meet the community.
+1. [Fill out this form](https://airtable.com/shrsdRcYVzp019U22) to join our [slack channel](https://citybureau.slack.com/#labs_city_scrapers) and meet the community.
 2. Read about [how we collaborate](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) and review our [Code of Conduct](https://github.com/City-Bureau/documenters-aggregator/blob/master/CODE_OF_CONDUCT.md).
 3. Get started with [Installation](docs/02_installation.md) and [Contributing a spider](docs/03_contribute.md).
 
-We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on [slack](https://citybureau.slack.com/#labs_aggregator) for support if you need it. We also meet up in person to work together regularly, and post about upcoming meetups in slack.
+We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on [slack](https://citybureau.slack.com/#labs_city_scrapers) for support if you need it. We also meet up in person to work together regularly, and post about upcoming meetups in slack.
 
 For those familiar with the project, please see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
 
