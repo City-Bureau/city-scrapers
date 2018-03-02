@@ -5,7 +5,20 @@
 
 ## What are the City Scrapers?
 
-The City Scrapers collect information about public meetings posted online. Everyday, the City Scrapers go out and fetch information about new meetings from Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them. Community members are also welcome to use this code to set up their own databases.
+The City Scrapers collect information about public meetings. Everyday, the City Scrapers go out and fetch information about new meetings from Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them. 
+
+Community members are also welcome to use this code to set up their own databases.
+
+## What can I learn from working on the City Scrapers?
+
+A lot about the City of Chicago! What is City Council talking about this week? What are the local school councils, and what community power do they have? What neighborhoods is the police department doing outreach in? Who governs our water?
+
+From building a scraper, you'll gain experience with:  
+- how the web works (HTTP requests and responses, reading HTML)  
+- writing functions and tests in Python
+- version control and collaborative coding (git and Github)
+- a basic data file format (json), working with a schema and data validation
+- problem solving, finding patterns, designing robust code
 
 ## Who are the City Bureau Documenters, and why do they want to scrape websites?
 
