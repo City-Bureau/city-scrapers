@@ -1,8 +1,10 @@
 import requests
 import os
 import time
+import json
+from collections import defaultdict
+from functools import reduce
 
-from deploy import ecs
 from invoke import Collection, task, run
 from jinja2 import Environment, FileSystemLoader
 from urllib.parse import urlparse
@@ -63,8 +65,8 @@ def runtests(ctx):
     """
     Runs pytest and flake8.
     """
-    run('pytest -s', pty=pty_available)
-    run('flake8 --ignore E265,E266,E501 --exclude src', pty=pty_available)
+    run('pytest -s tests', pty=pty_available)
+    run('flake8 --ignore E265,E266,E501 --exclude src, lib', pty=pty_available)
 
 
 def _make_classname(name):
@@ -155,8 +157,57 @@ def _get_domains(start_urls):
     return domains
 
 
+@task
+def validate_spider(ctx, spider_file):
+    """
+    Validates scraped items from a spider.
+    Passes if >=90% of the scraped items
+    conform to the schema.
+    """
+    spider = os.path.basename(spider_file).split('.')[0]
+    with open(spider_file, 'r') as f:
+        content = f.read()
+
+        if len(content) == 0:
+            print("{0} was empty.".format(spider_file))
+            return
+        try:
+
+            scraped_items = json.loads(content)
+        except json.decoder.JSONDecodeError:
+            message = "Could not decode JSON. Here is the beginning and end of the file: {0}\n...\n{1}"
+            print(message).format(content[:50], content[-50:])
+            raise Exception("Could not decode JSON")
+
+    nonempty_items = [item for item in scraped_items if item]
+    validated_items = defaultdict(list)
+    for item in nonempty_items:
+        for k, v in item.items():
+            if k.startswith('val_'):
+                validated_items[k].append(v)
+
+    print('\n------------Validation Summary for: {0}---------------'.format(spider))
+    print('Validating {} items\n'.format(len(nonempty_items)))
+    validation_summary = {}
+    for item_key, item_list in validated_items.items():
+        validation_summary[item_key] = reduce(lambda x, y: x + y, item_list) / len(item_list)
+        print('{}: {:.0%}'.format(item_key[4:], validation_summary[item_key]))
+
+    try:
+        assert all([x >= 0.9 for x in validation_summary.values()])
+    except AssertionError as e:
+        message = (
+            'Less than 90% of the scraped items from {0} passed validation. '
+            'See the validation summary printed in stdout, and check that the '
+            'scraped items conform to the events schema at: '
+            'https://github.com/City-Bureau/city-scrapers/'
+            'blob/master/docs/06_event_schema.md'
+        ).format(spider)
+        raise Exception(message) from e
+
+
 # Python invoke namespace (http://docs.pyinvoke.org/en/0.11.0/concepts/namespaces.html#nesting-collections)
 ns = Collection()
 ns.add_task(genspider)
 ns.add_task(runtests)
-ns.add_collection(ecs, 'ecs')
+ns.add_task(validate_spider)

@@ -19,7 +19,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-01-27T09:00:00-06:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-01-27T09:00:00-06:00'
 
 
 def test_id():
@@ -33,7 +33,8 @@ def test_status():
 def test_location():
     assert parsed_items[0]['location'] == {
         'url': '',
-        'name': '1900 W. Polk, Second Floor Conference Room, Chicago, Illinois',
+        'name': '',
+        'address': '1900 W. Polk, Second Floor Conference Room, Chicago, Illinois',
         'coordinates': {'latitude': '', 'longitude': ''},
     }
 
