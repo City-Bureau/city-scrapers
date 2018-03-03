@@ -6,7 +6,6 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 
 import re
 from datetime import datetime
-from pytz import timezone
 from time import strptime
 
 from documenters_aggregator.spider import Spider
@@ -28,14 +27,12 @@ class Chi_pubhealthSpider(Spider):
         needs.
         """
 
-        title = response.css('#content-content h1::text').extract_first()
-
+        title = response.xpath('//h1[@class="page-heading"]/text()').extract_first()
         parts = re.match(r'(\d{4}) (.*?)s', title)
         year = int(parts.group(1))
         name = parts.group(2)
 
-        first_paragraph = response.css('#content-content h1 + p::text').extract_first()
-        description = first_paragraph.replace('The specific dates, by month, for 2017 are:', '').strip()
+        description = response.css('#content-content h1 + p::text').extract_first()
 
         for item in response.css('#content-content p'):
 
@@ -45,21 +42,20 @@ class Chi_pubhealthSpider(Spider):
             if matches is not None:
                 month = int(strptime(matches.group(1), '%B').tm_mon)
                 day = int(matches.group(2))
-                tz = timezone('America/Chicago')
 
                 naive_start_time = datetime(year, month, day, 9)
-                start_time = tz.localize(naive_start_time)
+                start_time = self._naive_datetime_to_tz(naive_start_time)
 
                 naive_end_time = datetime(year, month, day, 10, 30)
-                end_time = tz.localize(naive_end_time)
+                end_time = self._naive_datetime_to_tz(naive_end_time)
 
                 data = {
                     '_type': 'event',
                     'name': name,
                     'description': description,
                     'classification': self._parse_classification(item),
-                    'start_time': start_time.isoformat(),
-                    'end_time': end_time.isoformat(),
+                    'start_time': start_time,
+                    'end_time': end_time,
                     'all_day': False,
                     'timezone': 'America/Chicago',
                     'status': self._parse_status(item),

@@ -25,7 +25,7 @@ class Il_pubhealthSpider(Spider):
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': start_time.isoformat() if start_time else None,
+                'start_time': start_time,
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'timezone': 'America/Chicago',
@@ -73,6 +73,7 @@ class Il_pubhealthSpider(Spider):
         return {
             'url': '',
             'name': '',
+            'address': '',
             'coordinates': {'longitude': '', 'latitude': ''},
         }
 
@@ -111,7 +112,8 @@ class Il_pubhealthSpider(Spider):
         Combine end time with year, month, and day.
         """
         try:
-            return item.css('div span.date-display-end::attr(content)').extract()[0]
+            end = item.css('div span.date-display-end::attr(content)').extract()[0]
+            return dateparse(end)
         except IndexError:
             return None
 

@@ -15,6 +15,7 @@ class Cook_boardSpider(Spider):
     name = 'cook_board'
     long_name = 'Cook County Board of Commissioners'
     allowed_domains = ['cook-county.legistar.com']
+    event_timezone = 'America/Chicago'
     start_urls = ['https://www.cook-county.legistar.com']  # use LegistarEventsScraper instead
 
     def parse(self, response):
@@ -44,10 +45,10 @@ class Cook_boardSpider(Spider):
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': start_time.isoformat(),
+                'start_time': start_time,
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
-                'timezone': 'America/Chicago',
+                'timezone': self.event_timezone,
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item)
             }
@@ -67,7 +68,7 @@ class Cook_boardSpider(Spider):
         tentative = no agenda posted
         confirmed = agenda posted
         """
-        if datetime.now().isoformat() > start_time:
+        if datetime.now().replace(tzinfo=timezone(self.event_timezone)) > start_time:
             return 'passed'
         if 'url' in item['Agenda']:
             return 'confirmed'
@@ -80,7 +81,8 @@ class Cook_boardSpider(Spider):
         """
         return {
             'url': None,
-            'name': item.get('Meeting Location', None),
+            'address': item.get('Meeting Location', None),
+            'name': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -118,8 +120,7 @@ class Cook_boardSpider(Spider):
         if date and time:
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
-            tz = timezone('America/Chicago')
-            return tz.localize(naive)
+            return self._naive_datetime_to_tz(naive, self.event_timezone)
         return None
 
     def _parse_end(self, item):

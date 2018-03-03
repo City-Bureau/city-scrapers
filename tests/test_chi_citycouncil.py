@@ -20,7 +20,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-10-16T10:00:00-05:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-10-16T10:00:00-05:00'
 
 
 def test_end_time():
@@ -28,7 +28,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_citycouncil/None/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
+    assert parsed_items[0]['id'] == 'chi_citycouncil/201710161000/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
 
 
 def test_all_day():

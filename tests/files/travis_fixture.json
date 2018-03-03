@@ -1,10 +1,10 @@
 [
     {
         "_type": "event",
-        "name": "March 2018 Regular Board Meeting",
+        "name": "March 2019 Regular Board Meeting",
         "description": "\u200b \r\n",
         "classification": "Not classified",
-        "start_time": "2018-03-01T09:00:00-06:00",
+        "start_time": "2019-03-01T09:00:00-06:00",
         "end_time": null,
         "timezone": "America/Chicago",
         "status": "tentative",
@@ -19,18 +19,18 @@
         },
         "sources": [
             {
-                "url": "http://www.ccc.edu/events/Pages/March-2018-Regular-Board-Meeting.aspx",
+                "url": "http://www.ccc.edu/events/Pages/March-2019-Regular-Board-Meeting.aspx",
                 "note": ""
             }
         ],
-        "id": "chi_city_college/201803010900/x/march_2018_regular_board_meeting"
+        "id": "chi_city_college/201903010900/x/march_2019_regular_board_meeting"
     },
     {
         "_type": "event",
-        "name": "May 2018 Regular Board Meeting",
+        "name": "May 2019 Regular Board Meeting",
         "description": "\u200b \r\n",
         "classification": "Not classified",
-        "start_time": "2018-05-03T09:00:00-05:00",
+        "start_time": "2019-05-03T09:00:00-05:00",
         "end_time": null,
         "all_day": false,
         "timezone": "America/Chicago",
@@ -45,18 +45,18 @@
         },
         "sources": [
             {
-                "url": "http://www.ccc.edu/events/Pages/May-2018-Regular-Board-Meeting.aspx",
+                "url": "http://www.ccc.edu/events/Pages/May-2019-Regular-Board-Meeting.aspx",
                 "note": ""
             }
         ],
-        "id": "chi_city_college/201805030900/x/may_2018_regular_board_meeting"
+        "id": "chi_city_college/201905030900/x/may_2019_regular_board_meeting"
     },
     {
         "_type": "event",
-        "name": "April 2018 Regular Board Meeting",
+        "name": "April 2019 Regular Board Meeting",
         "description": "\u200b \r\n",
         "classification": "Not classified",
-        "start_time": "2018-04-05T09:00:00-05:00",
+        "start_time": "2019-04-05T09:00:00-05:00",
         "end_time": null,
         "all_day": false,
         "timezone": "America/Chicago",
@@ -71,10 +71,10 @@
         },
         "sources": [
             {
-                "url": "http://www.ccc.edu/events/Pages/April-2018-Regular-Board-Meeting.aspx",
+                "url": "http://www.ccc.edu/events/Pages/April-2019-Regular-Board-Meeting.aspx",
                 "note": ""
             }
         ],
-        "id": "chi_city_college/201804050900/x/april_2018_regular_board_meeting"
+        "id": "chi_city_college/201904050900/x/april_2019_regular_board_meeting"
     }
 ]

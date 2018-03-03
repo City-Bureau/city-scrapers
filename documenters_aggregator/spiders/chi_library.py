@@ -6,8 +6,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import re
 import urllib.request
 import json
-from datetime import datetime
-from pytz import timezone
+import datetime
 
 from documenters_aggregator.spider import Spider
 
@@ -60,7 +59,7 @@ class Chi_librarySpider(Spider):
                 'name': 'Chicago Public Library Board Meeting',
                 'description': description_str,
                 'classification': 'Board meeting',
-                'start_time': start_time.isoformat(),
+                'start_time': start_time,
                 'end_time': None,  # no end time listed
                 'all_day': False,  # default is false
                 'timezone': 'America/Chicago',
@@ -135,9 +134,8 @@ class Chi_librarySpider(Spider):
         date = date.replace(',', '')
         date = date.replace('.', '')
         date = date + ' ' + year
-        datetime_object = datetime.strptime(date, '%A %B %d %I %p %Y')
-        tz = timezone('America/Chicago')
-        return tz.localize(datetime_object)
+        datetime_object = datetime.datetime.strptime(date, '%A %B %d %I %p %Y')
+        return self._naive_datetime_to_tz(datetime_object)
 
     def _parse_sources(self, response):
         """
