@@ -27,11 +27,11 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-11-15T14:00:00-06:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-11-15T14:00:00-06:00'
 
 
 def test_start_time_after_mtg():
-    assert parsed_items[1]['start_time'] == '2017-11-15T14:00:00-06:00'
+    assert parsed_items[1]['start_time'].isoformat() == '2017-11-15T14:00:00-06:00'
 
 
 def test_classification():

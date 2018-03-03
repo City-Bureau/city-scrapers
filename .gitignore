@@ -123,4 +123,5 @@ deploy/*.py
 
 # validation logs
 logs/*.log
+travis/*.json
 

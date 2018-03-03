@@ -13,15 +13,15 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == 'The Chicago Board of Health is scheduled to meet on the third Wednesday of each month from 9:00am-10:30am. The meetings are held at the Chicago Department of Public Health, DePaul Center, 333 S. State Street, 2nd Floor Board Room.'
+    assert parsed_items[0]['description'] == 'The Chicago Board of Health is scheduled to meet on the third Wednesday of each month from 9:00am-10:30am. The meetings are held at the Chicago Department of Public Health, DePaul Center, 333 S. State Street, 2nd Floor Board Room. The specific dates, by month, for 2017 are:'
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-01-18T09:00:00-06:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-01-18T09:00:00-06:00'
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'] == '2017-01-18T10:30:00-06:00'
+    assert parsed_items[0]['end_time'].isoformat() == '2017-01-18T10:30:00-06:00'
 
 
 def test_id():

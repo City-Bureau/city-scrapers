@@ -18,7 +18,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-09-13T10:00:00-05:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-09-13T10:00:00-05:00'
 
 
 def test_end_time():
@@ -49,7 +49,8 @@ def test_status():
 def test_location():
     assert parsed_items[0]['location'] == {
         'url': 'http://www.cookcountylandbank.org/',
-        'name': "Cook County Administration Building, 69 W. Washington St., 22nd Floor, Conference Room 'A', Chicago, IL 60602",
+        'name': None,
+        'address': "Cook County Administration Building, 69 W. Washington St., 22nd Floor, Conference Room 'A', Chicago, IL 60602",
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -58,10 +59,10 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == {
+    assert parsed_items[0]['sources'] == [{
         'url': 'http://www.cookcountylandbank.org/events/cclba-finance-committee-meeting-09132017/',
         'note': "Event Page",
-    }
+    }]
 
 
 def test__type():

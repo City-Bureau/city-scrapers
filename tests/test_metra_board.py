@@ -14,7 +14,7 @@ def test_name():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2018-02-21T10:30:00-06:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2018-02-21T10:30:00-06:00'
 
 
 def test_id():

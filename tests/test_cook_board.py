@@ -24,7 +24,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[25]['start_time'] == '2017-09-13T11:00:00-05:00'
+    assert parsed_items[25]['start_time'].isoformat() == '2017-09-13T11:00:00-05:00'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -53,7 +53,8 @@ def test_status():
 def test_location():
     assert parsed_items[25]['location'] == {
         'url': None,
-        'name': 'Cook County Building, Board Room, 118 North Clark Street, Chicago, Illinois',
+        'name': None,
+        'address': 'Cook County Building, Board Room, 118 North Clark Street, Chicago, Illinois',
         'coordinates': {
             'latitude': None,
             'longitude': None,

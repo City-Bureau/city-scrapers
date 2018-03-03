@@ -34,11 +34,11 @@ def test_description():
 
 
 def test_start_time():
-    assert item['start_time'] == '2018-09-08T10:00:00-05:00'
+    assert item['start_time'].isoformat() == '2018-09-08T10:00:00-05:00'
 
 
 def test_end_time():
-    assert item['end_time'] == '2018-09-08T14:00:00-05:00'
+    assert item['end_time'].isoformat() == '2018-09-08T14:00:00-05:00'
 
 
 def test_id():
@@ -52,7 +52,8 @@ def test_classification():
 def test_location():
     assert item['location'] == {
         'url': None,
-        'name': 'Robbins Health Center 13450 W. Kedzie, Robbins, IL',
+        'name': None,
+        'address': 'Robbins Health Center 13450 W. Kedzie, Robbins, IL',
         'coordinates': {
             'latitude': None,
             'longitude': None,

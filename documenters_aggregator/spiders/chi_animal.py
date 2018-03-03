@@ -4,8 +4,6 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 from dateutil.parser import parse as dateparse
-from pytz import timezone
-
 from documenters_aggregator.spider import Spider
 
 
@@ -38,13 +36,12 @@ class Chi_animalSpider(Spider):
                 continue
 
             # Parse the item
-            start_time, start_time_str = self._parse_start(text)
             data = {
                 '_type': 'event',
                 'name': self._parse_name(text),
                 'description': self._parse_description(text),
                 'classification': self._parse_classification(text),
-                'start_time': start_time_str,
+                'start_time': self._parse_start(text),
                 'end_time': self._parse_end(text),
                 'all_day': self._parse_all_day(text),
                 'timezone': 'America/Chicago',
@@ -52,7 +49,7 @@ class Chi_animalSpider(Spider):
                 'location': self._parse_location(text),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data, data['start_time'])
 
             yield data
 
@@ -112,12 +109,9 @@ class Chi_animalSpider(Spider):
         """
         Parse start date and time.
         """
+        item = '-'.join(item.split('-')[:2]).strip()
         naive_date = dateparse(item)
-        tz = timezone('America/Chicago')
-        date = tz.localize(naive_date)
-        date_str = date.isoformat()
-
-        return (date, date_str)
+        return self._naive_datetime_to_tz(naive_date)
 
     def _parse_end(self, item):
         """
