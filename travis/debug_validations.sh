@@ -14,7 +14,8 @@ export SCRAPY_SETTINGS_MODULE='travis.travis_settings'
 
 # Run new or modified spiders and save output
 find documenters_aggregator/spiders -name "[^_]*.py" | \
-    xargs sh -c 'scraper=$(basename "${1%%.*}") ; scrapy crawl $scraper -o ./travis/$scraper.json --loglevel=ERROR' --
+    xargs basename -s .py | \
+    xargs -I{} scrapy crawl {} -o ./travis/{}.json --loglevel=ERROR
 
 # Validate saved output
-find travis -name *.json | xargs invoke validate-spider
+find travis -name "*.json" | xargs -I{} invoke validate-spider {}
