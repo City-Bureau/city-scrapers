@@ -165,16 +165,20 @@ def validate_spider(ctx, spider_file):
     conform to the schema.
     """
     spider = os.path.basename(spider_file).split('.')[0]
-    try:
-        with open(spider_file, 'r') as f:
-            scraped_items = json.load(f)
-    except json.decoder.JSONDecodeError:
-        with open(spider_file, 'r') as f:
-            file_string = f.read()
-        print(("Could not decode json. Here is the beginning "
-            "and end of the file: {0}\n...\n{1}").format(file_string[:50], file_string[-50:]))
-        scraped_items = json.loads(file_string[file_string.find('['):file_string.rfind(']')+1])
-        
+    with open(spider_file, 'r') as f:
+        content = f.read()
+
+        if len(content) == 0:
+            print("{0} was empty.".format(spider_file))
+            return
+        try:
+
+            scraped_items = json.loads(content)
+        except json.decoder.JSONDecodeError:
+            message = "Could not decode JSON. Here is the beginning and end of the file: {0}\n...\n{1}"
+            print(message).format(content[:50], content[-50:])
+            raise Exception("Could not decode JSON")
+
     nonempty_items = [item for item in scraped_items if item]
     validated_items = defaultdict(list)
     for item in nonempty_items:
