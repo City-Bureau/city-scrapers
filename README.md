@@ -2,6 +2,13 @@
 
 [![Deploy Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZUwxa3FleE42andOVVZhUytOSXFQOE5QMnYwN3Jxa2FmWTBoMk5XZmJTb05OSmtIcXc4SW5ycjZua2x0Zy9SQzN2Q3ZTVW1xRWFrTGRUSVhna2Y3NWtnPSIsIml2UGFyYW1ldGVyU3BlYyI6IklRdldCcXJKMm4zTmFtZXEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://console.aws.amazon.com/codebuild/home?region=us-east-1#/projects/DocumentersAggregator/view)
 
+## Who are the City Bureau Documenters, and why do they want to scrape websites?
+
+Public meetings are important spaces for democracy where any resident can participate and hold public figures accountable. [City Bureau's Documenters program](https://www.citybureau.org/documenters) pays community members an hourly wage to inform and engage their communities by attending and documenting public meetings.
+
+How does the Documenters program know when meetings are happening? It isn’t easy! These events are spread across dozens of websites, rarely in useful data formats.
+
+That’s why City Bureau and ProPublica Illinois are working together with a team of civic coders to develop and coordinate the City Scrapers, a community open source project to scrape and store these meetings in a central database.
 
 ## What are the City Scrapers?
 
@@ -19,14 +26,6 @@ From building a scraper, you'll gain experience with:
 - version control and collaborative coding (git and Github)
 - a basic data file format (json), working with a schema and data validation
 - problem solving, finding patterns, designing robust code
-
-## Who are the City Bureau Documenters, and why do they want to scrape websites?
-
-Public meetings are important spaces for democracy where any resident can participate and hold public figures accountable. [City Bureau's Documenters program](https://www.citybureau.org/documenters) pays community members an hourly wage to inform and engage their communities by attending and documenting public meetings.
-
-How does the Documenters program know when meetings are happening? It isn’t easy! These events are spread across dozens of websites, rarely in useful data formats.
-
-That’s why City Bureau and ProPublica Illinois are working together with a team of civic coders to develop and coordinate a community open source project to scrape and store these meetings in a central database.
 
 ## Community Mission
 
