@@ -18,7 +18,7 @@ def test_description(item):
 
 
 def test_start_time():
-    assert parsed_items[8]['start_time'] == '2017-09-18T19:30:00-05:00'
+    assert parsed_items[8]['start_time'].isoformat() == '2017-09-18T19:30:00-05:00'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -48,7 +48,8 @@ def test_status():
 def test_location(item):
     assert item['location'] == {
         'url': None,
-        'name': 'Chicago Public Safety Headquarters, 3510 South Michigan Avenue',
+        'name': None,
+        'address': 'Chicago Public Safety Headquarters, 3510 South Michigan Avenue',
         'coordinates': {
             'latitude': None,
             'longitude': None,

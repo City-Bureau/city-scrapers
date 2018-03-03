@@ -3,7 +3,6 @@ import scrapy
 
 import re
 from datetime import datetime
-from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
@@ -27,7 +26,7 @@ class RegionaltransitSpider(Spider):
                 'name': name,
                 'description': description,
                 'classification': self._parse_classification(item),
-                'start_time': start_time.isoformat() if start_time else None,
+                'start_time': start_time,
                 'end_time': None,
                 'all_day': False,
                 'timezone': 'America/Chicago',
@@ -93,9 +92,8 @@ class RegionaltransitSpider(Spider):
         """
         title = item.css('.committee::text').extract_first()
         m = re.search('(\d{4})-(\d{1,2})-(\d{1,2})', title)
-        tz = timezone('America/Chicago')
         naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
-        return tz.localize(naive_dt)
+        return self._naive_datetime_to_tz(naive_dt, 'America/Chicago')
 
     def _parse_sources(self, response):
         """

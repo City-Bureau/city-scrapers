@@ -11,8 +11,8 @@ class TravisValidationPipeline(object):
         'name': {'required': True, 'type': str},
         'description': {'required': False, 'type': str},
         'classification': {'required': True, 'type': str},
-        'start_time': {'required': True, 'type': str, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
-        'end_time': {'required': False, 'type': str, 'format_str': '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-0(5|6):00'},
+        'start_time': {'required': True, 'type': datetime},
+        'end_time': {'required': False, 'type': datetime},
         'timezone': {'required': True, 'type': str},
         'all_day': {'required': False, 'type': bool},
         'location': {'required': True, 'type': dict},
@@ -37,13 +37,12 @@ class TravisValidationPipeline(object):
         '''
         Adds validation fields to an item.
         '''
-        try:
-            tz = timezone(item['timezone'])
-            start_time = item['start_time']
-            if start_time < tz.localize(datetime.now()).isoformat():
-                return {}
-        except:
-            pass
+        start_time = item['start_time']
+        tz = timezone(item['timezone'])
+        if not start_time:
+            return {}
+        if start_time.isoformat() < tz.localize(datetime.now()).isoformat():
+            return {}
 
         item_location = item.get('location', {})
         if not isinstance(item_location, dict):

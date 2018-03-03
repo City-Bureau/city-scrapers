@@ -16,11 +16,11 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-12-28T18:30:00-06:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-12-28T18:30:00-06:00'
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'] == '2017-12-28T19:30:00-06:00'
+    assert parsed_items[0]['end_time'].isoformat() == '2017-12-28T19:30:00-06:00'
 
 
 def test_id():
@@ -40,7 +40,7 @@ def test_status():
 
 
 def test_location():
-    assert isinstance(parsed_items[0]['location']['name'], str)
+    assert isinstance(parsed_items[0]['location']['address'], str)
 
 
 def test__type():

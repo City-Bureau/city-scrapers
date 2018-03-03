@@ -13,15 +13,15 @@ def test_name():
 
 
 def test_start_time():
-    assert item['start_time'] == '2017-11-15T13:00:00-06:00'
+    assert item['start_time'].isoformat() == '2017-11-15T13:00:00-06:00'
 
 
 def test_end_time():
-    assert item['end_time'] == '2017-11-15T15:00:00-06:00'
+    assert item['end_time'].isoformat() == '2017-11-15T15:00:00-06:00'
 
 
 def test_id():
-    assert item['id'] == 'cook_county/201711151300/ZBAPublicHearing2017-11-15T13:00:00-06:00/zba_public_hearing'
+    assert item['id'] == 'cook_county/201711151300/x/zba_public_hearing'
 
 
 def test_all_day():
@@ -39,7 +39,8 @@ def test_status():
 def test_location():
     assert item['location'] == {
         'url': None,
-        'name': '69 W. Washington Street Chicago , IL  60602',
+        'name': None,
+        'address': '69 W. Washington Street Chicago , IL  60602',
         'coordinates': {
             'latitude': None,
             'longitude': None,

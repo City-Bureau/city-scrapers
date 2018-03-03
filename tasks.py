@@ -66,7 +66,7 @@ def runtests(ctx):
     Runs pytest and flake8.
     """
     run('pytest -s tests', pty=pty_available)
-    run('flake8 --ignore E265,E266,E501 --exclude src', pty=pty_available)
+    run('flake8 --ignore E265,E266,E501 --exclude src, lib', pty=pty_available)
 
 
 def _make_classname(name):
@@ -166,14 +166,28 @@ def validate_spider(ctx, spider_file):
     """
     spider = os.path.basename(spider_file).split('.')[0]
     with open(spider_file, 'r') as f:
-        scraped_items = json.load(f)
+        content = f.read()
+
+        if len(content) == 0:
+            print("{0} was empty.".format(spider_file))
+            return
+        try:
+
+            scraped_items = json.loads(content)
+        except json.decoder.JSONDecodeError:
+            message = "Could not decode JSON. Here is the beginning and end of the file: {0}\n...\n{1}"
+            print(message).format(content[:50], content[-50:])
+            raise Exception("Could not decode JSON")
+
+    nonempty_items = [item for item in scraped_items if item]
     validated_items = defaultdict(list)
-    for item in scraped_items:
+    for item in nonempty_items:
         for k, v in item.items():
             if k.startswith('val_'):
                 validated_items[k].append(v)
 
-    print('\n------------Validation Summary for: {0}---------------\n'.format(spider))
+    print('\n------------Validation Summary for: {0}---------------'.format(spider))
+    print('Validating {} items\n'.format(len(nonempty_items)))
     validation_summary = {}
     for item_key, item_list in validated_items.items():
         validation_summary[item_key] = reduce(lambda x, y: x + y, item_list) / len(item_list)
