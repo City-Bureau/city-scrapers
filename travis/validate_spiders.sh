@@ -21,4 +21,4 @@ git diff --name-only --diff-filter=AM $TRAVIS_COMMIT_RANGE| \
     xargs sh -c 'scraper=$(basename "${1%%.*}") ; scrapy crawl $scraper -o ./travis/$scraper.json --loglevel=ERROR' --
 
 # Validate saved output
-ls travis | grep json$ | xargs invoke validate-spider
+find travis -name *.json | xargs invoke validate-spider
