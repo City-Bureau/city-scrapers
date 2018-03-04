@@ -29,7 +29,7 @@ From building a scraper, you'll gain experience with:
 
 ## Community Mission
 
-The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for racial and gender minorities.
+The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
  
 We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both our community and Chicago’s tech and media scenes at large.
 
