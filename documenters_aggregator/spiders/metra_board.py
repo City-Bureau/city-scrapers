@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from pytz import timezone
 import re
 
 from documenters_aggregator.spider import Spider
@@ -21,14 +20,14 @@ class Metra_boardSpider(Spider):
         needs.
         """
         for item in response.css('.listingTable')[0].css('.listingRow'):
-            start_dt = self._parse_start(item)
+            start_time = self._parse_start(item)
 
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'description': '',
                 'classification': self._parse_classification(item),
-                'start_time': start_dt.isoformat(),
+                'start_time': start_time,
                 'end_time': None,
                 'timezone': 'America/Chicago',
                 'all_day': False,
@@ -36,7 +35,7 @@ class Metra_boardSpider(Spider):
                 'sources': self._parse_sources(response),
             }
 
-            data['id'] = self._generate_id(data, start_dt)
+            data['id'] = self._generate_id(data, start_time)
             yield data
 
     def _parse_name(self, item):
@@ -72,8 +71,7 @@ class Metra_boardSpider(Spider):
         except ValueError:
             return None
 
-        tz = timezone('America/Chicago')
-        return tz.localize(naive)
+        return self._naive_datetime_to_tz(naive, 'America/Chicago')
 
     def _parse_end(self, item):
         """

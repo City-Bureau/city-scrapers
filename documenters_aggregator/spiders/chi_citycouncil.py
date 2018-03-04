@@ -6,8 +6,10 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import scrapy
 import requests
 import json
-import datetime as dt
+import datetime
+
 from pytz import timezone
+import dateutil.parser
 
 from documenters_aggregator.spider import Spider
 
@@ -17,7 +19,7 @@ class Chi_citycouncilSpider(Spider):
     long_name = "Chicago City Council"
     ocd_url = 'https://ocd.datamade.us/'
     ocd_tp = 'events/?'
-    ocd_d = 'start_date__gt=' + str(dt.date.today()) + '&'
+    ocd_d = 'start_date__gt=' + str(datetime.date.today()) + '&'
     ocd_srt = 'sort=start_date&'
     ocd_jur = 'jurisdiction=ocd-jurisdiction/'
     ocd_loc = 'country:us/state:il/place:chicago/government'
@@ -89,11 +91,7 @@ class Chi_citycouncilSpider(Spider):
         if len(timestamp) <= 0:
             return None
 
-        timestamp = timestamp.split('+')[0]
-        datetime_object = dt.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S')
-        utc_tz = timezone('UTC')
-        chicago_tz = timezone('America/Chicago')
-        return utc_tz.localize(datetime_object).astimezone(chicago_tz).isoformat()
+        return dateutil.parser.parse(timestamp).astimezone(timezone("America/Chicago"))
 
     def _parse_location(self, ocd_response):
         """
@@ -101,6 +99,7 @@ class Chi_citycouncilSpider(Spider):
         """
         null_location = {
             'url': None,
+            'address': None,
             'name': None,
             'coordinates': {'longitude': None, 'latitude': None}
         }
@@ -111,6 +110,9 @@ class Chi_citycouncilSpider(Spider):
         else:
             if not location.get('coordinates', None):
                 location['coordinates'] = {'longitude': None, 'latitude': None}
+            if not location.get('address', None):
+                location['address'] = location.get('name', None)
+                location['name'] = None
         return location
 
     def _parse_sources(self, ocd_response, id):

@@ -7,7 +7,6 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import os
 import json
 from datetime import datetime
-from pytz import timezone
 from enum import IntEnum
 
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
@@ -182,7 +181,7 @@ class WardNightSpider(Spider):
                 'status': self._parse_status(row),
                 'location': self._parse_location(row),
             }
-            data['id'] = self._generate_id(data, dates['datetime'])
+            data['id'] = self._generate_id(data, dates['start'])
             return data
 
         days = self._days_for_frequency(row[Row.FREQUENCY], row[Row.DAY_OF_WEEK])
@@ -258,14 +257,11 @@ class WardNightSpider(Spider):
         """
         Parse start-date-time and end-date-time
         """
-        tz = timezone('America/Chicago')
-
         start_time = datetime.strptime(row[Row.START_TIME], '%I:%M %p')
         start_datetime = datetime.combine(day, start_time.time())
 
         end_time = datetime.strptime(row[Row.END_TIME], '%I:%M %p')
         end_datetime = datetime.combine(day, end_time.time())
 
-        return {'start': tz.localize(start_datetime).isoformat(),
-                'end': tz.localize(end_datetime).isoformat(),
-                'datetime': tz.localize(start_datetime)}
+        return {'start': self._naive_datetime_to_tz(start_datetime),
+                'end': self._naive_datetime_to_tz(end_datetime)}
