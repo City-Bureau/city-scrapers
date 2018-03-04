@@ -21,12 +21,14 @@ class CsvPipeline(object):
         file = open('{}{}_{}.csv'.format(path, spider.name, stamp), 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
-        self.exporter.fields_to_export = ['agency_name',
+        self.exporter.fields_to_export = ['agency_name', '_type',
                                           'id', 'name', 'description',
                                           'classification', 'start_time',
-                                          'end_time', 'timezone', 'all_day',
-                                          'location_name', 'location_url',
-                                          'location_address', 'url',
+                                          'end_time', 'timezone', 'status',
+                                          'all_day', 'location_name',
+                                          'location_url',
+                                          'location_address',
+                                          'source_url', 'source_note',
                                           ]
         self.exporter.start_exporting()
 
@@ -42,8 +44,12 @@ class CsvPipeline(object):
         new_item['location_url'] = get_key(new_item, 'location.url')
         new_item['location_name'] = get_key(new_item, 'location.name')
         new_item['location_address'] = get_key(new_item, 'location.address')
-        new_item['url'] = new_item.get('sources', [{'url': ''}])[0].get('url', '')
-        new_item['agency_name'] = spider.long_name
+        new_item['source_url'] = new_item.get('sources', [{'url': ''}])[0].get('url', '')
+        new_item['source_note'] = new_item.get('sources', [{'note': ''}])[0].get('note', '')
+        try:
+            new_item['agency_name'] = spider.long_name
+        except AttributeError:
+            new_item['agency_name'] = 'No agency name associated'
         new_item = {k: self._format_values(k, v) for k, v in new_item.items() if k in self.exporter.fields_to_export}
 
         self.exporter.export_item(new_item)

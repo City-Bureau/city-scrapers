@@ -1,15 +1,34 @@
 import json
+from datetime import datetime
 from tests.utils import read_test_file_content
 from documenters_aggregator.pipelines.localExporter import CsvPipeline
+from documenters_aggregator.spider import Spider
 
 
-fixtures = json.loads(read_test_file_content('files/travis_fixture.json'))
-valid_item = fixtures[0]
+def _str_to_datetime(date_string, source_tz='America/Chicago'):
+    if not date_string:
+        return None
+    spider = Spider(name='tmp')
+    naive = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
+    return spider._naive_datetime_to_tz(naive, source_tz)
+
+
+def load_valid_item():
+    fixtures = json.loads(read_test_file_content('files/exporter_fixture.json'))
+    valid_item = fixtures[0]
+    valid_item['start_time'] = _str_to_datetime(valid_item['start_time'])
+    valid_item['end_time'] = _str_to_datetime(valid_item['end_time'])
+    return valid_item
+
+
+valid_item = load_valid_item()
 pipeline = CsvPipeline()
 
+# TODO: Add in CsvItemExporter separately to get around initializing spider
 
 def test_valid_process_item():
     processed = pipeline.process_item(valid_item, None)
+    # to change, verify that it matches expected type
     for k, v in processed.items():
         if k.startswith('val_'):
             assert v == 1
@@ -41,14 +60,6 @@ def test_invalid_location():
     invalid_item['location']['address'] = ''
     processed = pipeline.process_item(invalid_item, None)
     assert processed['val_loc_address'] == 0
-
-
-def test_invalid_coordinates():
-    # Should be string, not a float
-    invalid_item = valid_item.copy()
-    invalid_item['location']['coordinates']['latitude'] = 10.0
-    processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_coord_latitude'] == 0
 
 
 def test_invalid_sources():
