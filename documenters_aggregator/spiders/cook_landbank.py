@@ -7,7 +7,6 @@ import scrapy
 
 import json
 import datetime as dt
-from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
@@ -99,14 +98,13 @@ class Cook_landbankSpider(Spider):
         item = scrapy.Selector(text=data['content'], type="html")
 
         if not item.css('div.eventon_list_event p.no_events'):
-            start_time = self._parse_start(item)
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': start_time.isoformat() if start_time else None,
+                'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'timezone': 'America/Chicago',
@@ -114,7 +112,7 @@ class Cook_landbankSpider(Spider):
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item)
             }
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data, data['start_time'])
             yield data
         else:
             yield
@@ -172,7 +170,8 @@ class Cook_landbankSpider(Spider):
         location_detail = item.css('span[class=\'evcal_desc evo_info \']::attr(data-location_name)').extract_first()
         return {
             'url': 'http://www.cookcountylandbank.org/',
-            'name': location_detail + ", " + street_address,
+            'name': None,
+            'address': location_detail + ", " + street_address,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -199,8 +198,7 @@ class Cook_landbankSpider(Spider):
         start_date = item.css('[itemprop=\'startDate\']::attr(datetime)').extract_first()
         start_time = item.css('em.evo_time span[class=\'start\']::text').extract_first()
         start_date_time = dt.datetime.strptime(start_date + ' ' + start_time, '%Y-%m-%d %I:%M %p')
-        tz = timezone('America/Chicago')
-        return tz.localize(start_date_time)
+        return self._naive_datetime_to_tz(start_date_time)
 
     def _parse_end(self, item):
         """
@@ -229,7 +227,7 @@ class Cook_landbankSpider(Spider):
 
     def _parse_sources(self, item):
         source_url = item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)').extract_first()
-        return {
+        return [{
             'url': source_url,
             'note': 'Event Page'
-        }
+        }]
