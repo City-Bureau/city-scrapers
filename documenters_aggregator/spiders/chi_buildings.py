@@ -19,6 +19,7 @@ class Chi_buildingsSpider(Spider):
     allowed_domains = ['www.pbcchicago.com']
     base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     calendar_date = datetime.now()
+    timezone = 'America/Chicago'
     start_urls = ['{}&start={}'.format(
         base_url, calendar_date.strftime('%Y-%m-%d')
     )]
@@ -43,7 +44,7 @@ class Chi_buildingsSpider(Spider):
                     'start_time': start_time,
                     'end_time': self._naive_datetime_to_tz(self._parse_datetime(item['end'])),
                     'all_day': item['allDay'],
-                    'timezone': 'America/Chicago',
+                    'timezone': self.timezone,
                     'status': self._parse_status(item, start_time),
                     'sources': self._parse_sources(item)
                 }
@@ -87,7 +88,7 @@ class Chi_buildingsSpider(Spider):
 
         By default, return "tentative"
         """
-        tz = pytz.timezone('America/Chicago')
+        tz = pytz.timezone(self.timezone)
         local_cal_date = tz.localize(self.calendar_date)
         if start_time < local_cal_date:
             return 'passed'

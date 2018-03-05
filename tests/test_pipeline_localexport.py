@@ -2,15 +2,16 @@ import json
 from datetime import datetime
 from tests.utils import read_test_file_content
 from documenters_aggregator.pipelines.localExporter import CsvPipeline
-from documenters_aggregator.spider import Spider
+from documenters_aggregator.spiders.chi_buildings import Chi_buildingsSpider
+
+testSpider = Chi_buildingsSpider()
 
 
-def _str_to_datetime(date_string, source_tz='America/Chicago'):
+def _str_to_datetime(date_string, spider_in=testSpider):
     if not date_string:
-        return None
-    spider = Spider(name='tmp')
+        return testSpider
     naive = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
-    return spider._naive_datetime_to_tz(naive, source_tz)
+    return spider_in._naive_datetime_to_tz(naive)
 
 
 def load_valid_item():
@@ -23,47 +24,12 @@ def load_valid_item():
 
 valid_item = load_valid_item()
 pipeline = CsvPipeline()
+pipeline.spider_opened(testSpider)
 
-# TODO: Add in CsvItemExporter separately to get around initializing spider
 
 def test_valid_process_item():
-    processed = pipeline.process_item(valid_item, None)
-    # to change, verify that it matches expected type
-    for k, v in processed.items():
-        if k.startswith('val_'):
-            assert v == 1
-
-
-def test_invalid_required_value():
-    invalid_item = valid_item.copy()
-    invalid_item['id'] = ''
-    processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_id'] == 0
-
-
-def test_invalid_type():
-    invalid_item = valid_item.copy()
-    invalid_item['id'] = True
-    processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_id'] == 0
-
-
-def test_invalid_format():
-    invalid_item = valid_item.copy()
-    invalid_item['id'] = 'invalid-id-format'
-    processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_id'] == 0
-
-
-def test_invalid_location():
-    invalid_item = valid_item.copy()
-    invalid_item['location']['address'] = ''
-    processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_loc_address'] == 0
-
-
-def test_invalid_sources():
-    invalid_item = valid_item.copy()
-    invalid_item['sources'].append({})
-    processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_sources'] == 0
+    processed = pipeline.process_item(valid_item, testSpider)
+    del processed["scraped_time"]
+    expected = {"classification": "Board Meeting", "start_time": "2999-03-13 14:30", "end_time": "2999-03-13 15:30", "source_url": "http://www.pbcchicago.com/events/event/board-meeting-march-13-2999/", "status": "tentative", "description": "N/A", "all_day": 0, "name": "Board Meeting \u2013 March 13, 2999", "location_url": "https://thedaleycenter.com", "location_address": "50 W. Washington Street Chicago, IL 60602", "source_note": "N/A", "location_name": "Second Floor Board Room, Richard J. Daley Center", "agency_name": "Public Building Commission of Chicago", "id": "chi_buildings/299903131430/x/board_meeting_march_13_2999", "_type": "event", "timezone": "America/Chicago"}
+    pipeline.spider_closed(testSpider, deleteme=True)
+    assert processed == expected
