@@ -4,6 +4,7 @@ from .LoggingPipeline import DocumentersAggregatorLoggingPipeline
 from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
 from .TravisValidation import TravisValidationPipeline
+from .localExporter import CsvPipeline
 
 
 __all__ = (
@@ -12,5 +13,6 @@ __all__ = (
     'GeocoderPipeline',
     'DocumentersAggregatorSQLAlchemyPipeline',
     'ValidationPipeline',
-    'TravisValidationPipeline'
+    'TravisValidationPipeline',
+    'CsvPipeline'
 )
