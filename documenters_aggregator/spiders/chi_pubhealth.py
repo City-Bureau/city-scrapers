@@ -43,7 +43,7 @@ class Chi_pubhealthSpider(Spider):
                 date = datetime.strptime(date_text, '%B %d')
 
             except ValueError:
-                pass
+                continue
 
             else:
                 naive_start_time = datetime(year, date.month, date.day, 9)
