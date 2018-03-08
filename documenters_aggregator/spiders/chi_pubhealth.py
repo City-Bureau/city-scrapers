@@ -16,7 +16,7 @@ class Chi_pubhealthSpider(Spider):
     name = 'chi_pubhealth'
     long_name = 'Chicago Department of Public Health'
     allowed_domains = ['www.cityofchicago.org']
-    start_urls = ['https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html']
+    start_urls = ['https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2018-board-of-health-meetings.html']
 
     def parse(self, response):
         """
@@ -32,21 +32,24 @@ class Chi_pubhealthSpider(Spider):
         year = int(parts.group(1))
         name = parts.group(2)
 
-        description = response.css('#content-content h1 + p::text').extract_first()
+        description = response.xpath('//div[contains(@class, "page-full-description-above")]/div/div/p/text()').extract_first()
 
-        for item in response.css('#content-content p'):
+        for item in response.xpath('//a[starts-with(@title, "Board of Health Agenda")]'):
 
-            text = item.css('::text').extract_first()
-            matches = re.match(r'(\w+) +(\d+)', text)
+            date_text = item.xpath('text()').extract_first()
 
-            if matches is not None:
-                month = int(strptime(matches.group(1), '%B').tm_mon)
-                day = int(matches.group(2))
+            try:
+                # Extract date formatted like "January 12"
+                date = datetime.strptime(date_text, '%B %d')
 
-                naive_start_time = datetime(year, month, day, 9)
+            except ValueError:
+                pass
+
+            else:
+                naive_start_time = datetime(year, date.month, date.day, 9)
                 start_time = self._naive_datetime_to_tz(naive_start_time)
 
-                naive_end_time = datetime(year, month, day, 10, 30)
+                naive_end_time = datetime(year, date.month, date.day, 10, 30)
                 end_time = self._naive_datetime_to_tz(naive_end_time)
 
                 data = {
