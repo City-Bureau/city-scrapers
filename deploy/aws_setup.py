@@ -117,9 +117,13 @@ def get_definitions(family_name):
 
 
 def update_lambda_function():
-    run('zip -X -r code.zip deploy/scraperScheduler/*')
+    with open("deploy/scraperScheduler/spiders.txt", "w") as file:
+        file.write("\n".join(spider_names))
+
+    run('zip -X -j -r code.zip deploy/scraperScheduler/*')
     run('aws lambda update-function-code --function-name scraperScheduler --zip-file fileb://code.zip')
     run('rm code.zip')
+    run('rm deploy/scraperScheduler/spiders.txt')
 
 
 def quote_for_awscli(data):

@@ -1,31 +1,14 @@
-const AWS = require('aws-sdk')
+const AWS = require('aws-sdk');
 const ecs = new AWS.ECS();
 
-const tasks = [
-    'chi_animal',
-    'chi_buildings',
-    'chi_city_college',
-    'chi_citycouncil',
-    'chi_infra',
-    'chi_library',
-    'chi_parks',
-    'chi_police',
-    'chi_policeboard',
-    'chi_pubhealth',
-    'chi_school_actions',
-    'chi_schools',
-    'chi_transit',
-    'cook_board',
-    'cook_county',
-    'cook_electoral',
-    'cook_hospitals',
-    'cook_landbank',
-    'cook_pubhealth',
-    'il_labor',
-    'il_pubhealth',
-    'regionaltransit',
-    'ward_night',
-];
+const fs = require('fs');
+const spiders = fs.readFileSync('./spiders.txt', {encoding: 'utf-8'});
+
+const tasks = spiders.trim().split("\n").sort();
+
+if (tasks.length > 48) {
+  throw "Too many tasks defined!";
+}
 
 exports.handler = (events, context) => {
     const now = new Date();
