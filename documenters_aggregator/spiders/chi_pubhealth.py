@@ -16,7 +16,24 @@ class Chi_pubhealthSpider(Spider):
     name = 'chi_pubhealth'
     long_name = 'Chicago Department of Public Health'
     allowed_domains = ['www.cityofchicago.org']
-    start_urls = ['https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2018-board-of-health-meetings.html']
+
+    @property
+    def start_urls(self):
+        """
+        DPH generally uses a standard URL format, but sometimes deviates from
+        the pattern. This property inserts the current year into the standard
+        format, as well as known variants, in hopes DPH sticks to one of their
+        conventions and this scraper does not need to be updated annually.
+        """
+        standard_url = 'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/{}-board-of-health-meetings.html'
+        url_variant_1 = 'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/{}-board-of-health.html'
+
+        current_year = datetime.now().year
+
+        return [
+            standard_url.format(current_year),
+            url_variant_1.format(current_year),
+        ]
 
     def parse(self, response):
         """
@@ -28,6 +45,8 @@ class Chi_pubhealthSpider(Spider):
         """
 
         title = response.xpath('//h1[@class="page-heading"]/text()').extract_first()
+
+        # Extract year and meeting name from title like "2017 Board of Health Meetings"
         parts = re.match(r'(\d{4}) (.*?)s', title)
         year = int(parts.group(1))
         name = parts.group(2)
@@ -38,35 +57,30 @@ class Chi_pubhealthSpider(Spider):
 
             date_text = item.xpath('text()').extract_first()
 
-            try:
-                # Extract date formatted like "January 12"
-                date = datetime.strptime(date_text, '%B %d')
+            # Extract date formatted like "January 12"
+            date = datetime.strptime(date_text, '%B %d')
 
-            except ValueError:
-                continue
+            naive_start_time = datetime(year, date.month, date.day, 9)
+            start_time = self._naive_datetime_to_tz(naive_start_time)
 
-            else:
-                naive_start_time = datetime(year, date.month, date.day, 9)
-                start_time = self._naive_datetime_to_tz(naive_start_time)
+            naive_end_time = datetime(year, date.month, date.day, 10, 30)
+            end_time = self._naive_datetime_to_tz(naive_end_time)
 
-                naive_end_time = datetime(year, date.month, date.day, 10, 30)
-                end_time = self._naive_datetime_to_tz(naive_end_time)
-
-                data = {
-                    '_type': 'event',
-                    'name': name,
-                    'description': description,
-                    'classification': self._parse_classification(item),
-                    'start_time': start_time,
-                    'end_time': end_time,
-                    'all_day': False,
-                    'timezone': 'America/Chicago',
-                    'status': self._parse_status(item),
-                    'location': self._parse_location(item),
-                    'sources': self._parse_sources(response)
-                }
-                data['id'] = self._generate_id(data, start_time)
-                yield data
+            data = {
+                '_type': 'event',
+                'name': name,
+                'description': description,
+                'classification': self._parse_classification(item),
+                'start_time': start_time,
+                'end_time': end_time,
+                'all_day': False,
+                'timezone': 'America/Chicago',
+                'status': self._parse_status(item),
+                'location': self._parse_location(item),
+                'sources': self._parse_sources(response)
+            }
+            data['id'] = self._generate_id(data, start_time)
+            yield data
 
     def _parse_classification(self, item):
         """
