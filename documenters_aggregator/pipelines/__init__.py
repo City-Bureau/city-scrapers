@@ -1,5 +1,6 @@
 from .airtable import AirtablePipeline
 from .geocoder import GeocoderPipeline
+from .mapbox import MapboxPipeline
 from .LoggingPipeline import DocumentersAggregatorLoggingPipeline
 from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
@@ -14,5 +15,6 @@ __all__ = (
     'DocumentersAggregatorSQLAlchemyPipeline',
     'ValidationPipeline',
     'TravisValidationPipeline',
+    'MapboxPipeline',
     'CsvPipeline'
 )
