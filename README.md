@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/City-Bureau/documenters-aggregator.svg?branch=master)](https://travis-ci.org/City-Bureau/documenters-aggregator)
+[![Build Status](https://travis-ci.org/City-Bureau/city-scrapers.svg?branch=master)](https://travis-ci.org/City-Bureau/city-scrapers)
 
 [![Deploy Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZUwxa3FleE42andOVVZhUytOSXFQOE5QMnYwN3Jxa2FmWTBoMk5XZmJTb05OSmtIcXc4SW5ycjZua2x0Zy9SQzN2Q3ZTVW1xRWFrTGRUSVhna2Y3NWtnPSIsIml2UGFyYW1ldGVyU3BlYyI6IklRdldCcXJKMm4zTmFtZXEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://console.aws.amazon.com/codebuild/home?region=us-east-1#/projects/DocumentersAggregator/view)
 
