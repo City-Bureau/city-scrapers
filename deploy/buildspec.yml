@@ -3,6 +3,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - bash deploy/check_for_master.sh
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
   build:
