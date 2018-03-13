@@ -1,6 +1,8 @@
 #!/bin/bash
 
-if [[ $(git symbolic-ref HEAD --short 2>/dev/null) = "master" ]] ; then
+REF=$(git symbolic-ref HEAD --short 2>/dev/null)
+
+if [[ $REF = "master" ]] ; then
   echo "Running on master; build will continue."
   echo Build completed on `date`
   echo Verifying build
@@ -12,4 +14,5 @@ if [[ $(git symbolic-ref HEAD --short 2>/dev/null) = "master" ]] ; then
   curl -X POST --data-urlencode "payload={\"channel\": \"#labs_city_scrapers\", \"username\": \"ecs\", \"text\": \"<https://github.com/City-Bureau/documenters-aggregator/commit/$CODEBUILD_SOURCE_VERSION|Commit $CODEBUILD_SOURCE_VERSION> deployed to production. <https://console.aws.amazon.com/codebuild/home?region=us-east-1#/builds/$CODEBUILD_BUILD_ID/view/new|View build log>.\", \"icon_emoji\": \":ecs:\"}" $SLACK_WEBHOOK_URL
 else
   echo "Not on the master branch; aborting."
+  echo $REF
 fi
