@@ -36,9 +36,20 @@ STATUS_ICON = '''
 
 def handler(event, context):
     client = boto3.client('s3')
-    # TODO: Figure out where to pull values from
+
+    if 'detail-type' not in event or event['detail-type'] != 'ECS Task State Change':
+        raise ValueError('ERROR: Event is not an ECS task state change event')
+
+    if event['detail']['lastStatus'] != 'STOPPED':
+        print('INFO: Last status was not STOPPED, exiting...')
+        return
+
+    if event['detail']['stoppedReason'] == 'Essential container in task exited':
+        status = 'failed'
+    else:
+        status = 'running'
+    # TODO: Find where to pull scraper name from
     scraper = event['TBD']
-    status = event['TBD']
 
     client.put_object(
         Bucket=STATUS_BUCKET,
