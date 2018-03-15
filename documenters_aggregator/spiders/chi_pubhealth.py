@@ -51,11 +51,22 @@ class Chi_pubhealthSpider(Spider):
         year = int(parts.group(1))
         name = parts.group(2)
 
-        description = response.xpath('//div[contains(@class, "page-full-description-above")]/div/div/p/text()').extract_first()
+        # The description and meeting dates are a series of p elements
+        p = response.xpath('//div[contains(@class, "page-full-description-above")]/div/div/p')
 
-        for item in response.xpath('//a[starts-with(@title, "Board of Health Agenda")]'):
+        for idx, item in enumerate(p, start=1):
 
+            if idx == 1:
+                # Description is the first p element
+                description = item.xpath('text()').extract_first()
+                continue
+
+            # Future meetings are plain text
             date_text = item.xpath('text()').extract_first()
+
+            if not date_text:
+                # Past meetings are links to the agenda
+                date_text = item.xpath('a/text()').extract_first()
 
             # Extract date formatted like "January 12"
             date = datetime.strptime(date_text, '%B %d')
