@@ -5,7 +5,6 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
 import datetime as dt
-import pytz
 
 from documenters_aggregator.spider import Spider
 
@@ -35,7 +34,7 @@ class Chi_infraSpider(Spider):
                 'name': 'Board Meeting',
                 'description': None,
                 'classification': 'Board Meeting',
-                'start_time': start_time.isoformat(),
+                'start_time': start_time,
                 'end_time': None,
                 'all_day': False,
                 'timezone': 'America/Chicago',
@@ -67,9 +66,8 @@ class Chi_infraSpider(Spider):
         except:
             return None
         else:
-            start_date_obj = dt.datetime.strptime(date_string, "%A, %B %d %Y")
-            tz = pytz.timezone('America/Chicago')
-            return tz.localize(start_date_obj)
+            start_date = dt.datetime.strptime(date_string, "%A, %B %d %Y")
+            return self._naive_datetime_to_tz(start_date, 'America/Chicago')
 
     def _parse_sources(self, response):
         """
@@ -84,6 +82,7 @@ class Chi_infraSpider(Spider):
         return {
             'url': None,
             'name': None,
+            'address': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

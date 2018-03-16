@@ -7,7 +7,6 @@ import scrapy
 import re
 
 from datetime import datetime, timedelta
-from pytz import timezone
 import time as Time
 
 from documenters_aggregator.spider import Spider
@@ -40,8 +39,8 @@ class Cook_pubhealthSpider(Spider):
             'name': self._parse_name(response),
             'description': self._parse_description(response),
             'classification': self._parse_classification(response),
-            'start_time': times['start'].isoformat() if times['start'] else None,
-            'end_time': times['end'].isoformat() if times['end'] else None,
+            'start_time': times['start'],
+            'end_time': times['end'],
             'all_day': self._parse_all_day(response),
             'timezone': 'America/Chicago',
             'status': self._parse_status(response),
@@ -87,7 +86,8 @@ class Cook_pubhealthSpider(Spider):
         """
         return {
             'url': None,
-            'name': response.xpath('//input[@type="hidden"][contains(@id, "Location")]/@value').extract_first(),
+            'name': None,
+            'address': response.xpath('//input[@type="hidden"][contains(@id, "Location")]/@value').extract_first(),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -210,9 +210,8 @@ class Cook_pubhealthSpider(Spider):
             naive = datetime.strptime(time_string, '%b %d %Y %I:%M%p')
         except ValueError:
             return None
-
-        tz = timezone('America/Chicago')
-        return tz.localize(naive)
+        else:
+            return self._naive_datetime_to_tz(naive)
 
     def _parse_sources(self, response):
         """

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from pytz import timezone
 from documenters_aggregator.spider import Spider
 
 
@@ -36,8 +35,8 @@ class ChiSchoolActionsSpider(Spider):
                         'name': item_name,
                         'description': self._parse_description(school_name, meeting_type, school_docs),
                         'classification': meeting_type,
-                        'start_time': self._format_datetime(start_datetime),
-                        'end_time': self._format_datetime(end_datetime),
+                        'start_time': self._naive_datetime_to_tz(start_datetime),
+                        'end_time': self._naive_datetime_to_tz(end_datetime),
                         'timezone': self._parse_timezone(meeting),
                         'all_day': False,
                         'location': self._parse_location(meeting),
@@ -107,14 +106,6 @@ class ChiSchoolActionsSpider(Spider):
             return self._parse_datetime_str(date_str, split_time[1])
         else:
             return self._parse_start(item)
-
-    def _format_datetime(self, time):
-        """
-        Format datetime as timezone-aware,
-        ISO-formatted string.
-        """
-        tz = timezone('America/Chicago')
-        return tz.localize(time).isoformat()
 
     def _parse_timezone(self, item):
         """

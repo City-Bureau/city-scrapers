@@ -7,7 +7,6 @@ import scrapy
 import re
 
 from datetime import datetime
-from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
@@ -31,14 +30,14 @@ class Chi_cityCollegeSpider(Spider):
             yield scrapy.Request(next_url, callback=self.parse_event_page, dont_filter=True)
 
     def parse_event_page(self, response):
-        start_time, start_time_str = self._parse_start(response)
+        start_time = self._parse_start(response)
         data = {
             '_type': 'event',
             'name': self._parse_name(response),
             'description': self._parse_description(response),
             'classification': self._parse_classification(),
-            'start_time': start_time_str,
-            'end_time': self._parse_end(),
+            'start_time': start_time,
+            'end_time': None,
             'all_day': self._parse_all_day(),
             'timezone': 'America/Chicago',
             'status': self._parse_status(),
@@ -74,7 +73,8 @@ class Chi_cityCollegeSpider(Spider):
         """
         return {
             'url': None,
-            'name': response.xpath('//span[@class="content required address"]/text()').extract_first(),
+            'name': None,
+            'address': response.xpath('//span[@class="content required address"]/text()').extract_first(),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -110,20 +110,11 @@ class Chi_cityCollegeSpider(Spider):
         date_regex = r"(\d+)\/(\d+)\/(\d+)"
         time_regex = r"(\d+):(\d+)"
 
-        tz = timezone('America/Chicago')
-
         d = re.search(date_regex, raw_date_time)
         t = re.search(time_regex, raw_date_time)
 
         naive_dt = datetime(month=int(d.group(1)), day=int(d.group(2)), year=int(d.group(3)), hour=int(t.group(1)), minute=int(t.group(2)))
-        dt = tz.localize(naive_dt)
-        return (dt, dt.isoformat())
-
-    def _parse_end(self):
-        """
-        Parse end date and time.
-        """
-        return None
+        return self._naive_datetime_to_tz(naive_dt, "America/Chicago")
 
     def _parse_sources(self, response):
         """
