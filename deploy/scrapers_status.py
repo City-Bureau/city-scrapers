@@ -2,6 +2,7 @@ import os
 import boto3
 from datetime import datetime
 
+PROJECT_SLUG = 'documenters_aggregator'
 STATUS_BUCKET = os.getenv('STATUS_BUCKET')
 
 STATUS_COLOR_MAP = {
@@ -48,8 +49,10 @@ def handler(event, context):
         status = 'failed'
     else:
         status = 'running'
-    # TODO: Find where to pull scraper name from
-    scraper = event['TBD']
+
+    # Pull scraper name from ARN in documenters_aggregator-{SCRAPER}
+    task_def = event['detail']['taskDefinitionArn'].split('/')[0]
+    scraper = task_def.split(':')[-1][len(PROJECT_SLUG) + 1:]
 
     client.put_object(
         Bucket=STATUS_BUCKET,
