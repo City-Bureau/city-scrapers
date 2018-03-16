@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from pytz import timezone
 
 from documenters_aggregator.spider import Spider
 
@@ -31,17 +30,15 @@ class Cook_hospitalsSpider(Spider):
             aria_control = item.xpath("@aria-controls").extract_first()
             item_uncollapsed = item.xpath("//div[@id='{}']//tbody//td[@data-title='Meeting Information']".format(aria_control))
             for subitem in item_uncollapsed:
-                start_time = self._parse_start(subitem)
-
                 new_item = {
                     'description': self._parse_description(subitem),
                     'classification': self._parse_classification(subitem),
-                    'start_time': start_time.isoformat() if start_time else None,
+                    'start_time': self._parse_start(subitem),
                     'location': self._parse_location(subitem)
                 }
                 new_item.update(data)
                 new_item['status'] = self._parse_status(subitem, new_item['start_time'])
-                new_item['id'] = self._generate_id(data, start_time)
+                new_item['id'] = self._generate_id(data, new_item['start_time'])
                 yield new_item
 
     def _parse_classification(self, item):
@@ -59,7 +56,7 @@ class Cook_hospitalsSpider(Spider):
         Is this the right way to determine tentative vs confirmed?
         Looks like agendas are usually posted a week before the meeting
         """
-        if datetime.now().isoformat() > start_time:
+        if datetime.now().isoformat() > start_time.isoformat():
             return 'passed'
         agenda = subitem.xpath("following-sibling::td/a/@href").extract_first()
         if agenda is None:
@@ -69,11 +66,12 @@ class Cook_hospitalsSpider(Spider):
 
     def _parse_location(self, subitem):
         """
-        @TODO geocode location?
+        Parse location
         """
         return {
             'url': '',
-            'name': subitem.xpath('text()').extract()[1].strip(),
+            'name': '',
+            'address': subitem.xpath('text()').extract()[1].strip(),
             'coordinates': {'longitude': '', 'latitude': ''},
         }
 
@@ -126,9 +124,7 @@ class Cook_hospitalsSpider(Spider):
         time_string = fmt_string.format(year=year, month=month, day=day, time=time, am_pm=am_pm)
 
         naive = datetime.strptime(time_string, '%Y %B %d %I:%M%p')
-
-        tz = timezone('America/Chicago')
-        return tz.localize(naive)
+        return self._naive_datetime_to_tz(naive)
 
     def _parse_sources(self, response):
         """

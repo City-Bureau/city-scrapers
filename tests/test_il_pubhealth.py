@@ -25,11 +25,11 @@ Interested persons may contact the Office of Women’s Health at 312-814-4035 fo
 
 
 def test_start_time():
-    assert parsed_items[4]['start_time'] == '2017-08-09T11:00:00-05:00'
+    assert parsed_items[4]['start_time'].isoformat() == '2017-08-09T11:00:00-05:00'
 
 
 def test_end_time():
-    assert parsed_items[4]['end_time'] == '2017-08-09T15:00:00-05:00'
+    assert parsed_items[4]['end_time'].isoformat() == '2017-08-09T15:00:00-05:00'
 
 
 def test_id():
@@ -56,6 +56,7 @@ def test_location(item):
     assert item['location'] == {
         'url': '',
         'name': '',
+        'address': '',
         'coordinates': {'latitude': '', 'longitude': ''}
     }
 

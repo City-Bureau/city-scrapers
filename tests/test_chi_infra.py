@@ -16,7 +16,7 @@ def test_description():
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'] == '2017-10-11T00:00:00-05:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2017-10-11T00:00:00-05:00'
 
 
 def test_end_time():
@@ -44,6 +44,7 @@ def test_location(item):
     assert item['location'] == {
         'url': None,
         'name': None,
+        'address': None,
         'coordinates': {
             'latitude': None,
             'longitude': None,

@@ -1,0 +1,29 @@
+[
+  {
+      "_type": "event",
+      "name":"Board Meeting \u2013 March 13, 2999",
+      "description": "N/A",
+      "classification":"Board Meeting",
+      "start_time": "2999-03-13 14:30:00",
+      "end_time": "2999-03-13 15:30:00",
+      "all_day": false,
+      "timezone": "America/Chicago",
+      "status": "tentative",
+      "location": {
+          "url": "https://thedaleycenter.com",
+          "name": "Second Floor Board Room, Richard J. Daley Center",
+          "address": "50 W. Washington Street Chicago, IL 60602",
+          "coordinates": {
+              "latitude": null,
+              "longitude": null
+          }
+      },
+      "sources": [
+          {
+              "url": "http://www.pbcchicago.com/events/event/board-meeting-march-13-2999/",
+              "note": ""
+          }
+      ],
+      "id": "chi_buildings/299903131430/x/board_meeting_march_13_2999"
+  }
+]

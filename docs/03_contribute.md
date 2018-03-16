@@ -51,6 +51,7 @@ You now have a spider named `chi_housing`. To run it (admittedly, not much will 
 ```
 
 If there are no error messages, congratulations! You have a barebones spider.
+Additionally, each time you run your scraper, you can see your results as a csv output in the /documenters_aggregator/local_outputs/ folder. Each `scrapy crawl` command produces a unique file with the agency name and timestamp. These files are ignored by git, but you may want to clean the folder up locally after some testing.
 
 ### 5. Run the automated tests
 

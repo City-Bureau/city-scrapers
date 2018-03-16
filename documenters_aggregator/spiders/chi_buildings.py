@@ -19,6 +19,7 @@ class Chi_buildingsSpider(Spider):
     allowed_domains = ['www.pbcchicago.com']
     base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     calendar_date = datetime.now()
+    timezone = 'America/Chicago'
     start_urls = ['{}&start={}'.format(
         base_url, calendar_date.strftime('%Y-%m-%d')
     )]
@@ -34,17 +35,17 @@ class Chi_buildingsSpider(Spider):
         data = json.loads(response.text)
         for item in data:
             if item.get('category') and 'holiday' not in item['category']:
-                start_time = self._parse_datetime(item['start'])
+                start_time = self._naive_datetime_to_tz(self._parse_datetime(item['start']))
                 item_data = {
                     '_type': 'event',
                     'id': self._generate_id({'name': item['title']}, start_time),
                     'name': item['title'],
                     'classification': self._parse_classification(item),
-                    'start_time': start_time.isoformat(),
-                    'end_time': self._parse_datetime(item['end']).isoformat(),
+                    'start_time': start_time,
+                    'end_time': self._naive_datetime_to_tz(self._parse_datetime(item['end'])),
                     'all_day': item['allDay'],
-                    'timezone': 'America/Chicago',
-                    'status': self._parse_status(item),
+                    'timezone': self.timezone,
+                    'status': self._parse_status(item, start_time),
                     'sources': self._parse_sources(item)
                 }
                 # If it's a board meeting, return description
@@ -76,7 +77,7 @@ class Chi_buildingsSpider(Spider):
         """
         return ' '.join([w.capitalize() for w in item['category'][0].split('-')])
 
-    def _parse_status(self, item):
+    def _parse_status(self, item, start_time):
         """
         Parse or generate status of meeting. Can be one of:
 
@@ -87,9 +88,9 @@ class Chi_buildingsSpider(Spider):
 
         By default, return "tentative"
         """
-        tz = pytz.timezone('America/Chicago')
+        tz = pytz.timezone(self.timezone)
         local_cal_date = tz.localize(self.calendar_date)
-        if self._parse_datetime(item['start']) < local_cal_date:
+        if start_time < local_cal_date:
             return 'passed'
         else:
             return 'tentative'
@@ -177,9 +178,7 @@ class Chi_buildingsSpider(Spider):
         return re.sub(r'\s+', ' ', description)
 
     def _parse_datetime(self, time_str):
-        tz = pytz.timezone('America/Chicago')
-        parsed_datetime = datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S')
-        return tz.localize(parsed_datetime)
+        return datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S')
 
     def _parse_sources(self, item):
         """

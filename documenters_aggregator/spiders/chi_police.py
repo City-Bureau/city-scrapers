@@ -4,7 +4,6 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import json
-import pytz
 from datetime import datetime
 
 from documenters_aggregator.spider import Spider
@@ -31,23 +30,21 @@ class Chi_policeSpider(Spider):
         data = json.loads(response.body_as_unicode())
 
         for item in data:
-            start_time = self._parse_start(item)
-            end_time = self._parse_end(item)
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': 'CAPS community event',
-                'start_time': start_time.isoformat() if start_time else None,
-                'end_time': end_time.isoformat() if end_time else None,
+                'start_time': self._parse_start(item),
+                'end_time': self._parse_end(item),
                 'all_day': False,
                 'timezone': 'America/Chicago',
                 'status': 'confirmed',
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item)
             }
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data, data['start_time'])
             yield data
 
     def _parse_id(self, item):
@@ -82,7 +79,8 @@ class Chi_policeSpider(Spider):
         """
         return {
             'url': None,
-            'name': item['location'],
+            'address': item['location'],
+            'name': None,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -108,8 +106,8 @@ class Chi_policeSpider(Spider):
         return item['eventDetails']
 
     def _format_time(self, time):
-        tz = pytz.timezone('America/Chicago')
-        return tz.localize(datetime.strptime(time, "%Y-%m-%dT%H:%M:%S"), is_dst=None)
+        naive = datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
+        return self._naive_datetime_to_tz(naive)
 
     def _parse_start(self, item):
         """

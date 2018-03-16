@@ -5,7 +5,6 @@ import json
 import os
 import requests
 import datetime
-import dateutil.parser
 import time
 from random import randint
 import re
@@ -42,7 +41,7 @@ class GeocoderPipeline(object):
         if item.get('start_time') is None:
             spider.logger.debug('GEOCODER PIPELINE: Ignoring event without start_time {0}'.format(item['id']))
             return item
-        dt = dateutil.parser.parse(item['start_time'])
+        dt = item['start_time']
         if dt < datetime.datetime.now(dt.tzinfo):
             spider.logger.debug('GEOCODER PIPELINE: Ignoring past event {0}'.format(item['id']))
             return item
