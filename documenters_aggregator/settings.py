@@ -25,6 +25,9 @@ DOCUMENTERS_AGGREGATOR_ROBOTSTXT_LOGONLY = True
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
 
+#change to warning, info, or other levels if desireds
+LOG_LEVEL = 'DEBUG'
+
 # Configure item pipelines
 #
 # One of:
@@ -34,7 +37,8 @@ COOKIES_ENABLED = False
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'documenters_aggregator.pipelines.CsvPipeline': 400
+    'documenters_aggregator.pipelines.MapboxPipeline': 300
+    # 'documenters_aggregator.pipelines.JsonWriterPipeline': 400
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)

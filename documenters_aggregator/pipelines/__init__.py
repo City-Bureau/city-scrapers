@@ -6,6 +6,7 @@ from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
 from .TravisValidation import TravisValidationPipeline
 from .localExporter import CsvPipeline
+from .feedWriter import JsonWriterPipeline
 
 
 __all__ = (
@@ -16,5 +17,6 @@ __all__ = (
     'ValidationPipeline',
     'TravisValidationPipeline',
     'MapboxPipeline',
-    'CsvPipeline'
+    'CsvPipeline',
+    'JsonWriterPipeline'
 )
