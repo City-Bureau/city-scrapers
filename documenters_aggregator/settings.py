@@ -37,8 +37,9 @@ LOG_LEVEL = 'DEBUG'
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'documenters_aggregator.pipelines.MapboxPipeline': 300
-    # 'documenters_aggregator.pipelines.JsonWriterPipeline': 400
+    'documenters_aggregator.pipelines.MapboxPipeline': 300,
+    'documenters_aggregator.pipelines.JsonWriterPipeline': 400,
+    'documenters_aggregator.pipelines.CsvPipeline': 400
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)

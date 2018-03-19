@@ -1,4 +1,6 @@
 import geocoder
+import requests
+
 """
 This pipeline decorates items with latitude and longitude by geocoding their
 addresses.
@@ -21,16 +23,23 @@ class MapboxPipeline(object):
     """
 
     def process_item(self, item, spider):
-        if item['location']['coordinates']['latitude'] is (None or ''):
-            response = self.get_geocoder_query(
-                item['location']['address'],
-                bbox=[-87.940102, 41.643921, -87.523987, 42.023022])
-            item['location']['coordinates']['longitude'] = response[0].lng
-            item['location']['coordinates']['latitude'] = response[0].lat
-            item['location']['url'] = response[0].url
-        return item
+        try:
+            # import pdb; pdb.set_trace()
+            if item['location']['coordinates']['latitude'] is None:
+                with requests.Session() as session:
+                    response = self.get_geocoder_query(
+                        item['location']['address'],
+                        bbox=[-87.940102, 41.643921, -87.523987, 42.023022], session=session)
+                    #I'm not sure the above session is being persisted the way I would like
+                    item['location']['coordinates']['longitude'] = response[0].lng
+                    item['location']['coordinates']['latitude'] = response[0].lat
+                    item['location']['url'] = response[0].url
+            return item
+        except Exception as e:
+            print(e)
+            raise
 
-    def get_geocoder_query(self, address=None, bbox=None):
+    def get_geocoder_query(self, address=None, bbox=None, **kwargs):
 
         if self.engine == 'geocoder':
             provider = 'mapbox'
