@@ -41,7 +41,10 @@ class Chi_schoolsSpider(Spider):
         unsafe to assume that will always be the case so let's
         grab it programmatically anyways.
         """
-        return None
+        return ("The Chicago Board of Education is responsible for the "
+                "governance, organizational and financial oversight of "
+                "Chicago Public Schools (CPS), the third largest school "
+                "district in the United States of America.")
 
     def _parse_classification(self, item):
         """
