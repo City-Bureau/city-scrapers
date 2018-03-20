@@ -107,11 +107,12 @@ class Chi_parksSpider(Spider):
         """
         Parse or generate event name.
         """
-        agenda = item['Agenda']
-        try:
-            return agenda['url']
-        except:
-            return agenda
+        return ("The mission of the Chicago Park District is to enhance" 
+                "the quality of life in Chicago by becoming the leading" 
+                "provider of recreation and leisure opportunities; provide" 
+                "safe, inviting and beautifully maintained parks and facilities"
+                "and create a customer-focused and responsive park system that"
+                "prioritizes the needs of children and families")
 
     def _parse_time(self, item):
         """
