@@ -104,10 +104,9 @@ class Cook_boardSpider(Spider):
         Parse or generate event name.
         """
         agenda = item['Agenda']
-        try:
-            return agenda['url']
-        except:
-            return agenda
+        return ("County Commissioners are elected officials who oversee county" 
+                "activities and work to ensure that citizen concerns are met," 
+                "federal and state requirements are fulfilled, and county operations run smoothly.")
 
     def _parse_start(self, item):
         """
