@@ -47,7 +47,8 @@ def test_status(item):
 def test_location(item):
     assert item['location'] == {
         'url': 'https://www.cityofchicago.org/city/en/depts/cdph.html',
-        'name': '2nd Floor Board Room, DePaul Center, 333 S. State Street, Chicago, IL',
+        'name': '2nd Floor Board Room, DePaul Center',
+        'address': '333 S. State Street, Chicago, IL',
         'coordinates': {
             'latitude': None,
             'longitude': None,
