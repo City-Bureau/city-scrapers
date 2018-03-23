@@ -1,22 +1,26 @@
- 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
     <head>
+         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-        
-            <meta name="viewport" content="width=device-width, initial-scale=1">  
-            
-    
-    
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="description" content="" /> 
-        <meta name="keywords" content="" /> 
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
         <meta name="google-site-verification" content="IkSsM0IAGpvE2RejHQrIlbmss6Ws-_6zR4x4ZfTptaM" />
-        
-        
-         
 
 
 
@@ -27,33 +31,55 @@
 
 
 
-<meta name="pagePath" content="/content/city/en/depts/cdph/supp_info/boh/2017-board-of-health" />
+
+
+
+
+
+
+
+
+
+
+
+                        <meta name="dpt" content="/content/city/en/depts/cdph" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="pagePath" content="/content/city/en/depts/cdph/supp_info/boh/2018-board-of-health-meetings" />
 
 <meta name="searchType" content="service" />
-        
+
         <!-- Title Tag -->
-        
+
+
+
+
 <title>
-    City of Chicago :: 2017 Board of Health Meetings
+    City of Chicago :: 2018 Board of Health Meetings
 </title>
 
         <!-- Day Initialization -->
-        
+
+
+
+
 
         <!-- Favicon -->
         <link rel="SHORTCUT ICON" href="/etc/designs/city/favicon.ico">
-  
-        <!--[if gte IE 7]>
-        <link rel="stylesheet" type="text/css" media="screen" href="/etc/designs/city/css/cssshadows.css" />
-        <![endif]-->
-        <![if !IE]>
-        <link rel="stylesheet" type="text/css" media="screen" href="/etc/designs/city/css/cssshadows.css"/>
-        <![endif]>
-        
-
-        <link rel="stylesheet" type="text/css" media="print" href="/etc/designs/city/css/print.css"/>
-
-        <!-- JavaScript -->
+        <script type="text/javascript" src="/etc/designs/base/clientlibs/jquery.js"></script>
         <link rel="stylesheet" href="/etc/clientlibs/foundation/main.min.css" type="text/css">
 <link rel="stylesheet" href="/etc/designs/city/clientlibs.min.css" type="text/css">
 <script type="text/javascript" src="/etc/clientlibs/granite/jquery.min.js"></script>
@@ -64,133 +90,29 @@
 <script type="text/javascript" src="/etc/designs/city/clientlibs.min.js"></script>
 
 
-        
-        
-        
-        
-        
-        
-        <!--[if lt IE 7]>
-        <script type="text/javascript" language="JavaScript" src="/etc/designs/city/js/unitpngfix.js"></script>
-        <script type="text/javascript" language="JavaScript">
-            try {
-                document.execCommand("BackgroundImageCache", false, true);
-            } catch (e) { }
-        </script>
-        <![endif]-->
-        
-     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-       <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
-    <![endif]-->       
-        
-        <script type="text/javascript"> 
-           jQuery(document).ready(function() { 
-         
-                  $('#mgmenu1').universalMegaMenu({
-                    menu_effect: 'hover_slide',
-                    menu_speed_show: 100,
-                    menu_speed_hide: 200,
-                    menu_speed_delay: 200,
-                    menu_click_outside: true,
-                    menubar_trigger : false,
-                    menubar_hide : false,
-                    menu_responsive: true
-                });
+        <script type="text/javascript" src="/etc/designs/base/clientlibs.min.js"></script>
 
-                $(".peFallback").hide();
-                $(".peEnhance").show();
-                
-                $(".selfSubmitting").change(function() {
-                    $(this).closest("form").submit();
-                });
-                 $(".yt_pPhoto").prettyPhoto({
-                    allowresize: false,
-                    opacity: .4,
-                    default_width: 640,
-                    default_height: 385
-                });
-                $(".page-link2").click(function() {
-                    var vc_cmpHolder = $(this).closest(".youtubeparsys");                   
-                    var vc_visibleVideo = vc_cmpHolder.find(".visibleVideoGal");
-                    var currentVideoGal = vc_visibleVideo.attr("class");
-                    var currentVideoGalId = parseInt(currentVideoGal.substr(currentVideoGal.indexOf('-')+1));                   
-                    var nextGal = ".videoGal-"+(currentVideoGalId+1);
 
-                    var directionOut = "left";
-                    var directionIn = "right";                    
-                    if($(this).hasClass("prev")){ 
-                        var directionOut = "right";
-                        var directionIn = "left";
-                        var nextGal = ".videoGal-"+(currentVideoGalId-1);
-                    } 
- 
-                   //CQ55 Patch
-                    var clickedNext = ($(this).find("img").attr("src") == '/etc/designs/city/images/next-large.png');
-                    var clickedPrev = !clickedNext;
-                    var showNext = false;
-                    if(clickedNext && vc_cmpHolder.find( ".videoGal-" +(currentVideoGalId+2) ).html()||'' != '') {
-                        showNext = true;
-                    }
-                    //End 
-                     
-                    //if(!vc_cmpHolder.find(nextGal).prev().hasClass("videoGal")) {  //Removed
-                    if( !clickedNext && nextGal =='.videoGal-0' ) { //for this
-                        vc_cmpHolder.find(".prev img").hide();
-                    }
-                    else { 
-                        vc_cmpHolder.find(".prev img").show();
-                    }
-                    //if(!vc_cmpHolder.find(nextGal).next().hasClass("videoGal")) {   //Removed
-                    if( !clickedPrev && !showNext  ) {   //for this
-                        vc_cmpHolder.find(".next img").hide();
-                    }
-                    else { 
-                        vc_cmpHolder.find(".next img").show();
-                    } 
-                    
-                    vc_cmpHolder.find(".visibleVideoGal").hide("slide",{direction:directionOut},300, function() {
-                        vc_cmpHolder.find(nextGal).show("slide",{direction:directionIn},400).removeClass('hiddenVideoGal').addClass('visibleVideoGal');
-                    }).removeClass('visibleVideoGal').addClass('hiddenVideoGal');
-                });
-                
-                var visibleVideosParents = $('.visibleVideo').parent();
-                visibleVideosParents.wrapAll('<div class="videoGal visibleVideoGal videoGal-0" style="display:block"/>');
 
-                $('.hiddenVideo').parent().each(function(index) {
-                    var remainder = index % visibleVideosParents.length;
-                    if (remainder == 0) {
-                        var quotient = ( index - remainder ) / visibleVideosParents.length;
-                        var hv_parents = $('.video-'+(quotient+1)).parent();
-                        hv_parents.wrapAll('<div class="videoGal hiddenVideoGal videoGal-' + (quotient+1) + '" />');
-                    }                       
-                });
-            });          
-        </script>
-        
-        
-<!--[if lte IE 6]>
-<style type="text/css" media="screen">
-.sf-menu li ul li ul, .sf-menu li ul li ul {
-        height:100%; } /* keeps mega lists visible in IE6 */
-</style>
-<![endif]-->
+        <link href="/etc/designs/base/MegaNavBar/assets/css/MegaNavbar.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/etc/designs/base/MegaNavBar/assets/css/skins/city-top-nav-white.css" rel="stylesheet" type="text/css"/>
+        <link href="/etc/designs/base/MegaNavBar/assets/css/skins/city-department-nav-white.css" rel="stylesheet" type="text/css"/>
+        <link href="/etc/designs/city/css/theme.css" rel="stylesheet" type="text/css"/>
 
-<!--[if lte IE 7]>
-        <link rel="stylesheet" type="text/css" href="/etc/designs/city/css/ie7-or-lower.css" />
-<![endif]-->
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
-<!--[if lte IE 6]>
-        <link rel="stylesheet" type="text/css" href="/etc/designs/city/css/ie6-and-lower.css" />
-<![endif]-->
+
+
+
+
+
 
 
 
 
 <script type="text/javascript">
  $(document).ready(function() {
- $.reject({ 
+ $.reject({
         reject: { /*msie7: true,
                   firefox15: true,
                   firefox11: true,
@@ -199,752 +121,1256 @@
                   chrome21: true,
                   chrome20: true,*/
                   chrome19: true
-         }, // Reject these browsers  
-        header: 'Dear Web User:', // Header Text  
-        paragraph1: 'This web browser version may limit the quality of your visit to the City of Chicago website. The site is internally tested and best viewed with the browsers listed below, so updating to one of these versions may improve your experience.', // Paragraph 1   
+         }, // Reject these browsers
+        header: 'Dear Web User:', // Header Text
+        paragraph1: 'This web browser version may limit the quality of your visit to the City of Chicago website. The site is internally tested and best viewed with the browsers listed below, so updating to one of these versions may improve your experience.', // Paragraph 1
         paragraph2: 'Select an icon to get to the download page:',
-        display: ['firefox','chrome','msie'], 
+        display: ['firefox','chrome','msie'],
         closeCookie: true, // Once per session
-        closeMessage: ' ', // Message below close window link 
+        closeMessage: ' ', // Message below close window link
         closeURL: '#notification'
-        
+
     }); // Customized Browsers
     return false;
  });
-    </script>  
+    </script>
+
     </head>
-    <body>
-        <div class="background-image-holder" align="center">
-            <div id="container">
+
+    <body class="page-narrative">
+
+
+
+
+
+
+
+            <div  class="page-wrapper">
                 <!-- Header -->
-                
- 
-
- 
- 
-
-<html xmlns="http://www.w3.org/1999/xhtml"> 
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <div class="container-fluid container-header" style="margin-top:0px;padding-left:0px;padding-right:0px;">
+                     <div class="row">
+                        <div class="col-xs-12 page-header" style="margin-top:0px;">
 
 
 
 
-<style type="text/css">
-@charset "utf-8";
-/* CSS for google translate */
 
-.lan_cont {
-    position:absolute; left:600px; z-index:1000;
-}
 
-a.lan:link, a.lan:visited {
-    font:Arial, Helvetica, sans-serif;
-    color:#fff;
-    text-decoration:none;
-    font-size:12px;
-    display:inline-block;
-   /* height:20px;*/
-    padding:0px 5px 0px 5px;
-}
 
-a.lan:hover, a.lan:active {
-    font:Arial, Helvetica, sans-serif;
-    color:#fff;
-    text-decoration:underline;
-    font-size:12px;
-    display:inline-block;
-    padding:0px 5px 0px 5px;
-}
 
-#arabic {
-    font-size:16px;
-}
 
-.divider {
-    color:#FFF;
-    margin:0px 10px 0px 10px;
-    font-weight:lighter;
-} 
 
-    ul.ui-autocomplete { z-index:10000000; }
-    .ui-helper-hidden-accessible { display:none; } 
-    .ui-menu-item a { cursor:pointer;}
-</style>
-</head>
 
-<div id="print-preview">
-    <div class="logo-float">
-        <img src="/etc/designs/city/images/city-of-chicago-logo-black.gif" width="504" height="47" alt="The City of Chicago's Official Site"/>
-    </div>
-</div>
 
- 
+    <style>
 
-  <div class="lan_cont">
-<a href="http://translate.google.com/translate?hl=en&sl=en&tl=en&u=https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html" class="lan" title="Click to view site in English. Disclaimer: The City of Chicago is not responsible for inaccurately translated content.">English</a>
-<span class="divider">|</span>
-<a class="lan" href="http://translate.google.com/translate?hl=en&sl=en&tl=es&u=https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html" title="Haga clic para ver el sitio en español. Descargo de responsabilidad: La ciudad de Chicago no es responsable por el contenido traducido erróneamente.">Espa&ntilde;ol</a>
-<span class="divider">|</span>
-<a class="lan" href="http://translate.google.com/translate?hl=en&sl=en&tl=zh-CN&u=https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html" title="Click to view site in Chinese. Disclaimer: The City of Chicago is not responsible for inaccurately translated content.">中文</a>
-<span class="divider">|</span>
-<a href="http://translate.google.com/translate?hl=en&sl=en&tl=pl&u=https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html" class="lan" title="Kliknij aby zobaczyć stronę w chińskiej Zastrzeżenie: City of Chicago nie ponosi odpowiedzialności za niedokładnie przetłumaczonej treści.">Polski</a>
-<span class="divider">|</span>
-<a href="http://translate.google.com/translate?hl=en&sl=en&tl=ar&u=https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2017-board-of-health.html" class="lan" id="arabic" title="انقر فوق لعرض في موقع المسؤولية الصينية: مدينة شيكاغو ليست مسؤولة عن محتوى ترجمة غير دقيقة.">عربي</a>
 
-</div>
 
-<div class="header">
-    <div class="logo-float">
-        <div id="skip">
-            <a href="#startcontent">Skip to Main Content</a>
+        ul.ui-autocomplete { z-index:10000000; }
+        .ui-helper-hidden-accessible { display:none; }
+        .ui-menu-item a { cursor:pointer;}
+    </style>
+
+
+
+
+
+
+
+
+<div class="header container-fluid site-logo" style="margin-bottom:0px;margin-top:0px; padding:10px;background-color: #0198DD">
+        <div class="row" >
+            <div class="col-xs-12 col-sm-8">
+                    <div id="skip">
+                        <a href="#startcontent">Skip to Main Content</a>
+                    </div>
+
+                <a href="/content/city/en.html" title="The City of Chicago's Official Site">
+                    <img class="img-responsive" src="/content/dam/city/homepage/city-logo.png" alt="The City of Chicago's Official Site"/>
+                </a>
+            </div>
+
+            <div class="xsearch col-xs-12 col-sm-4 hidden-xs">
+                <form action="/city/en/general/search_results.html" method="GET" name="g" style="text-align:right;margin-top:20px;">
+                    <p class="search-fields">
+                    <input type="text" id="site-search"  placeholder="Search the City of Chicago"
+                        value="" style="color: #809DB9;width: 80%;display: inline;"
+                    name="keyword" class="global-search auto-search global-search-text form-control" />
+                    &nbsp;
+                        <input type="hidden" name="from" value="internal"/>
+                        <button title="Search the City of Chicago" type="submit" value="Search" name="Go" id="Go" class="btn btn-top-search" style="padding:6px" >
+                            <i class="fa fa-search">&nbsp;&nbsp;</i>
+                        </button>
+                    </p>
+
+                </form>
+            </div>
         </div>
-        
-        <a href="/content/city/en.html" title="The City of Chicago's Official Site">
-            <img src="/etc/designs/city/images/city-of-chicago-logo.png" width="504" height="54" alt="The City of Chicago's Official Site"/>
-        </a>
-    </div>
+     </div>
 
-    <div class="search"> 
-        <form action="/city/en/general/search_results.html" method="GET" name="g">
-            <p class="search-fields"><input type="text" id="site-search" 
-            value="Keyword" style="color: #809DB9;"
-            name="keyword" class="global-search auto-search global-search-text"/>
-            &nbsp;
-            <input type="submit" value="Search" name="Go" id="Go" class="mainSearchSubmitBtn" style="font-size: 12px; height: 20px;"/>
-            </p>
+<script type="text/javascript">
 
-        </form>
-    </div>
-
-    <script type="text/javascript">
-
-    $(document).ready(function() {
+        $(document).ready(function() {
 
 
-        $( ".auto-search" ).autocomplete({ 
-            source: "/content/city/en.SuggestProxy.html",
-            //  appendTo: ".site-search", 
-            select: function( event, ui ) {
-                // $(this).attr("value",ui.item.value);
-                 $(this).val(ui.item.value);
-                var inputId = $(this).attr("id");
-                if(inputId != "findServicesBigSearchInput" && inputId != "city-service-search-cmp") {
-                    $('#site-search').val($('#site-search').val().trim());
-                    if($('#keyword').length) {
-                        $('#keyword').val($('#keyword').val().trim());
+            $( ".auto-search" ).autocomplete({
+                source: "/content/city/en.SuggestProxy.html",
+                //  appendTo: ".site-search",
+                select: function( event, ui ) {
+                    // $(this).attr("value",ui.item.value);
+                     $(this).val(ui.item.value);
+                    var inputId = $(this).attr("id");
+                    if(inputId != "findServicesBigSearchInput" && inputId != "city-service-search-cmp") {
+                        $('#site-search').val($('#site-search').val().trim());
+                        if($('#keyword').length) {
+                            $('#keyword').val($('#keyword').val().trim());
+                        }
+                        $(this).closest("form").submit();
                     }
-                    $(this).closest("form").submit();
                 }
+            });
+
+            if($('#site-search').val() == "Keyword") {
+                $('#site-search').css('color','#809DB9');
             }
         });
 
-        if($('#site-search').val() == "Keyword") {
-            $('#site-search').css('color','#809DB9');
-        }
+        </script>
+
+        <script type="text/javascript" language="JavaScript">
+        $('#site-search').focus(function(){
+            if($(this).val() == 'Keyword') {
+                $(this).val('');
+                $(this).css('color','Black');
+            }
+        });
+
+        $('#site-search').blur(function(){
+            if($(this).val() == "") {
+                $(this).val('Keyword');
+                $(this).css('color','#809DB9');
+            }
+        });
+        $('#Go').click(function(){
+            if($('#site-search').val() == "" || $('#site-search').val() == "Keyword") {
+                $('#site-search').focus();
+                return false;
+            }
+            $('#site-search').val($('#site-search').val().trim());
+
+        });
+</script>
+
+
+    <!-- Main Navigation Bar -->
+
+
+
+
+
+
+    <div id="mobdiv" class="visible-xs"></div>
+
+  <div class="container-fluid" style="padding-left:0px;padding-right:0px">
+        <nav class="navbar city-top-nav no-border-radius xs-height75 navbar-static-top" id="main_navbar" role="navigation" style="margin-bottom:0px">
+            <div class="container-fluid" >
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#MegaNavbarID">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                        <form style="margin-top:7px" class="navbar-form-expanded navbar-form navbar-left visible-xs-block" role="search" action="/city/en/general/search_results.html" method="GET" name="g">
+                            <div class="input-group">
+                                <input type="text" class="form-control" data-width="80px" data-width-expanded="170px" placeholder="Search the City of Chicago" value="" name="keyword" >
+                                <span class="input-group-btn"><button class="btn btn-danger" type="submit" ><i class="fa fa-search"></i>&nbsp;</button></span>
+                            </div>
+                        </form>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="MegaNavbarID">
+
+                    <!-- regular link -->
+                    <ul class="nav navbar-nav navbar-left dropdown-onhover">
+
+                        <a href="/city/en.html" title="City of Chicago Home Page" class="navbar-link navbar-left hidden-xs"><i style="font-size:20px;margin-top:10px;" class="fa fa-home" aria-hidden="true"></i></a>
+
+
+
+
+
+
+            <li class="dropdown">
+                <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle" aria-expanded="true">I Want To<span class="caret"></span></a>
+                    <ul class="dropdown-menu"  role="menu" >
+
+
+
+      <li class="dropdown-right-onhover no-fix" >
+            <a href="javascript:;" data-target="#m-apply_for" data-toggle="collapse" class="dropdown-toggle collapsed">Apply for</a>
+                <ul class="dropdown-menu collapse" id="m-apply_for">
+
+                        <li><a title="Bid Job Opportunities " href="/content/city/en/depts/dhr/provdrs/emp/svcs/apply_for_bid_opportunities-forcityofchicagoemployeesandbargaini.html">Bid Job Opportunities </a></li>
+
+                        <li><a title="Buildings E-Permits" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/e-permits.html">Buildings E-Permits</a></li>
+
+                        <li><a title="Business Licenses" href="/content/city/en/depts/bacp/provdrs/bus/svcs/apply_for_a_businesslicenseonline.html">Business Licenses</a></li>
+
+                        <li><a title="Chicago Housing Authority (CHA) Housing" href="/content/city/en/depts/other/provdrs/cha/svcs/find_housing_information.html">Chicago Housing Authority (CHA) Housing</a></li>
+
+                        <li><a title="Internships and Volunteer Programs" href="/content/city/en/depts/dhr/provdrs/emp/svcs/internships.html">Internships and Volunteer Programs</a></li>
+
+                        <li><a title="Job Opportunities at City of Chicago" href="/content/city/en/depts/dhr/provdrs/emp/svcs/city_of_chicago_jobopportunities.html">Job Opportunities at City of Chicago</a></li>
+
+                        <li><a title="Link Card, Food Stamps and Medical Assistance" href="/content/city/en/depts/other/provdrs/soi/svcs/apply_for_link_cardfoodstampsandmedicalassistance.html">Link Card, Food Stamps and Medical Assistance</a></li>
+
+                        <li><a title="Permit Parking Zone Lookup" href="/content/city/en/depts/other/provdrs/clerk/svcs/parking_permit_zonelookup.html">Permit Parking Zone Lookup</a></li>
+
+                        <li><a title="WIC (Women Infant Children program)" href="/content/city/en/depts/cdph/provdrs/healthymothers_and_babies/svcs/apply_for_wic_.html">WIC (Women Infant Children program)</a></li>
+
+        <li class="divider"></li>
+        <li><a title="More Services" href="/city/en/svcs/iwantto.apply_for.html.html"><i class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;More Services</a></li>
+
+    </ul>
+    </li>
+
+
+      <li class="dropdown-right-onhover no-fix" >
+            <a href="javascript:;" data-target="#m-check_status_of" data-toggle="collapse" class="dropdown-toggle collapsed">Check Status Of</a>
+                <ul class="dropdown-menu collapse" id="m-check_status_of">
+
+                        <li><a title="Abandoned Vehicle Complaint" href="/content/city/en/depts/streets/provdrs/traffic/svcs/abndvhclstatus.html">Abandoned Vehicle Complaint</a></li>
+
+                        <li><a title="Building Permit Status" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/building_permit_status.html">Building Permit Status</a></li>
+
+                        <li><a title="Building Violations" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/building_violationsonline.html">Building Violations</a></li>
+
+                        <li><a title="Building-Related Court Actions" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/building-relatedcourtactions.html">Building-Related Court Actions</a></li>
+
+                        <li><a title="Easy Building Permit Applications" href="/content/city/en/depts/bldgs/provdrs/permit_proc/svcs/applications.html">Easy Building Permit Applications</a></li>
+
+                        <li><a title="HomeMod - My Application status" href="/content/city/en/depts/mopd/provdrs/hous/svcs/accessible_home_modificationprogram-ages0-5911.html">HomeMod - My Application status</a></li>
+
+                        <li><a title="Parking, Red Light, or Speed Ticket(s)" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/pay_parking_and_red-lightticketson-line.html">Parking, Red Light, or Speed Ticket(s)</a></li>
+
+                        <li><a title="Permit for Business ID and Advertising Signs" href="/content/city/en/depts/dcd/provdrs/admin/svcs/business_identificationandadvertisingsigns.html">Permit for Business ID and Advertising Signs</a></li>
+
+                        <li><a title="Service Request for Street Light Out" href="/content/city/en/depts/cdot/provdrs/traffic_signals_andstreetlights/svcs/bldgviolstatus.html">Service Request for Street Light Out</a></li>
+
+                        <li><a title="Vacant Property" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/check_status_of_vacantproperty.html">Vacant Property</a></li>
+
+        <li class="divider"></li>
+        <li><a title="More Services" href="/city/en/svcs/iwantto.check_status_of.html.html"><i class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;More Services</a></li>
+
+    </ul>
+    </li>
+
+
+      <li class="dropdown-right-onhover no-fix" >
+            <a href="javascript:;" data-target="#m-find_get" data-toggle="collapse" class="dropdown-toggle collapsed">Find/Get</a>
+                <ul class="dropdown-menu collapse" id="m-find_get">
+
+                        <li><a title="Auto Pound Locations" href="/content/city/en/depts/streets/provdrs/traffic/svcs/auto_pound_locations.html">Auto Pound Locations</a></li>
+
+                        <li><a title="Bids, RFP, RFQ, RFI, Small Order" href="/content/city/en/depts/dps/provdrs/contract/svcs/current_bid_opportunities.html">Bids, RFP, RFQ, RFI, Small Order</a></li>
+
+                        <li><a title="Business License Look-up" href="/content/city/en/depts/bacp/provdrs/bus/svcs/business_licenselook-up.html">Business License Look-up</a></li>
+
+                        <li><a title="Chicago Building Code" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/chicago_buildingcodeonline.html">Chicago Building Code</a></li>
+
+                        <li><a title="Drivers License or State Id" href="/content/city/en/depts/other/provdrs/soi/svcs/get_a_driver_s_licenseorastateid.html">Drivers License or State Id</a></li>
+
+                        <li><a title="Free STI/HIV/AIDS Testing and Treatment" href="/content/city/en/depts/cdph/provdrs/health_services/svcs/get_yourself_evaluatedforstihivaids.html">Free STI/HIV/AIDS Testing and Treatment</a></li>
+
+                        <li><a title="Maps - GIS/Data" href="/content/city/en/depts/doit/provdrs/gis/svcs/maps---gis-data.html">Maps - GIS/Data</a></li>
+
+                        <li><a title="Permit Parking Zone Lookup" href="/content/city/en/depts/other/provdrs/clerk/svcs/parking_permit_zonelookup.html">Permit Parking Zone Lookup</a></li>
+
+                        <li><a title="Vital Records from the Cook County Clerk's Office" href="/content/city/en/depts/other/provdrs/ccco/svcs/get_vital_records.html">Vital Records from the Cook County Clerk's Office</a></li>
+
+                        <li><a title="Ward & Alderman by Address" href="/content/city/en/depts/other/provdrs/clerk/svcs/find_your_ward_andalderman.html">Ward & Alderman by Address</a></li>
+
+        <li class="divider"></li>
+        <li><a title="More Services" href="/city/en/svcs/iwantto.find_get.html.html"><i class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;More Services</a></li>
+
+    </ul>
+    </li>
+
+
+      <li class="dropdown-right-onhover no-fix" >
+            <a href="javascript:;" data-target="#m-pay_for_buy" data-toggle="collapse" class="dropdown-toggle collapsed">Pay for/Buy</a>
+                <ul class="dropdown-menu collapse" id="m-pay_for_buy">
+
+                        <li><a title="Administrative Hearing Fines" href="/content/city/en/depts/fin/provdrs/payment_processingdivision/svcs/QuickPay.html">Administrative Hearing Fines</a></li>
+
+                        <li><a title="Business License Renewal" href="/content/city/en/depts/bacp/provdrs/bus/svcs/renew_your_businesslicenseonline.html">Business License Renewal</a></li>
+
+                        <li><a title="Business Taxes" href="/content/city/en/depts/fin/provdrs/tax_division/svcs/pay_and_file_yourtaxesonline.html">Business Taxes</a></li>
+
+                        <li><a title="CTA Transit Customer Fare Cards" href="/content/city/en/depts/other/provdrs/cta/svcs/customer_fares_chartsandpurchasectafarecards.html">CTA Transit Customer Fare Cards</a></li>
+
+                        <li><a title="Calculate the Cost of a Permit" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/permit_fee_calculator.html">Calculate the Cost of a Permit</a></li>
+
+                        <li><a title="City of Chicago Photography" href="/content/city/en/depts/dgs/provdrs/asset_management/svcs/purchase_city_photography.html">City of Chicago Photography</a></li>
+
+                        <li><a title="Parking, Red Light, or Speed Ticket(s)" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/pay_parking_and_red-lightticketson-line.html">Parking, Red Light, or Speed Ticket(s)</a></li>
+
+                        <li><a title="Surplus, Vehicles, Auctions" href="/content/city/en/depts/dps/provdrs/auction/svcs/city_of_chicago_onlineauctions.html">Surplus, Vehicles, Auctions</a></li>
+
+                        <li><a title="Vehicle and Residential Permit Parking Stickers" href="/content/city/en/depts/other/provdrs/clerk/svcs/vehicle_sticker_andresidentialpermitparkingsales.html">Vehicle and Residential Permit Parking Stickers</a></li>
+
+                        <li><a title="View Automated Speed Enforcement Video" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_automated_speedenforcementvideo.html">View Automated Speed Enforcement Video</a></li>
+
+        <li class="divider"></li>
+        <li><a title="More Services" href="/city/en/svcs/iwantto.pay_for_buy.html.html"><i class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;More Services</a></li>
+
+    </ul>
+    </li>
+
+
+      <li class="dropdown-right-onhover no-fix" >
+            <a href="javascript:;" data-target="#m-register" data-toggle="collapse" class="dropdown-toggle collapsed">Register</a>
+                <ul class="dropdown-menu collapse" id="m-register">
+
+                        <li><a title="Discrimination Complaint" href="/content/city/en/depts/cchr/provdrs/discrim/svcs/file_a_discriminationcomplaint.html">Discrimination Complaint</a></li>
+
+                        <li><a title="Dog Registration" href="/content/city/en/depts/other/provdrs/clerk/svcs/dog_registration.html">Dog Registration</a></li>
+
+                        <li><a title="Extreme Weather Notification" href="/content/city/en/depts/oem/provdrs/emerg_mang/svcs/sign_up_for_extremeweathernotification.html">Extreme Weather Notification</a></li>
+
+                        <li><a title="For Park District Programs" href="/content/city/en/depts/other/provdrs/cpd/svcs/register_for_parkdistrictprogramsonline.html">For Park District Programs</a></li>
+
+                        <li><a title="HIV/AIDS Online Courses" href="/content/city/en/depts/cdph/provdrs/health_services/svcs/register_for_freestihivaidsonlinecourses.html">HIV/AIDS Online Courses</a></li>
+
+                        <li><a title="Independent Living Skills Program" href="/content/city/en/depts/mopd/provdrs/resource/svcs/ilp-independent_livingprogram.html">Independent Living Skills Program</a></li>
+
+                        <li><a title="MPEA Airport Tax" href="/content/city/en/depts/bacp/provdrs/vehic/svcs/mpea_online_permitapplicationform.html">MPEA Airport Tax</a></li>
+
+                        <li><a title="Register a Cottage Food Operation" href="/content/city/en/depts/cdph/provdrs/healthy_communities/svcs/register_a_cottagefoodoperation.html">Register a Cottage Food Operation</a></li>
+
+        <li class="divider"></li>
+        <li><a title="More Services" href="/city/en/svcs/iwantto.register.html.html"><i class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;More Services</a></li>
+
+    </ul>
+    </li>
+
+
+      <li class="dropdown-right-onhover no-fix" >
+            <a href="javascript:;" data-target="#m-report_file" data-toggle="collapse" class="dropdown-toggle collapsed">Report/File</a>
+                <ul class="dropdown-menu collapse" id="m-report_file">
+
+                        <li><a title="AIC (Annual Inspection Certification) Inspections" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/annual_inspectioncertificationaicprogramupdate.html">AIC (Annual Inspection Certification) Inspections</a></li>
+
+                        <li><a title="Abandoned Vehicle" href="/content/city/en/depts/streets/provdrs/traffic/svcs/abandoned_vehicles.html">Abandoned Vehicle</a></li>
+
+                        <li><a title="Cab Feedback" href="/content/city/en/depts/bacp/provdrs/consumer/svcs/consumer_cab_complaint.html">Cab Feedback</a></li>
+
+                        <li><a title="Claim for Vehicle or Property Damage" href="/content/city/en/depts/other/provdrs/clerk/svcs/file_a_claim.html">Claim for Vehicle or Property Damage</a></li>
+
+                        <li><a title="Complaint Against a Chicago Police Officer" href="/content/city/en/depts/ipra/provdrs/investigate/svcs/report_an_incidentagainstachicagopoliceofficer.html">Complaint Against a Chicago Police Officer</a></li>
+
+                        <li><a title="Consumer Complaint Online" href="/content/city/en/depts/bacp/provdrs/pros_adj/svcs/file_a_citizen_complaintonline.html">Consumer Complaint Online</a></li>
+
+                        <li><a title="Economic Disclosure, Affidavit, Online EDS" href="/content/city/en/depts/dps/provdrs/comp/svcs/economic_disclosurestatementseds.html">Economic Disclosure, Affidavit, Online EDS</a></li>
+
+                        <li><a title="Pothole in the Street" href="/content/city/en/depts/cdot/provdrs/street/svcs/report_a_pot_holeinstreet.html">Pothole in the Street</a></li>
+
+                        <li><a title="Stray Animal in Neighborhood" href="/content/city/en/depts/cacc/provdrs/animal_control_andrescue/svcs/report_a_stray_animal.html">Stray Animal in Neighborhood</a></li>
+
+        <li class="divider"></li>
+        <li><a title="More Services" href="/city/en/svcs/iwantto.report_file.html.html"><i class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;More Services</a></li>
+
+    </ul>
+    </li>
+
+
+      <li class="dropdown-right-onhover no-fix" >
+            <a href="javascript:;" data-target="#m-request" data-toggle="collapse" class="dropdown-toggle collapsed">Request</a>
+                <ul class="dropdown-menu collapse" id="m-request">
+
+                        <li><a title="Building Inspection" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/request_an_inspection.html">Building Inspection</a></li>
+
+                        <li><a title="Garbage Cart" href="/content/city/en/depts/streets/provdrs/rodent/svcs/garbage_cart_distribution.html">Garbage Cart</a></li>
+
+                        <li><a title="Graffiti Removal Services" href="/content/city/en/depts/streets/provdrs/graffiti_blasters/svcs/mayor_daley_s_graffitiblasters.html">Graffiti Removal Services</a></li>
+
+                        <li><a title="Parking Ticket Photos" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_parking_ticketpictures.html">Parking Ticket Photos</a></li>
+
+                        <li><a title="Request a Bike Map" href="/content/city/en/depts/cdot/provdrs/bike/svcs/request_a_bike_map.html">Request a Bike Map</a></li>
+
+                        <li><a title="Residential Garbage Collection" href="/content/city/en/depts/streets/provdrs/streets_san/svcs/residential_garbagecollection.html">Residential Garbage Collection</a></li>
+
+                        <li><a title="Restaurant Inspection" href="/content/city/en/depts/cdph/provdrs/healthy_communities/svcs/food_protection_program.html">Restaurant Inspection</a></li>
+
+                        <li><a title="View Red Light Video" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_red-light_video.html">View Red Light Video</a></li>
+
+        <li class="divider"></li>
+        <li><a title="More Services" href="/city/en/svcs/iwantto.request.html.html"><i class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;More Services</a></li>
+
+    </ul>
+    </li>
+
+
+      <li class="dropdown-right-onhover no-fix" >
+            <a href="javascript:;" data-target="#m-sign_up" data-toggle="collapse" class="dropdown-toggle collapsed">Sign up for/volunteer</a>
+                <ul class="dropdown-menu collapse" id="m-sign_up">
+
+                        <li><a title="Alerts from NotifyChicago" href="/content/city/en/depts/oem/provdrs/alertchicago/svcs/notifychicago.html">Alerts from NotifyChicago</a></li>
+
+                        <li><a title="CAPS Brochures & Information" href="/content/city/en/depts/cpd/provdrs/police_services/svcs/caps_brochure_request.html">CAPS Brochures & Information</a></li>
+
+                        <li><a title="Community Emergency Response Team (CERT)" href="/content/city/en/depts/oem/provdrs/edu/svcs/become_a_cert_volunteer.html">Community Emergency Response Team (CERT)</a></li>
+
+                        <li><a title="Food Alerts and Recalls" href="/content/city/en/depts/cdph/provdrs/healthy_communities/svcs/sign_up_to_receivefoodalertsandrecalls.html">Food Alerts and Recalls</a></li>
+
+                        <li><a title="Internships and Volunteer Programs" href="/content/city/en/depts/dhr/provdrs/emp/svcs/internships.html">Internships and Volunteer Programs</a></li>
+
+                        <li><a title="One Good Deed Chicago Volunteer Opportunities" href="/content/city/en/depts/mayor/provdrs/special_prog/svcs/one_good_deed_chicago.html">One Good Deed Chicago Volunteer Opportunities</a></li>
+
+                        <li><a title="Voluntary Disclosure" href="/content/city/en/depts/fin/provdrs/tax_division/svcs/apply_for_voluntarydisclosureofchicagobusinesstaxes.html">Voluntary Disclosure</a></li>
+
+        <li class="divider"></li>
+        <li><a title="More Services" href="/city/en/svcs/iwantto.sign_up.html.html"><i class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;More Services</a></li>
+
+    </ul>
+    </li>
+
+</ul>
+</li>
+
+
+
+
+
+
+                        <!--Programs &amp; Initiatives -->
+                        <li class="dropdown-grid  menu-programs">
+                            <a data-toggle="dropdown" href="/city/en/progs.html" class="dropdown-toggle nav-url"><span>Programs &amp; Initiatives</span><span class="caret"></span></a>
+                            <div class="dropdown-grid-wrapper">
+                                <div class="dropdown-menu row col-xs-12 col-sm-6 no-shadow no-border-radius border">
+                                        <div class="col-xs-12 col-sm-6">
+                                            <ul>
+                                                <li>
+                                                    <a title="Affordable Chicago" href="/city/en/progs/affordchic.html">Affordable Chicago</a>
+                                                    <a title="Consumer Protection" href="/city/en/progs/protect.html">Consumer Protection</a>
+                                                    <a title="Education" href="/city/en/progs/edu.html">Education</a>
+                                                    <a title="Environment" href="/city/en/progs/env.html">Environment</a>
+                                                    <a title="Freedom of Information (FOIA)" href="/city/en/progs/foia.html">Freedom of Information (FOIA)</a>
+                                                    <a title="Grants" href="/city/en/progs/grants.html">Grants</a>
+                                                    <a title="Health &amp; Wellness" href="/city/en/progs/health.html">Health &amp; Wellness</a>
+                                                    <a title="Housing" href="/city/en/progs/hous.html">Housing</a>
+                                                    <a title="Inspections, Permitting &amp; Licensing" href="/city/en/progs/inspectionspermitting.html">Inspections, Permitting &amp; Licensing</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-6">
+                                            <ul>
+                                                <li>
+                                                        <a title="Jobs" href="/city/en/progs/emp.html">Jobs</a>
+                                                        <a title="Municipal Marketing" href="/city/en/progs/municipal_marketing.html">Municipal Marketing</a>
+                                                        <a title="One Chicago" target="blank" href="https://onechi.org/">One Chicago</a>
+                                                        <a title="Safety" href="/city/en/progs/safety.html">Safety</a>
+                                                        <a title="Taxes" href="/city/en/progs/tax.html">Taxes</a>
+                                                        <a title="Technology" href="/city/en/progs/tech.html">Technology</a>
+                                                        <a title="Transparency" href="/city/en/progs/transparency.html">Transparency</a>
+                                                        <a title="Transportation" href="/city/en/progs/trnsprt.html">Transportation</a>                                             <a title="Food Service Establishments" href="/city/en/ofinterest/bus/food.html">Food Service Establishments</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!--Chicago Government -->
+                        <li class="dropdown-full menu-departments">
+                            <a data-toggle="dropdown" href="/city/en/chicagogovt.html" class="dropdown-toggle nav-url"><span>Government</span><span class="caret"></span></a>
+                            <div class="dropdown-menu">
+
+                                        <div class="col-xs-12 col-sm-3">
+                                            <ul>
+                                                <li class="dropdown-header">Elected Officials</li>
+                                            </ul>
+                                            <ul>
+                                                <li>
+                                                    <a title="Mayor's Office" href="/city/en/depts/mayor.html">Mayor's Office</a>
+                                                    <a title="City Clerk and Ordinances" href="http://www.chicityclerk.com/">City Clerk</a>
+                                                    <a title="City Treasurer" href="http://www.chicagocitytreasurer.com/">City Treasurer</a>
+                                                    <a title="City Council, Your Ward &amp; Aldermen" href="/city/en/about/council.html">City Council (Your Ward &amp; Aldermen)</a>
+                                                </li>
+                                            </ul>
+                                            <ul>
+                                                <li class="dropdown-header"><br>Other City Agencies</li>
+                                            </ul>
+                                            <ul>
+                                                <li>
+                                                    <a title="" href="#"></a>
+                                                <a title="City Colleges" target="blank" href="http://www.ccc.edu">City Colleges</a>
+                                                <a title="Housing Authority (CHA)" href="/content/city/en/depts/other/provdrs/cha.html">Housing Authority (CHA)</a>
+                                                <a title="Park District" href="/content/city/en/depts/other/provdrs/cpd.html">Park District</a>
+                                                <a title="Public Building Commission" href="http://www.pbcchicago.com/" target="_blank">Public Building Commission</a>
+                                                <a title="Public Schools" href="/city/en/depts/other/provdrs/cps.html">Public Schools</a>
+                                                <a title="Transit Authority (CTA)" href="/city/en/depts/other/provdrs/cta.html">Transit Authority (CTA)</a>
+                                                <a title="Metro Pier & Exposition Authority" href="http://www.mpea.com/" target="_blank">Metro Pier & Exposition Authority</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-xs-12 col-sm-9">
+                                            <div class="col-xs-12 col-sm-3">
+                                                <ul>
+                                                      <li class="dropdown-header">Departments</li>
+                                                      <li>
+                                                        <a title="311 City Services" href="/city/en/depts/311.html">311 City Services</a>
+                                                        <a title="Administrative Hearings" href="/city/en/depts/ah.html">Administrative Hearings</a>
+                                                        <a title="Animal Care &amp; Control" href="/city/en/depts/cacc.html">Animal Care &amp; Control</a>
+                                                        <a title="Aviation" href="/city/en/depts/doa.html">Aviation</a>
+                                                        <a title="Budget &amp; Management" href="/city/en/depts/obm.html">Budget &amp; Management</a>
+                                                        <a title="Buildings" href="/city/en/depts/bldgs.html">Buildings</a>
+                                                        <a title="Bus. Affairs &amp; Consumer Protection" href="/city/en/depts/bacp.html">Bus. Affairs &amp; Consumer Protection</a>
+                                                        <a title="City of Chicago TV" href="/city/en/depts/tv.html">City of Chicago TV</a>
+                                                        <a title="Civilian Office of Police Accountability" href="/city/en/depts/copa.html">Civilian Office of Police Accountability</a>
+                                                          <a title="Cultural Affairs &amp; Special Events" href="/city/en/depts/dca.html">Cultural Affairs &amp; Special Events</a>
+                                                        <a title="Emergency Mgmt &amp; Communications" href="/city/en/depts/oem.html">Emergency Mgmt &amp; Communications</a>
+
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <ul>
+                                                    <li>
+                                                        <a title="Ethics" href="/city/en/depts/ethics.html">Ethics</a>
+                                                        <a title="Family &amp; Support Services" href="/city/en/depts/fss.html">Family &amp; Support Services</a>
+                                                        <a title="Finance" href="/city/en/depts/fin.html">Finance</a>
+                                                        <a title="Fire" href="/city/en/depts/cfd.html">Fire</a>
+                                                        <a title="Fleet and Facility Management" href="/city/en/depts/dgs.html">Fleet and Facility Management</a>
+                                                        <a title="Human Relations" href="/city/en/depts/cchr.html">Human Relations</a>
+                                                        <a title="Human Resources" href="/city/en/depts/dhr.html">Human Resources</a>
+                                                        <a title="Innovation &amp; Technology" href="/city/en/depts/doit.html">Innovation &amp; Technology</a>
+                                                        <a title="Inspector General" href="/city/en/depts/igo.html">Inspector General</a>
+                                                        <a title="Law" href="/city/en/depts/dol.html">Law</a>
+                                                        <a title="License Appeal Commission" href="/city/en/depts/lac.html">License Appeal Commission</a>
+                                                        <a title="People with Disabilities" href="/city/en/depts/mopd.html">People with Disabilities</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <ul>
+                                                    <li>
+
+
+                                                        <a title="Planning &amp; Development" href="/city/en/depts/dcd.html">Planning &amp; Development</a>
+                                                        <a title="Police" href="/city/en/depts/cpd.html">Police</a>
+                                                        <a title="Police Board" href="/city/en/depts/cpb.html">Police Board</a>
+                                                        <a title="Procurement Services" href="/city/en/depts/dps.html">Procurement Services</a>
+                                                        <a title="Public Health" href="/city/en/depts/cdph.html">Public Health</a>
+                                                        <a title="Public Library" href="/city/en/depts/cpl.html">Public Library</a>
+                                                        <a title="Streets &amp; Sanitation" href="/city/en/depts/streets.html">Streets &amp; Sanitation</a>
+                                                        <a title="Transportation" href="/city/en/depts/cdot.html">Transportation</a>
+                                                        <a title="Water Management" href="/city/en/depts/water.html">Water Management</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3">
+                                                <ul>
+                                                      <li class="dropdown-header">Legislation and Regulation</li>
+                                                      <li>
+                                                            <a title="Municipal Code" target="blank" href="http://www.chicityclerk.com/legislation-records/municipal-code">Municipal Code</a>
+                                                            <a title="Building Code" target="blank" href="http://library.amlegal.com/nxt/gateway.dll/Illinois/chicagobuilding/buildingcodeandrelatedexcerptsofthemunic?f=templates$fn=default.htm$3.0$vid=amlegal:chicagobuilding_il">Building Code</a>
+                                                            <a title="Zoning and Land Use Ordinance" target="blank" href="http://library.amlegal.com/nxt/gateway.dll/Illinois/chicagozoning/chicagozoningordinanceandlanduseordinanc?f=templates$fn=default.htm$3.0$vid=amlegal:chicagozoning_il">Zoning and Land Use Ordinance</a>
+                                                            <a title="Rules and Regulations" href="/city/en/depts/dol/rules-and-regulations-portal.html">Rules and Regulations</a>
+
+                                                     </li>
+                                                </ul>
+                                                <ul>
+                                                      <li class="dropdown-header"><br>Other</li>
+                                                      <li>
+                                                            <a title="Employee Directory" target="blank" href="http://cityinfo.cityofchicago.org/PhoneBook">Employee Directory</a>
+                                                          <a title="Boards & Commissions" target="blank" href="https://webapps1.cityofchicago.org/moboco/">Boards & Commissions</a>
+
+                                                     </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                            </div>
+                        </li>
+
+
+                        <li class="dropdown-short menu-about">
+                            <a data-toggle="dropdown" href="/city/en/about.html" class="dropdown-toggle nav-url"><span>About</span><span class="caret"></span></a>
+                            <div class="dropdown-menu">
+
+
+                                    <ul>
+                                        <li>
+                                            <a title="Chicago History" href="/city/en/about/history.html">Chicago History</a>
+                                            <a title="Facts &amp; Statistics" href="/city/en/about/facts.html">Facts &amp; Statistics</a>
+                                            <a title="Attractions" href="https://www.choosechicago.com/" target="_blank">Attractions</a>
+
+                                        </li>
+                                    </ul>
+
+                            </div>
+                        </li>
+
+                        <!-- divider
+                        <li class="divider"></li>-->
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right dropdown-onhover">
+
+                        <!--Translate-->
+                            <li class="dropdown-short">
+                            <a data-toggle="dropdown" href="javascript:void(0);" class="dropdown-toggle"><i class="fa fa-flag"></i>&nbsp;<span class="hidden-sm hidden-md reverse">Translate</span><span class="caret"></span></a>
+                            <div class="dropdown-menu">
+                                 <ul id="menu-translate">
+                                        <li>
+                                        <a href="http://translate.google.com/translate?hl=en&amp;sl=en&amp;tl=en&amp;u=https://www.cityofchicago.org/city/en.html" class="lan" title="Click to view site in English. Disclaimer: The City of Chicago is not responsible for inaccurately translated content.">English</a>
+
+                                        <a class="lan" href="http://translate.google.com/translate?hl=en&amp;sl=en&amp;tl=es&amp;u=https://www.cityofchicago.org/city/en.html" title="Haga clic para ver el sitio en español. Descargo de responsabilidad: La ciudad de Chicago no es responsable por el contenido traducido erróneamente.">Español</a>
+
+                                        <a class="lan" href="http://translate.google.com/translate?hl=en&amp;sl=en&amp;tl=zh-CN&amp;u=https://www.cityofchicago.org/city/en.html" title="Click to view site in Chinese. Disclaimer: The City of Chicago is not responsible for inaccurately translated content.">中文</a>
+
+                                        <a href="http://translate.google.com/translate?hl=en&amp;sl=en&amp;tl=pl&amp;u=https://www.cityofchicago.org/city/en.html" class="lan" title="Kliknij aby zobaczyć stronę w chińskiej Zastrzeżenie: City of Chicago nie ponosi odpowiedzialności za niedokładnie przetłumaczonej treści.">Polski</a>
+
+                                        <a href="http://translate.google.com/translate?hl=en&amp;sl=en&amp;tl=ar&amp;u=https://www.cityofchicago.org/city/en.html" class="lan" id="arabic" title="انقر فوق لعرض في موقع المسؤولية الصينية: مدينة شيكاغو ليست مسؤولة عن محتوى ترجمة غير دقيقة.">عربي</a>
+
+
+                                        </li>
+                                    </ul>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+<style>.xnavbar[class*="navbar-fixed-"] {
+    opacity: 0.75;
+    -webkit-transition: opacity 0.35s ease-in-out;
+    -moz-transition: opacity 0.35s ease-in-out;
+    transition: opacity 0.35s ease-in-out;
+}
+.xnavbar[class*="navbar-fixed-"]:hover {opacity: 1;}
+</style>
+
+<script>
+    $( window ).load(function() {
+        $(document).on('click', '.navbar .dropdown-menu', function(e) {e.stopPropagation();});
     });
+
+    /*  $(document).ready( function() {
+      var docWidth = document.documentElement.offsetWidth;
+
+        [].forEach.call(
+          document.querySelectorAll('*'),
+          function(el) {
+            if (el.offsetWidth > docWidth) {
+              console.log(el);
+            }
+          }
+         );
+         });*/
 
     </script>
 
-    <script type="text/javascript" language="JavaScript">
-    $('#site-search').focus(function(){
-        if($(this).val() == 'Keyword') {
-            $(this).val('');
-            $(this).css('color','Black');
-        }
-    });
+     <script>
 
-    $('#site-search').blur(function(){
-        if($(this).val() == "") {
-            $(this).val('Keyword');
-            $(this).css('color','#809DB9');
-        } 
-    });
-    $('#Go').click(function(){
-        if($('#site-search').val() == "" || $('#site-search').val() == "Keyword") {
-            $('#site-search').focus();
-            return false;
-        }
-        $('#site-search').val($('#site-search').val().trim());  
 
-    });
+        //Start Fix MegaNavbar on scroll page
+        var navHeight = $('#main_navbar').offset().top;
+         //FixMegaNavbar(navHeight);
+         //$(window).bind('scroll', function() {FixMegaNavbar(navHeight);});
+
+        function FixMegaNavbar(navHeight) {
+            if (!$('#main_navbar').hasClass('navbar-fixed-bottom')) {
+                if ($(window).scrollTop() > navHeight) {
+                    $('#main_navbar').addClass('navbar-fixed-top')
+                    $('body').css({'margin-top': $('#main_navbar').height()+'px'});
+                    if ($('#main_navbar').parent('div').hasClass('container')) $('#main_navbar').children('div').addClass('container').removeClass('container-fluid');
+                    else if ($('#main_navbar').parent('div').hasClass('container-fluid')) $('#main_navbar').children('div').addClass('container-fluid').removeClass('container');
+                }
+                else {
+                    $('#main_navbar').removeClass('navbar-fixed-top');
+                    $('#main_navbar').children('div').addClass('container-fluid').removeClass('container');
+                    $('body').css({'margin-top': ''});
+                }
+            }
+        }
+        //End Fix MegaNavbar on scroll page
+
+        //Next code used to prevent unexpected menu close when using some components (like accordion, tabs, forms, etc), please add the next JavaScript to your page
+        $( window ).load(function() {
+            $(document).on('click', '.navbar .dropdown-menu', function(e) {e.stopPropagation();});
+        });
+
+        $(document).ready(function() {
+
+
+            //top level menu: if it has an url and is not on mobile view, then go to the url.
+            $(".nav-url").on("click",function() {
+
+                var isMobile =  $("#mobdiv").css("display") =="block";
+                if(!isMobile) {
+                    window.location = $(this).attr("href");
+                }
+            });
+
+            //handles to-top functionality
+            $("#toTop").css("display", "none");
+
+            $(window).scroll(function(){
+                if($(window).scrollTop() > 0){$("#toTop").fadeIn("slow");} else {$("#toTop").fadeOut("slow");}
+            });
+
+            $("#toTop").click(function(){
+                event.preventDefault();
+                $("html, body").animate({scrollTop:0},"slow");
+            });
+
+
+            //handles active menu
+            var parts = window.location.pathname.split('/');
+            var menu="";
+
+            var path = parts[1];
+            if(path=="content") {
+                path=parts[4];
+            }else {
+
+                path=parts[3];
+            }
+            console.log(path);
+
+            switch(path) {
+                case "progs": menu="menu-programs"; break;
+                case "progs.html": menu="menu-programs"; break;
+                case "depts": menu="menu-departments"; break;
+                case "depts.html": menu="menu-departments"; break;
+                case "ofinterest": menu="menu-people"; break;
+                case "ofinterest.html": menu="menu-people"; break;
+                case "about":menu="menu-about"; break;
+                case "about.html":menu="menu-about"; break;
+                case "chicagogovt.html":menu="menu-departments"; break;
+                default: menu=""; break;
+            }
+            if(menu!="") {
+                $("."+menu).addClass("active");
+            }
+
+
+        });
+
     </script>
-</div>
-
-<!-- Main Navigation Bar -->
 
 
-
-<div id="mgmenu1" class="mgmenu_container"><!-- Begin Mega Menu Container -->
-
-
-        
-        <ul class="mgmenu"><!-- Begin Mega Menu -->
-               
+    <!-- Banner -->
 
 
-            <li class="mgmenu_button">City Of Chicago</li><!-- Button (Mobile Devices) -->
-               
-            <li class="mgmenu-home"><span><a href="/city/en.html" title="The City of Chicago Official Site" class="top_menu">Home</a></span></li>
-            <!-- City Services-->
-            <li>
-                <a title="City Services" class="top_menu" href="/city/en/svcs/find.html">City Services</a>
-                <div class="dropdown_container dropdown_6columns">
-                    <div class="col_6">
-                        <a title="Most Popular 311 Services" href="/city/en/depts/311/supp_info/most_popular_311services.html">Most Popular 311 Services</a><br>
-                        <a title="Service Directory (A-Z)" href="/city/en/svcs/servicedirectory.html">Service Directory (A-Z)</a><br>
-                        <a title="Request a 311 Service" href="/city/en/depts/311/supp_info/request_service.html">Request a 311 Service</a>
-                    </div>
-                    <div class="col_6">
-                        <p class="menu-header">Most used Online Services</p><br>
-                        <a title="Apply for Building E-Permit" href="/city/en/depts/bldgs/provdrs/stand_plan/svcs/e-permits.html">Apply for Building E-Permit</a>
-                        <a title="Apply for Business Licenses" href="/city/en/depts/bacp/sbc/business_licensing.html">Apply for Business Licenses</a> 
-                        <a title="Apply for Job Opportunities" href="/city/en/depts/dhr/provdrs/emp/svcs/city_of_chicago_jobopportunities.html">Apply for Job Opportunities</a>
-                        <a title="Look up Building Violations" href="/city/en/depts/bldgs/provdrs/inspect/svcs/building_violationsonline.html">Look up Building Violations</a>
-                        <a title="Pay Parking Tickets" href="/city/en/depts/rev/provdrs/citation/svcs/pay_parking_and_red-lightticketson-line.html">Pay Parking Tickets</a>
-                        <a title="Pay Water Bill" href="/city/en/depts/rev/provdrs/water/svcs/paying_the_waterbill.html">Pay Water Bill</a>
-                        <a title="View Red-light Violation Video" href="/city/en/depts/rev/provdrs/citation/svcs/view_red-light_video.html">View Red-light Violation Video</a>              
-                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style >
+    .page-banner-text {
+            background-color:#013248;
+            min-height:180px;
+            padding-left:20px;
+            font-family:'Open Sans';
+            color:#FFFFFF;
+            padding-top:10px;
+            padding-bottom:10px;
+     }
+    .page-banner-text h1 {
+        text-transform:uppercase;
+        margin-top:0px;
+        font-size:320%;
+    }
+    .page-banner-text {
+            display:flex;
+            align-items: center;
+     }
+    .page-banner-text-overlay {
+            padding:5px;
+            xbackground-image: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+       }
+    @media (max-width: 960px) {
+    .page-banner-text {
+            height: auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
+     }
+      .page-banner-text h1 {
+            font-size:200%;
+
+        }
+
+        .page-banner-text h3 {
+            font-size:1em;
+            text-align:center;
+
+        }
+
+    }
+</style>
+
+
+
+<div class="container-fluid page-banner-text">
+    <div class="row" style="width:100%;margin:0px;">
+            <div class="col-xs-12 col-md-6">
+                <div class="page-banner-text-overlay">
+                    <h1>Public Health</h1>
+                    <h3>Healthy Chicago</h3>
                 </div>
+            </div>
+        </div>
+    </div>
 
-            </li>
-            <!-- End City Services-->
-            
-            <!-- People We Serve-->
-            <li>
-              
-                <a class="top_menu" title="People We Serve" href="/city/en/ofinterest.html">People We Serve</a>
-                <div class="dropdown_container dropdown_10columns">
-                    <div class="col_3">
-                        <a class="menu-header" title="Residents" href="/city/en/ofinterest/res.html">Residents</a>
-                        <a title="Children" href="/city/en/ofinterest/res/child.html">Children</a>
-                        <a title="Ex-Offenders" href="/city/en/ofinterest/res/exoffend.html">Ex-Offenders</a>
-                        <a title="Families" href="/city/en/ofinterest/res/fam.html">Families</a>
-                        <a title="Home Owners" href="/city/en/ofinterest/res/owner.html">Home Owners</a>
-                        <a title="Job Seekers" href="/city/en/ofinterest/res/job.html">Job Seekers</a>
-                        <a title="Motorists" href="/city/en/ofinterest/res/motorists.html">Motorists</a>
-                        <a title="Parents" href="/city/en/ofinterest/res/parent.html">Parents</a>
-                        <a title="People with Disabilities" href="/city/en/ofinterest/res/disab.html">People with Disabilities</a>
-                        <a title="Renters" href="/city/en/ofinterest/res/rent.html">Renters</a>
-                    </div>
-                    
-                    <div class="col_3">
-                        <a title="Seniors" href="/city/en/ofinterest/res/senior.html">Seniors</a>
-                        <a title="Students" href="/city/en/ofinterest/res/stud.html">Students</a>
-                        <a title="Veterans" href="/city/en/ofinterest/res/vet.html">Veterans</a>
-                        <a title="Volunteers" href="/city/en/ofinterest/res/vol.html">Volunteers</a>
-                        <a title="Youth/Teens" href="/city/en/ofinterest/res/teen.html">Youth/Teens</a>
-                        <p>&nbsp;</p>
-                        <a class="menu-header" title="Visitors" href="http://www.choosechicago.com/" target="_blank">Visitors</a> 
-                        <a href="http://www.choosechicago.com/" target="_blank">Choose Chicago</a>
-                    </div>
 
-                    <div class="col_3">
-                        <a class="menu-header" title="Businesses &amp; Professionals" href="/city/en/ofinterest/bus.html">Businesses &amp; Professionals</a>
-                        <a title="Artists &amp; Entertainers" href="/city/en/ofinterest/bus/art.html">Artists &amp; Entertainers</a>
-                        <a title="Builders" href="/city/en/ofinterest/bus/bldr.html">Builders</a>
-                        <a title="Caregivers" href="/city/en/ofinterest/bus/crgvr.html">Caregivers</a>
-                        <a title="Contractors" href="/city/en/ofinterest/bus/contract.html">Contractors</a>
-                        <a title="Cultural Organizations" href="/city/en/ofinterest/bus/cultural.html">Cultural Organizations</a>
-                        <a title="Developers" href="/city/en/ofinterest/bus/dvlpr.html">Developers</a>
-                        <a title="Educators" href="/city/en/ofinterest/bus/edu.html">Educators</a>
-                        <a title="Existing Businesses" href="/city/en/ofinterest/bus/exst_bus.html">Existing Businesses</a>
-                        <a title="Food Service Establishments" href="/city/en/ofinterest/bus/food.html">Food Service Establishments</a>
 
-                    </div>
 
-                    <div class="col_3">
-                        <a title="Health Professionals" href="/city/en/ofinterest/bus/health.html">Health Professionals</a>
-                        <a title="MBE/WBE/DBE" href="/city/en/ofinterest/bus/mwdbe.html">MBE/WBE/DBE</a>
-                        <a title="New Businesses" href="/city/en/ofinterest/bus/new_bus.html">New Businesses</a>
-                        <a title="Non-Profit Organizations" href="/city/en/ofinterest/bus/non_prof.html">Non-Profit Organizations</a>
-                        <a title="Retail Establishments" href="/city/en/ofinterest/bus/retail.html">Retail Establishments</a>
-                        <a title="Social Service Providers" href="/city/en/ofinterest/bus/social.html">Social Service Providers</a>
-                        <a title="Trades" href="/city/en/ofinterest/bus/trades.html">Trades</a>
-                        <a title="Vendors" href="/city/en/ofinterest/bus/vend.html">Vendors</a>
-                        <p>&nbsp;</p> 
-                        <a class="menu-header" title="Investor Relations" href="/city/en/depts/fin/provdrs/financial_policy.html">Investor Relations</a>                              
-                   
-                    </div>
-                </div>
-            </li>
-            <!-- End People We Serve-->
 
-            <!-- Programs and Initiatives-->
 
-             <li>
-               
-                 <a title="Programs &amp; Initiatives" class="top_menu" href="/city/en/progs.html">Programs &amp; Initiatives</a>
-                <div class="dropdown_container dropdown_6columns">
-                    <div class="col_6">
-                        <a title="Affordable Chicago" href="/city/en/progs/affordchic.html">Affordable Chicago</a>
-                        <a title="Consumer Protection" href="/city/en/progs/protect.html">Consumer Protection</a>
-                        <a title="Education" href="/city/en/progs/edu.html">Education</a>
-                        <a title="Environment" href="/city/en/progs/env.html">Environment</a>
-                        <a title="Freedom of Information (FOIA)" href="/city/en/progs/foia.html">Freedom of Information (FOIA)</a>
-                        <a title="Grants" href="/city/en/progs/grants.html">Grants</a>
-                        <a title="Health &amp; Wellness" href="/city/en/progs/health.html">Health &amp; Wellness</a>
-                        <a title="Housing" href="/city/en/progs/hous.html">Housing</a>
-                        <a title="Inspections, Permitting &amp; Licensing" href="/city/en/progs/inspectionspermitting.html">Inspections, Permitting &amp; Licensing</a>
-                    </div>
-                    <div class="col_6">
-                        <a title="Jobs" href="/city/en/progs/emp.html">Jobs</a>
-                        
-                        <a title="Municipal Marketing" href="/city/en/progs/municipal_marketing.html">Municipal Marketing</a>
-                        <a title="Recovery &amp; Reinvestment (Stimulus)" href="/city/en/progs/recovery_reinvest.html">Recovery &amp; Reinvestment (Stimulus)</a>
-                        <a title="Safety" href="/city/en/progs/safety.html">Safety</a>
-                        <a title="Taxes" href="/city/en/progs/tax.html">Taxes</a>
-                        <a title="Technology" href="/city/en/progs/tech.html">Technology</a>
-                        <a title="Transparency" href="/city/en/progs/transparency.html">Transparency</a>
-                        <a title="Transportation" href="/city/en/progs/trnsprt.html">Transportation</a>
-                    </div>
-                </div>
 
-            </li>
-            <!-- end Programs and Initiatives-->
 
-             <!-- Chicago Goverment-->
-                     <li>
-                         <a title="Chicago Government" class="top_menu" href="/city/en/chicagogovt.html">Chicago Government</a>
-                        <div class="dropdown_container dropdown_fullwidth">
-                            <div class="col_3">
-                                 <p class="menu-header">Elected Officials</p>
-                                <a title="Mayor's Office" href="/city/en/depts/mayor.html">Mayor's Office</a>
-                                <a title="City Clerk and Ordinances" href="http://www.chicityclerk.com/">City Clerk and Ordinances</a>
-                                <a title="City Treasurer" href="http://www.chicagocitytreasurer.com/">City Treasurer</a>
-                                <a title="City Council, Your Ward &amp; Aldermen" href="/city/en/about/council.html">City Council, Your Ward &amp; Aldermen</a>
-                                 
-                                <p>
-                                <br><strong><a title="Employee Directory" href="http://cityinfo.cityofchicago.org/PhoneBook">Employee Directory</a></strong>
-                                </p>
-                                <p>
-                                <strong><a title="Other City, County &amp; State Agencies" href="/city/en/about/other_ag.html">Other City, County &amp; State Agencies</a></strong>
-                                </p>
-                            </div>
-                    
-                            <div class="col_3">
-                                 <p class="menu-header">Departments</p>
-                                <a title="311 City Services" href="/city/en/depts/311.html">311 City Services</a>
-                                <a title="Administrative Hearings" href="/city/en/depts/ah.html">Administrative Hearings</a>
-                                <a title="Animal Care &amp; Control" href="/city/en/depts/cacc.html">Animal Care &amp; Control</a>
-                                <a title="Aviation" href="/city/en/depts/doa.html">Aviation</a>
-                                <a title="Budget &amp; Management" href="/city/en/depts/obm.html">Budget &amp; Management</a>
-                                <a title="Buildings" href="/city/en/depts/bldgs.html">Buildings</a>
-                                <a title="Bus. Affairs &amp; Consumer Protection" href="/city/en/depts/bacp.html">Bus. Affairs &amp; Consumer Protection</a>                                
-                                <a title="City of Chicago TV" href="/city/en/depts/tv.html">City of Chicago TV</a>
-                                <a title="Cultural Affairs &amp; Special Events" href="/city/en/depts/dca.html">Cultural Affairs &amp; Special Events</a>
-                                <a title="Emergency Mgmt &amp; Communications" href="/city/en/depts/oem.html">Emergency Mgmt &amp; Communications</a>
-                                <a title="Ethics" href="/city/en/depts/ethics.html">Ethics</a>
-                                         
-                            </div>
-
-                            <div class="col_3">
-                                <p>&nbsp;</p>
-                                <a title="Family &amp; Support Services" href="/city/en/depts/fss.html">Family &amp; Support Services</a>
-                                <a title="Finance" href="/city/en/depts/fin.html">Finance</a>
-                                <a title="Fire" href="/city/en/depts/cfd.html">Fire</a>
-                                <a title="Fleet and Facility Management" href="/city/en/depts/dgs.html">Fleet and Facility Management</a>                                 
-                                <a title="Human Relations" href="/city/en/depts/cchr.html">Human Relations</a>
-                                <a title="Human Resources" href="/city/en/depts/dhr.html">Human Resources</a>
-                                <a title="Independent Police Review Authority" href="/city/en/depts/ipra.html">Independent Police Review Authority</a>
-                                <a title="Innovation &amp; Technology" href="/city/en/depts/doit.html">Innovation &amp; Technology</a>
-                                <a title="Inspector General's Office" href="/city/en/depts/igo.html">Inspector General's Office</a>
-                                <a title="Law" href="/city/en/depts/dol.html">Law</a>
-                             <!--   <a title="Legislative Inspector General" href="/city/en/depts/olig.html">Legislative Inspector General</a> -->
-
-                            </div>
-
-                            <div class="col_3">
-                                <p>&nbsp;</p>
-                                <a title="License Appeal Commission" href="/city/en/depts/lac.html">License Appeal Commission</a>                             
-                                <a title="People with Disabilities" href="/city/en/depts/mopd.html">People with Disabilities</a>
-                                <a title="Planning &amp; Development" href="/city/en/depts/dcd.html">Planning &amp; Development</a>
-                                <a title="Police" href="/city/en/depts/cpd.html">Police</a>
-                                <a title="Police Board" href="/city/en/depts/cpb.html">Police Board</a>
-                                <a title="Procurement Services" href="/city/en/depts/dps.html">Procurement Services</a>
-                                <a title="Public Health" href="/city/en/depts/cdph.html">Public Health</a>
-                                <a title="Public Library" href="/city/en/depts/cpl.html">Public Library</a>
-                                <a title="Rules of the City of Chicago" href="/city/en/depts/dol/rules-and-regulations-portal.html">Rules of the City of Chicago</a>
-                                
-                                <a title="Streets &amp; Sanitation" href="/city/en/depts/streets.html">Streets &amp; Sanitation</a>
-                                <a title="Transportation" href="/city/en/depts/cdot.html">Transportation</a>
-                                <a title="Water Management" href="/city/en/depts/water.html">Water Management</a>                  
-                            </div>
                         </div>
-                    </li>
-
-             <!-- End Chicago Goverment-->
-
-       
-            <!-- About-->
-            <li>
-                <a title="About Chicago" class="top_menu" href="/city/en/about.html">About Chicago</a>
-                <div class="dropdown_container dropdown_2columns"> 
-                  
-                        <a title="Chicago History" href="/city/en/about/history.html">Chicago History</a>
-                        <a title="Facts &amp; Statistics" href="/city/en/about/facts.html">Facts &amp; Statistics</a>
-                        <a title="Attractions" href="http://www.choosechicago.com/deals/tours-and-attractions/" target="_blank">Attractions</a>
-                    
+                    </div>
                 </div>
-
-            </li>
-            <!-- End About -->
-
-
-      
-            
-
-
-          
-
-            
-
-
-               
-
-         
-
-
-
-        </ul><!-- End Mega Menu -->
-
-
-
-    </div><!-- End Mega Menu Container -->
-
-<!-- Banner -->
-
-
-
-
-
-
-<div id="header-image">
-    
-        <!-- <img src="/content/dam/city/depts/cdph/CDPH/Health_Main-banner2.png" width="960" height="220" border="1" alt="A bunch of children and adults by the lake in a park practicing mountain climbing" title="A bunch of children and adults by the lake in a park practicing mountain climbing"/> -->
-        <img src="/content/dam/city/depts/cdph/CDPH/Health_Main-banner2.png" border="1" alt="A bunch of children and adults by the lake in a park practicing mountain climbing" title="A bunch of children and adults by the lake in a park practicing mountain climbing"/>
-    
-</div>
 
                 <!-- Body of the Site -->
-                
-
-
-<div id="content-container">
-    <div id="left-column">
-        <div class="left-module"> 
-            
-
-
-
-<div class="thefacts">
+                <div class="container-fluid container-body">
+                     <div class="row">
+                        <div class="col-xs-12 page-body">
 
 
 
 
 
-<span class="thefacts-header white">Supporting Information Facts</span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="col-xs-12 container-dept-menu" >
+
+
+
+
+
+
+
+<div class="container-fluid department-menu" style="padding-left:0px;padding-right:0px;margin-bottom:10px;margin-left:-15px;margin-right:-15px;margin-top:0px">
+        <nav class="navbar brand-right city-department no-border-radius xs-height100 navbar-static-top" id="dept_navbar" role="navigation" style="margin-bottom:0px">
+            <div class="container-fluid" >
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#departmentNavBar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+
+
+                </div>
+
+                <div class="collapse navbar-collapse" id="departmentNavBar">
+                    <ul class="nav navbar-nav navbar-left dropdown-onhover">
+
+
+
+                        <a href="/content/city/en/depts/cdph.html" title="Public Health Home" class="navbar-link navbar-left">CDPH Home</a>
+
+
+                    <!--Start Menu Items-->
+
+
+
+
+                                    <li class="Short">
+                                        <a data-toggle="dropdown" href="javascript:void(0);" class="dropdown-toggle"><span>Quick Links</span><span class="caret"></span></a>
+                                        <div class="dropdown-menu">
+                                                <ul>
+<li><a title="Join Email List" href="https://visitor.r20.constantcontact.com/manage/optin/ea?v=001jsw_pnV76tUmSNJOdEkYeA%253D%253D" target="_blank" rel="noopener noreferrer">Join Email List</a></li>
+<li><a title="Birth/Death Certificates" href="http://www.cookcountyclerk.com/vitalrecords/Pages/default.aspx" target="_blank" rel="noopener noreferrer">Birth/Death Certificates</a></li>
+<li><a title="Compliance" href="/content/city/en/depts/cdph/provdrs/health_data_and_reports/svcs/compliance-office.html" target="_blank" rel="noopener noreferrer">Compliance</a></li>
+<li><a title="File a Complaint" href="https://servicerequest.cityofchicago.org/web_intake_chic/Controller" target="_blank" rel="noopener noreferrer">File a Complaint</a></li>
+<li><a title="Freedom of Information Request(FOIA)" href="/content/city/en/depts/cdph/supp_info/cdph_foia.html" target="_blank" rel="noopener noreferrer">Freedom of Information Request (FOIA)</a></li>
+<li><a title="Household Chemicals &amp; Computer Recycling" href="/content/city/en/depts/cdph/supp_info/inspections---permitting/household_chemicalscomputerrecyclingfacilityaccepteditems.html" target="_blank" rel="noopener noreferrer">Household Chemicals &amp; Computer Recycling</a></li>
+<li><a title="Notice of Privacy Practices" href="/content/city/en/depts/cdph/supp_info/notice_of_privacypractices.html" target="_blank" rel="noopener noreferrer">Notice of Privacy Practices</a></li>
+<li><a title="Rules and Regulations" href="/content/city/en/depts/dol/rules-and-regulations-portal.html" target="_blank" rel="noopener noreferrer">Rules and Regulations</a></li>
+</ul>
+                                        </div>
+                                    </li>
+
+
+
+
+
+
+
+
+                        <li> <a href="/content/city/en/depts/cdph/supp_info/data-reports/previously_releasedreports.html" class="navbar-link">Fact Sheets, Reports, Rules & Regulations</a></li>
+
+
+
+
+
+
+
+
+                                    <li class="Short">
+                                        <a data-toggle="dropdown" href="javascript:void(0);" class="dropdown-toggle"><span>Featured Campaigns</span><span class="caret"></span></a>
+                                        <div class="dropdown-menu">
+                                                <ul>
+<li><a title="#NoRoom4Stigma" href="/content/city/en/depts/cdph/supp_info/lgbt/-noroom4stigma.html" target="_blank" rel="noopener noreferrer">#NoRoom4Stigma</a></li>
+<li><a href="/content/dam/city/depts/cdph/tobacco_alchohol_and_drug_abuse/2016ChicagoOpioidReport.pdf" target="_blank" rel="noopener noreferrer">2016 Chicago Opioid Report</a></li>
+<li><a href="/content/dam/city/depts/cdph/tobacco_alchohol_and_drug_abuse/2016_JtCookCountyChgo_OpioidBrief_Jan302018.pdf" target="_blank" rel="noopener noreferrer">2016 Joint Cook County Chicago Opioid Brief</a></li>
+<li><a href="/content/city/en/depts/cdph/provdrs/healthychicago.html" target="_blank" rel="noopener noreferrer">Healthy Chicago 2.0</a></li>
+<li><a href="/content/city/en/depts/cdph/supp_info/clinical_health/healthy-chicago-survey.html" target="_blank" rel="noopener noreferrer">Healthy Chicago Survey</a></li>
+<li><a href="/content/city/en/depts/cdph/supp_info/health-protection/influenza.html" target="_blank" rel="noopener noreferrer">Influenza</a></li>
+<li><a href="/content/city/en/depts/cdph/provdrs/healthy_living/svcs/pharmaceutical-representative-license.html" target="_blank" rel="noopener noreferrer">Pharmaceutical Representative License</a></li>
+<li><a href="https://www.stopzikachicago.org/" target="_blank" rel="noopener noreferrer">Stop Zika</a></li>
+</ul>
+                                        </div>
+                                    </li>
+
+
+
+
+
+
+
+                    <!--End Menu Items-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </ul>
+
+                        <ul class="nav navbar-nav navbar-right dropdown-onhover">
+
+
+
+
+
+
+
+<li class="dropdown-grid no-shadow no-border-radius">
+    <a data-toggle="dropdown" href="javascript:;" class="dropdown-toggle" aria-expanded="true"><i class="fa fa-envelope"></i>&nbsp;<span class="hidden-sm">Contact us</span><span class="caret"></span></a>
+    <div class="dropdown-grid-wrapper">
+        <ul class="dropdown-menu  col-xs-12 col-sm-8 no-padding"  role="menu" >
+
+            <li class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row">
+                    <div class="embed-responsive embed-responsive-4by3">
+                    <iframe class="embed-responsive-item" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCP2j0sQ0ihmBraJhd1sOTtQSDfpghpFXs&q=333 S. State Street+Chicago+IL&zoom=13">
+                    </iframe>
+                    </div>
+                </div>
+            </li>
+            <li class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 ">
+                        <h3 style="border-bottom: 1px solid #FFF; margin-bottom: 10px;"><i class="fa fa-envelope"></i> Contact us</h3>
+                        <div class="row">
+                            <address class="col-xs-12">
+                                <h3><strong>Public Health.</strong><br></h3>
+                                333 S. State Street, Room 200<br>
+                                Chicago, IL 60604 (For 24-hour assistance or to report a public health issue, call 311.)<br>
+                                <br>
+                                  <abbr title="Phone">Phone: </abbr>312.747.9884<br>
+
+
+                                  <abbr title="TTY">TTY: </abbr>312.747.2374<br>
+
+
+
+
+
+                            </address>
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</li>
+                        </ul>
+
+
+                </div>
+            </div>
+        </nav>
+
+    </div>
+
+
+
+
+</div></div></div>
+
+
+
+<div class="container-fluid twocolumns-new">
+    <div class="row">
+        <div class="col-sm-12 col-md-9 page-center">
+
+
+
+
+
+
+
+
+
+
+<div class="row breadcrubms">
+    <div class="col-xs-12 hidden-xs">
+        <ol class="breadcrumb">
+<li ><a href="/content/city/en.html">Home</a></li><li ><a href="/content/city/en/depts.html">Departments</a></li><li ><a href="/content/city/en/depts/cdph.html">Public Health</a></li><li ><a href="/content/city/en/depts/cdph/supp_info.html">Supporting Info</a></li><li class='active'>2018 Board of Health Meetings</li>
+        </ol>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="row page-heading-container">
+    <div class="col-xs-12">
+        <h1 class="page-heading">2018 Board of Health Meetings</h1>
+    </div>
+    </div>
+
+
+
+
+        <div class="container-fluid page-full-description-above">
+             <div class="row">
+                <div class="col-xs-12">
+                    <p>The Chicago Board of Health is scheduled to meet on the third Wednesday of each month from 9:00am-10:30am. The meetings are held at the Chicago Department of Public Health, DePaul Center, 333 S. State Street, 2nd Floor Board Room. The specific dates, by month, for 2018 are:</p>
+<p><a title="Board of Health Agenda - Jan. 17, 2018" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Agenda_Jan172018.pdf" target="_blank" rel="noopener noreferrer">January 17</a></p>
+<ul>
+<li><a title="Board of Health Minutes - Jan. 17, 2018" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Minutes_Jan172018.pdf" target="_blank" rel="noopener noreferrer">Minutes</a></li>
+</ul>
+<p><a title="Board of Health Agenda - Feb. 21, 2018" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Agenda_Feb212018.pdf" target="_blank" rel="noopener noreferrer">February 21</a></p>
+<p>March 21</p>
+<p>April 18</p>
+<p>May 16</p>
+<p>June 20</p>
+<p>July 18</p>
+<p>August 15</p>
+<p>September 19</p>
+<p>October 17</p>
+<p>November 21</p>
+<p>December 19</p>
+                </div>
+            </div>
+        </div>
+
+
+
+    <div class="top-images">
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="clear: both">
+
+
+
+
+
+
+
 
 
 </div>
 
 
-<div class="findservices">
+
+        </div>
+        <div class="col-sm-12 col-md-3 page-right">
 
 
-   
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="/etc/designs/city/css/dcmegamenu.css"/>
-    <link rel="stylesheet" type="text/css" href="/etc/designs/city/css/services-menu.css"/>
-</head>
-
-<body style="background-color: rgb(215, 234, 244)">
-<span class="thefacts-header white">City Services</span>
-<p class="dotted-white"></p>
-
-    <div class="menucontainer">
-    <h3>I Want To...</h3>
-    <ul class="topmenu" id="css3menu1" style="padding:4px;">
-        <li class="topmenu">
-        
-        <a title="Apply For" style="width: 170px;" href="/city/en/svcs/iwantto.apply_for.html">Apply For</a>        
-  
-      <ul class="city-left-nav-overlay-container"> 
-      <li class="subfirst"><a title="A to Z List of Services" href="/city/en/svcs/iwantto.apply_for.html" style="text-align: center; margin-bottom: 3px">A to Z List of Services</a></li>
-      
-                   
-              <li class="subfirst"><a title="Bid Job Opportunities " href="/content/city/en/depts/dhr/provdrs/emp/svcs/apply_for_bid_opportunities-forcityofchicagoemployeesandbargaini.html"><span>Bid Job Opportunities </span></a></li>
-                      
-              <li class="subfirst"><a title="Buildings E-Permits" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/e-permits.html"><span>Buildings E-Permits</span></a></li>
-                      
-              <li class="subfirst"><a title="Business Licenses" href="/content/city/en/depts/bacp/provdrs/bus/svcs/apply_for_a_businesslicenseonline.html"><span>Business Licenses</span></a></li>
-                      
-              <li class="subfirst"><a title="Chicago Housing Authority (CHA) Housing" href="/content/city/en/depts/other/provdrs/cha/svcs/find_housing_information.html"><span>Chicago Housing Authority (CHA) Housing</span></a></li>
-                      
-              <li class="subfirst"><a title="Internships and Volunteer Programs" href="/content/city/en/depts/dhr/provdrs/emp/svcs/internships.html"><span>Internships and Volunteer Programs</span></a></li>
-                      
-              <li class="subfirst"><a title="Job Opportunities at City of Chicago" href="/content/city/en/depts/dhr/provdrs/emp/svcs/city_of_chicago_jobopportunities.html"><span>Job Opportunities at City of Chicago</span></a></li>
-                      
-              <li class="subfirst"><a title="Link Card, Food Stamps and Medical Assistance" href="/content/city/en/depts/other/provdrs/soi/svcs/apply_for_link_cardfoodstampsandmedicalassistance.html"><span>Link Card, Food Stamps and Medical Assistance</span></a></li>
-                      
-              <li class="subfirst"><a title="Permit Parking Zone Lookup" href="/content/city/en/depts/other/provdrs/clerk/svcs/parking_permit_zonelookup.html"><span>Permit Parking Zone Lookup</span></a></li>
-                      
-              <li class="subfirst"><a title="WIC (Women Infant Children program)" href="/content/city/en/depts/cdph/provdrs/health_promotion/svcs/apply_for_wic_.html"><span>WIC (Women Infant Children program)</span></a></li>
-         
-        <div style="text-align: center; margin-bottom: 10px"></div>
-        
-        
-         </ul>
-                
-   </li>
-    
-    
-    <li class="topmenu">
-        <a title="Check Status Of" style="width: 170px;" href="/city/en/svcs/iwantto.check_status_of.html">Check Status Of</a>
-  
-      <ul class="city-left-nav-overlay-container"> 
-      <li class="subfirst"><a title="A to Z List of Services" href="/city/en/svcs/iwantto.check_status_of.html" style="text-align: center; margin-bottom: 3px">A to Z List of Services</a></li> 
-                   
-              <li class="subfirst"><a title="Abandoned Vehicle Complaint" href="/content/city/en/depts/streets/provdrs/traffic/svcs/abndvhclstatus.html"><span>Abandoned Vehicle Complaint</span></a></li> 
-                      
-              <li class="subfirst"><a title="Building Permit Status" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/building_permit_status.html"><span>Building Permit Status</span></a></li> 
-                      
-              <li class="subfirst"><a title="Building Violations" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/building_violationsonline.html"><span>Building Violations</span></a></li> 
-                      
-              <li class="subfirst"><a title="Building-Related Court Actions" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/building-relatedcourtactions.html"><span>Building-Related Court Actions</span></a></li> 
-                      
-              <li class="subfirst"><a title="Easy Building Permit Applications" href="/content/city/en/depts/bldgs/provdrs/permit_proc/svcs/applications.html"><span>Easy Building Permit Applications</span></a></li> 
-                      
-              <li class="subfirst"><a title="HomeMod - My Application status" href="/content/city/en/depts/mopd/provdrs/hous/svcs/accessible_home_modificationprogram-ages0-5911.html"><span>HomeMod - My Application status</span></a></li> 
-                      
-              <li class="subfirst"><a title="Parking, Red Light, or Speed Ticket(s)" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/pay_parking_and_red-lightticketson-line.html"><span>Parking, Red Light, or Speed Ticket(s)</span></a></li> 
-                      
-              <li class="subfirst"><a title="Permit for Business ID and Advertising Signs" href="/content/city/en/depts/dcd/provdrs/admin/svcs/business_identificationandadvertisingsigns.html"><span>Permit for Business ID and Advertising Signs</span></a></li> 
-                      
-              <li class="subfirst"><a title="Service Request for Street Light Out" href="/content/city/en/depts/cdot/provdrs/traffic_signals_andstreetlights/svcs/bldgviolstatus.html"><span>Service Request for Street Light Out</span></a></li> 
-                      
-              <li class="subfirst"><a title="Vacant Property" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/check_status_of_vacantproperty.html"><span>Vacant Property</span></a></li> 
-          
-        
-        <div style="text-align: center; margin-bottom: 10px"></div>
-        
-         </ul>
-                
-   </li>
- 
-     
-    <li class="topmenu">
-        <a title="Find/Get" style="width: 170px;" href="/city/en/svcs/iwantto.find_get.html">Find/Get</a>
-          
-      <ul class="city-left-nav-overlay-container">
-      <li class="subfirst"><a title="A to Z List of Services" href="/city/en/svcs/iwantto.find_get.html" style="text-align: center; margin-bottom: 3px">A to Z List of Services</a></li> 
-
-                   
-              <li class="subfirst"><a title="Auto Pound Locations" href="/content/city/en/depts/streets/provdrs/traffic/svcs/auto_pound_locations.html"><span>Auto Pound Locations</span></a></li>
-                      
-              <li class="subfirst"><a title="Bids, RFP, RFQ, RFI, Small Order" href="/content/city/en/depts/dps/provdrs/contract/svcs/current_bid_opportunities.html"><span>Bids, RFP, RFQ, RFI, Small Order</span></a></li>
-                      
-              <li class="subfirst"><a title="Business License Look-up" href="/content/city/en/depts/bacp/provdrs/bus/svcs/business_licenselook-up.html"><span>Business License Look-up</span></a></li>
-                      
-              <li class="subfirst"><a title="Chicago Building Code" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/chicago_buildingcodeonline.html"><span>Chicago Building Code</span></a></li>
-                      
-              <li class="subfirst"><a title="Drivers License or State Id" href="/content/city/en/depts/other/provdrs/soi/svcs/get_a_driver_s_licenseorastateid.html"><span>Drivers License or State Id</span></a></li>
-                      
-              <li class="subfirst"><a title="Free STI/HIV/AIDS Testing and Treatment" href="/content/city/en/depts/cdph/provdrs/health_services/svcs/get_yourself_evaluatedforstihivaids.html"><span>Free STI/HIV/AIDS Testing and Treatment</span></a></li>
-                      
-              <li class="subfirst"><a title="Maps - GIS/Data" href="/content/city/en/depts/doit/provdrs/gis/svcs/maps---gis-data.html"><span>Maps - GIS/Data</span></a></li>
-                      
-              <li class="subfirst"><a title="Permit Parking Zone Lookup" href="/content/city/en/depts/other/provdrs/clerk/svcs/parking_permit_zonelookup.html"><span>Permit Parking Zone Lookup</span></a></li>
-                      
-              <li class="subfirst"><a title="Vital Records from the Cook County Clerk's Office" href="/content/city/en/depts/other/provdrs/ccco/svcs/get_vital_records.html"><span>Vital Records from the Cook County Clerk's Office</span></a></li>
-                      
-              <li class="subfirst"><a title="Ward & Alderman by Address" href="/content/city/en/depts/other/provdrs/clerk/svcs/find_your_ward_andalderman.html"><span>Ward & Alderman by Address</span></a></li>
-         
-        
-        <div style="text-align: center; margin-bottom: 10px"></div>
-        
-         </ul>
-                
-   </li> 
-   
- 
-    <li class="topmenu">
-        <a title="Pay For/Buy" style="width: 170px;" href="/city/en/svcs/iwantto.pay_for_buy.html">Pay For/Buy</a>
-  
-      <ul class="city-left-nav-overlay-container"> 
-      <li class="subfirst"><a title="A to Z List of Services" href="/city/en/svcs/iwantto.pay_for_buy.html" style="text-align: center; margin-bottom: 3px">A to Z List of Services</a></li> 
-
-                   
-              <li class="subfirst"><a title="Administrative Hearing Fines" href="/content/city/en/depts/fin/provdrs/payment_processingdivision/svcs/QuickPay.html"><span>Administrative Hearing Fines</span></a></li>
-                      
-              <li class="subfirst"><a title="Business License Renewal" href="/content/city/en/depts/bacp/provdrs/bus/svcs/renew_your_businesslicenseonline.html"><span>Business License Renewal</span></a></li>
-                      
-              <li class="subfirst"><a title="Business Taxes" href="/content/city/en/depts/fin/provdrs/tax_division/svcs/pay_and_file_yourtaxesonline.html"><span>Business Taxes</span></a></li>
-                      
-              <li class="subfirst"><a title="CTA Transit Customer Fare Cards" href="/content/city/en/depts/other/provdrs/cta/svcs/customer_fares_chartsandpurchasectafarecards.html"><span>CTA Transit Customer Fare Cards</span></a></li>
-                      
-              <li class="subfirst"><a title="Calculate the Cost of a Permit" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/permit_fee_calculator.html"><span>Calculate the Cost of a Permit</span></a></li>
-                      
-              <li class="subfirst"><a title="City of Chicago Photography" href="/content/city/en/depts/dgs/provdrs/asset_management/svcs/purchase_city_photography.html"><span>City of Chicago Photography</span></a></li>
-                      
-              <li class="subfirst"><a title="Parking, Red Light, or Speed Ticket(s)" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/pay_parking_and_red-lightticketson-line.html"><span>Parking, Red Light, or Speed Ticket(s)</span></a></li>
-                      
-              <li class="subfirst"><a title="Surplus, Vehicles, Auctions" href="/content/city/en/depts/dps/provdrs/auction/svcs/city_of_chicago_onlineauctions.html"><span>Surplus, Vehicles, Auctions</span></a></li>
-                      
-              <li class="subfirst"><a title="Vehicle and Residential Permit Parking Stickers" href="/content/city/en/depts/other/provdrs/clerk/svcs/vehicle_sticker_andresidentialpermitparkingsales.html"><span>Vehicle and Residential Permit Parking Stickers</span></a></li>
-                      
-              <li class="subfirst"><a title="View Automated Speed Enforcement Video" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_automated_speedenforcementvideo.html"><span>View Automated Speed Enforcement Video</span></a></li>
-         
-        
-         <div style="text-align: center; margin-bottom: 10px"></div>
-         
-         </ul>
-                
-   </li>
-
-    <li class="topmenu">
-        <a title="Register" style="width: 170px;" href="/city/en/svcs/iwantto.register.html">Register</a>
-          
-      <ul class="city-left-nav-overlay-container"> 
-      <li class="subfirst"><a title="A to Z List of Services" href="/city/en/svcs/iwantto.register.html" style="text-align: center; margin-bottom: 3px">A to Z List of Services</a></li> 
-
-                   
-              <li class="subfirst"><a title="Discrimination Complaint" href="/content/city/en/depts/cchr/provdrs/discrim/svcs/file_a_discriminationcomplaint.html"><span>Discrimination Complaint</a></span></li>
-                      
-              <li class="subfirst"><a title="Dog Registration" href="/content/city/en/depts/other/provdrs/clerk/svcs/dog_registration.html"><span>Dog Registration</a></span></li>
-                      
-              <li class="subfirst"><a title="Extreme Weather Notification" href="/content/city/en/depts/oem/provdrs/emerg_mang/svcs/sign_up_for_extremeweathernotification.html"><span>Extreme Weather Notification</a></span></li>
-                      
-              <li class="subfirst"><a title="For Park District Programs" href="/content/city/en/depts/other/provdrs/cpd/svcs/register_for_parkdistrictprogramsonline.html"><span>For Park District Programs</a></span></li>
-                      
-              <li class="subfirst"><a title="HIV/AIDS Online Courses" href="/content/city/en/depts/cdph/provdrs/health_services/svcs/register_for_freestihivaidsonlinecourses.html"><span>HIV/AIDS Online Courses</a></span></li>
-                      
-              <li class="subfirst"><a title="Independent Living Skills Program" href="/content/city/en/depts/mopd/provdrs/resource/svcs/ilp-independent_livingprogram.html"><span>Independent Living Skills Program</a></span></li>
-                      
-              <li class="subfirst"><a title="MPEA Airport Tax" href="/content/city/en/depts/bacp/provdrs/vehic/svcs/mpea_online_permitapplicationform.html"><span>MPEA Airport Tax</a></span></li>
-                      
-              <li class="subfirst"><a title="Register a Cottage Food Operation" href="/content/city/en/depts/cdph/provdrs/inspections_and_permitting/svcs/register_a_cottagefoodoperation.html"><span>Register a Cottage Food Operation</a></span></li>
-         
-         
-         <div style="text-align: center; margin-bottom: 10px"></div>
-         
-         </ul>
-                
-   </li>
-
-    <li class="topmenu">
-        <a title="Report/File" style="width: 170px;" href="/city/en/svcs/iwantto.report_file.html">Report/File</a>
-          
-      <ul class="city-left-nav-overlay-container"> 
-      <li class="subfirst"><a title="A to Z List of Services" href="/city/en/svcs/iwantto.report_file.html" style="text-align: center; margin-bottom: 3px">A to Z List of Services</a></li> 
-
-                   
-              <li class="subfirst"><a title="AIC (Annual Inspection Certification) Inspections" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/annual_inspectioncertificationaicprogramupdate.html"><span>AIC (Annual Inspection Certification) Inspections</span></a></li>
-                      
-              <li class="subfirst"><a title="Abandoned Vehicle" href="/content/city/en/depts/streets/provdrs/traffic/svcs/abandoned_vehicles.html"><span>Abandoned Vehicle</span></a></li>
-                      
-              <li class="subfirst"><a title="Cab Feedback" href="/content/city/en/depts/bacp/provdrs/consumer/svcs/consumer_cab_complaint.html"><span>Cab Feedback</span></a></li>
-                      
-              <li class="subfirst"><a title="Claim for Vehicle or Property Damage" href="/content/city/en/depts/other/provdrs/clerk/svcs/file_a_claim.html"><span>Claim for Vehicle or Property Damage</span></a></li>
-                      
-              <li class="subfirst"><a title="Complaint Against a Chicago Police Officer" href="/content/city/en/depts/ipra/provdrs/investigate/svcs/report_an_incidentagainstachicagopoliceofficer.html"><span>Complaint Against a Chicago Police Officer</span></a></li>
-                      
-              <li class="subfirst"><a title="Consumer Complaint Online" href="/content/city/en/depts/bacp/provdrs/pros_adj/svcs/file_a_citizen_complaintonline.html"><span>Consumer Complaint Online</span></a></li>
-                      
-              <li class="subfirst"><a title="Economic Disclosure, Affidavit, Online EDS" href="/content/city/en/depts/dps/provdrs/comp/svcs/economic_disclosurestatementseds.html"><span>Economic Disclosure, Affidavit, Online EDS</span></a></li>
-                      
-              <li class="subfirst"><a title="Pothole in the Street" href="/content/city/en/depts/cdot/provdrs/street/svcs/report_a_pot_holeinstreet.html"><span>Pothole in the Street</span></a></li>
-                      
-              <li class="subfirst"><a title="Stray Animal in Neighborhood" href="/content/city/en/depts/cacc/provdrs/animal_control_andrescue/svcs/report_a_stray_animal.html"><span>Stray Animal in Neighborhood</span></a></li>
-         
-        
-         <div style="text-align: center; margin-bottom: 10px"></div>
-         
-         </ul>
-                
-   </li>
 
 
-    <li class="topmenu">
-        <a title="Request" style="width: 170px;" href="/city/en/svcs/iwantto.request.html">Request</a>
-          
-      <ul class="city-left-nav-overlay-container"> 
-      <li class="subfirst"><a title="A to Z List of Services" href="/city/en/svcs/iwantto.request.html" style="text-align: center; margin-bottom: 3px">A to Z List of Services</a></li> 
 
-                   
-              <li class="subfirst"><a title="Building Inspection" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/request_an_inspection.html"><span>Building Inspection</span></a></li>
-                      
-              <li class="subfirst"><a title="Garbage Cart" href="/content/city/en/depts/streets/provdrs/rodent/svcs/garbage_cart_distribution.html"><span>Garbage Cart</span></a></li>
-                      
-              <li class="subfirst"><a title="Graffiti Removal Services" href="/content/city/en/depts/streets/provdrs/graffiti_blasters/svcs/mayor_daley_s_graffitiblasters.html"><span>Graffiti Removal Services</span></a></li>
-                      
-              <li class="subfirst"><a title="Parking Ticket Photos" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_parking_ticketpictures.html"><span>Parking Ticket Photos</span></a></li>
-                      
-              <li class="subfirst"><a title="Request a Bike Map" href="/content/city/en/depts/cdot/provdrs/bike/svcs/request_a_bike_map.html"><span>Request a Bike Map</span></a></li>
-                      
-              <li class="subfirst"><a title="Residential Garbage Collection" href="/content/city/en/depts/streets/provdrs/streets_san/svcs/residential_garbagecollection.html"><span>Residential Garbage Collection</span></a></li>
-                      
-              <li class="subfirst"><a title="Restaurant Inspection" href="/content/city/en/depts/cdph/provdrs/inspections_and_permitting/svcs/food_protection_program.html"><span>Restaurant Inspection</span></a></li>
-                      
-              <li class="subfirst"><a title="View Red Light Video" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_red-light_video.html"><span>View Red Light Video</span></a></li>
-         
-         
-         <div style="text-align: center; margin-bottom: 10px"></div>
-         
-         </ul>
-                
-   </li>
 
-    <li class="toplast">
-        <a title="Sign up for/Volunteer" style="width: 170px;" href="/city/en/svcs/iwantto.sign_up_for_volunteer.html">Sign up for/Volunteer</a>
-          
-      <ul class="city-left-nav-overlay-container"> 
-      <li class="subfirst"><a title="A to Z List of Services" href="/city/en/svcs/iwantto.sign_up_for_volunteer.html" style="text-align: center; margin-bottom: 3px">A to Z List of Services</a></li> 
 
-                   
-              <li class="subfirst"><a title="Alerts from NotifyChicago" href="/content/city/en/depts/oem/provdrs/alertchicago/svcs/notifychicago.html"><span>Alerts from NotifyChicago</span></a></li>
-                      
-              <li class="subfirst"><a title="CAPS Brochures & Information" href="/content/city/en/depts/cpd/provdrs/police_services/svcs/caps_brochure_request.html"><span>CAPS Brochures & Information</span></a></li>
-                      
-              <li class="subfirst"><a title="Community Emergency Response Team (CERT)" href="/content/city/en/depts/oem/provdrs/edu/svcs/become_a_cert_volunteer.html"><span>Community Emergency Response Team (CERT)</span></a></li>
-                      
-              <li class="subfirst"><a title="Food Alerts and Recalls" href="/content/city/en/depts/cdph/provdrs/inspections_and_permitting/svcs/sign_up_to_receivefoodalertsandrecalls.html"><span>Food Alerts and Recalls</span></a></li>
-                      
-              <li class="subfirst"><a title="Internships and Volunteer Programs" href="/content/city/en/depts/dhr/provdrs/emp/svcs/internships.html"><span>Internships and Volunteer Programs</span></a></li>
-                      
-              <li class="subfirst"><a title="One Good Deed Chicago Volunteer Opportunities" href="/content/city/en/depts/mayor/provdrs/special_prog/svcs/one_good_deed_chicago.html"><span>One Good Deed Chicago Volunteer Opportunities</span></a></li>
-                      
-              <li class="subfirst"><a title="Voluntary Disclosure" href="/content/city/en/depts/fin/provdrs/tax_division/svcs/apply_for_voluntarydisclosureofchicagobusinesstaxes.html"><span>Voluntary Disclosure</span></a></li>
-         
-        
-         <div style="text-align: center; margin-bottom: 10px"></div>
-         
-         </ul>
-                
-   </li>        
-          
-    </ul>
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid thefacts">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default panel-thefacts">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-sticky-note-o" aria-hidden="true"></i>&nbsp;Supporting Information Facts</h3>
+                </div>
+                <div class="panel-body">
+
+
+
+
+
+
+                            <h4 class="white">Department:</h4>
+
+                            <ul class="no-bullets no-indent blue">
+
+
+
+                                            <li class="thefacts-levelone"><a href="/content/city/en/depts/cdph.html">Public Health</a></li>
+
+
+
+
+
+
+
+                                            <li class="thefacts-leveltwo">
+                                                <a href="/content/city/en/depts/cdph/provdrs/health_data_and_reports.html">Health Data and Reports</a>
+                                            </li>
+
+
+
+                            </ul>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<p style="margin-top: 1px" ></p>
 
-</body>
-</html>
 
-  
+<!--
 
 
 
-<!-- search-services-->
- </div>
-
-
-<div class="ofinteresttobuttons"><!-- 
 
 
 <a href="/city/en/ofinterest/bus.html" title="Businesses & Professionals">
@@ -957,128 +1383,386 @@ a.lan:hover, a.lan:active {
 
 <a href="http://explorechicago.org" title="Visitors" target="_blank">
     <img class="hover-button" src="/etc/designs/city/images/buttons/for-visitors.gif" width="175" height="30" border="0" alt="Visitors" name="findservicesforvisitors" />
-</a> 
---></div>
+</a>
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid find-services-panel">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>&nbsp;I Want To</h3>
+                </div>
+                <div class="panel-body">
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="applyforheading">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#applyfor" aria-expanded="true" aria-controls="applyfor">
+         Apply For
+        </a>
+      </h4>
+    </div>
+    <div id="applyfor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="applyforheading">
+      <div class="panel-body">
+        <ul class="list-group i-list-services">
+                <li class="list-group-item"><a title="Bid Job Opportunities " href="/content/city/en/depts/dhr/provdrs/emp/svcs/apply_for_bid_opportunities-forcityofchicagoemployeesandbargaini.html"><span>Bid Job Opportunities </span></a></li><li class="list-group-item"><a title="Buildings E-Permits" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/e-permits.html"><span>Buildings E-Permits</span></a></li><li class="list-group-item"><a title="Business Licenses" href="/content/city/en/depts/bacp/provdrs/bus/svcs/apply_for_a_businesslicenseonline.html"><span>Business Licenses</span></a></li><li class="list-group-item"><a title="Chicago Housing Authority (CHA) Housing" href="/content/city/en/depts/other/provdrs/cha/svcs/find_housing_information.html"><span>Chicago Housing Authority (CHA) Housing</span></a></li><li class="list-group-item"><a title="Internships and Volunteer Programs" href="/content/city/en/depts/dhr/provdrs/emp/svcs/internships.html"><span>Internships and Volunteer Programs</span></a></li><li class="list-group-item"><a title="Job Opportunities at City of Chicago" href="/content/city/en/depts/dhr/provdrs/emp/svcs/city_of_chicago_jobopportunities.html"><span>Job Opportunities at City of Chicago</span></a></li><li class="list-group-item"><a title="Link Card, Food Stamps and Medical Assistance" href="/content/city/en/depts/other/provdrs/soi/svcs/apply_for_link_cardfoodstampsandmedicalassistance.html"><span>Link Card, Food Stamps and Medical Assistance</span></a></li><li class="list-group-item"><a title="Permit Parking Zone Lookup" href="/content/city/en/depts/other/provdrs/clerk/svcs/parking_permit_zonelookup.html"><span>Permit Parking Zone Lookup</span></a></li><li class="list-group-item"><a title="WIC (Women Infant Children program)" href="/content/city/en/depts/cdph/provdrs/healthymothers_and_babies/svcs/apply_for_wic_.html"><span>WIC (Women Infant Children program)</span></a></li>
+            <li class="list-group-item"><a title="More services" href="/city/en/svcs/iwantto.apply_for.html"><strong>More services</strong></a></li>
+
+        </ul>
+      </div>
+    </div>
+  </div><!--End Apply For-->
+
+
+
+
+   <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="statusOfheading">
+      <h4 class="panel-title">
+
+             <a role="button" data-toggle="collapse" data-parent="#accordion" href="#checkstatusOf" aria-expanded="true" aria-controls="checkstatusOf">Check Status Of</a>
+
+      </h4>
+    </div>
+    <div id="checkstatusOf" class="panel-collapse collapse" role="tabpanel" aria-labelledby="statusOfheading">
+      <div class="panel-body">
+        <ul class="list-group i-list-services">
+            <li class="list-group-item"><a title="Abandoned Vehicle Complaint" href="/content/city/en/depts/streets/provdrs/traffic/svcs/abndvhclstatus.html"><span>Abandoned Vehicle Complaint</span></a></li><li class="list-group-item"><a title="Building Permit Status" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/building_permit_status.html"><span>Building Permit Status</span></a></li><li class="list-group-item"><a title="Building Violations" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/building_violationsonline.html"><span>Building Violations</span></a></li><li class="list-group-item"><a title="Building-Related Court Actions" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/building-relatedcourtactions.html"><span>Building-Related Court Actions</span></a></li><li class="list-group-item"><a title="Easy Building Permit Applications" href="/content/city/en/depts/bldgs/provdrs/permit_proc/svcs/applications.html"><span>Easy Building Permit Applications</span></a></li><li class="list-group-item"><a title="HomeMod - My Application status" href="/content/city/en/depts/mopd/provdrs/hous/svcs/accessible_home_modificationprogram-ages0-5911.html"><span>HomeMod - My Application status</span></a></li><li class="list-group-item"><a title="Parking, Red Light, or Speed Ticket(s)" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/pay_parking_and_red-lightticketson-line.html"><span>Parking, Red Light, or Speed Ticket(s)</span></a></li><li class="list-group-item"><a title="Permit for Business ID and Advertising Signs" href="/content/city/en/depts/dcd/provdrs/admin/svcs/business_identificationandadvertisingsigns.html"><span>Permit for Business ID and Advertising Signs</span></a></li><li class="list-group-item"><a title="Service Request for Street Light Out" href="/content/city/en/depts/cdot/provdrs/traffic_signals_andstreetlights/svcs/bldgviolstatus.html"><span>Service Request for Street Light Out</span></a></li><li class="list-group-item"><a title="Vacant Property" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/check_status_of_vacantproperty.html"><span>Vacant Property</span></a></li>
+            <li class="list-group-item"><a title="More services" href="/city/en/svcs/iwantto.check_status_of.html"><strong>More services</strong></a></li>
+
+                </ul>
+      </div>
+    </div>
+  </div><!--Status Of-->
+
+
+   <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="findGetheading">
+      <h4 class="panel-title">
+
+             <a role="button" data-toggle="collapse" data-parent="#accordion" href="#findGet" aria-expanded="true" aria-controls="findGet">Find/Get</a>
+
+
+      </h4>
+    </div>
+    <div id="findGet" class="panel-collapse collapse" role="tabpanel" aria-labelledby="findGetheading">
+      <div class="panel-body">
+        <ul class="list-group i-list-services">
+                <li class="list-group-item"><a title="Auto Pound Locations" href="/content/city/en/depts/streets/provdrs/traffic/svcs/auto_pound_locations.html"><span>Auto Pound Locations</span></a></li><li class="list-group-item"><a title="Bids, RFP, RFQ, RFI, Small Order" href="/content/city/en/depts/dps/provdrs/contract/svcs/current_bid_opportunities.html"><span>Bids, RFP, RFQ, RFI, Small Order</span></a></li><li class="list-group-item"><a title="Business License Look-up" href="/content/city/en/depts/bacp/provdrs/bus/svcs/business_licenselook-up.html"><span>Business License Look-up</span></a></li><li class="list-group-item"><a title="Chicago Building Code" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/chicago_buildingcodeonline.html"><span>Chicago Building Code</span></a></li><li class="list-group-item"><a title="Drivers License or State Id" href="/content/city/en/depts/other/provdrs/soi/svcs/get_a_driver_s_licenseorastateid.html"><span>Drivers License or State Id</span></a></li><li class="list-group-item"><a title="Free STI/HIV/AIDS Testing and Treatment" href="/content/city/en/depts/cdph/provdrs/health_services/svcs/get_yourself_evaluatedforstihivaids.html"><span>Free STI/HIV/AIDS Testing and Treatment</span></a></li><li class="list-group-item"><a title="Maps - GIS/Data" href="/content/city/en/depts/doit/provdrs/gis/svcs/maps---gis-data.html"><span>Maps - GIS/Data</span></a></li><li class="list-group-item"><a title="Permit Parking Zone Lookup" href="/content/city/en/depts/other/provdrs/clerk/svcs/parking_permit_zonelookup.html"><span>Permit Parking Zone Lookup</span></a></li><li class="list-group-item"><a title="Vital Records from the Cook County Clerk's Office" href="/content/city/en/depts/other/provdrs/ccco/svcs/get_vital_records.html"><span>Vital Records from the Cook County Clerk's Office</span></a></li><li class="list-group-item"><a title="Ward & Alderman by Address" href="/content/city/en/depts/other/provdrs/clerk/svcs/find_your_ward_andalderman.html"><span>Ward & Alderman by Address</span></a></li>
+            <li class="list-group-item"> <a title="More services" href="/city/en/svcs/iwantto.find_get.html"><strong>More services</strong></a></li>
+
+                </ul>
+      </div>
+    </div>
+  </div><!--find get-->
+
+     <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="payForheading">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#payFor" aria-expanded="true" aria-controls="payFor">
+        Pay For/Buy
+        </a>
+      </h4>
+    </div>
+    <div id="payFor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="payForheading">
+      <div class="panel-body">
+        <ul class="list-group i-list-services">
+                <li class="list-group-item"><a title="Administrative Hearing Fines" href="/content/city/en/depts/fin/provdrs/payment_processingdivision/svcs/QuickPay.html"><span>Administrative Hearing Fines</span></a></li><li class="list-group-item"><a title="Business License Renewal" href="/content/city/en/depts/bacp/provdrs/bus/svcs/renew_your_businesslicenseonline.html"><span>Business License Renewal</span></a></li><li class="list-group-item"><a title="Business Taxes" href="/content/city/en/depts/fin/provdrs/tax_division/svcs/pay_and_file_yourtaxesonline.html"><span>Business Taxes</span></a></li><li class="list-group-item"><a title="CTA Transit Customer Fare Cards" href="/content/city/en/depts/other/provdrs/cta/svcs/customer_fares_chartsandpurchasectafarecards.html"><span>CTA Transit Customer Fare Cards</span></a></li><li class="list-group-item"><a title="Calculate the Cost of a Permit" href="/content/city/en/depts/bldgs/provdrs/stand_plan/svcs/permit_fee_calculator.html"><span>Calculate the Cost of a Permit</span></a></li><li class="list-group-item"><a title="City of Chicago Photography" href="/content/city/en/depts/dgs/provdrs/asset_management/svcs/purchase_city_photography.html"><span>City of Chicago Photography</span></a></li><li class="list-group-item"><a title="Parking, Red Light, or Speed Ticket(s)" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/pay_parking_and_red-lightticketson-line.html"><span>Parking, Red Light, or Speed Ticket(s)</span></a></li><li class="list-group-item"><a title="Surplus, Vehicles, Auctions" href="/content/city/en/depts/dps/provdrs/auction/svcs/city_of_chicago_onlineauctions.html"><span>Surplus, Vehicles, Auctions</span></a></li><li class="list-group-item"><a title="Vehicle and Residential Permit Parking Stickers" href="/content/city/en/depts/other/provdrs/clerk/svcs/vehicle_sticker_andresidentialpermitparkingsales.html"><span>Vehicle and Residential Permit Parking Stickers</span></a></li><li class="list-group-item"><a title="View Automated Speed Enforcement Video" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_automated_speedenforcementvideo.html"><span>View Automated Speed Enforcement Video</span></a></li>
+            <li class="list-group-item"> <a title="More services" href="/city/en/svcs/iwantto.pay_for_buy.html"><strong>More services</strong></a></li>
+
+                </ul>
+      </div>
+    </div>
+  </div><!--Payfor/Buy-->
+
+ <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="registerheading">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#register" aria-expanded="true" aria-controls="register">
+        Register
+        </a>
+      </h4>
+    </div>
+    <div id="register" class="panel-collapse collapse" role="tabpanel" aria-labelledby="registerheading">
+      <div class="panel-body">
+        <ul class="list-group i-list-services">
+                <li class="list-group-item"><a title="Discrimination Complaint" href="/content/city/en/depts/cchr/provdrs/discrim/svcs/file_a_discriminationcomplaint.html"><span>Discrimination Complaint</span></a></li><li class="list-group-item"><a title="Dog Registration" href="/content/city/en/depts/other/provdrs/clerk/svcs/dog_registration.html"><span>Dog Registration</span></a></li><li class="list-group-item"><a title="Extreme Weather Notification" href="/content/city/en/depts/oem/provdrs/emerg_mang/svcs/sign_up_for_extremeweathernotification.html"><span>Extreme Weather Notification</span></a></li><li class="list-group-item"><a title="For Park District Programs" href="/content/city/en/depts/other/provdrs/cpd/svcs/register_for_parkdistrictprogramsonline.html"><span>For Park District Programs</span></a></li><li class="list-group-item"><a title="HIV/AIDS Online Courses" href="/content/city/en/depts/cdph/provdrs/health_services/svcs/register_for_freestihivaidsonlinecourses.html"><span>HIV/AIDS Online Courses</span></a></li><li class="list-group-item"><a title="Independent Living Skills Program" href="/content/city/en/depts/mopd/provdrs/resource/svcs/ilp-independent_livingprogram.html"><span>Independent Living Skills Program</span></a></li><li class="list-group-item"><a title="MPEA Airport Tax" href="/content/city/en/depts/bacp/provdrs/vehic/svcs/mpea_online_permitapplicationform.html"><span>MPEA Airport Tax</span></a></li><li class="list-group-item"><a title="Register a Cottage Food Operation" href="/content/city/en/depts/cdph/provdrs/healthy_communities/svcs/register_a_cottagefoodoperation.html"><span>Register a Cottage Food Operation</span></a></li>
+            <li class="list-group-item"> <a title="More services" href="/city/en/svcs/iwantto.register.html"><strong>More services</strong></a></li>
+
+                </ul>
+      </div>
+    </div>
+  </div><!--Register-->
+
+ <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="report_fileheading">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#report_file" aria-expanded="true" aria-controls="report_file">
+        Report/File
+        </a>
+      </h4>
+    </div>
+    <div id="report_file" class="panel-collapse collapse" role="tabpanel" aria-labelledby="report_fileheading">
+      <div class="panel-body">
+        <ul class="list-group i-list-services">
+                <li class="list-group-item"><a title="AIC (Annual Inspection Certification) Inspections" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/annual_inspectioncertificationaicprogramupdate.html"><span>AIC (Annual Inspection Certification) Inspections</span></a></li><li class="list-group-item"><a title="Abandoned Vehicle" href="/content/city/en/depts/streets/provdrs/traffic/svcs/abandoned_vehicles.html"><span>Abandoned Vehicle</span></a></li><li class="list-group-item"><a title="Cab Feedback" href="/content/city/en/depts/bacp/provdrs/consumer/svcs/consumer_cab_complaint.html"><span>Cab Feedback</span></a></li><li class="list-group-item"><a title="Claim for Vehicle or Property Damage" href="/content/city/en/depts/other/provdrs/clerk/svcs/file_a_claim.html"><span>Claim for Vehicle or Property Damage</span></a></li><li class="list-group-item"><a title="Complaint Against a Chicago Police Officer" href="/content/city/en/depts/ipra/provdrs/investigate/svcs/report_an_incidentagainstachicagopoliceofficer.html"><span>Complaint Against a Chicago Police Officer</span></a></li><li class="list-group-item"><a title="Consumer Complaint Online" href="/content/city/en/depts/bacp/provdrs/pros_adj/svcs/file_a_citizen_complaintonline.html"><span>Consumer Complaint Online</span></a></li><li class="list-group-item"><a title="Economic Disclosure, Affidavit, Online EDS" href="/content/city/en/depts/dps/provdrs/comp/svcs/economic_disclosurestatementseds.html"><span>Economic Disclosure, Affidavit, Online EDS</span></a></li><li class="list-group-item"><a title="Pothole in the Street" href="/content/city/en/depts/cdot/provdrs/street/svcs/report_a_pot_holeinstreet.html"><span>Pothole in the Street</span></a></li><li class="list-group-item"><a title="Stray Animal in Neighborhood" href="/content/city/en/depts/cacc/provdrs/animal_control_andrescue/svcs/report_a_stray_animal.html"><span>Stray Animal in Neighborhood</span></a></li>
+            <li class="list-group-item"> <a title="More services" href="/city/en/svcs/iwantto.report_file.html"><strong>More services</strong></a></li>
+
+                </ul>
+      </div>
+    </div>
+  </div><!--Report/File-->
+
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="requestheading">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#request" aria-expanded="true" aria-controls="request">
+        Request
+        </a>
+      </h4>
+    </div>
+    <div id="request" class="panel-collapse collapse" role="tabpanel" aria-labelledby="requestheading">
+      <div class="panel-body">
+        <ul class="list-group i-list-services">
+                <li class="list-group-item"><a title="Building Inspection" href="/content/city/en/depts/bldgs/provdrs/inspect/svcs/request_an_inspection.html"><span>Building Inspection</span></a></li><li class="list-group-item"><a title="Garbage Cart" href="/content/city/en/depts/streets/provdrs/rodent/svcs/garbage_cart_distribution.html"><span>Garbage Cart</span></a></li><li class="list-group-item"><a title="Graffiti Removal Services" href="/content/city/en/depts/streets/provdrs/graffiti_blasters/svcs/mayor_daley_s_graffitiblasters.html"><span>Graffiti Removal Services</span></a></li><li class="list-group-item"><a title="Parking Ticket Photos" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_parking_ticketpictures.html"><span>Parking Ticket Photos</span></a></li><li class="list-group-item"><a title="Request a Bike Map" href="/content/city/en/depts/cdot/provdrs/bike/svcs/request_a_bike_map.html"><span>Request a Bike Map</span></a></li><li class="list-group-item"><a title="Residential Garbage Collection" href="/content/city/en/depts/streets/provdrs/streets_san/svcs/residential_garbagecollection.html"><span>Residential Garbage Collection</span></a></li><li class="list-group-item"><a title="Restaurant Inspection" href="/content/city/en/depts/cdph/provdrs/healthy_communities/svcs/food_protection_program.html"><span>Restaurant Inspection</span></a></li><li class="list-group-item"><a title="View Red Light Video" href="/content/city/en/depts/fin/provdrs/parking_and_redlightcitationadministration/svcs/view_red-light_video.html"><span>View Red Light Video</span></a></li>
+            <li class="list-group-item"> <a title="More services" href="/city/en/svcs/iwantto.request.html"><strong>More services</strong></a></li>
+
+                </ul>
+      </div>
+    </div>
+  </div><!--Request-->
+
+   <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="sign_upheading">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#sign_up" aria-expanded="true" aria-controls="sign_up">
+        Sign up for/Volunteer
+        </a>
+      </h4>
+    </div>
+    <div id="sign_up" class="panel-collapse collapse" role="tabpanel" aria-labelledby="sign_upheading">
+      <div class="panel-body">
+        <ul class="list-group i-list-services">
+                <li class="list-group-item"><a title="Alerts from NotifyChicago" href="/content/city/en/depts/oem/provdrs/alertchicago/svcs/notifychicago.html"><span>Alerts from NotifyChicago</span></a></li><li class="list-group-item"><a title="CAPS Brochures & Information" href="/content/city/en/depts/cpd/provdrs/police_services/svcs/caps_brochure_request.html"><span>CAPS Brochures & Information</span></a></li><li class="list-group-item"><a title="Community Emergency Response Team (CERT)" href="/content/city/en/depts/oem/provdrs/edu/svcs/become_a_cert_volunteer.html"><span>Community Emergency Response Team (CERT)</span></a></li><li class="list-group-item"><a title="Food Alerts and Recalls" href="/content/city/en/depts/cdph/provdrs/healthy_communities/svcs/sign_up_to_receivefoodalertsandrecalls.html"><span>Food Alerts and Recalls</span></a></li><li class="list-group-item"><a title="Internships and Volunteer Programs" href="/content/city/en/depts/dhr/provdrs/emp/svcs/internships.html"><span>Internships and Volunteer Programs</span></a></li><li class="list-group-item"><a title="One Good Deed Chicago Volunteer Opportunities" href="/content/city/en/depts/mayor/provdrs/special_prog/svcs/one_good_deed_chicago.html"><span>One Good Deed Chicago Volunteer Opportunities</span></a></li><li class="list-group-item"><a title="Voluntary Disclosure" href="/content/city/en/depts/fin/provdrs/tax_division/svcs/apply_for_voluntarydisclosureofchicagobusinesstaxes.html"><span>Voluntary Disclosure</span></a></li>
+            <li class="list-group-item"> <a title="More services" href="/city/en/svcs/iwantto.sign_up.html"><strong>More services</strong></a></li>
+
+                </ul>
+      </div>
+    </div>
+  </div><!--sign_up-->
+
+
+</div><!--End Panel Group -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<p style="margin-top: 1px" ></p>
+
+
+
+
+
+
+
+
 
 
 
 
         </div>
-    </div>
-    
-    <div id="two-column-top"></div>
-    <div id="content-panel">
-        <div id="content-content">
-           
-
-
-
-<div class="toolbar">
-
-<script type="text/javascript">
-    var addthis_options = 'email, favorites, digg, delicious, facebook, blogger, live, myspace, stumbleupon, twitter, linkedin, reddit, mixx, more';
-    var addthis_brand = "City of Chicago";
-    var addthis_config = {
-        services_custom: {
-            name: "RSS",
-            url: "http://www.cityofchicago.org/city/en/rss.html?url={{url}}&title={{title}}",
-            icon: "http://www.cityofchicago.org/etc/designs/city/images/icons/rss-icon.png"
-        },
-        ui_click: true /* normally would disable mouseover behavior */
-    };
-</script>
-
-<!-- Option 1 -->
-<!-- icon: "http://www.cityofchicago.org/etc/designs/city/images/icons/rss-icon.png" -->
-<div id="tools">
-    <div class="addthis_sharing_toolbox">
 
     </div>
 </div>
 
 
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=cocinternetsite" async="async"></script>
 
-
-
-<!-- Screenreader to skip navigation -->
-<a id="startcontent" name="startcontent"></a></div>
-
-
-
-
-
- 
-
-
-
-
-    <h1 class="page-heading">2017 Board of Health Meetings</h1>
-
-    
-        <p>The Chicago Board of Health is scheduled to meet on the third Wednesday of each month from 9:00am-10:30am. The meetings are held at the Chicago Department of Public Health, DePaul Center, 333 S. State Street, 2nd Floor Board Room. The specific dates, by month, for 2017 are:</p>
-<p>&nbsp;</p>
-<p><a title="Board of Health Agenda - Jan. 18, 2017" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHAgendaJanuary.18.2017.pdf" target="_blank" rel="noopener noreferrer">January 18</a></p>
-<ul>
-<li><a title="Board of Health minutes - Jan. 18, 2017" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHMinutesJanuary.18.2017.pdf" target="_blank" rel="noopener noreferrer">Minutes</a></li>
-</ul>
-<p><a title="Board of Health Agenda - Feb. 15, 2017" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHAgendaFebruary.15.2017.pdf" target="_blank" rel="noopener noreferrer">February 15</a></p>
-<ul>
-<li><a title="Board of Health Minutes - Feb. 15, 2017" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHMinutesFebruary.15.2017.pdf" target="_blank" rel="noopener noreferrer">Minutes</a></li>
-</ul>
-<p><a title="Board of Health Agenda - Mar. 15, 2017" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHAgendaMarch.15.2017.pdf" target="_blank" rel="noopener noreferrer">March 15</a></p>
-<ul>
-<li><a title="Minutes" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHMinutesMarch.15.2017.pdf" target="_blank" rel="noopener noreferrer">Minutes</a></li>
-</ul>
-<p><a title="Board of Health Agenda - Apr. 19, 2017" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHAgendaApril.19.2017.pdf" target="_blank" rel="noopener noreferrer">April 19</a></p>
-<ul>
-<li><a href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHMinutesApril.19.2017.pdf" target="_blank" rel="noopener noreferrer">Minutes</a></li>
-</ul>
-<p><a title="Board of Health Agenda - May 17, 2017" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHAgendaMay.17.2017.pdf" target="_blank" rel="noopener noreferrer">May 17</a></p>
-<ul>
-<li><a title="Board of Health Minutes - May 17, 2017" href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHMinutesMay.17.2017.pdf" target="_blank" rel="noopener noreferrer">Minutes</a></li>
-</ul>
-<p><a href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHAgendaJune.21.2017.pdf" target="_blank" rel="noopener noreferrer">June 21</a></p>
-<ul>
-<li><a href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHMinutesJune.21.2017.pdf" target="_blank" rel="noopener noreferrer">Minutes</a></li>
-</ul>
-<p><a href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHAgendaJuly.19.2017.pdf" target="_blank" rel="noopener noreferrer">July 19</a></p>
-<p><a href="/content/dam/city/depts/cdph/policy_planning/Board_of_Health/2017Meetings/BOHAgendaAugust.16.2017.pdf" target="_blank" rel="noopener noreferrer">August 16</a></p>
-<p>September 20</p>
-<p>October 18</p>
-<p>November 15</p>
-<p>December 20</p>
-    
-
-    <div class="top-images">
-        
-            
-            
-                
-            
-        
-    </div>
-
-    
-
-
-<div class="parsys cityparsys"></div>
-
-<div style="clear: both"><div class="youtubeparsys cityparsys"></div>
-</div>
-
-        </div>
-    </div>
-    
-    <div id="content-bottom-gradient"></div>
-</div>
-
-
+                        </div>
+                    </div>
+                </div>
                 <!-- Footer -->
-                
 
 
- 
+
+
+
+
+
+
+
+
+<style>
+
+
+    .department-footer {
+        background-color: #777777;
+
+    }
+    .dept-footer-container {
+        max-width: 960px;
+        display: flex;
+        margin: auto;
+        justify-content: center;
+    }
+    .footer-column {
+        flex-grow: 1;
+        color: #FFF;
+        xborder-right: 1px solid #AAA;
+        margin-right: 10px;
+        width:300px;
+        padding:5px;
+    }
+    .footer-column:last-child {
+        xborder-right: none;
+        xmargin-right: 0px;
+    }
+    .footer-column  a {
+            color:#FFF;
+
+    }
+   .footer-column  a:hover {
+             text-decoration:underline;
+
+    }
+
+    @media only screen and (max-width: 480px) {
+        .dept-footer-container {
+            flex-direction: column;
+        }
+        .footer-column {
+            border-right: none;
+            margin-right: 0px;
+        }
+                .footer-column h3 {
+                        font-size:1.3em;
+                    }
+    }
+
+    ul.footer-social {
+        display: inline-block;
+        list-style: none;
+        padding-left: 0px;
+    }
+    ul.footer-social li {
+        display: inline-block;
+    }
+    ul.footer-social a {
+        color: #777777;
+    }
+    ul.footer-social a:hover {
+        color: #FFF;
+    }
+    .social [class*="fa fa-"] {
+        background-color: #DDD;
+        border-radius: 30px;
+        display: inline-block;
+        height: 30px;
+        line-height: 30px;
+        margin: auto 3px;
+        width: 30px;
+        font-size: 15px;
+        text-align: center;
+    }
+    .fa-twitter:hover {
+        background-color: #46c0fb;
+    }
+    .fa-facebook:hover {
+        background-color: #3B5998;
+    }
+    .fa-pinterest-p:hover {
+        background-color: #6E1A19;
+    }
+    .fa-youtube:hover {
+        background-color: #CC181E;
+    }
+
+    .title-divider {
+        height: 3px;
+        display: block;
+        background-color:#AAA;
+        margin: 1em 0 1em;
+        width: 100%;
+        max-width: 50px;
+        margin-top: .66em;
+    }
+
+
+</style>
+
+<div class="container-fluid department-footer">
+     <div class="dept-footer-container">
+
+
+
+
+                    <!--Start Footer Items-->
+
+                            <div class="footer-column">
+                                <h3 class="footer-title">Contact CDPH</h3>
+                                <div class="title-divider"></div>
+                                <p><strong>Phone:&nbsp;</strong>312.747.9884</p>
+<p><strong>TTY:</strong>&nbsp;312.747.2374<br />333 S. State Street&nbsp;<br />Room 200<br />Chicago, IL 60604 (For 24-hour assistance or to report a public health issue, call 311</p>
+                            </div>
+
+                            <div class="footer-column">
+                                <h3 class="footer-title">Quick Links</h3>
+                                <div class="title-divider"></div>
+                                <p><a title="content/city/en/depts/cdph/provdrs/healthychicago/news/2013/aug/chicago_departmentofpublichealthbecomesthelargestlocalhealthdepa" href="/content/city/en/depts/cdph/provdrs/healthychicago/news/2013/aug/chicago_departmentofpublichealthbecomesthelargestlocalhealthdepa.html">Accreditation</a></p>
+                            </div>
+
+
+
+                <div class="footer-column social-column">
+                    <h3>Connect With CDPH</h3><div class="title-divider"></div>
+                        <ul class="footer-social social">
+                            <li> <a href="https://www.facebook.com/ChicagoPublicHealth" title="Follow us on FaceBook" target="blank"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
+                            <li> <a href="https://twitter.com/ChiPublicHealth" title="Follow us on Twitter" target="blank"><i class="fa fa-twitter" aria-hidden="true"></i></a> </li>
+
+                                <li> <a href="https://www.youtube.com/user/cityofchicagotv" title="Follow us on YouTube" target="blank"><i class="fa fa-youtube" aria-hidden="true"></i></a> </li>
+                          </ul>
+
+                </div>
+
+
+
+         </div>
+
+</div>
+
+
+
+
+
+
+
+                <div class="container-fluid page-footer-container">
+                     <div class="row">
+                        <div class="col-xs-12 page-footer">
+
+
+
+
+
+
+
 <!-- footer -->
 <div id="footer">
     <div class="footer-navigation">
@@ -1090,41 +1774,45 @@ a.lan:hover, a.lan:active {
             <li><!--googleoff: anchor--><a href="/city/en/general/credits.html">Site Credits</a><!--googleon: anchor--> : </li>
             <li><!--googleoff: anchor--><a href="/city/en/general/sitemap.html">Site Map</a><!--googleon: anchor--> : </li>
             <li><!--googleoff: anchor--><a href="/city/en/general/contact.html">Contact Us</a><!--googleon: anchor--> : </li>
-            <li><!--googleoff: anchor--><a href="http://author.cityofchicago.org/en/depts/mayor/en/press_room.html" target="_blank">Press Room</a><!--googleon: anchor--></li>
+            <li><!--googleoff: anchor--><a href="/content/city/en/depts/mayor/press_room.html">Press Room</a><!--googleon: anchor--> : </li>
+            <li><!--googleoff: anchor--><a target="blank" title="Website Feedback" href="https://www.surveymonkey.com/r/cocwebsitesurvey">Website Feedback</a><!--googleon: anchor--></li>
         </ul>
-    </div> 
-     
+    </div>
+
     <!-- /footer-navigation -->
 
-    Copyright &#169; 2010 - 2017 City of Chicago<br />
+    Copyright &#169; 2010 - 2018 City of Chicago<br />
 
     <br />
-    
+
     <a href="/content/city/en.html" title="The City of Chicago's Official Site">
         <img src="/etc/designs/city/images/seal.gif" width="65" height="65" title="The City of Chicago's Official Site" alt="The City of Chicago's Official Site"/>
     </a>
 </div>
 
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- /container -->
-        </div>
+
+        <button id="toTop" class="btn btn-default btn-lg"><i class="fa fa-chevron-up"></i></button>
 
 
- 
-	<script>
+    <script>
 
         $(document).ready(function() {
-			var qs = window.location.search;
+            var qs = window.location.search;
              var isRedirect = window.location.href.indexOf("redirect.html")>=0;
 
             if(!isRedirect) {
-				return;
+                return;
             }
 
             if(qs.indexOf("redirectTo")>=0) {
-				url = qs.split("=")[1];
+                url = qs.split("=")[1];
                 setTimeout( function() {
-					window.location = url;
+                    window.location = url;
                 },5000);
             }else {
                 window.location = "/city/en.html";
@@ -1134,11 +1822,11 @@ a.lan:hover, a.lan:active {
         });
     </script>
 
- 
 
-        
-        
-            <!-- Google Analytics Snippet - start -->           
+
+
+
+            <!-- Google Analytics Snippet - start -->
             <script type="text/javascript">
                 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
                 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -1147,11 +1835,11 @@ a.lan:hover, a.lan:active {
                 try {
                     var pageTracker = _gat._getTracker("UA-2412440-12");
                     pageTracker._trackPageview();
-                } 
+                }
                 catch(err) {}
             </script>
             <!-- Google Analytics Snippet - end -->
-        
-        
+
+
     </body>
 </html>
