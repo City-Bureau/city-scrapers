@@ -1,105 +1,69 @@
-# -*- coding: utf-8 -*-
+import os
+import boto3
+from datetime import datetime
 
-# Scrapy settings for documenters_aggregator project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     http://doc.scrapy.org/en/latest/topics/settings.html
-#     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
+PROJECT_SLUG = 'documenters_aggregator'
+STATUS_BUCKET = os.getenv('STATUS_BUCKET')
 
-BOT_NAME = 'documenters_aggregator'
-
-SPIDER_MODULES = ['documenters_aggregator.spiders']
-NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
-
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Documenters Aggregator [production mode]. Learn more and say hello at https://city-bureau.gitbooks.io/documenters-event-aggregator/'
-
-# Obey robots.txt rules
-ROBOTSTXT_OBEY = False
-DOCUMENTERS_AGGREGATOR_ROBOTSTXT_OBEY = True
-DOCUMENTERS_AGGREGATOR_ROBOTSTXT_LOGONLY = True
-
-# Disable cookies (enabled by default)
-COOKIES_ENABLED = False
-
-# Configure item pipelines
-#
-# One of:
-# * documenters_aggregator.pipelines.DocumentersAggregatorLoggingPipeline,
-# * documenters_aggregator.pipelines.DocumentersAggregatorSQLAlchemyPipeline,
-# * documenters_aggregator.pipelines.AirtablePipeline
-#
-# Or define your own.
-# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-    'documenters_aggregator.pipelines.GeocoderPipeline': 200,
-    'documenters_aggregator.pipelines.ValidationPipeline': 300,
-    'documenters_aggregator.pipelines.AirtablePipeline': 400
-}
-# Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
-
-# Configure a delay for requests for the same website (default: 0)
-# See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
-# See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
-# The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
-
-# Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
-
-# Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
-
-# Enable or disable spider middlewares
-# See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'documenters_aggregator.middlewares.DocumentersAggregatorSpiderMiddleware': 543,
-#}
-
-# Enable or disable downloader middlewares
-# See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-    'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
+STATUS_COLOR_MAP = {
+    'running': '#4c1',
+    'failing': '#cb2431',
+    'unclear': '#dfb317'
 }
 
-# Enable or disable extensions
-# See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    'scrapy.extensions.telnet.TelnetConsole': None,
-#}
+STATUS_ICON = '''
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144" height="20">
+    <linearGradient id="b" x2="0" y2="100%">
+        <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+        <stop offset="1" stop-opacity=".1"/>
+    </linearGradient>
+    <clipPath id="a">
+        <rect width="144" height="20" rx="3" fill="#fff"/>
+    </clipPath>
+    <g clip-path="url(#a)">
+        <path fill="#555" d="M0 0h67v20H0z"/>
+        <path fill="{color}" d="M67 0h77v20H67z"/>
+        <path fill="url(#b)" d="M0 0h144v20H0z"/>
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="110">
+        <text x="345" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">{status}</text>
+        <text x="345" y="140" transform="scale(.1)">{status}</text>
+        <text x="1045" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)">{date}</text>
+        <text x="1045" y="140" transform="scale(.1)">{date}</text>
+    </g>
+</svg>
+'''
 
-EXTENSIONS = {
-    "scrapy_sentry.extensions.Errors": 10,
-    'scrapy.extensions.closespider.CloseSpider': None,
-}
 
+def handler(event, context):
+    client = boto3.client('s3')
 
-# Enable and configure the AutoThrottle extension (disabled by default)
-# See http://doc.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
-# The initial download delay
-#AUTOTHROTTLE_START_DELAY = 5
-# The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
-# The average number of requests Scrapy should be sending in parallel to
-# each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
-# Enable showing throttling stats for every response received:
-#AUTOTHROTTLE_DEBUG = False
+    if 'detail-type' not in event or event['detail-type'] != 'ECS Task State Change':
+        raise ValueError('ERROR: Event is not an ECS task state change event')
 
-# Enable and configure HTTP caching (disabled by default)
-# See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
-#HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = 'httpcache'
-#HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+    if event['detail']['lastStatus'] != 'STOPPED':
+        print('INFO: Last status was not STOPPED, exiting...')
+        return
+
+    if event['detail']['stoppedReason'] == 'Essential container in task exited':
+        status = 'failed'
+    else:
+        status = 'running'
+
+    # Pull scraper name from ARN in documenters_aggregator-{SCRAPER}
+    task_def = event['detail']['taskDefinitionArn'].split('/')[1]
+    scraper = task_def.split(':')[0][len(PROJECT_SLUG) + 1:]
+    
+    if scraper == '':
+        message = 'Could not extract scraper name from {}'.format(event['detail']['taskDefinitionArn'])
+        raise ValueError(message)
+
+    client.put_object(
+        Bucket=STATUS_BUCKET,
+        Key='{}.svg'.format(scraper),
+        Body=STATUS_ICON.format(
+            color=STATUS_COLOR_MAP.get(status, '#dfb317'),
+            status=status,
+            date=datetime.today().strftime('%Y-%m-%d')
+        )
+    )
