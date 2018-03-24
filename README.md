@@ -58,6 +58,7 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | Chicago Animal Care and Control Commission | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_animal.svg) |
 | Public Building Commission of Chicago | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_buildings.svg) |
 | City College of Chicago | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_city_college.svg) |
+| Chicago City Council | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_citycouncil.svg) |
 | Chicago Infrastructure Trust | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_infra.svg) |
 | Chicago Parks District | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_parks.svg) |
 | Chicago Police Department | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_police.svg) |
