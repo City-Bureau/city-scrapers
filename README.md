@@ -55,29 +55,32 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 
 | Scraper | Status / Last Ran |
 |---------|--------|
-| Chicago Animal Care and Control Commission | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_animal.svg) |
-| Public Building Commission of Chicago | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_buildings.svg) |
+**Chicago**
+| Aldermanic Ward Nights | ![Status](https://s3.amazonaws.com/city-scrapers-status/ward_night.svg) |
+| Animal Care and Control Commission | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_animal.svg) |
+| Building Commission of Chicago | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_buildings.svg) |
 | City College of Chicago | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_city_college.svg) |
-| Chicago City Council | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_citycouncil.svg) |
-| Chicago Infrastructure Trust | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_infra.svg) |
-| Chicago Parks District | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_parks.svg) |
-| Chicago Police Department | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_police.svg) |
-| Chicago Police Board | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_policeboard.svg) |
-| Chicago Department of Public Health | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_pubhealth.svg) |
-| Chicago Public Library | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_library.svg) |
-| Chicago Public Schools: School Actions | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_school_actions.svg) |
-| Chicago Public Schools Board of Education | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_schools.svg) |
-| Chicago Transit Authority | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_transit.svg) |
-| Cook County Board of Commissioners | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_board.svg) |
-| Cook County Government | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_county.svg) |
-| Cook County Electoral Board | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_electoral.svg) |
-| Cook County Health and Hospitals System | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_hospitals.svg) |
-| Cook County Land Bank | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_landbank.svg) |
-| Cook County Department of Public Health | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_pubhealth.svg) |
+| City Council | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_citycouncil.svg) |
+| Department of Public Health | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_pubhealth.svg) |
+| Infrastructure Trust | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_infra.svg) |
+| Parks District | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_parks.svg) |
+| Police Department | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_police.svg) |
+| Police Board | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_policeboard.svg) |
+| Public Library | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_library.svg) |
+| Public Schools: School Actions | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_school_actions.svg) |
+| Public Schools Board of Education | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_schools.svg) |
+| Transit Authority | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_transit.svg) |
+**Cook County**
+| Board of Commissioners | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_board.svg) |
+| Department of Public Health | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_pubhealth.svg) |
+| Electoral Board | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_electoral.svg) |
+| Government | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_county.svg) |
+| Health and Hospitals System | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_hospitals.svg) |
+| Land Bank | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_landbank.svg) |
+**Illinois**
 | Illinois Labor Relations Board | ![Status](https://s3.amazonaws.com/city-scrapers-status/il_labor.svg) |
 | Metra Board of Directors | ![Status](https://s3.amazonaws.com/city-scrapers-status/metra_board.svg) |
 | Regional Transportation Authority | ![Status](https://s3.amazonaws.com/city-scrapers-status/regionaltransit.svg) |
-| Ward Nights | ![Status](https://s3.amazonaws.com/city-scrapers-status/ward_night.svg) |
 
 ## Support this work
 
