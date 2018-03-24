@@ -53,7 +53,7 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 
 ## Scraper Status
 
-| Scraper | Status |
+| Scraper | Status / Last Ran |
 |---------|--------|
 | Chicago Animal Care and Control Commission | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_animal.svg) |
 | Public Building Commission of Chicago | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_buildings.svg) |
