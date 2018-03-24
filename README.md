@@ -72,7 +72,7 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | Public Schools Board of Education | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_schools.svg) |
 | Transit Authority | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_transit.svg) |
 
-### Cook County**
+### Cook County
 | Board of Commissioners | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_board.svg) |
 | Department of Public Health | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_pubhealth.svg) |
 | Electoral Board | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_electoral.svg) |
@@ -80,7 +80,7 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | Health and Hospitals System | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_hospitals.svg) |
 | Land Bank | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_landbank.svg) |
 
-### Illinois**
+### Illinois
 | Illinois Labor Relations Board | ![Status](https://s3.amazonaws.com/city-scrapers-status/il_labor.svg) |
 | Metra Board of Directors | ![Status](https://s3.amazonaws.com/city-scrapers-status/metra_board.svg) |
 | Regional Transportation Authority | ![Status](https://s3.amazonaws.com/city-scrapers-status/regionaltransit.svg) |
