@@ -51,8 +51,12 @@ def handler(event, context):
         status = 'running'
 
     # Pull scraper name from ARN in documenters_aggregator-{SCRAPER}
-    task_def = event['detail']['taskDefinitionArn'].split('/')[0]
-    scraper = task_def.split(':')[-1][len(PROJECT_SLUG) + 1:]
+    task_def = event['detail']['taskDefinitionArn'].split('/')[1]
+    scraper = task_def.split(':')[0][len(PROJECT_SLUG) + 1:]
+    
+    if scraper == '':
+        message = 'Could not extract scraper name from {}'.format(event['detail']['taskDefinitionArn'])
+        raise ValueError(message)
 
     client.put_object(
         Bucket=STATUS_BUCKET,
