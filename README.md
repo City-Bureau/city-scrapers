@@ -63,6 +63,7 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | Chicago Police Department | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_police.svg) |
 | Chicago Police Board | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_policeboard.svg) |
 | Chicago Department of Public Health | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_pubhealth.svg) |
+| Chicago Public Library | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_library.svg) |
 | Chicago Public Schools: School Actions | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_school_actions.svg) |
 | Chicago Public Schools Board of Education | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_schools.svg) |
 | Chicago Transit Authority | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_transit.svg) |
