@@ -107,12 +107,13 @@ class Chi_parksSpider(Spider):
         """
         Parse or generate event name.
         """
-        return ("The mission of the Chicago Park District is to enhance" 
-                "the quality of life in Chicago by becoming the leading" 
-                "provider of recreation and leisure opportunities; provide" 
-                "safe, inviting and beautifully maintained parks and facilities"
-                "and create a customer-focused and responsive park system that"
-                "prioritizes the needs of children and families")
+        return ("The Chicago Park District Act provides that the Chicago"
+                "Park District shall be governed by a board of seven" 
+                "non-salaried Commissioners who are appointed by the Mayor"
+                "of the City of Chicago with the approval of the Chicago City"
+                "Council. Under the Chicago Park District Code, the Commissioners"
+                "have a fiduciary duty to act, vote on all matters, and govern"
+                "the Park District in the best interest of the Park District.")
 
     def _parse_time(self, item):
         """
