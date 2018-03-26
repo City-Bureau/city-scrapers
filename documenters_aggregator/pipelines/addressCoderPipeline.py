@@ -4,9 +4,9 @@ This pipeline cleans up the addresses.
 import usaddress
 import re
 from fuzzywuzzy import process
-import json
 import requests
 import collections
+
 
 CITY_FILE = requests.get('https://data.cityofchicago.org/resource/pasq-g8mx.json').json()
 CITY_STREETS = set([d['street'] for d in CITY_FILE])
