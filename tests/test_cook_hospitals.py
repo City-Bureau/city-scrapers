@@ -15,7 +15,12 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == 'http://www.cookcountyhhs.org/wp-content/uploads/2016/01/01-27-17-Board-Agenda.pdf'
+    EXPECTED_DESCRIPTION = ("The CCHHS is charged with delivering integrated health services with dignity and respect "
+                            "regardless of a patient’s ability to pay; fostering partnerships with other health providers "
+                            "and communities to enhance the health of the public; and advocating for policies that promote "
+                            "the physical, mental and social well being of the people of Cook County. "
+                            "The CCHHS Board of Directors has five standing committees.")
+    assert parsed_items[0]['description'] == EXPECTED_DESCRIPTION
 
 
 def test_start_time():
