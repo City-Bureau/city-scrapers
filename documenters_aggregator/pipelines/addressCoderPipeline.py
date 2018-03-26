@@ -36,14 +36,14 @@ class AddressPipeline(object):
         query = location_dict.get('address', '').strip()
         if name != '':
             query = ', '.join([name, query])  # combine '{name}, {address}'
-        query= re.sub('city hall((?!.*chicago, il).)*$', 'City Hall 121 N LaSalle Dr, Chicago, IL', query, flags=re.I) #replace city hall 
+        query = re.sub('city hall((?!.*chicago, il).)*$', 'City Hall 121 N LaSalle Dr, Chicago, IL', query, flags=re.I) #replace city hall 
         try:
             querydict = usaddress.tag(query)[0]
         except usaddress.RepeatedLabelError as e:
             querydict = self.bad_address_tag(e.parsed_string)
-        city = querdict.get('PlaceName', default_city) # replace w default city if blank
-        state = querdict.get('StateName', default_state)  # replace w default state if blank
-        street = querdict.get('StreetName', '')
+        city = querydict.get('PlaceName', default_city) # replace w default city if blank
+        state = querydict.get('StateName', default_state)  # replace w default state if blank
+        street = querydict.get('StreetName', '')
         if city.lower() == 'chicago' and street != '': # fuzzy matching on closest street name if misspelled
             street = process.extract(street, CITY_STREETS, limit=1)
         querydict['PlaceName'] = city
@@ -64,7 +64,7 @@ class AddressPipeline(object):
         counts = collections.Counter(t[1] for t in parsed_string)
         parsedDict = collections.OrderedDict()
 
-        for t in parseList:
+        for t in parsed_string:
             num = counts.get(t[1], 0)
             signifier = t[1]
             if num > 1:
