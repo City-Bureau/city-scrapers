@@ -30,7 +30,7 @@ class AddressPipeline(object):
     def street_clean_dict(self, location_dict, default_city, default_state):
         """
         Clean and item's location to make a mapzen query.
-        @TODO: Fuzzy match addresses against Chicago Data Portal Address API
+        Fuzzy match Chicago addresses against Chicago Data Portal Address API
         """
         name = location_dict.get('name', '').strip()
         query = location_dict.get('address', '').strip()
@@ -44,7 +44,7 @@ class AddressPipeline(object):
         city = querdict.get('PlaceName', default_city) # replace w default city if blank
         state = querdict.get('StateName', default_state)  # replace w default state if blank
         street = querdict.get('StreetName', '')
-        if street != '': # fuzzy matching on closest street name if misspelled
+        if city.lower() == 'chicago' and street != '': # fuzzy matching on closest street name if misspelled
             street = process.extract(street, CITY_STREETS, limit=1)
         querydict['PlaceName'] = city
         querydict['StateName'] = state
