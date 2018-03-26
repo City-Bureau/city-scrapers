@@ -61,7 +61,7 @@ class AddressPipeline(object):
         we are encoding the second PlaceName as the true PlaceName while
         preserving the order in an ordered dictionary.
         """
-        counts = collections.Counter(t[1] for t in parsed_string
+        counts = collections.Counter(t[1] for t in parsed_string)
         parsedDict = collections.OrderedDict()
 
         for t in parseList:
