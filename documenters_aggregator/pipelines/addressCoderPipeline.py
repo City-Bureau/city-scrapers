@@ -70,5 +70,5 @@ class AddressPipeline(object):
             if num > 1:
                 signifier = signifier+str(num)
                 counts[t[1]] = num-1
-            parseDict[signifier] = t[0]
-        return parseDict
+            parsedDict[signifier] = t[0]
+        return parsedDict
