@@ -67,5 +67,6 @@ def handler(event, context):
             status=status,
             date=datetime.today().strftime('%Y-%m-%d')
         ),
+        CacheControl='no-cache',
         ContentType='image/svg+xml',
     )
