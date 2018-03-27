@@ -32,7 +32,7 @@ class CsvPipeline(object):
                                           'end_time', 'timezone', 'status',
                                           'all_day', 'location_name',
                                           'location_url',
-                                          'location_address',
+                                          'location_address', 'location_latitude', 'location_longitude',
                                           'source_url', 'source_note',
                                           'scraped_time'
                                           ]
@@ -57,6 +57,8 @@ class CsvPipeline(object):
         new_item['location_url'] = get_key(new_item, 'location.url')
         new_item['location_name'] = get_key(new_item, 'location.name')
         new_item['location_address'] = get_key(new_item, 'location.address')
+        new_item['location_latitude'] = get_key(new_item, 'location.coordinates.latitude')
+        new_item['location_longitude'] = get_key(new_item, 'location.coordinates.longitude')
         new_item['source_url'] = new_item.get('sources', [{'url': ''}])[0].get('url', '')
         new_item['source_note'] = new_item.get('sources', [{'note': ''}])[0].get('note', '')
         new_item['agency_name'] = spider.long_name
