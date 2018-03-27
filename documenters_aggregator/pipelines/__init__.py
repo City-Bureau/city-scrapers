@@ -7,7 +7,7 @@ from .ValidationPipeline import ValidationPipeline
 from .TravisValidation import TravisValidationPipeline
 from .localExporter import CsvPipeline
 from .feedWriter import JsonWriterPipeline
-
+from .addressCoderPipeline import AddressPipeline
 
 __all__ = (
     'DocumentersAggregatorLoggingPipeline',
@@ -18,5 +18,6 @@ __all__ = (
     'TravisValidationPipeline',
     'MapboxPipeline',
     'CsvPipeline',
-    'JsonWriterPipeline'
+    'JsonWriterPipeline',
+    'AddressPipeline',
 )

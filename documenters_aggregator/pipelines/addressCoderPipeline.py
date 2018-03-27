@@ -3,7 +3,6 @@ This pipeline cleans up the addresses.
 """
 import usaddress
 import re
-from fuzzywuzzy import process
 import requests
 import collections
 
@@ -30,7 +29,7 @@ class AddressPipeline(object):
     def street_clean_dict(self, location_dict, default_city, default_state):
         """
         Clean and item's location to make a mapzen query.
-        Fuzzy match Chicago addresses against Chicago Data Portal Address API
+        Disabled Fuzzy match Chicago addresses on Chicago Data Portal Address API
         """
         name = location_dict.get('name', '').strip()
         query = location_dict.get('address', '').strip()
@@ -43,12 +42,8 @@ class AddressPipeline(object):
             querydict = self.bad_address_tag(e.parsed_string)
         city = querydict.get('PlaceName', default_city) # replace w default city if blank
         state = querydict.get('StateName', default_state)  # replace w default state if blank
-        street = querydict.get('StreetName', '')
-        if city.lower() == 'chicago' and street != '': # fuzzy matching on closest street name if misspelled
-            street = process.extract(street, CITY_STREETS, limit=1)
         querydict['PlaceName'] = city
         querydict['StateName'] = state
-        querydict['StreetName'] = street
         return querydict
 
     def bad_address_tag(parsed_string):
