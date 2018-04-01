@@ -24,7 +24,6 @@ class MapboxPipeline(object):
 
     def process_item(self, item, spider):
         try:
-            # import pdb; pdb.set_trace()
             if item['location']['coordinates']['latitude'] is None:
                 with requests.Session() as session:
                     response = self.get_geocoder_query(
@@ -34,6 +33,7 @@ class MapboxPipeline(object):
                     item['location']['coordinates']['longitude'] = response[0].lng
                     item['location']['coordinates']['latitude'] = response[0].lat
                     item['location']['url'] = response[0].url
+
             return item
         except Exception as e:
             print(e)
