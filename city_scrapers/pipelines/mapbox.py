@@ -34,6 +34,8 @@ class MapboxPipeline(object):
                     item['location']['coordinates']['longitude'] = response[0].lng
                     item['location']['coordinates']['latitude'] = response[0].lat
                     item['location']['url'] = response[0].url
+                    item['location']['neighborhood'] = response[0].raw.get('neighborhood')
+
             return item
         except Exception as e:
             print(e)
