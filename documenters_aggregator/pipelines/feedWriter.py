@@ -3,16 +3,17 @@ from scrapy.exporters import JsonItemExporter, CsvItemExporter
 import datetime
 
 
-def generate_file_name(file_format):
+def generate_file_name(spider, file_format):
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M')
-    file_name = './documenters_aggregator/local_outputs/{}_{}.{}'.format('output',timestamp, file_format)
+    file_name = './documenters_aggregator/local_outputs/{}_{}.{}'.format(spider.name,timestamp, file_format)
     return file_name
 
 
 class JsonWriterPipeline(object):
 
-    def __init__(self):
-        self.file = open(generate_file_name('json'), 'wb')
+    def open_spider(self, spider):
+        # import pdb; pdb.set_trace()
+        self.file = open(generate_file_name(spider, 'json'), 'wb')
         self.exporter = JsonItemExporter(self.file, encoding='utf-8', ensure_ascii=False)
         self.exporter.start_exporting()
 
@@ -26,8 +27,8 @@ class JsonWriterPipeline(object):
 
 class CsvWriterPipeline(object):
 
-    def __init__(self):
-        self.file = open(generate_file_name('csv'), 'wb')
+    def open_spider(self, spider):
+        self.file = open(generate_file_name(spider, 'csv'), 'wb')
         self.exporter = CsvItemExporter(self.file, encoding='utf-8')
         self.exporter.start_exporting()
 
