@@ -6,7 +6,7 @@ from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
 from .TravisValidation import TravisValidationPipeline
 from .localExporter import CsvPipeline
-from .feedWriter import JsonWriterPipeline
+from .feedWriter import JsonWriterPipeline, CsvWriterPipeline
 from .addressCoderPipeline import AddressPipeline
 
 __all__ = (

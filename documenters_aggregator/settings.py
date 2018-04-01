@@ -40,6 +40,7 @@ ITEM_PIPELINES = {
     'documenters_aggregator.pipelines.AddressPipeline': 200,
     'documenters_aggregator.pipelines.MapboxPipeline': 300,
     'documenters_aggregator.pipelines.JsonWriterPipeline': 400,
+    'documenters_aggregator.pipelines.CsvWriterPipeline': 400,
     'documenters_aggregator.pipelines.CsvPipeline': 400
 }
 
