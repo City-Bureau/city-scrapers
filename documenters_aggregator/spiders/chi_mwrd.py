@@ -53,7 +53,9 @@ class Chi_mwrdSpider(Spider):
                 'sources': self._parse_sources(item)
             }
             data['status'] = self._parse_status(item, data['start_time'])
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data, data['start_time'])
+
+
             yield data
 
     def _parse_classification(self, item):
@@ -126,9 +128,10 @@ class Chi_mwrdSpider(Spider):
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
             return self._naive_datetime_to_tz(naive)
-        else:
-            return date
-
+        elif not time:
+            time_string = '{0}'.format(date)
+            naive = datetime.strptime(time_string, '%m/%d/%Y')
+            return self._naive_datetime_to_tz(naive)
         return None
 
     def _parse_end(self, item):
