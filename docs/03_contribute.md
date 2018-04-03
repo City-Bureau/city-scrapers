@@ -21,7 +21,7 @@ Save and note the issue number.
 Create a new branch in your fork:
 
 ```
-$ git checkout -b XXXX-spider-NAMEOFAGENCY
+$ git checkout -b XXXX-spider_NAMEOFAGENCY
 ```
 
 `XXXX` is the zero-padded issue number and `NAMEOFAGENCY` should be something like `chi_housing`. For example, for ticket number 53 entitled "SPIDER: Chicago Housing Authority", create a branch named `0053-spider-chi_housing`.
