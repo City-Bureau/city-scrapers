@@ -106,10 +106,13 @@ class Cook_boardSpider(Spider):
         Parse or generate event name.
         """
         agenda = item['Agenda']
-        try:
-            return agenda['url']
-        except:
-            return agenda
+        return ("The Cook County Board of Commissioners is the governing board and"
+                "legislative body of the county. It is comprised of 17 Commissioners,"
+                "each serving a four-year term and is elected from single member districts."
+                "Each district represents approximately 300,000 residents. County Commissioners"
+                "are elected officials who oversee county" 
+                "activities and work to ensure that citizen concerns are met," 
+                "federal and state requirements are fulfilled, and county operations run smoothly.")
 
     def _parse_start(self, item):
         """
