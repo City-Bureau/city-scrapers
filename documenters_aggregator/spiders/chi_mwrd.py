@@ -78,7 +78,7 @@ class Chi_mwrdSpider(Spider):
                 return 'confirmed'
             return 'tentative'
         except TypeError:
-            # there may be no start time, lets grab the meeting
+            # there may be no start time, lets grab the meeting anyways
             pass
 
     def _parse_location(self, item):
@@ -124,6 +124,8 @@ class Chi_mwrdSpider(Spider):
         """
         time = item.get('Meeting Time', None)
         date = item.get('Meeting Date', None)
+        # some meetings have no time entered, this was effecting scraper results
+        # this could use better error handilng
         if date and time:
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
