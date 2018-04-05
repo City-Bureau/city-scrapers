@@ -15,7 +15,7 @@ machine.
 * Python installed
 * Virtual environment manager
 
-If in doubt, please also refer to the [prequisites help file](https://github.com/City-Bureau/city-scrapers/blob/master/docs/prerequisites.md), which should be useful for common first-time setup issues.
+If in doubt, please also refer to the [setup help file](https://github.com/City-Bureau/city-scrapers/blob/master/docs/setuphelp.md), which should be useful for common first-time setup issues.
 
 ## Step 1: Clone the Repository
 
