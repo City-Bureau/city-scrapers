@@ -4,11 +4,11 @@ title: Prerequisites
 
 <h1 class="hidden">Prerequisites</h1>
 
-This document covers some of the issues associated with first-time development environment setup.
+This document covers some of the issues associated with first-time development environment setup and with collaboration using Git.
 
 ## Github
 
-### Create a Github account 
+### Creating a Github account 
 If you do not have an account already, go to [Github.com](https://github.com/) and sign up for an account.
 
 ### Installing Github
@@ -21,7 +21,7 @@ Once you have forked the code and have begun contribution, [syncing your fork](h
 
 ## Windows Limitations
 
-The pty package is not available on Windows, which makes it difficult to run city scraper tests locally. We recommend that if you want to contribute more extensive code to the project, consider creating a Linux environment by installing a virtual machine, partitioning your computer or following the [Docker installation steps on the install guide](02_installation.md#step-2-option-1-local-python-3-and-virtualenv).
+This project uses `invoke` tasks, which rely upon the `pty` package for pseudo-terminal utilties. [Unfortunately, `pty` is not available on Windows](https://github.com/City-Bureau/city-scrapers/issues/62), which makes it difficult to run all City Scraper tests locally. We recommend that if are using Windows and  want to contribute more extensive code to the project, consider creating a Linux environment by installing a virtual machine, partitioning your computer or following the [Docker installation steps on the install guide](02_installation.md#step-2-option-1-local-python-3-and-virtualenv).
 
 ## Creating a virtual environment
 
