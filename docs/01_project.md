@@ -16,7 +16,7 @@ The best way to familiarize yourself with the code base is to build a spider. Fo
 * [Installation](02_installation.md)
 * [Contributing a spider](03_contribute.md)
 
-To contribute infrastructure and utilities, see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+To contribute infrastructure and utilities, see the [help-wanted Github issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
 
 ## Support this work
 
