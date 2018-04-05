@@ -12,7 +12,14 @@ def test_name():
 
 
 def test_description():
-    assert isinstance(parsed_items[0]['description'], str)
+    EXPECTED_DESCRIPTION = ("Each District Commander has a District Advisory "
+            "Committee which serves to provide advice and community based "
+            "strategies that address underlying conditions contributing to crime "
+            "and disorder in the district. Each District Advisory Committee should "
+            "represent the broad spectrum of stakeholders in the community including "
+            "residents, businesses, houses of worship, libraries, parks, schools and "
+            "community-based organizations.")
+    assert parsed_items[0]['description'] == EXPECTED_DESCRIPTION
 
 
 def test_start_time():
