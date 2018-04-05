@@ -1,8 +1,8 @@
 ---
-title: Prerequisites
+title: Setup Help
 ---
 
-<h1 class="hidden">Prerequisites</h1>
+<h1 class="hidden">Setup Help</h1>
 
 This document covers some of the issues associated with first-time development environment setup and with collaboration using Git.
 
