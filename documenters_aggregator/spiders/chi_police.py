@@ -103,7 +103,11 @@ class Chi_policeSpider(Spider):
         """
         Parse or generate event name.
         """
-        return item['eventDetails']
+        return ("Each District Commander has a District Advisory Committee which serves "
+               "to provide advice and community based strategies that address underlying conditions "
+               "contributing to crime and disorder in the district. Each District Advisory Committee "
+               "should represent the broad spectrum of stakeholders in the community including "
+               "residents, businesses, houses of worship, libraries, parks, schools and community-based organizations.")
 
     def _format_time(self, time):
         naive = datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
