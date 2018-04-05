@@ -9,8 +9,13 @@ machine.
 
 ## Prerequisites
 
+* Git installed
 * Github account
 * Working internet connection
+* Python installed
+* Virtual environment manager
+
+If in doubt, please also refer to the [prequisites help file](https://github.com/City-Bureau/city-scrapers/blob/master/docs/prerequisites.md), which should be useful for common first-time setup issues.
 
 ## Step 1: Clone the Repository
 
