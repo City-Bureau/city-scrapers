@@ -39,7 +39,12 @@ def test_sources(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['description'] is None
+    EXPECTED_DESCRIPTION = ("The Chicago Board of Education is responsible for "
+                            "the governance, organizational and financial "
+                            "oversight of Chicago Public Schools (CPS), "
+                            "the third largest school district in the "
+                            "United States of America.")
+    assert item['description'] == EXPECTED_DESCRIPTION
 
 
 @pytest.mark.parametrize('item', parsed_items)
