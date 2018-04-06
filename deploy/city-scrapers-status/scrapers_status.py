@@ -6,7 +6,7 @@ PROJECT_SLUG = 'documenters_aggregator'
 STATUS_BUCKET = os.getenv('STATUS_BUCKET')
 
 STATUS_COLOR_MAP = {
-    'running': '#4c1',
+    'running': '#44cc11',
     'failing': '#cb2431',
     'unclear': '#dfb317'
 }
@@ -37,6 +37,7 @@ STATUS_ICON = '''
 
 def handler(event, context):
     client = boto3.client('s3')
+    print(event)
 
     if 'detail-type' not in event or event['detail-type'] != 'ECS Task State Change':
         raise ValueError('ERROR: Event is not an ECS task state change event')
@@ -45,21 +46,27 @@ def handler(event, context):
         print('INFO: Last status was not STOPPED, exiting...')
         return
 
-    if event['detail']['stoppedReason'] == 'Essential container in task exited':
-        status = 'failed'
-    else:
+    if event['detail']['containers'][0]['exitCode'] == 0:
         status = 'running'
+    else:
+        status = 'failed'
 
     # Pull scraper name from ARN in documenters_aggregator-{SCRAPER}
-    task_def = event['detail']['taskDefinitionArn'].split('/')[0]
-    scraper = task_def.split(':')[-1][len(PROJECT_SLUG) + 1:]
+    task_def = event['detail']['taskDefinitionArn'].split('/')[1]
+    scraper = task_def.split(':')[0][len(PROJECT_SLUG) + 1:]
+    
+    if scraper == '':
+        message = 'Could not extract scraper name from {}'.format(event['detail']['taskDefinitionArn'])
+        raise ValueError(message)
 
     client.put_object(
         Bucket=STATUS_BUCKET,
         Key='{}.svg'.format(scraper),
         Body=STATUS_ICON.format(
-            color=STATUS_COLOR_MAP.get(status, '#dfb317'),
+            color=STATUS_COLOR_MAP[status],
             status=status,
             date=datetime.today().strftime('%Y-%m-%d')
-        )
+        ),
+        CacheControl='no-cache',
+        ContentType='image/svg+xml',
     )

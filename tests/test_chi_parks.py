@@ -23,7 +23,14 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == 'Not available'
+    EXPECTED_DESCRIPTION = ("The Chicago Park District Act provides that the Chicago"
+        "Park District shall be governed by a board of seven" 
+        "non-salaried Commissioners who are appointed by the Mayor"
+        "of the City of Chicago with the approval of the Chicago City"
+        "Council. Under the Chicago Park District Code, the Commissioners"
+        "have a fiduciary duty to act, vote on all matters, and govern"
+        "the Park District in the best interest of the Park District.")
+    assert parsed_items[0]['description'] == EXPECTED_DESCRIPTION
 
 
 def test_start_time():

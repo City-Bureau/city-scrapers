@@ -14,10 +14,10 @@ license:
 links:
     header:
       - title: GitHub
-        url: https://github.com/City-Bureau/documenters-aggregator
+        url: https://github.com/City-Bureau/city-scrapers
     footer:
       - title: GitHub
-        url: https://github.com/City-Bureau/documenters-aggregator
+        url: https://github.com/City-Bureau/city-scrapers
 
 ui:
     header:
@@ -28,7 +28,7 @@ ui:
 social:
     github:
         user: City-Bureau
-        repo: documenters-aggregator
+        repo: city-scrapers
     twitter:
         enabled: false
         via:
