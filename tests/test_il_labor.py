@@ -16,7 +16,12 @@ def test_name():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['description'] == 'To discuss issues and cases pending before the panel'
+    EXPECTED_DESCRIPTION = ("The Illinois Public Labor Relations Act (Act) governs labor relations "
+                "between most public employers in Illinois and their employees. Throughout "
+                "the State, the Illinois Labor Relations Board regulates the designation of "
+                "employee representatives; the negotiation of wages, hours, and other conditions "
+                "of employment; and resolves, or if necessary, adjudicates labor disputes.")
+    assert item['description'] == EXPECTED_DESCRIPTION
 
 
 @pytest.mark.parametrize('item', parsed_items)
