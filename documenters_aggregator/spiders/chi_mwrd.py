@@ -70,15 +70,15 @@ class Chi_mwrdSpider(Spider):
         tentative = no agenda posted
         confirmed = agenda posted
         """
-        #scraper appears to bypass entries with no meeting time, may not be desired
+        # scraper appears to bypass entries with no meeting time, may not be desired
         try:
             if datetime.now().isoformat() > start_time.isoformat():
                 return 'passed'
             if 'url' in item['Agenda']:
                 return 'confirmed'
             return 'tentative'
-        except TypeError:
-            # there may be no start time, lets grab the meeting anyways
+        except Exception:
+            print("Parsing status failed!")
             pass
 
     def _parse_location(self, item):
@@ -116,7 +116,7 @@ class Chi_mwrdSpider(Spider):
         try:
             return agenda['url']
         except:
-            return agenda
+            return 'agenda'
 
     def _parse_start(self, item):
         """
@@ -133,7 +133,9 @@ class Chi_mwrdSpider(Spider):
         elif not time:
             time_string = '{0}'.format(date)
             naive = datetime.strptime(time_string, '%m/%d/%Y')
-            return self._naive_datetime_to_tz(naive)
+            # return self._naive_datetime_to_tz(naive)
+            print("Meeting with no start time...skipping")
+            return None
         return None
 
     def _parse_end(self, item):
