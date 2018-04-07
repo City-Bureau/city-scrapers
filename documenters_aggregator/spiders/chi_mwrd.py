@@ -116,7 +116,7 @@ class Chi_mwrdSpider(Spider):
         try:
             return agenda['url']
         except:
-            return 'agenda'
+            return 'no agenda posted'
 
     def _parse_start(self, item):
         """
