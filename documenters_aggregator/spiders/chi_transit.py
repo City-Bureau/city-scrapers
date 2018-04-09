@@ -15,7 +15,7 @@ class ChiTransitSpider(Spider):
     long_name = 'Chicago Transit Authority'
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
-    start_urls = ['http://www.transitchicago.com/agendaminute/default.aspx?F_OrderBy=MeetingDate+DESC&All=y']
+    start_urls = ['https://www.transitchicago.com/board/notices-agendas-minutes/']
 
     def parse(self, response):
         """
