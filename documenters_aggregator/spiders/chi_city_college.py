@@ -13,7 +13,7 @@ from documenters_aggregator.spider import Spider
 
 class Chi_cityCollegeSpider(Spider):
     name = 'chi_city_college'
-    long_name = 'City College of Chicago'
+    long_name = 'City Colleges of Chicago'
     allowed_domains = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
     start_urls = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
 
@@ -96,11 +96,12 @@ class Chi_cityCollegeSpider(Spider):
 
     def _parse_description(self, response):
         """
-        Parse or generate event name.
+        Static description as given in Issue #275
         """
-        text_chunks = response.css('div.ms-rtestate-field::text').extract()
-
-        return ' '.join(text_chunks)
+        return ("The Board of Trustees is the governing body of City Colleges "
+                "of Chicago Community College District No. 508. City Colleges "
+                "of Chicago currently operates seven accredited colleges "
+                "located throughout Chicago.")
 
     def _parse_start(self, response):
         """
