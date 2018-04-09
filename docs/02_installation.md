@@ -9,23 +9,28 @@ machine.
 
 ## Prerequisites
 
+* Git installed
 * Github account
 * Working internet connection
+* Python installed
+* Virtual environment manager
+
+If in doubt, please also refer to the [setup help file](https://github.com/City-Bureau/city-scrapers/blob/master/docs/setuphelp.md), which should be useful for common first-time setup issues.
 
 ## Step 1: Clone the Repository
 
 These steps are the same, regardless of which option below you choose.
 
-1. [Fork the repository](https://github.com/City-Bureau/documenters-aggregator/fork) to your own Github account.
+1. [Fork the repository](https://github.com/City-Bureau/city-scrapers/fork) to your own Github account.
 
 2. Clone your fork to your local machine:
 ```
-$ git clone git@github.com:<your-username>/documenters-aggregator.git
+$ git clone git@github.com:<your-username>/city-scrapers.git
 ```
 
 3. Change directories into the main project folder:
 ```
-$ cd documenters-aggregator
+$ cd city-scrapers
 ```
 
 *If you do not plan to do any development, you can skip creating a fork and
@@ -40,15 +45,15 @@ If you are using a different virtual environment manager, please refer to its
 documentation (steps 1-3 should be the same).
 
 
-1. Create a virtual environment (also called documenters-aggregator) for the project:
+1. Create a virtual environment (also called city-scrapers) for the project:
 ```
-$ mkvirtualenv -p `which python3` documenters-aggregator
+$ mkvirtualenv -p `which python3` city-scrapers
 ```
 The virtual environment should now be activated.
 
 2. Install the required packages into the virtual environment:
 ```
-(documenters-aggregator)$ pip install -r requirements.txt
+(city-scrapers)$ pip install -r requirements.txt
 ```
 
 You should now have a working environment for running the project or making
@@ -56,13 +61,13 @@ changes to it. Remember to always activate the virtual environment before
 working with it:
 
 ```
-$ workon documenters-aggregator
+$ workon city-scrapers
 ```
 
 Should you need to deactivate the virtual environment, it is as simple as:
 
 ```
-(documenters-aggregator)$ deactivate
+(city-scrapers)$ deactivate
 ```
 
 
@@ -70,16 +75,16 @@ Should you need to deactivate the virtual environment, it is as simple as:
 
 This is a good option for Windows or a system that doesn't have any of the above prerequisites installed but does have Docker. You will first have to install Docker [here](https://docs.docker.com/install/). Older Mac and Windows systems may need to use [Docker Toolbox](https://docs.docker.com/toolbox/overview/) instead.
 
-1. [Fork the repository](https://github.com/City-Bureau/documenters-aggregator/fork) to your own Github account.
+1. [Fork the repository](https://github.com/City-Bureau/city-scrapers/fork) to your own Github account.
 
 2. Clone your fork to your local machine:
 ```
-$ git clone git@github.com:<your-username>/documenters-aggregator.git
+$ git clone git@github.com:<your-username>/city-scrapers.git
 ```
 
 3. Change directories into the main project folder:
 ```
-$ cd documenters-aggregator
+$ cd city-scrapers
 ```
 
 4. Build the docker container. Don't forget final ".", which tells Docker to use the Dockerfile in the current directory. The "-t" flag adds a tag to the image so that it gets a nice repository name and tag. This tag matches the [Docker Hub docker repository](https://hub.docker.com/r/easherma/documenters-aggregator), but you can add other tags. For more information, read the [Docker docs.](https://docs.docker.com/)
