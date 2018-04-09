@@ -26,16 +26,20 @@ class Chi_policeSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-
         data = json.loads(response.body_as_unicode())
 
         for item in data:
+            # Drop events that aren't Beat meetings or DAC meetings
+            classification = self._parse_classification(item)
+            if not classification:
+                continue
+
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': 'CAPS community event',
+                'description': self._parse_description(classification),
+                'classification': classification,
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'all_day': False,
@@ -57,7 +61,14 @@ class Chi_policeSpider(Spider):
         """
         Parse or generate classification (e.g. town hall).
         """
-        return 'Not classified'
+        if 'beat' in item['title'].lower():
+            return 'Beat Meeting'
+        elif 'district advisory committee' in item['title'].lower():
+            return 'District Advisory Committee (DAC)'
+        else:
+            return None
+        # return 'CAPS community event'  # do we still want this?
+
 
     def _parse_status(self, item):
         """
@@ -99,15 +110,23 @@ class Chi_policeSpider(Spider):
         """
         return item['title']
 
-    def _parse_description(self, item):
+    def _parse_description(self, classification):
         """
         Parse or generate event name.
         """
-        return ("Each District Commander has a District Advisory Committee which serves "
-               "to provide advice and community based strategies that address underlying conditions "
-               "contributing to crime and disorder in the district. Each District Advisory Committee "
-               "should represent the broad spectrum of stakeholders in the community including "
-               "residents, businesses, houses of worship, libraries, parks, schools and community-based organizations.")
+        if classification == 'Beat Meeting':
+            return ("CPD Beat meetings, held on all 279 police "
+                    "beats in the City, provide a regular opportunity "
+                    "for police officers, residents, and other community "
+                    "stakeholders to exchange information, identify and "
+                    "prioritize problems, and begin developing solutions "
+                    "to those problems.")
+        elif classification == 'District Advisory Committee (DAC)':
+            return ("Each District Commander has a District Advisory Committee which serves "
+                    "to provide advice and community based strategies that address underlying conditions "
+                    "contributing to crime and disorder in the district. Each District Advisory Committee "
+                    "should represent the broad spectrum of stakeholders in the community including "
+                    "residents, businesses, houses of worship, libraries, parks, schools and community-based organizations.")
 
     def _format_time(self, time):
         naive = datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
