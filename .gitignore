@@ -89,6 +89,7 @@ celerybeat-schedule
 venv/
 ENV/
 documenters-aggregator/
+city-scrapers/
 
 # Spyder project settings
 .spyderproject

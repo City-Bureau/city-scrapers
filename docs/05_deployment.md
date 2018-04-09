@@ -13,7 +13,7 @@ There is also a Lambda script that runs every hour and kicks off the next scrape
 
 ## How Deployment Works
 
-The [GitHub repo](https://github.com/City-Bureau/documenters-aggregator) is connected to AWS CodeBuild. When code is pushed to the master branch on GitHub, CodeBuild fetches the latest code and runs a build as defined in `buildspec.yml`. This file defines a workflow that:
+The [GitHub repo](https://github.com/City-Bureau/city-scrapers) is connected to AWS CodeBuild. When code is pushed to the master branch on GitHub, CodeBuild fetches the latest code and runs a build as defined in `buildspec.yml`. This file defines a workflow that:
   1. Builds a Docker image using `deploy/Dockerfile`
   2. Tags the new image with `latest` (Note that this is the tag that all of the ECS Task Definitions will use).
   3. Checks that the tests pass by running `invoke runtests` in the new image

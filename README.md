@@ -36,12 +36,12 @@ We hope that working with us will fill experience gaps (like using git/github, w
 ## Ready to code with us?
 
 1. [Fill out this form](https://airtable.com/shrsdRcYVzp019U22) to join our [slack channel](https://citybureau.slack.com/#labs_city_scrapers) and meet the community.
-2. Read about [how we collaborate](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) and review our [Code of Conduct](https://github.com/City-Bureau/documenters-aggregator/blob/master/CODE_OF_CONDUCT.md).
+2. Read about [how we collaborate](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md) and review our [Code of Conduct](https://github.com/City-Bureau/city-scrapers/blob/master/CODE_OF_CONDUCT.md).
 3. Get started with [Installation](docs/02_installation.md) and [Contributing a spider](docs/03_contribute.md).
 
 We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on [slack](https://citybureau.slack.com/#labs_city_scrapers) for support if you need it. We also meet up in person to work together regularly, and post about upcoming meetups in slack.
 
-For those familiar with the project, please see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+For those familiar with the project, please see the [help-wanted Github issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
 
 ## Don't want to code?
 

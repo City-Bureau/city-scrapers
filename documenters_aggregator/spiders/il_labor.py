@@ -119,7 +119,11 @@ class Il_laborSpider(Spider):
         """
         No meeting-specific description, so use a generic description from page.
         """
-        return 'To discuss issues and cases pending before the panel'
+        return ("The Illinois Public Labor Relations Act (Act) governs labor relations "
+                "between most public employers in Illinois and their employees. Throughout "
+                "the State, the Illinois Labor Relations Board regulates the designation of "
+                "employee representatives; the negotiation of wages, hours, and other conditions "
+                "of employment; and resolves, or if necessary, adjudicates labor disputes.")
 
     def _parse_start(self, item):
         """
