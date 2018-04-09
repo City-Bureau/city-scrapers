@@ -81,7 +81,7 @@ class ChiTransitSpider(Spider):
         """
         location_str = item.css('td:nth-child(4)::text').extract_first()
         # Always 537 W Lake, so handle that if provided (but allow for change)
-        if re.match(r'567 (W.|W|West) Lake.*', location_str):
+        if re.search(r'567 (W.|W|West) Lake.*|board\s?room', location_str, re.IGNORECASE):
             return {
                 'url': self.base_url,
                 'name': 'Chicago Transit Authority 2nd Floor Boardroom',
