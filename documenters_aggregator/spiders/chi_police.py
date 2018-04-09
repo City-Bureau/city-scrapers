@@ -67,8 +67,6 @@ class Chi_policeSpider(Spider):
             return 'District Advisory Committee (DAC)'
         else:
             return None
-        # return 'CAPS community event'  # do we still want this?
-
 
     def _parse_status(self, item):
         """
