@@ -15,7 +15,7 @@ SPIDER_MODULES = ['documenters_aggregator.spiders']
 NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Documenters Aggregator [development mode]. Learn more and say hello at https://city-bureau.github.io/city-scrapers/'
+USER_AGENT = 'City Scrapers [development mode]. Learn more and say hello at https://www.citybureau.org/city-scrapers/'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
