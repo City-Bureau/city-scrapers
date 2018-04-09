@@ -68,7 +68,11 @@ class ChiTransitSpider(Spider):
 
         By default, return "tentative"
         """
-        return 'tentative'
+        status = 'tentative'
+        name = item.css('td:nth-child(3)::text').extract_first()
+        if re.search(r'cancelled', name, re.IGNORECASE):
+            status = 'cancelled'
+        return status
 
     def _parse_location(self, item):
         """
