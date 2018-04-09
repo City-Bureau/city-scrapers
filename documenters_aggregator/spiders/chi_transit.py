@@ -10,6 +10,7 @@ from pytz import timezone
 from documenters_aggregator.spider import Spider
 
 
+
 class ChiTransitSpider(Spider):
     name = 'chi_transit'
     long_name = 'Chicago Transit Authority'
@@ -26,7 +27,7 @@ class ChiTransitSpider(Spider):
         needs.
         """
         today = datetime.now().replace(tzinfo=timezone('America/Chicago'))
-        response_items = response.css('.datatbl tr:not(:first-child)')
+        response_items = response.css('.agendaminuteDataTbl tr:not(:first-child)')
         for idx, item in enumerate(response_items):
             # Including previous item for meetings where it's needed
             prev_item = response_items[idx - 1] if idx > 0 else None
