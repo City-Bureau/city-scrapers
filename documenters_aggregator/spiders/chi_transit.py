@@ -127,7 +127,7 @@ class ChiTransitSpider(Spider):
         """
         date_el_text = item.css('td:first-child').extract_first()
         date_text = date_el_text[4:-5]
-        date_str, time_str = date_text.split('<br>')
+        date_str, time_str = [x.strip() for x in date_text.split('<br>')]
         # A.M. and AM formats are used inconsistently, remove periods
         time_str = time_str.replace('.', '')
         if re.match(r'\d{1,2}:\d{2} (AM|PM)', time_str):
