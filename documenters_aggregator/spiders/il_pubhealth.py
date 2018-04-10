@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import usaddress
 from dateutil.parser import parse as dateparse
 
 from documenters_aggregator.spider import Spider
@@ -70,12 +71,32 @@ class Il_pubhealthSpider(Spider):
         """
         @TODO better location
         """
+        lines = item.css('div.event_description p::text').extract()
+        lines = [line.strip() for line in lines]
+
+        for line in lines:
+            address = self._find_possible_address(line)
+            if address:
+                break
+        else:
+            address = ''
+
         return {
             'url': '',
             'name': '',
-            'address': '',
+            'address': address,
             'coordinates': {'longitude': '', 'latitude': ''},
         }
+
+    def _find_possible_address(self, line):
+        try:
+            tagged_address, address_type = usaddress.tag(line)
+            if address_type  == "Street Address" and tagged_address.get("PlaceName") == "Chicago":
+                return line
+        except usaddress.RepeatedLabelError:
+            pass
+        else:
+            return None
 
     def _parse_all_day(self, item):
         """
