@@ -3,7 +3,7 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.il_pubhealth import Il_pubhealthSpider
+from city_scrapers.spiders.il_pubhealth import Il_pubhealthSpider
 
 test_response = file_response('files/il_pubhealth.html', url='http://www.dph.illinois.gov/events')
 spider = Il_pubhealthSpider()

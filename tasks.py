@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 from urllib.parse import urlparse
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'documenters_aggregator/spiders')
+SPIDERS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'city_scrapers/spiders')
 TESTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests/files')
 

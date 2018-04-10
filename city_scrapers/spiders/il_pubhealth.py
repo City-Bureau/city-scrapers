@@ -2,7 +2,7 @@
 import scrapy
 from dateutil.parser import parse as dateparse
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Il_pubhealthSpider(Spider):

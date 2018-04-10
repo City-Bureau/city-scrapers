@@ -10,7 +10,7 @@ import unicodedata
 from datetime import datetime
 
 import scrapy
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Chi_buildingsSpider(Spider):

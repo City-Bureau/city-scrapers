@@ -4,7 +4,7 @@ import json
 import time
 
 from airtable import Airtable
-from documenters_aggregator.utils import get_key
+from city_scrapers.utils import get_key
 from random import randint
 from requests.exceptions import HTTPError
 from scrapy.exceptions import DropItem

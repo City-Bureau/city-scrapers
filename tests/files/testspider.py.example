@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class TestspiderSpider(Spider):

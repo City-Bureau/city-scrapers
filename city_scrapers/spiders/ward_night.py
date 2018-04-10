@@ -11,9 +11,9 @@ from enum import IntEnum
 
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
-GOOGLE_API_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_GOOGLE_API_KEY') or 'test-token'
+GOOGLE_API_KEY = os.environ.get('city_scrapers_GOOGLE_API_KEY') or 'test-token'
 SPREADSHEET_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1xnt4kZI9Ruinw91wM-nnWftsFD-ZaKaozepdNXeIrpo'
 
 

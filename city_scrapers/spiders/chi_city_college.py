@@ -8,7 +8,7 @@ import re
 
 from datetime import datetime
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Chi_cityCollegeSpider(Spider):

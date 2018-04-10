@@ -11,7 +11,7 @@ import datetime
 from pytz import timezone
 import dateutil.parser
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Chi_citycouncilSpider(Spider):

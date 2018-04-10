@@ -2,7 +2,7 @@
 from datetime import datetime
 import re
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Metra_boardSpider(Spider):

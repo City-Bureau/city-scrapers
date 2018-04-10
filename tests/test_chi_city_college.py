@@ -1,5 +1,5 @@
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_city_college import Chi_cityCollegeSpider
+from city_scrapers.spiders.chi_city_college import Chi_cityCollegeSpider
 
 
 test_response = file_response('files/ccc_event.html')

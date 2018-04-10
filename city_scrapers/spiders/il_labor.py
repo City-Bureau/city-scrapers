@@ -7,7 +7,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 from datetime import datetime
 from pytz import timezone
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Il_laborSpider(Spider):

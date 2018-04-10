@@ -8,7 +8,7 @@ import re
 from datetime import datetime
 from time import strptime
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Chi_pubhealthSpider(Spider):

@@ -9,7 +9,7 @@ import re
 
 from pytz import timezone
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Chi_policeboardSpider(Spider):
