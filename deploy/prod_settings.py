@@ -35,7 +35,8 @@ COOKIES_ENABLED = False
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'documenters_aggregator.pipelines.GeocoderPipeline': 200,
+    # disabled until we can rebuild it on another provider
+    #'documenters_aggregator.pipelines.GeocoderPipeline': 200,
     'documenters_aggregator.pipelines.ValidationPipeline': 300,
     'documenters_aggregator.pipelines.AirtablePipeline': 400
 }
