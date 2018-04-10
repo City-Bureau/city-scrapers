@@ -19,6 +19,24 @@ For a primer on Git for first-time users, see the [try.github.io](https://try.gi
 
 Once you have forked the code and have begun contribution, [syncing your fork](https://help.github.com/articles/syncing-a-fork/) periodically with the main City Bureau repository will be useful in staying up-to-date with the project.
 
+1. You must first [add a remote link from which Git can track the main City Bureau project](https://help.github.com/articles/configuring-a-remote-for-a-fork/). The remote URL is <https://github.com/City-Bureau/city-scrapers.git>. Conventionally we name this remote source `upstream`. The remote source for your original cloned repository is usually named `origin`.
+
+```
+git remote add upstream https://github.com/City-Bureau/city-scrapers.git
+```
+You can see your existing remotes as well by running `git remote -v`.
+
+2. Once you've added the City Bureau remote, fetch the changes from upstream
+```
+git fetch upstream
+```
+3. Make sure you are in the branch you hope to merge changes into (typically your `master` branch), then merge the changes in.
+```
+git checkout master
+git merge
+```
+4. The final step is to update your fork on Github with the changes from the original repository by running `git push`.
+
 ## Windows Limitations
 
 This project uses `invoke` tasks, which rely upon the `pty` package for pseudo-terminal utilties. [Unfortunately, `pty` is not available on Windows](https://github.com/City-Bureau/city-scrapers/issues/62), which makes it difficult to run all City Scraper tests locally. We recommend that if are using Windows and  want to contribute more extensive code to the project, consider creating a Linux environment by installing a virtual machine, partitioning your computer or following the [Docker installation steps on the install guide](02_installation.md#step-2-option-1-local-python-3-and-virtualenv).
