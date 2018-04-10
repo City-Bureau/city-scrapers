@@ -1,7 +1,7 @@
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 from scrapy.exporters import CsvItemExporter
-from documenters_aggregator.utils import get_key
+from city_scrapers.utils import get_key
 import datetime
 from os import remove
 import subprocess
@@ -13,7 +13,7 @@ class CsvPipeline(object):
     Outputs csv files for local development to the /local_output/ folder
     """
 
-    path = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode("utf-8").rstrip()  + '/documenters_aggregator/local_outputs/'
+    path = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode("utf-8").rstrip()  + '/city_scrapers/local_outputs/'
 
     def __init__(self):
         dispatcher.connect(self.spider_opened, signals.spider_opened)

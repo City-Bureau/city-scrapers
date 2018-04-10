@@ -8,7 +8,7 @@ import scrapy
 import json
 import datetime as dt
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Cook_landbankSpider(Spider):
@@ -38,11 +38,11 @@ class Cook_landbankSpider(Spider):
         'DOWNLOAD_DELAY': 1,
         'CONCURRENT_REQUESTS_PER_UP': 1,
         'LOG_ENABLED': True,
-        'BOT_NAME': 'documenters_aggregator',
+        'BOT_NAME': 'city_scrapers',
         'COOKIES_ENABLED': False,
-        'NEWSPIDER_MODULE': 'documenters_aggregator.spiders',
+        'NEWSPIDER_MODULE': 'city_scrapers.spiders',
         'ROBOTSTXT_OBEY': True,
-        'SPIDER_MODULES': ['documenters_aggregator.spiders'],
+        'SPIDER_MODULES': ['city_scrapers.spiders'],
         'USER_AGENT': 'Documenters Aggregator (learn more and say hello at https://TKTK)'
     }
 

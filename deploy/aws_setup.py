@@ -7,7 +7,7 @@ PROJECT_SLUG = 'documenters_aggregator'
 DEPLOY_TAG = 'latest'  # datetime.now().strftime("%Y%m%d%H%M")
 ECS_URI = environ.get('ECS_REPOSITORY_URI')
 
-SPIDER_PATH = 'documenters_aggregator/spiders'
+SPIDER_PATH = 'city_scrapers/spiders'
 
 spider_names = [
     path.splitext(f)[0]

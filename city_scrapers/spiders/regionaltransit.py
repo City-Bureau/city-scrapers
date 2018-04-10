@@ -4,7 +4,7 @@ import scrapy
 import re
 from datetime import datetime
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 # The RTA's Board and other meetings are are displayed on their

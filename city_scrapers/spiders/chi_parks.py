@@ -3,25 +3,26 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
+import re
+import urllib3
 
 from datetime import datetime
-from pytz import timezone
 from legistar.events import LegistarEventsScraper
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
-class Cook_boardSpider(Spider):
-    name = 'cook_board'
-    long_name = 'Cook County Board of Commissioners'
-    allowed_domains = ['cook-county.legistar.com']
-    event_timezone = 'America/Chicago'
-    start_urls = ['https://www.cook-county.legistar.com']  # use LegistarEventsScraper instead
+class Chi_parksSpider(Spider):
+    name = 'chi_parks'
+    long_name = 'Chicago Park District'
+    START_URL = 'https://chicagoparkdistrict.legistar.com'
+    allowed_domains = ['chicagoparkdistrict.legistar.com']
+    start_urls = [START_URL]
 
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`.
+        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
@@ -30,30 +31,30 @@ class Cook_boardSpider(Spider):
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         les = LegistarEventsScraper(jurisdiction=None, datadir=None)
-        les.EVENTSPAGE = 'https://cook-county.legistar.com/Calendar.aspx'
-        les.BASE_URL = 'https://cook-county.legistar.com'
+        les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
+        les.BASE_URL = self.START_URL
         if not since:
             since = datetime.today().year
         return les.events(since=since)
 
     def _parse_events(self, events):
         for item, _ in events:
-            start_time = self._parse_start(item)
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': start_time,
+                'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
-                'timezone': self.event_timezone,
+                'timezone': 'America/Chicago',
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item)
+                'sources': self._parse_sources(item),
             }
+            data['id'] = self._generate_id(data, data['start_time'])
             data['status'] = self._parse_status(item, data['start_time'])
-            data['id'] = self._generate_id(data, start_time)
             yield data
 
     def _parse_classification(self, item):
@@ -68,7 +69,7 @@ class Cook_boardSpider(Spider):
         tentative = no agenda posted
         confirmed = agenda posted
         """
-        if datetime.now().replace(tzinfo=timezone(self.event_timezone)) > start_time:
+        if datetime.now().isoformat() > start_time.isoformat():
             return 'passed'
         if 'url' in item['Agenda']:
             return 'confirmed'
@@ -81,7 +82,7 @@ class Cook_boardSpider(Spider):
         """
         return {
             'url': None,
-            'address': item.get('Meeting Location', None),
+            'address': self.clean_html(item.get('Meeting Location', None)),
             'name': None,
             'coordinates': {
                 'latitude': None,
@@ -99,17 +100,19 @@ class Cook_boardSpider(Spider):
         """
         Parse or generate event name.
         """
-        return item['Name']['label']
+        return item['Name']
 
     def _parse_description(self, item):
         """
         Parse or generate event name.
         """
-        agenda = item['Agenda']
-        try:
-            return agenda['url']
-        except:
-            return agenda
+        return ("The Chicago Park District Act provides that the Chicago"
+                "Park District shall be governed by a board of seven"
+                "non-salaried Commissioners who are appointed by the Mayor"
+                "of the City of Chicago with the approval of the Chicago City"
+                "Council. Under the Chicago Park District Code, the Commissioners"
+                "have a fiduciary duty to act, vote on all matters, and govern"
+                "the Park District in the best interest of the Park District.")
 
     def _parse_start(self, item):
         """
@@ -120,12 +123,12 @@ class Cook_boardSpider(Spider):
         if date and time:
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
-            return self._naive_datetime_to_tz(naive, self.event_timezone)
+            return self._naive_datetime_to_tz(naive)
         return None
 
     def _parse_end(self, item):
         """
-        Parse end date and time.
+        No end date.
         """
         return None
 
@@ -136,5 +139,17 @@ class Cook_boardSpider(Spider):
         try:
             url = item['Name']['url']
         except:
-            url = 'https://cook-county.legistar.com/Calendar.aspx'
+            url = self.START_URL + '/Calendar.aspx'
         return [{'url': url, 'note': ''}]
+
+    # TODO move to parent class?
+    @staticmethod
+    def clean_html(html):
+        """
+        Clean up HTML artifacts.
+        """
+        if html is None:
+            return None
+        else:
+            clean = re.sub(r'\s*(\r|\n|(--em--))+\s*', ' ', html)
+            return clean.strip()

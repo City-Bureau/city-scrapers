@@ -9,7 +9,7 @@ import re
 from datetime import datetime, timedelta
 import time as Time
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Cook_pubhealthSpider(Spider):

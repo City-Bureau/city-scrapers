@@ -4,7 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 from dateutil.parser import parse as dateparse
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Chi_animalSpider(Spider):

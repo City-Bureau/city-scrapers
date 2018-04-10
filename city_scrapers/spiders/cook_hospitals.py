@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Cook_hospitalsSpider(Spider):
@@ -96,7 +96,7 @@ class Cook_hospitalsSpider(Spider):
                 "dignity and respect regardless of a patient’s ability to pay; "
                 "fostering partnerships with other health providers and communities "
                 "to enhance the health of the public; and advocating for policies "
-                "that promote the physical, mental and social well being of the people of Cook County. " 
+                "that promote the physical, mental and social well being of the people of Cook County. "
                 "The CCHHS Board of Directors has five standing committees.")
 
     def _parse_start(self, subitem):

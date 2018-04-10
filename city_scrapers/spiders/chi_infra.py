@@ -6,7 +6,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import re
 import datetime as dt
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Chi_infraSpider(Spider):
