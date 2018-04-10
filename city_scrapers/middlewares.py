@@ -14,12 +14,12 @@ from scrapy.utils.python import to_native_str
 logger = logging.getLogger(__name__)
 
 
-class DocumentersAggregatorRobotsTxtMiddleware(object):
+class CityScrapersRobotsTxtMiddleware(object):
     """
     This is a middleware to respect robots.txt policies. To activate it you must
-    enable this middleware and enable the DOCUMENTERS_AGGREGATOR_ROBOTSTXT_OBEY
+    enable this middleware and enable the CITY_SCRAPERS_ROBOTSTXT_OBEY
     setting. To log robots.txt violations but proceed, enable the
-    DOCUMENTERS_AGGREGATOR_ROBOTSTXT_LOGONLY setting.
+    CITY_SCRAPERS_ROBOTSTXT_LOGONLY setting.
 
     @TODO: Potentially send back to Scrapy. This is a straight copy of
     https://github.com/scrapy/scrapy/blob/6cd35c77da6601f218b5042f4b9a9919e642e15c/scrapy/downloadermiddlewares/robotstxt.py
@@ -29,7 +29,7 @@ class DocumentersAggregatorRobotsTxtMiddleware(object):
     DOWNLOAD_PRIORITY = 1000
 
     def __init__(self, crawler):
-        if not crawler.settings.getbool('DOCUMENTERS_AGGREGATOR_ROBOTSTXT_OBEY'):
+        if not crawler.settings.getbool('CITY_SCRAPERS_ROBOTSTXT_OBEY'):
             raise NotConfigured
 
         self.crawler = crawler
@@ -51,7 +51,7 @@ class DocumentersAggregatorRobotsTxtMiddleware(object):
         if rp is not None and not rp.can_fetch(to_native_str(self._useragent), request.url):
             logger.debug("Forbidden by robots.txt: %(request)s",
                          {'request': request}, extra={'spider': spider})
-            if not self.crawler.settings.get('DOCUMENTERS_AGGREGATOR_ROBOTSTXT_LOGONLY'):
+            if not self.crawler.settings.get('CITY_SCRAPERS_ROBOTSTXT_LOGONLY'):
                 raise IgnoreRequest()
         else:
             logger.debug("Allowed by robots.txt: %(request)s",
