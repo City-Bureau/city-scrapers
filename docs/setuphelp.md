@@ -30,10 +30,10 @@ You can see your existing remotes as well by running `git remote -v`.
 ```
 git fetch upstream
 ```
-3. Make sure you are in the branch you hope to merge changes into (typically your `master` branch), then merge the changes in.
+3. Make sure you are in the branch you hope to merge changes into (typically your `master` branch), then merge the changes in from the `upstream/master` branch. 
 ```
 git checkout master
-git merge
+git merge upstream/master
 ```
 4. The final step is to update your fork on Github with the changes from the original repository by running `git push`.
 
