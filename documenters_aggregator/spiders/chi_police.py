@@ -5,6 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import json
 from datetime import datetime
+from math import floor
 
 from documenters_aggregator.spider import Spider
 
@@ -12,8 +13,8 @@ from documenters_aggregator.spider import Spider
 class Chi_policeSpider(Spider):
     name = 'chi_police'
     long_name = 'Chicago Police Department'
-    allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
-    start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
+    allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
+    start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
     custom_settings = {
         'USER_AGENT': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
     }
@@ -61,12 +62,33 @@ class Chi_policeSpider(Spider):
         """
         Parse or generate classification (e.g. town hall).
         """
-        if 'beat' in item['title'].lower():
-            return 'Beat Meeting'
-        elif 'district advisory committee' in item['title'].lower():
+        if ('district advisory committee' in item['title'].lower()) or ('DAC' in item['title']):
             return 'District Advisory Committee (DAC)'
+        elif 'beat' in item['title'].lower():
+            district = self._parse_district(item)
+            if district:
+                return 'Beat Meeting, District {}'.format(district).strip()
+            else:
+                return 'Beat Meeting'
         else:
             return None
+
+    def _parse_district(self, item):
+        """
+        Parse the district number for beat meetings by
+        using the biggest number found in the item's title.
+        """
+        title = [w.replace(',', '').replace('(', '').replace(')', '') for w in item['title'].split()]
+        numbers_only = [w for w in title if w.replace('-', '').replace('/', '').isdigit()]
+        clean_numbers = [x for w in numbers_only for x in w.split('/')]
+        clean_numbers = [x for w in clean_numbers for x in w.split('-')]
+        clean_numbers = [int(x) for x in clean_numbers if x]
+        if not clean_numbers:
+            return None
+        else:
+            biggest_number = max(clean_numbers)
+            district = int(floor(biggest_number / 100))
+            return district
 
     def _parse_status(self, item):
         """
@@ -112,7 +134,7 @@ class Chi_policeSpider(Spider):
         """
         Parse or generate event name.
         """
-        if classification == 'Beat Meeting':
+        if 'Beat Meeting' in classification:
             return ("CPD Beat meetings, held on all 279 police "
                     "beats in the City, provide a regular opportunity "
                     "for police officers, residents, and other community "
