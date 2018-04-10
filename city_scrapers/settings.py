@@ -19,8 +19,8 @@ USER_AGENT = 'City Scrapers [development mode]. Learn more and say hello at http
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
-city_scrapers_ROBOTSTXT_OBEY = True
-city_scrapers_ROBOTSTXT_LOGONLY = True
+CITY_SCRAPERS_ROBOTSTXT_OBEY = True
+CITY_SCRAPERS_ROBOTSTXT_LOGONLY = True
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
