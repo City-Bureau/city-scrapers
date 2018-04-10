@@ -56,6 +56,7 @@ class chi_LSCMeetingSpider(Spider):
         """
 
         rows = json.loads(response.body.decode('utf-8'))['values']
+        rows = [row for row in rows if (len(row) == 12)]
         now = datetime.now().replace(tzinfo=timezone('America/Chicago'))
 
         for row in rows:
