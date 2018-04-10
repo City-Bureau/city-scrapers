@@ -9,7 +9,6 @@ test_response = file_response('files/il_pubhealth.html', url='http://www.dph.ill
 spider = Il_pubhealthSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
-
 def test_name():
     assert parsed_items[2]['name'] == 'PAC: Maternal Mortality Review Committee Meeting'
 
@@ -51,12 +50,11 @@ def test_status(item):
     assert item['status'] == 'tentative'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_location(item):
-    assert item['location'] == {
+def test_location():
+    assert parsed_items[2]['location'] == {
         'url': '',
         'name': '',
-        'address': '',
+        'address': '69 West Washington St., 35th Floor, Chicago',
         'coordinates': {'latitude': '', 'longitude': ''}
     }
 
