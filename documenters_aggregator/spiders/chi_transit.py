@@ -10,12 +10,13 @@ from pytz import timezone
 from documenters_aggregator.spider import Spider
 
 
+
 class ChiTransitSpider(Spider):
     name = 'chi_transit'
     long_name = 'Chicago Transit Authority'
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
-    start_urls = ['http://www.transitchicago.com/agendaminute/default.aspx?F_OrderBy=MeetingDate+DESC&All=y']
+    start_urls = ['https://www.transitchicago.com/board/notices-agendas-minutes/']
 
     def parse(self, response):
         """
@@ -26,7 +27,7 @@ class ChiTransitSpider(Spider):
         needs.
         """
         today = datetime.now().replace(tzinfo=timezone('America/Chicago'))
-        response_items = response.css('.datatbl tr:not(:first-child)')
+        response_items = response.css('.agendaminuteDataTbl tr:not(:first-child)')
         for idx, item in enumerate(response_items):
             # Including previous item for meetings where it's needed
             prev_item = response_items[idx - 1] if idx > 0 else None
@@ -67,7 +68,11 @@ class ChiTransitSpider(Spider):
 
         By default, return "tentative"
         """
-        return 'tentative'
+        status = 'tentative'
+        name = item.css('td:nth-child(3)::text').extract_first()
+        if re.search(r'cancelled', name, re.IGNORECASE):
+            status = 'cancelled'
+        return status
 
     def _parse_location(self, item):
         """
@@ -76,7 +81,7 @@ class ChiTransitSpider(Spider):
         """
         location_str = item.css('td:nth-child(4)::text').extract_first()
         # Always 537 W Lake, so handle that if provided (but allow for change)
-        if re.match(r'567 (W.|W|West) Lake.*', location_str):
+        if re.search(r'567 (W.|W|West) Lake.*|board\s?room', location_str, re.IGNORECASE):
             return {
                 'url': self.base_url,
                 'name': 'Chicago Transit Authority 2nd Floor Boardroom',
@@ -126,7 +131,7 @@ class ChiTransitSpider(Spider):
         """
         date_el_text = item.css('td:first-child').extract_first()
         date_text = date_el_text[4:-5]
-        date_str, time_str = date_text.split('<br>')
+        date_str, time_str = [x.strip() for x in date_text.split('<br>')]
         # A.M. and AM formats are used inconsistently, remove periods
         time_str = time_str.replace('.', '')
         if re.match(r'\d{1,2}:\d{2} (AM|PM)', time_str):
