@@ -1,6 +1,6 @@
 import os
 import boto3
-from datetime import datetime
+from datetime import datetime, timedelta
 
 PROJECT_SLUG = 'documenters_aggregator'
 STATUS_BUCKET = os.getenv('STATUS_BUCKET')
@@ -52,11 +52,11 @@ def handler(event, context):
         status = 'failed'
 
     # Pull scraper name from ARN in documenters_aggregator-{SCRAPER}
-    task_def = event['detail']['taskDefinitionArn'].split('/')[1]
-    scraper = task_def.split(':')[0][len(PROJECT_SLUG) + 1:]
+    task_def = event['detail']['taskDefinitionArn']
+    scraper = task_def[task_def.find(PROJECT_SLUG):].split(':')[0][len(PROJECT_SLUG) + 1:]
     
     if scraper == '':
-        message = 'Could not extract scraper name from {}'.format(event['detail']['taskDefinitionArn'])
+        message = 'Could not extract scraper name from {}'.format(task_def)
         raise ValueError(message)
 
     client.put_object(
@@ -65,7 +65,7 @@ def handler(event, context):
         Body=STATUS_ICON.format(
             color=STATUS_COLOR_MAP[status],
             status=status,
-            date=datetime.today().strftime('%Y-%m-%d')
+            date=(datetime.utcnow() - timedelta(hours=6)).strftime('%Y-%m-%d')
         ),
         CacheControl='no-cache',
         ContentType='image/svg+xml',
