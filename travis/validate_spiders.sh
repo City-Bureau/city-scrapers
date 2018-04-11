@@ -20,6 +20,7 @@ git diff --name-only --diff-filter=AM $TRAVIS_COMMIT_RANGE| \
     grep .*documenters_aggregator/spiders/.*\.py | \
     xargs basename -s .py | \
     xargs -I{} scrapy crawl {} -o ./travis/{}.json --loglevel=ERROR
+if [ $? -ne 0 ]; then exit 1; fi
 
 # Validate saved output
 find travis -name "*.json" | xargs -I{} invoke validate-spider {}
