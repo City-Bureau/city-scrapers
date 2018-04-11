@@ -1,6 +1,6 @@
 import os
 import boto3
-from datetime import datetime
+from datetime import datetime, timedelta
 
 PROJECT_SLUG = 'documenters_aggregator'
 STATUS_BUCKET = os.getenv('STATUS_BUCKET')
@@ -65,7 +65,7 @@ def handler(event, context):
         Body=STATUS_ICON.format(
             color=STATUS_COLOR_MAP[status],
             status=status,
-            date=datetime.today().strftime('%Y-%m-%d')
+            date=(datetime.utcnow() - timedelta(hours=6)).strftime('%Y-%m-%d')
         ),
         CacheControl='no-cache',
         ContentType='image/svg+xml',
