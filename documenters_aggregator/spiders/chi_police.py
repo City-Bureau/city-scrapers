@@ -5,6 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import json
 from datetime import datetime
+from math import floor
 
 from documenters_aggregator.spider import Spider
 
@@ -12,10 +13,10 @@ from documenters_aggregator.spider import Spider
 class Chi_policeSpider(Spider):
     name = 'chi_police'
     long_name = 'Chicago Police Department'
-    allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
-    start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/']
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
+    allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
+    start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
+    custom_settings = {
+        'USER_AGENT': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
     }
 
     def parse(self, response):
@@ -26,16 +27,20 @@ class Chi_policeSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-
         data = json.loads(response.body_as_unicode())
 
         for item in data:
+            # Drop events that aren't Beat meetings or DAC meetings
+            classification = self._parse_classification(item)
+            if not classification:
+                continue
+
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': 'CAPS community event',
+                'description': self._parse_description(classification),
+                'classification': classification,
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'all_day': False,
@@ -57,7 +62,33 @@ class Chi_policeSpider(Spider):
         """
         Parse or generate classification (e.g. town hall).
         """
-        return 'Not classified'
+        if ('district advisory committee' in item['title'].lower()) or ('DAC' in item['title']):
+            return 'District Advisory Committee (DAC)'
+        elif 'beat' in item['title'].lower():
+            district = self._parse_district(item)
+            if district:
+                return 'Beat Meeting, District {}'.format(district).strip()
+            else:
+                return 'Beat Meeting'
+        else:
+            return None
+
+    def _parse_district(self, item):
+        """
+        Parse the district number for beat meetings by
+        using the biggest number found in the item's title.
+        """
+        title = [w.replace(',', '').replace('(', '').replace(')', '') for w in item['title'].split()]
+        numbers_only = [w for w in title if w.replace('-', '').replace('/', '').isdigit()]
+        clean_numbers = [x for w in numbers_only for x in w.split('/')]
+        clean_numbers = [x for w in clean_numbers for x in w.split('-')]
+        clean_numbers = [int(x) for x in clean_numbers if x]
+        if not clean_numbers:
+            return None
+        else:
+            biggest_number = max(clean_numbers)
+            district = int(floor(biggest_number / 100))
+            return district
 
     def _parse_status(self, item):
         """
@@ -99,11 +130,23 @@ class Chi_policeSpider(Spider):
         """
         return item['title']
 
-    def _parse_description(self, item):
+    def _parse_description(self, classification):
         """
         Parse or generate event name.
         """
-        return item['eventDetails']
+        if 'Beat Meeting' in classification:
+            return ("CPD Beat meetings, held on all 279 police "
+                    "beats in the City, provide a regular opportunity "
+                    "for police officers, residents, and other community "
+                    "stakeholders to exchange information, identify and "
+                    "prioritize problems, and begin developing solutions "
+                    "to those problems.")
+        elif classification == 'District Advisory Committee (DAC)':
+            return ("Each District Commander has a District Advisory Committee which serves "
+                    "to provide advice and community based strategies that address underlying conditions "
+                    "contributing to crime and disorder in the district. Each District Advisory Committee "
+                    "should represent the broad spectrum of stakeholders in the community including "
+                    "residents, businesses, houses of worship, libraries, parks, schools and community-based organizations.")
 
     def _format_time(self, time):
         naive = datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
