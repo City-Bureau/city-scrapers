@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import re
 import scrapy
+import usaddress
 from dateutil.parser import parse as dateparse
 
 from documenters_aggregator.spider import Spider
@@ -11,6 +13,7 @@ class Il_pubhealthSpider(Spider):
     allowed_domains = ['www.dph.illinois.gov']
     start_urls = ['http://www.dph.illinois.gov/events']
     domain_root = 'http://www.dph.illinois.gov'
+    chicago_matcher_regex = re.compile('Chicago')
 
     def parse(self, response):
         """
@@ -70,12 +73,50 @@ class Il_pubhealthSpider(Spider):
         """
         @TODO better location
         """
+        lines = item.css('div.event_description p::text').extract()
+        lines = [line.strip() for line in lines]
+
+        address = self._find_high_confidence_address(lines)
+        if address is None:
+            address = self._find_medium_confidence_address(lines)
+        if address is None:
+            address = self._find_low_confidence_address(lines)
+        if address is None:
+            address = 'multiple locations not in Chicago, see description'
+
         return {
             'url': '',
             'name': '',
-            'address': '',
+            'address': address,
             'coordinates': {'longitude': '', 'latitude': ''},
         }
+
+    def _find_high_confidence_address(self, lines):
+        for line in lines:
+            try:
+                tagged_address, address_type = usaddress.tag(line)
+                if address_type  == "Street Address" and tagged_address.get("PlaceName") == "Chicago":
+                    return line
+            except usaddress.RepeatedLabelError:
+                pass
+        else:
+            return None
+
+    def _find_medium_confidence_address(self, lines):
+        for line in lines:
+            parsed_address = usaddress.parse(line)
+            for address_component in parsed_address:
+                if address_component[1]  == "PlaceName" and address_component[0] == "Chicago":
+                    return line
+        else:
+            return None
+
+    def _find_low_confidence_address(self, lines):
+        for line in lines:
+            if self.chicago_matcher_regex.search(line):
+                return line
+        else:
+            return None
 
     def _parse_all_day(self, item):
         """
