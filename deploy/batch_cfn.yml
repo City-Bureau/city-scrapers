@@ -1,0 +1,170 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the ECS instances.
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Select a VPC that allows instances access to the Internet.
+  SubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Select at two subnets in your selected VPC.
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Select security group.
+Resources:
+  BatchServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: batch.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole
+      Path: /service-role/
+  BatchInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+          Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+  BatchJobRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      RoleName: city-scrapers-batch-job-role
+  BatchInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles: 
+        - !Ref BatchInstanceRole
+  ComputeEnvironment:
+    Type: AWS::Batch::ComputeEnvironment
+    DependsOn:
+      - BatchServiceRole
+      - BatchInstanceProfile
+    Properties:
+      Type: MANAGED
+      ServiceRole: !GetAtt BatchServiceRole.Arn
+      ComputeEnvironmentName: city-scrapers-compute-env
+      ComputeResources:
+        MaxvCpus: 6
+        MinvCpus: 0
+        DesiredvCpus: 0
+        SecurityGroupIds: [!Ref 'SecurityGroup']
+        Type: EC2
+        Subnets: !Ref 'SubnetIds'
+        InstanceRole: !GetAtt BatchInstanceProfile.Arn
+        InstanceTypes:
+          - m5.large
+        Ec2KeyPair: !Ref 'KeyName'
+        Tags: {"Service": "City Scrapers Jobs"}
+      State: ENABLED
+  JobQueue:
+    Type: AWS::Batch::JobQueue
+    DependsOn: ComputeEnvironment
+    Properties:
+      ComputeEnvironmentOrder:
+        - Order: 1
+          ComputeEnvironment: !Ref 'ComputeEnvironment'
+      State: ENABLED
+      Priority: 1
+      JobQueueName: city-scrapers-job-queue
+  BatchJobTriggerFunctionRole:
+      Type: AWS::IAM::Role
+      DependsOn: JobQueue
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: batch-job-trigger-policy
+            PolicyDocument:
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - arn:aws:logs:*:*:*
+                - Effect: Allow
+                  Action:
+                    - batch:*
+                  Resource: "*"
+        Path: "/"
+  BatchJobTrigger:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: city-scrapers-scheduler
+      Description: Runs all available city scrapers job definitions
+      Role: !GetAtt BatchJobTriggerFunctionRole.Arn
+      Handler: index.handler
+      Runtime: python3.6
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          BATCH_JOB_QUEUE: city-scrapers-job-queue
+      Code:
+        ZipFile: |
+          import os
+          import boto3
+
+          batch = boto3.client('batch')
+          JOB_QUEUE = os.getenv('BATCH_JOB_QUEUE')
+
+          def handler(event, context):
+              try:
+                  job_defs = batch.describe_job_definitions(status='ACTIVE')['jobDefinitions']
+                  active_job_defs = set([job['jobDefinitionName'] for job in job_defs])
+
+                  for job in active_job_defs:
+                      response = batch.submit_job(
+                          jobName='{}-job'.format(job),
+                          jobQueue=JOB_QUEUE,
+                          jobDefinition=job,
+                          retryStrategy={'attempts': 3}
+                      )
+                      print(response)
+              except Exception as e:
+                  print(e)
+                  raise e
+  BatchJobTriggerRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: BatchJobTriggerRule
+      ScheduleExpression: rate(1 day)
+      Targets:
+        - Id: BatchJobTrigger
+          Arn: !GetAtt BatchJobTrigger.Arn
+      State: DISABLED
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref BatchJobTrigger
+      SourceArn: !GetAtt BatchJobTriggerRule.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
