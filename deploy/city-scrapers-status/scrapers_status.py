@@ -50,7 +50,7 @@ def handler(event, context):
     else:
         status = 'failing'
 
-    # Pull scraper name from ARN in documenters_aggregator-{SCRAPER}
+    # Pull scraper name from ARN
     task_def = event['detail']['taskDefinitionArn']
     task_str = 'task-definition/'
     scraper = task_def[task_def.find(task_str):].split(':')[0][len(task_str):]
