@@ -54,7 +54,7 @@ def create_job_definitions():
                     'image': '{0}:{1}'.format(ECS_URI, DEPLOY_TAG),
                     'vcpus': 1,
                     'memory': 768,
-                    'command': ['sh', '-c', 'scrapy crawl {}'.format(job_def)],
+                    'command': ['scrapy', 'crawl', job_def],
                     'jobRoleArn': job_role_arn,
                     'environment': [{'name': v, 'value': environ.get(v)} for v in ENV_VARS],
                     'readonlyRootFilesystem': False,

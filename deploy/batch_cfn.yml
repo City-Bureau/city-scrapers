@@ -64,7 +64,6 @@ Resources:
     Properties:
       Type: MANAGED
       ServiceRole: !GetAtt BatchServiceRole.Arn
-      ComputeEnvironmentName: city-scrapers-compute-env
       ComputeResources:
         MaxvCpus: 6
         MinvCpus: 0
