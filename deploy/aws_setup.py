@@ -8,7 +8,12 @@ from zipfile import ZipFile
 DEPLOY_TAG = 'latest'  # datetime.now().strftime("%Y%m%d%H%M")
 ECS_URI = environ.get('ECS_REPOSITORY_URI')
 BATCH_JOB_ROLE = 'city-scrapers-batch-job-role'
-SPIDER_PATH = 'documenters_aggregator/spiders'
+
+SPIDER_PATH = join(
+    path.dirname(path.dirname(path.abspath(__file__))),
+    'documenters_aggregator',
+    'spiders'
+)
 
 ENV_VARS = [
     'SCRAPY_SETTINGS_MODULE',
@@ -39,7 +44,6 @@ def create_job_definitions():
     active_job_def_names = set([j['jobDefinitionName'] for j in active_job_defs])
 
     future_job_defs = spider_names
-    env_vars = [{'name': v, 'value': environ.get(v)} for v in ENV_VARS]
     job_role_arn = iam.Role(BATCH_JOB_ROLE).arn
 
     for job_def in future_job_defs:
