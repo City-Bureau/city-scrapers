@@ -16,7 +16,12 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == 'Test Description'
+    assert 'Test Description' == ("The RTA Board of Directors is a 16-member group of professionals"
+                        "governing the activities and initiatives of the RTA. The RTA is "
+                        "charged with financial oversight, funding, and regional transit "
+                        "planning for the region’s transit operators: the Chicago Transit
+                        "Authority (CTA), Metra and Pace Suburban Bus and Pace Americans "
+                        "with Disabilities Act (ADA) Paratransit.")
 
 
 def test_start_time():
