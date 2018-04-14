@@ -17,10 +17,10 @@ class RegionaltransitSpider(Spider):
     domain_root = 'http://www.rtachicago.org'
 
     def parse_iframe(self, response):
-        description = ("The RTA Board of Directors is a 16-member group of professionals"
-                      "governing the activities and initiatives of the RTA. The RTA is "
-                      "charged with financial oversight, funding, and regional transit "
-                       "planning for the region’s transit operators: the Chicago Transit
+        description = ("The RTA Board of Directors is a 16-member group of professionals "
+                       "governing the activities and initiatives of the RTA. The RTA is "
+                       "charged with financial oversight, funding, and regional transit "
+                       "planning for the region’s transit operators: the Chicago Transit "
                        "Authority (CTA), Metra and Pace Suburban Bus and Pace Americans "
                        "with Disabilities Act (ADA) Paratransit.")
         for item in response.css('#upcoming .row'):
