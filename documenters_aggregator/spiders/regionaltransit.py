@@ -17,7 +17,12 @@ class RegionaltransitSpider(Spider):
     domain_root = 'http://www.rtachicago.org'
 
     def parse_iframe(self, response):
-        description = response.request.meta['description']
+        description = ("The RTA Board of Directors is a 16-member group of professionals "
+                       "governing the activities and initiatives of the RTA. The RTA is "
+                       "charged with financial oversight, funding, and regional transit "
+                       "planning for the region’s transit operators: the Chicago Transit "
+                       "Authority (CTA), Metra and Pace Suburban Bus and Pace Americans "
+                       "with Disabilities Act (ADA) Paratransit.")
         for item in response.css('#upcoming .row'):
             start_time = self._parse_start(item)
             name = self._parse_name(item)
@@ -43,7 +48,12 @@ class RegionaltransitSpider(Spider):
         event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
         """
 
-        description = response.css('.show_item_intro_text p::text').extract_first()
+        description = ("The RTA Board of Directors is a 16-member group of professionals "
+                       "governing the activities and initiatives of the RTA. The RTA is "
+                       "charged with financial oversight, funding, and regional transit "
+                       "planning for the region’s transit operators: the Chicago Transit "
+                       "Authority (CTA), Metra and Pace Suburban Bus and Pace Americans "
+                       "with Disabilities Act (ADA) Paratransit.")
 
         url = response.css('iframe::attr(src)').extract_first()
 
