@@ -6,7 +6,12 @@ from tests.utils import file_response
 from documenters_aggregator.spiders.regionaltransit import RegionaltransitSpider
 
 events_response = file_response('files/rta_calendar.html', url='http://www.rtachicago.org/about-us/board-meetings')
-events_response.meta['description'] = "Test Description"
+events_response.meta['description'] = ("The RTA Board of Directors is a 16-member group of professionals "
+                       "governing the activities and initiatives of the RTA. The RTA is "
+                       "charged with financial oversight, funding, and regional transit "
+                       "planning for the region’s transit operators: the Chicago Transit "
+                       "Authority (CTA), Metra and Pace Suburban Bus and Pace Americans "
+                       "with Disabilities Act (ADA) Paratransit.")
 spider = RegionaltransitSpider()
 parsed_items = [item for item in spider.parse_iframe(events_response) if isinstance(item, dict)]
 
@@ -16,7 +21,12 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == 'Test Description'
+    assert parsed_items[0]['description'] == ("The RTA Board of Directors is a 16-member group of professionals "
+                       "governing the activities and initiatives of the RTA. The RTA is "
+                       "charged with financial oversight, funding, and regional transit "
+                       "planning for the region’s transit operators: the Chicago Transit "
+                       "Authority (CTA), Metra and Pace Suburban Bus and Pace Americans "
+                       "with Disabilities Act (ADA) Paratransit.")
 
 
 def test_start_time():
