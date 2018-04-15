@@ -116,6 +116,25 @@ def get_definitions(family_name):
     return quote_for_awscli([definition])
 
 
+def deploy_lambda_function(name):
+    print(f'Updating lambda function {name}...')
+    run(f'zip -X -j -r {name}.zip deploy/{name}/*')
+    run(f'aws lambda update-function-code --function-name {name} --zip-file fileb://{name}.zip')
+    run(f'rm {name}.zip')
+
+
+def update_scheduler_function():
+    with open("deploy/scraperScheduler/spiders.txt", "w") as file:
+        file.write("\n".join(spider_names))
+
+    deploy_lambda_function('scraperScheduler')
+    run('rm deploy/scraperScheduler/spiders.txt')
+
+
+def update_status_function():
+    deploy_lambda_function('city-scrapers-status')
+
+
 def quote_for_awscli(data):
     # The following is an ugly but functional way of creating the quoting
     # that the aws cli wants.
@@ -125,3 +144,5 @@ def quote_for_awscli(data):
 
 create_log_groups()
 create_task_definitions()
+update_scheduler_function()
+update_status_function()

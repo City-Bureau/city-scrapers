@@ -72,7 +72,7 @@ traitlets==4.3.2
 Twisted==17.5.0
 Unidecode==0.4.21
 urllib3==1.22
-usaddress==0.5.4
+usaddress==0.5.10
 validictory==1.1.1
 w3lib==1.17.0
 wcwidth==0.1.7

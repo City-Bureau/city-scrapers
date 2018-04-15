@@ -13,10 +13,10 @@ There are many ways to contribute to this project: coding a spider (webscraper),
 
 The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on [slack](https://citybureau.slack.com/) for support--we can meet up in person to troubleshoot some headaches like virtual environment issues.
 
-* [Installation](installation.md)
-* [Contributing a spider](contribute-a-spider.md)
+* [Installation](02_installation.md)
+* [Contributing a spider](03_contribute.md)
 
-To contribute infrastructure and utilities, see the [help-wanted Github issues](https://github.com/City-Bureau/documenters-aggregator/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+To contribute infrastructure and utilities, see the [help-wanted Github issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
 
 ## Support this work
 

@@ -8,11 +8,19 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-    assert isinstance(parsed_items[0]['name'], str)
+    assert parsed_items[0]['name'] == '2514 Beat Meeting'
 
 
 def test_description():
-    assert isinstance(parsed_items[0]['description'], str)
+    EXPECTED_DESCRIPTION = (
+        "CPD Beat meetings, held on all 279 police "
+        "beats in the City, provide a regular opportunity "
+        "for police officers, residents, and other community "
+        "stakeholders to exchange information, identify and "
+        "prioritize problems, and begin developing solutions "
+        "to those problems."
+    )
+    assert parsed_items[0]['description'] == EXPECTED_DESCRIPTION
 
 
 def test_start_time():
@@ -32,7 +40,7 @@ def test_all_day():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'CAPS community event'
+    assert parsed_items[0]['classification'] == 'Beat Meeting, District 25'
 
 
 def test_status():
@@ -40,20 +48,27 @@ def test_status():
 
 
 def test_location():
-    assert isinstance(parsed_items[0]['location']['address'], str)
+    EXPECTED_LOCATION = {
+            'url': None,
+            'address': "St. Ferdinand's3115 N. Mason",
+            'name': None,
+            'coordinates': {
+                'latitude': None,
+                'longitude': None,
+            },
+    }
+    assert parsed_items[0]['location'] == EXPECTED_LOCATION
 
 
 def test__type():
-    assert isinstance(parsed_items[0]['_type'], str)
+    assert parsed_items[0]['_type'] == 'event'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_sources(item):
+def test_sources():
     EXPECTED_SOURCES = [{'url': 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
                          'note': ''}]
-    assert item['sources'] == EXPECTED_SOURCES
+    assert parsed_items[0]['sources'] == EXPECTED_SOURCES
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
+def test_timezone():
+    assert parsed_items[0]['timezone'] == 'America/Chicago'

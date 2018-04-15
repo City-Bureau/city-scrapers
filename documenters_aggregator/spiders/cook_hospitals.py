@@ -92,7 +92,12 @@ class Cook_hospitalsSpider(Spider):
         """
         Get url to agenda
         """
-        return subitem.xpath("following-sibling::td/a/@href").extract_first()
+        return ("The CCHHS is charged with delivering integrated health services with "
+                "dignity and respect regardless of a patient’s ability to pay; "
+                "fostering partnerships with other health providers and communities "
+                "to enhance the health of the public; and advocating for policies "
+                "that promote the physical, mental and social well being of the people of Cook County. " 
+                "The CCHHS Board of Directors has five standing committees.")
 
     def _parse_start(self, subitem):
         """

@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  StatusBucketName:
+    Type: String
+    Default: city-scrapers-status
+    Description: Name of S3 Bucket to be created
+  CodeBucketName:
+    Type: String
+    Default: city-scrapers-lambda
+    Description: Name of S3 Bucket containing the key in LambdaFileKey
+  LambdaFileKey:
+    Type: String
+    Default: scrapers_status.zip
+    Description: Zip file key name containing the application code
+  LambdaHandler:
+    Type: String
+    Default: scrapers_status.handler
+    Description: The Python file name and handler function inside the zip file
+Resources:
+  ScraperStatusBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref StatusBucketName
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: unavailable.svg
+  ScraperStatusBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: ScraperStatusBucket
+    Properties:
+      Bucket: !Ref StatusBucketName
+      PolicyDocument:
+        Statement:
+        - Sid: AllowPublicRead
+          Effect: Allow
+          Principal:
+            AWS: "*"
+          Action: s3:GetObject
+          Resource:
+            Fn::Sub:
+            - arn:aws:s3:::${Bucket}/*
+            - { Bucket: !Ref StatusBucketName }
+  IamRoleLambdaExecution:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: scraper-lambda-execution-role
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource:
+            - arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action: s3:*
+            Resource:
+              Fn::Sub:
+              - arn:aws:s3:::${Bucket}/*
+              - { Bucket: !Ref StatusBucketName }
+  ScraperStatusLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Ref CodeBucketName
+        S3Key: !Ref LambdaFileKey
+      FunctionName: city-scrapers-status
+      Handler: !Ref LambdaHandler
+      MemorySize: 1024
+      Role:
+        Fn::GetAtt:
+        - IamRoleLambdaExecution
+        - Arn
+      Runtime: python3.6
+      Timeout: 300
+      Environment:
+        Variables:
+          STATUS_BUCKET: !Ref StatusBucketName
+    DependsOn: IamRoleLambdaExecution
+      

@@ -89,6 +89,7 @@ celerybeat-schedule
 venv/
 ENV/
 documenters-aggregator/
+city-scrapers/
 
 # Spyder project settings
 .spyderproject
@@ -117,6 +118,8 @@ src/
 # deployment
 deploy/*.sh
 deploy/*.py
+
+!deploy/scrapers_status.py
 
 # OS files
 .DS_Store

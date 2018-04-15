@@ -6,13 +6,13 @@ title: Contribute
 
 ## Familiarize yourself with how we work!
 
-*Please read the project's [CONTRIBUTING.md](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) file to learn about how we use GitHub to manage the project and our pull request policy.*
+*Please read the project's [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md) file to learn about how we use GitHub to manage the project and our pull request policy.*
 
 ## Spider Set-up:
 
 ### 1. Find a site to scrape and create an issue
 
-First, find an unclaimed event source within the project's [issues](https://github.com/City-Bureau/documenters-aggregator/issues). Any unassigned issue is fair game--assign yourself to pick up the work.
+First, find an unclaimed event source within the project's [issues](https://github.com/City-Bureau/city-scrapers/issues). Any unassigned issue is fair game--assign yourself to pick up the work.
 
 Save and note the issue number.
 
@@ -31,15 +31,15 @@ $ git checkout -b XXXX-spider-NAMEOFAGENCY
 Run the `genspider` task with a spider slug, spider name, and URLs to start scraping. Following the previous example:
 
 ```
-(documenters-aggregator)$ invoke genspider chi_housing "Chicago Housing Authority" http://www.thecha.org
+(city-scrapers)$ invoke genspider chi_housing "Chicago Housing Authority" http://www.thecha.org
 ```
 
 You should see some output like:
 
 ```
-Created /Users/eads/Code/documenters-aggregator/documenters_aggregator/spiders/chi_housing.py
-Created /Users/eads/Code/documenters-aggregator/tests/test_chi_housing.py
-Created /Users/eads/Code/documenters-aggregator/tests/files/chi_housing_thecha.html
+Created /Users/eads/Code/dcity-scrapers/documenters_aggregator/spiders/chi_housing.py
+Created /Users/eads/Code/city-scrapers/tests/test_chi_housing.py
+Created /Users/eads/Code/city-scrapers/tests/files/chi_housing_thecha.html
 ```
 
 ### 4. Test crawling
@@ -47,7 +47,7 @@ Created /Users/eads/Code/documenters-aggregator/tests/files/chi_housing_thecha.h
 You now have a spider named `chi_housing`. To run it (admittedly, not much will happen until you start editing the scraper), run:
 
 ```
-(documenters-aggregator)$ scrapy crawl chi_housing
+(city-scrapers)$ scrapy crawl chi_housing
 ```
 
 If there are no error messages, congratulations! You have a barebones spider.
@@ -63,7 +63,7 @@ check that all code is written in the proper style.
 To run these tools, use the `invoke runtests` command:
 
 ```
-(documenters-aggregator)$ invoke runtests
+(city-scrapers)$ invoke runtests
 ```
 
 Whoops! The tests for new spiders fail by default. Here's typical output:
@@ -71,7 +71,7 @@ Whoops! The tests for new spiders fail by default. Here's typical output:
 ```
 ====================================== test session starts =======================================
 platform darwin -- Python 3.6.2, pytest-3.1.3, py-1.4.34, pluggy-0.4.0
-rootdir: /Users/eads/projects/documenters-aggregator, inifile:
+rootdir: /Users/eads/projects/city-scrapers, inifile:
 collected 59 items
 
 tests/test_chi_housing.py F
@@ -99,7 +99,7 @@ That's OK.
 
 ## A. Write parse methods in the spider
 
-*If you run into any troubles, feel free to reach out on [slack](https://citybureau.slack.com/) or open a pull request so others can take a look at your code. Pull requests don't need to contain perfect code. See [CONTRIBUTING.md](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md).*
+*If you run into any troubles, feel free to reach out on [slack](https://citybureau.slack.com/) or open a pull request so others can take a look at your code. Pull requests don't need to contain perfect code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md).*
 
 Open `documenters_aggregator/spiders/chi_housing.py` to work on your spider. A simple structure has been created for you to use. Let's look at the basics.
 
@@ -125,7 +125,7 @@ class Chi_housingSpider(scrapy.Spider):
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.gitbooks.io/documenters-event-aggregator/event-schema.html>.
+        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
@@ -244,4 +244,4 @@ pull request name with `WIP` so that everyone knows what kind of feedback you
 are looking for.
 
 Additionally, please use the pull request description to explain anything you'd
-like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/documenters-aggregator/blob/master/CONTRIBUTING.md) for more details.
+like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md) for more details.
