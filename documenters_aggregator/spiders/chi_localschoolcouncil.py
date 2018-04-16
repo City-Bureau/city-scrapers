@@ -41,7 +41,7 @@ Every Chicago public school has a Local School Council (LSC) which consists of p
 """
 
 class chi_LSCMeetingSpider(Spider):
-    name = 'localschoolcouncil'
+    name = 'chi_localschoolcouncil'
     long_name = 'Local School Council'
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = [SPREADSHEET_URL + '/values/A2:L1400?key=' + GOOGLE_API_KEY]
