@@ -178,7 +178,7 @@ Resources:
       Targets:
         - Id: BatchJobTrigger
           Arn: !GetAtt BatchJobTrigger.Arn
-      State: DISABLED
+      State: ENABLED
   PermissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
@@ -248,13 +248,34 @@ Resources:
       FunctionName: city-scrapers-status
       Handler: !Ref LambdaHandler
       MemorySize: 1024
-      Role:
-        Fn::GetAtt:
-        - IamRoleLambdaExecution
-        - Arn
+      Role: !GetAtt IamRoleLambdaExecution.Arn
       Runtime: python3.6
       Timeout: 300
       Environment:
         Variables:
           STATUS_BUCKET: !Ref StatusBucketName
     DependsOn: IamRoleLambdaExecution
+  ScraperStatusTriggerRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: ScraperStatusTriggerRule
+      EventPattern: |
+        {
+          "source": [
+            "aws.ecs"
+          ],
+          "detail-type": [
+            "ECS Task State Change"
+          ]
+        }
+      Targets:
+        - Id: ScraperStatusLambda
+          Arn: !GetAtt ScraperStatusLambda.Arn
+      State: ENABLED
+  PermissionForEventsToInvokeStatusLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ScraperStatusLambda
+      SourceArn: !GetAtt ScraperStatusTriggerRule.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
