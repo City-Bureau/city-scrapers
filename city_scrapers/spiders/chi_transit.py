@@ -87,8 +87,8 @@ class ChiTransitSpider(Spider):
                 'name': 'Chicago Transit Authority 2nd Floor Boardroom',
                 'address': '567 West Lake Street Chicago, IL',
                 'coordinates': {
-                    'latitude': 41.88528,
-                    'longitude': -87.64235,
+                    'latitude': '41.88528',
+                    'longitude': '-87.64235',
                 },
             }
         else:
