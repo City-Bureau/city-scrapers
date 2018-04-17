@@ -13,7 +13,7 @@ export PYTHONPATH=$PYTHONPATH:$DIR
 export SCRAPY_SETTINGS_MODULE='travis.travis_settings'
 
 # Run new or modified spiders and save output
-find documenters_aggregator/spiders -name "[^_]*.py" | \
+find city_scrapers/spiders -name "[^_]*.py" | \
     xargs basename -s .py | \
     xargs -I{} scrapy crawl {} -o ./travis/{}.json --loglevel=ERROR
 
