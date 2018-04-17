@@ -3,7 +3,7 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.cook_hospitals import Cook_hospitalsSpider
+from city_scrapers.spiders.cook_hospitals import Cook_hospitalsSpider
 
 test_response = file_response('files/cook_hospitals.html', url='http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/')
 spider = Cook_hospitalsSpider()

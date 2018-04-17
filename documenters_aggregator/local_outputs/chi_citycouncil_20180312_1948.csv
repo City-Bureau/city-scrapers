@@ -1,0 +1,2 @@
+agency_name,_type,id,name,description,classification,start_time,end_time,timezone,status,all_day,location_name,location_url,location_address,source_url,source_note,scraped_time
+Chicago City Council,event,chi_citycouncil/201803151000/ocd-event-4c8993e9-e35f-4ce8-a111-bae1711213e7/committee_on_aviation,Committee on Aviation,N/A,city council meeting,2018-03-15 10:00,,America/Chicago,confirmed,0,N/A,N/A,"Council Chambers ,  City Hall ",https://ocd.datamade.us/ocd-event/4c8993e9-e35f-4ce8-a111-bae1711213e7/,ocd-api,2018-03-12 19:48

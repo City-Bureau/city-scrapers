@@ -11,7 +11,7 @@ BATCH_JOB_ROLE = 'city-scrapers-batch-job-role'
 
 SPIDER_PATH = join(
     path.dirname(path.dirname(path.abspath(__file__))),
-    'documenters_aggregator',
+    'city_scrapers',
     'spiders'
 )
 

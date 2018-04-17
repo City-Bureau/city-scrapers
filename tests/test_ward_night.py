@@ -2,7 +2,7 @@ import pytest
 from datetime import date
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.ward_night import WardNightSpider, Calendar
+from city_scrapers.spiders.ward_night import WardNightSpider, Calendar
 from textwrap import dedent
 
 test_response = file_response('files/ward_night.json')
