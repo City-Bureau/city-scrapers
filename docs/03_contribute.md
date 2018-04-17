@@ -37,7 +37,7 @@ Run the `genspider` task with a spider slug, spider name, and URLs to start scra
 You should see some output like:
 
 ```
-Created /Users/eads/Code/dcity-scrapers/documenters_aggregator/spiders/chi_housing.py
+Created /Users/eads/Code/city-scrapers/city_scrapers/spiders/chi_housing.py
 Created /Users/eads/Code/city-scrapers/tests/test_chi_housing.py
 Created /Users/eads/Code/city-scrapers/tests/files/chi_housing_thecha.html
 ```
@@ -51,7 +51,7 @@ You now have a spider named `chi_housing`. To run it (admittedly, not much will 
 ```
 
 If there are no error messages, congratulations! You have a barebones spider.
-Additionally, each time you run your scraper, you can see your results as a csv output in the /documenters_aggregator/local_outputs/ folder. Each `scrapy crawl` command produces a unique file with the agency name and timestamp. These files are ignored by git, but you may want to clean the folder up locally after some testing.
+Additionally, each time you run your scraper, you can see your results as a csv output in the /city_scrapers/local_outputs/ folder. Each `scrapy crawl` command produces a unique file with the agency name and timestamp. These files are ignored by git, but you may want to clean the folder up locally after some testing.
 
 ### 5. Run the automated tests
 
@@ -101,7 +101,7 @@ That's OK.
 
 *If you run into any troubles, feel free to reach out on [slack](https://citybureau.slack.com/) or open a pull request so others can take a look at your code. Pull requests don't need to contain perfect code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md).*
 
-Open `documenters_aggregator/spiders/chi_housing.py` to work on your spider. A simple structure has been created for you to use. Let's look at the basics.
+Open `city_scrapers/spiders/chi_housing.py` to work on your spider. A simple structure has been created for you to use. Let's look at the basics.
 
 The spider should look something like this:
 
@@ -206,7 +206,7 @@ Here is the test setup and an example test from the Idph spider:
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.idph import IdphSpider
+from city_scrapers.spiders.idph import IdphSpider
 
 test_response = file_response('files/idph.html')
 spider = IdphSpider()

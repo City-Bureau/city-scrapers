@@ -2,7 +2,7 @@ import pytest
 import json
 
 from freezegun import freeze_time
-from documenters_aggregator.spiders.chi_parks import Chi_parksSpider
+from city_scrapers.spiders.chi_parks import Chi_parksSpider
 
 freezer = freeze_time('2017-10-10 12:00:01')
 freezer.start()
@@ -24,7 +24,7 @@ def test_name():
 
 def test_description():
     EXPECTED_DESCRIPTION = ("The Chicago Park District Act provides that the Chicago"
-        "Park District shall be governed by a board of seven" 
+        "Park District shall be governed by a board of seven"
         "non-salaried Commissioners who are appointed by the Mayor"
         "of the City of Chicago with the approval of the Chicago City"
         "Council. Under the Chicago Park District Code, the Commissioners"

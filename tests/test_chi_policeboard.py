@@ -1,6 +1,6 @@
 import pytest
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_policeboard import Chi_policeboardSpider
+from city_scrapers.spiders.chi_policeboard import Chi_policeboardSpider
 
 test_response = file_response('files/chi_policeboard_public_meetings.html', url='https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html')
 spider = Chi_policeboardSpider()
