@@ -1,8 +1,8 @@
 import json
 from datetime import datetime
 from tests.utils import read_test_file_content
-from documenters_aggregator.pipelines.TravisValidation import TravisValidationPipeline
-from documenters_aggregator.spider import Spider
+from city_scrapers.pipelines.TravisValidation import TravisValidationPipeline
+from city_scrapers.spider import Spider
 
 
 def _str_to_datetime(date_string):

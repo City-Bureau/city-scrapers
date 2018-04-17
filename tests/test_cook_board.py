@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from documenters_aggregator.spiders.cook_board import Cook_boardSpider
+from city_scrapers.spiders.cook_board import Cook_boardSpider
 
 
 test_response = []
