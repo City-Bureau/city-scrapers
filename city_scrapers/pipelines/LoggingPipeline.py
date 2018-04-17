@@ -1,4 +1,4 @@
-class DocumentersAggregatorLoggingPipeline(object):
+class CityScrapersLoggingPipeline(object):
     """
     Dummy logging pipeline. Enabled by default, it reminds developers to
     turn on some kind of backend storage pipeline.
