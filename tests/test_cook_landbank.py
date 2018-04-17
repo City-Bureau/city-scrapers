@@ -1,6 +1,6 @@
 import pytest
 from tests.utils import file_response
-from documenters_aggregator.spiders.cook_landbank import Cook_landbankSpider
+from city_scrapers.spiders.cook_landbank import Cook_landbankSpider
 
 file = file_response('files/cook_landbank.json')
 spider = Cook_landbankSpider()

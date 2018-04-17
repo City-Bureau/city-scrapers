@@ -2,7 +2,7 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.il_labor import Il_laborSpider
+from city_scrapers.spiders.il_labor import Il_laborSpider
 
 
 test_response = file_response('files/il_labor.html', url='https://www.illinois.gov/ilrb/meetings/Pages/default.aspx')

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for documenters_aggregator project
+# Scrapy settings for city_scrapers project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,18 +9,18 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'documenters_aggregator'
+BOT_NAME = 'city_scrapers'
 
-SPIDER_MODULES = ['documenters_aggregator.spiders']
-NEWSPIDER_MODULE = 'documenters_aggregator.spiders'
+SPIDER_MODULES = ['city_scrapers.spiders']
+NEWSPIDER_MODULE = 'city_scrapers.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Documenters Aggregator [production mode]. Learn more and say hello at https://city-bureau.gitbooks.io/documenters-event-aggregator/'
+USER_AGENT = 'City Scrapers [production mode]. Learn more and say hello at https://citybureau.org/city-scrapers'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
-DOCUMENTERS_AGGREGATOR_ROBOTSTXT_OBEY = True
-DOCUMENTERS_AGGREGATOR_ROBOTSTXT_LOGONLY = True
+CITY_SCRAPERS_ROBOTSTXT_OBEY = True
+CITY_SCRAPERS_ROBOTSTXT_LOGONLY = True
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
@@ -28,17 +28,17 @@ COOKIES_ENABLED = False
 # Configure item pipelines
 #
 # One of:
-# * documenters_aggregator.pipelines.DocumentersAggregatorLoggingPipeline,
-# * documenters_aggregator.pipelines.DocumentersAggregatorSQLAlchemyPipeline,
-# * documenters_aggregator.pipelines.AirtablePipeline
+# * city_scrapers.pipelines.CityScrapersLoggingPipeline,
+# * city_scrapers.pipelines.CityScrapersSQLAlchemyPipeline,
+# * city_scrapers.pipelines.AirtablePipeline
 #
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # disabled until we can rebuild it on another provider
-    #'documenters_aggregator.pipelines.GeocoderPipeline': 200,
-    'documenters_aggregator.pipelines.ValidationPipeline': 300,
-    'documenters_aggregator.pipelines.AirtablePipeline': 400
+    #'city_scrapers.pipelines.GeocoderPipeline': 200,
+    'city_scrapers.pipelines.ValidationPipeline': 300,
+    'city_scrapers.pipelines.AirtablePipeline': 400
 }
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -63,13 +63,13 @@ ITEM_PIPELINES = {
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'documenters_aggregator.middlewares.DocumentersAggregatorSpiderMiddleware': 543,
+#    'city_scrapers.middlewares.CityScrapersSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'documenters_aggregator.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
+    'city_scrapers.middlewares.CityScrapersRobotsTxtMiddleware': 543,
 }
 
 # Enable or disable extensions
