@@ -1,17 +1,17 @@
 from .airtable import AirtablePipeline
 from .geocoder import GeocoderPipeline
-from .LoggingPipeline import DocumentersAggregatorLoggingPipeline
-from .sqlalchemy import DocumentersAggregatorSQLAlchemyPipeline
+from .LoggingPipeline import CityScrapersLoggingPipeline
+from .sqlalchemy import CityScrapersSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
 from .TravisValidation import TravisValidationPipeline
 from .localExporter import CsvPipeline
 
 
 __all__ = (
-    'DocumentersAggregatorLoggingPipeline',
+    'CityScrapersLoggingPipeline',
     'AirtablePipeline',
     'GeocoderPipeline',
-    'DocumentersAggregatorSQLAlchemyPipeline',
+    'CityScrapersSQLAlchemyPipeline',
     'ValidationPipeline',
     'TravisValidationPipeline',
     'CsvPipeline'

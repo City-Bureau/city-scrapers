@@ -1,4 +1,4 @@
-class DocumentersAggregatorSQLAlchemyPipeline(object):
+class CityScrapersSQLAlchemyPipeline(object):
     """
     Stub pipeline to save to AirTable.
     """

@@ -60,13 +60,13 @@ ITEM_PIPELINES = {
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'city_scrapers.middlewares.DocumentersAggregatorSpiderMiddleware': 543,
+#    'city_scrapers.middlewares.CityScrapersSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'city_scrapers.middlewares.DocumentersAggregatorRobotsTxtMiddleware': 543,
+    'city_scrapers.middlewares.CityScrapersRobotsTxtMiddleware': 543,
 }
 
 COMMANDS_MODULE = 'city_scrapers.commands'
