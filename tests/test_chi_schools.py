@@ -2,7 +2,7 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_schools import Chi_schoolsSpider
+from city_scrapers.spiders.chi_schools import Chi_schoolsSpider
 
 test_response = file_response('files/cpsboe.html', url='http://www.cpsboe.org/meetings/planning-calendar')
 spider = Chi_schoolsSpider()

@@ -3,7 +3,7 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.regionaltransit import RegionaltransitSpider
+from city_scrapers.spiders.regionaltransit import RegionaltransitSpider
 
 events_response = file_response('files/rta_calendar.html', url='http://www.rtachicago.org/about-us/board-meetings')
 events_response.meta['description'] = ("The RTA Board of Directors is a 16-member group of professionals "
