@@ -9,7 +9,6 @@ test_response = file_response('files/il_pubhealth.html', url='http://www.dph.ill
 spider = Il_pubhealthSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
-
 def test_name():
     assert parsed_items[2]['name'] == 'PAC: Maternal Mortality Review Committee Meeting'
 
@@ -51,12 +50,44 @@ def test_status(item):
     assert item['status'] == 'tentative'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_location(item):
-    assert item['location'] == {
+def test_high_confidence_location():
+    addr_lines = [
+        'Top of the Building',
+        '69 West Washington St., 35th Floor, Chicago',
+        '-OR-',
+        '500 Vernon, Normal, IL 61761'
+    ]
+    address = spider._find_high_confidence_address(addr_lines)
+
+    assert address == '69 West Washington St., 35th Floor, Chicago'
+
+def test_medium_confidence_location():
+    addr_lines = [
+        'Top of the Building',
+        '122 S. Michigan Avenue, Room 711, West Chicago',
+        '-OR-',
+        '500 Vernon, Normal, IL 61761'
+    ]
+    address = spider._find_medium_confidence_address(addr_lines)
+
+    assert address == '122 S. Michigan Avenue, Room 711, West Chicago'
+
+def test_low_confidence_location():
+    addr_lines = [
+        'Top of the Building',
+        '1234 Main St, West Side, 57th Floor, Chicago, IL',
+        '-OR-',
+        '500 Vernon, Normal, IL 61761'
+    ]
+    address = spider._find_low_confidence_address(addr_lines)
+
+    assert address == '1234 Main St, West Side, 57th Floor, Chicago, IL'
+
+def test_no_matching_location():
+    assert parsed_items[8]['location'] == {
         'url': '',
         'name': '',
-        'address': '',
+        'address': 'multiple locations not in Chicago, see description',
         'coordinates': {'latitude': '', 'longitude': ''}
     }
 

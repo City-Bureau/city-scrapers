@@ -47,6 +47,15 @@ def test_location():
     }
 
 
+def test_description():
+    assert item['description'] == ("The Board of Trustees is the governing "
+                                   "body of City Colleges of Chicago "
+                                   "Community College District No. 508. City "
+                                   "Colleges of Chicago currently operates "
+                                   "seven accredited colleges located "
+                                   "throughout Chicago.")
+
+
 def test__type():
     assert item['_type'] == 'event'
 
