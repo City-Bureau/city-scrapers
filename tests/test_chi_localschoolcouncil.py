@@ -4,7 +4,7 @@ import pytest
 from datetime import date
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.ward_night import WardNightSpider, Calendar
+from documenters_aggregator.spiders.chi_localschoolcouncil import chi_LSCMeetingSpider #, Calendar
 from textwrap import dedent
 
 test_response = file_response('files/tests_chilocal_events.json')
@@ -13,40 +13,41 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_localschoolcouncil/201804171500/x/local_school_council_aldridge_es'
+    assert parsed_items[0]['id'] == 'chi_localschoolcouncil/201804191500/x/local_school_council_melody_es'
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Local School Council: Aldridge ES'
+    assert parsed_items[0]['name'] == 'Local School Council: Melody ES'
 
 
 def test_description():
     expected = dedent("""\
-    Ward Night with Alderman Joe Moreno (Ward 1).
-    first come first served, one-on-one meetings usually about 10-20 minutes""")
+    Every Chicago public school has a Local School Council (LSC) which consists of parents, 
+    community members, teachers, and the principal of the school. All members of the council are elected. 
+    which are responsible for three main duties: 1) Approving how school funds and resources are allocated 
+    2) Developing and monitoring the annual School Improvement Plan 3) Evaluating and selecting the school's principal""")
 
     assert parsed_items[0]['description'] == expected
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2017-11-07T16:00:00-06:00'
+    assert parsed_items[0]['start_time'].isoformat() == '2018-04-19T15:00:00-05:00'
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'].isoformat() == '2017-11-07T18:00:00-06:00'
+    assert parsed_items[0]['end_time'] == None
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'url': None,
-        'name': '2740 W North Ave, Chicago',
+        'address': '3937 W Wilcox St 60624',
         'coordinates': {
-            'latitude': None,
-            'longitude': None,
+            'latitude': '41.87879893',
+            'longitude': '-87.72466123',
         }
     }
 
-
+'''
 @pytest.mark.parametrize('item', parsed_items)
 def test_timezone(item):
     assert item['timezone'] == 'America/Chicago'
@@ -168,3 +169,4 @@ def test_last_friday():
 
     assert days == [date(2017, 10, 27), date(2017, 11, 24), date(2017, 12, 29),
                     date(2018, 1, 26)]
+'''
