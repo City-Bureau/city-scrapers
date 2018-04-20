@@ -1,7 +1,7 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_pubhealth import Chi_pubhealthSpider
+from city_scrapers.spiders.chi_pubhealth import Chi_pubhealthSpider
 
 test_response = file_response('files/chi_pubhealth.html', url='https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2018-board-of-health-meetings.html')
 spider = Chi_pubhealthSpider()

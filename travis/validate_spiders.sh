@@ -17,7 +17,7 @@ if [ $TRAVIS_PULL_REQUEST == 'false' ]; then echo "Build NOT triggered by a PR. 
 
 # Run new or modified spiders and save output
 git diff --name-only --diff-filter=AM $TRAVIS_COMMIT_RANGE| \
-    grep .*documenters_aggregator/spiders/.*\.py | \
+    grep .*city_scrapers/spiders/.*\.py | \
     xargs basename -s .py | \
     xargs -I{} scrapy crawl {} -o ./travis/{}.json --loglevel=ERROR
 if [ $? -ne 0 ]; then 

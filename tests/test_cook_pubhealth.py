@@ -3,7 +3,7 @@ from datetime import datetime
 from pytz import timezone
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.cook_pubhealth import Cook_pubhealthSpider
+from city_scrapers.spiders.cook_pubhealth import Cook_pubhealthSpider
 
 
 test_response = file_response('files/cook_pubhealth_321.html', 'http://www.cookcountypublichealth.org/events-view/321')
