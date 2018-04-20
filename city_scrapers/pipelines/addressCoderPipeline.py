@@ -13,12 +13,6 @@ CITY_STREETS = set([d['street'] for d in CITY_FILE])
 
 class AddressPipeline(object):
     """
-    Stub pipeline to clean addresses into structured data
-    """
-    def __init__(self):
-        pass
-
-    """
     Process an item.
     """
     def process_item(self, item, spider):
@@ -28,18 +22,28 @@ class AddressPipeline(object):
 
     def street_clean_dict(self, location_dict, default_city, default_state):
         """
-        Clean and item's location to make a mapzen query.
         Disabled Fuzzy match Chicago addresses on Chicago Data Portal Address API
         """
-        name = location_dict.get('name', '').strip()
-        query = location_dict.get('address', '').strip()
-        if name != '':
-            query = ', '.join([name, query])  # combine '{name}, {address}'
-        query = re.sub('city hall((?!.*chicago, il).)*$', 'City Hall 121 N LaSalle Dr, Chicago, IL', query, flags=re.I) #replace city hall 
+        name = location_dict.get('name', None)
+        address = location_dict.get('address', None)
+
+        if name is None and address is None:
+            return {}
+
+        if name is None:
+            query = address.strip()
+        else:
+            query = ', '.join([name.strip(), adaddress.strip()])
+
+        # replace city hall
+        query = re.sub('city hall((?!.*chicago, il).)*$',
+                       'City Hall 121 N LaSalle Dr, Chicago, IL', query, flags=re.I)
+
         try:
             querydict = usaddress.tag(query)[0]
-        except usaddress.RepeatedLabelError as e:
-            querydict = self.bad_address_tag(e.parsed_string)
+        except usaddress.RepeatedLabelError as ex:
+            querydict = self.bad_address_tag(ex.parsed_string)
+
         city = querydict.get('PlaceName', default_city) # replace w default city if blank
         state = querydict.get('StateName', default_state)  # replace w default state if blank
         querydict['PlaceName'] = city
