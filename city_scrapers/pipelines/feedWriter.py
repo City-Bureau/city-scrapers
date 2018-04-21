@@ -7,7 +7,7 @@ class JsonWriterPipeline(object):
 
     def __init__(self):
         self.stamp = datetime.datetime.now().strftime('%Y%m%d_%H%M')
-        self.fname = './documenters_aggregator/local_outputs/{}_{}.json'.format('output', self.stamp)
+        self.fname = './local_outputs/{}_{}.json'.format('output', self.stamp)
         self.file = open(self.fname, 'wb')
         self.exporter = JsonItemExporter(self.file, encoding='utf-8', ensure_ascii=False)
         self.exporter.start_exporting()
