@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import re
+from datetime import datetime
 from documenters_aggregator.spider import Spider
 
 
@@ -17,30 +19,35 @@ class Det_schoolsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
 
+        names = response.xpath('//main/h3/a/text()').extract()
+
+        times = response.xpath('//main/h3/following-sibling::text()[1]').extract()
+        times = map(lambda x: x.strip(), times)
+
+        addresses = response.xpath('//main/h3/following-sibling::span[@class="address"]/text()').extract()
+
+        items = zip(names, times, addresses)
+
+        for item in items:
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
-                'name': self._parse_name(item),
-                'description': self._parse_description(item),
+                'name': item[0],
+                'description': item[0],
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
-                'timezone': self._parse_timezone(item),
+                'start_time': self._parse_start(item[1]),
+                'end_time': self._parse_end(item[1]),
+                'timezone': 'America/Detroit',
                 'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
-                'location': self._parse_location(item),
-                'sources': self._parse_sources(item),
+                'location': self._parse_location(item[2]),
+                # 'sources': self._parse_sources(item),
             }
 
-        data['id'] = self._generate_id(data, start_time)
+            # data['id'] = self._generate_id(data, start_time)
 
-        yield data
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
+            yield data
 
     def _parse_next(self, response):
         """
@@ -76,25 +83,35 @@ class Det_schoolsSpider(Spider):
         """
         Parse or generate classification (e.g. public health, education, etc).
         """
-        return ''
+        return 'education'
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        return ''
+        components = item.split(' ')
+        start_time = "{month} {day} {year} {hour_and_minutes}{meridiem}".format(
+            month=components[0],
+            day=components[1],
+            year=components[2],
+            hour_and_minutes=components[3],
+            meridiem=components[4]
+        )
+        return datetime.strptime(start_time, "%B %d, %Y %I:%M%p")
 
     def _parse_end(self, item):
         """
         Parse end date and time.
         """
-        return ''
-
-    def _parse_timezone(self, item):
-        """
-        Parse or generate timzone in tzinfo format.
-        """
-        return 'America/Chicago'
+        components = item.split(' ')
+        end_time = "{month} {day} {year} {hour_and_minutes}{meridiem}".format(
+            month=components[0],
+            day=components[1],
+            year=components[2],
+            hour_and_minutes=components[6],
+            meridiem=components[7]
+        )
+        return datetime.strptime(end_time, "%B %d, %Y %I:%M%p")
 
     def _parse_all_day(self, item):
         """
@@ -110,7 +127,7 @@ class Det_schoolsSpider(Spider):
         return {
             'url': '',
             'name': '',
-            'address': '',
+            'address': item,
             'coordinates': {
                 'latitude': '',
                 'longitude': '',

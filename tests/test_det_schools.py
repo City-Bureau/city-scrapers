@@ -3,51 +3,41 @@ import pytest
 from tests.utils import file_response
 from documenters_aggregator.spiders.det_schools import Det_schoolsSpider
 
-
-def test_tests():
-    print('Please write some tests for this spider or at least disable this one.')
-    assert False
-
-
-"""
-Uncomment below
-"""
-
-# test_response = file_response('files/det_schools.html')
-# spider = Det_schoolsSpider()
-# parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+test_response = file_response('files/det_schools.html')
+spider = Det_schoolsSpider()
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-# def test_name():
-    # assert parsed_items[0]['name'] == 'EXPECTED NAME'
+def test_name():
+    assert parsed_items[0]['name'] == 'Policy Ad-hoc Sub-Committee Meeting (Open)'
 
 
-# def test_description():
-    # assert parsed_items[0]['description'] == 'EXPECTED DESCRIPTION'
+def test_description():
+    assert parsed_items[0]['description'] == 'Policy Ad-hoc Sub-Committee Meeting (Open)'
 
 
-# def test_start_time():
-    # assert parsed_items[0]['start_time'].isoformat() == 'EXPECTED START DATE AND TIME'
+def test_start_time():
+    assert parsed_items[0]['start_time'].isoformat() == '2018-04-17T09:00:00'
 
 
-# def test_end_time():
-    # assert parsed_items[0]['end_time'].isoformat() == 'EXPECTED END DATE AND TIME'
+def test_end_time():
+    assert parsed_items[0]['end_time'].isoformat() == '2018-04-17T10:30:00'
 
 
 # def test_id():
     # assert parsed_items[0]['id'] == 'EXPECTED ID'
 
 
-# def test_location():
-    # assert parsed_items[0]['location'] == {
-        # 'url': 'EXPECTED URL',
-        # 'name': 'EXPECTED NAME',
-        # 'address': 'EXPECTED ADDRESS'
-        # 'coordinates': {
-            # 'latitude': 'EXPECTED LATITUDE',
-            # 'longitude': 'EXPECTED LONGITUDE',
-        # },
-    # }
+def test_location():
+    assert parsed_items[0]['location'] == {
+        'url': '',
+        'name': '',
+        'address': 'Fisher Building, 3011 W. Grand Boulevard, 12th Floor Conference Room',
+        'coordinates': {
+            'latitude': '',
+            'longitude': '',
+        },
+    }
 
 
 # def test_sources():
