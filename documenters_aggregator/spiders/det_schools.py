@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import re
+import urllib.parse
 from datetime import datetime
 from documenters_aggregator.spider import Spider
 
@@ -21,31 +22,32 @@ class Det_schoolsSpider(Spider):
         """
 
         names = response.xpath('//main/h3/a/text()').extract()
+        calendar_links = response.xpath('//main/h3/a/@href').extract()
 
         times = response.xpath('//main/h3/following-sibling::text()[1]').extract()
         times = map(lambda x: x.strip(), times)
 
         addresses = response.xpath('//main/h3/following-sibling::span[@class="address"]/text()').extract()
 
-        items = zip(names, times, addresses)
+        items = zip(names, calendar_links, times, addresses)
 
         for item in items:
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
+                'id': self._parse_id(item[1]),
                 'name': item[0],
                 'description': item[0],
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item[1]),
-                'end_time': self._parse_end(item[1]),
+                'start_time': self._parse_start(item[2]),
+                'end_time': self._parse_end(item[2]),
                 'timezone': 'America/Detroit',
                 'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
-                'location': self._parse_location(item[2]),
-                # 'sources': self._parse_sources(item),
+                'location': self._parse_location(item[3]),
+                'sources': self._parse_sources(item),
             }
 
-            # data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data, data['start_time'])
 
             yield data
 
@@ -58,14 +60,9 @@ class Det_schoolsSpider(Spider):
         return scrapy.Request(next_url, callback=self.parse)
 
     def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique and in the following format:
-        <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-identifier>/<underscored-event-name>
-
-        Example:
-        chi_buildings/201710161230/2176/daley_plaza_italian_exhibit
-        """
-        return ''
+        parsed_url = urllib.parse.urlparse(item)
+        parsed_query = urllib.parse.parse_qs(parsed_url.query)
+        return parsed_query['eid'][0]
 
     def _parse_name(self, item):
         """

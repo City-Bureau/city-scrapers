@@ -24,8 +24,8 @@ def test_end_time():
     assert parsed_items[0]['end_time'].isoformat() == '2018-04-17T10:30:00'
 
 
-# def test_id():
-    # assert parsed_items[0]['id'] == 'EXPECTED ID'
+def test_id():
+    assert parsed_items[0]['id'] == 'det_schools/201804170900/MmlhcTcyNW50Nm43dWZqN3BpOWwzYmF1ZzRfMjAxODA0MTdUMTMwMDAwWiA4bmpua21kbzgxcDdyZGw0MjA4dDI2MmM2b0Bn/policy_ad_hoc_sub_committee_meeting_open'
 
 
 def test_location():
