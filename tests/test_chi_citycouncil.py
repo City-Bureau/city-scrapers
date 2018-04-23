@@ -1,7 +1,7 @@
 import pytest
 
 import json
-from documenters_aggregator.spiders.chi_citycouncil import Chi_citycouncilSpider
+from city_scrapers.spiders.chi_citycouncil import Chi_citycouncilSpider
 
 test_response = []
 with open('tests/files/chi_citycouncil.json') as f:

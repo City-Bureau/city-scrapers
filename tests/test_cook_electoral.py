@@ -1,6 +1,6 @@
 import pytest
 from tests.utils import file_response
-from documenters_aggregator.spiders.cook_electoral import Cook_electoralSpider
+from city_scrapers.spiders.cook_electoral import Cook_electoralSpider
 
 test_response = file_response('files/cook_electoral_default.html', url='http://cookcountyclerk.com/elections/electoralboard/Pages/default.aspx')
 spider = Cook_electoralSpider()
