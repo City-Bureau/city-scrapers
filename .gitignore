@@ -107,7 +107,7 @@ city-scrapers/
 # cyrus
 json_conversions.md
 .citybureau/
-documenters_aggregator/caps.py
+city_scrapers/caps.py
 
 # legistar cache
 _cache/
@@ -128,4 +128,4 @@ deploy/*.py
 logs/*.log
 travis/*.json
 
-# output files: local gitignore added to documenters_aggregator/local_outputs/
+# output files: local gitignore added to city_scrapers/local_outputs/

@@ -1,6 +1,6 @@
 import pytest
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_infra import Chi_infraSpider
+from city_scrapers.spiders.chi_infra import Chi_infraSpider
 
 test_response = file_response('files/chi_infra.html', url='http://chicagoinfrastructure.org/public-records/scheduled-meetings')
 spider = Chi_infraSpider()
