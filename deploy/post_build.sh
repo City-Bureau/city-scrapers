@@ -15,7 +15,7 @@ if [ "$REF" == "master" ] ; then
   echo Syncing log groups and task definitions
   pip install boto3
   python deploy/aws_setup.py
-  curl -X POST --data-urlencode "payload={\"channel\": \"#labs_city_scrapers\", \"username\": \"ecs\", \"text\": \"<https://github.com/City-Bureau/documenters-aggregator/commit/$CODEBUILD_SOURCE_VERSION|Commit $CODEBUILD_SOURCE_VERSION> deployed to production. <https://console.aws.amazon.com/codebuild/home?region=us-east-1#/builds/$CODEBUILD_BUILD_ID/view/new|View build log>.\", \"icon_emoji\": \":ecs:\"}" $SLACK_WEBHOOK_URL
+  curl -X POST --data-urlencode "payload={\"channel\": \"#labs_github\", \"username\": \"ecs\", \"text\": \"<https://github.com/City-Bureau/documenters-aggregator/commit/$CODEBUILD_SOURCE_VERSION|Commit $CODEBUILD_SOURCE_VERSION> deployed to production. <https://console.aws.amazon.com/codebuild/home?region=us-east-1#/builds/$CODEBUILD_BUILD_ID/view/new|View build log>.\", \"icon_emoji\": \":ecs:\"}" $SLACK_WEBHOOK_URL
 else
   echo "Not on the master branch; aborting."
   echo $REF
