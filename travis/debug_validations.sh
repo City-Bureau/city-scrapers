@@ -16,6 +16,7 @@ export SCRAPY_SETTINGS_MODULE='travis.travis_settings'
 find city_scrapers/spiders -name "[^_]*.py" | \
     xargs basename -s .py | \
     xargs -I{} scrapy crawl {} -o ./travis/{}.json --loglevel=ERROR
+if [ $? -ne 0 ]; then exit 1; fi
 
 # Validate saved output
 find travis -name "*.json" | xargs -I{} invoke validate-spider {}
