@@ -1,13 +1,33 @@
+import os
 import json
-from subprocess import check_output
+import boto3
 from os import listdir, environ, path
 from os.path import isfile, join
+from zipfile import ZipFile
 
-PROJECT_SLUG = 'documenters_aggregator'
 DEPLOY_TAG = 'latest'  # datetime.now().strftime("%Y%m%d%H%M")
 ECS_URI = environ.get('ECS_REPOSITORY_URI')
+BATCH_JOB_ROLE = 'city-scrapers-batch-job-role'
 
-SPIDER_PATH = 'city_scrapers/spiders'
+SPIDER_PATH = join(
+    path.dirname(path.dirname(path.abspath(__file__))),
+    'city_scrapers',
+    'spiders'
+)
+
+ENV_VARS = [
+    'SCRAPY_SETTINGS_MODULE',
+    'AIRTABLE_API_KEY',
+    'DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY',
+    'DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE',
+    'DOCUMENTERS_AGGREGATOR_AIRTABLE_GEOCODE_TABLE',
+    'SENTRY_DSN',
+    'MAPZEN_API_KEY'
+]
+
+batch = boto3.client('batch')
+iam = boto3.resource('iam')
+lambda_client = boto3.client('lambda')
 
 spider_names = [
     path.splitext(f)[0]
@@ -16,133 +36,56 @@ spider_names = [
 ]
 
 
-def run(command):
-    return check_output([command], shell=True)
-
-
-def json_run(command):
-    output = run(command)
-    return json.loads(output)
-
-
-def get_env():
+def create_job_definitions():
     """
-    Read in environment variables
+    Register all job definitions.
     """
-    vars_to_import = [
-        'SCRAPY_SETTINGS_MODULE',
-        'AIRTABLE_API_KEY',
-        'DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY',
-        'DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE',
-        'DOCUMENTERS_AGGREGATOR_AIRTABLE_GEOCODE_TABLE',
-        'SENTRY_DSN',
-        'MAPZEN_API_KEY'
-    ]
-    return {key: environ.get(key) for key in vars_to_import}
+    active_job_defs = batch.describe_job_definitions(status='ACTIVE')['jobDefinitions']
+    active_job_def_names = set([j['jobDefinitionName'] for j in active_job_defs])
 
+    future_job_defs = spider_names
+    job_role_arn = iam.Role(BATCH_JOB_ROLE).arn
 
-def create_log_groups():
-    """Create log groups for each scraper."""
-
-    existing_log_groups = [
-        data['logGroupName']
-        for data
-        in json_run('aws logs describe-log-groups')['logGroups']
-    ]
-
-    future_log_groups = [
-        '{0}-{1}'.format(PROJECT_SLUG, name) for name in spider_names
-    ]
-
-    for log_group_name in future_log_groups:
-        if log_group_name in existing_log_groups:
-            print('log group {0} exists'.format(log_group_name))
+    for job_def in future_job_defs:
+        if job_def in active_job_def_names:
+            print('job def {} exists'.format(job_def))
         else:
-            print('creating log group {0}'.format(log_group_name))
-            run('aws logs create-log-group --log-group-name "{0}"'.format(log_group_name))
+            print('creating job def {}'.format(job_def))
+            batch.register_job_definition(
+                jobDefinitionName=job_def,
+                type='container',
+                containerProperties={
+                    'image': '{0}:{1}'.format(ECS_URI, DEPLOY_TAG),
+                    'vcpus': 1,
+                    'memory': 768,
+                    'command': ['scrapy', 'crawl', job_def],
+                    'jobRoleArn': job_role_arn,
+                    'environment': [{'name': v, 'value': environ.get(v)} for v in ENV_VARS],
+                    'readonlyRootFilesystem': False,
+                    'privileged': False,
+                },
+                retryStrategy={'attempts': 3}
+            )
+
+    for job_def in active_job_def_names:
+        if job_def not in future_job_defs:
+            print('deregistering job definitions for unused job {}'.format(job_def))
+            remove_arns = [j['jobDefinitionArn'] for j in active_job_defs if j['jobDefinitionName'] == job_def]
+            for arn in remove_arns:
+                batch.deregister_job_definition(jobDefinition=arn)
 
 
-def create_task_definitions():
-    """
-    Register all task definitions.
-    """
+def update_lambda_function(name):
+    with ZipFile('{}.zip'.format(name), 'w') as zf:
+        for f in listdir(join(path.dirname(__file__), name)):
+            zf.write(join(path.dirname(__file__), name, f), path.basename(f))
 
-    existing_task_families = [
-        family_name
-        for family_name
-        in json_run('aws ecs list-task-definition-families --status ACTIVE')['families']
-    ]
+    with open('{}.zip'.format(name), 'rb') as zf:
+        zip_buffer = zf.read()
 
-    future_task_families = [
-        '{0}-{1}'.format(PROJECT_SLUG, name) for name in spider_names
-    ]
-
-    for family_name in future_task_families:
-        if family_name in existing_task_families:
-            print('task family {0} exists'.format(family_name))
-        else:
-            print('creating task definition family {0}'.format(family_name))
-            definitions = get_definitions(family_name)
-            run('aws ecs register-task-definition --family {0} --network-mode host --container-definitions "{1}"'.format(family_name, definitions))
-
-    for family_name in existing_task_families:
-        if family_name not in future_task_families:
-            print('deregistering task definitions for unused task family {0}'.format(family_name))
-            existing_defs = json_run('aws ecs list-task-definitions --family {0}'.format(family_name))
-            for arn in existing_defs['taskDefinitionArns']:
-                run('aws ecs deregister-task-definition --task-definition {0}'.format(arn))
+    os.remove('{}.zip'.format(name))
+    lambda_client.update_function_code(FunctionName=name, ZipFile=zip_buffer)
 
 
-def get_definitions(family_name):
-    env = get_env()
-    name = family_name.replace(PROJECT_SLUG + '-', '')
-    definition = {
-        'environment': [{'name': k, 'value': v} for k, v in env.items()],
-        'name': PROJECT_SLUG,
-        'image': '{0}:{1}'.format(ECS_URI, DEPLOY_TAG),
-        'command': ["sh", "-c", 'scrapy crawl {0}'.format(name)],
-        'workingDirectory': '/usr/src/app',
-        'memory': 512,
-        'memoryReservation': 256,
-        'essential': True,
-        'logConfiguration': {
-            'logDriver': 'awslogs',
-            'options': {
-                'awslogs-group': family_name,
-                'awslogs-region': environ.get('AWS_DEFAULT_REGION', 'us-east-1'),
-            }
-        }
-    }
-    return quote_for_awscli([definition])
-
-
-def deploy_lambda_function(name):
-    print(f'Updating lambda function {name}...')
-    run(f'zip -X -j -r {name}.zip deploy/{name}/*')
-    run(f'aws lambda update-function-code --function-name {name} --zip-file fileb://{name}.zip')
-    run(f'rm {name}.zip')
-
-
-def update_scheduler_function():
-    with open("deploy/scraperScheduler/spiders.txt", "w") as file:
-        file.write("\n".join(spider_names))
-
-    deploy_lambda_function('scraperScheduler')
-    run('rm deploy/scraperScheduler/spiders.txt')
-
-
-def update_status_function():
-    deploy_lambda_function('city-scrapers-status')
-
-
-def quote_for_awscli(data):
-    # The following is an ugly but functional way of creating the quoting
-    # that the aws cli wants.
-    jsonstring = json.dumps(data)
-    return jsonstring.replace("\"", r"\"")
-
-
-create_log_groups()
-create_task_definitions()
-update_scheduler_function()
-update_status_function()
+create_job_definitions()
+update_lambda_function('city-scrapers-status')
