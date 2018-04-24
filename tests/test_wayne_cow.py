@@ -65,7 +65,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'committee-meeting'
+    assert item['classification'] == 'Committee'
 
 
 @pytest.mark.parametrize('item', parsed_items)

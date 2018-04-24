@@ -82,7 +82,7 @@ class Wayne_cowSpider(Spider):
         """
         Parse or generate classification (e.g. public health, education, etc).
         """
-        return 'committee-meeting'
+        return 'Committee'
 
     def _parse_start(self, item):
         """
