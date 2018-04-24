@@ -2,7 +2,7 @@ import pytest
 
 from freezegun import freeze_time
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_transit import ChiTransitSpider
+from city_scrapers.spiders.chi_transit import ChiTransitSpider
 
 freezer = freeze_time('2017-11-10 12:00:01')
 freezer.start()
@@ -66,8 +66,8 @@ def test_location(item):
         'name': 'Chicago Transit Authority 2nd Floor Boardroom',
         'address': '567 West Lake Street Chicago, IL',
         'coordinates': {
-            'latitude': 41.88528,
-            'longitude': -87.64235,
+            'latitude': '41.88528',
+            'longitude': '-87.64235',
         },
     }
 

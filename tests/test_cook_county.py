@@ -1,5 +1,5 @@
 from tests.utils import file_response
-from documenters_aggregator.spiders.cook_county import Cook_countySpider
+from city_scrapers.spiders.cook_county import Cook_countySpider
 
 
 test_response = file_response('files/cook_county_event.html',

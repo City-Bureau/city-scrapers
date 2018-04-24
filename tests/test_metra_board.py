@@ -1,7 +1,7 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.metra_board import Metra_boardSpider
+from city_scrapers.spiders.metra_board import Metra_boardSpider
 
 
 test_response = file_response('files/metra_board.html')
