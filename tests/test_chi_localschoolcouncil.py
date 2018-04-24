@@ -6,7 +6,7 @@ from datetime import datetime
 from pytz import timezone
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_localschoolcouncil import chi_LSCMeetingSpider
+from city_scrapers.spiders.chi_localschoolcouncil import chi_LSCMeetingSpider
 from textwrap import dedent
 
 test_response = file_response('files/tests_chilocal_events.json')
