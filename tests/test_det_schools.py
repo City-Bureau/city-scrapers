@@ -1,9 +1,9 @@
 import pytest
 
 from tests.utils import file_response
-from documenters_aggregator.spiders.det_schools import Det_schoolsSpider
+from city_scrapers.spiders.det_schools import Det_schoolsSpider
 
-test_response = file_response('files/det_schools.html')
+test_response = file_response('files/det_schools.html', url='http://detroitk12.org/board/meetings/')
 spider = Det_schoolsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -40,11 +40,11 @@ def test_location():
     }
 
 
-# def test_sources():
-    # assert parsed_items[0]['sources'] == {
-        # 'url': 'EXPECTED URL',
-        # 'note': 'EXPECTED NOTE'
-    # }
+def test_sources():
+    assert parsed_items[0]['sources'] == [{
+        'url': 'http://detroitk12.org/board/meetings/',
+        'note': ''
+    }]
 
 
 # @pytest.mark.parametrize('item', parsed_items)

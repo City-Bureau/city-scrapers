@@ -3,7 +3,7 @@ import scrapy
 import re
 import urllib.parse
 from datetime import datetime
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class Det_schoolsSpider(Spider):
@@ -44,7 +44,7 @@ class Det_schoolsSpider(Spider):
                 'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item[3]),
-                'sources': self._parse_sources(item),
+                'sources': self._parse_sources(response),
             }
 
             data['id'] = self._generate_id(data, data['start_time'])
@@ -142,11 +142,11 @@ class Det_schoolsSpider(Spider):
         """
         return 'tentative'
 
-    def _parse_sources(self, item):
+    def _parse_sources(self, response):
         """
         Parse or generate sources.
         """
         return [{
-            'url': '',
+            'url': response.url,
             'note': '',
         }]
