@@ -13,7 +13,7 @@ class CsvPipeline(object):
     Outputs csv files for local development to the /local_output/ folder
     """
 
-    path = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode("utf-8").rstrip()  + '/city_scrapers/local_outputs/'
+    path = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode("utf-8").rstrip()  + '/local_outputs/'
 
     def __init__(self):
         dispatcher.connect(self.spider_opened, signals.spider_opened)
