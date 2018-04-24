@@ -57,7 +57,7 @@ class chi_LSCMeetingSpider(Spider):
 
         rows = json.loads(response.body.decode('utf-8'))['values']
         rows = [row for row in rows if (len(row) == 12)]
-        now = datetime.now().replace(tzinfo=timezone('America/Chicago'))
+        now = self.start_date.replace(tzinfo=timezone('America/Chicago'))
 
         for row in rows:
             # Strip leading or trailing whitespace from all values
@@ -70,6 +70,7 @@ class chi_LSCMeetingSpider(Spider):
             missing_values = 13 - len(row)
             row.extend([''] * missing_values)
             data = self._parse_row(row)
+            yield data
 
             # Only work with the next month's worth of meetings
             # to avoid overloading Airtable
