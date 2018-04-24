@@ -3,7 +3,7 @@ import scrapy
 
 from datetime import datetime
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_buildings import Chi_buildingsSpider
+from city_scrapers.spiders.chi_buildings import Chi_buildingsSpider
 
 
 test_json_response = file_response('files/chi_buildings.json')

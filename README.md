@@ -8,7 +8,7 @@ Public meetings are important spaces for democracy where any resident can partic
 
 How does the Documenters program know when meetings are happening? It isn’t easy! These events are spread across dozens of websites, rarely in useful data formats.
 
-That’s why City Bureau and ProPublica Illinois are working together with a team of civic coders to develop and coordinate the City Scrapers, a community open source project to scrape and store these meetings in a central database.
+That’s why City Bureau is working together with a team of civic coders to develop and coordinate the City Scrapers, a community open source project to scrape and store these meetings in a central database.
 
 ## What are the City Scrapers?
 
@@ -32,6 +32,13 @@ From building a scraper, you'll gain experience with:
 The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
  
 We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both our community and Chicago’s tech and media scenes at large.
+
+## Governance Structure
+The City Scrapers project is governed by a committee of rotating volunteer project leaders in collaboration with project contributors. The committee’s role is to 1) Make decisions through consensus on issues that haven't been resolved among volunteers and informal conversations 2) Onboard and advise volunteers who want to get involved in the City Scrapers project 3) Review, approve and enact project agendas OR 3) Manage the project on behalf of the City Bureau Documenters Program use case (prioritize issues, review pull requests, etc) 4) Lead regular meet-ups open to all Labs members and 5) Uphold the City Bureau Labs mission.
+
+Current committee members: Jim Benton, David Eads, Bonnie Fan, Cat Greim, Darryl Holliday, Rebecca Wei
+
+Point of contact: Rebecca Wei (@r-wei)
 
 ## Ready to code with us?
 
@@ -93,15 +100,11 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 
 ## Support this work
 
-This project is organized and maintained by [City Bureau](http://www.citybureau.org/) and [ProPublica Illinois](https://www.propublica.org/illinois).
+This project is organized and maintained by [City Bureau](http://www.citybureau.org/).
 
 * [City Bureau](https://www.citybureau.org/)
   * [Donate](https://www.citybureau.org/press-club)
-  * [Subscribe](https://citybureau.squarespace.com/newsletter/)
+  * [Subscribe](https://citybureau.com/newsletter/)
   * [Twitter @city_bureau](https://twitter.com/city_bureau/)
   * [Facebook](https://www.facebook.com/CityBureau/)
-* [ProPublica Illinois](https://www.propublica.org/illinois)
-  * [Donate](https://www.propublica.org/donate-illinois)
-  * [Subscribe](http://go.propublica.org/sign-up)
-  * [Twitter @propublicail](https://twitter.com/ProPublicaIL)
-  * [Facebook](https://www.facebook.com/propublicaillinois/)
+

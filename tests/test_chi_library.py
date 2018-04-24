@@ -1,6 +1,6 @@
 import pytest
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_library import Chi_librarySpider
+from city_scrapers.spiders.chi_library import Chi_librarySpider
 
 # def test_tests():
 #     print('Please write some tests for this spider or at least disable this one.')

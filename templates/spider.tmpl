@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 
 class {{ classname }}(Spider):
@@ -68,7 +68,7 @@ class {{ classname }}(Spider):
 
     def _parse_description(self, item):
         """
-        Parse or generate event name.
+        Parse or generate event description.
         """
         return ''
 

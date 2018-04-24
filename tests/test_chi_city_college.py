@@ -1,5 +1,5 @@
 from tests.utils import file_response
-from documenters_aggregator.spiders.chi_city_college import Chi_cityCollegeSpider
+from city_scrapers.spiders.chi_city_college import Chi_cityCollegeSpider
 
 
 test_response = file_response('files/ccc_event.html')
@@ -45,6 +45,15 @@ def test_location():
             'longitude': None,
         },
     }
+
+
+def test_description():
+    assert item['description'] == ("The Board of Trustees is the governing "
+                                   "body of City Colleges of Chicago "
+                                   "Community College District No. 508. City "
+                                   "Colleges of Chicago currently operates "
+                                   "seven accredited colleges located "
+                                   "throughout Chicago.")
 
 
 def test__type():
