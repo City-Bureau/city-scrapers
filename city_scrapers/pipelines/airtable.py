@@ -10,8 +10,11 @@ from requests.exceptions import HTTPError
 from scrapy.exceptions import DropItem
 from pytz import utc
 
-AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
-AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
+AIRTABLE_BASE_KEY_CHI = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY_CHI')
+AIRTABLE_DATA_TABLE_CHI = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE_CHI')
+AIRTABLE_BASE_KEY_DET = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY_DET')
+AIRTABLE_DATA_TABLE_DET = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE_DET')
+
 KEEP_FIELDS = ['id', 'name', 'description', 'classification', 'start_time', 'end_time',
                'timezone', 'agency_name', 'location_name', 'location_url',
                'location_address', 'location_latitude', 'location_longitude',
@@ -24,14 +27,15 @@ KEEP_FIELDS = ['id', 'name', 'description', 'classification', 'start_time', 'end
 
 class AirtablePipeline(object):
     """
-    Stub pipeline to save to AirTable.
+    Pipeline to save to AirTable.
     """
     def __init__(self):
-        self.airtable = Airtable(AIRTABLE_BASE_KEY, AIRTABLE_DATA_TABLE)
+        self.airtable = None
 
     def process_item(self, item, spider):
-        # copy item; airtable-specific munging is happening here that breaks
-        # opencivicdata standard
+        # write to a different Airtable depending on the city
+        # temporary fix, remove/adjust when the Platform is built
+        self._set_airtable(spider)
 
         if item.get('start_time') is None:
             spider.logger.debug('AIRTABLE PIPELINE: Ignoring event without start_time {0}'.format(item['id']))
@@ -42,8 +46,10 @@ class AirtablePipeline(object):
             spider.logger.debug('AIRTABLE PIPELINE: Ignoring past event {0}'.format(item['id']))
             return item
 
-        time.sleep(randint(0, 3))  # to avoid rate limiting?
+        time.sleep(randint(0, 3))  # to avoid rate limiting
 
+        # copy item; airtable-specific munging is happening here that breaks
+        # opencivicdata standard
         new_item = item.copy()
 
         # flatten location
@@ -68,6 +74,18 @@ class AirtablePipeline(object):
             raise DropItem('Could not save {0}'.format(new_item['id']))
         except Exception as e:
             spider.logger.exception('Unknown error')
+
+    def _set_airtable(self, spider):
+        """
+        Sets self.airtable depending on the spider's region.
+        Defaults to Chicago.
+        """
+        region_prefix = spider.name.split('_')[0]
+        if region_prefix == 'det':
+            self.airtable = Airtable(AIRTABLE_BASE_KEY_DET, AIRTABLE_DATA_TABLE_DET)
+        else:
+            self.airtable = Airtable(AIRTABLE_BASE_KEY_CHI, AIRTABLE_DATA_TABLE_CHI)
+
 
     def _format_values(self, k, v):
         if ((v is None) or v == '') and (k not in ['start_time', 'end_time']):
