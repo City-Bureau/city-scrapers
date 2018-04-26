@@ -12,7 +12,7 @@ from pytz import timezone
 
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 
-from documenters_aggregator.spider import Spider
+from city_scrapers.spider import Spider
 
 GOOGLE_API_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_GOOGLE_API_KEY') or 'test-token'
 SPREADSHEET_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1uzgWLWl19OUK6RhkAuqy6O6p4coTOqA22_nmKfzbakE'
@@ -41,7 +41,7 @@ Every Chicago public school has a Local School Council (LSC) which consists of p
 """
 
 class chi_LSCMeetingSpider(Spider):
-    name = 'localschoolcouncil'
+    name = 'chi_localschoolcouncil'
     long_name = 'Local School Council'
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = [SPREADSHEET_URL + '/values/A2:L1400?key=' + GOOGLE_API_KEY]
@@ -57,7 +57,7 @@ class chi_LSCMeetingSpider(Spider):
 
         rows = json.loads(response.body.decode('utf-8'))['values']
         rows = [row for row in rows if (len(row) == 12)]
-        now = datetime.now().replace(tzinfo=timezone('America/Chicago'))
+        now = self.start_date.replace(tzinfo=timezone('America/Chicago'))
 
         for row in rows:
             # Strip leading or trailing whitespace from all values
@@ -70,6 +70,7 @@ class chi_LSCMeetingSpider(Spider):
             missing_values = 13 - len(row)
             row.extend([''] * missing_values)
             data = self._parse_row(row)
+            yield data
 
             # Only work with the next month's worth of meetings
             # to avoid overloading Airtable
