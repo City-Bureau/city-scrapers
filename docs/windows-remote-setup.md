@@ -1,21 +1,27 @@
+# Developing on Codeanywhere
 This tutorial uses Codeanywhere as an alternative to developing on Windows. Codeanywhere runs a Virtual Private Server with its own RAM, disk space and processing power. 
-We'll set up a Linux development environment in a Codeanywhere container and clone the project here.
+We'll set up a Linux development environment in a Codeanywhere container to clone the project in.
 
-# Code Anywhere Setup
+## Steps:
+1. Codeanywhere setup
+2. Environment setup and installation
+3. Next steps
+
+## 1. Codeanywhere setup
 1. Get a free tier codeanywhere account at https://codeanywhere.com/signup
 2. Login to Codeanywhere.
 3. Start a new Container by going to File -> New Connections -> Container.
 4. Choose the **Blank: Ubuntu 14.04** container. Name it something that makes sense to you.
 5. Wait for the container to deploy, and close out of the welcome message to switch to the terminal window. (If you ever exit out of your terminal, just right click on your Container under Connections and select "SSH Terminal")
 
-# Environment setup and installations
-## Option 1: Run a shell script to set everything up:
-1. This command runs all of the setup commands at once. Copy and right click to paste into your terminal.
+## 2. Environment setup and installations
+### Option 1: Run a shell script to set everything up:
+This command runs all of the setup commands at once. Copy and right click to paste into your terminal.
 ```
 source <(curl -s https://gist.githubusercontent.com/pjsier/06c03529c8cde7255f2ea0c3dd2d7e7c/raw/9784f283f32073d5e2a83f90b31d70f8b9e0111b/city_scrapers_setup.sh)
 ```
 
-## Option 2: Run the commands step-by-step (in case the shell script did not work, or you want more explanations)
+### Option 2: Run the commands step-by-step (in case the shell script did not work, or you want more explanations)
 1. In order to install Python 3.6, we will have to update our directories. Run the below (line by line):
 
 ```
@@ -47,7 +53,7 @@ echo "export LANG=en_GB.UTF-8" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-# Next Steps: 
+## 3. Next Steps: 
 
 1. Create your virtual environment: 
 
