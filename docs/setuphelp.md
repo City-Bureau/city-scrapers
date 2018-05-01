@@ -37,13 +37,17 @@ git merge upstream/master
 ```
 4. The final step is to update your fork on Github with the changes from the original repository by running `git push`.
 
-## Windows Limitations
-
-This project uses `invoke` tasks, which rely upon the `pty` package for pseudo-terminal utilties. [Unfortunately, `pty` is not available on Windows](https://github.com/City-Bureau/city-scrapers/issues/62), which makes it difficult to run all City Scraper tests locally. We recommend that if are using Windows and  want to contribute more extensive code to the project, consider creating a Linux environment by installing a virtual machine, partitioning your computer or following the [Docker installation steps on the install guide](02_installation.md#step-2-option-1-local-python-3-and-virtualenv).
 
 ## Creating a virtual environment
 
 The [following gist](https://gist.github.com/bonfirefan/c5556ca54e8bbe9d83764730c36a4b3e) covers common headaches with setting up a virtual environment on a Linux-like environment.
+
+It is also possible to use `venv` to create your virtual environment. 
+```
+python3.6 -m venv cityscraperenv
+source cityscraperenv/bin/activate
+```
+(Here we are naming the virtual environment differently to avoid confusing the directory with your Github repository).
 
 ## Getting Google API Credentials
 
