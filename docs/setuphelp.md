@@ -44,10 +44,10 @@ The [following gist](https://gist.github.com/bonfirefan/c5556ca54e8bbe9d83764730
 
 It is also possible to use `venv` to create your virtual environment. 
 ```
-python3.6 -m venv cityscraperenv
-source cityscraperenv/bin/activate
+python3.6 -m venv venv
+source venv/bin/activate
 ```
-(Here we are naming the virtual environment differently to avoid confusing the directory with your Github repository).
+(Here we are naming the virtual environment `venv`, which has been added to the project's `.gitignore`).
 
 ## Getting Google API Credentials
 
