@@ -64,4 +64,4 @@ Once you've activated your virtual environment, you should see it appear in pare
 ```
 To deactivate, type `deactivate`. To activate it, re-run the `source cityscraperenv/bin/activate` command. You'll want to activate the virtual environment when developing for the City Scrapers project.
 
-3. Continue on with the rest of the [installation instructions](https://github.com/City-Bureau/city-scrapers/blob/master/docs/02_installation.md). You will need to clone your repository and install the requirements in your virtual environment. 
+2. Continue on with the rest of the [installation instructions](https://github.com/City-Bureau/city-scrapers/blob/master/docs/02_installation.md). You will need to clone your repository and install the requirements in your virtual environment. 
