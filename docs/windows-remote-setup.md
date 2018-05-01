@@ -10,6 +10,7 @@ We'll set up a development environment in Linux and clone the project here.
 
 ```
 sudo apt-get install python-software-properties
+sudo apt update
 sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:fkrull/deadsnakes 
 ```
@@ -41,6 +42,7 @@ python3 -V
 ```
 10. One of the project dependencies is the `Inflector` python package. It will fail unless we set local encoding settings:
 ```
+sudo apt-get install language-pack-en
 export LC_ALL=en_GB.UTF-8
 export LANG=en_GB.UTF-8
 ```
