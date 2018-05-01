@@ -51,7 +51,7 @@ class Chi_citycouncilSpider(Spider):
             '_type': 'event',
             'id': item['id'],
             'name': item['name'],
-            'description': item['description'],
+            'description': self._parse_description(),
             'classification': 'city council meeting',
             'start_time': self._parse_time(item.get('start_date', '')),
             'end_time': self._parse_time(item.get('end_date', '')),
@@ -83,6 +83,14 @@ class Chi_citycouncilSpider(Spider):
             return e_pg.json()
         else:
             return None
+
+    def _parse_description(self):
+        return ("The City of Chicago is divided into fifty legislative districts or wards. "
+                "Each district is represented by an alderman who is elected by "
+                "their constituency to serve a 4-year term. "
+                "In addition to representing the interests of their ward residents, "
+                "together the 50 aldermen comprise the Chicago City Council, which serves "
+                "as the legislative branch of government of the City of Chicago.")
 
     def _parse_time(self, timestamp):
         """
