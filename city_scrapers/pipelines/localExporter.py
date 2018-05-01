@@ -49,7 +49,10 @@ class CsvPipeline(object):
         new_item = item.copy()
 
         # flatten location
-        new_item['start_time'] = datetime.datetime.strftime(new_item['start_time'], '%Y-%m-%d %H:%M')
+        try:
+            new_item['start_time'] = datetime.datetime.strftime(new_item['start_time'], '%Y-%m-%d %H:%M')
+        except:
+            pass
         try:
             new_item['end_time'] = datetime.datetime.strftime(new_item['end_time'], '%Y-%m-%d %H:%M')
         except:
