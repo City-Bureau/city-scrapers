@@ -58,8 +58,8 @@ source ~/.bashrc
 1. Create your virtual environment: 
 
 ```
-python3.6 -m venv cityscraperenv
-source cityscraperenv/bin/activate
+python3.6 -m venv venv
+source venv/bin/activate
 ```
 Note: these steps differ from those in the [installation instructions](https://github.com/City-Bureau/city-scrapers/blob/master/docs/02_installation.md). The only difference is that you are using `venv` to set up your virtual environment and specifying which Python 3 version you are using (3.6).
 
