@@ -25,7 +25,7 @@ sudo apt-get install -y software-properties-common
 sudo add-apt-repository ppa:fkrull/deadsnakes -y
 ```
 
-7. Now that we've added the `ppa:fkrull/deadsnakes` directory, we can install Python 3.6 and pip. Run the below:
+2. Now that we've added the `ppa:fkrull/deadsnakes` directory, we can install Python 3.6 and pip. Run the below:
 
 ```
 sudo apt-get update -y
@@ -38,7 +38,7 @@ sudo python3.6 get-pip.py
 rm get-pip.py
 ```
 
-8. One of the project dependencies is the `Inflector` python package. It will fail unless we set local encoding settings:
+3. One of the project dependencies is the `Inflector` python package. It will fail unless we set local encoding settings:
 
 ```
 sudo apt-get install -y language-pack-en
