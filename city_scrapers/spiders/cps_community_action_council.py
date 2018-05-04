@@ -23,7 +23,6 @@ class Cps_community_action_councilSpider(Spider):
 
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
@@ -43,23 +42,6 @@ class Cps_community_action_councilSpider(Spider):
         # uncomment to find a "next" url
         # yield self._parse_next(response)
 
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique and in the following format:
-        <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-identifier>/<underscored-event-name>
-
-        Example:
-        chi_buildings/201710161230/2176/daley_plaza_italian_exhibit
-        """
-        return ''
 
     def _parse_name(self, item):
         """
@@ -76,7 +58,7 @@ class Cps_community_action_councilSpider(Spider):
         """
         Parse or generate event description.
         """
-        return ''
+        return None
 
     def _parse_classification(self, item):
         """
@@ -148,7 +130,7 @@ class Cps_community_action_councilSpider(Spider):
         """
         Parse end date and time.
         """
-        return ''
+        return None
 
     def _parse_timezone(self, item):
         """
