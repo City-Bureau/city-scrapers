@@ -32,7 +32,7 @@ class Cps_community_action_councilSpider(Spider):
                 'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item),
+                'sources': self._parse_sources(response),
             }
 
             data['id'] = self._generate_id(data, data['start_time'])
@@ -51,7 +51,7 @@ class Cps_community_action_councilSpider(Spider):
             community_name = item.css('li').css('strong::text').extract()
         else:
             community_name = item.css('li').css('strong').css('a::text').extract()
-        name = community_name[0] + ' community action council meeting'
+        name = community_name[0] + ' CPS community action council meeting'
         return name
 
     def _parse_description(self, item):
@@ -64,7 +64,7 @@ class Cps_community_action_councilSpider(Spider):
         """
         Parse or generate classification (e.g. public health, education, etc).
         """
-        return 'Not classified'
+        return 'Education'
 
     def _parse_start(self, item):
         """
@@ -111,19 +111,27 @@ class Cps_community_action_councilSpider(Spider):
             return dateparse(
                 str(meeting_date.year) + '-' + str(meeting_date.month) + '-' + str(meeting_date.day) + ' ' + time)
 
+        def get_start(source):
+            '''Combines above defined parse_day, parse_time, count_days, and concat_date functions to get the start
+             date from the source. If a start time cannot be found the UNIX epoch date is returned.
+             '''
+            try:
+                day = parse_day(source)
+                week_count = source[0].strip()[
+                    0]  # selects first character in the source, which is usually the week count
+                if week_count.isdigit():
+                    time = parse_time(source)
+                    meeting_date = count_days(day, week_count)
+                    start = concat_date(meeting_date, time)
+                else:
+                    pass
+            except (AttributeError) as e:
+                start = datetime(1970, 1, 1)
+            return start
+
         source = item.css('li::text').extract()
-        try:
-            day = parse_day(source)
-            week_count = source[0].strip()[0]  # selects first character in the source, which is usually the week count
-            if week_count.isdigit():
-                time = parse_time(source)
-                meeting_date = count_days(day, week_count)
-                output = concat_date(meeting_date, time)
-            else:
-                pass
-        except (AttributeError) as e:
-            output = datetime(1970, 1, 1)
-        return output
+
+        return get_start(source)
 
     def _parse_end(self, item):
         """
@@ -147,21 +155,35 @@ class Cps_community_action_councilSpider(Spider):
         """
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
-
-        Uses RegEx to obtain the address from the source, returns the raw source as the address if address
-        in not written in regular format.
         """
+
+        def get_location_address(source):
+            '''Uses RegEx to obtain the address from the source, returns the raw source as the address if address
+            in not written in regular format.
+            '''
+            address_regex = re.compile(r'(am|pm)(.*)$')
+            mo = address_regex.search(source)
+            try:
+                address = mo.group()[2:]
+            except AttributeError as e:
+                address = item.css('li::text').extract()[0]
+            return address
+
+        def get_location_name(item):
+            '''Gets the name of the location of the meeting from the item.
+            '''
+            if len(item.css('li').css('strong::text').extract()) == 1:
+                community_name = item.css('li').css('strong::text').extract()
+            else:
+                community_name = item.css('li').css('strong').css('a::text').extract()
+            return community_name[0]
+
         source = item.css('li::text').extract()[1]
-        address_regex = re.compile(r'(am|pm)(.*)$')
-        mo = address_regex.search(source)
-        try:
-            address = mo.group()[2:]
-        except AttributeError as e:
-            address = source
+
         return {
             'url': None,
-            'name': '',
-            'address': address,
+            'name': get_location_name(item),
+            'address': get_location_address(source),
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -179,11 +201,11 @@ class Cps_community_action_councilSpider(Spider):
         """
         return 'Tentative'
 
-    def _parse_sources(self, item):
+    def _parse_sources(self, response):
         """
         Parse or generate sources.
         """
         return [{
-            'url': '',
+            'url': response.url,
             'note': '',
         }]
