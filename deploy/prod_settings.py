@@ -104,3 +104,11 @@ EXTENSIONS = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# Write spiders to S3 bucket
+FEED_EXPORTERS = {
+    'cityscrapers_jsonlines': 'city_scrapers.exporters.CityScrapersJsonLinesItemExporter'
+}
+
+FEED_FORMAT = 'cityscrapers_jsonlines'
+FEED_URI = 's3://city-scrapers-events-feed/%(name)s/%(time)s.json'
