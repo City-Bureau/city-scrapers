@@ -111,7 +111,6 @@ class Cps_community_action_councilSpider(Spider):
             return dateparse(
                 str(meeting_date.year) + '-' + str(meeting_date.month) + '-' + str(meeting_date.day) + ' ' + time)
 
-
         source = item.css('li::text').extract()
         try:
             day = parse_day(source)
@@ -148,14 +147,24 @@ class Cps_community_action_councilSpider(Spider):
         """
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
+
+        Uses RegEx to obtain the address from the source, returns the raw source as the address if address
+        in not written in regular format.
         """
+        source = item.css('li::text').extract()[1]
+        address_regex = re.compile(r'(am|pm)(.*)$')
+        mo = address_regex.search(source)
+        try:
+            address = mo.group()[2:]
+        except AttributeError as e:
+            address = source
         return {
-            'url': '',
+            'url': None,
             'name': '',
-            'address': '',
+            'address': address,
             'coordinates': {
-                'latitude': '',
-                'longitude': '',
+                'latitude': None,
+                'longitude': None,
             },
         }
 
@@ -168,7 +177,7 @@ class Cps_community_action_councilSpider(Spider):
         * passed
         By default, return "tentative"
         """
-        return 'tentative'
+        return 'Tentative'
 
     def _parse_sources(self, item):
         """
