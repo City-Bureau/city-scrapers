@@ -56,7 +56,7 @@ def test_location():
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
     assert item['sources'] == [
-        {'url': 'https://www.waynecounty.com/elected/commission/committee-of-the-whole.aspx', 'note': ''}]
+        {'url': 'www.waynecounty.com/documents/commission/cowmtg01-10-17.pdf', 'note': 'Agenda'}]
 
 
 @pytest.mark.parametrize('item', parsed_items)
