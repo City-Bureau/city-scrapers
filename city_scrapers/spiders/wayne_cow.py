@@ -39,7 +39,7 @@ class Wayne_cowSpider(Spider):
                 'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item),
+                'sources': self._parse_sources(response, item),
             }
 
             data['id'] = self._generate_id(data, start_time)
@@ -151,11 +151,17 @@ class Wayne_cowSpider(Spider):
         """
         return 'tentative'
 
-    def _parse_sources(self, item):
+    def _parse_sources(self, response, item):
         """
         Parse or generate sources.
         """
-        return [{
-            'url': '',
-            'note': '',
-        }]
+        try:
+            return [{
+                'url': ''.join(('www.waynecounty.com', item.xpath('.//td[4]/a/@href').extract()[0])),
+                'note': item.xpath('.//td[4]/a/text()').extract()[0],
+            }]
+        except IndexError:
+            return [{
+                'url': response.url,
+                'note': '',
+            }]
