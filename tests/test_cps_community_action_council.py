@@ -3,27 +3,17 @@ import pytest
 from tests.utils import file_response
 from city_scrapers.spiders.cps_community_action_council import Cps_community_action_councilSpider
 
-
-def test_tests():
-    print('Please write some tests for this spider or at least disable this one.')
-    assert False
-
-
-"""
-Uncomment below
-"""
-
-# test_response = file_response('files/cps_community_action_council.html')
-# spider = Cps_community_action_councilSpider()
-# parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+test_response = file_response('files/cps_community_action_council_CAC.html')
+spider = Cps_community_action_councilSpider()
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-# def test_name():
-    # assert parsed_items[0]['name'] == 'EXPECTED NAME'
+def test_name():
+    assert parsed_items[0]['name'] == 'Austin CPS community action council meeting'
 
 
-# def test_description():
-    # assert parsed_items[0]['description'] == 'EXPECTED DESCRIPTION'
+def test_description():
+    assert parsed_items[0]['description'] == None
 
 
 # def test_start_time():
