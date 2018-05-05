@@ -33,7 +33,7 @@ class AddressPipeline(object):
         if name is None:
             query = address.strip()
         else:
-            query = ', '.join([name.strip(), adaddress.strip()])
+            query = ', '.join([name.strip(), address.strip()])
 
         # replace city hall
         query = re.sub('city hall((?!.*chicago, il).)*$',
@@ -41,7 +41,8 @@ class AddressPipeline(object):
 
         try:
             querydict = usaddress.tag(query)[0]
-        except usaddress.RepeatedLabelError as ex:
+        except usaddress.RepeatedLabelError as ex: 
+        # includ multiple errors
             querydict = self.bad_address_tag(ex.parsed_string)
 
         city = querydict.get('PlaceName', default_city) # replace w default city if blank
