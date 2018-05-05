@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from datetime import datetime
 from city_scrapers.spider import Spider
 
 
@@ -9,6 +10,9 @@ class Wayne_cowSpider(Spider):
     allowed_domains = ['www.waynecounty.com']
     start_urls = ['https://www.waynecounty.com/elected/commission/committee-of-the-whole.aspx']
 
+    # Calendar shows only meetings in current year.
+    yearStr = datetime.now().year
+
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the Event Schema
@@ -17,7 +21,11 @@ class Wayne_cowSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
+
+        entries = response.xpath('//tbody/tr')
+
+        for item in entries:
+            start_time = self._parse_start(item)
 
             data = {
                 '_type': 'event',
@@ -34,9 +42,9 @@ class Wayne_cowSpider(Spider):
                 'sources': self._parse_sources(item),
             }
 
-        data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data, start_time)
 
-        yield data
+            yield data
 
         # self._parse_next(response) yields more responses to parse if necessary.
         # uncomment to find a "next" url
@@ -88,7 +96,16 @@ class Wayne_cowSpider(Spider):
         """
         Parse start date and time.
         """
-        return ''
+
+        mdStr = item.xpath('.//td[2]/text()').extract()[0]
+        timeStr = item.xpath('.//td[3]/text()').extract()[0]
+        time_string = '{0}, {1} - {2}'.format(mdStr, self.yearStr, timeStr)
+        try:
+            naive = datetime.strptime(time_string, '%B %d, %Y - %I:%M %p')
+        except ValueError:
+            return None
+        else:
+            return self._naive_datetime_to_tz(naive)
 
     def _parse_end(self, item):
         """
