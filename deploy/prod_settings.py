@@ -37,6 +37,7 @@ COOKIES_ENABLED = False
 ITEM_PIPELINES = {
     # disabled until we can rebuild it on another provider
     #'city_scrapers.pipelines.GeocoderPipeline': 200,
+    'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
     'city_scrapers.pipelines.ValidationPipeline': 300,
     'city_scrapers.pipelines.AirtablePipeline': 400
 }
