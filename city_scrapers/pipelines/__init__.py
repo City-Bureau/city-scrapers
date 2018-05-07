@@ -5,6 +5,7 @@ from .sqlalchemy import CityScrapersSQLAlchemyPipeline
 from .ValidationPipeline import ValidationPipeline
 from .TravisValidation import TravisValidationPipeline
 from .localExporter import CsvPipeline
+from .item import CityScrapersItemPipeline
 
 
 __all__ = (
@@ -14,5 +15,6 @@ __all__ = (
     'CityScrapersSQLAlchemyPipeline',
     'ValidationPipeline',
     'TravisValidationPipeline',
-    'CsvPipeline'
+    'CsvPipeline',
+    'CityScrapersItemPipeline'
 )

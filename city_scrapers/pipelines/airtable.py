@@ -52,7 +52,6 @@ class AirtablePipeline(object):
         new_item['location_address'] = get_key(new_item, 'location.address')
         new_item['location_latitude'] = get_key(new_item, 'location.coordinates.latitude')
         new_item['location_longitude'] = get_key(new_item, 'location.coordinates.longitude')
-        new_item['agency_name'] = spider.long_name
         new_item['url'] = new_item.get('sources', [{'url': ''}])[0].get('url', '')
 
         new_item = {k: self._format_values(k, v) for k, v in new_item.items() if k in KEEP_FIELDS}
