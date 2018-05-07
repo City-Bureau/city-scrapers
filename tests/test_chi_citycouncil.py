@@ -16,7 +16,13 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == ''
+    EXPECTED_DESCRIPTION = ("The City of Chicago is divided into fifty legislative districts or wards. "
+                            "Each district is represented by an alderman who is elected by "
+                            "their constituency to serve a 4-year term. "
+                            "In addition to representing the interests of their ward residents, "
+                            "together the 50 aldermen comprise the Chicago City Council, which serves "
+                            "as the legislative branch of government of the City of Chicago.")
+    assert parsed_items[0]['description'] == EXPECTED_DESCRIPTION
 
 
 def test_start_time():

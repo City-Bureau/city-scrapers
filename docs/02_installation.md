@@ -4,8 +4,7 @@ title: Installation
 
 <h1 class="hidden">Installation</h1>
 
-Follow the following directions if you'd like to run the project on your
-machine.
+Follow the following directions for cloning the repository and installing requirements.
 
 ## Prerequisites
 
@@ -15,7 +14,12 @@ machine.
 * Python installed
 * Virtual environment manager
 
-If in doubt, please also refer to the [setup help file](https://github.com/City-Bureau/city-scrapers/blob/master/docs/setuphelp.md), which should be useful for common first-time setup issues.
+If in doubt, please also refer to the [setup help file](setuphelp.md), which should be useful for common first-time setup issues.
+
+### Windows Limitations
+This project uses `invoke` tasks, which rely upon the `pty` package for pseudo-terminal utilties. Unfortunately, `pty` is not available on Windows, which makes it difficult to run all City Scraper tests locally. We recommend that if are using Windows and want to contribute more extensive code to the project to [set up an environment on Codeanywhere](windows-remote-setup.md). This is the simplest option to start contributing code.
+
+If you don't mind some installation and want to develop locally, you can also  consider creating a Linux environment by installing a virtual machine, partitioning your computer or [following the Docker installation steps](windows-docker-setup.md).
 
 ## Step 1: Clone the Repository
 
@@ -36,7 +40,7 @@ $ cd city-scrapers
 *If you do not plan to do any development, you can skip creating a fork and
 just clone the main City-Bureau repo.*
 
-## Step 2, Option 1: Local Python 3 and Virtualenv
+## Step 2: Local Python 3 and Virtualenv
 
 You'll need a fairly standard Python development stack. If you're on OS X, the [NPR Visuals guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
 
@@ -68,32 +72,4 @@ Should you need to deactivate the virtual environment, it is as simple as:
 
 ```
 (city-scrapers)$ deactivate
-```
-
-
-### Step 2, Option 2: Docker
-
-This is a good option for Windows or a system that doesn't have any of the above prerequisites installed but does have Docker. You will first have to install Docker [here](https://docs.docker.com/install/). Older Mac and Windows systems may need to use [Docker Toolbox](https://docs.docker.com/toolbox/overview/) instead.
-
-1. [Fork the repository](https://github.com/City-Bureau/city-scrapers/fork) to your own Github account.
-
-2. Clone your fork to your local machine:
-```
-$ git clone git@github.com:<your-username>/city-scrapers.git
-```
-
-3. Change directories into the main project folder:
-```
-$ cd city-scrapers
-```
-
-4. Build the docker container. Don't forget final ".", which tells Docker to use the Dockerfile in the current directory. The "-t" flag adds a tag to the image so that it gets a nice repository name and tag. This tag matches the [Docker Hub docker repository](https://hub.docker.com/r/easherma/documenters-aggregator), but you can add other tags. For more information, read the [Docker docs.](https://docs.docker.com/)
-```
-$ docker build -t easherma/documenters-aggregator .
-```
-
-Then you can run commands on the container. For instance, to run tests:
-
-```
-$ docker run easherma/documenters-aggregator invoke runtests
 ```
