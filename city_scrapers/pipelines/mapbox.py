@@ -5,7 +5,7 @@ import requests
 This pipeline decorates items with latitude and longitude by geocoding their
 addresses.
 """
-
+MAPZEN_API_KEY  = os.environ.get('MAPZEN_API_KEY')
 
 class MapboxPipeline(object):
     """
@@ -16,7 +16,7 @@ class MapboxPipeline(object):
         # the geocoder library. this way we can use other libraries if needed or write/extend our own
         self.engine = 'geocoder'
         # api key, mapbox in this case. best practice would be to hide this
-        self.key = 'pk.eyJ1IjoiZWFzaGVybWEiLCJhIjoiY2oxcW51Nzk2MDBkbTJxcGUxdm85bW5xayJ9.7mL0wQ7cjifWwt5DrXMuJA'  #API
+        self.key = MAPZEN_API_KEY  #API
 
     """
     Process an item.
