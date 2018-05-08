@@ -20,6 +20,11 @@ class Cps_community_action_councilSpider(Spider):
         needs.
         """
         for item in response.css("ul").css('li')[17:]:
+            try:
+                if item.css("strong").css("a::attr(href)").extract()[0] == 'http://www.humboldtparkportal.org/':
+                    continue
+            except:
+                pass
 
             data = {
                 '_type': 'event',
@@ -41,7 +46,6 @@ class Cps_community_action_councilSpider(Spider):
         # self._parse_next(response) yields more responses to parse if necessary.
         # uncomment to find a "next" url
         # yield self._parse_next(response)
-
 
     def _parse_name(self, item):
         """
@@ -115,18 +119,15 @@ class Cps_community_action_councilSpider(Spider):
             '''Combines above defined parse_day, parse_time, count_days, and concat_date functions to get the start
              date from the source. If a start time cannot be found the UNIX epoch date is returned.
              '''
-            try:
-                day = parse_day(source)
-                week_count = source[0].strip()[
-                    0]  # selects first character in the source, which is usually the week count
-                if week_count.isdigit():
-                    time = parse_time(source)
-                    meeting_date = count_days(day, week_count)
-                    start = concat_date(meeting_date, time)
-                else:
-                    pass
-            except (AttributeError) as e:
-                start = datetime(1970, 1, 1)
+            day = parse_day(source)
+            week_count = source[0].strip()[
+                0]  # selects first character in the source, which is usually the week count
+            if week_count.isdigit():
+                time = parse_time(source)
+                meeting_date = count_days(day, week_count)
+                start = concat_date(meeting_date, time)
+            else:
+                pass
             return start
 
         source = item.css('li::text').extract()
@@ -179,7 +180,6 @@ class Cps_community_action_councilSpider(Spider):
             return community_name[0]
 
         source = item.css('li::text').extract()[1]
-
         return {
             'url': None,
             'name': get_location_name(item),
