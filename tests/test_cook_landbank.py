@@ -14,7 +14,7 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] is ("The CCLBA acquires, holds, and transfers interest in real estate "
+    assert parsed_items[0]['description'] == ("The CCLBA acquires, holds, and transfers interest in real estate "
                        "properties throughout Cook County to promote redevelopment and "
                        "reuse of vacant, abandoned, foreclosed or tax-delinquent properties "
                        "and support targeted efforts to stabilize neighborhoods. It was "
