@@ -189,10 +189,16 @@ class Cook_landbankSpider(Spider):
         return name
 
     def _parse_description(self, item):
-        """
-        No real 'description' field to parse. Leaving None.
-        """
-        return None
+       ADDEDdescription = ("The CCLBA acquires, holds, and transfers interest in real estate "
+                      "properties throughout Cook County to promote redevelopment and "
+                      "reuse of vacant, abandoned, foreclosed or tax-delinquent properties "
+                      "and support targeted efforts to stabilize neighborhoods. It was "
+                      "formed by ordinance of Cook County in 2013 to address the large "
+                      "inventory of vacant residential, industrial and commercial property "
+                      "in Cook County. The CCLBA is the largest land bank by geography in "
+                      "the country and is governed by a Board of Directors appointed by "
+                      "the Cook County Board of Commissioners.")
+        return ADDEDdescription
 
     def _parse_start(self, item):
         start_date = item.css('[itemprop=\'startDate\']::attr(datetime)').extract_first()
