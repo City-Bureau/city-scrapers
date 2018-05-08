@@ -112,4 +112,4 @@ FEED_EXPORTERS = {
 }
 
 FEED_FORMAT = 'cityscrapers_jsonlines'
-FEED_URI = 's3://city-scrapers-events-feed/%(name)s/%(time)s.json'
+FEED_URI = 's3://city-scrapers-events-feed/%(name)s/%(year)s/%(month)s/%(day)s/%(hour_min)s.json'
