@@ -12,9 +12,9 @@ parsed_items = list(spider.parse(test_response))
 def test_name():
     assert parsed_items[0]['name'] == 'CCLBA Finance Committee Meeting'
 
-
+@pytest.mark.parametrize('item', parsed_items)
 def test_description():
-    assert parsed_items[0]['description'] == ("The CCLBA acquires, holds, and transfers interest in real estate "
+    assert item['description'] == ("The CCLBA acquires, holds, and transfers interest in real estate "
                        "properties throughout Cook County to promote redevelopment and "
                        "reuse of vacant, abandoned, foreclosed or tax-delinquent properties "
                        "and support targeted efforts to stabilize neighborhoods. It was "
