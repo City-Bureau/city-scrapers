@@ -75,7 +75,7 @@ class Cook_housingAuthoritySpider(Spider):
 
 
     def _parse_description(self, response):
-        desc = response.css('div.description::text').extract_first()
+        desc = response.css('div.description::text').extract_first().strip()
 
         if desc is None:
             return ""
