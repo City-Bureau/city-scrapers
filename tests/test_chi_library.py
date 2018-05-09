@@ -2,9 +2,6 @@ import pytest
 from tests.utils import file_response
 from city_scrapers.spiders.chi_library import Chi_librarySpider
 
-# def test_tests():
-#     print('Please write some tests for this spider or at least disable this one.')
-#     assert False
 
 test_response = file_response('files/chi_library.html', url='https://www.chipublib.org/board-of-directors/board-meeting-schedule/')
 spider = Chi_librarySpider()
@@ -35,32 +32,44 @@ def test_all_day():
     assert parsed_items[0]['all_day'] is False
 
 
-# def test_classification(item):
-    # assert parsed_items[0]['classification'] == None
+def test_location():
+    assert parsed_items[0]['location'] == {
+    'address': '400 S. State Street, CHICAGO IL 60605',
+    'coordinates': {'latitude': None, 'longitude': None},
+    'name': 'Harold Washington Library Center, Multi-Purpose Room, Lower Level',
+    'url': None}
 
 
-# def test_status(item):
-    # assert parsed_items[0]['status'] == 'tentative'
+##### Parameterized Tests #####
 
 
-# def test_location(item):
-    # assert item['location'] == {
-    #     'url': 'EXPECTED URL',
-    #     'name': 'EXPECTED NAME',
-    #     'coordinates': {
-    #         'latitude': 'EXPECTED LATITUDE',
-    #         'longitude': 'EXPECTED LONGITUDE',
-    #     },
-    # }
+@pytest.mark.parametrize('item', parsed_items)
+def test_type(item):
+    assert item['_type'] == 'event'
 
+@pytest.mark.parametrize('item', parsed_items)
+def test_name(item):
+    assert item['name'] == 'Chicago Public Library Board Meeting'
 
-# def test__type(item):
-    # assert parsed_items[0]['_type'] == 'event'
+@pytest.mark.parametrize('item', parsed_items)
+def test_classification(item):
+    assert item['classification'] == 'Board meeting'
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_end(item):
+    assert item['end_time'] is None
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_end(item):
+    assert item['all_day'] is False
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_timezone(item):
     assert item['timezone'] == 'America/Chicago'
 
+@pytest.mark.parametrize('item', parsed_items)
+def test_status(item):
+    assert item['status'] == 'tentative'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
