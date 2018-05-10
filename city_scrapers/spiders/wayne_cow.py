@@ -105,7 +105,7 @@ class Wayne_cowSpider(Spider):
         except ValueError:
             return None
         else:
-            return self._naive_datetime_to_tz(naive)
+            return self._naive_datetime_to_tz(naive, 'America/Detroit')
 
     def _parse_end(self, item):
         """
