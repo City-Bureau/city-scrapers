@@ -79,6 +79,8 @@ class Cps_community_action_councilSpider(Spider):
     def _parse_start(self, item, month_counter):
         """
         Parse start date and time.
+
+        Accepts month_counter as an argument from top level parse function to iterate through all months in the year.
         """
 
         def parse_day(source):
@@ -106,7 +108,7 @@ class Cps_community_action_councilSpider(Spider):
             week_counter = 0
             for x in range(1, 31):
                 try:
-                    current_date = datetime(today.year, month_counter, x)
+                    current_date = datetime(today.year, month_counter, x) #uses month counter from top level parse func.
                     if current_date.weekday() == week_day[day]:
                         week_counter += 1
                         if week_counter == int(week_count):
