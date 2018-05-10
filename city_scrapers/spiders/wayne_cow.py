@@ -29,7 +29,6 @@ class Wayne_cowSpider(Spider):
 
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'description': self._parse_description(item),
                 'classification': self._parse_classification(item),
@@ -57,16 +56,6 @@ class Wayne_cowSpider(Spider):
         """
         next_url = None  # What is next URL?
         return scrapy.Request(next_url, callback=self.parse)
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique and in the following format:
-        <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-identifier>/<underscored-event-name>
-
-        Example:
-        chi_buildings/201710161230/2176/daley_plaza_italian_exhibit
-        """
-        return ''
 
     def _parse_name(self, item):
         """
@@ -111,7 +100,7 @@ class Wayne_cowSpider(Spider):
         """
         Parse end date and time.
         """
-        return ''
+        return None
 
     def _parse_timezone(self, item):
         """
@@ -155,13 +144,4 @@ class Wayne_cowSpider(Spider):
         """
         Parse or generate sources.
         """
-        try:
-            return [{
-                'url': ''.join(('www.waynecounty.com', item.xpath('.//td[4]/a/@href').extract()[0])),
-                'note': item.xpath('.//td[4]/a/text()').extract()[0],
-            }]
-        except IndexError:
-            return [{
-                'url': response.url,
-                'note': '',
-            }]
+        return [{'url': response.url, 'note': ''}]

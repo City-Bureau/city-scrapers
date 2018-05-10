@@ -48,6 +48,11 @@ def test_name(item):
 
 
 @pytest.mark.parametrize('item', parsed_items)
+def test_end_time(item):
+    assert item['end_time'] is None
+
+
+@pytest.mark.parametrize('item', parsed_items)
 def test_timezone(item):
     assert item['timezone'] == 'America/Detroit'
 
@@ -67,22 +72,19 @@ def test__type(item):
     assert item['_type'] == 'event'
 
 
-# NON-PARAMETRIZED TESTS
-
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'www.waynecounty.com/documents/commission/cowmtg01-10-17.pdf',
-        'note': 'Agenda'
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == [{
+        'url': 'https://www.waynecounty.com/elected/commission/committee-of-the-whole.aspx',
+        'note': ''
     }]
 
+
+# NON-PARAMETRIZED TESTS
 
 def test_start_time():
     assert parsed_items[0]['start_time'].isoformat() == '2018-01-10T10:00:00-05:00'
 
 
-# def test_end_time():
-# assert parsed_items[0]['end_time'].isoformat() == 'EXPECTED END DATE AND TIME'
-
-
-# def test_id():
-# assert parsed_items[0]['id'] == 'EXPECTED ID'
+def test_id():
+    assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/committee_of_the_whole'
