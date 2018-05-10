@@ -48,7 +48,7 @@ def test_type(item):
     assert item['_type'] == 'event'
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_name(item):
+def test_name_param(item):
     assert item['name'] == 'Chicago Public Library Board Meeting'
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -60,7 +60,7 @@ def test_end(item):
     assert item['end_time'] is None
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_end(item):
+def test_all_day_param(item):
     assert item['all_day'] is False
 
 @pytest.mark.parametrize('item', parsed_items)

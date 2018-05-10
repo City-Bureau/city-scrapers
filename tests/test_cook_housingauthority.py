@@ -32,7 +32,7 @@ def test_location():
     'name': 'Turlington West Community Room',
     'url': None}
 
-def test_location():
+def test_sources():
     assert item['sources'] == [{'note': '',
     'url': 'http://thehacc.org/event/entrepreneurship-boot-camp-session-2-marketing-analysis'}]
 
@@ -45,13 +45,13 @@ def test_type():
 def test_allday():
     assert item['all_day'] == False
 
-def test_allday():
+def test_classification():
     assert item['classification'] == 'Not classified'
 
-def test_type():
+def test_status():
     assert item['status'] == 'tentative'
 
-def test_allday():
+def test_timezone():
     assert item['timezone'] == 'America/Chicago'
 
 
