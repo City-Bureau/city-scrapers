@@ -1,3 +1,4 @@
+from datetime import datetime
 import pytest
 
 from tests.utils import file_response
@@ -9,7 +10,8 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_len():
-    assert len(parsed_items) == 8
+    current_month_number = datetime.today().month
+    assert len(parsed_items) == (13 - current_month_number)*8 #len varies depending on the month that the spider is run
 
 
 def test_name():
