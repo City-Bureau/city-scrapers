@@ -78,6 +78,7 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_library.svg) | Public Library |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_schools.svg) | Public Schools: Board of Education |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_school_actions.svg) | Public Schools: School Actions |
+| ![Status](https://s3.amazonaws.com/city-scrapers-status/cps_community_action_council.svg) | Public Schools: Community Action Council |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_transit.svg) | Transit Authority |
 
 
@@ -91,6 +92,7 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_county.svg) | Government |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_hospitals.svg) | Health and Hospitals System |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_landbank.svg) | Land Bank |
+| ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_housingauthority.svg) | Housing Authority |
 
 ### Illinois
 
@@ -105,6 +107,12 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | Status / Last Ran | Scraper |
 |---------|--------|
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/det_schools.svg) | Detroit Board of Education |
+
+### Wayne County, Michigan
+
+| Status / Last Ran | Scraper |
+|---------|--------|
+| ![Status](https://s3.amazonaws.com/city-scrapers-status/wayne_cow.svg) | Committee of the Whole |
 
 ## Support this work
 
