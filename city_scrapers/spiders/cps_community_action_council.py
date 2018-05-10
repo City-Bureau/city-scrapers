@@ -19,33 +19,39 @@ class Cps_community_action_councilSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css("ul").css('li')[17:]:
-            try:
-                if item.css("strong").css("a::attr(href)").extract()[0] == 'http://www.humboldtparkportal.org/':
-                    continue
-            except:
-                pass
+        month_counter = datetime.today().month # Sets month counter to the current month, which is passed to parse_start
+        for x in range(12): # iterates through every month in the year after the current month
+            if month_counter > 12:
+                break
+            else:
+                for item in response.css("ul").css('li')[17:]:
+                    try:
+                        if item.css("strong").css("a::attr(href)").extract()[0] == 'http://www.humboldtparkportal.org/':
+                            continue
+                    except:
+                        pass
 
-            data = {
-                '_type': 'event',
-                'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
-                'timezone': self._parse_timezone(item),
-                'status': self._parse_status(item),
-                'all_day': self._parse_all_day(item),
-                'location': self._parse_location(item),
-                'sources': self._parse_sources(response),
-            }
+                    data = {
+                        '_type': 'event',
+                        'name': self._parse_name(item),
+                        'description': self._parse_description(item),
+                        'classification': self._parse_classification(item),
+                        'start_time': self._parse_start(item, month_counter),
+                        'end_time': self._parse_end(item),
+                        'timezone': self._parse_timezone(item),
+                        'status': self._parse_status(item),
+                        'all_day': self._parse_all_day(item),
+                        'location': self._parse_location(item),
+                        'sources': self._parse_sources(response),
+                    }
 
-            data['id'] = self._generate_id(data, data['start_time'])
-            yield data
+                    data['id'] = self._generate_id(data, data['start_time'])
+                    yield data
+            month_counter += 1  # month counter is increased by 1 month with each iteration of the for loop
 
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
+    # self._parse_next(response) yields more responses to parse if necessary.
+    # uncomment to find a "next" url
+    # yield self._parse_next(response)
 
     def _parse_name(self, item):
         """
@@ -70,7 +76,7 @@ class Cps_community_action_councilSpider(Spider):
         """
         return 'Education'
 
-    def _parse_start(self, item):
+    def _parse_start(self, item, month_counter):
         """
         Parse start date and time.
         """
@@ -100,7 +106,7 @@ class Cps_community_action_councilSpider(Spider):
             week_counter = 0
             for x in range(1, 31):
                 try:
-                    current_date = datetime(today.year, today.month, x)
+                    current_date = datetime(today.year, month_counter, x)
                     if current_date.weekday() == week_day[day]:
                         week_counter += 1
                         if week_counter == int(week_count):
