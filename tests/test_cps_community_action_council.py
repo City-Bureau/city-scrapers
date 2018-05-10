@@ -9,7 +9,7 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_len():
-    assert len(parsed_items) == 9
+    assert len(parsed_items) == 8
 
 
 def test_name():
