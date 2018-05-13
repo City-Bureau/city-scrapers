@@ -9,6 +9,16 @@ import scrapy
 class Spider(scrapy.Spider):
     inflector = Inflector(English)
 
+    def __init__(self, *args, **kwargs):
+        # Add parameters for feed storage in Chicago time
+        tz = timezone('America/Chicago')
+        now = tz.localize(datetime.now())
+        self.year = now.year
+        self.month = now.strftime('%m')
+        self.day = now.strftime('%d')
+        self.hour_min = now.strftime('%H%M')
+        super(Spider, self).__init__(*args, **kwargs)
+
     def _generate_id(self, data, start_time):
         """
         Calulate ID. ID must be unique within the data source being scraped.

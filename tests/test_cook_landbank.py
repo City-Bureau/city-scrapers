@@ -13,8 +13,17 @@ def test_name():
     assert parsed_items[0]['name'] == 'CCLBA Finance Committee Meeting'
 
 
-def test_description():
-    assert parsed_items[0]['description'] is None
+@pytest.mark.parametrize('item', parsed_items)
+def test_description(item):
+    assert item['description'] == ("The CCLBA acquires, holds, and transfers interest in real estate "
+                       "properties throughout Cook County to promote redevelopment and "
+                       "reuse of vacant, abandoned, foreclosed or tax-delinquent properties "
+                       "and support targeted efforts to stabilize neighborhoods. It was "
+                       "formed by ordinance of Cook County in 2013 to address the large "
+                       "inventory of vacant residential, industrial and commercial property "
+                       "in Cook County. The CCLBA is the largest land bank by geography in "
+                       "the country and is governed by a Board of Directors appointed by "
+                       "the Cook County Board of Commissioners.")
 
 
 def test_start_time():

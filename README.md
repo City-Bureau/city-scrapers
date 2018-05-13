@@ -71,13 +71,15 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_citycouncil.svg) | City Council |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_pubhealth.svg) | Department of Public Health |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_infra.svg) | Infrastructure Trust |
+| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_localschoolcouncil.svg) | Local School Council |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_parks.svg) | Parks District |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_police.svg) | Police Department |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_policeboard.svg) | Police Board |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_library.svg) | Public Library |
+| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_schools.svg) | Public Schools: Board of Education |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_school_actions.svg) | Public Schools: School Actions |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_schools.svg) | Public Schools Board of Education |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_transit.svg) | Transit Authority |
+
 
 ### Cook County
 
@@ -97,6 +99,12 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/il_labor.svg) | Illinois Labor Relations Board |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/metra_board.svg) | Metra Board of Directors |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/regionaltransit.svg) | Regional Transportation Authority |
+
+### Detroit
+
+| Status / Last Ran | Scraper |
+|---------|--------|
+| ![Status](https://s3.amazonaws.com/city-scrapers-status/det_schools.svg) | Detroit Board of Education |
 
 ## Support this work
 

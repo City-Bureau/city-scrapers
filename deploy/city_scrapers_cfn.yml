@@ -69,6 +69,13 @@ Resources:
               Service: ecs-tasks.amazonaws.com
             Action: sts:AssumeRole
       RoleName: city-scrapers-batch-job-role
+      Policies:
+      - PolicyName: S3ServicePolicy
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action: ['s3:*']
+            Resource: '*'
   BatchInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:

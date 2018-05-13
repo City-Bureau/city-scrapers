@@ -37,6 +37,7 @@ COOKIES_ENABLED = False
 ITEM_PIPELINES = {
     # disabled until we can rebuild it on another provider
     #'city_scrapers.pipelines.GeocoderPipeline': 200,
+    'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
     'city_scrapers.pipelines.ValidationPipeline': 300,
     'city_scrapers.pipelines.AirtablePipeline': 400
 }
@@ -104,3 +105,11 @@ EXTENSIONS = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# Write spiders to S3 bucket
+FEED_EXPORTERS = {
+    'cityscrapers_jsonlines': 'city_scrapers.exporters.CityScrapersJsonLinesItemExporter'
+}
+
+FEED_FORMAT = 'cityscrapers_jsonlines'
+FEED_URI = 's3://city-scrapers-events-feed/%(name)s/%(year)s/%(month)s/%(day)s/%(hour_min)s.json'
