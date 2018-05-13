@@ -7,7 +7,7 @@ import re
 
 class Cps_community_action_councilSpider(Spider):
     name = 'cps_community_action_council'
-    long_name = 'CPS Community Action Council'
+    long_name = 'Chicago Public Schools'
     allowed_domains = ['cps.edu']
     start_urls = ['http://cps.edu/FACE/Pages/CAC.aspx']
 
