@@ -1,14 +1,21 @@
-import json
-from datetime import datetime
-from tests.utils import read_test_file_content, test_geocode_item
-from city_scrapers.pipelines.localExporter import CsvPipeline
-from city_scrapers.spiders.chi_buildings import Chi_buildingsSpider
-from city_scrapers.pipelines.mapbox import MapboxPipeline
+import betamax
+import requests
+import tests.conftest as config
+from tests.utils import test_item
+from city_scrapers.pipelines.geocoder import GeocoderPipeline
 
-pipeline = MapboxPipeline()
-testSpider = Chi_buildingsSpider()
+betamax_config = config.config
 
-def test_valid_geocode_item():
-    fixture = test_geocode_item()
-    processed = pipeline.process_item(fixture, testSpider)
-    print(processed)
+def test_geocoding():
+    item = test_item()
+    item['location']['coordinates'] = None
+
+    session = requests.Session()
+    recorder = betamax.Betamax(session, betamax_config.cassette_library_dir)
+
+    with recorder.use_cassette('test_geocoding'):
+        geocoder = GeocoderPipeline(session)
+        geocoder.process_item(item, None)
+
+    expected = {'latitude': '41.8838677', 'longitude': '-87.6319365'}
+    assert item['location']['coordinates'] == expected
