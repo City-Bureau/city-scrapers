@@ -6,6 +6,7 @@ from city_scrapers.pipelines.geocoder import GeocoderPipeline
 
 betamax_config = config.config
 
+
 def test_geocoding():
     item = test_item()
     item['location']['coordinates'] = None
