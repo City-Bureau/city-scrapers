@@ -27,20 +27,18 @@ class GeocoderPipeline(object):
         coordinates.
         """
         if item['location']['coordinates'] is None:
-            query = self.street_clean_dict(item.get('location', {}),'Chicago', 'IL')
+            query = self._parse_address(item.get('location', {}))
             if not query:
                 spider.logger.debug('GEOCODER PIPELINE: Empty query. Not geocoding {0}'.format(item['id']))
                 return item
-            item['location']['coordinates'] = self._geocode_address(query)
+            item['location']['coordinates'] = self._geocode_address(query,'Chicago', 'IL')
             return item
 
-    def _geocode_address(self, query):
-        city_found = query['PlaceName']
-        state_found = query['StateName']
+    def _geocode_address(self, query, default_city, default_state):
+        city_found = query.get('PlaceName', default_city) # replace w default city if blank
+        state_found = query.get('StateName', default_state)  # replace w default state if blank
         zipcode_found = query.get('ZipCode', '')
         address = ', '.join(v for (k, v) in query.items() if k not in ['PlaceName', 'StateName', 'ZipCode'])
-        print(query)
-        print(address)
         g = geocoder.tamu(address,
                           city=city_found,
                           state=state_found,
@@ -49,7 +47,7 @@ class GeocoderPipeline(object):
         coords = g.latlng
         return {'latitude': str(coords[0]), 'longitude': str(coords[1])}
 
-    def street_clean_dict(self, location_dict, default_city, default_state):
+    def _parse_address(self, location_dict):
         """
         Disabled Fuzzy match Chicago addresses on Chicago Data Portal Address API
         """
@@ -66,18 +64,14 @@ class GeocoderPipeline(object):
 
         # replace city hall
         query = re.sub('city hall((?!.*chicago, il).)*$',
-                       'City Hall 121 N LaSalle Dr, Chicago, IL', query, flags=re.I)
+                       'City Hall 121 N LaSalle St., Chicago, IL', query, flags=re.I)
 
         try:
             querydict = usaddress.tag(query)[0]
         except usaddress.RepeatedLabelError as ex: 
-        # includ multiple errors
+        # include multiple errors
             querydict = self.bad_address_tag(ex.parsed_string)
 
-        city = querydict.get('PlaceName', default_city) # replace w default city if blank
-        state = querydict.get('StateName', default_state)  # replace w default state if blank
-        querydict['PlaceName'] = city
-        querydict['StateName'] = state
         return querydict
 
     def bad_address_tag(parsed_string):
