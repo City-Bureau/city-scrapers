@@ -9,7 +9,7 @@ In this case, comment or make a note on the source spreadsheet. We will have
 a process for manually updating some data sources. At this point in time, we'll
 use the manual process for PDFs and images.
 
-## How do I run a spider (like [ward_night](https://github.com/City-Bureau/city-scrapers/blob/master/city_scrapers/spiders/ward_night.py) or chi_localschoolcouncil(https://github.com/City-Bureau/city-scrapers/blob/master/city_scrapers/spiders/chi_localschoolcouncil.py)) that requires a Google Sheets API key?
+## How do I run a spider (like [ward_night](https://github.com/City-Bureau/city-scrapers/blob/master/city_scrapers/spiders/ward_night.py) or [chi_localschoolcouncil](https://github.com/City-Bureau/city-scrapers/blob/master/city_scrapers/spiders/chi_localschoolcouncil.py)) that requires a Google Sheets API key?
 
 You can get an API key for Google Sheets for free by:
 
