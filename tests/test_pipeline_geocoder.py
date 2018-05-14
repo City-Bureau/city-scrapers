@@ -18,5 +18,5 @@ def test_geocoding():
         geocoder = GeocoderPipeline(session)
         geocoder.process_item(item, None)
 
-    expected = {'latitude': '41.8838677', 'longitude': '-87.6319365'}
+    expected = {'latitude': '41.8833466352224', 'longitude': '-87.6323211702195'}
     assert item['location']['coordinates'] == expected
