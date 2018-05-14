@@ -16,6 +16,7 @@ def test_geocoding():
 
     with recorder.use_cassette('test_geocoding'):
         geocoder = GeocoderPipeline(session)
+        geocoder.geocode_database = {}
         geocoder.process_item(item, None)
 
     expected = {'latitude': '41.8833466352224', 'longitude': '-87.6323211702195'}

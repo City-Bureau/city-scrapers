@@ -19,7 +19,7 @@ class GeocoderPipeline(object):
         if session is None:
             session = requests.Session()
         self.session = session
-        #self.geocode_database = Airtable(AIRTABLE_BASE_KEY, AIRTABLE_GEOCODE_TABLE)
+        self.geocode_database = Airtable(AIRTABLE_BASE_KEY, AIRTABLE_GEOCODE_TABLE)
 
     def process_item(self, item, spider):
         """
