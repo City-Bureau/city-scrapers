@@ -50,41 +50,10 @@ def test_item():
 
         'location': {
             'url': '',
-            'name': '121 N. Lasalle, Chicago, IL',
+            'name': '121 N. Lasalle St., Chicago, IL',
             'coordinates': {
                 'latitude': '41.883868',
                 'longitude': '-87.631936'
-            }
-        },
-
-        'sources': [
-            {
-                'url': '',
-                'note': ''
-            }
-        ]
-    }
-
-
-def test_geocode_item():
-    return {
-        '_type': 'event',
-        'name': 'Committee on Pedestrian Safety',
-        'description': 'A longer description',
-        'classification': 'committee-meeting',
-        'start_time': '2017-08-30T17:30:00Z',
-        'end_time': None,
-        'timezone': 'America/Chicago',
-        'all_day': False,
-        'status': 'tentative',
-
-        'location': {
-            'url': '',
-            'name': '',
-            'address': '121 N. Lasalle, Chicago, IL',
-            'coordinates': {
-                'latitude': '',
-                'longitude': ''
             }
         },
 

@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2017-09-06T07:03:55",
+      "recorded_at": "2018-05-14T15:10:59",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -18,78 +18,57 @@
             "keep-alive"
           ],
           "User-Agent": [
-            "python-requests/2.18.2"
-          ],
-          "host": [
-            "www.mapquestapi.com"
-          ],
-          "referer": [
-            "http://www.mapquestapi.com/geocoding/"
+            "python-requests/2.18.4"
           ]
         },
         "method": "GET",
-        "uri": "http://www.mapquestapi.com/geocoding/v1/address?key=KWNWFvp3KP6x0AKtULuJgPm6MRO7nAND&location=121+N.+Lasalle%2C+Chicago%2C+IL&maxResults=1&outFormat=json"
+        "uri": "https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?zip=&verbose=true&version=4.01&state=IL&streetAddress=121%2C+North%2C+Lasalle%2C+St.&notStore=false&city=Chicago&format=json&censusYear=1990%7C2000%7C2010&apikey=e8a8f1283b3440c4b248adb52204c8ae&census=true"
       },
       "response": {
         "body": {
-          "encoding": "UTF-8",
-          "string": "{\"info\":{\"statuscode\":0,\"copyright\":{\"text\":\"\\u00A9 2017 MapQuest, Inc.\",\"imageUrl\":\"http://api.mqcdn.com/res/mqlogo.gif\",\"imageAltText\":\"\\u00A9 2017 MapQuest, Inc.\"},\"messages\":[]},\"options\":{\"maxResults\":1,\"thumbMaps\":true,\"ignoreLatLngInput\":false},\"results\":[{\"providedLocation\":{\"location\":\"121 N. Lasalle, Chicago, IL\"},\"locations\":[{\"street\":\"121 N Lasalle St\",\"adminArea6\":\"\",\"adminArea6Type\":\"Neighborhood\",\"adminArea5\":\"Chicago\",\"adminArea5Type\":\"City\",\"adminArea4\":\"Cook\",\"adminArea4Type\":\"County\",\"adminArea3\":\"IL\",\"adminArea3Type\":\"State\",\"adminArea1\":\"US\",\"adminArea1Type\":\"Country\",\"postalCode\":\"60602\",\"geocodeQualityCode\":\"L1BAA\",\"geocodeQuality\":\"ADDRESS\",\"dragPoint\":false,\"sideOfStreet\":\"L\",\"linkId\":\"rnr6209102|i19007316\",\"unknownInput\":\"\",\"type\":\"s\",\"latLng\":{\"lat\":41.883617,\"lng\":-87.632367},\"displayLatLng\":{\"lat\":41.883617,\"lng\":-87.632367},\"mapUrl\":\"http://www.mapquestapi.com/staticmap/v5/map?key=KWNWFvp3KP6x0AKtULuJgPm6MRO7nAND&type=map&size=225,160&locations=41.883617,-87.632367|marker-sm-50318A-1&scalebar=true&zoom=15&rand=2044015731\"}]}]}"
+          "base64_string": "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",
+          "encoding": "utf-8"
         },
         "headers": {
-          "Access-Control-Allow-Methods": [
-            "OPTIONS,GET,POST"
-          ],
           "Access-Control-Allow-Origin": [
             "*"
           ],
           "Cache-Control": [
-            "no-cache, must-revalidate"
+            "private"
           ],
-          "Connection": [
-            "keep-alive"
+          "Content-Encoding": [
+            "gzip"
           ],
           "Content-Length": [
-            "1073"
+            "1511"
           ],
           "Content-Type": [
-            "application/json;charset=UTF-8"
+            "text/plain; charset=utf-8"
           ],
           "Date": [
-            "Wed, 06 Sep 2017 07:03:55 GMT"
-          ],
-          "Expires": [
-            "Mon, 20 Dec 1998 01:00:00 GMT"
-          ],
-          "GeocodeTransactionCount": [
-            "1"
-          ],
-          "Last-Modified": [
-            "Wed, 06 Sep 2017 07:03:55 GMT"
-          ],
-          "Pragma": [
-            "no-cache"
-          ],
-          "ReverseGeocodeTransactionCount": [
-            "0"
+            "Mon, 14 May 2018 15:11:06 GMT"
           ],
           "Server": [
-            "Apache-Coyote/1.1"
+            "Microsoft-IIS/7.5"
           ],
           "Set-Cookie": [
-            "JSESSIONID=0AF9002D6FB126AAD9DE2EFEB245988D; Path=/; HttpOnly"
+            "ASP.NET_SessionId=2vhdxv1vvtj0ecyimwobxruh; path=/; HttpOnly"
           ],
-          "status": [
-            "success"
+          "Vary": [
+            "Accept-Encoding"
           ],
-          "transactionWeight": [
-            "1.0"
+          "X-AspNet-Version": [
+            "4.0.30319"
+          ],
+          "X-Powered-By": [
+            "ASP.NET"
           ]
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "http://www.mapquestapi.com/geocoding/v1/address?key=KWNWFvp3KP6x0AKtULuJgPm6MRO7nAND&location=121+N.+Lasalle%2C+Chicago%2C+IL&maxResults=1&outFormat=json"
+        "url": "https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?zip=&verbose=true&version=4.01&state=IL&streetAddress=121%2C+North%2C+Lasalle%2C+St.&notStore=false&city=Chicago&format=json&censusYear=1990%7C2000%7C2010&apikey=e8a8f1283b3440c4b248adb52204c8ae&census=true"
       }
     }
   ],

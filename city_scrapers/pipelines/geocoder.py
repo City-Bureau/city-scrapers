@@ -4,12 +4,14 @@ Geocoder.
 import geocoder
 import requests
 import usaddress
+import re
+import os
 from airtable import Airtable
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_GEOCODE_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_GEOCODE_TABLE')
 
-'TAMU_API_KEY' = 'e8a8f1283b3440c4b248adb52204c8ae' #temporary for testing
+TAMU_API_KEY = 'e8a8f1283b3440c4b248adb52204c8ae' #temporary for testing
 
 
 class GeocoderPipeline(object):
@@ -17,7 +19,7 @@ class GeocoderPipeline(object):
         if session is None:
             session = requests.Session()
         self.session = session
-        self.geocode_database = Airtable(AIRTABLE_BASE_KEY, AIRTABLE_GEOCODE_TABLE)
+        #self.geocode_database = Airtable(AIRTABLE_BASE_KEY, AIRTABLE_GEOCODE_TABLE)
 
     def process_item(self, item, spider):
         """
@@ -25,7 +27,7 @@ class GeocoderPipeline(object):
         coordinates.
         """
         if item['location']['coordinates'] is None:
-            query = self.self.street_clean_dict(item.get('location', {}),'Chicago', 'IL')
+            query = self.street_clean_dict(item.get('location', {}),'Chicago', 'IL')
             if not query:
                 spider.logger.debug('GEOCODER PIPELINE: Empty query. Not geocoding {0}'.format(item['id']))
                 return item
@@ -35,11 +37,14 @@ class GeocoderPipeline(object):
     def _geocode_address(self, query):
         city_found = query['PlaceName']
         state_found = query['StateName']
-        zipcode_found = querydict.get('ZipCode', '')
+        zipcode_found = query.get('ZipCode', '')
         address = ', '.join(v for (k, v) in query.items() if k not in ['PlaceName', 'StateName', 'ZipCode'])
+        print(query)
+        print(address)
         g = geocoder.tamu(address,
                           city=city_found,
                           state=state_found,
+                          zipcode=zipcode_found,
                           session=self.session, key=TAMU_API_KEY)
         coords = g.latlng
         return {'latitude': str(coords[0]), 'longitude': str(coords[1])}
@@ -49,7 +54,7 @@ class GeocoderPipeline(object):
         Disabled Fuzzy match Chicago addresses on Chicago Data Portal Address API
         """
         name = location_dict.get('name', None)
-        address = location_dict.get('address', None)
+        address = location_dict.get('address', '')
 
         if name is None and address is None:
             return {}
