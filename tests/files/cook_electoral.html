@@ -1,0 +1,206 @@
+<html><head>
+    <link href="css/base.css" rel="stylesheet" type="text/css">
+    <script src="js/Help.js" type="text/javascript"></script>
+    <script src="js/jquery-1.3.2.js" type="text/javascript"></script>
+    <script src="js/jquery.ba-postmessage.js" type="text/javascript"></script>
+    <script src="js/iframeexpand.js" type="text/javascript"></script>
+</head>
+<body>
+    <form name="Form1" method="post" action="./boardmeetingsearch.aspx" id="Form1">
+<div>
+
+
+
+
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['Form1'];
+if (!theForm) {
+    theForm = document.Form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=-3rTs6k0KnfPVAK2b9az1lx5RGH2nv3G46p4tYwt9sEDXdCOoueAiL_UdRk9aHqLI4LsG1A2g8FDqZmsMuNOYQmkGQDaRA3PhbSi-rFxWN01&amp;t=636511232826842555" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=hhLX9Zh7G2jTSVqilECFTJT6MqijTFwrYHyDXNFCtwrsLkKi2uCBjpkj2sY1JYQkLBMSvZ3N8ZpxNWHh_CoLU2Dxq8JXt5wdl5sFih8_yVWudej9cTnB742fCUjlSb3bPsqQxbBG6f6tyz-msn6JT4RO-1uec10Li6E-G70RHKE1&amp;t=ffffffffad4b7194" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=4XNiM6_ilCd_sdm3H-00sQtWu7Aa2sd5sBNVM3nc9MwH_eG_U36LfqWGFyzZZFc7T6YqoaLOPhE9o0fECSuKFKp_3SJR8wsuz_S5SvRri8A19AJ8JVDKnQ2oogfTT6mDkfPcaOrjmeCsB7N8kaTCmxIblR-hOFVrt37D2YFs0_z9g2m4WXKGdW0fBWu4OprG0&amp;t=ffffffffad4b7194" type="text/javascript"></script>
+<div>
+
+
+
+</div>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ScriptManager1', 'Form1', ['tUpdatePanel1',''], ['btnGo','','ddlMeetingYear',''], [], 90, '');
+//]]>
+</script>
+
+
+    <div class="iWant-Help">
+        <a href="#" onclick="return OpenHelp(event,'boardMeetingHelp');">?</a>
+    </div>
+
+        <div id="UpdatePanel1">
+                <div class="boardMeetingSearchForm">
+                    <h2>Search Board Meeting Documents</h2>
+                    <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                    <td>Year</td>
+                    <td>Meeting Date (*Special meeting)</td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <select name="ddlMeetingYear" onchange="javascript:setTimeout('__doPostBack(\'ddlMeetingYear\',\'\')', 0)" id="ddlMeetingYear">
+  <option selected="selected" value="2018">2018</option>
+  <option value="2017">2017</option>
+  <option value="2016">2016</option>
+  <option value="2015">2015</option>
+  <option value="2014">2014</option>
+  <option value="2013">2013</option>
+  <option value="2012">2012</option>
+  <option value="2011">2011</option>
+  <option value="2010">2010</option>
+  <option value="2009">2009</option>
+  <option value="2008">2008</option>
+  <option value="2007">2007</option>
+  <option value="2006">2006</option>
+  <option value="2005">2005</option>
+  <option value="2004">2004</option>
+  <option value="2003">2003</option>
+  <option value="2002">2002</option>
+  <option value="2001">2001</option>
+  <option value="2000">2000</option>
+
+</select>
+                    </td>
+                    <td>
+                        <select name="ddlMeetingDate" id="ddlMeetingDate">
+  <option selected="selected" value="490">Tuesday, January 9, 2018</option>
+  <option value="491">Wednesday, January 17, 2018</option>
+  <option value="511">*Tuesday, February 6, 2018</option>
+  <option value="492">Wednesday, February 7, 2018</option>
+  <option value="493">Tuesday, March 13, 2018</option>
+  <option value="494">Wednesday, March 14, 2018</option>
+  <option value="495">Tuesday, April 24, 2018</option>
+  <option value="496">Wednesday, April 25, 2018</option>
+  <option value="497">Wednesday, May 16, 2018</option>
+  <option value="498">Tuesday, June 5, 2018</option>
+  <option value="499">Wednesday, June 6, 2018</option>
+  <option value="500">Wednesday, June 27, 2018</option>
+  <option value="501">Wednesday, July 25, 2018</option>
+  <option value="502">Tuesday, September 11, 2018</option>
+  <option value="503">Wednesday, September 12, 2018</option>
+  <option value="504">Wednesday, September 26, 2018</option>
+  <option value="505">Tuesday, October 16, 2018</option>
+  <option value="506">Wednesday, October 17, 2018</option>
+  <option value="507">Tuesday, November 13, 2018</option>
+  <option value="508">Wednesday, November 14, 2018</option>
+  <option value="509">Tuesday, December 11, 2018</option>
+  <option value="510">Wednesday, December 12, 2018</option>
+
+</select>
+                    </td>
+                    <td>
+                        <input type="image" name="btnGo" id="btnGo" src="Images/go.gif" alt="Go Search" style="border-width:0px;">
+                    </td>
+                    </tr>
+                    </tbody></table>
+                </div>
+
+                <div id="locationPanel">
+
+                    <h3>Meeting Time and Location</h3>
+                    <p>
+                        <span id="lblMeetingTime">Tuesday, January 9, 2018 9:00</span>
+                        <span id="lblDuration">AM</span><br>
+                        <span id="lblLocation">County Board Room, County Building</span><br>
+                        <span id="lblAddress">118 N. Clark Street, 5th Floor</span><br>
+                        <span id="lblCity">Chicago</span>, IL
+                    </p>
+
+</div>
+
+
+
+
+                <div class="boardMeetingSearchResults">
+                    <div id="currentDocDisplay">
+
+
+                                <ul>
+
+                                <li>
+                                    <a id="BoardMeetingGridview_ctl01_HyperLink1" href="http://aba-clerk.s3-website-us-east-1.amazonaws.com/Agenda_pdf_010918_490.pdf" target="_blank">January 9, 2018 Consent Agenda</a>
+                                </li>
+
+                                <li>
+                                    <a id="BoardMeetingGridview_ctl02_HyperLink1" href="http://aba-clerk.s3-website-us-east-1.amazonaws.com/PostBoardAgenda_pdf_010918_490.pdf" target="_blank">January 9, 2018 Consent Agenda - Second Set</a>
+                                </li>
+
+                                <li>
+                                    <a id="BoardMeetingGridview_ctl03_HyperLink1" href="http://aba-clerk.s3-website-us-east-1.amazonaws.com/NewItemsAgenda_pdf_010918_490.pdf" target="_blank">January 9, 2018 Consent Agenda - Third Set</a>
+                                </li>
+
+                                <li>
+                                    <a id="BoardMeetingGridview_ctl04_HyperLink1" href="http://aba-clerk.s3-website-us-east-1.amazonaws.com/Resolution_pdf_010918_490.pdf" target="_blank">January 9, 2018 Resolutions</a>
+                                </li>
+
+                                <li>
+                                    <a id="BoardMeetingGridview_ctl05_HyperLink1" href="http://aba-clerk.s3-website-us-east-1.amazonaws.com/Journal_pdf_010918_490.pdf" target="_blank">January 9, 2018 Consent Journal of Proceedings</a>
+                                </li>
+
+                                </ul>
+
+
+</div>
+
+
+
+
+
+
+
+
+                    <div id="attendancePanel">
+
+                        <span id="lblMessage" class="red"></span>
+                        <h3 style="margin-top:1em;">Meeting Attendance</h3>
+                        <p><b>Present</b>: <span id="lblPresent">N/A</span></p>
+                        <p><b>Absent</b>: <span id="lblAbsent">N/A</span></p>
+
+</div>
+                </div>
+            </div>
+
+    <div class="helpContainer" id="boardMeetingHelp">
+        <div class="helpHeader">
+        </div>
+        <div class="helpBody">
+            <div class="helpClose">
+                <a href="#" onclick="return CloseHelp('boardMeetingHelp');">x</a></div>
+            <h3>
+                Help With Board Meeting Search</h3>
+            <p>
+                Why do meeting documents sometimes not appear in the search results?</p>
+            <p>
+                Some meetings do not have documents available</p>
+        </div>
+        <div class="helpFooter">
+        </div>
+    </div>
+    <span style="display: none !important;"><input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value=""></span><span style="display: none !important;"><input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value=""></span><span style="display: none !important;"><input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value=""></span><span style="display: none !important;"><input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEyNTM3MzA1NjkPZBYCAgEPZBYCAgMPZBYCZg9kFgwCAQ8QDxYGHg5EYXRhVmFsdWVGaWVsZAULTWVldGluZ1llYXIeDURhdGFUZXh0RmllbGQFC01lZXRpbmdZZWFyHgtfIURhdGFCb3VuZGdkEBUTBDIwMTgEMjAxNwQyMDE2BDIwMTUEMjAxNAQyMDEzBDIwMTIEMjAxMQQyMDEwBDIwMDkEMjAwOAQyMDA3BDIwMDYEMjAwNQQyMDA0BDIwMDMEMjAwMgQyMDAxBDIwMDAVEwQyMDE4BDIwMTcEMjAxNgQyMDE1BDIwMTQEMjAxMwQyMDEyBDIwMTEEMjAxMAQyMDA5BDIwMDgEMjAwNwQyMDA2BDIwMDUEMjAwNAQyMDAzBDIwMDIEMjAwMQQyMDAwFCsDE2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAWZkAgMPEA8WBh8ABQ5Cb2FyZE1lZXRpbmdJZB8BBRhNZWV0aW5nRGF0ZVRpbWVGb3JtYXR0ZWQfAmdkEBUWGFR1ZXNkYXksIEphbnVhcnkgOSwgMjAxOBtXZWRuZXNkYXksIEphbnVhcnkgMTcsIDIwMTgaKlR1ZXNkYXksIEZlYnJ1YXJ5IDYsIDIwMTgbV2VkbmVzZGF5LCBGZWJydWFyeSA3LCAyMDE4F1R1ZXNkYXksIE1hcmNoIDEzLCAyMDE4GVdlZG5lc2RheSwgTWFyY2ggMTQsIDIwMTgXVHVlc2RheSwgQXByaWwgMjQsIDIwMTgZV2VkbmVzZGF5LCBBcHJpbCAyNSwgMjAxOBdXZWRuZXNkYXksIE1heSAxNiwgMjAxOBVUdWVzZGF5LCBKdW5lIDUsIDIwMTgXV2VkbmVzZGF5LCBKdW5lIDYsIDIwMTgYV2VkbmVzZGF5LCBKdW5lIDI3LCAyMDE4GFdlZG5lc2RheSwgSnVseSAyNSwgMjAxOBtUdWVzZGF5LCBTZXB0ZW1iZXIgMTEsIDIwMTgdV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTIsIDIwMTgdV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjYsIDIwMTgZVHVlc2RheSwgT2N0b2JlciAxNiwgMjAxOBtXZWRuZXNkYXksIE9jdG9iZXIgMTcsIDIwMTgaVHVlc2RheSwgTm92ZW1iZXIgMTMsIDIwMTgcV2VkbmVzZGF5LCBOb3ZlbWJlciAxNCwgMjAxOBpUdWVzZGF5LCBEZWNlbWJlciAxMSwgMjAxOBxXZWRuZXNkYXksIERlY2VtYmVyIDEyLCAyMDE4FRYDNDkwAzQ5MQM1MTEDNDkyAzQ5MwM0OTQDNDk1AzQ5NgM0OTcDNDk4AzQ5OQM1MDADNTAxAzUwMgM1MDMDNTA0AzUwNQM1MDYDNTA3AzUwOAM1MDkDNTEwFCsDFmdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dkZAIHDw8WAh4HVmlzaWJsZWdkFgoCAQ8PFgIeBFRleHQFHVR1ZXNkYXksIEphbnVhcnkgOSwgMjAxOCA5OjAwZGQCAw8PFgIfBAUCQU1kZAIFDw8WAh8EBSJDb3VudHkgQm9hcmQgUm9vbSwgQ291bnR5IEJ1aWxkaW5nZGQCBw8PFgIfBAUeMTE4IE4uIENsYXJrIFN0cmVldCwgNXRoIEZsb29yZGQCCQ8PFgIfBAUHQ2hpY2Fnb2RkAgkPZBYCAgEPFgIeC18hSXRlbUNvdW50AgUWCgIBD2QWAgIBDw8WBB4LTmF2aWdhdGVVcmwFTWh0dHA6Ly9hYmEtY2xlcmsuczMtd2Vic2l0ZS11cy1lYXN0LTEuYW1hem9uYXdzLmNvbS9BZ2VuZGFfcGRmXzAxMDkxOF80OTAucGRmHwQFHkphbnVhcnkgOSwgMjAxOCBDb25zZW50IEFnZW5kYWRkAgIPZBYCAgEPDxYEHwYFVmh0dHA6Ly9hYmEtY2xlcmsuczMtd2Vic2l0ZS11cy1lYXN0LTEuYW1hem9uYXdzLmNvbS9Qb3N0Qm9hcmRBZ2VuZGFfcGRmXzAxMDkxOF80OTAucGRmHwQFK0phbnVhcnkgOSwgMjAxOCBDb25zZW50IEFnZW5kYSAtIFNlY29uZCBTZXRkZAIDD2QWAgIBDw8WBB8GBVVodHRwOi8vYWJhLWNsZXJrLnMzLXdlYnNpdGUtdXMtZWFzdC0xLmFtYXpvbmF3cy5jb20vTmV3SXRlbXNBZ2VuZGFfcGRmXzAxMDkxOF80OTAucGRmHwQFKkphbnVhcnkgOSwgMjAxOCBDb25zZW50IEFnZW5kYSAtIFRoaXJkIFNldGRkAgQPZBYCAgEPDxYEHwYFUWh0dHA6Ly9hYmEtY2xlcmsuczMtd2Vic2l0ZS11cy1lYXN0LTEuYW1hem9uYXdzLmNvbS9SZXNvbHV0aW9uX3BkZl8wMTA5MThfNDkwLnBkZh8EBRtKYW51YXJ5IDksIDIwMTggUmVzb2x1dGlvbnNkZAIFD2QWAgIBDw8WBB8GBU5odHRwOi8vYWJhLWNsZXJrLnMzLXdlYnNpdGUtdXMtZWFzdC0xLmFtYXpvbmF3cy5jb20vSm91cm5hbF9wZGZfMDEwOTE4XzQ5MC5wZGYfBAUuSmFudWFyeSA5LCAyMDE4IENvbnNlbnQgSm91cm5hbCBvZiBQcm9jZWVkaW5nc2RkAgsPDxYCHwNoZGQCDQ8PFgIfA2dkFgQCAw8PFgIfBAUDTi9BZGQCBQ8PFgIfBAUDTi9BZGQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgEFBWJ0bkdvvb/P9/3UqyQFl0Bfa/v2ErB08B9VTVXgMy74lhKNSOo="></span><span style="display: none !important;"><input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="8D0D2500"></span><span style="display: none !important;"><input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdACxhoh4+OvFPnBE9qLEj/0WnsWGGssG80O5Bdeg49d9aiJzgdSmJw0uR8DGoVKd3nKRSpsTLLix5OfwJs/oL36/vxKO2uKrTndVdTiugDTEt0mBTA6K9OOze+abJ+krMkyhRP+LXWMsfH09iVF+9Y1bo2uvB/KSnDVZ9Ssu6knnJ9SvOEbsKnH2PqAftg2pPuVvcsYIxvdaTnHDjjHTg6EG37hLbP+D5foUIN74H0K2c5F9ydNjX1h3rM5WnC9BKd+Ukhqby1YZSJ0iZgUwOpj0qxg5Hw/MYj6ZbgoaNBx6wd78neBXqQ7LElxWmNk1iY/qWR0r+7ku5lEle9b9elcRoxfpIXbB/ostCc5W6egNJZQVAIy1MGeFWxq92OA5LLO1aRxoZeMxdsX5U/n3b2OxxjcO7N5ufopd3fN1haGRPcPaMs1J+0JIiC04LEvE/S4z7nQlh0iS4CoEOClm/96cDNNo/re0FW1D7SC6hiGanXh+eOgtsMWcDZcYHaFF+ozQBCvQ7UQcviWPUYOdvm8monOBLij2o4Qkzpt8sR0Q0Awoe5mfByB486YR7KuDzt07RDrQT12sBtRRCbL5VFh7TAg/ekcueYZCcSiZ+0NIJHJnnUMNTox/9oc8bwRDzH9gSVMXqcPM+xyRxiC6vKVGkpCNDJMmU4ipsvGzO3xGm9Rerh2jIGWHeHtY0apTd10t7CkUBsjB5OgYGa940hxHbj8fs8TtvtaZJl9jnE0RarR5vukpAjGFbEt6BA1PDw9qjkwgE4DSLtX9L7a6KiO2VHCFreVp/2Z/ID9B25/qfmkRnYb4wKFdC8eYhA83GJalrbqhpOv4+4IM39QNILWUJXislTcTPgpKSm6FZ/eVhv+TozzfDoAj2TyiOOM452VW9oGe02t0hzsbMoi+0kzUaT+YbEjjdrfBAXWiiaimP6PD2x34Ft/E1nc6ShCEL1LAQwhHMNACbjBmVIve1ym/I"></span></form>
+
+
+</body></html>
