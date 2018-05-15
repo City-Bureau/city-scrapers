@@ -1,5 +1,5 @@
-name: City Bureau Documenters Aggregator
-remote_theme: allejo/jekyll-docs-theme
+name: City Bureau City Scrapers Project
+remote_theme: allecjo/jekyll-docs-theme
 
 project:
     version: 0.1.0
