@@ -133,9 +133,9 @@ class Chi_waterSpider(Spider):
         elif not time:
             time_string = '{0}'.format(date)
             naive = datetime.strptime(time_string, '%m/%d/%Y')
-            # return self._naive_datetime_to_tz(naive)
-            print("Meeting with no start time...skipping")
-            return None
+            return self._naive_datetime_to_tz(naive)
+            #print("Meeting with no start time...skipping")
+            #return naive
         return None
 
     def _parse_end(self, item):
