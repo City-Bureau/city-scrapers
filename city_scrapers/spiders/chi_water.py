@@ -105,7 +105,7 @@ class Chi_waterSpider(Spider):
         """
         Parse or generate event name.
         """
-        return item['Name']['label']
+        return item.get('Name',None).get('label',None)
 
     def _parse_description(self, item):
         """
