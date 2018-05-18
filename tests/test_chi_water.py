@@ -4,7 +4,7 @@ import json
 from city_scrapers.spiders.chi_water import Chi_waterSpider
 
 test_response = []
-with open('./files/chi_water_test.json') as f:
+with open('tests/files/chi_water_test.json') as f:
     test_response.extend(json.loads(f.read()))
 spider = Chi_waterSpider()
 # This line throws error
