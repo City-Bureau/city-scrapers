@@ -36,6 +36,7 @@ class Chi_waterSpider(Spider):
 
     def _parse_events(self, events):
         for item in events:
+            item = item[0]
             # import pdb; pdb.set_trace()
             # start time is not correct! :-o
 
