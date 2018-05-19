@@ -61,14 +61,17 @@ class Cps_community_action_councilSpider(Spider):
             community_name = item.css('li').css('strong::text').extract()
         else:
             community_name = item.css('li').css('strong').css('a::text').extract()
-        name = community_name[0] + ' CPS community action council meeting'
-        return name
+        return community_name[0] + ' Community Action Council'
 
     def _parse_description(self, item):
         """
         Parse or generate event description.
         """
-        return None
+        return "Community Action Councils, or CACs, consist of 25-30 voting members who are directly involved in " \
+               "developing a strategic plan for educational success within their communities. CAC members include" \
+               " parents; elected officials; faith-based institutions, health care and community-based " \
+               "organizations; Local School Council (LSC) members; business leaders; educators and school" \
+               " administrators; staff members from Chicago's Sister Agencies; community residents; and students."
 
     def _parse_classification(self, item):
         """
@@ -146,7 +149,7 @@ class Cps_community_action_councilSpider(Spider):
         """
         Parse end date and time.
         """
-        return None
+        return 'Estimated 3 hours'
 
     def _parse_timezone(self, item):
         """
@@ -165,33 +168,11 @@ class Cps_community_action_councilSpider(Spider):
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
         """
-
-        def get_location_address(source):
-            '''Uses RegEx to obtain the address from the source, returns the raw source as the address if address
-            in not written in regular format.
-            '''
-            address_regex = re.compile(r'(am|pm)(.*)$')
-            mo = address_regex.search(source)
-            try:
-                address = mo.group()[2:]
-            except AttributeError as e:
-                address = item.css('li::text').extract()[0]
-            return address
-
-        def get_location_name(item):
-            '''Gets the name of the location of the meeting from the item.
-            '''
-            if len(item.css('li').css('strong::text').extract()) == 1:
-                community_name = item.css('li').css('strong::text').extract()
-            else:
-                community_name = item.css('li').css('strong').css('a::text').extract()
-            return community_name[0]
-
         source = item.css('li::text').extract()[1]
         return {
             'url': None,
-            'name': get_location_name(item),
-            'address': get_location_address(source),
+            'name': source[source.find("at")+2:source.find("(")].replace('the', ''),
+            'address': source[source.find("(")+1:source.find(")")],
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
