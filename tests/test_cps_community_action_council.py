@@ -40,11 +40,15 @@ def test_location():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['description'] == "Community Action Councils, or CACs, consist of 25-30 voting members who are directly involved in " \
-               "developing a strategic plan for educational success within their communities. CAC members include" \
-               " parents; elected officials; faith-based institutions, health care and community-based " \
-               "organizations; Local School Council (LSC) members; business leaders; educators and school" \
-               " administrators; staff members from Chicago's Sister Agencies; community residents; and students."
+    assert item['description'] == "Community Action Councils, or CACs, consist of 25-30 voting members who are " \
+                                  "directly involved in developing a strategic plan for educational success within " \
+                                  "their communities. CAC members include parents; elected officials; faith-based " \
+                                  "institutions, health care and community-based organizations; Local School" \
+                                  " Council (LSC) members; business leaders; educators and school administrators; " \
+                                  "staff members from Chicago's Sister Agencies; community residents; " \
+                                  "and students. There are nine CACs across Chicago. Each works to empower the " \
+                                  "community they serve to lead the improvement of local quality education."
+
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end_time(item):

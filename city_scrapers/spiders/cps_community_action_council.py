@@ -67,11 +67,14 @@ class Cps_community_action_councilSpider(Spider):
         """
         Parse or generate event description.
         """
-        return "Community Action Councils, or CACs, consist of 25-30 voting members who are directly involved in " \
-               "developing a strategic plan for educational success within their communities. CAC members include" \
-               " parents; elected officials; faith-based institutions, health care and community-based " \
-               "organizations; Local School Council (LSC) members; business leaders; educators and school" \
-               " administrators; staff members from Chicago's Sister Agencies; community residents; and students."
+        return "Community Action Councils, or CACs, consist of 25-30 voting members who are " \
+                                  "directly involved in developing a strategic plan for educational success within " \
+                                  "their communities. CAC members include parents; elected officials; faith-based " \
+                                  "institutions, health care and community-based organizations; Local School" \
+                                  " Council (LSC) members; business leaders; educators and school administrators; " \
+                                  "staff members from Chicago's Sister Agencies; community residents; " \
+                                  "and students. There are nine CACs across Chicago. Each works to empower the " \
+                                  "community they serve to lead the improvement of local quality education."
 
     def _parse_classification(self, item):
         """
