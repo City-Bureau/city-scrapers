@@ -80,6 +80,7 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_school_actions.svg) | Public Schools: School Actions |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/cps_community_action_council.svg) | Public Schools: Community Action Council |
 | ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_transit.svg) | Transit Authority |
+| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_water.svg) | Metropolitan Water Reclamation District of Greater Chicago |
 
 
 ### Cook County
