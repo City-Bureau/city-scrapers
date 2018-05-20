@@ -21,6 +21,9 @@ def test_name():
 def test_start_time():
     assert parsed_items[0]['start_time'].isoformat() == '2018-05-08T17:30:00'
 
+def test_end_time():
+    assert parsed_items[0]['end_time'].isoformat() == '2018-05-08T20:30:00'
+
 
 def test_id():
     assert parsed_items[0]['id'] == \
@@ -50,9 +53,6 @@ def test_description(item):
                                   "community they serve to lead the improvement of local quality education."
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_end_time(item):
-    assert item['end_time'] == 'Estimated 3 hours'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
