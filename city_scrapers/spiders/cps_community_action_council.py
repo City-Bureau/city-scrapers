@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from city_scrapers.spider import Spider
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.parser import parse as dateparse
 import re
 
@@ -43,15 +43,27 @@ class Cps_community_action_councilSpider(Spider):
                         'all_day': self._parse_all_day(item),
                         'location': self._parse_location(item),
                         'sources': self._parse_sources(response),
+                        'community_area' : self._parse_community_area(item)
                     }
 
                     data['id'] = self._generate_id(data, data['start_time'])
+                    data['end_time'] = data['start_time'] + timedelta(hours=3) #adds 3 hours to start time
                     yield data
             month_counter += 1  # month counter is increased by 1 month with each iteration of the for loop
 
     # self._parse_next(response) yields more responses to parse if necessary.
     # uncomment to find a "next" url
     # yield self._parse_next(response)
+
+    def _parse_community_area(self, item):
+        """
+        Parse or generate community area.
+        """
+        if len(item.css('li').css('strong::text').extract()) == 1:
+            community_name = item.css('li').css('strong::text').extract()
+        else:
+            community_name = item.css('li').css('strong').css('a::text').extract()
+        return community_name[0]
 
     def _parse_name(self, item):
         """
