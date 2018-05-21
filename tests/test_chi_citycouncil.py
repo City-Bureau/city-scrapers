@@ -1,15 +1,23 @@
-import pytest
-
 import json
+
+import pytest
+import betamax
+import requests
+
 from city_scrapers.spiders.chi_citycouncil import Chi_citycouncilSpider
 
 test_response = []
 with open('tests/files/chi_citycouncil.json') as f:
     for line in f:
         test_response.append(json.loads(line))
-spider = Chi_citycouncilSpider()
-parsed_items = [spider._parse_item(item) for item in test_response[0]]
 
+
+# Use betamax to record requests
+session = requests.Session()
+recorder = betamax.Betamax(session)
+with recorder.use_cassette('test_chi_citycouncil_ocd_request'):
+    spider = Chi_citycouncilSpider(session=session)
+    parsed_items = [spider._parse_item(item) for item in test_response[0]]
 
 def test_name():
     assert parsed_items[0]['name'] == 'Joint Committee: Finance; Transportation and Public Way'
