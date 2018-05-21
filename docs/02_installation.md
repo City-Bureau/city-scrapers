@@ -29,7 +29,7 @@ These steps are the same, regardless of which option below you choose.
 
 2. Clone your fork to your local machine:
 ```
-$ git clone git@github.com:<your-username>/city-scrapers.git
+$ git clone https://github.com/YOUR-USERNAME/city-scrapers.git
 ```
 
 3. Change directories into the main project folder:
