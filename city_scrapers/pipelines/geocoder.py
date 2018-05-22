@@ -10,8 +10,7 @@ from airtable import Airtable
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_GEOCODE_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_GEOCODE_TABLE')
-
-TAMU_API_KEY = 'e8a8f1283b3440c4b248adb52204c8ae' #temporary for testing
+TAMU_API_KEY = os.environ.get('CITY_SCRAPERS_TAMU_API_KEY')
 
 
 class GeocoderPipeline(object):
@@ -28,6 +27,7 @@ class GeocoderPipeline(object):
         """
         if item['location']['coordinates'] is None:
             query = self._parse_address(item.get('location', {}))
+            print(query)
             if not query:
                 spider.logger.debug('GEOCODER PIPELINE: Empty query. Not geocoding {0}'.format(item['id']))
                 return item
