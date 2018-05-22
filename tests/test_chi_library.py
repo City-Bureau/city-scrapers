@@ -1,11 +1,17 @@
 import pytest
+import betamax
+import requests
+
 from tests.utils import file_response
 from city_scrapers.spiders.chi_library import Chi_librarySpider
 
-
-test_response = file_response('files/chi_library.html', url='https://www.chipublib.org/board-of-directors/board-meeting-schedule/')
-spider = Chi_librarySpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+# Use betamax to record requests
+session = requests.Session()
+recorder = betamax.Betamax(session)
+with recorder.use_cassette('test_chi_library_libinfo'):
+    test_response = file_response('files/chi_library.html', url='https://www.chipublib.org/board-of-directors/board-meeting-schedule/')
+    spider = Chi_librarySpider(session=session)
+    parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
 def test_name():

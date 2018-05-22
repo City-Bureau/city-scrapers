@@ -27,6 +27,13 @@ class Chi_citycouncilSpider(Spider):
     allowed_domains = [ocd_url]
     start_urls = [ocd_url + ocd_tp + ocd_d + ocd_srt + ocd_jur + ocd_loc]
 
+    def __init__(self, session=requests.Session()):
+        """
+        Initialize a spider with a requests session for use in the 
+        _make_ocd_request function.
+        """
+        self.session = session
+
     def parse(self, response):
         """
         This is not a traditional spider, rather, this is a glorified wrapper
@@ -78,7 +85,7 @@ class Chi_citycouncilSpider(Spider):
         Makes http request to OCD
         """
         pgurl = self.ocd_url + id + '/'  # Avoid redirect just to add trailing slash
-        e_pg = requests.get(pgurl)
+        e_pg = self.session.get(pgurl)
         if e_pg.status_code == 200:
             return e_pg.json()
         else:

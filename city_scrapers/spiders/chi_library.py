@@ -4,7 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-import urllib.request
+import requests
 import json
 import datetime
 
@@ -16,6 +16,13 @@ class Chi_librarySpider(Spider):
     long_name = 'Chicago Public Library'
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
+
+    def __init__(self, session=requests.Session()):
+        """
+        Initialize a spider with a session object to use in the
+        _get_lib_info function.
+        """
+        self.session = session
 
     def parse(self, response):
         """
@@ -47,12 +54,11 @@ class Chi_librarySpider(Spider):
         description_str = ' '.join(all_clean_events[0] + all_clean_events[1])
         # remove first two informational lines from events array
         events_only = all_clean_events[2:]
-        # gets year of events
+        # get library info from City of Chicago API
+        lib_info = self._get_lib_info()
 
         for item in events_only:
             yr = cleanhtml(year[0])
-            with urllib.request.urlopen("https://data.cityofchicago.org/resource/psqp-6rmg.json") as url:
-                lib_info = json.loads(url.read().decode())
             start_time = self._parse_start(item, yr)
             data = {
                 '_type': 'event',
@@ -69,6 +75,14 @@ class Chi_librarySpider(Spider):
             }
             data['id'] = self._generate_id(data, start_time)
             yield data
+
+    def _get_lib_info(self):
+        """
+        Returns a list of dictionaries of information about each library
+        from the City of Chicago's API.
+        """
+        r = self.session.get("https://data.cityofchicago.org/resource/psqp-6rmg.json")
+        return json.loads(r.text)
 
     def _parse_classification(self, item):
         """
