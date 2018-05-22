@@ -15,23 +15,26 @@ def test_len():
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Austin CPS community action council meeting'
+    assert parsed_items[0]['name'] == 'Austin Community Action Council'
 
 
 def test_start_time():
     assert parsed_items[0]['start_time'].isoformat() == '2018-05-08T17:30:00'
 
+def test_end_time():
+    assert parsed_items[0]['end_time'].isoformat() == '2018-05-08T20:30:00'
+
 
 def test_id():
     assert parsed_items[0]['id'] == \
-           'cps_community_action_council/201805081730/x/austin_cps_community_action_council_meeting'
+           'cps_community_action_council/201805081730/x/austin_community_action_council'
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
             'url': None,
-            'name': 'Austin',
-            'address': ' at Michele Clark HS (5101 W Harrison St.)',
+            'name': ' Michele Clark HS ',
+            'address': '5101 W Harrison St.',
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -40,11 +43,16 @@ def test_location():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['description'] == None
+    assert item['description'] == "Community Action Councils, or CACs, consist of 25-30 voting members who are " \
+                                  "directly involved in developing a strategic plan for educational success within " \
+                                  "their communities. CAC members include parents; elected officials; faith-based " \
+                                  "institutions, health care and community-based organizations; Local School" \
+                                  " Council (LSC) members; business leaders; educators and school administrators; " \
+                                  "staff members from Chicago's Sister Agencies; community residents; " \
+                                  "and students. There are nine CACs across Chicago. Each works to empower the " \
+                                  "community they serve to lead the improvement of local quality education."
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_end_time(item):
-    assert item['end_time'] == None
+
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
