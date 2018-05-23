@@ -2,10 +2,10 @@ from datetime import datetime
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.cps_community_action_council import Cps_community_action_councilSpider
+from city_scrapers.spiders.chi_school_community_action_council import chi_school_community_action_councilSpider
 
-test_response = file_response('files/cps_community_action_council_CAC.html', url='http://cps.edu/FACE/Pages/CAC.aspx')
-spider = Cps_community_action_councilSpider()
+test_response = file_response('files/chi_school_community_action_council_CAC.html', url='http://cps.edu/FACE/Pages/CAC.aspx')
+spider = chi_school_community_action_councilSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
@@ -27,7 +27,7 @@ def test_end_time():
 
 def test_id():
     assert parsed_items[0]['id'] == \
-           'cps_community_action_council/201805081730/x/austin_community_action_council'
+           'chi_school_community_action_council/201805081730/x/austin_community_action_council'
 
 
 def test_location():
