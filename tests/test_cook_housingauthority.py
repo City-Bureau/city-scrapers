@@ -26,10 +26,17 @@ def test_start_time():
 def test_end_time():
     assert item['end_time'].isoformat() == '2018-05-11T12:00:00-05:00'
 
+def test_parse_date_time_string():
+   parsed_meeting_details = spider._parse_raw_details_string('June 12, 2018, 1:00 pm - 2:30 pm 15306 S. Robey Ave.')
+   assert parsed_meeting_details['date'] == 'June 12, 2018'
+   assert parsed_meeting_details['start_time'] == '1:00 pm'
+   assert parsed_meeting_details['end_time'] == '2:30 pm'
+   assert parsed_meeting_details['location']['address'] == '15306 S. Robey Ave.'
+
 def test_location():
-    assert item['location']== {'address': '15306 S. Robey Ave. Harvey Il 60426',
+    assert item['location']== {'address': '15306 S. Robey Ave.',
     'coordinates': {'latitude': None, 'longitude': None},
-    'name': 'Turlington West Community Room',
+    'name': None,
     'url': None}
 
 def test_sources():
@@ -53,6 +60,5 @@ def test_status():
 
 def test_timezone():
     assert item['timezone'] == 'America/Chicago'
-
 
 
