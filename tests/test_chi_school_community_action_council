@@ -5,7 +5,7 @@ from tests.utils import file_response
 from city_scrapers.spiders.chi_school_community_action_council import Chi_school_community_action_councilSpider
 
 test_response = file_response('files/chi_school_community_action_council_CAC.html', url='http://cps.edu/FACE/Pages/CAC.aspx')
-spider = chi_school_community_action_councilSpider()
+spider = Chi_school_community_action_councilSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
