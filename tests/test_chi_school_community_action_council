@@ -2,7 +2,7 @@ from datetime import datetime
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_school_community_action_council import chi_school_community_action_councilSpider
+from city_scrapers.spiders.chi_school_community_action_council import Chi_school_community_action_councilSpider
 
 test_response = file_response('files/chi_school_community_action_council_CAC.html', url='http://cps.edu/FACE/Pages/CAC.aspx')
 spider = chi_school_community_action_councilSpider()
