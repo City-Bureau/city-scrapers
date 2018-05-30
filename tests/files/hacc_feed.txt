@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Upcoming Events &#8211; HACC</title>
+	<atom:link href="http://thehacc.org/events/feed/" rel="self" type="application/rss+xml" />
+	<link>http://thehacc.org</link>
+	<description></description>
+	<lastBuildDate>Tue, 29 May 2018 17:03:26 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=4.9.6</generator>
+	<item>
+		<title>HACC-Harper College Scholarship Info Session</title>
+		<link>http://thehacc.org/event/hacc-harper-college-scholarship-info-session/</link>
+		<comments>http://thehacc.org/event/hacc-harper-college-scholarship-info-session/#respond</comments>
+		<pubDate>Wed, 30 May 2018 22:30:00 +0000</pubDate>
+		<dc:creator><![CDATA[Nicholas Mathiowdis]]></dc:creator>
+		
+		<guid isPermaLink="false">http://thehacc.org/?post_type=tribe_events&#038;p=2836</guid>
+		<description><![CDATA[<p>The Housing Authority of Cook County is partnering with One Million Degrees and Harper College to provide scholarships to Housing Authority participants for the upcoming...<a href="http://thehacc.org/event/hacc-harper-college-scholarship-info-session/" class="readmore">read more</a></p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/hacc-harper-college-scholarship-info-session/">HACC-Harper College Scholarship Info Session</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>The Housing Authority of Cook County is partnering with One Million Degrees and Harper College to provide scholarships to Housing Authority participants for the upcoming school year! <em><span style="text-decoration: underline"><a href="http://events.constantcontact.com/register/event?llr=yl8b4ndab&amp;oeidk=a07efebe75vf40d4661"><strong>Register Here</strong></a></span></em> to attend this informational session to learn more!</p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/hacc-harper-college-scholarship-info-session/">HACC-Harper College Scholarship Info Session</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://thehacc.org/event/hacc-harper-college-scholarship-info-session/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>HACC-Prairie State College Scholarship Info Session</title>
+		<link>http://thehacc.org/event/hacc-prairie-state-college-scholarship-info-session/</link>
+		<comments>http://thehacc.org/event/hacc-prairie-state-college-scholarship-info-session/#respond</comments>
+		<pubDate>Thu, 31 May 2018 22:30:00 +0000</pubDate>
+		<dc:creator><![CDATA[Nicholas Mathiowdis]]></dc:creator>
+		
+		<guid isPermaLink="false">http://thehacc.org/?post_type=tribe_events&#038;p=2816</guid>
+		<description><![CDATA[<p>The Housing Authority of Cook County is partnering with One Million Degrees and Prairie State College to provide scholarships to Housing Authority participants for the...<a href="http://thehacc.org/event/hacc-prairie-state-college-scholarship-info-session/" class="readmore">read more</a></p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/hacc-prairie-state-college-scholarship-info-session/">HACC-Prairie State College Scholarship Info Session</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>The Housing Authority of Cook County is partnering with One Million Degrees and Prairie State College to provide scholarships to Housing Authority participants for the upcoming school year! <span style="text-decoration: underline"> <strong><a href="https://events.r20.constantcontact.com/register/eventReg?oeidk=a07efdtkssob8c1de96&amp;oseq=&amp;c=&amp;ch=">Register Here</a></strong></span> to attend this informational session to learn more and enter into a raffle for an Amazon Fire HD8 (an Alexa Tablet) or White Sox Tickets!</p>
+<p>&nbsp;</p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/hacc-prairie-state-college-scholarship-info-session/">HACC-Prairie State College Scholarship Info Session</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://thehacc.org/event/hacc-prairie-state-college-scholarship-info-session/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Entrepreneurship Boot Camp Session 4 Conclusion</title>
+		<link>http://thehacc.org/event/entrepreneurship-boot-camp-session-4-conclusion/</link>
+		<pubDate>Fri, 01 Jun 2018 15:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[Jessica Del Valle]]></dc:creator>
+		
+		<guid isPermaLink="false">http://thehacc.org/?post_type=tribe_events&#038;p=2650</guid>
+		<description><![CDATA[<p>Learn how to start and run your own business. See the attached flyer for more details about workshops. FSS participants, Entrepreneurship Boot camp will help...<a href="http://thehacc.org/event/entrepreneurship-boot-camp-session-4-conclusion/" class="readmore">read more</a></p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/entrepreneurship-boot-camp-session-4-conclusion/">Entrepreneurship Boot Camp Session 4 Conclusion</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Learn how to start and run your own business. See the attached flyer for more details about workshops. FSS participants, Entrepreneurship Boot camp will help you reach your “open my own business” goal. Register today!</p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/entrepreneurship-boot-camp-session-4-conclusion/">Entrepreneurship Boot Camp Session 4 Conclusion</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></content:encoded>
+			</item>
+		<item>
+		<title>Landlord Workshop &#8211; Nuts and Bolts of HCV Program</title>
+		<link>http://thehacc.org/event/landlord-workshop-nuts-bolts-hcv-program-2-2/</link>
+		<pubDate>Tue, 12 Jun 2018 18:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[Nicholas Mathiowdis]]></dc:creator>
+		
+		<guid isPermaLink="false">http://thehacc.org/?post_type=tribe_events&#038;p=2882</guid>
+		<description><![CDATA[<p>Join Us! These Workshops are for Landlords who are interested in learning more about the HCV Program, the HACC’s process and HQS Inspections. REGISTER HERE!</p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/landlord-workshop-nuts-bolts-hcv-program-2-2/">Landlord Workshop &#8211; Nuts and Bolts of HCV Program</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Join Us!<br />
+These Workshops are for Landlords who are interested in learning more about the HCV Program, the HACC’s process and HQS Inspections. <strong><a href="https://events.r20.constantcontact.com/register/eventReg?oeidk=a07efewhl50513b7023&amp;oseq=&amp;c=&amp;ch=">REGISTER HERE!</a></strong></p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/landlord-workshop-nuts-bolts-hcv-program-2-2/">Landlord Workshop &#8211; Nuts and Bolts of HCV Program</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></content:encoded>
+			</item>
+		<item>
+		<title>Smart Money</title>
+		<link>http://thehacc.org/event/smart-money/</link>
+		<comments>http://thehacc.org/event/smart-money/#respond</comments>
+		<pubDate>Mon, 18 Jun 2018 15:30:00 +0000</pubDate>
+		<dc:creator><![CDATA[Nicholas Mathiowdis]]></dc:creator>
+		
+		<guid isPermaLink="false">http://thehacc.org/?post_type=tribe_events&#038;p=2858</guid>
+		<description><![CDATA[<p>The Housing Authority of Cook County is providing a private Smart Money class just for our Forest Preserve Experience Employees. Take control of you financial...<a href="http://thehacc.org/event/smart-money/" class="readmore">read more</a></p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/smart-money/">Smart Money</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>The Housing Authority of Cook County is providing a private Smart Money class just for our Forest Preserve Experience Employees. Take control of you financial future and earn over $1000 this summer!</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline"><em><strong><a href="https://events.r20.constantcontact.com/register/eventReg?oeidk=a07efekamkb54c612ca&amp;oseq=&amp;c=&amp;ch=">REGISTER HERE!</a> </strong></em></span> for either the 10:30-12:30pm or 1:00-3:00pm classes!</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/smart-money/">Smart Money</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://thehacc.org/event/smart-money/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Landlord Workshop &#8211; HQS Inspections</title>
+		<link>http://thehacc.org/event/landlord-workshop-hqs-inspections-2/</link>
+		<pubDate>Tue, 19 Jun 2018 18:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[Nicholas Mathiowdis]]></dc:creator>
+		
+		<guid isPermaLink="false">http://thehacc.org/?post_type=tribe_events&#038;p=2879</guid>
+		<description><![CDATA[<p>Join Us! These Workshops are for Landlords who are interested in learning more about the HCV Program, the HACC’s process and HQS Inspections. REGISTER HERE!</p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/landlord-workshop-hqs-inspections-2/">Landlord Workshop &#8211; HQS Inspections</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></description>
+				<content:encoded><![CDATA[<p>Join Us!<br />
+These Workshops are for Landlords who are interested in learning more about the HCV Program, the HACC’s process and HQS Inspections. <strong><a href="https://events.r20.constantcontact.com/register/eventReg?oeidk=a07efewg8egfee9435a&amp;oseq=&amp;c=&amp;ch=">REGISTER HERE!</a></strong></p>
+<p>The post <a rel="nofollow" href="http://thehacc.org/event/landlord-workshop-hqs-inspections-2/">Landlord Workshop &#8211; HQS Inspections</a> appeared first on <a rel="nofollow" href="http://thehacc.org">HACC</a>.</p>
+]]></content:encoded>
+			</item>
+	</channel>
+</rss>
+
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.w3-edge.com/products/
+
+Object Caching 27/82 objects using disk
+Minified using disk
+Database Caching 2/20 queries in 0.024 seconds using disk
+
+Served from: thehacc.org @ 2018-05-29 13:25:05 by W3 Total Cache
+-->
