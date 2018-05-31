@@ -3,12 +3,11 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
-import re
+import json
+import urllib.parse as urlparse
 
+import scrapy
 from dateutil.parser import parse as dateparse
-from datetime import datetime
-from pytz import timezone
 
 from city_scrapers.spider import Spider
 
@@ -18,7 +17,7 @@ class Cook_housingAuthoritySpider(Spider):
     long_name = 'Housing Authority of Cook County'
     allowed_domains = ['http://thehacc.org/']
     start_urls = ['http://thehacc.org/events/feed/']
-    event_timezone = 'America/Chicago'
+    events_endpoint = 'http://thehacc.org/wp-json/tribe/events/v1/events/{id}'
 
     def parse(self, response):
         """
@@ -28,102 +27,71 @@ class Cook_housingAuthoritySpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        # events = response.css('item')
-
-        for url in self._get_event_urls(response):
+        for url in self._gen_requests(response):
             yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
-        # for event in events:
-        #    yield self._parse_event(event)
+    def _gen_requests(self, response):
+        for link in response.css('guid::text').extract():
+            params = urlparse.parse_qs(link)
+            event_id = params['p'][0]
+            yield self.events_endpoint.format(id=event_id)
 
     def _parse_event(self, response):
-        """
-        Parse the event page.
-        """
-        raw_meeting_details = response.xpath(
-            "//header/h3[@class='entry-title']/following-sibling::p/text()").extract_first()
-        details = self._parse_raw_details_string(raw_meeting_details)
-        start_time, end_time = self._parse_date_time(details)
-        data = {
+        r = json.loads(response.body)
+        event = r['json_ld']
+        all_date = r['all_day']
+        classification = 'Not classified'
+        description = self._extract_text(r['description'])
+        end_time = dateparse(event['endDate'])
+        location = self._parse_location(event)
+        name = event['name']
+        sources = [{'note': '', 'url': event['url']}]
+        start_time = dateparse(event['startDate'])
+        status = 'tentative'
+        tz = r['timezone']
+
+        parsed_event = {
             '_type': 'event',
-            'name': response.css('h3.entry-title::text').extract_first(),
-            'description': self._parse_description(response),
-            'classification': self._parse_classification(),
-            'start_time': start_time,
+            'all_day': all_date,
+            'classification': classification,
+            'description': description,
             'end_time': end_time,
-            'all_day': self._parse_all_day(response),
-            'timezone': self.event_timezone,
-            'status': self._parse_status(response),
-            'location': details['location'],
-            'sources': [{'url': response.url, 'note': ''}]
+            'location': location,
+            'name': name,
+            'sources': sources,
+            'start_time': start_time,
+            'status': status,
+            'timezone': tz,
         }
-        data['id'] = self._generate_id(data, start_time)
-        return data
+        parsed_event['id'] = self._generate_id(parsed_event, parsed_event['start_time'])
+        yield parsed_event
 
-    def _get_event_urls(self, response):
-        return response.css('item link::text').extract()
-
-    def _parse_date_time(self, details):
-        '''
-        '''
-        start_time = dateparse('{date} {time}'.format(date=details['date'], time=details['start_time']))
-        end_time = dateparse('{date} {time}'.format(date=details['date'], time=details['end_time']))
-        return self._naive_datetime_to_tz(start_time), self._naive_datetime_to_tz(end_time)
-
-    @staticmethod
-    def _parse_raw_details_string(raw_meeting_details):
-        """
-        Parse meeting details from raw string
-            June 12, 2018, 1:00 pm - 2:30 pm 15306 S. Robey Ave.
-        """
-        matches = re.search('(.*(?: am | pm ))(.*)', raw_meeting_details)
-        date = re.search('(.*,.*), (.*)', matches.group(1))
-        address = matches.group(2)
-        time_list = date.group(2).split(' - ')
-        start_time = time_list[0].strip()
-        end_time = time_list[1].strip()
-        date = date.group(1)
+    def _parse_location(self, event):
+        address = self._parse_address(event)
+        location_name = event['location']['name']
         location = {
             'url': None,
             'address': address,
-            'name': None,
+            'name': location_name,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
             },
         }
-        return {
-            'date': date,
-            'start_time': start_time,
-            'end_time': end_time,
-            'location': location
-        }
+        return location
 
-    def _parse_description(self, response):
-        desc = response.css('div.description::text').extract_first().strip()
+    @staticmethod
+    def _parse_address(event):
+        address = event['location']['address']
+        address = "{address}, {city} {state} {zip}".format(
+            address=address['streetAddress'],
+            city=address['addressLocality'],
+            state=address['addressRegion'],
+            zip=address['postalCode'],
+        )
+        return address
 
-        if desc is None:
-            return ""
-        else:
-            return desc
-
-    def _parse_classification(self):
-
-        return 'Not classified'
-
-    def _parse_all_day(self, response):
-
-        return False
-
-    def _parse_status(self, response):
-        """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
-        """
-        return 'tentative'
+    @staticmethod
+    def _extract_text(text):
+        descs = scrapy.Selector(text=text).css('p::text').extract()
+        return ' '.join([desc for desc in descs])
