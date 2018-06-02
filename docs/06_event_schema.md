@@ -2,30 +2,39 @@
 
 Our data model for events is based on the [Event Object](http://docs.opencivicdata.org/en/latest/data/event.html) from the [Open Civic Data](http://docs.opencivicdata.org) project.
 
+"Required" means that the value cannot be `None`, an empty string, empty dictionary nor empty list. "Optional" means that `None` or empty values are ok.
+
 ```python
 {
   '_type': 'event',                              # required value
+  
   'id': 'unique identifier'                      # required string in format:
                                                  # <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-id>/<underscored-event-name>
                                                  # if start-time is missing, replace hhmm with 0000
+                                                 
   'name': 'Committee on Pedestrian Safety',      # required string, name of the event
+  
   'event_description': 'A longer description',   # optional string, event description
-  'start': {                                     # required dictionary
-    'start_date': date(2018, 12, 31),            # required datetime.date object in local timezone
-    'start_time': None,                          # optional datetime.time object in local timezone
-    'note': 'in the afternoon'                   # optional string, supplementary information if there’s no start time
-   },
-   'end': {                                      # required dictionary
-    'end_date': date(2018, 12, 31),              # optional datetime.date object in local timezone
-    'end_time': time(13, 30),                    # optional datetime.time object in local timezone
-    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there’s no end time
-   },
-  'all_day': False,                              # required boolean
+  
+  'all_day': False,                              # required boolean, whether or not the event lasts all day
+  
   'status': 'tentative',                         # required string, one of the following:
                                                  # 'cancelled': event is listed as cancelled or rescheduled
                                                  # 'tentative': event both does not have an agenda and the event is > 7 days away
                                                  # 'confirmed': either an agenda is posted or the event will happen in <= 7 days
                                                  # 'passed': event happened in the past
+  
+  'start': {                                     # required dictionary
+    'start_date': date(2018, 12, 31),            # required datetime.date object in local timezone
+    'start_time': None,                          # optional datetime.time object in local timezone
+    'note': 'in the afternoon'                   # optional string, supplementary information if there’s no start time
+   },
+   
+   'end': {                                      # required dictionary
+    'end_date': date(2018, 12, 31),              # optional datetime.date object in local timezone
+    'end_time': time(13, 30),                    # optional datetime.time object in local timezone
+    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there’s no end time
+   },   
 
   'location': [                                  # required list of event locations
     {
