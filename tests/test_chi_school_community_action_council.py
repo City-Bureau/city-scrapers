@@ -25,9 +25,9 @@ def test_end_time():
     assert parsed_items[0]['end_time'].isoformat() == '2018-05-08T20:30:00'
 
 
-def test_id():
-    assert parsed_items[0]['id'] == \
-           'chi_school_community_action_council/201805081730/x/austin_community_action_council'
+# def test_id():
+#    assert parsed_items[0]['id'] == \
+#           'chi_school_community_action_council/201805081730/x/austin_community_action_council'
 
 
 def test_location():

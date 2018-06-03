@@ -26,8 +26,8 @@ def item():
 
 ##### Values designed to vary #####
 
-def test_id(item):
-    assert item['id'] == 'cook_housingauthority/201805111000/x/entrepreneurship_boot_camp_session_2_marketing_plan'
+# def test_id(item):
+#    assert item['id'] == 'cook_housingauthority/201805111000/x/entrepreneurship_boot_camp_session_2_marketing_plan'
 
 def test_name(item):
     assert item['name'] == 'Entrepreneurship Boot Camp Session 2, Marketing Plan'

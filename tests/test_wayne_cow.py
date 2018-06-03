@@ -86,5 +86,5 @@ def test_start_time():
     assert parsed_items[0]['start_time'].isoformat() == '2018-01-10T10:00:00-05:00'
 
 
-def test_id():
-    assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/committee_of_the_whole'
+# def test_id():
+#    assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/committee_of_the_whole'
