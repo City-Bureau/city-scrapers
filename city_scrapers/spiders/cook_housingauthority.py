@@ -37,34 +37,38 @@ class Cook_housingAuthoritySpider(Spider):
             yield self.events_endpoint.format(id=event_id)
 
     def _parse_event(self, response):
-        r = json.loads(response.body)
-        event = r['json_ld']
-        all_date = r['all_day']
-        classification = 'Not classified'
-        description = self._extract_text(r['description'])
-        end_time = dateparse(event['endDate'])
-        location = self._parse_location(event)
-        name = event['name']
-        sources = [{'note': '', 'url': event['url']}]
-        start_time = dateparse(event['startDate'])
-        status = 'tentative'
-        tz = r['timezone']
+        try:
+            r = json.loads(response.body)
+        except TypeError:
+            yield {}
+        else:
+            event = r['json_ld']
+            all_date = r['all_day']
+            classification = 'Not classified'
+            description = self._extract_text(r['description'])
+            end_time = dateparse(event['endDate'])
+            location = self._parse_location(event)
+            name = event['name']
+            sources = [{'note': '', 'url': event['url']}]
+            start_time = dateparse(event['startDate'])
+            status = 'tentative'
+            tz = r['timezone']
 
-        parsed_event = {
-            '_type': 'event',
-            'all_day': all_date,
-            'classification': classification,
-            'description': description,
-            'end_time': end_time,
-            'location': location,
-            'name': name,
-            'sources': sources,
-            'start_time': start_time,
-            'status': status,
-            'timezone': tz,
-        }
-        parsed_event['id'] = self._generate_id(parsed_event)
-        yield parsed_event
+            parsed_event = {
+                '_type': 'event',
+                'all_day': all_date,
+                'classification': classification,
+                'description': description,
+                'end_time': end_time,
+                'location': location,
+                'name': name,
+                'sources': sources,
+                'start_time': start_time,
+                'status': status,
+                'timezone': tz,
+            }
+            parsed_event['id'] = self._generate_id(parsed_event)
+            yield parsed_event
 
     def _parse_location(self, event):
         address = self._parse_address(event)
