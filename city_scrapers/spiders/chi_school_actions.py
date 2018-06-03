@@ -31,7 +31,7 @@ class ChiSchoolActionsSpider(Spider):
                     item_name = self._parse_name(school_name, meeting_type)
                     yield {
                         '_type': 'event',
-                        'id': self._generate_id({'name': item_name}, start_datetime),
+                        'id': self._generate_id({'name': item_name}),
                         'name': item_name,
                         'description': self._parse_description(school_name, meeting_type, school_docs),
                         'classification': meeting_type,

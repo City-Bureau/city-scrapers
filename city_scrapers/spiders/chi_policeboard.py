@@ -46,7 +46,7 @@ class Chi_policeboardSpider(Spider):
             start_time = self._parse_start(item, universal_start_time)
             new_item = {
                 'start_time': start_time,
-                'id': self._generate_id(data, start_time)
+                'id': self._generate_id(data)
             }
             new_item.update(data)
             new_item['status'] = self._parse_status(new_item['start_time'])

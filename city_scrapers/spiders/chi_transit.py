@@ -48,7 +48,7 @@ class ChiTransitSpider(Spider):
                     'location': self._parse_location(item),
                     'sources': self._parse_sources(response)
                 }
-                item_data['id'] = self._generate_id({'name': item_name}, item_start)
+                item_data['id'] = self._generate_id({'name': item_name})
                 yield item_data
 
     def _parse_classification(self, item):
