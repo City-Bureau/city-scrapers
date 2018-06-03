@@ -131,10 +131,6 @@ class Chi_policeSpider(Spider):
                     "should represent the broad spectrum of stakeholders in the community including "
                     "residents, businesses, houses of worship, libraries, parks, schools and community-based organizations.")
 
-    def _format_time(self, time):
-        naive = datetime.strptime(time, "%Y-%m-%dT%H:%M:%S")
-        return self._naive_datetime_to_tz(naive)
-
     def _parse_start(self, item):
         """
         Parse start date and time.
