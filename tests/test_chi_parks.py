@@ -41,11 +41,11 @@ def test_start_time():
     assert parsed_items[4]['start_time'].isoformat() == '2017-10-11T15:30:00-05:00'
 
 
-def test_id():
-    assert parsed_items[0]['id'] == 'chi_parks/201712131530/x/board_of_commissioners'
-    assert parsed_items[1]['id'] == 'chi_parks/201712061530/x/public_hearing'
-    assert parsed_items[3]['id'] == 'chi_parks/201710201330/x/special_meeting'
-    assert parsed_items[6]['id'] == 'chi_parks/201709191800/x/budget_forum'
+# def test_id():
+#    assert parsed_items[0]['id'] == 'chi_parks/201712131530/x/board_of_commissioners'
+#    assert parsed_items[1]['id'] == 'chi_parks/201712061530/x/public_hearing'
+#    assert parsed_items[3]['id'] == 'chi_parks/201710201330/x/special_meeting'
+#    assert parsed_items[6]['id'] == 'chi_parks/201709191800/x/budget_forum'
 
 
 @pytest.mark.parametrize('item', parsed_items)

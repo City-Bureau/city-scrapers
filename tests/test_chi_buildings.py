@@ -60,8 +60,8 @@ def test_end_time():
     assert parsed_items[0]['end_time'].isoformat() == '2018-01-04T14:00:00-06:00'
 
 
-def test_id():
-    assert parsed_items[0]['id'] == 'chi_buildings/201801041300/x/administrative_operations_committee_meeting_january_4_2018'
+# def test_id():
+#   assert parsed_items[0]['id'] == 'chi_buildings/201801041300/x/administrative_operations_committee_meeting_january_4_2018'
 
 
 @pytest.mark.parametrize('item', parsed_items)

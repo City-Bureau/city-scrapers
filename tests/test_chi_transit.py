@@ -39,9 +39,9 @@ def test_classification():
     assert parsed_items[2]['classification'] == 'Transit Board Meetings'
 
 
-def test_id():
-    assert parsed_items[0]['id'] == 'chi_transit/201804091330/x/ada_advisory_committee_meeting'
-    assert parsed_items[2]['id'] == 'chi_transit/201803141130/x/regular_board_meeting_of_chicago_transit_board'
+# def test_id():
+#    assert parsed_items[0]['id'] == 'chi_transit/201804091330/x/ada_advisory_committee_meeting'
+#    assert parsed_items[2]['id'] == 'chi_transit/201803141130/x/regular_board_meeting_of_chicago_transit_board'
 
 
 def test_status():
