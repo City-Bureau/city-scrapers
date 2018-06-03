@@ -53,7 +53,7 @@ class Chi_parksSpider(Spider):
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item),
             }
-            data['id'] = self._generate_id(data, data['start_time'])
+            data['id'] = self._generate_id(data)
             data['status'] = self._parse_status(item, data['start_time'])
             yield data
 

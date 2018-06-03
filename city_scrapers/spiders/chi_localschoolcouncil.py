@@ -102,7 +102,7 @@ class chi_LSCMeetingSpider(Spider):
                 }
             }
         }
-        data['id'] = self._generate_id(data, start_time)
+        data['id'] = self._generate_id(data)
         return data
 
     def _parse_start_time(self, row):

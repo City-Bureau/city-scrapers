@@ -46,7 +46,7 @@ class Chi_school_community_action_councilSpider(Spider):
                         'community_area' : self._parse_community_area(item)
                     }
 
-                    data['id'] = self._generate_id(data, data['start_time'])
+                    data['id'] = self._generate_id(data)
                     data['end_time'] = data['start_time'] + timedelta(hours=3) #adds 3 hours to start time
                     yield data
             month_counter += 1  # month counter is increased by 1 month with each iteration of the for loop

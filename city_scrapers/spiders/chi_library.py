@@ -73,7 +73,7 @@ class Chi_librarySpider(Spider):
                 'location': self._parse_location(item, lib_info),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data)
             yield data
 
     def _get_lib_info(self):
