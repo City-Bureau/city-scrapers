@@ -41,7 +41,7 @@ class Wayne_cowSpider(Spider):
                 'sources': self._parse_sources(response, item),
             }
 
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data)
 
             yield data
 

@@ -8,8 +8,8 @@ spider = Det_schoolsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-def test_id():
-    assert parsed_items[0]['id'] == 'det_schools/201804170900/MmlhcTcyNW50Nm43dWZqN3BpOWwzYmF1ZzRfMjAxODA0MTdUMTMwMDAwWiA4bmpua21kbzgxcDdyZGw0MjA4dDI2MmM2b0Bn/policy_ad_hoc_sub_committee_meeting_open'
+# def test_id():
+#    assert parsed_items[0]['id'] == 'det_schools/201804170900/MmlhcTcyNW50Nm43dWZqN3BpOWwzYmF1ZzRfMjAxODA0MTdUMTMwMDAwWiA4bmpua21kbzgxcDdyZGw0MjA4dDI2MmM2b0Bn/policy_ad_hoc_sub_committee_meeting_open'
 
 def test_name():
     assert parsed_items[0]['name'] == 'Policy Ad-hoc Sub-Committee Meeting (Open)'

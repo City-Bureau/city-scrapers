@@ -53,7 +53,7 @@ class Chi_waterSpider(Spider):
                 'sources': self._parse_sources(item)
             }
             data['status'] = self._parse_status(item, data['start_time'])
-            data['id'] = self._generate_id(data, data['start_time'])
+            data['id'] = self._generate_id(data)
 
 
             yield data

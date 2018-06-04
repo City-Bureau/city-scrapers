@@ -69,7 +69,7 @@ class Chi_citycouncilSpider(Spider):
         ocd_response = self._make_ocd_request(data['id'])
         data.update({'location': self._parse_location(ocd_response),
                      'sources': self._parse_sources(ocd_response, data['id'])})
-        data['id'] = self._generate_id(data, data['start_time'])  # must happen AFTER previous line
+        data['id'] = self._generate_id(data)  # must happen AFTER previous line
         return data
 
     def _parse_next(self, response, pgnum):

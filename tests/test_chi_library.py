@@ -30,8 +30,8 @@ def test_end_time():
     assert parsed_items[0]['end_time'] is None
 
 
-def test_id():
-    assert parsed_items[0]['id'] == 'chi_library/201701170900/x/chicago_public_library_board_meeting'
+# def test_id():
+#    assert parsed_items[0]['id'] == 'chi_library/201701170900/x/chicago_public_library_board_meeting'
 
 
 def test_all_day():
