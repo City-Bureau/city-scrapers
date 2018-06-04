@@ -26,8 +26,8 @@ def test_description():
 
 def test_start():
     EXPECTED_START = {
-        'start_date': date(2017, 12, 28),
-        'start_time': time(18, 30),
+        'date': date(2017, 12, 28),
+        'time': time(18, 30),
         'note': ''
     }
     assert parsed_items[0]['start'] == EXPECTED_START
@@ -35,8 +35,8 @@ def test_start():
 
 def test_end_time():
     EXPECTED_END = {
-        'end_date': date(2017, 12, 28),
-        'end_time': time(19, 30),
+        'date': date(2017, 12, 28),
+        'time': time(19, 30),
         'note': ''
     }
     assert parsed_items[0]['end'] == EXPECTED_END
@@ -54,16 +54,20 @@ def test_status():
     assert parsed_items[0]['status'] == 'passed'
 
 
+def test_classification():
+    assert parsed_items[0]['classification'] == 'Beat Meeting'
+
+
 def test_documents():
     assert parsed_items[0]['documents'] == []
 
 
 def test_location():
-    EXPECTED_LOCATION = [{
+    EXPECTED_LOCATION = {
             'address': "St. Ferdinand's3115 N. Mason",
             'name': '',
             'neighborhood': ''
-    }]
+    }
     assert parsed_items[0]['location'] == EXPECTED_LOCATION
 
 
