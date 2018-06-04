@@ -32,15 +32,16 @@ class Chi_policeSpider(Spider):
 
         for item in data:
             # Drop events that aren't Beat meetings or DAC meetings
-            name = self._parse_name(item)
-            if not name:
+            classification = self._parse_classification(item)
+            if not classification:
                 continue
 
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
-                'name': self._parse_name(item),
-                'event_description': self._parse_description(name),
+                'name': self._parse_name(classification, item),
+                'event_description': self._parse_description(classification),
+                'classification': classification,
                 'all_day': False,
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
@@ -64,13 +65,27 @@ class Chi_policeSpider(Spider):
         """
         return str(item['calendarId'])
 
-    def _parse_name(self, item):
+    def _parse_classification(self, item):
         """
-        Parse or generate name (e.g. town hall).
+        Returns one of the following: 
+        * District Advisory Committee (DAC)
+        * Beat Meeting
+        * ''
         """
         if ('district advisory committee' in item['title'].lower()) or ('DAC' in item['title']):
             return 'District Advisory Committee (DAC)'
         elif 'beat' in item['title'].lower():
+            return 'Beat Meeting'
+        else:
+            return ''
+
+    def _parse_name(self, classification, item):
+        """
+        Generate a name based on the classfication.
+        """
+        if classification == 'District Advisory Committee (DAC)':
+            return classification
+        elif classification == 'Beat Meeting':
             district = self._parse_district(item)
             if district:
                 return 'Beat Meeting, District {}'.format(district).strip()
@@ -101,11 +116,11 @@ class Chi_policeSpider(Spider):
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
-        return [{
+        return {
             'address': item['location'],
             'name': '',
             'neighborhood': ''
-        }]
+        }
 
     def _parse_all_day(self, item):
         """
@@ -113,18 +128,18 @@ class Chi_policeSpider(Spider):
         """
         return False
 
-    def _parse_description(self, name):
+    def _parse_description(self, classification):
         """
-        Parse or generate event description.
+        Generate event description based on classification.
         """
-        if 'Beat Meeting' in name:
+        if classification == 'Beat Meeting':
             return ("CPD Beat meetings, held on all 279 police "
                     "beats in the City, provide a regular opportunity "
                     "for police officers, residents, and other community "
                     "stakeholders to exchange information, identify and "
                     "prioritize problems, and begin developing solutions "
                     "to those problems.")
-        elif name == 'District Advisory Committee (DAC)':
+        elif classification == 'District Advisory Committee (DAC)':
             return ("Each District Commander has a District Advisory Committee which serves "
                     "to provide advice and community based strategies that address underlying conditions "
                     "contributing to crime and disorder in the district. Each District Advisory Committee "
@@ -137,8 +152,8 @@ class Chi_policeSpider(Spider):
         """
         datetime_obj = datetime.strptime(item['start'], "%Y-%m-%dT%H:%M:%S")
         return {
-            'start_date': datetime_obj.date(),
-            'start_time': datetime_obj.time(),
+            'date': datetime_obj.date(),
+            'time': datetime_obj.time(),
             'note': ''
         }
 
@@ -150,14 +165,14 @@ class Chi_policeSpider(Spider):
             datetime_obj = datetime.strptime(item['end'], "%Y-%m-%dT%H:%M:%S")
         except TypeError:
             return {
-                'end_date': None,
-                'end_time': None,
+                'date': None,
+                'time': None,
                 'note': 'no end time listed'
             }
         else:
             return {
-                'end_date': datetime_obj.date(),
-                'end_time': datetime_obj.time(),
+                'date': datetime_obj.date(),
+                'time': datetime_obj.time(),
                 'note': ''
             }
     def _parse_sources(self, item):
