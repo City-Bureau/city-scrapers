@@ -12,20 +12,21 @@ class TravisValidationPipeline(object):
         'event_description': {'required': False, 'type': str},
         'all_day': {'required': True, 'type': bool},
         'status': {'required': True, 'type': str, 'values': ['cancelled', 'tentative', 'confirmed', 'passed']},
+        'classification': {'required': False, 'type': str},
         'start': {'required': True, 'type': dict},
         'end': {'required': True, 'type': dict},
-        'location': {'required': True, 'type': list},
+        'location': {'required': True, 'type': dict},
         'documents': {'required': False, 'type': list},
         'sources': {'required': True, 'type': list}
     }
     START_SCHEMA = {
-        'start_date': {'required': True, 'type': date},
-        'start_time': {'required': False, 'type': time},
+        'date': {'required': True, 'type': date},
+        'time': {'required': False, 'type': time},
         'note': {'required': False, 'type': str}
     }
     END_SCHEMA = {
-        'end_date': {'required': False, 'type': date},
-        'end_time': {'required': False, 'type': time},
+        'date': {'required': False, 'type': date},
+        'time': {'required': False, 'type': time},
         'note': {'required': False, 'type': str}
     }
     LOCATION_SCHEMA = {
@@ -57,20 +58,23 @@ class TravisValidationPipeline(object):
         # Create a dict with validation fields from self.SCHEMA
         validation_record = self._validate_against_schema(item, self.SCHEMA)
 
-        # unpack start and end dictionaries
+        # unpack start, end and location dictionaries
         start = item.get('start', {})
         if not isinstance(start, dict):
             start = {}
         end = item.get('end', {})
         if not isinstance(end, dict):
             end = {}
+        location = item.get('location', {})
+        if not isinstance(location, dict):
+            location = {}
 
         # Add validation fields from self.START_SCHEMA and self.END_SCHEMA
         validation_record.update(self._validate_against_schema(start, self.START_SCHEMA, 'start'))
         validation_record.update(self._validate_against_schema(end, self.END_SCHEMA, 'end'))
+        validation_record.update(self._validate_against_schema(location, self.LOCATION_SCHEMA, 'loc'))
 
-        # Add validation fields from self.LOCATION_SCHEMA, self.DOCUMENTS_SCHEMA, self.SOURCES_SCHEMA
-        validation_record.update(self._validate_list(item.get('location', []), self.LOCATION_SCHEMA, 'loc'))
+        # Add validation fields from self.DOCUMENTS_SCHEMA, self.SOURCES_SCHEMA
         validation_record.update(self._validate_list(item.get('documents', []), self.DOCUMENTS_SCHEMA, 'doc'))
         validation_record.update(self._validate_list(item.get('sources', []), self.SOURCES_SCHEMA, 'sources'))
 

@@ -5,24 +5,23 @@
         "name": "March 2019 Regular Board Meeting",
         "event_description": "The board meeting for the month of March 2019.",
         "status": "tentative",
+        "classification": "board meeting",
         "all_day": false,
         "start": {
-            "start_date": "2019-03-01",
-            "start_time": "09:00",
+            "date": "2019-03-01",
+            "time": "09:00",
             "note": ""
         },
         "end": {
-            "end_date": null,
-            "end_time": null,
+            "date": null,
+            "time": null,
             "note": ""
         },
-        "location": [
-            {
-                "name": "",
-                "address": "226 West Jackson Boulevard",
-                "neighborhood": ""
-            }
-        ],
+        "location": {
+            "name": "",
+            "address": "226 West Jackson Boulevard",
+            "neighborhood": ""
+        },
         "documents": [
             {
                 "url": "http://www.ccc.edu/events/Pages/March-2019-Regular-Board-Meeting.aspx",

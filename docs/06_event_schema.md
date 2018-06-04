@@ -24,25 +24,28 @@ Our data model for events is based on the [Event Object](http://docs.opencivicda
                                                  # 'confirmed': either an agenda is posted or the event will happen in <= 7 days
                                                  # 'passed': event happened in the past
   
-  'start': {                                     # required dictionary
-    'start_date': date(2018, 12, 31),            # required datetime.date object in local timezone
-    'start_time': None,                          # optional datetime.time object in local timezone
-    'note': 'in the afternoon'                   # optional string, supplementary information if there’s no start time
-   },
-   
-   'end': {                                      # required dictionary
-    'end_date': date(2018, 12, 31),              # optional datetime.date object in local timezone
-    'end_time': time(13, 30),                    # optional datetime.time object in local timezone
-    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there’s no end time
-   },   
+  'classification': 'board meeting',             # optional string. This field is used by some spiders
+                                                 # to differentiate between board and various committee
+                                                 # meetings. Ask @diaholliday if unsure.
 
-  'location': [                                  # required list of event locations
-    {
-      'address': '121 N LaSalle Dr, Chicago, IL',# required string, address of the location
-      'name': 'City Hall, Room 201A',            # optional string, name of the location
-      'neighborhood': 'Loop'                     # optional string, use community area in Chicago
-    }
-  ],
+  'start': {                                     # required dictionary
+    'date': date(2018, 12, 31),                  # required datetime.date object in local timezone
+    'time': None,                                # optional datetime.time object in local timezone
+    'note': 'in the afternoon'                   # optional string, supplementary information if there’s no start time
+  },
+   
+  'end': {                                       # required dictionary
+    'date': date(2018, 12, 31),                  # optional datetime.date object in local timezone
+    'time': time(13, 30),                        # optional datetime.time object in local timezone
+    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there’s no end time
+  },   
+
+  'location': {                                  # required dict of event locations
+                                                 # for multiple locations: make a different event with unique id for each location
+    'address': '121 N LaSalle Dr, Chicago, IL',  # required string, address of the location
+    'name': 'City Hall, Room 201A',              # optional string, name of the location
+    'neighborhood': 'Loop'                       # optional string, use community area in Chicago
+  },
   
   'documents': [                                 # optional list of documents
     {
