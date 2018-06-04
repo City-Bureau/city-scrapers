@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from city_scrapers.spider import Spider
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.parser import parse as dateparse
 import re
 
-class Cps_community_action_councilSpider(Spider):
-    name = 'cps_community_action_council'
-    long_name = 'CPS Community Action Council'
+class Chi_school_community_action_councilSpider(Spider):
+    name = 'chi_school_community_action_council'
+    long_name = 'Chicago Public Schools Community Action Council'
     allowed_domains = ['cps.edu']
     start_urls = ['http://cps.edu/FACE/Pages/CAC.aspx']
 
@@ -43,15 +43,27 @@ class Cps_community_action_councilSpider(Spider):
                         'all_day': self._parse_all_day(item),
                         'location': self._parse_location(item),
                         'sources': self._parse_sources(response),
+                        'community_area' : self._parse_community_area(item)
                     }
 
-                    data['id'] = self._generate_id(data, data['start_time'])
+                    data['id'] = self._generate_id(data)
+                    data['end_time'] = data['start_time'] + timedelta(hours=3) #adds 3 hours to start time
                     yield data
             month_counter += 1  # month counter is increased by 1 month with each iteration of the for loop
 
     # self._parse_next(response) yields more responses to parse if necessary.
     # uncomment to find a "next" url
     # yield self._parse_next(response)
+
+    def _parse_community_area(self, item):
+        """
+        Parse or generate community area.
+        """
+        if len(item.css('li').css('strong::text').extract()) == 1:
+            community_name = item.css('li').css('strong::text').extract()
+        else:
+            community_name = item.css('li').css('strong').css('a::text').extract()
+        return community_name[0]
 
     def _parse_name(self, item):
         """
@@ -61,14 +73,20 @@ class Cps_community_action_councilSpider(Spider):
             community_name = item.css('li').css('strong::text').extract()
         else:
             community_name = item.css('li').css('strong').css('a::text').extract()
-        name = community_name[0] + ' CPS community action council meeting'
-        return name
+        return community_name[0] + ' Community Action Council'
 
     def _parse_description(self, item):
         """
         Parse or generate event description.
         """
-        return None
+        return "Community Action Councils, or CACs, consist of 25-30 voting members who are " \
+                                  "directly involved in developing a strategic plan for educational success within " \
+                                  "their communities. CAC members include parents; elected officials; faith-based " \
+                                  "institutions, health care and community-based organizations; Local School" \
+                                  " Council (LSC) members; business leaders; educators and school administrators; " \
+                                  "staff members from Chicago's Sister Agencies; community residents; " \
+                                  "and students. There are nine CACs across Chicago. Each works to empower the " \
+                                  "community they serve to lead the improvement of local quality education."
 
     def _parse_classification(self, item):
         """
@@ -146,7 +164,7 @@ class Cps_community_action_councilSpider(Spider):
         """
         Parse end date and time.
         """
-        return None
+        return 'Estimated 3 hours'
 
     def _parse_timezone(self, item):
         """
@@ -165,33 +183,11 @@ class Cps_community_action_councilSpider(Spider):
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
         """
-
-        def get_location_address(source):
-            '''Uses RegEx to obtain the address from the source, returns the raw source as the address if address
-            in not written in regular format.
-            '''
-            address_regex = re.compile(r'(am|pm)(.*)$')
-            mo = address_regex.search(source)
-            try:
-                address = mo.group()[2:]
-            except AttributeError as e:
-                address = item.css('li::text').extract()[0]
-            return address
-
-        def get_location_name(item):
-            '''Gets the name of the location of the meeting from the item.
-            '''
-            if len(item.css('li').css('strong::text').extract()) == 1:
-                community_name = item.css('li').css('strong::text').extract()
-            else:
-                community_name = item.css('li').css('strong').css('a::text').extract()
-            return community_name[0]
-
         source = item.css('li::text').extract()[1]
         return {
             'url': None,
-            'name': get_location_name(item),
-            'address': get_location_address(source),
+            'name': source[source.find("at")+2:source.find("(")].replace('the', ''),
+            'address': source[source.find("(")+1:source.find(")")],
             'coordinates': {
                 'latitude': None,
                 'longitude': None,

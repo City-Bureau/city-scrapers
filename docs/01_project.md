@@ -5,7 +5,7 @@ homepage: true
 
 # Project
 
-The Documenters Aggregator is a collection of webscrapers and utilities to collect and store a comprehensive, central, and accessible calendar for public governmental meetings in Chicago and Cook County.
+The City Scrapers project is a collection of webscrapers and utilities to collect and store a comprehensive, central, and accessible calendar for public governmental meetings in Chicago and Cook County.
 
 ## Ways to contribute
 

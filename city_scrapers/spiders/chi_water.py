@@ -1,46 +1,45 @@
 # -*- coding: utf-8 -*-
-"""
-All spiders should yield data shaped according to the Open Civic Data
-specification (http://docs.opencivicdata.org/en/latest/data/event.html).
-"""
-import re
-import urllib3
 
 from datetime import datetime
+from pytz import timezone
 from legistar.events import LegistarEventsScraper
 
 from city_scrapers.spider import Spider
 
 
-class Chi_parksSpider(Spider):
-    name = 'chi_parks'
-    long_name = 'Chicago Park District'
-    START_URL = 'https://chicagoparkdistrict.legistar.com'
-    allowed_domains = ['chicagoparkdistrict.legistar.com']
-    start_urls = [START_URL]
+class Chi_waterSpider(Spider):
+    name = 'chi_water'
+    long_name = 'Metropolitan Water Reclamation District of Greater Chicago'
+    allowed_domains = ['mwrd.legistar.com']
+    event_timezone = 'America/Chicago'
+    start_urls = ['https://mwrd.legistar.com']
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
-
+        `parse` should always `yield` a dict that follows the Event Schema
+        <https://city-bureau.gitbooks.io/documenters-event-aggregator/event-schema.html>.
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+
+        # if legistar, different parse method or template required (needs documentation)
         events = self._make_legistar_call()
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         les = LegistarEventsScraper(jurisdiction=None, datadir=None)
-        les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
-        les.BASE_URL = self.START_URL
+        les.EVENTSPAGE = 'https://mwrd.legistar.com/Calendar.aspx'
+        les.BASE_URL = 'https://mwrd.legistar.com'
         if not since:
             since = datetime.today().year
         return les.events(since=since)
 
     def _parse_events(self, events):
-        for item, _ in events:
+        for item in events:
+            item = item[0]
+            # import pdb; pdb.set_trace()
+            # start time is not correct! :-o
+
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
@@ -49,12 +48,14 @@ class Chi_parksSpider(Spider):
                 'start_time': self._parse_start(item),
                 'end_time': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
-                'timezone': 'America/Chicago',
+                'timezone': self.event_timezone,
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item),
+                'sources': self._parse_sources(item)
             }
-            data['id'] = self._generate_id(data)
             data['status'] = self._parse_status(item, data['start_time'])
+            data['id'] = self._generate_id(data)
+
+
             yield data
 
     def _parse_classification(self, item):
@@ -69,11 +70,16 @@ class Chi_parksSpider(Spider):
         tentative = no agenda posted
         confirmed = agenda posted
         """
-        if datetime.now().isoformat() > start_time.isoformat():
-            return 'passed'
-        if 'url' in item['Agenda']:
-            return 'confirmed'
-        return 'tentative'
+        # scraper appears to bypass entries with no meeting time, may not be desired
+        try:
+            if datetime.now().isoformat() > start_time.isoformat():
+                return 'passed'
+            if 'url' in item['Agenda']:
+                return 'confirmed'
+            return 'tentative'
+        except Exception:
+            print("Parsing status failed!")
+            pass
 
     def _parse_location(self, item):
         """
@@ -82,7 +88,7 @@ class Chi_parksSpider(Spider):
         """
         return {
             'url': None,
-            'address': self.clean_html(item.get('Meeting Location', None)),
+            'address': item.get('Meeting Location', None),
             'name': None,
             'coordinates': {
                 'latitude': None,
@@ -100,19 +106,17 @@ class Chi_parksSpider(Spider):
         """
         Parse or generate event name.
         """
-        return item['Name']
+        return item['Name']['label']
 
     def _parse_description(self, item):
         """
         Parse or generate event name.
         """
-        return ("The Chicago Park District Act provides that the Chicago"
-                "Park District shall be governed by a board of seven"
-                "non-salaried Commissioners who are appointed by the Mayor"
-                "of the City of Chicago with the approval of the Chicago City"
-                "Council. Under the Chicago Park District Code, the Commissioners"
-                "have a fiduciary duty to act, vote on all matters, and govern"
-                "the Park District in the best interest of the Park District.")
+        agenda = item['Agenda']
+        try:
+            return agenda['url']
+        except:
+            return 'no agenda posted'
 
     def _parse_start(self, item):
         """
@@ -120,15 +124,23 @@ class Chi_parksSpider(Spider):
         """
         time = item.get('Meeting Time', None)
         date = item.get('Meeting Date', None)
+        # some meetings have no time entered, this was effecting scraper results
+        # this could use better error handilng
         if date and time:
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
             return self._naive_datetime_to_tz(naive)
+        elif not time:
+            time_string = '{0}'.format(date)
+            naive = datetime.strptime(time_string, '%m/%d/%Y')
+            return self._naive_datetime_to_tz(naive)
+            #print("Meeting with no start time...skipping")
+            #return naive
         return None
 
     def _parse_end(self, item):
         """
-        No end date.
+        Parse end date and time.
         """
         return None
 
@@ -139,17 +151,5 @@ class Chi_parksSpider(Spider):
         try:
             url = item['Name']['url']
         except:
-            url = self.START_URL + '/Calendar.aspx'
+            url = 'https://mwrd.legistar.com/Calendar.aspx'
         return [{'url': url, 'note': ''}]
-
-    # TODO move to parent class?
-    @staticmethod
-    def clean_html(html):
-        """
-        Clean up HTML artifacts.
-        """
-        if html is None:
-            return None
-        else:
-            clean = re.sub(r'\s*(\r|\n|(--em--))+\s*', ' ', html)
-            return clean.strip()

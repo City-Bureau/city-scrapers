@@ -1,0 +1,235 @@
+{
+  "id": 2644,
+  "global_id": "thehacc.org?id=2644",
+  "global_id_lineage": [
+    "thehacc.org?id=2644"
+  ],
+  "author": "2",
+  "status": "publish",
+  "date": "2018-04-16 12:36:33",
+  "date_utc": "2018-04-16 17:36:33",
+  "modified": "2018-04-16 12:36:51",
+  "modified_utc": "2018-04-16 17:36:51",
+  "url": "http:\/\/thehacc.org\/event\/entrepreneurship-boot-camp-session-2-marketing-analysis\/",
+  "rest_url": "http:\/\/thehacc.org\/wp-json\/tribe\/events\/v1\/events\/2644",
+  "title": "Entrepreneurship Boot Camp Session 2, Marketing Plan",
+  "description": "<p>Learn how to start and run your own business. See the attached flyer for more details about workshops. FSS participants, Entrepreneurship Boot camp will help you reach your \u201copen my own business\u201d goal. Register today!<\/p>",
+  "excerpt": "",
+  "slug": "entrepreneurship-boot-camp-session-2-marketing-analysis",
+  "image": {
+    "url": "http:\/\/thehacc.org\/wp-content\/uploads\/2018\/04\/Entrepreneurship-Boot-Camp_Flyer_Final-version-page-001.jpg",
+    "id": "2642",
+    "extension": "jpg",
+    "width": 1275,
+    "height": 1650,
+    "sizes": {
+      "thumbnail": {
+        "width": 150,
+        "height": 150,
+        "mime-type": "image\/jpeg",
+        "url": "http:\/\/thehacc.org\/wp-content\/uploads\/2018\/04\/Entrepreneurship-Boot-Camp_Flyer_Final-version-page-001-150x150.jpg"
+      },
+      "medium": {
+        "width": 232,
+        "height": 300,
+        "mime-type": "image\/jpeg",
+        "url": "http:\/\/thehacc.org\/wp-content\/uploads\/2018\/04\/Entrepreneurship-Boot-Camp_Flyer_Final-version-page-001-232x300.jpg"
+      },
+      "medium_large": {
+        "width": 768,
+        "height": 994,
+        "mime-type": "image\/jpeg",
+        "url": "http:\/\/thehacc.org\/wp-content\/uploads\/2018\/04\/Entrepreneurship-Boot-Camp_Flyer_Final-version-page-001-768x994.jpg"
+      },
+      "large": {
+        "width": 791,
+        "height": 1024,
+        "mime-type": "image\/jpeg",
+        "url": "http:\/\/thehacc.org\/wp-content\/uploads\/2018\/04\/Entrepreneurship-Boot-Camp_Flyer_Final-version-page-001-791x1024.jpg"
+      },
+      "article-featured": {
+        "width": 815,
+        "height": 1055,
+        "mime-type": "image\/jpeg",
+        "url": "http:\/\/thehacc.org\/wp-content\/uploads\/2018\/04\/Entrepreneurship-Boot-Camp_Flyer_Final-version-page-001-815x1055.jpg"
+      },
+      "article-featured-small": {
+        "width": 380,
+        "height": 200,
+        "mime-type": "image\/jpeg",
+        "url": "http:\/\/thehacc.org\/wp-content\/uploads\/2018\/04\/Entrepreneurship-Boot-Camp_Flyer_Final-version-page-001-380x200.jpg"
+      }
+    }
+  },
+  "all_day": false,
+  "start_date": "2018-05-11 10:00:00",
+  "start_date_details": {
+    "year": "2018",
+    "month": "05",
+    "day": "11",
+    "hour": "10",
+    "minutes": "00",
+    "seconds": "00"
+  },
+  "end_date": "2018-05-11 12:00:00",
+  "end_date_details": {
+    "year": "2018",
+    "month": "05",
+    "day": "11",
+    "hour": "12",
+    "minutes": "00",
+    "seconds": "00"
+  },
+  "utc_start_date": "2018-05-11 15:00:00",
+  "utc_start_date_details": {
+    "year": "2018",
+    "month": "05",
+    "day": "11",
+    "hour": "15",
+    "minutes": "00",
+    "seconds": "00"
+  },
+  "utc_end_date": "2018-05-11 17:00:00",
+  "utc_end_date_details": {
+    "year": "2018",
+    "month": "05",
+    "day": "11",
+    "hour": "17",
+    "minutes": "00",
+    "seconds": "00"
+  },
+  "timezone": "America\/Chicago",
+  "timezone_abbr": "CDT",
+  "cost": "",
+  "cost_details": {
+    "currency_symbol": "",
+    "currency_position": "prefix",
+    "values": []
+  },
+  "website": "http:\/\/events.constantcontact.com\/register\/event?llr=yl8b4ndab&amp;oeidk=a07efb446xp908681fd",
+  "show_map": false,
+  "show_map_link": false,
+  "hide_from_listings": false,
+  "sticky": false,
+  "featured": false,
+  "categories": [
+    {
+      "name": "FSS event",
+      "slug": "fss-event",
+      "term_group": 0,
+      "term_taxonomy_id": 22,
+      "taxonomy": "tribe_events_cat",
+      "description": "",
+      "parent": 0,
+      "count": 6,
+      "filter": "raw",
+      "id": 22,
+      "urls": {
+        "self": "http:\/\/thehacc.org\/wp-json\/tribe\/events\/v1\/categories\/22",
+        "collection": "http:\/\/thehacc.org\/wp-json\/tribe\/events\/v1\/categories"
+      }
+    }
+  ],
+  "tags": [],
+  "venue": {
+    "id": 1007,
+    "author": "5",
+    "status": "publish",
+    "date": "2017-05-16 20:40:52",
+    "date_utc": "2017-05-16 20:40:52",
+    "modified": "2017-05-16 20:40:52",
+    "modified_utc": "2017-05-16 20:40:52",
+    "url": "http:\/\/thehacc.org\/venue\/turlington-west-community-room-2\/",
+    "venue": "Turlington West Community Room",
+    "slug": "turlington-west-community-room-2",
+    "address": "15306 S. Robey Ave.",
+    "city": "Harvey",
+    "province": "Il",
+    "zip": "60426",
+    "website": "www.thehacc.org",
+    "stateprovince": "Il",
+    "json_ld": {
+      "@type": "Place",
+      "name": "Turlington West Community Room",
+      "description": "",
+      "url": false,
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "15306 S. Robey Ave.",
+        "addressLocality": "Harvey",
+        "addressRegion": "Il",
+        "postalCode": "60426"
+      },
+      "telephone": "",
+      "sameAs": "www.thehacc.org"
+    },
+    "show_map": true,
+    "show_map_link": true,
+    "global_id": "thehacc.org?id=1007",
+    "global_id_lineage": [
+      "thehacc.org?id=1007"
+    ]
+  },
+  "organizer": [
+    {
+      "id": 2565,
+      "author": "2",
+      "status": "publish",
+      "date": "2018-03-28 11:47:21",
+      "date_utc": "2018-03-28 16:47:21",
+      "modified": "2018-03-28 11:47:21",
+      "modified_utc": "2018-03-28 16:47:21",
+      "url": "http:\/\/thehacc.org\/organizer\/family-self-sufficiency-2\/",
+      "organizer": "Family Self Sufficiency",
+      "slug": "family-self-sufficiency-2",
+      "email": "fss@thehacc.org",
+      "json_ld": {
+        "@type": "Person",
+        "name": "Family Self Sufficiency",
+        "description": "",
+        "url": false,
+        "telephone": "",
+        "email": "&#102;s&#115;&#64;thehacc.&#111;r&#103;",
+        "sameAs": ""
+      },
+      "global_id": "thehacc.org?id=2565",
+      "global_id_lineage": [
+        "thehacc.org?id=2565"
+      ]
+    }
+  ],
+  "json_ld": {
+    "@context": "http:\/\/schema.org",
+    "@type": "Event",
+    "name": "Entrepreneurship Boot Camp Session 2, Marketing Plan",
+    "description": "&lt;p&gt;Learn how to start and run your own business. See the attached flyer for more details about workshops. FSS participants, Entrepreneurship Boot camp will help...&lt;a href=&quot;http:\/\/thehacc.org\/event\/entrepreneurship-boot-camp-session-2-marketing-analysis\/&quot; class=&quot;readmore&quot;&gt;read more&lt;\/a&gt;&lt;\/p&gt;\\n",
+    "image": "http:\/\/thehacc.org\/wp-content\/uploads\/2018\/04\/Entrepreneurship-Boot-Camp_Flyer_Final-version-page-001.jpg",
+    "url": "http:\/\/thehacc.org\/event\/entrepreneurship-boot-camp-session-2-marketing-analysis\/",
+    "startDate": "2018-05-11T10:00:00-05:00",
+    "endDate": "2018-05-11T12:00:00-05:00",
+    "location": {
+      "@type": "Place",
+      "name": "Turlington West Community Room",
+      "description": "",
+      "url": false,
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "15306 S. Robey Ave.",
+        "addressLocality": "Harvey",
+        "addressRegion": "Il",
+        "postalCode": "60426"
+      },
+      "telephone": "",
+      "sameAs": "www.thehacc.org"
+    },
+    "organizer": {
+      "@type": "Person",
+      "name": "Family Self Sufficiency",
+      "description": "",
+      "url": false,
+      "telephone": "",
+      "email": "&#102;s&#115;&#64;t&#104;eh&#97;cc.or&#103;",
+      "sameAs": ""
+    }
+  }
+}

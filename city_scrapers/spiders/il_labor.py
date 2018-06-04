@@ -13,8 +13,8 @@ from city_scrapers.spider import Spider
 class Il_laborSpider(Spider):
     name = 'il_labor'
     long_name = 'Illinois Labor Relations Board'
-    allowed_domains = ['www.illinois.gov']
-    start_urls = ['https://www.illinois.gov/ilrb/meetings/Pages/default.aspx']
+    allowed_domains = ['www2.illinois.gov']
+    start_urls = ['https://www2.illinois.gov/ilrb/meetings/Pages/default.aspx']
     event_timezone = 'America/Chicago'
 
     """
@@ -32,7 +32,7 @@ class Il_laborSpider(Spider):
         """
 
         # There's not a lot of structure on this page, so this selector is pretty fragile
-        for item in response.css('.soi-article-content .row-fluid .span12>p:nth-child(odd)'):
+        for item in response.xpath("//div[@class='row']/p/strong[contains(text(), 'MEETING')]/../.."):
             """
             Some monthly meetings are skipped. Instead of providing a date,
             there's text that says 'No /name/ meeting in month'.
@@ -56,7 +56,7 @@ class Il_laborSpider(Spider):
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data)
             yield data
 
     def _parse_classification(self, item):
@@ -83,16 +83,19 @@ class Il_laborSpider(Spider):
     def _parse_location(self, item):
         """
         Get address from the next paragraph following the event item.
-        Note: the structure of the page is not consistent. Sometimes the
-        address is in the next sibling `<p>`,
-        but it may be nested further down.
-        So we select the next node first,
-        then select the first `<p>` or `<div>` within it.
+        Note: the structure of the page is not consistent. Usually the
+        next row contains the meeting time, but sometimes
+        multiple meeting locations are listed within a single div.
         """
-        sibling = item.xpath('following-sibling::*')
-        address = sibling.css('p::text').extract_first()
-        if not address:
-            address = sibling.css('div::text').extract_first()
+        childs_siblings = item.xpath('child::*')
+        if len(childs_siblings) > 1:
+            addresses = item.xpath('child::div/div/p[position()>1]/text()').extract()
+            address = ' Or '.join([a.strip() for a in addresses])
+        else:
+            address = item.xpath('following-sibling::div[1]/div/p/text()').extract_first()
+            if address:
+                address = address.strip()
+
         return {
             'url': None,
             'address': address,

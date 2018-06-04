@@ -20,8 +20,8 @@ def test_end_time():
     assert item['end_time'].isoformat() == '2017-11-15T15:00:00-06:00'
 
 
-def test_id():
-    assert item['id'] == 'cook_county/201711151300/x/zba_public_hearing'
+# def test_id():
+#    assert item['id'] == 'cook_county/201711151300/x/zba_public_hearing'
 
 
 def test_all_day():

@@ -39,7 +39,7 @@ class Cook_electoralSpider(Spider):
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(data, data['start_time'])
+            data['id'] = self._generate_id(data)
             yield data
 
     def _parse_classification(self, item):

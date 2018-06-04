@@ -38,7 +38,7 @@ class Cook_hospitalsSpider(Spider):
                 }
                 new_item.update(data)
                 new_item['status'] = self._parse_status(subitem, new_item['start_time'])
-                new_item['id'] = self._generate_id(data, new_item['start_time'])
+                new_item['id'] = self._generate_id(data)
                 yield new_item
 
     def _parse_classification(self, item):

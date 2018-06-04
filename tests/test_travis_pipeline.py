@@ -1,25 +1,28 @@
 import json
-from datetime import datetime
+from datetime import datetime, date, time
 from tests.utils import read_test_file_content
 from city_scrapers.pipelines.TravisValidation import TravisValidationPipeline
 from city_scrapers.spider import Spider
 
 
-def _str_to_datetime(date_string):
-    if not date_string:
-        return None
-    spider = Spider(name='tmp')
-    naive = datetime.strptime(date_string[:-6], '%Y-%m-%dT%H:%M:%S')
-    return spider._naive_datetime_to_tz(naive)
+def _str_to_date(date_string):
+    try: 
+        return datetime.strptime(date_string, "%Y-%m-%d").date()
+    except:
+        return None 
 
+def _str_to_time(time_string):
+    try: 
+        return datetime.strptime(date_string, "%Y-%m-%d").time()
+    except:
+        return None
 
 def load_valid_item():
     fixtures = json.loads(read_test_file_content('files/travis_fixture.json'))
     valid_item = fixtures[0]
-    valid_item['start_time'] = _str_to_datetime(valid_item['start_time'])
-    valid_item['end_time'] = _str_to_datetime(valid_item['end_time'])
+    valid_item['start']['date'] = _str_to_date(valid_item['start']['date'])
+    valid_item['start']['time'] = _str_to_time(valid_item['start']['time'])
     return valid_item
-
 
 valid_item = load_valid_item()
 pipeline = TravisValidationPipeline()
@@ -53,6 +56,20 @@ def test_invalid_format():
     assert processed['val_id'] == 0
 
 
+def test_invalid_start_date():
+    invalid_item = valid_item.copy()
+    invalid_item['start']['date'] = None
+    processed = pipeline.process_item(invalid_item, None)
+    assert processed['val_start_date'] == 0
+
+
+def test_invalid_start_time():
+    invalid_item = valid_item.copy()
+    invalid_item['start']['time'] = True
+    processed = pipeline.process_item(invalid_item, None)
+    assert processed['val_start_time'] == 0
+
+
 def test_invalid_location():
     invalid_item = valid_item.copy()
     invalid_item['location']['address'] = ''
@@ -60,16 +77,15 @@ def test_invalid_location():
     assert processed['val_loc_address'] == 0
 
 
-def test_invalid_coordinates():
-    # Should be string, not a float
+def test_invalid_documents():
     invalid_item = valid_item.copy()
-    invalid_item['location']['coordinates']['latitude'] = 10.0
+    invalid_item['documents'].append({'url': 'www.example.com', 'note': ''})
     processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_coord_latitude'] == 0
+    assert processed['val_doc_note'] == 0
 
 
 def test_invalid_sources():
     invalid_item = valid_item.copy()
-    invalid_item['sources'].append({})
+    invalid_item['sources'].append({'url': '', 'note': 'agenda'})
     processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_sources'] == 0
+    assert processed['val_sources_url'] == 0
