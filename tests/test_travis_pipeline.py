@@ -20,8 +20,8 @@ def _str_to_time(time_string):
 def load_valid_item():
     fixtures = json.loads(read_test_file_content('files/travis_fixture.json'))
     valid_item = fixtures[0]
-    valid_item['start']['start_date'] = _str_to_date(valid_item['start']['start_date'])
-    valid_item['start']['start_time'] = _str_to_time(valid_item['start']['start_time'])
+    valid_item['start']['date'] = _str_to_date(valid_item['start']['date'])
+    valid_item['start']['time'] = _str_to_time(valid_item['start']['time'])
     return valid_item
 
 valid_item = load_valid_item()
@@ -58,21 +58,21 @@ def test_invalid_format():
 
 def test_invalid_start_date():
     invalid_item = valid_item.copy()
-    invalid_item['start']['start_date'] = None
+    invalid_item['start']['date'] = None
     processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_start_start_date'] == 0
+    assert processed['val_start_date'] == 0
 
 
 def test_invalid_start_time():
     invalid_item = valid_item.copy()
-    invalid_item['start']['start_time'] = True
+    invalid_item['start']['time'] = True
     processed = pipeline.process_item(invalid_item, None)
-    assert processed['val_start_start_time'] == 0
+    assert processed['val_start_time'] == 0
 
 
 def test_invalid_location():
     invalid_item = valid_item.copy()
-    invalid_item['location'][0]['address'] = ''
+    invalid_item['location']['address'] = ''
     processed = pipeline.process_item(invalid_item, None)
     assert processed['val_loc_address'] == 0
 

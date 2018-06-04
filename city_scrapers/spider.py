@@ -29,11 +29,11 @@ class Spider(scrapy.Spider):
         # Try to get the start date and time in YYYYmmddHHMM
         # Replace missing start date or times with 0's
         try:
-            start_date_str = data['start']['start_date'].strftime('%Y%m%d')
+            start_date_str = data['start']['date'].strftime('%Y%m%d')
         except (KeyError, TypeError):
             start_date_str = '00000000'
         try:
-            start_time_str = data['start']['start_time'].strftime('%H%M')
+            start_time_str = data['start']['time'].strftime('%H%M')
         except (KeyError, TypeError):
             start_time_str = '0000'
         start_str = '{0}{1}'.format(start_date_str, start_time_str)
@@ -53,7 +53,7 @@ class Spider(scrapy.Spider):
             return 'cancelled'
 
         try:
-            start = data['start']['start_date']
+            start = data['start']['date']
             # check if event is in the past
             if start < date.today():
                 return 'passed'

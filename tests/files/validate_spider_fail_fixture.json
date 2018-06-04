@@ -6,23 +6,22 @@
         "event_description": "Board meeting in March",
         "all_day": false,
         "status": "tentative",
+        "classification": "board meeting",
         "start": {
-            "start_date": "2019-03-01",
-            "start_time": "09:00",
+            "date": "2019-03-01",
+            "time": "09:00",
             "note": ""
         },
         "end": {
-            "end_date": null,
-            "end_time": null,
+            "date": null,
+            "time": null,
             "note": ""
         },
-        "location": [
-            {
-                "name": "",
-                "address": "226 West Jackson Boulevard",
-                "neighborhood": ""
-            }
-        ],
+        "location": {
+            "name": "",
+            "address": "226 West Jackson Boulevard",
+            "neighborhood": ""
+        },
         "documents": [
             {
                 "url": "http://www.ccc.edu/events/Pages/March-2019-Regular-Board-Meeting.aspx",
@@ -41,13 +40,14 @@
         "val_event_description": 1,
         "val_all_day": 1,
         "val_status": 1,
+        "val_classification": 1,
         "val_start": 1,
-        "val_start_start_date": 1,
-        "val_start_start_time": 1,
+        "val_start_date": 1,
+        "val_start_time": 1,
         "val_start_note": 1,
         "val_end": 1,
-        "val_end_end_date": 1,
-        "val_end_end_time": 1,
+        "val_end_date": 1,
+        "val_end_time": 1,
         "val_end_note": 1,
         "val_location": 1,
         "val_loc_address": 1,
@@ -67,23 +67,22 @@
         "event_description": "Board meeting in May",
         "all_day": false,
         "status": "tentative",
+        "classification": "board meeting",
         "start": {
-            "start_date": "2019-05-03",
-            "start_time": "09:00",
+            "date": "2019-05-03",
+            "time": "09:00",
             "note": ""
         },
         "end": {
-            "end_date": null,
-            "end_time": null,
+            "date": null,
+            "time": null,
             "note": ""
         },
-        "location": [
-            {
-                "name": "",
-                "address": "226 West Jackson Boulevard",
-                "neighborhood": ""
-            }
-        ],
+        "location": {
+            "name": "",
+            "address": "226 West Jackson Boulevard",
+            "neighborhood": ""
+        },
         "documents": [
             {
                 "url": "http://www.ccc.edu/events/Pages/May-2019-Regular-Board-Meeting.aspx",
@@ -102,13 +101,14 @@
         "val_event_description": 1,
         "val_all_day": 1,
         "val_status": 1,
+        "val_classification": 1,
         "val_start": 1,
-        "val_start_start_date": 1,
-        "val_start_start_time": 1,
+        "val_start_date": 1,
+        "val_start_time": 1,
         "val_start_note": 1,
         "val_end": 1,
-        "val_end_end_date": 1,
-        "val_end_end_time": 1,
+        "val_end_date": 1,
+        "val_end_time": 1,
         "val_end_note": 1,
         "val_location": 1,
         "val_loc_address": 1,
@@ -128,23 +128,22 @@
         "event_description": "Board meeting in April",
         "all_day": false,
         "status": "tentative",
+        "classification": "board meeting",
         "start": {
-            "start_date": "2019-04-05",
-            "start_time": "09:00",
+            "date": "2019-04-05",
+            "time": "09:00",
             "note": ""
         },
         "end": {
-            "end_date": null,
-            "end_time": null,
+            "date": null,
+            "time": null,
             "note": ""
         },
-        "location": [
-            {
-                "name": "",
-                "address": "226 West Jackson Boulevard",
-                "neighborhood": ""
-            }
-        ],
+        "location": {
+            "name": "",
+            "address": "226 West Jackson Boulevard",
+            "neighborhood": ""
+        },
         "documents": [
             {
                 "url": "http://www.ccc.edu/events/Pages/April-2019-Regular-Board-Meeting.aspx",
@@ -164,12 +163,13 @@
         "val_all_day": 1,
         "val_status": 1,
         "val_start": 1,
-        "val_start_start_date": 1,
-        "val_start_start_time": 1,
+        "val_classification": 1,
+        "val_start_date": 1,
+        "val_start_time": 1,
         "val_start_note": 1,
         "val_end": 1,
-        "val_end_end_date": 1,
-        "val_end_end_time": 1,
+        "val_end_date": 1,
+        "val_end_time": 1,
         "val_end_note": 1,
         "val_location": 1,
         "val_loc_address": 1,
