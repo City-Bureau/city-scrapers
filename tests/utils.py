@@ -50,7 +50,7 @@ def test_item():
 
         'location': {
             'url': '',
-            'name': '121 N. Lasalle St., Chicago, IL',
+            'address': '121 N. Lasalle St., Chicago, IL',
             'coordinates': {
                 'latitude': '41.883868',
                 'longitude': '-87.631936'

@@ -7,6 +7,7 @@ import usaddress
 import re
 import os
 from airtable import Airtable
+from random import randint
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
 AIRTABLE_GEOCODE_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_GEOCODE_TABLE')
@@ -26,30 +27,33 @@ class GeocoderPipeline(object):
         coordinates.
         """
         if item['location']['coordinates'] is None:
-            query = self._parse_address(item.get('location', {}))
+            query = self._parse_address(item.get('location', {}), 'Chicago', 'IL')
             print(query)
             if not query:
                 spider.logger.debug('GEOCODER PIPELINE: Empty query. Not geocoding {0}'.format(item['id']))
                 return item
-            item['location']['coordinates'] = self._geocode_address(query,'Chicago', 'IL')
+            item['location']['coordinates'] = self._geocode_address(query, spider)
             return item
 
-    def _geocode_address(self, query, default_city, default_state):
-        city_found = query.get('PlaceName', default_city) # replace w default city if blank
-        state_found = query.get('StateName', default_state)  # replace w default state if blank
-        zipcode_found = query.get('ZipCode', '')
-        address = ', '.join(v for (k, v) in query.items() if k not in ['PlaceName', 'StateName', 'ZipCode'])
+    def _geocode_address(self, query, spider):
+        address = ' '.join(v for (k, v) in query.items() if k not in ['PlaceName', 'StateName', 'ZipCode'])
+        print('Query '+address+' '+query['PlaceName']+' '+query['StateName']+' '+query['ZipCode'])
         g = geocoder.tamu(address,
-                          city=city_found,
-                          state=state_found,
-                          zipcode=zipcode_found,
+                          city=query['PlaceName'],
+                          state=query['StateName'],
+                          zipcode=query['ZipCode'],
                           session=self.session, key=TAMU_API_KEY)
+        print(g)
+        if (not g) or (g.latlng):
+            #spider.logger.exception(("GEOCODER PIPELINE: Couldn't geocode using mapzen or airtable cache. " "Query: {0}. Item id: {1}").format(query, item['id']))
+            return {'latitude': 'None found', 'longitude': 'None found'}
         coords = g.latlng
+        print(g.latlng)
         return {'latitude': str(coords[0]), 'longitude': str(coords[1])}
 
-    def _parse_address(self, location_dict):
+    def _parse_address(self, location_dict, default_city='Chicago', default_state='IL'):
         """
-        Disabled Fuzzy match Chicago addresses on Chicago Data Portal Address API
+        Parses address into dictionary of address components using usaddress
         """
         name = location_dict.get('name', None)
         address = location_dict.get('address', '')
@@ -64,15 +68,29 @@ class GeocoderPipeline(object):
 
         # replace city hall
         query = re.sub('city hall((?!.*chicago, il).)*$',
-                       'City Hall 121 N LaSalle St., Chicago, IL', query, flags=re.I)
+                       'City Hall 121 N LaSalle St., Chicago, IL',
+                       query, flags=re.I)
 
         try:
-            querydict = usaddress.tag(query)[0]
-        except usaddress.RepeatedLabelError as ex: 
-        # include multiple errors
-            querydict = self.bad_address_tag(ex.parsed_string)
+            query = usaddress.tag(query)[0]
+        except usaddress.RepeatedLabelError as ex:
+            # @TODO: include multiple errors
+            query = self.bad_address_tag(ex.parsed_string)
 
-        return querydict
+        loc_types = ['PlaceName', 'StateName', 'ZipCode']
+        default_locs = [default_city, default_state, '']
+
+        for i in range(3):
+            print(i)
+            label = loc_types[i]
+            loc = default_locs[i]
+            # usaddress will return "Southside, Chicago" as city 
+            #  or "IL, USA" as state
+            print(label + ' ' + loc)
+            if (label not in query) or re.search(',', query[label]):
+                query[label] = loc
+
+        return query
 
     def bad_address_tag(parsed_string):
         """
