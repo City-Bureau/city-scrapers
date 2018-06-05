@@ -1,3 +1,5 @@
+from datetime import date, time
+
 import pytest
 
 from city_scrapers.spiders.chi_boardofethics import Chi_boardofethicsSpider
@@ -19,15 +21,19 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['description'] == parsed_meeting_text
+    assert parsed_items[0]['event_description'] == parsed_meeting_text
 
 
 def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2018-06-15T12:00:00'
+    assert parsed_items[0]['start']['date'] == date(2018, 6, 15)
+    assert parsed_items[0]['start']['time'] == time(12, 00)
+    assert parsed_items[0]['start']['note'] == ''
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'].isoformat() == '2018-06-15T14:00:00'
+    assert parsed_items[0]['end']['date'] == date(2018, 6, 15)
+    assert parsed_items[0]['end']['time'] == time(14, 00)
+    assert parsed_items[0]['end']['note'] == ''
 
 
 def test_id():
@@ -35,13 +41,11 @@ def test_id():
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
+    assert parsed_items[0]['location'][0] == {
         'url': '',
         'name': 'City of Chicago Board of Ethics',
         'address': '740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488',
-        'coordinates': {'latitude': '',
-                        'longitude': '',
-                        }
+        'neighborhood': '',
     }
 
 
@@ -50,11 +54,6 @@ def test_sources():
         'url': 'https://www.cityofchicago.org/city/en/depts/ethics/supp_info/minutes.html',
         'note': ''
     }]
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
 
 
 @pytest.mark.parametrize('item', parsed_items)

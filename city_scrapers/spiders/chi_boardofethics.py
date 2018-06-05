@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import datetime
 from datetime import timedelta
 
 import dateutil.parser
@@ -37,17 +38,18 @@ class Chi_boardofethicsSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': 'Chicago Board of Ethics',
-                'description': description,
+                'event_description': description,
                 'classification': 'Board Meeting',
-                'start_time': self._parse_start(meeting_date, start_time),
-                'timezone': 'America/Chicago',
+                'start': self._parse_start(meeting_date, start_time),
+                'end': {},
                 'status': 'tentative',
                 'all_day': False,
-                'location': location,
+                'location': [location],
+                'documents': [],
                 'sources': [{'url': self.start_urls[0], 'note': ''}],
             }
-            data['end_time'] = self._parse_end(data)
-            data['id'] = self._generate_id(data, data['start_time'])
+            data['end'] = self._parse_end(data)
+            data['id'] = self._generate_id(data)
             yield data
 
     @staticmethod
@@ -55,8 +57,11 @@ class Chi_boardofethicsSpider(Spider):
         """
         Parse state date and time.
         """
-        dt = '{date} {time}'.format(date=date, time=time)
-        return dateutil.parser.parse(dt)
+        dt = dateutil.parser.parse('{date} {time}'.format(date=date, time=time))
+        return {'date': dt.date(),
+                'time': dt.time(),
+                'note': ''
+                }
 
     @staticmethod
     def _parse_end(item):
@@ -65,7 +70,12 @@ class Chi_boardofethicsSpider(Spider):
         """
 
         # meeting text says approx ~2hrs so just hard coding.
-        return item['start_time'] + timedelta(hours=2)
+        end = {}
+        end['date'] = item['start']['date']
+        end['note'] = item['start']['note']
+        dt = datetime.datetime.combine(datetime.date(1, 1, 1), item['start']['time'])
+        end['time'] = (dt + timedelta(hours=2)).time()
+        return end
 
     @staticmethod
     def _parse_location(text):
@@ -77,10 +87,7 @@ class Chi_boardofethicsSpider(Spider):
             'url': '',
             'name': location_name,
             'address': address,
-            'coordinates': {
-                'latitude': '',
-                'longitude': '',
-            },
+            'neighborhood': '',
         }
 
     @staticmethod
