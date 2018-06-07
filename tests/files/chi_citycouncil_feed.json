@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "end_date": "",
+      "all_day": false,
+      "start_date": "2017-10-16T15:00:00+00:00",
+      "id": "ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12",
+      "name": "Joint Committee: Finance; Transportation and Public Way",
+      "status": "cancelled",
+      "classification": "event",
+      "description": "",
+      "updated_at": "2017-10-10T12:48:03.997118+00:00"
+    },
+    {
+      "end_date": "",
+      "all_day": false,
+      "start_date": "2017-10-18T15:00:00+00:00",
+      "id": "ocd-event/93d62d20-b1dc-4d71-9e96-60c99c837e90",
+      "name": "City Council",
+      "status": "passed",
+      "classification": "event",
+      "description": "Special meeting - Mayoral Budget Address; Year 2018 Executive  Budget; Year XLIV (44) CDBG Recommendations; Supplemental Appropriations and Tax Levies; Date and Time of Public Hearing on Executive Budget",
+      "updated_at": "2017-12-01T02:33:20.978563+00:00"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "per_page": 100,
+    "total_count": 2,
+    "count": 2,
+    "max_page": 1
+  }
+}

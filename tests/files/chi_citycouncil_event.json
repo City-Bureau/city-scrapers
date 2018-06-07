@@ -1,0 +1,57 @@
+{
+  "end_date": "",
+  "debug": null,
+  "jurisdiction": {
+    "url": "https://chicago.legistar.com/",
+    "id": "ocd-jurisdiction/country:us/state:il/place:chicago/government",
+    "name": "Chicago City Government"
+  },
+  "status": "cancelled",
+  "extras": {},
+  "sources": [
+    {
+      "url": "http://webapi.legistar.com/v1/chicago/events/4954",
+      "note": "api"
+    },
+    {
+      "url": "https://chicago.legistar.com/MeetingDetail.aspx?ID=565455&GUID=B5103C52-1793-4B07-9F28-E0A1223E1540&Options=info&Search=",
+      "note": "web"
+    }
+  ],
+  "all_day": false,
+  "created_at": "2017-09-21T16:50:21.706742+00:00",
+  "agenda": [],
+  "location": {
+    "coordinates": null,
+    "url": "",
+    "name": "Council Chambers ,  City Hall "
+  },
+  "start_date": "2017-10-16T15:00:00+00:00",
+  "participants": [
+    {
+      "entity_id": "ocd-organization/bc24064d-2e11-40b2-bbce-197b8e3af634",
+      "entity_name": "Joint Committee: Finance; Transportation and Public Way",
+      "note": "participant",
+      "entity_type": "organization"
+    }
+  ],
+  "links": [],
+  "id": "ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12",
+  "media": [],
+  "documents": [
+    {
+      "date": "",
+      "note": "Cancellation Notice",
+      "links": [
+        {
+          "url": "http://media.legistar.com/chic/meetings/B5103C52-1793-4B07-9F28-E0A1223E1540/Fin%20CANCELLED%2010-16_20171010085450.pdf",
+          "media_type": "application/pdf"
+        }
+      ]
+    }
+  ],
+  "classification": "event",
+  "name": "Joint Committee: Finance; Transportation and Public Way",
+  "description": "",
+  "updated_at": "2017-10-10T12:48:03.997118+00:00"
+}
