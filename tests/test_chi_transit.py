@@ -5,7 +5,7 @@ from tests.utils import file_response
 from city_scrapers.spiders.chi_transit import ChiTransitSpider
 from datetime import date, time
 
-freezer = freeze_time('2018-04-09 13:30:00')
+freezer = freeze_time('2017-11-10 12:00:00')
 freezer.start()
 
 test_response = file_response('files/chi_transit.html')
@@ -28,8 +28,8 @@ def test_description():
 
 def test_start():
     EXPECTED_START = {
-        'date': date(2018, 04, 09),
-        'time': time(13, 30),
+        'date': date(2017, 11, 10),
+        'time': time(12, 00),
         'note': ''
     }
     assert parsed_items[0]['start_time'] == EXPECTED_START
