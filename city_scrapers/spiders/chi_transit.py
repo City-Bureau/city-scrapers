@@ -13,10 +13,12 @@ from city_scrapers.spider import Spider
 
 class ChiTransitSpider(Spider):
     name = 'chi_transit'
-    long_name = 'Chicago Transit Authority'
+    agency_id = 'Chicago Transit Authority'
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
-    start_urls = ['https://www.transitchicago.com/board/notices-agendas-minutes/']
+    timezone = 'America/Chicago'
+    START_URL = ['https://www.transitchicago.com/board/notices-agendas-minutes/']
+    start_urls = [START_URL]
 
     def parse(self, response):
         """
