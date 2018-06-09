@@ -17,7 +17,7 @@ class ChiTransitSpider(Spider):
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
     timezone = 'America/Chicago'
-    START_URL = ['https://www.transitchicago.com/board/notices-agendas-minutes/']
+    START_URL = 'https://www.transitchicago.com/board/notices-agendas-minutes/'
     start_urls = [START_URL]
 
     def parse(self, response):
