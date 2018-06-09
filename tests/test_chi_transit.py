@@ -3,6 +3,7 @@ import pytest
 from freezegun import freeze_time
 from tests.utils import file_response
 from city_scrapers.spiders.chi_transit import ChiTransitSpider
+from datetime import date, time
 
 freezer = freeze_time('2017-11-10 12:00:01')
 freezer.start()
@@ -25,13 +26,21 @@ def test_description():
     assert parsed_items[1]['description'] == 'CTA Meetings -  Meeting Notice: http://www.transitchicago.com/assets/1/21/CANCELLATION_032218_ERR_Committee.pdf?19154'
     assert parsed_items[2]['description'] == 'Transit Board Meetings -  Meeting Notice: http://www.transitchicago.com/assets/1/21/Mar2018_-_Notice_-_Regular_Brd.pdf?19083 Agenda: http://www.transitchicago.com/assets/1/21/Mar2018_-_Regular_Board_Agenda.pdf?19084'
 
+def test_start():
+    EXPECTED_START = {
+        'date': date(2017, 12, 13),
+        'time': time(15, 30),
+        'note': ''
+    }
+    assert parsed_items[0]['start'] == EXPECTED_START
 
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2018-04-09T13:30:00-05:00'
-
-
-def test_start_time_after_mtg():
-    assert parsed_items[1]['start_time'].isoformat() == '2018-03-22T15:00:00-05:00'
+def test_end():
+    EXPECTED_END = {
+        'date': date(2017, 12, 13),
+        'time': time(18, 30),
+        'note': 'Estimated 3 hours after start time'
+    }
+    assert parsed_items[0]['end'] == EXPECTED_END
 
 
 def test_classification():
@@ -39,15 +48,15 @@ def test_classification():
     assert parsed_items[2]['classification'] == 'Transit Board Meetings'
 
 
-# def test_id():
+#def test_id():
 #    assert parsed_items[0]['id'] == 'chi_transit/201804091330/x/ada_advisory_committee_meeting'
 #    assert parsed_items[2]['id'] == 'chi_transit/201803141130/x/regular_board_meeting_of_chicago_transit_board'
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'tentative'
-    assert parsed_items[1]['status'] == 'cancelled'
-
+    #assert parsed_items[0]['status'] == 'tentative'
+    #assert parsed_items[1]['status'] == 'cancelled'
+    assert parsed_items[0]['status'] == 'passed'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end_time(item):
