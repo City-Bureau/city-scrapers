@@ -32,7 +32,7 @@ def test_start():
         'time': time(15, 30),
         'note': ''
     }
-    assert parsed_items[0]['start'] == EXPECTED_START
+    assert parsed_items[0]['start_time'] == EXPECTED_START
 
 def test_end():
     EXPECTED_END = {
@@ -40,7 +40,7 @@ def test_end():
         'time': time(18, 30),
         'note': 'Estimated 3 hours after start time'
     }
-    assert parsed_items[0]['end'] == EXPECTED_END
+    assert parsed_items[0]['end_time'] == EXPECTED_END
 
 
 def test_classification():
