@@ -15,7 +15,7 @@ from city_scrapers.spider import Spider
 
 class Chi_citycouncilSpider(Spider):
     name = 'chi_citycouncil'
-    agency_id = 'City Council'
+    agency_id = 'Chicago City Council'
     timezone = 'America/Chicago'
     classification = 'City Council'
     allowed_domains = ['ocd.datamade.us']
@@ -40,7 +40,7 @@ class Chi_citycouncilSpider(Spider):
         We will attempt to return all events that have been uploaded in the
         future, i.e. past today's date.
         """
-        data = json.loads(response.body)
+        data = json.loads(response.text)
         for url in self._gen_requests(data):
             yield scrapy.Request(url, callback=self._parse_item)
 
@@ -66,7 +66,7 @@ class Chi_citycouncilSpider(Spider):
         return current_page + 1
 
     def _parse_item(self, response):
-        data = json.loads(response.body)
+        data = json.loads(response.text)
         start = self._parse_time(data.get('start_date', ''))
         end = self._parse_time(data.get('end_date', ''))
         documents = self._parse_documents(data['documents'])
