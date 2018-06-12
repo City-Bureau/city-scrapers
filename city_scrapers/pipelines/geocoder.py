@@ -44,11 +44,12 @@ class GeocoderPipeline(object):
                           zipcode=query['ZipCode'],
                           session=self.session, key=TAMU_API_KEY)
         print(g)
-        if (not g) or (g.latlng):
-            #spider.logger.exception(("GEOCODER PIPELINE: Couldn't geocode using mapzen or airtable cache. " "Query: {0}. Item id: {1}").format(query, item['id']))
-            return {'latitude': 'None found', 'longitude': 'None found'}
-        coords = g.latlng
+        print(g.ok)
         print(g.latlng)
+        if not g.latlng:
+            return {'latitude': 'None found', 'longitude': 'None found'}
+            #spider.logger.exception(("GEOCODER PIPELINE: Couldn't geocode using mapzen or airtable cache. " "Query: {0}. Item id: {1}").format(query, item['id']))
+        coords = g.latlng
         return {'latitude': str(coords[0]), 'longitude': str(coords[1])}
 
     def _parse_address(self, location_dict, default_city='Chicago', default_state='IL'):
