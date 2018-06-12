@@ -31,8 +31,8 @@ def test_end_time():
     assert parsed_items[4]['end_time'].isoformat() == '2017-08-09T15:00:00-05:00'
 
 
-def test_id():
-    assert parsed_items[5]['id'] == 'il_pubhealth/201708100830/16556/levels_of_care_work_group_hospital_designations_redesignations_change_of_networks'
+# def test_id():
+#    assert parsed_items[5]['id'] == 'il_pubhealth/201708100830/16556/levels_of_care_work_group_hospital_designations_redesignations_change_of_networks'
 
 
 @pytest.mark.parametrize('item', parsed_items)

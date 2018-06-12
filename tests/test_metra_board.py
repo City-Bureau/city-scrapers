@@ -17,8 +17,8 @@ def test_start_time():
     assert parsed_items[0]['start_time'].isoformat() == '2018-02-21T10:30:00-06:00'
 
 
-def test_id():
-    assert parsed_items[0]['id'] == 'metra_board/201802211030/x/metra_february_2018_board_meeting'
+# def test_id():
+#    assert parsed_items[0]['id'] == 'metra_board/201802211030/x/metra_february_2018_board_meeting'
 
 
 def test_location():

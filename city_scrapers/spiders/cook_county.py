@@ -53,7 +53,7 @@ class Cook_countySpider(Spider):
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
-        data['id'] = self._generate_id(data, start_time_object)
+        data['id'] = self._generate_id(data)
         return data
 
     def _get_event_urls(self, response):

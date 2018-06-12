@@ -13,7 +13,7 @@ export PYTHONPATH=$PYTHONPATH:$DIR
 export SCRAPY_SETTINGS_MODULE='travis.travis_settings'
 
 # If not a PR build, exit
-if [ $TRAVIS_PULL_REQUEST == 'false' ]; then echo "Build NOT triggered by a PR. Everything's ok."; exit 0; fi
+# if [ $TRAVIS_PULL_REQUEST == 'false' ]; then echo "Build NOT triggered by a PR. Everything's ok."; exit 0; fi
 
 # Run new or modified spiders and save output
 git diff --name-only --diff-filter=AM $TRAVIS_COMMIT_RANGE| \

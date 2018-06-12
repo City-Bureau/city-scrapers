@@ -34,7 +34,7 @@ COOKIES_ENABLED = False
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'city_scrapers.pipelines.CsvPipeline': 400
+#    'city_scrapers.pipelines.CsvPipeline': 400
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
