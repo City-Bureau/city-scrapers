@@ -13,7 +13,7 @@ from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 
 from city_scrapers.spider import Spider
 
-GOOGLE_API_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_GOOGLE_API_KEY') or 'test-token'
+GOOGLE_API_KEY = os.environ.get('CITY_SCRAPERS_GOOGLE_API_KEY') or 'test-token'
 SPREADSHEET_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1xnt4kZI9Ruinw91wM-nnWftsFD-ZaKaozepdNXeIrpo'
 
 
@@ -181,7 +181,7 @@ class WardNightSpider(Spider):
                 'status': self._parse_status(row),
                 'location': self._parse_location(row),
             }
-            data['id'] = self._generate_id(data, dates['start'])
+            data['id'] = self._generate_id(data)
             return data
 
         days = self._days_for_frequency(row[Row.FREQUENCY], row[Row.DAY_OF_WEEK])

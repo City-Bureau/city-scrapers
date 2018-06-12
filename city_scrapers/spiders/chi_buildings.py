@@ -38,7 +38,7 @@ class Chi_buildingsSpider(Spider):
                 start_time = self._naive_datetime_to_tz(self._parse_datetime(item['start']))
                 item_data = {
                     '_type': 'event',
-                    'id': self._generate_id({'name': item['title']}, start_time),
+                    'id': self._generate_id({'name': item['title']}),
                     'name': item['title'],
                     'classification': self._parse_classification(item),
                     'start_time': start_time,

@@ -27,8 +27,8 @@ def test_start_time():
     assert parsed_items[0]['start_time'].isoformat() == '2017-01-27T09:00:00-06:00'
 
 
-def test_id():
-    assert parsed_items[0]['id'] == 'cook_hospitals/201701270900/x/meetings_of_the_board_of_directors'
+# def test_id():
+#    assert parsed_items[0]['id'] == 'cook_hospitals/201701270900/x/meetings_of_the_board_of_directors'
 
 
 def test_status():

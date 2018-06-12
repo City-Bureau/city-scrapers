@@ -49,7 +49,7 @@ class Chi_animalSpider(Spider):
                 'location': self._parse_location(text),
                 'sources': self._parse_sources(response)
             }
-            data['id'] = self._generate_id(data, data['start_time'])
+            data['id'] = self._generate_id(data)
 
             yield data
 

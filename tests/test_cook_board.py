@@ -32,8 +32,8 @@ def test_end_time(item):
     assert item['end_time'] is None
 
 
-def test_id():
-    assert parsed_items[25]['id'] == 'cook_board/201709131100/x/board_of_commissioners'
+# def test_id():
+#    assert parsed_items[25]['id'] == 'cook_board/201709131100/x/board_of_commissioners'
 
 
 @pytest.mark.parametrize('item', parsed_items)

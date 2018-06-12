@@ -41,8 +41,8 @@ def test_end_time():
     assert item['end_time'].isoformat() == '2018-09-08T14:00:00-05:00'
 
 
-def test_id():
-    assert item['id'] == 'cook_pubhealth/201809081000/321/fresh_food_market_robbins_health_center'
+# def test_id():
+#    assert item['id'] == 'cook_pubhealth/201809081000/321/fresh_food_market_robbins_health_center'
 
 
 def test_classification():

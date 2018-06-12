@@ -44,7 +44,7 @@ class Chi_cityCollegeSpider(Spider):
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
-        data['id'] = self._generate_id(data, start_time)
+        data['id'] = self._generate_id(data)
         return data
 
     def _parse_classification(self):
