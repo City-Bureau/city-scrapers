@@ -34,7 +34,7 @@ class Spider(scrapy.Spider):
             start_date_str = '00000000'
         try:
             start_time_str = data['start']['time'].strftime('%H%M')
-        except (KeyError, TypeError):
+        except (KeyError, TypeError, AttributeError):
             start_time_str = '0000'
         start_str = '{0}{1}'.format(start_date_str, start_time_str)
 

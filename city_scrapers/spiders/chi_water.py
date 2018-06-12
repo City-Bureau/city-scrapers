@@ -9,10 +9,14 @@ from city_scrapers.spider import Spider
 
 class Chi_waterSpider(Spider):
     name = 'chi_water'
-    long_name = 'Metropolitan Water Reclamation District of Greater Chicago'
+    agency_id = 'Metropolitan Water Reclamation District of Greater Chicago'
+    timezone = 'America/Chicago'
     allowed_domains = ['mwrd.legistar.com']
     event_timezone = 'America/Chicago'
     start_urls = ['https://mwrd.legistar.com']
+    #TODO confirming this is correct address Issue #386
+    address = '100 East Erie Street Chicago, IL 60611'
+    neighborhood = 'River North'
 
     def parse(self, response):
         """
@@ -39,30 +43,47 @@ class Chi_waterSpider(Spider):
             item = item[0]
             # import pdb; pdb.set_trace()
             # start time is not correct! :-o
+            name = self._parse_name(item)
+            if name == 'Study Session':
+                continue
 
             data = {
                 '_type': 'event',
-                'name': self._parse_name(item),
-                'description': self._parse_description(item),
+                'name': name,
+                'event_description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'timezone': self.event_timezone,
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item)
+                'sources': self._parse_sources(item),
+                'documents': self._parse_documents(item)
             }
-            data['status'] = self._parse_status(item, data['start_time'])
+            data['status'] = self._generate_status(data, item['Meeting Location'])
             data['id'] = self._generate_id(data)
 
 
             yield data
 
+    def _parse_documents(self, item):
+        """
+        Parse meeting details and agenda if available.
+        """
+        documents = []
+        details = item['Meeting Details']
+        if type(details) == dict:
+            documents.append({'url': details['url'], 'note': 'meeting details'})
+        agenda = item['Agenda']
+        if type(agenda) == dict:
+            documents.append({'url': agenda['url'], 'note': 'agenda'})
+        return documents
+
     def _parse_classification(self, item):
         """
         Parse or generate classification (e.g. town hall).
         """
-        return 'Not classified'
+        return ''
 
     def _parse_status(self, item, start_time):
         """
@@ -87,13 +108,9 @@ class Chi_waterSpider(Spider):
         optional and may be more trouble than they're worth to collect.
         """
         return {
-            'url': None,
-            'address': item.get('Meeting Location', None),
-            'name': None,
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
+            'name': item.get('Meeting Location', None),
+            'address': self.address,
+            'neighborhood': self.neighborhood
         }
 
     def _parse_all_day(self, item):
@@ -129,20 +146,21 @@ class Chi_waterSpider(Spider):
         if date and time:
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
-            return self._naive_datetime_to_tz(naive)
+            return {'date': naive.date(),
+                    'time': naive.time(),
+                    'note': ''}
         elif not time:
             time_string = '{0}'.format(date)
             naive = datetime.strptime(time_string, '%m/%d/%Y')
-            return self._naive_datetime_to_tz(naive)
-            #print("Meeting with no start time...skipping")
-            #return naive
-        return None
+            return {'date': naive.date(),
+                    'time': None,
+                    'note': ''}
 
     def _parse_end(self, item):
         """
         Parse end date and time.
         """
-        return None
+        return {'date': None, 'time': None, 'note': ''}
 
     def _parse_sources(self, item):
         """
