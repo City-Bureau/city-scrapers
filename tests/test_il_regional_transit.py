@@ -6,7 +6,7 @@ import pytest
 from tests.utils import file_response
 from city_scrapers.spiders.il_regional_transit import RegionaltransitSpider
 
-events_response = file_response('files/rta_calendar.html', url='http://www.rtachicago.org/about-us/board-meetings')
+events_response = file_response('files/il_regional_transit_calendar.html', url='http://www.rtachicago.org/about-us/board-meetings')
 events_response.meta['event_description'] = (
         "The RTA Board of Directors typically meets each month on a Thursday at "
         "175 W. Jackson Blvd, Suite 1650 in Chicago. Board committee meetings "
