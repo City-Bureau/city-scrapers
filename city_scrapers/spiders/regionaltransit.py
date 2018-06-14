@@ -10,36 +10,34 @@ from city_scrapers.spider import Spider
 # The RTA's Board and other meetings are are displayed on their
 # website via an iframe from a different domain.
 class RegionaltransitSpider(Spider):
-    name = 'regionaltransit'
+    name = 'il_regional_transit'
+    agency_id = 'Regional Transportation Authority '
     long_name = 'Regional Transportation Authority'
+    timezone = 'America/Chicago'
+
     allowed_domains = ['www.rtachicago.org', 'rtachicago.granicus.com']
     start_urls = ['http://www.rtachicago.org/about-us/board-meetings']
     domain_root = 'http://www.rtachicago.org'
 
     def parse_iframe(self, response):
-        description = ("The RTA Board of Directors is a 16-member group of professionals "
-                       "governing the activities and initiatives of the RTA. The RTA is "
-                       "charged with financial oversight, funding, and regional transit "
-                       "planning for the region’s transit operators: the Chicago Transit "
-                       "Authority (CTA), Metra and Pace Suburban Bus and Pace Americans "
-                       "with Disabilities Act (ADA) Paratransit.")
-        for item in response.css('#upcoming .row'):
-            start_time = self._parse_start(item)
+        for item in response.css('.committee'):
+            start = self._parse_start(item)
             name = self._parse_name(item)
             data = {
                 '_type': 'event',
                 'name': name,
-                'description': description,
-                'classification': self._parse_classification(item),
-                'start_time': start_time,
-                'end_time': None,
+                'event_description': response.meta['event_description'],
+                'start': start,
+                'end': {'date': None, 'time': None, 'note': ''},
                 'all_day': False,
                 'timezone': 'America/Chicago',
-                'status': self._parse_status(item),
-                'location': self._parse_location(item),
-                'sources': self._parse_sources(response)
+                'location': self._parse_location(),
+                'documents': self._parse_documents(item),
+                'sources': [{'url': response.url, 'note': ''}],
             }
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data, '')
+            data['classification'] = self._parse_classification(data.get('name', ''))
             yield data
 
     def parse(self, response):
@@ -47,66 +45,64 @@ class RegionaltransitSpider(Spider):
         `parse` should always `yield` a dict that follows the `Open Civic Data
         event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
         """
-
-        description = ("The RTA Board of Directors is a 16-member group of professionals "
-                       "governing the activities and initiatives of the RTA. The RTA is "
-                       "charged with financial oversight, funding, and regional transit "
-                       "planning for the region’s transit operators: the Chicago Transit "
-                       "Authority (CTA), Metra and Pace Suburban Bus and Pace Americans "
-                       "with Disabilities Act (ADA) Paratransit.")
-
         url = response.css('iframe::attr(src)').extract_first()
+        desc_xpath = '//*[text()[contains(.,"The RTA Board")]]/text()'
+        description = response.xpath(desc_xpath).extract_first()
+        meta = {
+            'event_description': description,
+            # Disable built-in RobotsTxt middleware for this request.
+            'dont_obey_robotstxt': True,
+        }
+        yield scrapy.Request(url, callback=self.parse_iframe, meta=meta)
 
-        request = scrapy.Request(url, callback=self.parse_iframe)
-        request.meta['description'] = description
-
-        # Disable built-in RobotsTxt middleware for this request.
-        request.meta['dont_obey_robotstxt'] = True
-
-        yield request
-
-    def _parse_classification(self, item):
-        """
-        @TODO Not implemented
-        """
+    @staticmethod
+    def _parse_classification(name):
+        name = name.upper()
+        if 'CITIZENS ADVISORY' in name:
+            return 'Citizens Advisory Council'
+        if 'COMMITTEE' in name:
+            return 'Committee'
+        if 'BOARD' in name:
+            return 'Board'
         return 'Not classified'
 
-    def _parse_status(self, item):
-        """
-        @TODO determine correct status
-        """
-        return 'tentative'
-
-    def _parse_location(self, item):
+    @staticmethod
+    def _parse_location():
         """
         The location is hard coded based on the value shown on the meetings page. It
         is not expected to change often, so this is probably OK.
         """
         return {
-            'url': 'http://www.rtachicago.org/index.php/about-us/contact-us.html',
             'name': 'RTA Administrative Offices',
-            'coordinates': {'longitude': '', 'latitude': ''},
-            'address': '175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604'
+            'address': '175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604',
         }
 
-    def _parse_name(self, item):
+    @staticmethod
+    def _parse_name(item):
         """
         Get event name
         """
         title = item.css('.committee::text').extract_first()
         return title.split(' on ')[0]
 
-    def _parse_start(self, item):
+    @staticmethod
+    def _parse_start(item):
         """
         Retrieve the event date, always using 8:30am as the time.
         """
         title = item.css('.committee::text').extract_first()
         m = re.search('(\d{4})-(\d{1,2})-(\d{1,2})', title)
         naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
-        return self._naive_datetime_to_tz(naive_dt, 'America/Chicago')
+        return {
+            'date': naive_dt.date(),
+            'time': naive_dt.time(),
+            'note': ''
+        }
 
-    def _parse_sources(self, response):
-        """
-        Parse sources.
-        """
-        return [{'url': response.url, 'note': ''}]
+    @staticmethod
+    def _parse_documents(item):
+        document_xpath = 'ancestor::div[contains(@class, "row")]//a/@href'
+        document = item.xpath(document_xpath).extract_first()
+        if document:
+            return [{'url': document, 'note': 'agenda'}]
+        return []
