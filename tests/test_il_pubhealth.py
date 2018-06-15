@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import date, time
 
 import pytest
 
@@ -13,8 +14,8 @@ def test_name():
     assert parsed_items[2]['name'] == 'PAC: Maternal Mortality Review Committee Meeting'
 
 
-def test_description():
-    assert parsed_items[1]['description'] == """CONFERENCE ROOMS
+def test_event_description():
+    assert parsed_items[1]['event_description'] == """CONFERENCE ROOMS
 122 S. Michigan, 7th Floor, Chicago, Room 711
 535 West Jefferson St., 5th Floor, Springfield
 Conference Call Information
@@ -23,16 +24,24 @@ Access Code: 6819028741
 Interested persons may contact the Office of Women’s Health at 312-814-4035 for information"""
 
 
-def test_start_time():
-    assert parsed_items[4]['start_time'].isoformat() == '2017-08-09T11:00:00-05:00'
+def test_start():
+    assert parsed_items[4]['start'] == {
+        'date': date(2017, 8, 9),
+        'time': time(11, 00),
+        'note': ''
+    }
 
 
 def test_end_time():
-    assert parsed_items[4]['end_time'].isoformat() == '2017-08-09T15:00:00-05:00'
+    assert parsed_items[4]['end'] == {
+        'date': date(2017, 8, 9),
+        'time': time(15, 00),
+        'note': ''
+    }
 
 
-# def test_id():
-#    assert parsed_items[5]['id'] == 'il_pubhealth/201708100830/16556/levels_of_care_work_group_hospital_designations_redesignations_change_of_networks'
+def test_id():
+   assert parsed_items[5]['id'] == 'il_pubhealth/201708100830/16556/levels_of_care_work_group_hospital_designations_redesignations_change_of_networks'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -47,7 +56,7 @@ def test_classification(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):
-    assert item['status'] == 'tentative'
+    assert item['status'] == 'passed'
 
 
 def test_high_confidence_location():
@@ -85,21 +94,21 @@ def test_low_confidence_location():
 
 def test_no_matching_location():
     assert parsed_items[8]['location'] == {
-        'url': '',
         'name': '',
         'address': 'multiple locations not in Chicago, see description',
-        'coordinates': {'latitude': '', 'longitude': ''}
+        'neighborhood': '',
     }
 
+def test_documents():
+    assert parsed_items[0]['documents'] == []
+    assert parsed_items[1]['documents'] == [{
+        'url': 'http://www.dph.illinois.gov/sites/default/files/8-3-17-LOC-3-and-4-Agenda.pdf',
+        'note': 'agenda',
+    }]
 
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert item['_type'] == 'event'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
 
 
 def test_sources():
