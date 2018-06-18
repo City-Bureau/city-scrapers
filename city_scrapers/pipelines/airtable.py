@@ -10,8 +10,8 @@ from requests.exceptions import HTTPError
 from scrapy.exceptions import DropItem
 from pytz import utc
 
-AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
-AIRTABLE_DATA_TABLE = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_DATA_TABLE')
+AIRTABLE_BASE_KEY = os.environ.get('CITY_SCRAPERS_AIRTABLE_BASE_KEY')
+AIRTABLE_DATA_TABLE = os.environ.get('CITY_SCRAPERS_AIRTABLE_DATA_TABLE')
 KEEP_FIELDS = ['id', 'name', 'description', 'classification', 'start_time', 'end_time',
                'timezone', 'agency_name', 'location_name', 'location_url',
                'location_address', 'location_latitude', 'location_longitude',
