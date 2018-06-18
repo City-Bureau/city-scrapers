@@ -14,24 +14,16 @@ def test_name():
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_description(item):
-    assert item['description'] == ("The CCLBA acquires, holds, and transfers interest in real estate "
-                       "properties throughout Cook County to promote redevelopment and "
-                       "reuse of vacant, abandoned, foreclosed or tax-delinquent properties "
-                       "and support targeted efforts to stabilize neighborhoods. It was "
-                       "formed by ordinance of Cook County in 2013 to address the large "
-                       "inventory of vacant residential, industrial and commercial property "
-                       "in Cook County. The CCLBA is the largest land bank by geography in "
-                       "the country and is governed by a Board of Directors appointed by "
-                       "the Cook County Board of Commissioners.")
+def test_event_description(item):
+    assert item['event_description'] == ("The Cook County Land Bank Authority Finance Committee will meet on Wednesday, September 13th, 2017 at the hour of 10:00 AM in the Cook County Administration Building located at 69 W. Washington St., 22nd Floor, Conference Room ‘A’, Chicago, Illinois, to consider the following: AGENDA (CLICK HERE FOR PDF) 1. Call to Order and Roll Call 2. Public Speakers (Please note each registered speaker is asked to limit comments to 3 minutes) 3. FY 2016 Audit – Presentation By Washington, Pittman, & McKeever 4. CCLBA’s FY2018 Proposed Budget (Cassidy Harper/Robert Rose) 5. Update regarding CCLBA’s Line of Credit (Rob Rose) 6. Finance Report (Cassidy Harper) 7. Consent Agenda Approval of June 29, 2017 Cook County Land Bank Finance Committee meeting minutes. 8. Chairman’s Report (Director Calvin Holmes) 9. Adjournment Committee Chair: Holmes Members: Jenkins, Ostenburg, Sherwin")
 
 
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2017-09-13T10:00:00-05:00'
+def test_start():
+    assert parsed_items[0]['start'].isoformat() == '2017-09-13T10:00:00-05:00'
 
 
-def test_end_time():
-    assert parsed_items[0]['end_time'] is None
+def test_end():
+    assert parsed_items[0]['end'] is None
 
 
 @pytest.mark.parametrize('item', parsed_items)

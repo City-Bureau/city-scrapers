@@ -7,6 +7,7 @@ import scrapy
 
 import json
 import datetime as dt
+import re
 import unicodedata
 
 from city_scrapers.spider import Spider
@@ -217,6 +218,7 @@ class Cook_landbankSpider(Spider):
         raw_agenda = item.xpath('string(normalize-space(//div[@itemprop="description"]))').extract_first()
         normalized_agenda = unicodedata.normalize("NFKC", raw_agenda)
         agenda = normalized_agenda.strip()
+        agenda = re.sub('\s+',' ',agenda)
         return agenda
 
     def _parse_sources(self, item):
