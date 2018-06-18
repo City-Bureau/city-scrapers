@@ -40,7 +40,7 @@ def test_all_day():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Not classified'
+    assert parsed_items[0]['classification'] == 'committee meeting'
 
 
 def test_status():

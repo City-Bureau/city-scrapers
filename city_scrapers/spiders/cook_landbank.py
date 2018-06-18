@@ -107,7 +107,6 @@ class Cook_landbankSpider(Spider):
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'event_description': self._parse_description(item),
-                'classification': self._parse_classification(item),
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
@@ -117,6 +116,7 @@ class Cook_landbankSpider(Spider):
                 'sources': self._parse_sources(item),
                 'documents': [],
             }
+            data['classification'] = self._generate_classification(data['name'])
             data['id'] = self._generate_id(data)
             yield data
         else:
@@ -143,12 +143,6 @@ class Cook_landbankSpider(Spider):
     def _parse_id(self, item):
         event_id = item.css('div[data-event_id]::attr(data-event_id)').extract_first()
         return event_id
-
-    def _parse_classification(self, item):
-        """
-        No real 'classification' field to parse
-        """
-        return 'Not classified'
 
     def _parse_status(self, item):
         """
@@ -227,3 +221,9 @@ class Cook_landbankSpider(Spider):
             'url': source_url,
             'note': 'Event Page'
         }]
+
+    def _generate_classification(self, name):
+        if re.search("Board of Directors", name, re.IGNORECASE):
+            return 'board meeting'
+        else:
+            return 'committee meeting'
