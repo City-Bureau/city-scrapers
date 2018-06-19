@@ -6,7 +6,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import re
 import urllib3
 
-from datetime import datetime
+from datetime import datetime, date, time, timedelta
 from legistar.events import LegistarEventsScraper
 
 from city_scrapers.spider import Spider
@@ -14,7 +14,7 @@ from city_scrapers.spider import Spider
 
 class Chi_parksSpider(Spider):
     name = 'chi_parks'
-    long_name = 'Chicago Park District'
+    agency_id = 'Chicago Park District'
     START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = [START_URL]
@@ -44,50 +44,27 @@ class Chi_parksSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
+                'event_description': '',
                 'all_day': self._parse_all_day(item),
-                'timezone': 'America/Chicago',
+                'classification': self._parse_classification(item),
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
                 'location': self._parse_location(item),
+                'documents': self._parse_documents(item),
                 'sources': self._parse_sources(item),
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._parse_status(item, data['start_time'])
+            data['status'] = self._generate_status(data, '')
             yield data
-
-    def _parse_classification(self, item):
-        """
-        Parse or generate classification (e.g. town hall).
-        """
-        return 'Not classified'
-
-    def _parse_status(self, item, start_time):
-        """
-        passed = meeting already started
-        tentative = no agenda posted
-        confirmed = agenda posted
-        """
-        if datetime.now().isoformat() > start_time.isoformat():
-            return 'passed'
-        if 'url' in item['Agenda']:
-            return 'confirmed'
-        return 'tentative'
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
+        Parse or generate location.
         """
         return {
-            'url': None,
             'address': self.clean_html(item.get('Meeting Location', None)),
-            'name': None,
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
+            'name': '',
+            'neighborhood': ''
         }
 
     def _parse_all_day(self, item):
@@ -102,35 +79,67 @@ class Chi_parksSpider(Spider):
         """
         return item['Name']
 
-    def _parse_description(self, item):
+    def _parse_classification(self, item):
         """
-        Parse or generate event name.
+        Differentiate board meetings from public hearings.
         """
-        return ("The Chicago Park District Act provides that the Chicago"
-                "Park District shall be governed by a board of seven"
-                "non-salaried Commissioners who are appointed by the Mayor"
-                "of the City of Chicago with the approval of the Chicago City"
-                "Council. Under the Chicago Park District Code, the Commissioners"
-                "have a fiduciary duty to act, vote on all matters, and govern"
-                "the Park District in the best interest of the Park District.")
+        return item['Name']
+
+    def _parse_documents(self, item):
+        """
+        Parse or generate documents.
+        """
+        documents = []
+
+        # Add meetings details if available
+        info = item['Meeting Details']
+        try:
+            url = info['url']
+        except (TypeError, KeyError):
+            pass
+        else:
+            documents.append({'url': url, 'note': 'Meeting Details'})
+
+        # Add agenda if available
+        info = item['Agenda']
+        try:
+            url = info['url']
+        except (TypeError, KeyError):
+            pass
+        else:
+            documents.append({'url': url, 'note': 'Agenda'})
+        return documents
+
+    def _parse_start_datetime(self, item):
+        """
+        Parse the start datetime.
+        """
+        time = item.get('Meeting Time', None)
+        date = item.get('Meeting Date', None)
+        time_string = '{0} {1}'.format(date, time)
+        return datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        time = item.get('Meeting Time', None)
-        date = item.get('Meeting Date', None)
-        if date and time:
-            time_string = '{0} {1}'.format(date, time)
-            naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
-            return self._naive_datetime_to_tz(naive)
-        return None
+        datetime_obj = self._parse_start_datetime(item)
+        return {
+            'date': datetime_obj.date(),
+            'time': datetime_obj.time(),
+            'note': ''
+        }
 
     def _parse_end(self, item):
         """
-        No end date.
+        No end date listed. Estimate 3 hours after start time.
         """
-        return None
+        datetime_obj = self._parse_start_datetime(item)
+        return {
+            'date': datetime_obj.date(),
+            'time': (datetime_obj + timedelta(hours=3)).time(),
+            'note': 'Estimated 3 hours after start time'
+        }
 
     def _parse_sources(self, item):
         """

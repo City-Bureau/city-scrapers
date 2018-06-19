@@ -1,8 +1,9 @@
+from datetime import date, time
+
 import pytest
 
 from tests.utils import file_response
 from city_scrapers.spiders.chi_school_actions import ChiSchoolActionsSpider
-
 
 test_response = file_response('files/chi_school_actions.html')
 spider = ChiSchoolActionsSpider()
@@ -14,39 +15,41 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[3]['description'] == (
-        'Emil G Hirsch Metropolitan High School Community Meetings: Co-location. ' +
-        'Documentation: Transition Plan http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=6294, ' +
-        'Parent Letter http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=6292, ' +
-        'Staff Letter http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=6293'
-    )
+    assert parsed_items[3]['event_description'] == 'Emil G Hirsch Metropolitan High School Community Meetings: Co-location'
 
 
 def test_classification():
     assert parsed_items[0]['classification'] == 'Community Meetings: Consolidation'
 
 
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2018-01-09T18:00:00-06:00'
+def test_start():
+    expected_start = {
+        'date': date(2018, 1, 9),
+        'time': time(18, 00),
+        'note': ''
+    }
+    assert parsed_items[0]['start'] == expected_start
 
 
-def test_end_time():
-    assert parsed_items[0]['end_time'].isoformat() == '2018-01-09T20:00:00-06:00'
+def test_end():
+    expected_end = {
+        'date': date(2018, 1, 9),
+        'time': time(20, 00),
+        'note': ''
+    }
+    assert parsed_items[0]['end'] == expected_end
 
 
-# def test_id():
-#    assert parsed_items[0]['id'] == 'chi_school_actions/201801091800/x/castellanos_cardenas_community_meetings_consolidation'
+def test_id():
+    assert parsed_items[0]['id'] == \
+           'chi_school_actions/201801091800/x/castellanos_cardenas_community_meetings_consolidation'
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'url': '',
         'name': 'Rosario Castellanos ES',
         'address': '2524 S Central Park Ave',
-        'coordinates': {
-            'latitude': None,
-            'longitude': None,
-        },
+        'neighborhood': '',
     }
 
 
@@ -57,9 +60,15 @@ def test_sources():
     }]
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
+def test_documents():
+    assert parsed_items[0]['documents'] == [
+        {'note': 'Transition Plan', 'url': 'http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=5247'},
+        {'note': 'Transition Plan - ELL', 'url': 'http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=5248'},
+        {'note': 'Parent Letter', 'url': 'http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=5243'},
+        {'note': 'Parent Letter - ELL', 'url': 'http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=6298'},
+        {'note': 'Staff Letter', 'url': 'http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=5245'},
+        {'note': 'Staff Letter - ELL', 'url': 'http://schoolinfo.cps.edu/SchoolActions/Download.aspx?fid=6306'}
+    ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -69,4 +78,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
+    assert item['_type'] == 'event'

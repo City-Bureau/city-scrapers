@@ -12,8 +12,10 @@ export PYTHONPATH=$PYTHONPATH:$DIR
 # Set scrapy settings
 export SCRAPY_SETTINGS_MODULE='travis.travis_settings'
 
+# Optional $1 param. Defaults to all spiders
+SPIDERS=${1:-[^_]*.py} 
 # Run new or modified spiders and save output
-find city_scrapers/spiders -name "[^_]*.py" | \
+find city_scrapers/spiders -name "$SPIDERS" | \
     xargs basename -s .py | \
     xargs -I{} scrapy crawl {} -o ./travis/{}.json --loglevel=ERROR
 if [ $? -ne 0 ]; then exit 1; fi
