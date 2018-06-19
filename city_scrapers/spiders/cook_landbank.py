@@ -215,16 +215,6 @@ class Cook_landbankSpider(Spider):
         # end_date = item.css('[itemprop=\'endDate\']')[0].get('datetime')
         return None
 
-    def _parse_agenda(self, item):
-        """
-        Because this section is irregulary structured, make a best effort to capture the useful text
-        """
-        raw_agenda = item.xpath('string(normalize-space(//div[@itemprop="description"]))').extract_first()
-        normalized_agenda = unicodedata.normalize("NFKC", raw_agenda)
-        agenda = normalized_agenda.strip()
-        agenda = re.sub('\s+',' ',agenda)
-        return agenda
-
     def _parse_sources(self, item):
         source_url = item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)').extract_first()
         return [{
@@ -233,12 +223,16 @@ class Cook_landbankSpider(Spider):
         }]
 
     def _parse_documents(self, item):
-        #agenda_pdf_url = item.css('a[]').extract_first
-        #return [{
-        #    'url': 'http://www.example.com/agenda.pdf',
-        #    'note': 'agenda'
-        #}]
-        return []
+        documents = []
+
+        agenda_pdf_link = item.xpath('//div[@itemprop="description"]//a[contains(@href, "pdf")]/@href').extract_first()
+        if agenda_pdf_link:
+            documents.append({
+                'url': agenda_pdf_link,
+                'note': 'agenda'
+            })
+
+        return documents
 
     def _generate_classification(self, name):
         if re.search("Board of Directors", name, re.IGNORECASE):

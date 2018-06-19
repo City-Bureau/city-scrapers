@@ -65,6 +65,12 @@ def test_sources():
         'note': "Event Page",
     }]
 
+def test_documents():
+    assert parsed_items[0]['documents'] == [{
+        'url': 'http://www.cookcountylandbank.org/wp-content/uploads/2017/09/CCLBA.Finance.Committee_09.13.2017.pdf',
+        'note': 'agenda'
+    }]
+
 
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
