@@ -4,10 +4,10 @@ import re
 
 from city_scrapers.spider import Spider
 
-
 class Metra_boardSpider(Spider):
     name = 'metra_board'
-    long_name = 'Metra Board of Directors'
+    agency_id = 'Metra'
+    timezone = 'America/Chicago'
     allowed_domains = ['metrarail.com']
     start_urls = ['https://metrarr.granicus.com/ViewPublisher.php?view_id=5']
 
@@ -25,17 +25,18 @@ class Metra_boardSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
-                'description': '',
-                'classification': self._parse_classification(item),
-                'start_time': start_time,
-                'end_time': None,
-                'timezone': 'America/Chicago',
+                'event_description': '',
                 'all_day': False,
-                'location': self._parse_location(item),
-                'sources': self._parse_sources(response),
+                'classification': self._parse_classification(item),
+                'start': start_time,
+                'end': {'date': None, 'time': None,'note': ''},
+                'location': self._parse_location(),
+                'documents': [],
+                'sources': [{'url': response.url,'note': ''}],
             }
 
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data, data['name'])
             yield data
 
     def _parse_name(self, item):
@@ -68,49 +69,23 @@ class Metra_boardSpider(Spider):
 
         try:
             naive = datetime.strptime(date_time_str, '%b %d, %Y - %I:%M %p')
+            return {'date': naive.date(),
+                    'time': naive.time(),
+                    'note': '',
+            }
         except ValueError:
             return None
 
         return self._naive_datetime_to_tz(naive, 'America/Chicago')
 
-    def _parse_end(self, item):
-        """
-        Parse end date and time.
-        """
-        return ''
-
-    def _parse_timezone(self, item):
-        """
-        Parse or generate timzone in tzinfo format.
-        """
-        return 'America/Chicago'
-
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to False.
-        """
-        return False
-
-    def _parse_location(self, item):
+    @staticmethod
+    def _parse_location():
         """
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
         """
         return {
-            'url': '',
+            'neighborhood': 'West Loop',
             'name': '',
             'address': '547 West Jackson Boulevard, Chicago, IL',
-            'coordinates': {
-                'latitude': '',
-                'longitude': '',
-            },
-        }
-
-    def _parse_sources(self, response):
-        """
-        Parse or generate sources.
-        """
-        return [{
-            'url': response.url,
-            'note': '',
-        }]
+            }
