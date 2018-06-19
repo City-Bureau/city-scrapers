@@ -114,7 +114,7 @@ class Cook_landbankSpider(Spider):
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item),
-                'documents': [],
+                'documents': self._parse_documents(item),
             }
             data['classification'] = self._generate_classification(data['name'])
             data['id'] = self._generate_id(data)
@@ -188,8 +188,18 @@ class Cook_landbankSpider(Spider):
         return name
 
     def _parse_description(self, item):
-        agenda = self._parse_agenda(item)
-        return agenda
+        raw_description = item.xpath('string(normalize-space(//div[@itemprop="description"]))').extract_first()
+        normalized_description = unicodedata.normalize("NFKC", raw_description)
+        description = re.sub('\s+',' ', normalized_description)
+
+        agenda_sentinal = re.search("agenda", description, re.IGNORECASE)
+        if agenda_sentinal:
+            description = description[0:agenda_sentinal.start()]
+
+        description = description.strip()
+
+        return description
+        
 
     def _parse_start(self, item):
         start_date = item.css('[itemprop=\'startDate\']::attr(datetime)').extract_first()
@@ -221,6 +231,14 @@ class Cook_landbankSpider(Spider):
             'url': source_url,
             'note': 'Event Page'
         }]
+
+    def _parse_documents(self, item):
+        #agenda_pdf_url = item.css('a[]').extract_first
+        #return [{
+        #    'url': 'http://www.example.com/agenda.pdf',
+        #    'note': 'agenda'
+        #}]
+        return []
 
     def _generate_classification(self, name):
         if re.search("Board of Directors", name, re.IGNORECASE):

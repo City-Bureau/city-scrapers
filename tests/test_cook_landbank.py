@@ -15,7 +15,7 @@ def test_name():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    assert item['event_description'] == ("The Cook County Land Bank Authority Finance Committee will meet on Wednesday, September 13th, 2017 at the hour of 10:00 AM in the Cook County Administration Building located at 69 W. Washington St., 22nd Floor, Conference Room ‘A’, Chicago, Illinois, to consider the following: AGENDA (CLICK HERE FOR PDF) 1. Call to Order and Roll Call 2. Public Speakers (Please note each registered speaker is asked to limit comments to 3 minutes) 3. FY 2016 Audit – Presentation By Washington, Pittman, & McKeever 4. CCLBA’s FY2018 Proposed Budget (Cassidy Harper/Robert Rose) 5. Update regarding CCLBA’s Line of Credit (Rob Rose) 6. Finance Report (Cassidy Harper) 7. Consent Agenda Approval of June 29, 2017 Cook County Land Bank Finance Committee meeting minutes. 8. Chairman’s Report (Director Calvin Holmes) 9. Adjournment Committee Chair: Holmes Members: Jenkins, Ostenburg, Sherwin")
+    assert item['event_description'] == ("The Cook County Land Bank Authority Finance Committee will meet on Wednesday, September 13th, 2017 at the hour of 10:00 AM in the Cook County Administration Building located at 69 W. Washington St., 22nd Floor, Conference Room ‘A’, Chicago, Illinois, to consider the following:")
 
 
 def test_start():
