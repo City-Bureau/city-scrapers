@@ -6,7 +6,6 @@ USER_AGENT = 'City Scrapers [production mode]. Learn more and say hello at https
 #
 # One of:
 # * city_scrapers.pipelines.CityScrapersLoggingPipeline,
-# * city_scrapers.pipelines.CityScrapersSQLAlchemyPipeline,
 # * city_scrapers.pipelines.AirtablePipeline
 #
 # Or define your own.
@@ -15,7 +14,6 @@ ITEM_PIPELINES = {
     # disabled until we can rebuild it on another provider
     #'city_scrapers.pipelines.GeocoderPipeline': 200,
     'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
-    'city_scrapers.pipelines.ValidationPipeline': 300,
     'city_scrapers.pipelines.AirtablePipeline': 400
 }
 

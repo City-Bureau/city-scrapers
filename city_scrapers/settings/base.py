@@ -26,13 +26,6 @@ CITY_SCRAPERS_ROBOTSTXT_LOGONLY = True
 COOKIES_ENABLED = False
 
 # Configure item pipelines
-#
-# One of:
-# * city_scrapers.pipelines.ValidationPipeline,
-# * city_scrapers.pipelines.AirtablePipeline
-#
-# Or define your own.
-# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
 #    'city_scrapers.pipelines.CsvPipeline': 400
 }
