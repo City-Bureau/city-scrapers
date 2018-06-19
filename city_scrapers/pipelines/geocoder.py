@@ -9,7 +9,7 @@ import time
 from random import randint
 import re
 
-from mapzen.api import MapzenAPI
+# from mapzen.api import MapzenAPI
 from airtable import Airtable
 
 AIRTABLE_BASE_KEY = os.environ.get('DOCUMENTERS_AGGREGATOR_AIRTABLE_BASE_KEY')
