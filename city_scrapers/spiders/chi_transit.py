@@ -144,46 +144,7 @@ class ChiTransitSpider(Spider):
         # start time of the previous meeting
         elif prev_item is not None:
             return self._parse_start(prev_item)
-        
-    def _parse_start_date(self, item):
-        """
-        Parse the date in the new format
-        """
-        date_el_text = item.css('td:first-child').extract_first()
-        date_text = date_el_text[4:-5]
-        date_text = date_text.replace(' ','')
-        date_text = date_text.replace('\r\n', '')
-        date_text = date_text.split('<br>')
-        date_only = date_text[0]
-        new_date_only = datetime.strptime(date_only, "%m/%d/%Y").strftime("date(%Y, %m, %d)")
-        
-    def _parse_start_time(self, item):
-        """
-        Parse the time in the new format
-        """
-        date_el_text = item.css('td:first-child').extract_first()
-        date_text = date_el_text[4:-5]
-        date_text = date_text.replace(' ','')
-        date_text = date_text.replace('\r\n', '')
-        date_text = date_text.split('<br>')
-        time_only = date_text[1].replace('.','')
-        time_only2 = self._conv_HH24(time_only)
-        return time_only2
-    
-    def _conv_HH24(self, item):
-        """
-        Converts time with AM or PM into military time
-        """
-        ampm = item[-2]
-        if ampm == "AM":
-            rtrnTime = "time(" + item[:2] + ", " + item[3:-2] + ")"
-            return rtrnTime
-        else:
-            hours = item[:2]
-            new_hours = hours + 12
-            rtrnTime = "time(" + new_hours + ", " + item[3:-2] + ")"
-            return rtrnTime
-        
+              
     def _parse_sources(self, response):
         """
         Parse sources.
