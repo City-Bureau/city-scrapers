@@ -23,6 +23,7 @@ class Cook_landbankSpider(Spider):
     """
     name = 'cook_landbank'
     agency_id = 'Cook County Land Bank Authority'
+    long_name = 'Cook County Land Bank'
     timezone = 'America/Chicago'
 
     allowed_domains = ['www.cookcountylandbank.org']
