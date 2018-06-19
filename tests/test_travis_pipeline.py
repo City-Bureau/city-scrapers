@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, date, time
 from tests.utils import read_test_file_content
-from city_scrapers.pipelines.TravisValidation import TravisValidationPipeline
+from city_scrapers.pipelines import TravisValidationPipeline
 from city_scrapers.spider import Spider
 
 
