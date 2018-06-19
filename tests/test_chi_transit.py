@@ -28,16 +28,16 @@ def test_description():
 
 def test_start():
     EXPECTED_START = {
-        'date': date(2018, 4, 9),
-        'time': time(13, 30),
+        'date': item_start.date(),
+        'time': item_start.time(),
         'note': ''
     }
     assert parsed_items[0]['start_time'] == EXPECTED_START
 
 def test_end():
     EXPECTED_END = {
-        'date': date(2017, 12, 13),
-        'time': time(18, 30),
+        'date': item_start.date(),
+        'time': item_start.time(),
         'note': 'Estimated 3 hours after start time'
     }
     assert parsed_items[0]['end_time'] == EXPECTED_END
