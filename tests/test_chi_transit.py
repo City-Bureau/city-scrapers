@@ -28,8 +28,8 @@ def test_description():
 
 def test_start():
     EXPECTED_START = {
-        'date': item_start.date(),
-        'time': item_start.time(),
+        'date': date(2017, 11, 10),
+        'time': time(12, 00, 00),
         'note': ''
     }
     assert parsed_items[0]['start_time'] == EXPECTED_START
