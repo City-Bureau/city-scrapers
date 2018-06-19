@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
+from urllib.parse import urljoin
+
 import scrapy
 import usaddress
 from dateutil.parser import parse as dateparse
@@ -9,6 +11,9 @@ from city_scrapers.spider import Spider
 
 class Il_pubhealthSpider(Spider):
     name = 'il_pubhealth'
+    agency_id = 'Illinois Department of Public Health'
+    timezone = 'America/Chicago'
+
     long_name = 'Illinois Department of Public Health'
     allowed_domains = ['www.dph.illinois.gov']
     start_urls = ['http://www.dph.illinois.gov/events']
@@ -21,22 +26,21 @@ class Il_pubhealthSpider(Spider):
         event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
         """
         for item in response.css('.eventspage'):
-            start_time = self._parse_start(item)
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start_time': start_time,
-                'end_time': self._parse_end(item),
+                'event_description': self._parse_description(item),
+                'classification': 'Not classified',
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
-                'timezone': 'America/Chicago',
-                'status': self._parse_status(item),
                 'location': self._parse_location(item),
+                'documents': self._parse_documents(item, response.url),
                 'sources': self._parse_sources(response)
             }
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data, '')
             yield data
 
         yield self._parse_next(response)
@@ -57,18 +61,6 @@ class Il_pubhealthSpider(Spider):
         raw_id_string = item.css('div.addtocal::attr(id)').extract_first()
         return raw_id_string.split('_')[-1]
 
-    def _parse_classification(self, item):
-        """
-        @TODO Not implemented
-        """
-        return 'Not classified'
-
-    def _parse_status(self, item):
-        """
-        @TODO determine correct status
-        """
-        return 'tentative'
-
     def _parse_location(self, item):
         """
         @TODO better location
@@ -85,10 +77,9 @@ class Il_pubhealthSpider(Spider):
             address = 'multiple locations not in Chicago, see description'
 
         return {
-            'url': '',
             'name': '',
             'address': address,
-            'coordinates': {'longitude': '', 'latitude': ''},
+            'neighborhood': '',
         }
 
     def _find_high_confidence_address(self, lines):
@@ -146,20 +137,28 @@ class Il_pubhealthSpider(Spider):
         start = item.css('div span.date-display-start::attr(content)').extract_first()
         if start == '':
             start = item.css('div span.date-display-single::attr(content)').extract_first()
-        return dateparse(start)
+        dt = dateparse(start)
+        return {'date': dt.date(), 'time': dt.time(), 'note': ''}
 
     def _parse_end(self, item):
         """
         Combine end time with year, month, and day.
         """
-        try:
-            end = item.css('div span.date-display-end::attr(content)').extract()[0]
-            return dateparse(end)
-        except IndexError:
-            return None
+        match = item.css('div span.date-display-end::attr(content)').extract_first()
+        if match:
+            dt = dateparse(match)
+            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+        return {'date': None, 'time': None, 'note': ''}
 
     def _parse_sources(self, response):
         """
         Parse sources.
         """
         return [{'url': response.url, 'note': ''}]
+
+    def _parse_documents(self, item, base_url):
+        documents = []
+        agenda = item.xpath('.//a[contains(., "Agenda")]/@href').extract_first()
+        if agenda:
+            documents.append({'url': urljoin(base_url, agenda), 'note': 'agenda'})
+        return documents
