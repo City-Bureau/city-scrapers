@@ -34,13 +34,13 @@ def test_start():
     }
     assert parsed_items[0]['start_time'] == EXPECTED_START
 
-def test_end():
-    EXPECTED_END = {
-        'date': item_start.date(),
-        'time': item_start.time(),
-        'note': 'Estimated 3 hours after start time'
-    }
-    assert parsed_items[0]['end_time'] == EXPECTED_END
+#def test_end():
+   #EXPECTED_END = {
+        #'date': item_start.date(),
+        #'time': item_start.time(),
+        #'note': 'Estimated 3 hours after start time'
+    #}
+    #assert parsed_items[0]['end_time'] == EXPECTED_END
 
 
 def test_classification():
