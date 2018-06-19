@@ -32,7 +32,7 @@ def test_start():
         'time': time(12, 00, 00),
         'note': ''
     }
-    assert parsed_items[0]['start_time'] == EXPECTED_START
+    assert parsed_items[0]['date'] == EXPECTED_START
 
 #def test_end():
    #EXPECTED_END = {
@@ -53,10 +53,10 @@ def test_classification():
 #    assert parsed_items[2]['id'] == 'chi_transit/201803141130/x/regular_board_meeting_of_chicago_transit_board'
 
 
-def test_status():
+#def test_status():
     #assert parsed_items[0]['status'] == 'tentative'
     #assert parsed_items[1]['status'] == 'cancelled'
-    assert parsed_items[0]['status'] == 'passed'
+    #assert parsed_items[0]['status'] == 'passed'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end_time(item):
