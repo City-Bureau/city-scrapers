@@ -3,6 +3,12 @@
 # Remove existing output
 rm -f travis/*.json
 
+## Get parent dir
+DIR="$( cd "$( dirname `dirname "${BASH_SOURCE[0]}"` )" && pwd )"
+
+## Force parent dir into python search path
+export PYTHONPATH=$PYTHONPATH:$DIR
+
 # Set scrapy settings
 export SCRAPY_SETTINGS_MODULE='city_scrapers.settings.travis'
 
