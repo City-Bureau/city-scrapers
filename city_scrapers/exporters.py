@@ -1,5 +1,4 @@
 from datetime import datetime
-from pytz import timezone
 from scrapy.exporters import JsonLinesItemExporter
 
 
