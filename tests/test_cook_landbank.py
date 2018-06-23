@@ -1,4 +1,5 @@
 import pytest
+from datetime import date, time
 from tests.utils import file_response
 from city_scrapers.spiders.cook_landbank import Cook_landbankSpider
 
@@ -19,11 +20,21 @@ def test_event_description(item):
 
 
 def test_start():
-    assert parsed_items[0]['start'].isoformat() == '2017-09-13T10:00:00-05:00'
+    EXPECTED_START = {
+        'date': date(2017, 9, 13),
+        'time': time(10, 00),
+        'note': ''
+    }
+    assert parsed_items[0]['start'] == EXPECTED_START
 
 
 def test_end():
-    assert parsed_items[0]['end'] is None
+    EXPECTED_END = {
+        'date': None,
+        'time': None,
+        'note': ''
+    }
+    assert parsed_items[0]['end'] == EXPECTED_END
 
 
 @pytest.mark.parametrize('item', parsed_items)

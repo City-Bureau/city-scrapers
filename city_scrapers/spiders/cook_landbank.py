@@ -206,7 +206,11 @@ class Cook_landbankSpider(Spider):
         start_date = item.css('[itemprop=\'startDate\']::attr(datetime)').extract_first()
         start_time = item.css('em.evo_time span[class=\'start\']::text').extract_first()
         start_date_time = dt.datetime.strptime(start_date + ' ' + start_time, '%Y-%m-%d %I:%M %p')
-        return self._naive_datetime_to_tz(start_date_time)
+        return {
+            'date': start_date_time.date(),
+            'time': start_date_time.time(),
+            'note': ''
+        }
 
     def _parse_end(self, item):
         """
@@ -214,7 +218,11 @@ class Cook_landbankSpider(Spider):
         Left commented the code to pull the end date if you want to include later.
         """
         # end_date = item.css('[itemprop=\'endDate\']')[0].get('datetime')
-        return None
+        return {
+            'date': None,
+            'time': None,
+            'note': ''
+        }
 
     def _parse_sources(self, item):
         source_url = item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)').extract_first()
