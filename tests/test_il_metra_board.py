@@ -3,16 +3,19 @@ import pytest
 from tests.utils import file_response
 from datetime import date
 from datetime import time
-from city_scrapers.spiders.metra_board import Metra_boardSpider
+from city_scrapers.spiders.il_metra_board import Il_metra_boardSpider
 
 
 test_response = file_response('files/metra_board.html')
-spider = Metra_boardSpider()
+spider = Il_metra_boardSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
 def test_name():
     assert parsed_items[0]['name'] == 'Metra February 2018 Board Meeting'
+
+def test_classification():
+    assert parsed_items[0]['classification'] == 'Board Meeting'
 
 def test_start():
     EXPECTED_START = {
@@ -44,7 +47,7 @@ def test_sources():
     }
 
 def test_id():
-   assert parsed_items[0]['id'] == 'metra_board/201802211030/x/metra_february_2018_board_meeting'
+   assert parsed_items[0]['id'] == 'il_metra_board/201802211030/x/metra_february_2018_board_meeting'
 
 def test_status():
     assert parsed_items[0]['status'] == 'passed'
@@ -60,10 +63,6 @@ def test_description(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
     assert item['all_day'] is False
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_classification(item):
-    assert item['classification'] is 'transit'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_documents(item):
