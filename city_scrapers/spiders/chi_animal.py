@@ -39,10 +39,12 @@ class Chi_animalSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': self._parse_name(text),
-                'description': self._parse_description(text),
+                'event_description': self._parse_description(text),
                 'classification': self._parse_classification(text),
-                'start_time': self._parse_start(text),
-                'end_time': self._parse_end(text),
+                'start': {
+                    'date': self._parse_start(text),
+                },
+                'end': {},
                 'all_day': self._parse_all_day(text),
                 'timezone': 'America/Chicago',
                 'status': self._parse_status(text),
@@ -74,17 +76,11 @@ class Chi_animalSpider(Spider):
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitude and longitude are all
-        optional and may be more trouble than they're worth to collect.
+        Parse or generate location.
         """
         return {
-            'url': None,
             'name': 'David R. Lee Animal Care Center',
             'address': '2741 S. Western Ave, Chicago, IL 60608',
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
         }
 
     def _parse_all_day(self, item):
@@ -112,12 +108,6 @@ class Chi_animalSpider(Spider):
         item = '-'.join(item.split('-')[:2]).strip()
         naive_date = dateparse(item)
         return self._naive_datetime_to_tz(naive_date)
-
-    def _parse_end(self, item):
-        """
-        Parse end date and time.
-        """
-        return None
 
     def _parse_sources(self, response):
         """

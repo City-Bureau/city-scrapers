@@ -21,7 +21,7 @@ def test_name():
 
 # Different than last static pull
 def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2017-09-21T00:00:00-05:00'
+    assert parsed_items[0]['start']['date'].isoformat() == '2017-09-21T00:00:00-05:00'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -42,18 +42,16 @@ def test_name(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['description'] is None
+    assert 'description' not in item
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end(item):
-    assert item['end_time'] is None
+    assert item['end'] == {}
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
     assert item['location'] == {'address': '2741 S. Western Ave, Chicago, IL 60608',
-    'coordinates': {'latitude': None, 'longitude': None},
-    'name': 'David R. Lee Animal Care Center',
-    'url': None}
+    'name': 'David R. Lee Animal Care Center'}
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):
@@ -63,6 +61,10 @@ def test_status(item):
 def test_sources(item):
     assert item['sources'] == [{'url': 'https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html',
                                 'note': ''}]
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_documents(item):
+    assert 'documents' not in item
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_timezone(item):
