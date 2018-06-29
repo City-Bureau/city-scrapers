@@ -16,14 +16,9 @@ class Chi_librarySpider(Spider):
     long_name = 'Chicago Public Library'
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
-
-    def __init__(self, session=requests.Session()):
-        """
-        Initialize a spider with a session object to use in the
-        _get_lib_info function.
-        """
-        self.session = session
-
+    r = requests.get("https://data.cityofchicago.org/resource/psqp-6rmg.json")
+    LIB_INFO = json.loads(r.text)
+        
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
@@ -55,7 +50,6 @@ class Chi_librarySpider(Spider):
         # remove first two informational lines from events array
         events_only = all_clean_events[2:]
         # get library info from City of Chicago API
-        lib_info = self._get_lib_info()
 
         for item in events_only:
             yr = cleanhtml(year[0])
@@ -70,19 +64,11 @@ class Chi_librarySpider(Spider):
                 'all_day': False,  # default is false
                 'timezone': 'America/Chicago',
                 'status': self._parse_status(item),  # default is tentative, but there is no status info on site
-                'location': self._parse_location(item, lib_info),
+                'location': self._parse_location(item, self.LIB_INFO),
                 'sources': self._parse_sources(response)
             }
             data['id'] = self._generate_id(data)
             yield data
-
-    def _get_lib_info(self):
-        """
-        Returns a list of dictionaries of information about each library
-        from the City of Chicago's API.
-        """
-        r = self.session.get("https://data.cityofchicago.org/resource/psqp-6rmg.json")
-        return json.loads(r.text)
 
     def _parse_classification(self, item):
         """
