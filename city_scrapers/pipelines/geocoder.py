@@ -33,6 +33,7 @@ class GeocoderPipeline(object):
                 spider.logger.debug('GEOCODER PIPELINE: Empty query. Not geocoding {0}'.format(item['id']))
                 return item
             item['location']['coordinates'] = self._geocode_address(query, spider)
+            item['tamu_query'] = query
             return item
 
     def _geocode_address(self, query, spider):
@@ -56,21 +57,15 @@ class GeocoderPipeline(object):
         """
         Parses address into dictionary of address components using usaddress
         """
-        name = location_dict.get('name', None)
         address = location_dict.get('address', '')
 
-        if name is None and address is None:
+        if address is None:
             return {}
-
-        if name is None:
-            query = address.strip()
-        else:
-            query = ', '.join([name.strip(), address.strip()])
 
         # replace city hall
         query = re.sub('city hall((?!.*chicago, il).)*$',
                        'City Hall 121 N LaSalle St., Chicago, IL',
-                       query, flags=re.I)
+                       address, flags=re.I)
 
         try:
             query = usaddress.tag(query)[0]

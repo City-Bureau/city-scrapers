@@ -31,7 +31,7 @@ def test_compare_geo():
         oldcache = list(csv.DictReader(infile))
     infile.close()
     with open('city_scrapers/local_outputs/geocache_results.csv', 'w') as f:
-        newnames = ("mapzen_query", "location_name", "location_address",
+        newnames = ("mapzen_query", "tamu_query", "location_name", "location_address",
                     "new_latitude", "new_longitude",
                     "cache_latitude", "cache_longitude",
                     "community_area", "geo_key", "geocode_date_updated")
