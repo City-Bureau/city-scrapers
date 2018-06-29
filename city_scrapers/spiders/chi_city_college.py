@@ -34,7 +34,7 @@ class Chi_cityCollegeSpider(Spider):
         data = {
             '_type': 'event',
             'name': self._parse_name(response),
-            'description': self._parse_description(response),
+            'event_description': self._parse_description(response),
             'classification': self._parse_classification(),
             'start': {
                 'date': date,
