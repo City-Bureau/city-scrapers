@@ -6,9 +6,10 @@ from datetime import datetime
 
 class Chi_teacherpensionSpider(Spider):
     name = 'chi_teacherpension'
-    long_name = 'Chicago Teachers Pension Fund'
+    agency_id = 'Chicago Teachers Pension Fund'
+    timezone = 'America/Chicago'
     allowed_domains = ['www.ctpf.org']
-    start_urls = ['http://www.ctpf.org/general_info/boardmeetings.htm']
+    start_urls = ['https://www.ctpf.org/post/board-meetings']
 
     def parse(self, response):
         """
@@ -18,138 +19,115 @@ class Chi_teacherpensionSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for i in range(1,len(response.xpath('//*[@id="content"]/h4[4]/preceding-sibling::p').extract())+1):
-            data = {
-                        '_type': 'event',
-                        'id': self._parse_id(item),
-                        #'name': self._parse_name(item),
-                        'description': self._parse_description(item),
-                        'classification': self._parse_classification(item),
-                        #'start_time': self._parse_start(item),
-                        'end_time': self._parse_end(item),
-                        'timezone': self._parse_timezone(item),
-                        'status': self._parse_status(item),
-                        'all_day': self._parse_all_day(item),
-                        'location': self._parse_location(item),
-                        'sources': self._parse_sources(item),
-                    }
+        
+        for i in range(1,4): 
+
+            dates = self.get_dates(response, i)
+            for date in dates:
+
+                data = {
+                            '_type': 'event',
+                            'name': self._parse_name(response, i),
+                            'description': self._parse_description(response, i),
+                            'classification': self._parse_classification(i),
+                            'start': self._parse_start(response, date, i),
+                            'end': self._parse_end(date),
+                            'status': self._parse_status(),
+                            'all_day': self._parse_all_day(),
+                            'location': self._parse_location(),
+                            'sources': self._parse_sources(),
+                        }
+
+                data['id'] = self._generate_id(data)
+
+                yield data
 
 
-            x = '//*[@id="content"]/p['+str(i)+']/preceding-sibling::h4/div/text()'
-            title = response.xpath(x).extract()[-1]
-            date = response.xpath('//*[@id="content"]/p['+str(i)+']/text()').extract()
-            if len(date)>0:
-                date = re.findall(r'[A-Za-z]+ [0-9]+, [0-9]+',date[0])
-                if len(date)>0:
-                    data['name'] = title
-                    if title in ['Regular Meeting Schedule', 'Investments Committee Meeting Schedule']:
-                        date_time = date+' 9:30am'
-                    else:
-                        # After noon, will address better later
-                        date_time = date+' 12:00am'
-                    data['start_time'] = self._parse_start(date_time)
+    def get_dates(self, response, i):
+        if i == 1:
+            raw = response.xpath('//*[@id="node-full"]/div/div[2]/h3[1]/following-sibling::p[1]/text()').extract()
+        else:
+            raw = response.xpath('//*[@id="node-full"]/div/div[2]/h3['+str(i)+']/following-sibling::p[2]/text()').extract()
+        
+        return [date.strip() for date in raw]
 
-                    '''
-                    data = {
-                        '_type': 'event',
-                        'id': self._parse_id(item),
-                        #'name': self._parse_name(item),
-                        'description': self._parse_description(item),
-                        'classification': self._parse_classification(item),
-                        #'start_time': self._parse_start(item),
-                        'end_time': self._parse_end(item),
-                        'timezone': self._parse_timezone(item),
-                        'status': self._parse_status(item),
-                        'all_day': self._parse_all_day(item),
-                        'location': self._parse_location(item),
-                        'sources': self._parse_sources(item),
-                    }
-                    '''
-
-                data['id'] = self._generate_id(data, start_time)
-
-        yield data
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique and in the following format:
-        <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-identifier>/<underscored-event-name>
-
-        Example:
-        chi_buildings/201710161230/2176/daley_plaza_italian_exhibit
-        """
-        return ''
-
-    def _parse_name(self, item):
+    def _parse_name(self, response, i):
         """
         Parse or generate event name.
         """
-        return ''
+        return response.xpath('//*[@id="node-full"]/div/div[2]/h3['+str(i)+']/text()').extract_first()
 
-    def _parse_description(self, item):
+    def _parse_description(self, response, i):
         """
         Parse or generate event description.
         """
-        return ''
+        if i == 1:
+        	return response.xpath('//*[@id="node-full"]/div/div[2]/p[1]/text()').extract_first()
+        elif i ==2:
+        	return response.xpath('//*[@id="node-full"]/div/div[2]/p[3]/text()').extract_first()
+        else:
+        	return response.xpath('//*[@id="node-full"]/div/div[2]/p[5]/text()').extract_first()
+        
 
-    def _parse_classification(self, item):
+    def _parse_classification(self, i):
         """
         Parse or generate classification (e.g. public health, education, etc).
         """
-        return ''
+        if i == 1:
+        	return 'board meeting'
+        else:
+        	return ''
 
-    def _parse_start(self, date_time):
+    def _parse_start(self, response, date, i):
         """
         Parse start date and time.
         """
-        return datetime.strptime(date_time, '%B %d, %Y %H:%M%p')
+        date = datetime.strptime(date, '%A, %B %d, %Y')
+        
+        if i ==3:
+        	time = None
+        	note = response.xpath('//*[@id="node-full"]/div/div[2]/p[5]/text()').extract_first()
+        else:
+        	time = datetime.strptime('9:30am', '%H:%M%p').time()
+        	note = ''
+        
+        return {
+                    'date': date,
+                    'time': time,
+                    'note': note
+                }
 
-    def _parse_end(self, item):
+
+    def _parse_end(self, date):
         """
         Parse end date and time.
         """
-        return ''
+        date = datetime.strptime(date, '%A, %B %d, %Y')
 
-    def _parse_timezone(self, item):
-        """
-        Parse or generate timzone in tzinfo format.
-        """
-        return 'America/Chicago'
+        return {
+                    'date': date,
+                    'time': None,
+                    'note': ''
+                }
 
-    def _parse_all_day(self, item):
+    def _parse_all_day(self):
         """
         Parse or generate all-day status. Defaults to False.
         """
         return False
 
-    def _parse_location(self, item):
+    def _parse_location(self):
         """
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
         """
         return {
-            'url': '',
-            'name': '',
             'address': '203 North LaSalle Street, Suite 2600, Board Room',
-            'coordinates': {
-                'latitude': '',
-                'longitude': '',
-            },
+            'name': 'CTPF office',
+            'neighborhood': 'Loop'
         }
 
-    def _parse_status(self, item):
+    def _parse_status(self):
         """
         Parse or generate status of meeting. Can be one of:
         * cancelled
@@ -160,7 +138,7 @@ class Chi_teacherpensionSpider(Spider):
         """
         return 'tentative'
 
-    def _parse_sources(self, item):
+    def _parse_sources(self):
         """
         Parse or generate sources.
         """
