@@ -144,5 +144,6 @@ class Chi_teacherpensionSpider(Spider):
         """
         return [{
             'url': '',
-            'note': '',
+            'note': ''
         }]
+
