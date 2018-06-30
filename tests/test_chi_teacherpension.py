@@ -13,13 +13,13 @@ def test_tests():
 Uncomment below
 """
 
-# test_response = file_response('files/chi_teacherpension.html')
-# spider = Chi_teacherpensionSpider()
-# parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+test_response = file_response('files/chi_teacherpension.htm')
+spider = Chi_teacherpensionSpider()
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-# def test_name():
-    # assert parsed_items[0]['name'] == 'EXPECTED NAME'
+def test_name():
+    assert parsed_items[0]['name'] == 'Regular Board Meeting Schedule'
 
 
 # def test_description():
@@ -62,9 +62,9 @@ Uncomment below
     # assert item['timezone'] == 'EXPECTED TIMEZONE'
 
 
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_all_day(item):
-    # assert item['all_day'] is False
+@pytest.mark.parametrize('item', parsed_items)
+def test_all_day(item):
+    assert item['all_day'] is False
 
 
 # @pytest.mark.parametrize('item', parsed_items)
