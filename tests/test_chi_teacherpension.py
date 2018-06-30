@@ -4,9 +4,9 @@ from tests.utils import file_response
 from city_scrapers.spiders.chi_teacherpension import Chi_teacherpensionSpider
 
 
-def test_tests():
-    print('Please write some tests for this spider or at least disable this one.')
-    assert False
+#def test_tests():
+#    print('Please write some tests for this spider or at least disable this one.')
+#    assert False
 
 
 """
