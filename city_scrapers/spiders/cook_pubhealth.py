@@ -47,7 +47,7 @@ class Cook_pubhealthSpider(Spider):
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
-        data['id'] = self._generate_id(data, times['start'])
+        data['id'] = self._generate_id(data)
         return data
 
     def _parse_id(self, response):

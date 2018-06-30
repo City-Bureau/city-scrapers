@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 # Scrapy settings for city_scrapers project
 #
@@ -15,7 +16,7 @@ SPIDER_MODULES = ['city_scrapers.spiders']
 NEWSPIDER_MODULE = 'city_scrapers.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'City Scrapers [production mode]. Learn more and say hello at https://citybureau.org/city-scrapers'
+USER_AGENT = 'City Scrapers [development mode]. Learn more and say hello at https://www.citybureau.org/city-scrapers/'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -26,21 +27,11 @@ CITY_SCRAPERS_ROBOTSTXT_LOGONLY = True
 COOKIES_ENABLED = False
 
 # Configure item pipelines
-#
-# One of:
-# * city_scrapers.pipelines.CityScrapersLoggingPipeline,
-# * city_scrapers.pipelines.CityScrapersSQLAlchemyPipeline,
-# * city_scrapers.pipelines.AirtablePipeline
-#
-# Or define your own.
-# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # disabled until we can rebuild it on another provider
-    #'city_scrapers.pipelines.GeocoderPipeline': 200,
     'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
-    'city_scrapers.pipelines.ValidationPipeline': 300,
-    'city_scrapers.pipelines.AirtablePipeline': 400
+    # 'city_scrapers.pipelines.CsvPipeline': 400,
 }
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
@@ -73,6 +64,8 @@ DOWNLOADER_MIDDLEWARES = {
     'city_scrapers.middlewares.CityScrapersRobotsTxtMiddleware': 543,
 }
 
+COMMANDS_MODULE = 'city_scrapers.commands'
+
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
@@ -80,10 +73,10 @@ DOWNLOADER_MIDDLEWARES = {
 #}
 
 EXTENSIONS = {
-    "scrapy_sentry.extensions.Errors": 10,
     'scrapy.extensions.closespider.CloseSpider': None,
 }
 
+CLOSESPIDER_ERRORCOUNT = 5
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -106,10 +99,4 @@ EXTENSIONS = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-# Write spiders to S3 bucket
-FEED_EXPORTERS = {
-    'cityscrapers_jsonlines': 'city_scrapers.exporters.CityScrapersJsonLinesItemExporter'
-}
-
-FEED_FORMAT = 'cityscrapers_jsonlines'
-FEED_URI = 's3://city-scrapers-events-feed/%(name)s/%(year)s/%(month)s/%(day)s/%(hour_min)s.json'
+S3_ITEM_BUCKET = os.getenv('S3_ITEM_BUCKET', 'city-scrapers-meetings-staging')

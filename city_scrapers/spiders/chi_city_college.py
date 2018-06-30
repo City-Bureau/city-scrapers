@@ -5,8 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import scrapy
 import re
-
-from datetime import datetime
+from datetime import date, time
 
 from city_scrapers.spider import Spider
 
@@ -14,8 +13,9 @@ from city_scrapers.spider import Spider
 class Chi_cityCollegeSpider(Spider):
     name = 'chi_city_college'
     long_name = 'City Colleges of Chicago'
-    allowed_domains = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
-    start_urls = ['http://www.ccc.edu/departments/Pages/Board-of-Trustees.aspx']
+    allowed_domains = ['www.ccc.edu']
+
+    start_urls = ['http://www.ccc.edu/events/Pages/default.aspx?dept=Office%20of%20the%20Board%20of%20Trustees']
 
     def parse(self, response):
         """
@@ -25,26 +25,33 @@ class Chi_cityCollegeSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for link in response.css('a.Eventslink::attr(href)').extract():
+        for link in response.css('.event-entry .event-title a::attr(href)').extract():
             next_url = "http://www.ccc.edu" + link
             yield scrapy.Request(next_url, callback=self.parse_event_page, dont_filter=True)
 
     def parse_event_page(self, response):
-        start_time = self._parse_start(response)
+        date, start_time, end_time = self._parse_date_and_times(response)
         data = {
             '_type': 'event',
             'name': self._parse_name(response),
-            'description': self._parse_description(response),
+            'event_description': self._parse_description(response),
             'classification': self._parse_classification(),
-            'start_time': start_time,
-            'end_time': None,
+            'start': {
+                'date': date,
+                'time': start_time,
+                'note': None,
+            },
+            'end': {
+                'date': date,
+                'time': end_time,
+                'note': None,
+            },
             'all_day': self._parse_all_day(),
-            'timezone': 'America/Chicago',
             'status': self._parse_status(),
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
-        data['id'] = self._generate_id(data, start_time)
+        data['id'] = self._generate_id(data)
         return data
 
     def _parse_classification(self):
@@ -71,14 +78,17 @@ class Chi_cityCollegeSpider(Spider):
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
+
+        text = response.css('#ctl00_PlaceHolderMain_FullDescription__ControlWrapper_RichHtmlField span::text').extract_first()
+        match = re.search(r'\.m\.,([^,]+),(.+)', text)
+
+        name = match.group(1).strip()
+        address = match.group(2).strip().rstrip('.')
+
         return {
-            'url': None,
-            'name': None,
-            'address': response.xpath('//span[@class="content required address"]/text()').extract_first(),
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
+            'name': name,
+            'address': address,
+            'neighborhood': None,
         }
 
     def _parse_all_day(self):
@@ -103,19 +113,30 @@ class Chi_cityCollegeSpider(Spider):
                 "of Chicago currently operates seven accredited colleges "
                 "located throughout Chicago.")
 
-    def _parse_start(self, response):
+    def _time_from_parts(self, hour_string, minute_string, suffix):
+        hour = int(hour_string)
+        minute = int(minute_string)
+        if suffix == "PM":
+            hour += 12
+        return time(hour, minute)
+
+    def _parse_date_and_times(self, response):
         """
         Parse start date and time.
         """
-        raw_date_time = response.css('div#formatDateA.required::text').extract_first()
-        date_regex = r"(\d+)\/(\d+)\/(\d+)"
-        time_regex = r"(\d+):(\d+)"
 
-        d = re.search(date_regex, raw_date_time)
-        t = re.search(time_regex, raw_date_time)
+        date_text = response.css('#formatDateA::text').extract_first()
+        date_match = re.search(r"(\d+)\/(\d+)\/(\d+)", date_text)
+        if date_match:
+            date_value = date(month=int(date_match.group(1)), day=int(date_match.group(2)), year=int(date_match.group(3)))
+        else:
+            date_value = None
 
-        naive_dt = datetime(month=int(d.group(1)), day=int(d.group(2)), year=int(d.group(3)), hour=int(t.group(1)), minute=int(t.group(2)))
-        return self._naive_datetime_to_tz(naive_dt, "America/Chicago")
+        time_text = response.css('.hours::text').extract_first()
+
+        start_time_parts, end_time_parts = re.findall(r"(\d+):(\d{2})\s(AM|PM|noon)", time_text)
+
+        return date_value, self._time_from_parts(*start_time_parts), self._time_from_parts(*end_time_parts),
 
     def _parse_sources(self, response):
         """

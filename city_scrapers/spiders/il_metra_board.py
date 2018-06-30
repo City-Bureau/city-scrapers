@@ -5,9 +5,9 @@ import re
 from city_scrapers.spider import Spider
 
 
-class Metra_boardSpider(Spider):
-    name = 'metra_board'
-    long_name = 'Metra Board of Directors'
+class Il_metra_boardSpider(Spider):
+    name = 'il_metra_board'
+    long_name = 'Illinois Metra Board of Directors'
     allowed_domains = ['metrarail.com']
     start_urls = ['https://metrarr.granicus.com/ViewPublisher.php?view_id=5']
 
@@ -35,7 +35,7 @@ class Metra_boardSpider(Spider):
                 'sources': self._parse_sources(response),
             }
 
-            data['id'] = self._generate_id(data, start_time)
+            data['id'] = self._generate_id(data)
             yield data
 
     def _parse_name(self, item):
