@@ -55,7 +55,14 @@ class Chi_teacherpensionSpider(Spider):
         """
         Parse or generate event name.
         """
-        return response.xpath('//*[@id="node-full"]/div/div[2]/h3['+str(i)+']/text()').extract_first()
+        cut = len(' Schedule')
+
+        if i == 3:
+        	name = response.xpath('//*[@id="node-full"]/div/div[2]/h4[1]/text()').extract_first()
+        else:
+        	name = response.xpath('//*[@id="node-full"]/div/div[2]/h3['+str(i)+']/text()').extract_first()
+        
+        return name[0:len(name)-cut]
 
     def _parse_description(self, response, i):
         """
