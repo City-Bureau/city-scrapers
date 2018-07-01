@@ -15,11 +15,8 @@ def test_name():
     assert parsed_items[0]['name'] == 'Regular Board Meeting'
 
 
-#def test_description():
-#    assert parsed_items[0]['description'] == """The Chicago Teachers’ Pension Fund (CTPF) Board of Trustees 
-#    meets monthly to discuss and make decisions on various issues, proceedings, and financial matters that 
-#    affect the Fund. All meetings are held at 9:30 a.m. in the CTPF office unless otherwise noted. Meetings 
-#    are open to the public, except when the Board goes into executive session."""
+def test_description():
+    assert parsed_items[0]['description'] == """The Chicago Teachers’ Pension Fund (CTPF) Board of Trustees meets monthly to discuss and make decisions on various issues, proceedings, and financial matters that affect the Fund. All meetings are held at 9:30 a.m. in the CTPF office unless otherwise noted. Meetings are open to the public, except when the Board goes into executive session."""
 
 
 def test_start_time():
@@ -42,11 +39,6 @@ def test_classification():
 
 
 ##### Parametrized Tests ####
-
-#@pytest.mark.parametrize('item', parsed_items)
-#def test_agency_name(item):
-#    assert item['agency_name'] == 'Chicago Teachers Pension Fund'
-
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
