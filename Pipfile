@@ -14,6 +14,7 @@ requests = "*"
 "jinja2" = "*"
 usaddress = "*"
 pytz = "*"
+legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper" } 
 
 [dev-packages]
 pytest = "*"
