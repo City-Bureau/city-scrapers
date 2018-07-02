@@ -63,5 +63,5 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
-    assert item['sources'] == [{'url': 'https://www.example.com', 
+    assert item['sources'] == [{'url': 'http://www.example.com', 
                                 'note': ''}]
