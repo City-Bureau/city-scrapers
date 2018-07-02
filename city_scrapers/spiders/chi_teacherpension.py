@@ -35,7 +35,7 @@ class Chi_teacherpensionSpider(Spider):
                             'status': self._parse_status(),
                             'all_day': self._parse_all_day(),
                             'location': self._parse_location(),
-                            'sources': self._parse_sources(),
+                            'sources': self._parse_sources(response),
                         }
 
                 data['id'] = self._generate_id(data)
@@ -145,12 +145,12 @@ class Chi_teacherpensionSpider(Spider):
         """
         return 'tentative'
 
-    def _parse_sources(self):
+    def _parse_sources(self, response):
         """
         Parse or generate sources.
         """
         return [{
-            'url': '',
+            'url': response.url,
             'note': ''
         }]
 
