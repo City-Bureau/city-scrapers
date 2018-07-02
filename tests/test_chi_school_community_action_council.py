@@ -1,17 +1,21 @@
 from datetime import datetime
 import pytest
+from freezegun import freeze_time
 
 from tests.utils import file_response
 from city_scrapers.spiders.chi_school_community_action_council import Chi_school_community_action_councilSpider
 
+freezer = freeze_time('2018-06-01 12:00:01')
+freezer.start()
 test_response = file_response('files/chi_school_community_action_council_CAC.html', url='http://cps.edu/FACE/Pages/CAC.aspx')
 spider = Chi_school_community_action_councilSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+current_month_number = datetime.today().month
+freezer.stop()
 
 
-def test_len():
-    current_month_number = datetime.today().month
-    assert len(parsed_items) == (13 - current_month_number)*8  # len varies depending on the month that the spider is run
+def test_num_items():
+    assert len(parsed_items) == (13 - current_month_number)*8
 
 
 def test_name():
@@ -19,11 +23,9 @@ def test_name():
 
 
 def test_start_time():
-    # this test will fail if it is run after June 2018
     assert parsed_items[0]['start_time'].isoformat() == '2018-06-12T17:30:00'
 
 def test_end_time():
-    # this test will fail if it is run after June 2018
     assert parsed_items[0]['end_time'].isoformat() == '2018-06-12T20:30:00'
 
 
