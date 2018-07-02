@@ -83,7 +83,7 @@ class Chi_teacherpensionSpider(Spider):
         if i == 1:
         	return 'board meeting'
         else:
-        	return ''
+        	return 'committee meeting'
 
     def _parse_start(self, response, date, i):
         """
