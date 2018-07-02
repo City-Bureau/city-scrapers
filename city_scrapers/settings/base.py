@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 # Scrapy settings for city_scrapers project
 #
@@ -26,15 +27,9 @@ CITY_SCRAPERS_ROBOTSTXT_LOGONLY = True
 COOKIES_ENABLED = False
 
 # Configure item pipelines
-#
-# One of:
-# * city_scrapers.pipelines.ValidationPipeline,
-# * city_scrapers.pipelines.AirtablePipeline
-#
-# Or define your own.
-# See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-#    'city_scrapers.pipelines.CsvPipeline': 400
+    'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
+    # 'city_scrapers.pipelines.CsvPipeline': 400,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -103,3 +98,5 @@ CLOSESPIDER_ERRORCOUNT = 5
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+S3_ITEM_BUCKET = os.getenv('S3_ITEM_BUCKET', 'city-scrapers-meetings-staging')

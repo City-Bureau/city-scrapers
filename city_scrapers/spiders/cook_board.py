@@ -4,7 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
 from legistar.events import LegistarEventsScraper
 
@@ -13,10 +13,10 @@ from city_scrapers.spider import Spider
 
 class Cook_boardSpider(Spider):
     name = 'cook_board'
-    long_name = 'Cook County Board of Commissioners'
+    agency_id = 'Cook County Board of Commissioners'
+    timezone = 'America/Chicago'
     allowed_domains = ['cook-county.legistar.com']
-    event_timezone = 'America/Chicago'
-    start_urls = ['https://www.cook-county.legistar.com']  # use LegistarEventsScraper instead
+    start_urls = ['https://www.cook-county.legistar.com']
 
     def parse(self, response):
         """
@@ -39,54 +39,61 @@ class Cook_boardSpider(Spider):
 
     def _parse_events(self, events):
         for item, _ in events:
-            start_time = self._parse_start(item)
+            name = self._parse_name(item)
             data = {
                 '_type': 'event',
-                'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start_time': start_time,
-                'end_time': self._parse_end(item),
+                'name': name,
+                'event_description': self._parse_description(item),
+                'classification': self._parse_classification(name),
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
-                'timezone': self.event_timezone,
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item)
+                'sources': self._parse_sources(item),
+                'documents': self._parse_documents(item)
             }
-            data['status'] = self._parse_status(item, data['start_time'])
+            data['status'] = self._generate_status(data, item['Meeting Location'])
             data['id'] = self._generate_id(data)
             yield data
 
-    def _parse_classification(self, item):
+    def _parse_documents(self, item):
         """
-        Parse or generate classification (e.g. town hall).
+        Returns meeting details and agenda if available.
         """
-        return 'Not classified'
+        documents = []
+        details = item['Meeting Details']
+        if type(details) == dict:
+            documents.append({
+                'note': 'Meeting Details',
+                'url': details['url']
+            })
+        agenda = item['Agenda']
+        if type(agenda) == dict:
+            documents.append({
+                'note': 'Agenda',
+                'url': agenda['url']
+            })
+        return documents
 
-    def _parse_status(self, item, start_time):
+    def _parse_classification(self, name):
         """
-        passed = meeting already started
-        tentative = no agenda posted
-        confirmed = agenda posted
+        Differentiate board and committee meetings
+        based on event name.
         """
-        if datetime.now().replace(tzinfo=timezone(self.event_timezone)) > start_time:
-            return 'passed'
-        if 'url' in item['Agenda']:
-            return 'confirmed'
-        return 'tentative'
+        if 'board' in name.lower():
+            return 'Board'
+        else:
+            return 'Committee'
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
+        Parse or generate location.
         """
+        address = item['Meeting Location'].split('/n')[0]
         return {
-            'url': None,
-            'address': item.get('Meeting Location', None),
-            'name': None,
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
+            'address': address,
+            'name': '',
+            'neighborhood': ''
         }
 
     def _parse_all_day(self, item):
@@ -103,31 +110,55 @@ class Cook_boardSpider(Spider):
 
     def _parse_description(self, item):
         """
-        Parse or generate event name.
+        No description listed.
         """
-        agenda = item['Agenda']
-        try:
-            return agenda['url']
-        except:
-            return agenda
+        return ''
 
-    def _parse_start(self, item):
+    def _parse_start_datetime(self, item):
         """
-        Parse start date and time.
+        Return the start date and time as a datetime object.
         """
         time = item.get('Meeting Time', None)
         date = item.get('Meeting Date', None)
         if date and time:
             time_string = '{0} {1}'.format(date, time)
-            naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
-            return self._naive_datetime_to_tz(naive, self.event_timezone)
+            return datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
         return None
+
+    def _parse_start(self, item):
+        """
+        Parse the start date and time.
+        """
+        start_datetime = self._parse_start_datetime(item)
+        if start_datetime:
+            return {
+                'date': start_datetime.date(),
+                'time': start_datetime.time(),
+                'note': ''
+            }
+        return {
+            'date': None,
+            'time': None,
+            'note': ''
+        }
 
     def _parse_end(self, item):
         """
-        Parse end date and time.
+        No end times are listed, so estimate the end time to
+        be 3 hours after the start time.
         """
-        return None
+        start_datetime = self._parse_start_datetime(item)
+        if start_datetime:
+            return {
+                'date': start_datetime.date(),
+                'time': (start_datetime + timedelta(hours=3)).time(),
+                'note': 'Estimated 3 hours after start time'
+            }
+        return {
+            'date': None,
+            'time': None,
+            'note': ''
+        }
 
     def _parse_sources(self, item):
         """

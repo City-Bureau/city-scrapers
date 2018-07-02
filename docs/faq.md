@@ -19,5 +19,5 @@ You can get an API key for Google Sheets for free by:
 You'll need to set this as an environment variable before running the new scraper. An easy way to do this is to just put it on the command line like so:
 
 ```
-$ DOCUMENTERS_AGGREGATOR_GOOGLE_API_KEY=TheTokenYouCreatedAbove scrapy crawl chi_localschoolcouncil
+$ CITY_SCRAPERS_GOOGLE_API_KEY=TheTokenYouCreatedAbove scrapy crawl chi_localschoolcouncil
 ```

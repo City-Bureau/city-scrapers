@@ -1,10 +1,11 @@
+from datetime import date, time
+
 import pytest
-
-from tests.utils import file_response
-from city_scrapers.spiders.wayne_cow import Wayne_cowSpider
-
 # Adapted from test_chi_parks.py
 from freezegun import freeze_time
+
+from city_scrapers.spiders.wayne_cow import Wayne_cowSpider
+from tests.utils import file_response
 
 freezer = freeze_time('2018-04-26 12:00:01')
 freezer.start()
@@ -18,28 +19,25 @@ freezer.stop()
 # PARAMETRIZED TESTS
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_description(item):
-    EXPECTED_DESCRIPTION = ("This committee is a forum for extensive discussion on issues "
+def test_event_description(item):
+    expected_description = ("This committee is a forum for extensive discussion on issues "
                             "by the 15 members of the Wayne County Commission. Meetings "
                             "are scheduled at the call of the chair of the Commission. "
                             "Final approval of items happens at full Commission meetings, "
                             "not Committee of the Whole. All Committee of the Whole "
                             "meetings are held in the 7th floor meeting room, Guardian "
                             "Building, 500 Griswold, Detroit, unless otherwise indicated.")
-    assert item['description'] == EXPECTED_DESCRIPTION
+    assert item['event_description'] == expected_description
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
-    EXPECTED_LOCATION = ({
-        'url': 'http://guardianbuilding.com/',
+    expected_location = ({
         'name': '7th floor meeting room, Guardian Building',
         'address': '500 Griswold St, Detroit, MI 48226',
-        'coordinates': {
-            'latitude': '',
-            'longitude': '', },
+        'neighborhood': '',
     })
-    assert item['location'] == EXPECTED_LOCATION
+    assert item['location'] == expected_location
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -49,12 +47,11 @@ def test_name(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end_time(item):
-    assert item['end_time'] is None
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Detroit'
+    assert item['end'] == {
+        'date': None,
+        'time': None,
+        'note': '',
+    }
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -81,10 +78,24 @@ def test_sources(item):
 
 
 # NON-PARAMETRIZED TESTS
+def test_documents():
+    assert parsed_items[0]['documents'] == [{
+        'note': 'agenda',
+        'url': 'https://www.waynecounty.com/documents/commission/cowmtg01-10-17.pdf',
+    }]
 
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2018-01-10T10:00:00-05:00'
+
+def test_start():
+    assert parsed_items[0]['start'] == {
+        'date': date(2018, 1, 10),
+        'time': time(10, 00),
+        'note': '',
+    }
 
 
-# def test_id():
-#    assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/committee_of_the_whole'
+def test_status():
+    assert parsed_items[0]['status'] == 'passed'
+
+
+def test_id():
+   assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/committee_of_the_whole'

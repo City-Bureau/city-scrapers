@@ -4,5 +4,8 @@ class CityScrapersItemPipeline(object):
     items, i.e. assigning the long name to agency_name
     """
     def process_item(self, item, spider):
-        item['agency_name'] = spider.long_name
+        if hasattr(spider, 'long_name'):
+            item['agency_name'] = spider.long_name
+        else:
+            item['agency_name'] = spider.agency_id
         return item
