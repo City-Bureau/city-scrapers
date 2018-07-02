@@ -84,6 +84,16 @@ celerybeat-schedule
 # dotenv
 .env
 
+# IDEs and editors
+/.idea
+.vscode
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
 # virtualenv
 .venv
 venv/
