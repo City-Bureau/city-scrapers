@@ -59,8 +59,10 @@ class Il_metra_boardSpider(Spider):
 
         if "Board Meeting" in full_name:
             return "Board Meeting"
-        elif "Citizens Advisory Board Meeting" in full_name:
+        elif "Citizens Advisory" in full_name:
             return "Citizens Advisory"
+        elif "Committee Meeting" in full_name:
+            return "Committee Meeting"
         else:
             return ''
 

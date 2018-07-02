@@ -6,7 +6,7 @@ from datetime import time
 from city_scrapers.spiders.il_metra_board import Il_metra_boardSpider
 
 
-test_response = file_response('files/metra_board.html')
+test_response = file_response('files/il_metra_board.html')
 spider = Il_metra_boardSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
