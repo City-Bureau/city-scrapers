@@ -32,7 +32,7 @@ class Chi_buildingsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        meeting_types = ['admin-opp-committee-meeting', 'audit-committee', 'board-meeting','community-meeting']
+        meeting_types = ['admin-opp-committee-meeting', 'audit-committee', 'board-meeting']
 
         data = json.loads(response.text)
         for item in data:
