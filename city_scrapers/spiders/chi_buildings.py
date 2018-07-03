@@ -32,30 +32,32 @@ class Chi_buildingsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+        meeting_types = ['admin-opp-committee-meeting', 'audit-committee', 'board-meeting','community-meeting']
+
         data = json.loads(response.text)
         for item in data:
-            if item.get('category') and 'holiday' not in item['category']:
-                start_time = self._naive_datetime_to_tz(self._parse_datetime(item['start']))
-                item_data = {
-                    '_type': 'event',
-                    'id': self._generate_id({'name': item['title']}),
-                    'name': item['title'],
-                    'classification': self._parse_classification(item),
-                    'start_time': start_time,
-                    'end_time': self._naive_datetime_to_tz(self._parse_datetime(item['end'])),
-                    'all_day': item['allDay'],
-                    'timezone': self.timezone,
-                    'status': self._parse_status(item, start_time),
-                    'sources': self._parse_sources(item)
-                }
-                # If it's a board meeting, return description
-                if item['category'][0] in ['board-meeting', 'admin-opp-committee-meeting']:
-                    yield self._board_meeting(item_data)
-                else:
-                    # Request each relevant event page, including current data in meta attr
-                    req = scrapy.Request(item['url'], callback=self._parse_event, dont_filter=True)
-                    req.meta['item'] = item_data
-                    yield req
+            if item.get('category') != [] and item.get('category')[0] in meeting_types:
+                    start_time = self._naive_datetime_to_tz(self._parse_datetime(item['start']))
+                    item_data = {
+                        '_type': 'event',
+                        'id': self._generate_id({'name': item['title']}),
+                        'name': item['title'],
+                        'classification': self._parse_classification(item),
+                        'start_time': start_time,
+                        'end_time': self._naive_datetime_to_tz(self._parse_datetime(item['end'])),
+                        'all_day': item['allDay'],
+                        'timezone': self.timezone,
+                        'status': self._parse_status(item, start_time),
+                        'sources': self._parse_sources(item)
+                    }
+                    # If it's a board meeting, return description
+                    if item['category'][0] in ['board-meeting', 'admin-opp-committee-meeting']:
+                        yield self._board_meeting(item_data)
+                    else:
+                        # Request each relevant event page, including current data in meta attr
+                        req = scrapy.Request(item['url'], callback=self._parse_event, dont_filter=True)
+                        req.meta['item'] = item_data
+                        yield req
 
     def _parse_event(self, response):
         """

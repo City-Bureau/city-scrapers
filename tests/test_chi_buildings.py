@@ -42,9 +42,9 @@ def test_no_holidays_included(item):
 
 def test_classification():
     assert parsed_items[0]['classification'] == 'Admin Opp Committee Meeting'
-    assert parsed_items[1]['classification'] == 'Community Hiring'
-    assert parsed_items[2]['classification'] == 'Board Meeting'
-    assert parsed_items[3]['classification'] == 'Opportunity'
+    assert parsed_items[1]['classification'] == 'Board Meeting'
+    assert parsed_items[2]['classification'] == 'Admin Opp Committee Meeting'
+    assert parsed_items[3]['classification'] == 'Audit Committee'
 
 
 @pytest.mark.parametrize('item', parsed_items)
