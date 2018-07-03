@@ -4,23 +4,24 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-scrapy = "*"
 airtable-python-wrapper = "*"
-boto3 = "*"
-inflector = "*"
-invoke = "*"
-python-dateutil = "*"
-requests = "*"
-jinja2 = "*"
-usaddress = "*"
-pytz = "*"
-legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper" } 
-pytest = "*"
-pep8 = "*"
-flake8 = "*"
-freezegun = "*"
 betamax = "*"
 betamax-serializers = "*"
+boto3 = "*"
+flake8 = "*"
+freezegun = "*"
+inflector = "*"
+invoke = "*"
+jinja2 = "*"
+legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper" } 
+pep8 = "*"
+pytest = "*"
+python-dateutil = "*"
+pytz = "*"
+requests = "*"
+scrapy = "*"
+scrapy-sentry ="*"
+usaddress = "*"
 
 [requires]
 python_version = "3.6"
