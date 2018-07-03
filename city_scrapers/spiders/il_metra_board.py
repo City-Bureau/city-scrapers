@@ -57,7 +57,7 @@ class Il_metra_boardSpider(Spider):
         """
         full_name = item.css('td[headers=Name]::text').extract_first()
 
-        if "Board Meeting" in full_name:
+        if "Metra" in full_name and "Board Meeting" in full_name:
             return "Board Meeting"
         elif "Citizens Advisory" in full_name:
             return "Citizens Advisory"
