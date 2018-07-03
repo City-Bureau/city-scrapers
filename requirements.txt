@@ -3,16 +3,17 @@ airtable-python-wrapper==0.11.2
 asn1crypto==0.24.0
 attrs==18.1.0
 automat==0.7.0
-boto3==1.7.40
-botocore==1.10.40
+boto3==1.7.49
+botocore==1.10.49
 certifi==2018.4.16
-cffi==1.11.5; platform_python_implementation != 'pypy'
+cffi==1.11.5; platform_python_implementation != 'PyPy'
 chardet==3.0.4
 constantly==15.1.0
 cryptography==2.2.2
-cssselect==1.0.3
+cssselect==1.0.3; python_version != '3.2.*'
 docutils==0.14
 future==0.16.0
+git+https://github.com/opencivicdata/python-legistar-scraper@732accde243622de3bc390cc38815997886dc76c#egg=legistar
 hyperlink==18.0.0
 idna==2.7
 incremental==17.5.0
@@ -20,18 +21,18 @@ inflector==2.0.12
 invoke==1.0.0
 jinja2==2.10
 jmespath==0.9.3
-lxml==4.2.1
+lxml==4.2.3
 markupsafe==1.0
 parsel==1.4.0
 probableparsing==0.0.1
-pyasn1-modules==0.2.1
+pyasn1-modules==0.2.2
 pyasn1==0.4.3
 pycparser==2.18
 pydispatcher==2.0.5
 pyopenssl==18.0.0
 python-crfsuite==0.9.5
 python-dateutil==2.7.3
-pytz==2018.4
+pytz==2018.5
 queuelib==1.5.0
 requests==2.19.1
 s3transfer==0.1.13
@@ -39,7 +40,7 @@ scrapy==1.5.0
 service-identity==17.0.0
 six==1.11.0
 twisted==18.4.0
-urllib3==1.23
+urllib3==1.23; python_version != '3.0.*'
 usaddress==0.5.10
 w3lib==1.19.0
-zope.interface==4.5.0
+zope.interface==4.5.0; python_version >= '2.7'

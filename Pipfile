@@ -6,20 +6,21 @@ name = "pypi"
 [packages]
 scrapy = "*"
 airtable-python-wrapper = "*"
-"boto3" = "*"
+boto3 = "*"
 inflector = "*"
 invoke = "*"
 python-dateutil = "*"
 requests = "*"
-"jinja2" = "*"
+jinja2 = "*"
 usaddress = "*"
 pytz = "*"
 legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper" } 
 
 [dev-packages]
 pytest = "*"
+pep8 = "*"
+flake8 = "*"
 freezegun = "*"
-"flake8" = "*"
 betamax = "*"
 betamax-serializers = "*"
 
