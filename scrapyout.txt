@@ -1,0 +1,17 @@
+no pupa_settings on path, using defaults
+[s] Available Scrapy objects:
+[s]   scrapy     scrapy module (contains scrapy.Request, scrapy.Selector, etc)
+[s]   crawler    <scrapy.crawler.Crawler object at 0x7f299c7a8cf8>
+[s]   item       {}
+[s]   request    <GET https://www.chipublib.org/news-feed/board-of-directors/>
+[s]   response   <200 https://www.chipublib.org/news-feed/board-of-directors/>
+[s]   settings   <scrapy.settings.Settings object at 0x7f299c7a8c50>
+[s]   spider     <DefaultSpider 'default' at 0x7f299adb9ac8>
+[s] Useful shortcuts:
+[s]   fetch(url[, redirect=True]) Fetch URL and update local objects (by default, redirects are followed)
+[s]   fetch(req)                  Fetch a scrapy.Request and update local objects 
+[s]   shelp()           Shell help (print this help)
+[s]   view(response)    View response in a browser
+In [1]: 
+In [1]: 
+In [1]: 
