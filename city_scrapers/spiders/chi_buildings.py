@@ -37,17 +37,19 @@ class Chi_buildingsSpider(Spider):
         data = json.loads(response.text)
         for item in data:
             if item.get('category') != [] and item.get('category')[0] in meeting_types:
-                    start_time = self._naive_datetime_to_tz(self._parse_datetime(item['start']))
+                    start_date = self._naive_datetime_to_tz(self._parse_datetime(item['start']))
+                    end_date = self._naive_datetime_to_tz(self._parse_datetime(item['end']))
                     item_data = {
                         '_type': 'event',
                         'id': self._generate_id({'name': item['title']}),
                         'name': item['title'],
+                        'description': self._parse_description(item),
                         'classification': self._parse_classification(item),
-                        'start_time': start_time,
-                        'end_time': self._naive_datetime_to_tz(self._parse_datetime(item['end'])),
+                        'start': self._parse_time_dict(start_date),
+                        'end': self._parse_time_dict(end_date),
                         'all_day': item['allDay'],
                         'timezone': self.timezone,
-                        'status': self._parse_status(item, start_time),
+                        'status': self._parse_status(item, start_date),
                         'sources': self._parse_sources(item)
                     }
                     # If it's a board meeting, return description
@@ -64,7 +66,7 @@ class Chi_buildingsSpider(Spider):
         Parse event detail page if additional information
         """
         item = {
-            'description': self._parse_description(response),
+            #'description': self._parse_description(response),
             'location': self._parse_location(response)
         }
         # Merge event details with item data from request meta
@@ -102,7 +104,7 @@ class Chi_buildingsSpider(Spider):
         Return a standard location for board meetings
         """
         item_data = {
-            'description': None,
+            #'description': None,
             'location': {
                 'url': 'https://thedaleycenter.com',
                 'name': 'Second Floor Board Room, Richard J. Daley Center',
@@ -157,27 +159,13 @@ class Chi_buildingsSpider(Spider):
         """
         Parse or generate event description.
         """
-        description_lines = item.css('.entry-content > p')
-        if len(description_lines) == 0:
-            return None
+        return item['description']
 
-        description = ''
-        for line in description_lines:
-            links = line.css('a')
-            if len(links) > 0:
-                for link in links:
-                    link_text = link.css('*::text').extract_first()
-                    if link_text.endswith('.'):
-                        link_text = link_text[:-1]
-                    description += ' {}: {} '.format(
-                        link_text,
-                        link.xpath('@href').extract_first()
-                    )
-            else:
-                description += ' '.join([l.extract().strip() for l in line.css('*::text')]) + ' '
-        description = unicodedata.normalize('NFKD', description)
-        description = description.replace('\n', ' ').strip().replace(' , ', ', ')
-        return re.sub(r'\s+', ' ', description)
+    def _parse_time_dict(self, date):
+        return  {'date': date.date(),
+        'time': date.time(),
+        'note': ''
+        }
 
     def _parse_datetime(self, time_str):
         return datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S')
