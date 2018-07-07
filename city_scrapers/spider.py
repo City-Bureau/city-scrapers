@@ -78,3 +78,16 @@ class Spider(scrapy.Spider):
         """
         tz = timezone(source_tz)
         return tz.localize(datetime_object)
+
+    def _itemproc_finished(self, output, item, response, spider):
+        """
+        ItemProcessor finished for the given ``item`` and returned ``output``
+        """
+        self.logger.error('ERROR from _itemproc_finished')
+        self.logger.debug('DEBUG from _itemproc_finished')
+        
+        super()._itemproc_finished(output, item, response, spider)
+
+        if isinstance(output, Failure) and not isinstance(ex, DropItem):
+            self.logger.error('ERROR from _itemproc_finished')
+            self.logger.debug('DEBUG from _itemproc_finished')
