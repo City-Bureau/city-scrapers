@@ -9,6 +9,7 @@ import json
 import datetime
 
 from city_scrapers.spider import Spider
+from city_scrapers.utils import report_error
 
 
 class Chi_librarySpider(Spider):
@@ -24,7 +25,9 @@ class Chi_librarySpider(Spider):
         """
         self.session = session
 
+    @report_error
     def parse(self, response):
+        raise Exception("HELLO")
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
         event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.

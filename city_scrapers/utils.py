@@ -1,6 +1,7 @@
 from functools import reduce
 from functools import wraps
 from operator import getitem
+from scrapy_sentry.utils import get_client
 
 
 def get_key(the_dict, location_string):
@@ -26,6 +27,8 @@ def report_error(f):
         except:
             # TODO: Report to Sentry
             print('Reporting to Sentry')
+            get_client().captureException()
+            print('Done reporting to Sentry')
             raise
 
     return wrapper
