@@ -25,11 +25,13 @@ def report_error(f):
             print('Calling decorated function')
             return f(*args, **kwds)
         except:
-            # TODO: Report to Sentry
             print('Reporting to Sentry')
+            # TODO: Report to Sentry
             get_client().captureException()
             print('Done reporting to Sentry')
+            
             raise
 
     return wrapper
+
     
