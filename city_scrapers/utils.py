@@ -24,7 +24,6 @@ def report_error(f):
         try:
             print('Calling decorated function')
             return f(*args, **kwds)
-            print("THIS NEVER GETS ")
         except:
             print('Reporting to Sentry')
             # TODO: Report to Sentry
