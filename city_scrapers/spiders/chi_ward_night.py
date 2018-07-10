@@ -108,14 +108,17 @@ class Row(IntEnum):
     INFO = 13               # Text
 
 
-class WardNightSpider(Spider):
-    name = 'ward_night'
+class ChiWardNightSpider(Spider):
+    name = 'chi_ward_night'
+    agency_id = 'City Council'
+    timezone = 'America/Chicago'
     long_name = 'Ward Nights'
+
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = [SPREADSHEET_URL + '/values/A3:N100?key=' + GOOGLE_API_KEY]
 
     def __init__(self, start_date=datetime.today(), *args, **kwargs):
-        super(WardNightSpider, self).__init__(*args, **kwargs)
+        super(ChiWardNightSpider, self).__init__(*args, **kwargs)
         self.start_date = start_date
 
     def parse(self, response):
@@ -172,16 +175,17 @@ class WardNightSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': self._parse_name(row),
-                'description': self._parse_description(row),
-                'classification': self._parse_classification(row),
-                'start_time': dates['start'],
-                'end_time': dates['end'],
-                'all_day': self._parse_all_day(row),
-                'timezone': 'America/Chicago',
-                'status': self._parse_status(row),
+                'event_description': self._parse_description(row),
+                'classification': 'City Council',
+                'start': dates['start'],
+                'end': dates['end'],
+                'all_day': False,
+                'documents': [],
+                'sources': [],
                 'location': self._parse_location(row),
             }
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data, data['event_description'])
             return data
 
         days = self._days_for_frequency(row[Row.FREQUENCY], row[Row.DAY_OF_WEEK])
@@ -199,46 +203,16 @@ class WardNightSpider(Spider):
         name = 'Ward Night: Ward {ward}'.format(**values)
         return name
 
-    def _parse_classification(self, row):
-        """
-        Parse or generate classification (e.g. town hall).
-        """
-
-        return None
-
-    def _parse_status(self, row):
-        """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
-        """
-        return 'tentative'
-
     def _parse_location(self, row):
         """
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
         return {
-            'url': None,
-            'name': row[Row.ADDRESS].strip(),
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
+            'name': '',
+            'address': row[Row.ADDRESS].strip(),
+            'neighborhood': '',
         }
-
-    def _parse_all_day(self, row):
-        """
-        Parse or generate all-day status. Defaults to false.
-        """
-
-        return False
 
     def _parse_description(self, row):
         """
@@ -263,5 +237,7 @@ class WardNightSpider(Spider):
         end_time = datetime.strptime(row[Row.END_TIME], '%I:%M %p')
         end_datetime = datetime.combine(day, end_time.time())
 
-        return {'start': self._naive_datetime_to_tz(start_datetime),
-                'end': self._naive_datetime_to_tz(end_datetime)}
+        return {
+            'start': {'date': start_datetime.date(), 'time': start_datetime.time()},
+            'end': {'date': end_datetime.date(), 'time': end_datetime.time()},
+        }

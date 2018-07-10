@@ -1,53 +1,51 @@
 import pytest
-from datetime import date
+from datetime import date, time
 
 from tests.utils import file_response
-from city_scrapers.spiders.ward_night import WardNightSpider, Calendar
+from city_scrapers.spiders.chi_ward_night import ChiWardNightSpider, Calendar
 from textwrap import dedent
 
 test_response = file_response('files/ward_night.json')
-spider = WardNightSpider(start_date=date(2017, 11, 1))
+spider = ChiWardNightSpider(start_date=date(2017, 11, 1))
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-# def test_id():
-#    assert parsed_items[0]['id'] == 'ward_night/201711071600/x/ward_night_ward_1'
+def test_id():
+   assert parsed_items[0]['id'] == 'chi_ward_night/201711071600/x/ward_night_ward_1'
 
 
 def test_name():
     assert parsed_items[0]['name'] == 'Ward Night: Ward 1'
 
 
-def test_description():
+def test_event_description():
     expected = dedent("""\
     Ward Night with Alderman Joe Moreno (Ward 1).
     first come first served, one-on-one meetings usually about 10-20 minutes""")
 
-    assert parsed_items[0]['description'] == expected
+    assert parsed_items[0]['event_description'] == expected
 
 
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2017-11-07T16:00:00-06:00'
+def test_start():
+    assert parsed_items[0]['start'] == {
+        'date': date(2017, 11, 7),
+        'time': time(16,00)
+    }
 
 
-def test_end_time():
-    assert parsed_items[0]['end_time'].isoformat() == '2017-11-07T18:00:00-06:00'
+def test_end():
+    assert parsed_items[0]['end'] == {
+        'date': date(2017, 11, 7),
+        'time': time(18, 00)
+    }
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'url': None,
-        'name': '2740 W North Ave, Chicago',
-        'coordinates': {
-            'latitude': None,
-            'longitude': None,
-        }
+        'name': '',
+        'address': '2740 W North Ave, Chicago',
+        'neighborhood': ''
     }
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -57,17 +55,27 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] is None
+    assert item['classification'] == 'City Council'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):
-    assert item['status'] == 'tentative'
+    assert item['status'] == 'passed'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert item['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_documents(item):
+    assert item['documents'] == []
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == []
 
 
 # Test integration with the Calendar class
@@ -90,21 +98,39 @@ def test_weekly_generation():
         'First come first served '
     ]
 
-    spider = WardNightSpider()
+    spider = ChiWardNightSpider()
     spider.start_date = date(2017, 10, 31)
     events = spider._parse_row(row)
 
-    assert events[0]['start_time'].isoformat() == '2017-11-06T15:00:00-06:00'
-    assert events[0]['end_time'].isoformat() == '2017-11-06T19:00:00-06:00'
-#    assert events[0]['id'] == 'ward_night/201711061500/x/ward_night_ward_7'
+    assert events[0]['start'] == {
+        'date': date(2017, 11, 6),
+        'time': time(15, 00),
+    }
+    assert events[0]['end'] == {
+        'date': date(2017, 11, 6),
+        'time': time(19, 00)
+    }
+    assert events[0]['id'] == 'chi_ward_night/201711061500/x/ward_night_ward_7'
 
-    assert events[1]['start_time'].isoformat() == '2017-11-13T15:00:00-06:00'
-    assert events[1]['end_time'].isoformat() == '2017-11-13T19:00:00-06:00'
-#    assert events[1]['id'] == 'ward_night/201711131500/x/ward_night_ward_7'
+    assert events[1]['start'] == {
+        'date': date(2017,11,13),
+        'time': time(15,00),
+    }
+    assert events[1]['end'] == {
+        'date': date(2017, 11, 13),
+        'time': time(19, 00)
+    }
+    assert events[1]['id'] == 'chi_ward_night/201711131500/x/ward_night_ward_7'
 
-    assert events[2]['start_time'].isoformat() == '2017-11-20T15:00:00-06:00'
-    assert events[2]['end_time'].isoformat() == '2017-11-20T19:00:00-06:00'
-#    assert events[2]['id'] == 'ward_night/201711201500/x/ward_night_ward_7'
+    assert events[2]['start'] == {
+        'date': date(2017,11,20),
+        'time': time(15,00),
+    }
+    assert events[2]['end'] == {
+        'date': date(2017, 11, 20),
+        'time': time(19, 00)
+    }
+    assert events[2]['id'] == 'chi_ward_night/201711201500/x/ward_night_ward_7'
 
 
 def test_monthly_generation():
@@ -125,21 +151,39 @@ def test_monthly_generation():
         'Every fourth Tuesday, no meeting in November or December, group meetings rather than one-on-one'
     ]
 
-    spider = WardNightSpider()
+    spider = ChiWardNightSpider()
     spider.start_date = date(2017, 10, 31)
     events = spider._parse_row(row)
 
-    assert events[0]['start_time'].isoformat() == '2017-11-28T18:00:00-06:00'
-    assert events[0]['end_time'].isoformat() == '2017-11-28T20:00:00-06:00'
-#    assert events[0]['id'] == 'ward_night/201711281800/x/ward_night_ward_5'
+    assert events[0]['start'] == {
+        'date': date(2017, 11, 28),
+        'time': time(18, 00)
+    }
+    assert events[0]['end'] == {
+        'date': date(2017, 11, 28),
+        'time': time(20, 00)
+    }
+    assert events[0]['id'] == 'chi_ward_night/201711281800/x/ward_night_ward_5'
 
-    assert events[1]['start_time'].isoformat() == '2017-12-26T18:00:00-06:00'
-    assert events[1]['end_time'].isoformat() == '2017-12-26T20:00:00-06:00'
-#    assert events[1]['id'] == 'ward_night/201712261800/x/ward_night_ward_5'
+    assert events[1]['start'] == {
+        'date': date(2017, 12, 26),
+        'time': time(18, 00)
+    }
+    assert events[1]['end'] == {
+        'date': date(2017, 12, 26),
+        'time': time(20, 00)
+    }
+    assert events[1]['id'] == 'chi_ward_night/201712261800/x/ward_night_ward_5'
 
-    assert events[2]['start_time'].isoformat() == '2018-01-23T18:00:00-06:00'
-    assert events[2]['end_time'].isoformat() == '2018-01-23T20:00:00-06:00'
-#    assert events[2]['id'] == 'ward_night/201801231800/x/ward_night_ward_5'
+    assert events[2]['start'] == {
+        'date': date(2018, 1, 23),
+        'time': time(18, 00)
+    }
+    assert events[2]['end'] == {
+        'date': date(2018, 1, 23),
+        'time': time(20, 00)
+    }
+    assert events[2]['id'] == 'chi_ward_night/201801231800/x/ward_night_ward_5'
 
 
 # Calendar tests

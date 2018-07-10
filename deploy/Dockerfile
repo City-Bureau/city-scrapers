@@ -7,5 +7,3 @@ COPY . /usr/src/app/
 ENV PYTHONPATH=/usr/src/app
 
 WORKDIR /usr/src/app
-
-CMD ["./deploy/crawl.sh"]

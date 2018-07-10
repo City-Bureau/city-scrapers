@@ -7,6 +7,8 @@ import scrapy
 
 import json
 import datetime as dt
+import re
+import unicodedata
 
 from city_scrapers.spider import Spider
 
@@ -20,7 +22,10 @@ class Cook_landbankSpider(Spider):
     Yields dict for dates with events.
     """
     name = 'cook_landbank'
+    agency_id = 'Cook County Land Bank Authority'
     long_name = 'Cook County Land Bank'
+    timezone = 'America/Chicago'
+
     allowed_domains = ['www.cookcountylandbank.org']
     start_urls = ['http://www.cookcountylandbank.org/wp-admin/admin-ajax.php']
 
@@ -102,16 +107,17 @@ class Cook_landbankSpider(Spider):
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
+                'event_description': self._parse_description(item),
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'timezone': 'America/Chicago',
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(item)
+                'sources': self._parse_sources(item),
+                'documents': self._parse_documents(item),
             }
+            data['classification'] = self._generate_classification(data['name'])
             data['id'] = self._generate_id(data)
             yield data
         else:
@@ -138,12 +144,6 @@ class Cook_landbankSpider(Spider):
     def _parse_id(self, item):
         event_id = item.css('div[data-event_id]::attr(data-event_id)').extract_first()
         return event_id
-
-    def _parse_classification(self, item):
-        """
-        No real 'classification' field to parse
-        """
-        return 'Not classified'
 
     def _parse_status(self, item):
         """
@@ -189,22 +189,28 @@ class Cook_landbankSpider(Spider):
         return name
 
     def _parse_description(self, item):
-        ADDEDdescription = ("The CCLBA acquires, holds, and transfers interest in real estate "
-                      "properties throughout Cook County to promote redevelopment and "
-                      "reuse of vacant, abandoned, foreclosed or tax-delinquent properties "
-                      "and support targeted efforts to stabilize neighborhoods. It was "
-                      "formed by ordinance of Cook County in 2013 to address the large "
-                      "inventory of vacant residential, industrial and commercial property "
-                      "in Cook County. The CCLBA is the largest land bank by geography in "
-                      "the country and is governed by a Board of Directors appointed by "
-                      "the Cook County Board of Commissioners.")
-        return ADDEDdescription
+        raw_description = item.xpath('string(normalize-space(//div[@itemprop="description"]))').extract_first()
+        normalized_description = unicodedata.normalize("NFKC", raw_description)
+        description = re.sub('\s+',' ', normalized_description)
+
+        agenda_sentinal = re.search("agenda", description, re.IGNORECASE)
+        if agenda_sentinal:
+            description = description[0:agenda_sentinal.start()]
+
+        description = description.strip()
+
+        return description
+        
 
     def _parse_start(self, item):
         start_date = item.css('[itemprop=\'startDate\']::attr(datetime)').extract_first()
         start_time = item.css('em.evo_time span[class=\'start\']::text').extract_first()
         start_date_time = dt.datetime.strptime(start_date + ' ' + start_time, '%Y-%m-%d %I:%M %p')
-        return self._naive_datetime_to_tz(start_date_time)
+        return {
+            'date': start_date_time.date(),
+            'time': start_date_time.time(),
+            'note': ''
+        }
 
     def _parse_end(self, item):
         """
@@ -212,24 +218,11 @@ class Cook_landbankSpider(Spider):
         Left commented the code to pull the end date if you want to include later.
         """
         # end_date = item.css('[itemprop=\'endDate\']')[0].get('datetime')
-        return None
-
-    """
-    Was trying to parse the Agenda, but it's pretty irregularly structured.
-    The source_url goes straight to all the info and also includes an embedded
-    PDF that could potentially be scraped. Didn't bother with that here.
-    """
-    # def _parse_agenda(self, item):
-    #     agenda = []
-    #     for item in item.css('div[class=\'eventon_desc_in\'] h4'):
-    #     # This captures some, but not all agenda items, because they don't consistently use the same tags
-    #     # Not worrying a lot about it now, and it'll be clear in the output that the items numbers are off
-    #         description = item.text
-    #         if description:
-    #             agenda.append(description)
-    #         else:
-    #             continue
-    #     return agenda
+        return {
+            'date': None,
+            'time': None,
+            'note': ''
+        }
 
     def _parse_sources(self, item):
         source_url = item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)').extract_first()
@@ -237,3 +230,21 @@ class Cook_landbankSpider(Spider):
             'url': source_url,
             'note': 'Event Page'
         }]
+
+    def _parse_documents(self, item):
+        documents = []
+
+        agenda_pdf_link = item.xpath('//div[@itemprop="description"]//a[contains(@href, "pdf")]/@href').extract_first()
+        if agenda_pdf_link:
+            documents.append({
+                'url': agenda_pdf_link,
+                'note': 'agenda'
+            })
+
+        return documents
+
+    def _generate_classification(self, name):
+        if re.search("Board of Directors", name, re.IGNORECASE):
+            return 'board meeting'
+        else:
+            return 'committee meeting'
