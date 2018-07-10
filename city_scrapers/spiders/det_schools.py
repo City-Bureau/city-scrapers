@@ -8,7 +8,8 @@ from city_scrapers.spider import Spider
 
 class Det_schoolsSpider(Spider):
     name = 'det_schools'
-    long_name = 'Detroit Board of Education'
+	agency_id = 'Detroit Public Schools'
+	timezone ='America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/board/meetings/']
 
@@ -32,19 +33,41 @@ class Det_schoolsSpider(Spider):
         items = zip(names, calendar_links, times, addresses)
 
         for item in items:
+			startDate = self._parse_start(item[2])
+			endDate	  = self._parse_end(item[2])
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item[1]),
                 'name': item[0],
-                'description': item[0],
-                'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item[2]),
-                'end_time': self._parse_end(item[2]),
-                'timezone': 'America/Detroit',
-                'status': self._parse_status(item),
+                'event_description': item[0],
                 'all_day': self._parse_all_day(item),
+                'status': self._parse_status(item),
+                'classification': self._parse_classification(item),
+                'start': {
+					'date' :  startDate.date(),
+					'time' :  startDate.time(),
+					'note' :  ''
+				},
+				'end' : {
+					'date':  endDate.date(),
+					'time':  endDate.time(),
+					'note':  ''
+				},
                 'location': self._parse_location(item[3]),
-                'sources': self._parse_sources(response),
+				
+				'documents' : [
+					{
+					'url':   '' ,
+					'note':  ''
+					}
+				],
+                #'sources': self._parse_sources(response),
+				'sources': [
+					{
+						'url':  '' ,
+						'note': ''
+					}
+				]
             }
 
             data['id'] = self._generate_id(data)
@@ -63,7 +86,7 @@ class Det_schoolsSpider(Spider):
         parsed_url = urllib.parse.urlparse(item)
         parsed_query = urllib.parse.parse_qs(parsed_url.query)
         return parsed_query['eid'][0]
-
+ 
     def _parse_name(self, item):
         """
         Parse or generate event name.
@@ -95,8 +118,9 @@ class Det_schoolsSpider(Spider):
             meridiem=components[4]
         )
         return datetime.strptime(start_time, "%B %d, %Y %I:%M%p")
-
-    def _parse_end(self, item):
+		
+		
+	def _parse_end(self, item):
         """
         Parse end date and time.
         """
@@ -109,8 +133,8 @@ class Det_schoolsSpider(Spider):
             meridiem=components[7]
         )
         return datetime.strptime(end_time, "%B %d, %Y %I:%M%p")
-
-    def _parse_all_day(self, item):
+	
+	def _parse_all_day(self, item):
         """
         Parse or generate all-day status. Defaults to False.
         """
@@ -122,13 +146,9 @@ class Det_schoolsSpider(Spider):
         left blank and will be geocoded later.
         """
         return {
-            'url': '',
             'name': '',
             'address': item,
-            'coordinates': {
-                'latitude': '',
-                'longitude': '',
-            },
+			'neighborhood': ''
         }
 
     def _parse_status(self, item):
