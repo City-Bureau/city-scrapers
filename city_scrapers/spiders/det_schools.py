@@ -33,8 +33,8 @@ class Det_schoolsSpider(Spider):
         items = zip(names, calendar_links, times, addresses)
 
         for item in items:
-			startDate = self._parse_start(item[2])
-			endDate	  = self._parse_end(item[2])
+            startDate = self._parse_start(item[2])
+            endDate      = self._parse_end(item[2])
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item[1]),
@@ -42,32 +42,32 @@ class Det_schoolsSpider(Spider):
                 'event_description': item[0],
                 'all_day': self._parse_all_day(item),
                 'status': self._parse_status(item),
-                'classification': self._parse_classification(item),
+                'council': self._parse_classification(item),
                 'start': {
-					'date' :  startDate.date(),
-					'time' :  startDate.time(),
-					'note' :  ''
-				},
-				'end' : {
-					'date':  endDate.date(),
-					'time':  endDate.time(),
-					'note':  ''
-				},
+                    'date' :  startDate.date(),
+                    'time' :  startDate.time(),
+                    'note' :  ''
+                },
+                'end' : {
+                    'date':  endDate.date(),
+                    'time':  endDate.time(),
+                    'note':  ''
+                },
                 'location': self._parse_location(item[3]),
-				
-				'documents' : [
-					{
-					'url':   '' ,
-					'note':  ''
-					}
-				],
+                
+                'documents' : [
+                    {
+                    'url':   '' ,
+                    'note':  ''
+                    }
+                ],
                 #'sources': self._parse_sources(response),
-				'sources': [
-					{
-						'url':  '' ,
-						'note': ''
-					}
-				]
+                'sources': [
+                    {
+                        'url':  '' ,
+                        'note': ''
+                    }
+                ]
             }
 
             data['id'] = self._generate_id(data)
@@ -118,9 +118,9 @@ class Det_schoolsSpider(Spider):
             meridiem=components[4]
         )
         return datetime.strptime(start_time, "%B %d, %Y %I:%M%p")
-		
-		
-	def _parse_end(self, item):
+        
+        
+    def _parse_end(self, item):
         """
         Parse end date and time.
         """
@@ -133,8 +133,8 @@ class Det_schoolsSpider(Spider):
             meridiem=components[7]
         )
         return datetime.strptime(end_time, "%B %d, %Y %I:%M%p")
-	
-	def _parse_all_day(self, item):
+    
+    def _parse_all_day(self, item):
         """
         Parse or generate all-day status. Defaults to False.
         """
@@ -148,7 +148,7 @@ class Det_schoolsSpider(Spider):
         return {
             'name': '',
             'address': item,
-			'neighborhood': ''
+            'neighborhood': ''
         }
 
     def _parse_status(self, item):
