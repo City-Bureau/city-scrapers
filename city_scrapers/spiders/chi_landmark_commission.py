@@ -11,7 +11,6 @@ class Chi_landmark_commissionSpider(Spider):
     name = 'chi_landmark_commission'
     agency_id = 'Department of Planning and Development'
     timezone = 'America/Chicago'
-    long_name = 'Commission on Chicago Landmarks'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html']
 
