@@ -92,10 +92,8 @@ def test_start():
         'note': '',
     }
 
+def test_id():
+    assert parsed_items[0]['id'] == 'wayne_health_human_services/201801091330/x/committee_on_health_and_human_services'
 
-# @TODO Figure out why all status are coming in as "confirmed"
-# def test_status():
-#     assert parsed_items[0]['status'] == 'passed'
-# @TODO Get date and time inserted as ID
-# def test_id():
-#     assert parsed_items[0]['id'] == 'wayne_health_human_services/000000000000/x/committee_on_health_and_human_services'
+def test_status():
+    assert parsed_items[0]['status'] == 'passed'
