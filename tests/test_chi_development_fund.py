@@ -17,12 +17,16 @@ def test_meeting_count():
     assert len(parsed_items) == 57
 
 
+def test_unique_id_count():
+    assert len(set([item['id'] for item in parsed_items])) == 57
+
+
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Chicago Development Fund'
+    assert parsed_items[0]['name'] == 'Chicago Development Fund (Advisory Board)'
 
 
 def test_description():
@@ -50,7 +54,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_development_fund/201804180000/x/chicago_development_fund'
+    assert parsed_items[0]['id'] == 'chi_development_fund/201804180000/x/chicago_development_fund_advisory_board'
 
 
 def test_status():

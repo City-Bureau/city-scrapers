@@ -11,7 +11,6 @@ class Chi_development_fundSpider(Spider):
     name = 'chi_development_fund'
     agency_id = 'Department of Planning and Development'
     timezone = 'America/Chicago'
-    long_name = 'Chicago Development Fund'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_developmentfund.html']
 
@@ -32,11 +31,13 @@ class Chi_development_fundSpider(Spider):
             meetings = column.xpath(meeting_date_xpath).extract()
             meetings = self.format_meetings(meetings)
             for meeting in meetings:
+                name, start = self._parse_start(meeting)
                 data = {'_type': 'event',
-                        'name': "Chicago Development Fund",
+                        'name': "Chicago Development Fund ({})".format(name),
                         'event_description': description,
                         'classification': 'Commission',
-                        'start': self._parse_start(meeting), 'all_day': False,
+                        'start': start,
+                        'all_day': False,
                         'location': {'neighborhood': '',
                                      'name': 'City Hall',
                                      'address': '121 N. LaSalle St., Room 1000'},
@@ -75,11 +76,13 @@ class Chi_development_fundSpider(Spider):
         # Not all dates on site a valid dates (e.g. Jan. 2011), so try to parse
         # and return none if not possible
         try:
-            dt = dateutil.parser.parse(meeting, fuzzy=True)
+            dt, other_text = dateutil.parser.parse(meeting, fuzzy_with_tokens=True)
             # based on Agenda mtg time seems to vary but time not stated mtg desc
-            return {'date': dt.date(), 'time': None, 'note': ''}
+            name = [s.strip() for s in other_text if s.strip()]
+            return ' '.join(name), {'date': dt.date(), 'time': None, 'note': ''}
         except TypeError:
-            return {'date': None, 'time': None, 'note': ''}
+            name = ' '.join(meeting.split(' ')[:-3])
+            return name, {'date': None, 'time': None, 'note': ''}
 
     def _parse_documents(self, item, meeting, response):
         # Find <a> tags where 1st, non-blank, preceding text = meeting (e.g. 'Jan 16')
