@@ -8,8 +8,8 @@ from city_scrapers.spider import Spider
 
 class Det_schoolsSpider(Spider):
     name = 'det_schools'
-	agency_id = 'Detroit Public Schools'
-	timezone ='America/Detroit'
+    agency_id = 'Detroit Public Schools'
+    timezone ='America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/board/meetings/']
 
