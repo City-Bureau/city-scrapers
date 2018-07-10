@@ -85,8 +85,12 @@ def test_documents():
     }]
 
 
-def test_start_time():
-    assert parsed_items[0]['start'].isoformat() == '2018-01-09T13:30:00-05:00'
+def test_start():
+    assert parsed_items[0]['start'] == {
+        'date': date(2018, 1, 9),
+        'time': time(13, 30),
+        'note': '',
+    }
 
 
 # @TODO Figure out why all status are coming in as "confirmed"

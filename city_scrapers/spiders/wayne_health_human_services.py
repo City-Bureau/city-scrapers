@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-import re
 from dateutil.parser import parse as dateparse
 from urllib.parse import urljoin
 
@@ -79,7 +78,7 @@ class Wayne_health_human_servicesSpider(Spider):
         time_str = item.xpath('.//td[3]/text()').extract_first()
         date_str = dateparse('{0} {1} {2} {3}'.format(month_str, day_str, self.yearStr, time_str))
 
-        return self._naive_datetime_to_tz(date_str, source_tz='America/Detroit')
+        return {'date': date_str.date(), 'time': date_str.time(), 'note': ''}
 
     @staticmethod
     def _parse_location():
