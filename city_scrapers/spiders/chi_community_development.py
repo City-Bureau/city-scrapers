@@ -11,7 +11,6 @@ class ChiCommunityDevelopmentSpider(Spider):
     name = 'chi_community_development'
     agency_id = 'Department of Planning and Development'
     timezone = 'America/Chicago'
-    long_name = 'Community Development Commission'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/community_developmentcommission.html']
 
