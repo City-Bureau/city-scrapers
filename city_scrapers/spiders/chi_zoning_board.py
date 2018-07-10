@@ -10,7 +10,6 @@ class Chi_zoning_boardSpider(Spider):
     name = 'chi_zoning_board'
     agency_id = 'Department of Planning and Development'
     timezone = 'America/Chicago'                     # timezone of the events in tzinfo format
-    long_name = 'Zoning Board of Appeals'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html']
 

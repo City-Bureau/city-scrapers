@@ -16,6 +16,10 @@ def test_meeting_count():
     assert len(parsed_items) == 122
 
 
+def test_unique_id_count():
+    assert len(set([item['id'] for item in parsed_items])) == 122
+
+
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
 
