@@ -9,7 +9,6 @@ from city_scrapers.spider import Spider
 
 class Wayne_health_human_servicesSpider(Spider):
     name = 'wayne_health_human_services'
-    long_name = 'Wayne County Committee on Health and Human Services'
     agency_id = 'Wayne County Committee on Health and Human Services'
     timezone = 'America/Detroit'
     allowed_domains = ['www.waynecounty.com']
