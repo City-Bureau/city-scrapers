@@ -1,4 +1,4 @@
-from scrapy.xlib.pydispatch import dispatcher
+from pydispatch import dispatcher
 from scrapy import signals
 from scrapy.exporters import CsvItemExporter
 from city_scrapers.utils import get_key
