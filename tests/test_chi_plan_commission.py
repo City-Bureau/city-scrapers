@@ -18,6 +18,11 @@ def test_meeting_count():
     # 12 mtgs / yr * 10 yrs + 1 extra (March 2015)
     assert len(parsed_items) == 121
 
+
+def test_unique_id():
+    assert len(set([item['id'] for item in parsed_items])) == 121
+
+
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
 
