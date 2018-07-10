@@ -23,17 +23,17 @@ class {{ classname }}(Spider):
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
+                'event_description': self._parse_description(item),
                 'classification': self._parse_classification(item),
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
-                'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
                 'documents': self._parse_documents(item),
                 'sources': self._parse_sources(item),
             }
 
+            data['status'] = self._generate_status(data, text='')
             data['id'] = self._generate_id(data)
 
             yield data
@@ -96,17 +96,6 @@ class {{ classname }}(Spider):
             'name': '',
             'neighborhood': '',
         }
-
-    def _parse_status(self, item):
-        """
-        Parse or generate status of meeting. Can be one of:
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-        By default, return "tentative"
-        """
-        return 'tentative'
 
     def _parse_documents(self, item):
         """
