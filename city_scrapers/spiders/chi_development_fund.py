@@ -79,10 +79,10 @@ class Chi_development_fundSpider(Spider):
             dt, other_text = dateutil.parser.parse(meeting, fuzzy_with_tokens=True)
             # based on Agenda mtg time seems to vary but time not stated mtg desc
             name = [s.strip() for s in other_text if s.strip()]
-            return ' '.join(name), {'date': dt.date(), 'time': None, 'note': ''}
+            return ' '.join(name), {'date': dt.date(), 'time': None, 'note': 'see agenda document for time'}
         except TypeError:
             name = ' '.join(meeting.split(' ')[:-3])
-            return name, {'date': None, 'time': None, 'note': ''}
+            return name, {'date': None, 'time': None, 'note': 'see agenda document for time'}
 
     def _parse_documents(self, item, meeting, response):
         # Find <a> tags where 1st, non-blank, preceding text = meeting (e.g. 'Jan 16')

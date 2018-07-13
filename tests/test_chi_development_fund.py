@@ -41,7 +41,7 @@ def test_start():
     assert parsed_items[0]['start'] == {
         'date': date(2018, 4, 18),
         'time': None,
-        'note': ''
+        'note': 'see agenda document for time'
     }
 
 
