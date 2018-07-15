@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-from dateutil.parser import parse as dateparse
-from urllib.parse import urljoin
+
+# WE ARE BRINGING IN A MIXIN WHICH IMPORTS OTHER LIBRARIES.
+# MIXINS ARE STORED IN /city-scrapers/city-scrapers/mixins
+# YOU CAN TAKE THE DEFINITIONS OUT OF THE MIXIN AND ADD THEM HERE IF THEY ARE
+# UNIQUE.
 
 from city_scrapers.spider import Spider
+from city_scrapers.mixins.wayne_commission import Wayne_commission
 
 
-class Wayne_health_human_servicesSpider(Spider):
+class Wayne_health_human_servicesSpider(Wayne_commission, Spider):
     name = 'wayne_health_human_services'
     long_name = 'Wayne County Committee on Health and Human Services'
     agency_id = 'Wayne County Committee on Health and Human Services'
-    timezone = 'America/Detroit'
-    allowed_domains = ['www.waynecounty.com']
     start_urls = ['https://www.waynecounty.com/elected/commission/health-human-services.aspx']
-
-    # Calendar shows only meetings in current year.
-    yearStr = datetime.now().year
 
     def parse(self, response):
         """
@@ -47,19 +45,6 @@ class Wayne_health_human_servicesSpider(Spider):
             yield data
 
     @staticmethod
-    def _parse_documents(item, base_url):
-        url = item.xpath('td/a/@href').extract_first()
-        url = urljoin(base_url, url) if url is not None else ''
-        if url != '':
-            note = item.xpath('td/a/text()').extract_first()
-            note = note.lower() if note is not None else ''
-            return [{
-                'url': url,
-                'note': note
-            }]
-        return []
-
-    @staticmethod
     def _parse_description(response):
         """
         Event description taken from static text at top of page.
@@ -67,19 +52,6 @@ class Wayne_health_human_servicesSpider(Spider):
         desc_xpath = '//h2[contains(text(), "Health & Human Services")]/following-sibling::div/section/p/text()'
         desc = response.xpath(desc_xpath).extract_first()
         return desc
-
-    def _parse_start(self, item):
-        """
-        Parse start date and time.
-        """
-        # Dateparse can't always handle the inconsistent dates, so
-        # let's normalize them using scrapy's regular expressions.
-        month_str = item.xpath('.//td[2]/text()').re(r'[a-zA-Z]{3}')[0]
-        day_str = item.xpath('.//td[2]/text()').re(r'\d+')[0]
-        time_str = item.xpath('.//td[3]/text()').extract_first()
-        date_str = dateparse('{0} {1} {2} {3}'.format(month_str, day_str, self.yearStr, time_str))
-
-        return {'date': date_str.date(), 'time': date_str.time(), 'note': ''}
 
     @staticmethod
     def _parse_location():
