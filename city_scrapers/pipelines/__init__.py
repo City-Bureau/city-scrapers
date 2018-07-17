@@ -4,7 +4,6 @@ from .logging import CityScrapersLoggingPipeline
 from .travis import TravisValidationPipeline
 from .csv import CsvPipeline
 from .item import CityScrapersItemPipeline
-from .s3_item import CityScrapersS3ItemPipeline
 
 
 __all__ = (
@@ -14,5 +13,4 @@ __all__ = (
     'TravisValidationPipeline',
     'CsvPipeline',
     'CityScrapersItemPipeline',
-    'CityScrapersS3ItemPipeline',
 )
