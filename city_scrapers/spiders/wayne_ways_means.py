@@ -11,7 +11,6 @@ from city_scrapers.mixins.wayne_commission import Wayne_commission
 
 class Wayne_ways_meansSpider(Wayne_commission, Spider):
     name = 'wayne_ways_means'
-    long_name = 'Wayne County Ways and Means Committee'
     agency_id = 'Wayne County Ways and Means Committee'
     start_urls = ['https://www.waynecounty.com/elected/commission/ways-means.aspx']
 
