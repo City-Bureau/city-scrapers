@@ -1,3 +1,4 @@
+ics
 airtable-python-wrapper==0.5.0
 appnope==0.1.0
 asn1crypto==0.22.0
