@@ -13,6 +13,7 @@ spider = Chi_buildingsSpider()
 spider.calendar_date = datetime(2018, 2, 18)
 
 
+
 class MockRequest(object):
     meta = {}
 
@@ -35,38 +36,27 @@ def test_name():
     assert parsed_items[0]['name'] == 'Administrative Operations Committee Meeting – January 4, 2018'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_no_holidays_included(item):
-    assert item['classification'] != 'Holiday'
-
-
 def test_classification():
     assert parsed_items[0]['classification'] == 'Admin Opp Committee Meeting'
-    assert parsed_items[1]['classification'] == 'Community Hiring'
-    assert parsed_items[2]['classification'] == 'Board Meeting'
-    assert parsed_items[3]['classification'] == 'Opportunity'
+    assert parsed_items[1]['classification'] == 'Board Meeting'
+    assert parsed_items[2]['classification'] == 'Admin Opp Committee Meeting'
+    assert parsed_items[3]['classification'] == 'Audit Committee'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_description(item):
-    assert item['description'] is None
-
-
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2018-01-04T13:00:00-06:00'
+def test_start():
+    assert parsed_items[0]['start']['date'].isoformat() == '2018-01-04'
 
 
 def test_end_time():
-    assert parsed_items[0]['end_time'].isoformat() == '2018-01-04T14:00:00-06:00'
+    assert parsed_items[0]['end']['date'].isoformat() == '2018-01-04'
 
 
-# def test_id():
-#   assert parsed_items[0]['id'] == 'chi_buildings/201801041300/x/administrative_operations_committee_meeting_january_4_2018'
+def test_id():
+    assert parsed_items[0]['id'] == 'chi_buildings/000000000000/x/administrative_operations_committee_meeting_january_4_2018'
 
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_all_day(item):
-    assert item['all_day'] is False
+def test_event_description():
+    print(parsed_items[0]['description'])
+    assert parsed_items[0]['description'] == ('January 4, 2018  1:00 pm - 2:00 pm</br></br>Agenda\xa0')
 
 
 def test_status():
@@ -85,33 +75,10 @@ def test_board_meeting_location():
         },
     }
 
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
-
-
 def test_source():
     assert parsed_items[0]['sources'][0]['url'] == (
         'http://www.pbcchicago.com/events/event/administrative-operations-committee-meeting-january-4-2018/'
     )
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
-
-
-def test_event_description():
-    assert parsed_event['description'] == (
-        'On Wednesday, February 21, 2018, in the McKinley Park Auditorium, located at '
-        '2210 West Pershing Road, Chicago, Illinois 60609, PBC will host a Pre-Bid Meeting '
-        'at 9:30 a.m., a Mandatory Technical Review Meeting at 10:00a.m., and a Non-Mandatory '
-        'Site Visit at 12:00p.m. Attendees are to enter through (North) Main Entrance. Parking '
-        'is available in the parking lot adjacent to the McKinley Park Fieldhouse. Details here: '
-        'http://www.pbcchicago.com/opportunities/chicago-park-district-group-b-c1595/'
-    )
-
 
 def test_event_location():
     assert parsed_event['location'] == {
@@ -123,3 +90,21 @@ def test_event_location():
             'longitude': '-87.682445',
         },
     }
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test__type(item):
+    assert parsed_items[0]['_type'] == 'event'
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_no_holidays_included(item):
+    assert item['classification'] != 'Holiday'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_timezone(item):
+    assert item['timezone'] == 'America/Chicago'
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_all_day(item):
+    assert item['all_day'] is False

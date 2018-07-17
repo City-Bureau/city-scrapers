@@ -5,7 +5,8 @@ from city_scrapers.spider import Spider
 
 class TestspiderSpider(Spider):
     name = 'testspider'
-    long_name = 'Test Spider Board Of Trade And Englightenment'
+    agency_id = 'Test Spider Board Of Trade And Englightenment'
+    timezone = 'America/Chicago'
     allowed_domains = ['www.citybureau.org']
     start_urls = ['http://www.citybureau.org/articles', 'http://www.citybureau.org/staff', 'http://www.citybureau.org/is-chicago-any-less-segregated']
 
@@ -21,22 +22,21 @@ class TestspiderSpider(Spider):
 
             data = {
                 '_type': 'event',
-                'id': self._parse_id(item),
                 'name': self._parse_name(item),
-                'description': self._parse_description(item),
+                'event_description': self._parse_description(item),
                 'classification': self._parse_classification(item),
-                'start_time': self._parse_start(item),
-                'end_time': self._parse_end(item),
-                'timezone': self._parse_timezone(item),
-                'status': self._parse_status(item),
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
+                'documents': self._parse_documents(item),
                 'sources': self._parse_sources(item),
             }
 
-        data['id'] = self._generate_id(data, start_time)
+            data['status'] = self._generate_status(data, text='')
+            data['id'] = self._generate_id(data)
 
-        yield data
+            yield data
 
         # self._parse_next(response) yields more responses to parse if necessary.
         # uncomment to find a "next" url
@@ -49,16 +49,6 @@ class TestspiderSpider(Spider):
         """
         next_url = None  # What is next URL?
         return scrapy.Request(next_url, callback=self.parse)
-
-    def _parse_id(self, item):
-        """
-        Calulate ID. ID must be unique and in the following format:
-        <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-identifier>/<underscored-event-name>
-
-        Example:
-        chi_buildings/201710161230/2176/daley_plaza_italian_exhibit
-        """
-        return ''
 
     def _parse_name(self, item):
         """
@@ -90,12 +80,6 @@ class TestspiderSpider(Spider):
         """
         return ''
 
-    def _parse_timezone(self, item):
-        """
-        Parse or generate timzone in tzinfo format.
-        """
-        return 'America/Chicago'
-
     def _parse_all_day(self, item):
         """
         Parse or generate all-day status. Defaults to False.
@@ -108,31 +92,19 @@ class TestspiderSpider(Spider):
         left blank and will be geocoded later.
         """
         return {
-            'url': '',
-            'name': '',
             'address': '',
-            'coordinates': {
-                'latitude': '',
-                'longitude': '',
-            },
+            'name': '',
+            'neighborhood': '',
         }
 
-    def _parse_status(self, item):
+    def _parse_documents(self, item):
         """
-        Parse or generate status of meeting. Can be one of:
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-        By default, return "tentative"
+        Parse or generate documents.
         """
-        return 'tentative'
+        return [{'url': '', 'note': ''}]
 
     def _parse_sources(self, item):
         """
         Parse or generate sources.
         """
-        return [{
-            'url': '',
-            'note': '',
-        }]
+        return [{'url': '', 'note': ''}]
