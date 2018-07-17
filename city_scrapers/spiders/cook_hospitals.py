@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-
+from datetime import datetime, timedelta
+from dateutil.parser import parse
 from city_scrapers.spider import Spider
 
 
@@ -24,7 +24,6 @@ class Cook_hospitalsSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
-                'end': {'date': None, 'time': None, 'note': ''},
                 'all_day': False,
                 'sources': [{'url': response.url, 'note': ''}],
             }
@@ -36,11 +35,11 @@ class Cook_hospitalsSpider(Spider):
                 new_item = {
                     # TODO unsure where this should come from
                     'event_description': self._parse_description(subitem),
-                    'start': self._parse_start(subitem),
                     'location': self._parse_location(subitem),
                     'documents': self._parse_documents(subitem)
                 }
                 new_item.update(data)
+                new_item.update(self._parse_times(subitem))
                 new_item['status'] = self._generate_status(new_item, '')
                 new_item['id'] = self._generate_id(new_item)
                 new_item['classification'] = self._parse_classification(new_item['name'])
@@ -91,14 +90,29 @@ class Cook_hospitalsSpider(Spider):
         return ''
 
     @staticmethod
-    def _parse_start(subitem):
+    def _parse_times(subitem):
         """
         Combine start time with year, month, and day.
         """
-        start_time = subitem.xpath('text()').extract_first().strip()
-        dt = datetime.strptime(start_time, '%B %d, %Y - %H:%M %p')
-        return {
-            'date': dt.date(),
-            'time': dt.time(),
-            'note': ''
+        tokens = subitem.xpath('text()').extract_first().strip().split(' - ')
+        date = parse(tokens[0])
+        time = parse(tokens[1])
+        times = {
+            'start': {
+                'date': date.date(),
+                'time': time.time(),
+                'note': ''
+            },
+            'end' : {
+                'date': date.date()
+            }
         }
+
+        if len(tokens) > 2:
+            times['end']['time'] = parse(tokens[2]).time()
+            times['end']['note'] = ''
+        else:
+            times['end']['time'] = (time + timedelta(hours=3)).time()
+            times['end']['note'] = 'End time is estimated to be 3 hours after the start time'
+
+        return times

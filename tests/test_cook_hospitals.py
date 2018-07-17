@@ -10,7 +10,6 @@ test_response = file_response('files/cook_hospitals.html', url='http://www.cookc
 spider = Cook_hospitalsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
-
 def test_name():
     assert parsed_items[0]['name'] == 'Meetings of the Board of Directors'
 
@@ -19,13 +18,18 @@ def test_description():
     assert parsed_items[0]['event_description'] == ''
 
 
-def test_start():
+def test_times():
     assert parsed_items[0]['start'] == {
         'date': date(2017, 1, 27),
         'time': time(9, 00),
-        'note': '',
+        'note': ''
     }
 
+    assert parsed_items[0]['end'] == {
+        'date': date(2017, 1, 27),
+        'time': time(12, 00),
+        'note': 'End time is estimated to be 3 hours after the start time'
+    }
 
 def test_documents():
     assert parsed_items[0]['documents'] == [
@@ -56,11 +60,6 @@ def test_location():
 def test_classification():
     assert parsed_items[0]['classification'] == 'Board'
     assert parsed_items[-1]['classification'] == 'Committee'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_end_time(item):
-    assert item['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 @pytest.mark.parametrize('item', parsed_items)
