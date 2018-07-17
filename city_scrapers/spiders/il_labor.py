@@ -4,8 +4,8 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
-from datetime import datetime
-from pytz import timezone
+from datetime import datetime, timedelta
+from dateutil.parser import parse
 
 from city_scrapers.spider import Spider
 
@@ -39,22 +39,24 @@ class Il_laborSpider(Spider):
             If the date/time info can't be parsed, assume that it is a `no meeting`
             notice.
             """
-            start_time = self._parse_start(item)
-            if start_time is None:
+            start_datetime = self._parse_start(item)
+            if start_datetime is None:
                 continue
+
             name = self._parse_name(item)
             data = {
                 '_type': 'event',
                 'name': name,
-                'description': self._parse_description(item),
+                'event_description': self._parse_description(response),
                 'classification': self._parse_classification(item),
-                'start_time': start_time if start_time else None,
-                'end_time': None,
+                'start': { 'date': start_datetime.date(), 'time': start_datetime.time() },
+                'end': { 'date': start_datetime.date(), 'time': (start_datetime + timedelta(hours=3)).time() },
                 'all_day': self._parse_all_day(item),
                 'timezone': self.event_timezone,
                 'status': self._parse_status(item),
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(response)
+                'sources': self._parse_sources(response),
+                'documents': None
             }
             data['id'] = self._generate_id(data)
             yield data
@@ -89,7 +91,7 @@ class Il_laborSpider(Spider):
         """
         childs_siblings = item.xpath('child::*')
         if len(childs_siblings) > 1:
-            addresses = item.xpath('child::div/div/p[position()>1]/text()').extract()
+            addresses = item.xpath('child::div/div/p/text()').extract()
             address = ' Or '.join([a.strip() for a in addresses])
         else:
             address = item.xpath('following-sibling::div[1]/div/p/text()').extract_first()
@@ -97,13 +99,9 @@ class Il_laborSpider(Spider):
                 address = address.strip()
 
         return {
-            'url': None,
+            'url': '',
             'address': address,
-            'name': None,
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
+            'name': ''
         }
 
     def _parse_all_day(self, item):
@@ -118,25 +116,18 @@ class Il_laborSpider(Spider):
         """
         return item.css('strong::text').extract_first().capitalize()
 
-    def _parse_description(self, item):
+    def _parse_description(self, response):
         """
         No meeting-specific description, so use a generic description from page.
         """
-        return ("The Illinois Public Labor Relations Act (Act) governs labor relations "
-                "between most public employers in Illinois and their employees. Throughout "
-                "the State, the Illinois Labor Relations Board regulates the designation of "
-                "employee representatives; the negotiation of wages, hours, and other conditions "
-                "of employment; and resolves, or if necessary, adjudicates labor disputes.")
+        return response.css('#ctl00_PlaceHolderMain_ctl01__ControlWrapper_RichHtmlField p::text').extract_first().strip()
 
     def _parse_start(self, item):
         """
         Parse start date and time from the second `<strong>`
         """
-        time_string = item.css('strong:nth-of-type(2)::text').extract_first().replace('.', '')
         try:
-            naive = datetime.strptime(time_string, '%A, %B %d, %Y at %I:%M %p')
-            tz = timezone(self.event_timezone)
-            return tz.localize(naive)
+            return parse(item.css('strong:nth-of-type(2)::text').extract_first())
         except ValueError:
             return None
 
