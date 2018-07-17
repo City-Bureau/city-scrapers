@@ -47,7 +47,7 @@ class Wayne_commission:
         Postponed meetings will be considered cancelled.
         """
 
-        status_str = item.xpath('.//td[4]/text() | .//td[4]/a/text() | .//td[4]/p/a/text()').extract_first()
+        status_str = item.xpath('.//td[4]/a/text() | .//td[4]/text()').extract_first()
         # If the agenda column text contains "postponed," we consider it cancelled.
         if re.search(r'postpone', status_str, re.IGNORECASE):
             return 'cancelled'
