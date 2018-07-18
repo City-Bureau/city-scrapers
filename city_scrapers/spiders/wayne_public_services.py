@@ -12,35 +12,7 @@ class Wayne_public_servicesSpider(Wayne_commission, Spider):
     name = 'wayne_public_services'
     agency_id = 'Wayne County Committee on Public Services'
     start_urls = ['https://www.waynecounty.com/elected/commission/public-services.aspx']
-
-    def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
-
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
-
-        entries = response.xpath('//tbody/tr')
-
-        for item in entries:
-            data = {
-                '_type': 'event',
-                'name': 'Committee on Public Services',
-                'event_description': self._parse_description(item),
-                'classification': 'Committee',
-                'start': self._parse_start(item),
-                'end': {'date': None, 'time': None, 'note': ''},
-                'all_day': False,
-                'location': self.location,
-                'documents': self._parse_documents(item, response.url),
-                'sources': [{'url': response.url, 'note': ''}]
-            }
-            data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, '')
-
-            yield data
+    meeting_name = 'Wayne County Committee on Public Services'
 
     @staticmethod
     def _parse_description(response):
