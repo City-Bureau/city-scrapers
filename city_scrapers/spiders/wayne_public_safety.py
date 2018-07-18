@@ -33,7 +33,7 @@ class Wayne_public_safetySpider(Wayne_commission, Spider):
                 'start': self._parse_start(item),
                 'end': {'date': None, 'time': None, 'note': ''},
                 'all_day': False,
-                'location': self._parse_location(),
+                'location': self.location,
                 'documents': self._parse_documents(item, response.url),
                 'sources': [{'url': response.url, 'note': ''}]
             }
@@ -50,15 +50,3 @@ class Wayne_public_safetySpider(Wayne_commission, Spider):
         desc_xpath = '//h2[contains(text(), "Public Safety, Judiciary")]/following-sibling::div/section/p/text()'
         desc = response.xpath(desc_xpath).extract_first()
         return desc
-
-    @staticmethod
-    def _parse_location():
-        """
-        Location hardcoded. Text on the URL claims meetings are all held at
-        the same location.
-        """
-        return {
-            'name': '7th floor meeting room, Guardian Building',
-            'address': '500 Griswold St, Detroit, MI 48226',
-            'neighborhood': '',
-        }

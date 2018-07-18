@@ -11,6 +11,11 @@ from urllib.parse import urljoin
 class Wayne_commission:
     timezone = 'America/Detroit'
     allowed_domains = ['www.waynecounty.com']
+    location = {
+        'name': '7th floor meeting room, Guardian Building',
+        'address': '500 Griswold St, Detroit, MI 48226',
+        'neighborhood': '',
+    }
 
     # Calendar shows only meetings in current year.
     yearStr = datetime.now().year
