@@ -45,9 +45,6 @@ class Wayne_commission:
 
             yield data
 
-    # Calendar shows only meetings in current year.
-    yearStr = datetime.now().year
-
     def _parse_entries(self, response):
         return response.xpath('//tbody/tr')
 
@@ -68,12 +65,14 @@ class Wayne_commission:
         """
         Parse start date and time.
         """
+        # Calendar shows only meetings in current year.
+        yearStr = datetime.now().year
         # Dateparse can't always handle the inconsistent dates, so
         # let's normalize them using scrapy's regular expressions.
         month_str = item.xpath('.//td[2]/text()').re(r'[a-zA-Z]{3}')[0]
         day_str = item.xpath('.//td[2]/text()').re(r'\d+')[0]
         time_str = item.xpath('.//td[3]/text()').extract_first()
-        date_str = dateparse('{0} {1} {2} {3}'.format(month_str, day_str, self.yearStr, time_str))
+        date_str = dateparse('{0} {1} {2} {3}'.format(month_str, day_str, yearStr, time_str))
 
         return {'date': date_str.date(), 'time': date_str.time(), 'note': ''}
 
