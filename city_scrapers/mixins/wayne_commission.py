@@ -11,9 +11,42 @@ from urllib.parse import urljoin
 class Wayne_commission:
     timezone = 'America/Detroit'
     allowed_domains = ['www.waynecounty.com']
+    classification = 'Committee'
+    location = {
+        'name': '7th floor meeting room, Guardian Building',
+        'address': '500 Griswold St, Detroit, MI 48226',
+        'neighborhood': '',
+    }
 
-    # Calendar shows only meetings in current year.
-    yearStr = datetime.now().year
+    def parse(self, response):
+        """
+        `parse` should always `yield` a dict that follows the Event Schema
+        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+
+        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        needs.
+        """
+
+        for item in self._parse_entries(response):
+            data = {
+                '_type': 'event',
+                'name': self.meeting_name,
+                'event_description': self._parse_description(item),
+                'classification': self.classification,
+                'start': self._parse_start(item),
+                'end': {'date': None, 'time': None, 'note': ''},
+                'all_day': False,
+                'location': self.location,
+                'documents': self._parse_documents(item, response.url),
+                'sources': [{'url': response.url, 'note': ''}]
+            }
+            data['id'] = self._generate_id(data)
+            data['status'] = self._parse_status(item, data)
+
+            yield data
+
+    def _parse_entries(self, response):
+        return response.xpath('//tbody/tr')
 
     @staticmethod
     def _parse_documents(item, base_url):
@@ -32,12 +65,14 @@ class Wayne_commission:
         """
         Parse start date and time.
         """
+        # Calendar shows only meetings in current year.
+        yearStr = datetime.now().year
         # Dateparse can't always handle the inconsistent dates, so
         # let's normalize them using scrapy's regular expressions.
         month_str = item.xpath('.//td[2]/text()').re(r'[a-zA-Z]{3}')[0]
         day_str = item.xpath('.//td[2]/text()').re(r'\d+')[0]
         time_str = item.xpath('.//td[3]/text()').extract_first()
-        date_str = dateparse('{0} {1} {2} {3}'.format(month_str, day_str, self.yearStr, time_str))
+        date_str = dateparse('{0} {1} {2} {3}'.format(month_str, day_str, yearStr, time_str))
 
         return {'date': date_str.date(), 'time': date_str.time(), 'note': ''}
 
