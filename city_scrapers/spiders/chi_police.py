@@ -113,11 +113,15 @@ class Chi_policeSpider(Spider):
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
+        Parses location, adding Chicago, IL to the end of the address
+        since it isn't included but can be safely assumed.
         """
+        if item['location']:
+            address = item['location'] + ' Chicago, IL'
+        else:
+            address = None
         return {
-            'address': item['location'],
+            'address': address,
             'name': '',
             'neighborhood': ''
         }

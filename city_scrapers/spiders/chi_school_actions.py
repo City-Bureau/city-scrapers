@@ -129,12 +129,13 @@ class ChiSchoolActionsSpider(Spider):
     @staticmethod
     def _parse_location(item):
         """
-        Parse or generate location. Latitude and longitude can be
-        left blank and will be geocoded later.
+        Parses location, adding Chicago, IL to the end of the address
+        since it isn't included but can be safely assumed.
         """
+        address = item.css('.addr2::text').extract_first()
         return {
             'name': item.css('.addr::text').extract_first(),
-            'address': item.css('.addr2::text').extract_first(),
+            'address': address + ' Chicago, IL',
             'neighborhood': '',
         }
 

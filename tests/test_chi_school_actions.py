@@ -48,7 +48,7 @@ def test_id():
 def test_location():
     assert parsed_items[0]['location'] == {
         'name': 'Rosario Castellanos ES',
-        'address': '2524 S Central Park Ave',
+        'address': '2524 S Central Park Ave Chicago, IL',
         'neighborhood': '',
     }
 
