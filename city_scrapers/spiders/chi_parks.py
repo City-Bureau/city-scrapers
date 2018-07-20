@@ -32,7 +32,7 @@ class Chi_parksSpider(Spider):
 
     def _make_legistar_call(self, since=None):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        les = LegistarEventsScraper(jurisdiction=None, datadir=None)
+        les = LegistarEventsScraper(requests_per_minute=0)
         les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
         les.BASE_URL = self.START_URL
         if not since:
