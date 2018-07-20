@@ -2,6 +2,7 @@
 import pytest
 
 from tests.utils import file_response
+from datetime import date, time
 from city_scrapers.spiders.il_labor import Il_laborSpider
 
 
@@ -15,12 +16,7 @@ def test_name():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    EXPECTED_DESCRIPTION = ("The Illinois Public Labor Relations Act (Act) governs labor relations "
-                "between most public employers in Illinois and their employees. Throughout "
-                "the State, the Illinois Labor Relations Board regulates the designation of "
-                "employee representatives; the negotiation of wages, hours, and other conditions "
-                "of employment; and resolves, or if necessary, adjudicates labor disputes.")
-    assert item['description'] == EXPECTED_DESCRIPTION
+    assert item['event_description'] == "The State and Local Panel's of the Illinois Labor Relations Board meet separately on a monthly basis to discuss issues and cases pending before the Panels.\n    Meetings are open to the public and are conducted in accordance with the Illinois Open Meetings Act."
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -29,12 +25,14 @@ def test_timezone(item):
 
 
 def test_start_time():
-    assert parsed_items[1]['start_time'].isoformat() == '2018-06-12T13:00:00-05:00'
+    assert parsed_items[0]['start']['date'] == date(2018, 7, 10)
+    assert parsed_items[0]['start']['time'] == time(10, 0)
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end_time(item):
-    assert item['end_time'] is None
+    assert parsed_items[0]['end']['date'] == date(2018, 7, 10)
+    assert parsed_items[0]['end']['time'] == time(13, 0)
 
 
 # def test_id():
@@ -58,23 +56,9 @@ def test_status(item):
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'url': None,
-        'name': None,
-        'address': 'Room S-401, 160 N. LaSalle Street, Chicago, IL',
-        'coordinates': {
-            'latitude': None,
-            'longitude': None,
-        },
-    }
-
-    assert parsed_items[1]['location'] == {
-        'url': None,
-        'address': 'Room N-703, 160 N. LaSalle Street, Chicago, IL Or Room 5A, 801 S. 7th Street, Springfield, IL',
-        'name': None,
-        'coordinates': {
-            'latitude': None,
-            'longitude': None,
-        },
+        'url': '',
+        'name': '',
+        'address': 'Room S-401, 160 N. LaSalle Street, Chicago, IL'
     }
 
 

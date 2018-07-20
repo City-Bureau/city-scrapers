@@ -22,6 +22,7 @@ requests = "*"
 scrapy = "*"
 scrapy-sentry ="*"
 usaddress = "*"
+ics = "*"
 
 [requires]
 python_version = "3.6"

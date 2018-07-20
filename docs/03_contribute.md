@@ -120,7 +120,7 @@ class Chi_housingSpider(scrapy.Spider):
     name = 'chi_housing'
     allowed_domains = ['thecha.org']
     start_urls = ['http://thecha.org']
-    long_name = 'Chicago Housing Authority'
+    agency_id = 'Chicago Housing Authority'
 
     def parse(self, response):
         """
@@ -174,7 +174,7 @@ class Chi_housingSpider(scrapy.Spider):
 
 The `Chi_housingSpider.parse(...)` method is a standard part of Scrapy and handles returning data in the correct format and any subsequent requests to be made.
 
-There are pre-defined helper methods for every major field in the data. It's your job to fill them in. **See the [Event Schema](event-schema.md)** to see what is required in each field.
+There are pre-defined helper methods for every major field in the data. It's your job to fill them in. **See the [Event Schema](06_event_schema.md)** to see what is required in each field.
 
 For example, `_parse_classification` could be:
 
