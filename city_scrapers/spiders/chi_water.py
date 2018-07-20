@@ -31,7 +31,7 @@ class Chi_waterSpider(Spider):
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
-        les = LegistarEventsScraper(jurisdiction=None, datadir=None)
+        les = LegistarEventsScraper(requests_per_minute=0)
         les.EVENTSPAGE = 'https://mwrd.legistar.com/Calendar.aspx'
         les.BASE_URL = 'https://mwrd.legistar.com'
         if not since:
