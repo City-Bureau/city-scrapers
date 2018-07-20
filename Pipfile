@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+airtable-python-wrapper = "*"
+betamax = "*"
+betamax-serializers = "*"
+boto3 = "*"
+flake8 = "*"
+freezegun = "*"
+inflector = "*"
+invoke = "*"
+jinja2 = "*"
+legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper" } 
+pep8 = "*"
+pytest = "*"
+python-dateutil = "*"
+pytz = "*"
+requests = "*"
+scrapy = "*"
+scrapy-sentry ="*"
+usaddress = "*"
+ics = "*"
+
+[requires]
+python_version = "3.6"
