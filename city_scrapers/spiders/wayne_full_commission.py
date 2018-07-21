@@ -28,7 +28,10 @@ class Wayne_full_commissionSpider(Wayne_commission, Spider):
         @TODO Event description should be based on feedback from CB, since
         it also contains alternate location info.
         """
-        desc = ("The vote on the final adoption of any resolution or "
-                "ordinance is done within the meeting of the Wayne County "
-                "Commission.")
+        desc = ("The Wayne County Commission and its employees are the "
+                "legislative branch of county government. The chief role of "
+                "the commission is to adopt a budget and enact ordinances. "
+                "The commission also approves contracts, appointments and "
+                "rules. The money is spent and ordinances are enforced "
+                "through the administrative branch.")
         return desc

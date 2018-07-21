@@ -21,9 +21,13 @@ freezer.stop()
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    expected_description = ("The vote on the final adoption of any resolution "
-                            "or ordinance is done within the meeting of the "
-                            "Wayne County Commission.")
+    expected_description = ("The Wayne County Commission and its employees "
+                            "are the legislative branch of county government. "
+                            "The chief role of the commission is to adopt a "
+                            "budget and enact ordinances. The commission also "
+                            "approves contracts, appointments and rules. The "
+                            "money is spent and ordinances are enforced "
+                            "through the administrative branch.")
     assert item['event_description'] == expected_description
 
 
