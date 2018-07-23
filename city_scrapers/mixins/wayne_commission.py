@@ -2,7 +2,6 @@
 # BUT IT WILL BE INTEGRATED INTO A REGULAR AGENCY SPIDER.
 
 # -*- coding: utf-8 -*-
-import re
 from datetime import datetime
 from dateutil.parser import parse as dateparse
 from urllib.parse import urljoin
@@ -82,10 +81,10 @@ class Wayne_commission:
         Postponed meetings will be considered cancelled.
         """
 
-        status_str = item.xpath('.//td[4]/text() | .//td[4]/a/text() | .//td[4]/p/a/text()').extract_first()
-        # If the agenda column text contains "postponed," we consider it cancelled.
-        if re.search(r'postpone', status_str, re.IGNORECASE):
+        status_str = item.xpath('.//td[4]//text()').extract_first()
+        # If the agenda column text contains "postpone" or "cancel" we consider it cancelled.
+        if ('cancel' in status_str.lower()) or ('postpone' in status_str.lower()):
             return 'cancelled'
-        # If it's not cancelled, use the status logic from spider.py
+        # If it's not one of the above statuses, use the status logic from spider.py
         else:
             return self._generate_status(data, '')
