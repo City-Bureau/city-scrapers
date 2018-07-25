@@ -46,7 +46,7 @@ class Wayne_commission:
             yield data
 
     def _parse_entries(self, response):
-        return response.xpath('//tbody/tr')
+        return response.xpath('//tbody/tr[child::td/text()]')
 
     @staticmethod
     def _parse_documents(item, base_url):
