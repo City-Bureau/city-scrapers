@@ -112,7 +112,7 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
     def _set_meeting_defaults(response):
         data = {
             '_type': 'event',
-            'name': 'Downtown Development Authority',
+            'name': 'Board of Directors',
             'event_description': '',
             'classification': 'Board',
             'end': {'date': None, 'time': None, 'note': ''},

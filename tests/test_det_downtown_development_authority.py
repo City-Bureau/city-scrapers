@@ -11,7 +11,7 @@ from city_scrapers.spiders.det_downtown_development_authority import DetDowntown
 
 LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '500 Griswold, Suite 2200, Detroit'}
 
-NAME = 'Downtown Development Authority'
+NAME = 'Board of Directors'
 
 test_response = file_response('files/det_downtown_development_authority.html',
                               'http://www.degc.org/public-authorities/dda/')
@@ -60,7 +60,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_downtown_development_authority/201807251500/x/downtown_development_authority'
+    assert parsed_items[0]['id'] == 'det_downtown_development_authority/201807251500/x/board_of_directors'
 
 
 def test_status():
@@ -141,8 +141,8 @@ def test_prev_end():
 
 
 def test_prev_id():
-    assert parsed_prev_items[0][
-               'id'] == 'det_downtown_development_authority/201706280000/x/downtown_development_authority'
+    assert parsed_prev_items[0]['id'] == \
+           'det_downtown_development_authority/201706280000/x/board_of_directors'
 
 
 def test_prev_status():
