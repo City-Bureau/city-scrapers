@@ -13,12 +13,3 @@ class Wayne_economic_developmentSpider(Wayne_commission, Spider):
     agency_id = 'Wayne County Committee on Economic Development'
     start_urls = ['https://www.waynecounty.com/elected/commission/economic-development.aspx']
     meeting_name = 'Wayne County Committee on Economic Development'
-
-    @staticmethod
-    def _parse_description(response):
-        """
-        Event description taken from static text at top of page.
-        """
-        desc_xpath = '//h2[contains(text(), "Economic Development")]/following-sibling::div/section/p/text()'
-        desc = response.xpath(desc_xpath).extract_first()
-        return desc

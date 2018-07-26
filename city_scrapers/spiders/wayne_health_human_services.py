@@ -13,12 +13,3 @@ class Wayne_health_human_servicesSpider(Wayne_commission, Spider):
     agency_id = 'Wayne County Committee on Health and Human Services'
     start_urls = ['https://www.waynecounty.com/elected/commission/health-human-services.aspx']
     meeting_name = 'Wayne County Committee on Health and Human Services'
-
-    @staticmethod
-    def _parse_description(response):
-        """
-        Event description taken from static text at top of page.
-        """
-        desc_xpath = '//h2[contains(text(), "Health & Human Services")]/following-sibling::div/section/p/text()'
-        desc = response.xpath(desc_xpath).extract_first()
-        return desc

@@ -13,12 +13,3 @@ class Wayne_auditSpider(Wayne_commission, Spider):
     agency_id = 'Wayne County Audit Committee'
     start_urls = ['https://www.waynecounty.com/elected/commission/audit.aspx']
     meeting_name = 'Wayne County Audit Committee'
-
-    @staticmethod
-    def _parse_description(response):
-        """
-        Event description taken from static text at top of page.
-        """
-        desc_xpath = '//h2[contains(text(), "Audit")]/following-sibling::div/section/p/text()'
-        desc = response.xpath(desc_xpath).extract_first()
-        return desc

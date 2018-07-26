@@ -21,13 +21,7 @@ freezer.stop()
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    expected_description = ("This committee reviews matters pertaining to general "
-                            "community and public health, including the Department "
-                            "of Health, Veterans and Community Wellness; boards "
-                            "of health and social services; and youth-related matters, "
-                            "including the Head Start program, other juvenile services "
-                            "and juvenile detention facilities.")
-    assert item['event_description'] == expected_description
+    assert item['event_description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)
