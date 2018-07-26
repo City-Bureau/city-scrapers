@@ -54,9 +54,9 @@ class Wayne_building_authoritySpider(Wayne_commission, Spider):
         """
 
         # Our status may be buried inside a number of other elements
-        status_str = item.xpath('.//td[4]/*/text() | .//td[4]/*/*/text() | .//td[4]/text()').extract_first()
+        status_str = item.xpath('.//td[4]//text()').extract_first()
         # Meetings that are truly cancelled will be marked here.
-        if re.search(r'cancel', status_str, re.IGNORECASE):
+        if 'CANCEL' in status_str.upper():
             return 'cancelled'
         # If it's not cancelled, use the status logic from spider.py
         else:
