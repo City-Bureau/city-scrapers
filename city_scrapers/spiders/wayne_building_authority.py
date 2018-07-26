@@ -45,19 +45,3 @@ class Wayne_building_authoritySpider(Wayne_commission, Spider):
         date_time_str = dateparse('{0} {1}'.format(date_str, time_str))
 
         return {'date': date_time_str.date(), 'time': date_time_str.time(), 'note': ''}
-
-    def _parse_status(self, item, data):
-        """
-        Parse or generate status of meeting.
-        Postponed meetings all have replacement dates which we account for in
-        the _parse_start method.
-        """
-
-        # Our status may be buried inside a number of other elements
-        status_str = item.xpath('.//td[4]//text()').extract_first()
-        # Meetings that are truly cancelled will be marked here.
-        if 'CANCEL' in status_str.upper():
-            return 'cancelled'
-        # If it's not cancelled, use the status logic from spider.py
-        else:
-            return self._generate_status(data, '')
