@@ -20,14 +20,7 @@ freezer.stop()
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    expected_description = ("This committee is a forum for extensive discussion on issues "
-                            "by the 15 members of the Wayne County Commission. Meetings "
-                            "are scheduled at the call of the chair of the Commission. "
-                            "Final approval of items happens at full Commission meetings, "
-                            "not Committee of the Whole. All Committee of the Whole "
-                            "meetings are held in the 7th floor meeting room, Guardian "
-                            "Building, 500 Griswold, Detroit, unless otherwise indicated.")
-    assert item['event_description'] == expected_description
+    assert item['event_description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)

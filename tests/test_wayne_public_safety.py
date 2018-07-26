@@ -21,14 +21,7 @@ freezer.stop()
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    expected_description = ("This committee reviews matters regarding the "
-                            "Sheriff's Department; Prosecuting Attorney's "
-                            "Office; Corporation Counsel; Community "
-                            "Corrections; County Clerk; Department of "
-                            "Homeland Security and Emergency Management; and "
-                            "the Wayne County courts, including Circuit, "
-                            "Juvenile and Probate.")
-    assert item['event_description'] == expected_description
+    assert item['event_description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)

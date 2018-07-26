@@ -21,10 +21,7 @@ freezer.stop()
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    expected_description = ("This committee deals with business development, "
-                            "community development programs, affordable "
-                            "housing opportunities and land use planning.")
-    assert item['event_description'] == expected_description
+    assert item['event_description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)

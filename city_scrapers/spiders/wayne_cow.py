@@ -13,12 +13,3 @@ class Wayne_cowSpider(Wayne_commission, Spider):
     agency_id = 'Detroit Committee of the Whole'
     start_urls = ['https://www.waynecounty.com/elected/commission/committee-of-the-whole.aspx']
     meeting_name = 'Wayne County Committee of the Whole'
-
-    @staticmethod
-    def _parse_description(response):
-        """
-        Event description taken from static text at top of page.
-        """
-        desc_xpath = '//h2[contains(text(), "Committee of the Whole")]/following-sibling::div/section/text()'
-        desc = response.xpath(desc_xpath).extract_first()
-        return desc

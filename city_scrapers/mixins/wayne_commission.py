@@ -16,6 +16,7 @@ class Wayne_commission:
         'address': '500 Griswold St, Detroit, MI 48226',
         'neighborhood': '',
     }
+    description = ''
 
     def parse(self, response):
         """
@@ -30,7 +31,7 @@ class Wayne_commission:
             data = {
                 '_type': 'event',
                 'name': self.meeting_name,
-                'event_description': self._parse_description(item),
+                'event_description': self.description,
                 'classification': self.classification,
                 'start': self._parse_start(item),
                 'end': {'date': None, 'time': None, 'note': ''},

@@ -19,19 +19,9 @@ freezer.stop()
 
 # PARAMETRIZED TESTS
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_event_description(item):
-    expected_description = ("The County of Wayne will provide necessary "
-                            "reasonable auxiliary aids and services to "
-                            "individuals with disabilities at the meeting "
-                            "upon five days notice to the Legal Clerk of the "
-                            "Authority, such as signers for the hearing "
-                            "impaired and audio tapes of printed materials "
-                            "being considered at the meetings. Individuals "
-                            "with disabilities requiring auxiliary aids or "
-                            "services should contact the Authority in writing "
-                            "or call Audricka Grandison at (313) 967-1030.")
-    assert item['event_description'] == expected_description
+# @pytest.mark.parametrize('item', parsed_items)
+# def test_event_description(item):
+#     assert item['event_description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)

@@ -13,12 +13,3 @@ class Wayne_public_safetySpider(Wayne_commission, Spider):
     agency_id = 'Wayne County Committee on Public Safety, Judiciary, and Homeland Security'
     start_urls = ['https://www.waynecounty.com/elected/commission/public-safety-judiciary.aspx']
     meeting_name = "Wayne County Committee on Public Safety, Judiciary, and Homeland Security"
-
-    @staticmethod
-    def _parse_description(response):
-        """
-        Event description taken from static text at top of page.
-        """
-        desc_xpath = '//h2[contains(text(), "Public Safety, Judiciary")]/following-sibling::div/section/p/text()'
-        desc = response.xpath(desc_xpath).extract_first()
-        return desc

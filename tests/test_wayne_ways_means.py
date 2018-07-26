@@ -21,12 +21,7 @@ freezer.stop()
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    expected_description = ("This committee reviews financial issues relating "
-                            "to allocation of resources, which include the "
-                            "budget, compensation, bond issues, retirement, "
-                            "tax matters and the assessment and equalization "
-                            "of property.")
-    assert item['event_description'] == expected_description
+    assert item['event_description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)

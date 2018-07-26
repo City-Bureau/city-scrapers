@@ -25,31 +25,16 @@ class Wayne_building_authoritySpider(Wayne_commission, Spider):
     }
 
     def _parse_entries(self, response):
-        # There are several tables with old meetings. Look for the current year
-        # and get all rows which have children that contain text.
         current_year = datetime.now().year
-        return response.xpath('//section[contains(.,"%s")]//tbody/tr[child::td/text()]' %current_year)
+        current_year_non_empty_rows = response.xpath('//section[contains(.,"%s")]//tbody/tr[child::td/text()]' %current_year)
 
-    @staticmethod
-    def _parse_description(response):
-        """
-        Event description
-        """
-        desc = ("The County of Wayne will provide necessary reasonable "
-                "auxiliary aids and services to individuals with disabilities "
-                "at the meeting upon five days notice to the Legal Clerk of "
-                "the Authority, such as signers for the hearing impaired and "
-                "audio tapes of printed materials being considered at the "
-                "meetings. Individuals with disabilities requiring "
-                "auxiliary aids or services should contact the Authority in "
-                "writing or call Audricka Grandison at (313) 967-1030.")
-        return desc
+        return current_year_non_empty_rows
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        # Strong text indicates the a replacement meeting date
+        # Strong text indicates a replacement meeting date
         strong_text = item.xpath('.//td[2]/strong/text()').extract_first()
         if strong_text is not None:
             date_str = strong_text
