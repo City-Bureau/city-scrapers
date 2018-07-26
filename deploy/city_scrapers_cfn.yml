@@ -163,17 +163,27 @@ Resources:
 
           def handler(event, context):
               try:
-                  job_defs = batch.describe_job_definitions(status='ACTIVE')['jobDefinitions']
-                  active_job_defs = set([job['jobDefinitionName'] for job in job_defs])
-
-                  for job in active_job_defs:
-                      response = batch.submit_job(
-                          jobName='{}-job'.format(job),
-                          jobQueue=JOB_QUEUE,
-                          jobDefinition=job,
-                          retryStrategy={'attempts': 3}
+                  job_def_res = batch.describe_job_definitions()
+                  job_defs = job_def_res['jobDefinitions']
+                  while 'nextToken' in job_def_res:
+                      job_def_res = batch.describe_job_definitions(
+                          nextToken=job_def_res['nextToken'],
                       )
-                      print(response)
+                      job_defs.extend(job_def_res['jobDefinitions'])
+
+                  job_defs = set([job['jobDefinitionName'] for job in job_defs])
+
+                  for job in job_defs:
+                      try:
+                          response = batch.submit_job(
+                              jobName='{}-job'.format(job),
+                              jobQueue=JOB_QUEUE,
+                              jobDefinition=job,
+                              retryStrategy={'attempts': 3}
+                          )
+                          print(response)
+                      except batch.exceptions.ClientException as e:
+                          pass
               except Exception as e:
                   print(e)
                   raise e

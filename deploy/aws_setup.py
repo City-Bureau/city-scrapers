@@ -41,10 +41,19 @@ def create_job_definitions():
     """
     Register all job definitions.
     """
-    active_job_defs = batch.describe_job_definitions(status='ACTIVE')['jobDefinitions']
+    job_def_res = batch.describe_job_definitions(status='ACTIVE')
+    job_defs = job_def_res['jobDefinitions']
+    while 'nextToken' in job_def_res:
+        job_def_res = batch.describe_job_definitions(
+            status='ACTIVE',
+            nextToken=job_def_res['nextToken'],
+        )
+        job_defs.extend(job_def_res['jobDefinitions'])
+
+    active_job_arns = set([job['jobDefinitionArn'] for job in job_defs])
     print('deregistering all current job definitions')
-    for job in active_job_defs:
-        batch.deregister_job_definition(jobDefinition=job['jobDefinitionArn'])
+    for job_arn in active_job_arns:
+        batch.deregister_job_definition(jobDefinition=job_arn)
 
     future_job_defs = spider_names
     job_role_arn = iam.Role(BATCH_JOB_ROLE).arn
