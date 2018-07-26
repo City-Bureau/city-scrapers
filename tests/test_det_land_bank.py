@@ -5,7 +5,7 @@ from tests.utils import file_response
 from city_scrapers.spiders.det_land_bank import Det_land_bankSpider
 
 
-test_response = file_response('files/det_land_bank.html')
+test_response = file_response('files/det_land_bank.html', 'https://buildingdetroit.org/events/meetings')
 spider = Det_land_bankSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
