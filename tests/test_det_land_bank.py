@@ -57,7 +57,7 @@ def test_sources():
 def test_documents():
     assert parsed_items[0]['documents'] == [{
       'url': 'https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018085612.pdf',
-      'note': ''
+      'note': 'minutes'
     }]
 
 

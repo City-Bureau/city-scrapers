@@ -74,5 +74,5 @@ class Det_land_bankSpider(Spider):
         Parse or generate documents.
         """
         if item['file_path']:
-            return [{'url': item['file_path'], 'note': ''}]
+            return [{'url': item['file_path'], 'note': 'minutes'}]
         return []
