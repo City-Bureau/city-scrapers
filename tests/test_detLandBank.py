@@ -2,11 +2,11 @@ import pytest
 from datetime import date, time
 
 from tests.utils import file_response
-from city_scrapers.spiders.det_land_bank import Det_land_bankSpider
+from city_scrapers.spiders.detLandBank import DetLandBankSpider
 
 
-test_response = file_response('files/det_land_bank.html', 'https://buildingdetroit.org/events/meetings')
-spider = Det_land_bankSpider()
+test_response = file_response('files/detLandBank.html', 'https://buildingdetroit.org/events/meetings')
+spider = DetLandBankSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 parsed_items = sorted(parsed_items, key=lambda x: (x['start']['date'], x['start']['time']))
 
@@ -32,7 +32,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_land_bank/201401211400/x/board_of_director_meeting'
+    assert parsed_items[0]['id'] == 'detLandBank/201401211400/x/board_of_director_meeting'
 
 
 def test_status():

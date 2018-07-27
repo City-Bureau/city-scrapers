@@ -5,8 +5,8 @@ import json
 from dateutil.parser import parse as dateparse
 
 
-class Det_land_bankSpider(Spider):
-    name = 'det_land_bank'
+class DetLandBankSpider(Spider):
+    name = 'detLandBank'
     agency_id = 'Detroit Land Bank Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['buildingdetroit.org']
