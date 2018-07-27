@@ -47,7 +47,9 @@ class Det_land_bankSpider(Spider):
         """
         Parse or generate classification (e.g. public health, education, etc).
         """
-        return ''
+        if 'board of director' in item['category_type'].lower():
+            return 'Board'
+        return 'Committee'
 
     def _parse_start(self, item):
         """
