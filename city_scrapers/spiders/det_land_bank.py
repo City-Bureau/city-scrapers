@@ -6,7 +6,7 @@ from dateutil.parser import parse as dateparse
 
 
 class DetLandBankSpider(Spider):
-    name = 'detLandBank'
+    name = 'det_land_bank'
     agency_id = 'Detroit Land Bank Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['buildingdetroit.org']
