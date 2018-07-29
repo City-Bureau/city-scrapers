@@ -22,17 +22,12 @@ def report_error(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         try:
-            print('Calling decorated function')
             return f(*args, **kwargs)
         except:
-            print('Reporting to Sentry')
-            # TODO: Report to Sentry
             get_client().captureException(extra={
                 'args': args,
                 'kwargs': kwargs
             })
-            print('Done reporting to Sentry')
-
             raise
 
     return wrapper

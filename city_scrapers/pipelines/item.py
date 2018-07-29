@@ -7,8 +7,6 @@ class CityScrapersItemPipeline(object):
     """
     @report_error
     def process_item(self, item, spider):
-        raise Exception("HELLO")
-
         if hasattr(spider, 'long_name'):
             item['agency_name'] = spider.long_name
         else:
