@@ -27,7 +27,10 @@ def report_error(f):
         except:
             print('Reporting to Sentry')
             # TODO: Report to Sentry
-            get_client().captureException()
+            get_client().captureException(extra={
+                'args': args,
+                'kwargs': kwargs
+            })
             print('Done reporting to Sentry')
 
             raise
