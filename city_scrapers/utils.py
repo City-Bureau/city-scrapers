@@ -20,10 +20,10 @@ def get_key(the_dict, location_string):
 
 def report_error(f):
     @wraps(f)
-    def wrapper(*args, **kwds):
+    def wrapper(*args, **kwargs):
         try:
             print('Calling decorated function')
-            return f(*args, **kwds)
+            return f(*args, **kwargs)
         except:
             print('Reporting to Sentry')
             # TODO: Report to Sentry
