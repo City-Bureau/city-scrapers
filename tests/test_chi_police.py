@@ -64,7 +64,7 @@ def test_documents():
 
 def test_location():
     EXPECTED_LOCATION = {
-            'address': "St. Ferdinand's3115 N. Mason",
+            'address': "St. Ferdinand's3115 N. Mason Chicago, IL",
             'name': '',
             'neighborhood': ''
     }

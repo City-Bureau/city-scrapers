@@ -1,0 +1,2339 @@
+<!doctype html>
+<html lang="en-US">
+    <head >
+        <script>
+    var require = {
+        "baseUrl": "https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US"
+    };
+</script>
+        <meta charset="utf-8"/>
+<meta name="description" content="Description"/>
+<meta name="keywords" content="DLBA, E-commerce"/>
+<meta name="robots" content="INDEX,FOLLOW"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title></title>
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Careers/css/career.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Customers/css/dlba_customers.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Customers/css/style.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Core/css/mp.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Core/css/font-awesome.min.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_CommonElements/css/community.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Events/css/fullcalendar_event.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/vendor/owl-carousel/owl.carousel.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/vendor/owl-carousel/owl.theme.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/mage/calendar.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/bootstrap/css/bootstrap.min.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/css/fonts/font-awesome/css/font-awesome.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/css/fonts/MyriadProBold/font.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/vendor/chosen/chosen.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/css/theme-animate.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/css/theme-elements.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/css/theme-blog.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/css/theme-map.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/css/theme.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/css/theme-responsive.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.0/flexslider.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.5/angular-material.min.css" />
+<link  rel="stylesheet" type="text/css"  media="all" href="https://fonts.googleapis.com/css?family=Rochester" />
+<script  type="text/javascript"  src="https://www.google.com/recaptcha/api.js"></script>
+<script  type="text/javascript"  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHFiodIdzQWa6JJMuaSKogpOAezo7uaJA&libraries=places"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/moment.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular-touch.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular-route.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular-animate.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular-aria.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular-messages.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular-sanitize.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular-moment.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/angular-material.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_Properties/angular/ui-bootstrap-tpls.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/requirejs/require.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/mage/requirejs/mixins.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/_requirejs/frontend/DLBA/building-detroit/en_US/secure/requirejs-config.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/vendor/jquery.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/bootstrap/js/bootstrap.min.js"></script>
+<script  type="text/javascript"  src="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/vendor/chosen/chosen.jquery.min.js"></script>
+<link  rel="stylesheet/less" type="text/less" href="https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/DLBA_News/css/source/_module.less" />
+<link  rel="icon" type="image/x-icon" href="https://buildingdetroit.org/media/favicon/stores/1/dlba_logo_new.PNG" />
+<link  rel="shortcut icon" type="image/x-icon" href="https://buildingdetroit.org/media/favicon/stores/1/dlba_logo_new.PNG" />
+        <style>
+    #social-login-popup .social-login-title {
+		background-color: 	}
+
+	#social-login-popup .social-login #bnt-social-login-authentication {
+		background-color: ;
+		border: 	}
+
+	#social-login-popup .forgot .primary button {
+		background-color: ;
+		border: 	}
+
+	#social-login-popup .create .primary button {
+		background-color: ;
+		border: 	}
+
+	    /* Compatible ETheme_YOURstore*/
+    /* ETheme_YOURstore  */
+    </style>    </head>
+    <body data-container="body" data-mage-init='{"loaderAjax": {}, "loader": { "icon": "https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/images/loader-2.gif"}}' class="events-meetings-index page-layout-1column">
+            <script>
+        require.config({
+            deps: [
+                'jquery',
+                'mage/translate',
+                'jquery/jquery-storageapi'
+            ],
+            callback: function ($) {
+                'use strict';
+
+                var dependencies = [],
+                    versionObj;
+
+                $.initNamespaceStorage('mage-translation-storage');
+                $.initNamespaceStorage('mage-translation-file-version');
+                versionObj = $.localStorage.get('mage-translation-file-version');
+
+                if (versionObj.version !== '34558d1cfd0798f264242c7dfe03274997a6772f') {
+                    dependencies.push(
+                        'text!js-translation.json'
+                    );
+
+                }
+
+                require.config({
+                    deps: dependencies,
+                    callback: function (string) {
+                        if (typeof string === 'string') {
+                            $.mage.translate.add(JSON.parse(string));
+                            $.localStorage.set('mage-translation-storage', string);
+                            $.localStorage.set(
+                                'mage-translation-file-version',
+                                {
+                                    version: '34558d1cfd0798f264242c7dfe03274997a6772f'
+                                }
+                            );
+                        } else {
+                            $.mage.translate.add($.localStorage.get('mage-translation-storage'));
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "mage/cookies": {
+                "expires": null,
+                "path": "/",
+                "domain": ".buildingdetroit.org",
+                "secure": false,
+                "lifetime": "600"
+            }
+        }
+    }
+</script>
+    <noscript>
+        <div class="message global noscript">
+            <div class="content">
+                <p>
+                    <strong>JavaScript seems to be disabled in your browser.</strong>
+                    <span>For the best experience on our site, be sure to turn on Javascript in your browser.</span>
+                </p>
+            </div>
+        </div>
+    </noscript>
+<!-- BEGIN GOOGLE ANALYTICS CODE -->
+<script>
+//<![CDATA[
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    
+ga('create', 'UA-49913448-1', 'auto');
+ga('send', 'pageview');
+    
+//]]>
+</script>
+<!-- END GOOGLE ANALYTICS CODE -->
+<div class="page-wrapper"><header><style type="text/css">
+.social-btn .btn-social {
+    padding: 10px 0px;
+    padding-left: 0;
+    text-align: center;
+	text-transform: none;
+}
+.btn-social .fa {
+    display: none;
+}
+.account-social-login .actions-toolbar.social-btn {
+    width: 133px;
+}
+	#top
+	{
+		min-height: 60px;
+	}
+	.nav-top > li > a
+	{
+		padding: 16px 5px 15px;
+		font-size: 15px;
+	}
+	.nav-top {
+    border-right: 0px #111 !important;
+    text-align: right;
+    float: right;
+}
+	.c-dropdown
+	{
+		/*padding: 13px 0px;*/
+		    margin: 0px;
+	}
+	.c-button--dropdown
+	{
+		    font-size: 15px;
+	}
+	.c-button--dropdown:after
+	{
+		top: 28px;
+	}
+
+	.dropdown__item a
+	{
+		display: block;
+		padding:0px 10px;
+	}
+
+
+	.search-bar {
+	  width: 0;
+	  height: 35px;
+	  background: #3e3e3e;
+	  position: absolute;
+	  right: 35px;
+	  top: 0;
+	  transition: width 300ms ease-in-out;
+	}
+	.search-bar.active {
+	  width: 285px;
+	}
+	.search-bar input {
+	  background: transparent;
+	  outline: 0;
+	  border: 0;
+	  width: 100%;
+	  height: 100%;
+	  color: white;
+	  box-sizing: border-box;
+	  padding: 0 15px;
+	}
+
+	.search_icons {
+	    width: 35px;
+	    height: 35px;
+	  	position: absolute;
+	  	right: 0;
+	  	top: 0;
+	 	/* background: #3cabea;*/
+	  	transition: background 200ms ease-in-out;
+	}
+	.search_icons.active
+	{
+		background: #000;
+	}
+	.search_icons:hover {
+	  	background: #111;
+	  	cursor: pointer;
+	}
+	.search_icons.active .search-icon {
+	  	width: 25px;
+	  	height: 25px;
+	  	border: 3px solid #fff;
+	}
+	.search_icons.active .search-icon:before, .search_icons.active .search-icon:after {
+	  	top: 5px;
+	  	right: 8px;
+	}
+	.search_icons:hover .search-icon:before,.search_icons:hover .search-icon:after
+	{
+		background: #fff;
+	}
+	.search_icons:hover .search-icon
+	{
+		border: 3px solid #fff;
+	}
+	.search_icons.active .search-icon:after {
+		-webkit-transform: rotate(45deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+		-ms-transform: rotate(45deg);  /* IE 9 */
+		transform: rotate(45deg);  /* Firefox 16+, IE 10+, Opera */
+	}
+	.search-icon {
+	    width: 20px;
+	    height: 20px;
+	  	background: transparent;
+	  	border: 3px solid #fff;
+	  	display: block;
+	  	border-radius: 15px;
+	  	position: relative;
+	  	/*transition: all .2s ease-in-out;*/
+	  	-webkit-transition: all .2s ease-in-out; /* Safari 3.1 to 6.0 */
+		-ms-transition: all .2s ease-in-out; 
+    	transition: all .2s ease-in-out;
+	    margin: 5px 5px;
+	}
+	.search-icon:before, .search-icon:after {
+		width: 3px;
+		height: 10px;
+		display: block;
+		content: '';
+		background: #fff;
+		position: absolute;
+		top: 12px;
+		right: -5px;
+		-webkit-transform: rotate(-45deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+		-ms-transform: rotate(-45deg);  /* IE 9 */
+		transform: rotate(-45deg);  /* Firefox 16+, IE 10+, Opera */
+
+		/* transform: rotate(-45deg); 
+		transition: all .2s ease-in-out;*/
+
+		-webkit-transition: all .2s ease-in-out; /* Safari 3.1 to 6.0 */
+		-ms-transition: all .2s ease-in-out; 
+    	transition: all .2s ease-in-out;
+	}
+	.header-search
+	{
+		/*padding:8px 0px;*/
+		position: absolute;
+		top: 11px;
+		z-index: 9;
+	}
+	li.social_icons a {
+	    display: inline-block;
+	    color: #fff;
+	}
+	.search_icons.active .search-icon:after,.search_icons.active .search-icon:before
+	{
+		background: #fff;
+	}
+	/*li.social_icons a:hover
+	{
+		background: #111;
+	}
+*/
+	#create_account_form .control-label, #sign_in_form .control-label{display:none;}
+	#sign_in_form, #create_account_form{padding: 10px;}
+	#sign_in_form .checkbox label, #create_account_form .checkbox label{background-color:transparent;}
+	#sign_in_form .modal-title
+	{
+		text-align: center;
+		font-size: 24px;
+	}
+	.modal-footer{clear:both;}
+	.modal-content{float:left;width:100%;}
+	#sign_in .modal-content, #sign_in .modal-body{padding:0;}
+	#sign_in .modal-footer, #sign_in .modal-header{display:none;}
+	.no-padding{padding:0;}
+	.no-padding-left{padding-left:0;}
+	.no-padding-right{padding-right:0;}
+	.no-padding-side{padding-left:0;padding-right:0;}
+	.checkbox label {background-color: transparent;}
+	@media screen and (max-width:768px) {
+		.account_banner{display:none;}
+	}
+
+	.boxmain{padding: 10px;display: inline-block;width: 46%;text-align: center;}
+	.boxmain.facebook a
+	{
+		background: #3b5998;
+		color: #fff;
+	    border-radius: 3px;
+	    width: 100%;
+	    display: block;
+	    text-align: center;
+	    padding:10px;
+	}
+	.boxmain.google-plus a
+	{
+		background: #dd4b39;
+		color: #fff;
+	    border-radius: 3px;
+	    width: 100%;
+	    display: block;
+	    text-align: center;
+	    padding:10px;
+	}
+	.mage-error{color: #a94442;}
+	.ui-helper-hidden-accessible{
+		display: none;
+	}
+	/*.ui-menu-item{
+		display: none;
+	}*/
+</style>
+<!-- Modal -->
+<div id="paynow" class="modal fade" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+		  <div class="modal-header">
+			<h4 class="modal-title">Property Name</h4>
+		  </div>
+      		<div class="modal-body">
+				<p class="payment-progressing">Please wait we are progressing your request...</p>
+      		</div>			
+		</div>
+  	</div>
+</div>
+<div id="sign_in" class="modal fade" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-body">
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<form class="form form-login form-horizontal"
+              action="https://buildingdetroit.org/customer/account/loginPost/"
+              method="post"
+              id="sign_in_form"
+			  autocomplete="off"
+              data-mage-init='{"validation":{}}'>
+			  <input name="form_key" type="hidden" value="1rlrom8lIUQKSSvD" />						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="modal-title">Sign In</h3>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 text-center">
+																						<div class="block social-login-authentication-channel account-social-login">
+									<div class="block-content">
+																					<div class="actions-toolbar social-btn social-btn-actions-toolbar facebook-login">
+												<a class="btn btn-block btn-social btn-facebook" data-mage-init='{"socialProvider": {"url": "https://buildingdetroit.org/dlba_customers/social/login/type/facebook/", "label": "Login By Facebook"}}'>
+													<span class="fa fa-facebook"></span>
+													Facebook												</a>
+											</div>
+																					<div class="actions-toolbar social-btn social-btn-actions-toolbar google-login">
+												<a class="btn btn-block btn-social btn-google" data-mage-init='{"socialProvider": {"url": "https://buildingdetroit.org/dlba_customers/social/login/type/google/", "label": "Login By Google"}}'>
+													<span class="fa fa-google"></span>
+													Google												</a>
+											</div>
+																					<div class="actions-toolbar social-btn social-btn-actions-toolbar linkedin-login">
+												<a class="btn btn-block btn-social btn-linkedin" data-mage-init='{"socialProvider": {"url": "https://buildingdetroit.org/dlba_customers/social/login/type/linkedin/", "label": "Login By LinkedIn"}}'>
+													<span class="fa fa-linkedin"></span>
+													LinkedIn												</a>
+											</div>
+																			</div>
+								</div>
+														</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">				
+		                <div class="form-group">
+		                    <div class="col-sm-12">		                        
+								<input name="login[username]" type="text" id="email" placeholder="Username or Email address" class="form-control" data-validate="{required:true}">
+		                    </div>
+		                </div>
+		                </div>
+		                </div>
+		                <div class="form-group">
+		                    <div class="col-sm-12">
+								<input type="hidden" name="redirect_to" value="http://buildingdetroit.org/events/meetings" />
+		                        <input type="password" id="password" name="login[password]" placeholder="Password" class="form-control" data-validate="{required:true}">
+		                    </div>
+		                </div>
+		                <div class="col-md-12 col-xs-12">
+			               	<div class="form-group required">
+			                  <div id="recaptcha" class="g-recaptcha" class="g-recaptcha" style="transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;" data-validate="{required:true}" data-sitekey="6LdgJWEUAAAAADLF39UpkXFfKAqKH2OmhLccD-0r"></div>
+			            	</div>
+            			</div>
+		               	<p><a href="https://buildingdetroit.org/customer/account/forgotpassword/">Forgot your password?</a></p>
+		                <div class="form-group">
+		                    <div class="col-sm-12">
+		                        <button type="submit" name="send" class="btn btn-primary btn-block">Sign In</button>
+		                    </div>
+		                </div>
+		                <div class="form-group">
+		                    <div class="col-sm-12">
+		                        <div class="checkbox">
+		                            <label>
+		                                <input type="checkbox" checked="checked">Remember my email address		                            </label>
+		                        </div>
+		                    </div>
+		                </div> <!-- /.form-group -->				
+						<p class="text-center">Don't have an account? <a href="https://buildingdetroit.org/customer/account/create/">Create account</a></p>
+            		</form>
+				</div>	
+      		</div>
+		</div>
+  	</div>
+</div>
+<div id="top">
+	<div class="container">
+		<div class="row"> 
+			<div class="top-black-menu navbar-right col-sm-12">
+				
+				<ul class="nav nav-pills nav-top  ">
+					<div class="header-search">
+						<div class="search-bar">
+							<form action="https://buildingdetroit.org/commonelements/globalsearch" method="GET">
+								<input name="search-input" class="header_input" type="text" />
+							</form>
+						</div>
+						<div class="search_icons">
+							<div class="search-icon"></div>
+						</div>
+					</div>
+					<li class="social_icons"><a href="https://buildingdetroit.org/"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+							
+					<!-- <li class="signup"><a href=""></a></li> -->
+					<li class="login"><a id="global_login_link" data-toggle="modal" data-target="#sign_in" href="Javascript:void(0);">Login</a></li>
+										<li>
+						<div class="c-dropdown js-dropdown">
+							<input type="hidden" name="Framework" id="Framework" class="js-dropdown__input">
+							<span class="c-button c-button--dropdown js-dropdown__current">English</span>
+							<ul class="c-dropdown__list">
+																	            																								<li class="view-spanish switcher-option dropdown__item c-dropdown__item">
+					                        <a href="#" data-post='{"action":"https:\/\/buildingdetroit.org\/stores\/store\/switch\/","data":{"___store":"spanish","uenc":"aHR0cHM6Ly9idWlsZGluZ2RldHJvaXQub3JnL2V2ZW50cy9tZWV0aW5ncw,,"}}'>
+					                            Spanish</a>
+					                    </li>
+									            																								<li class="view-bengali switcher-option dropdown__item c-dropdown__item">
+					                        <a href="#" data-post='{"action":"https:\/\/buildingdetroit.org\/stores\/store\/switch\/","data":{"___store":"bengali","uenc":"aHR0cHM6Ly9idWlsZGluZ2RldHJvaXQub3JnL2V2ZW50cy9tZWV0aW5ncw,,"}}'>
+					                            Bengali</a>
+					                    </li>
+									            																								<li class="view-arabic switcher-option dropdown__item c-dropdown__item">
+					                        <a href="#" data-post='{"action":"https:\/\/buildingdetroit.org\/stores\/store\/switch\/","data":{"___store":"arabic","uenc":"aHR0cHM6Ly9idWlsZGluZ2RldHJvaXQub3JnL2V2ZW50cy9tZWV0aW5ncw,,"}}'>
+					                            Arabic</a>
+					                    </li>
+									            												</ul>
+						</div>
+					</li>
+					<li class="social_icons">
+						<a href="https://www.facebook.com/buildingdetroit" target="_blank" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+						<a href="https://twitter.com/buildingdet" target="_blank" title="" data-placement="bottom" data-toggle="tooltip" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>						
+					</li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- <script type="text/javascript">
+	var pageDetails = JSON.parse('');
+	var pageTitle = new Array();
+	for(var i=0; i<pageDetails.length; i++){
+		pageTitle.push(pageDetails[i]['title']);
+	}
+	console.log(pageDetails);
+	//$(".ui-menu-item").hide();
+	require(['jquery','jquery/ui'], function($){
+        $('.header_input').autocomplete({
+            source:pageTitle,
+            minLength:2,
+            select: function(event,ui){
+            	console.log(ui.item.value);
+        		for(var i=0; i<pageDetails.length; i++){
+					if(pageDetails[i]['title'].toLowerCase() == ui.item.value.toLowerCase()){
+						//console.log(pageDetails[i]['identifier']);
+						window.location.href = 'index.php/'+pageDetails[i]['identifier'];
+					}
+				}
+            }
+            //case keyCode.ENTER: console.log("enter key event")
+        });		
+	});
+</script> --><nav class="navbar navbar-default pgl-navbar-main"><div class="container"><style type="text/css">
+
+</style>
+<div class="navbar-header">
+	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> 
+		<span class="sr-only">Toggle navigation</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	</button>
+	<a class="top-logo" href="https://buildingdetroit.org/" title="DLBA Logo">
+		<div class="logo">
+		<img src="https://buildingdetroit.org/media/logo/stores/1/dlba_logo_new.PNG" alt="DLBA Logo"> 
+		</div>
+		<span class="text1">DETROIT LAND BANK AUTHORITY</span>
+		<span class="text2">buildingdetroit.org</span>
+	</a>
+</div><div class="navbar-collapse collapse width">
+	<ul class="nav navbar-nav pull-right"><li class="dropdown"><a target="" class="dropdown-toggle" data-toggle="dropdown" href="#">About Us</a><ul class="dropdown-menu"><li><a target="" href="https://buildingdetroit.org/overview/">Who We Are</a></li><li><a target="" href="https://buildingdetroit.org/events/meetings/">Board Meetings</a></li><li class="dropdown"><a target="" class="dropdown-toggle" data-toggle="dropdown" href="#">Reports</a><ul class="dropdown-menu"><li><a target="" href="https://buildingdetroit.org/city-council-quarterly-reports_en/">City Council Quarterly</a></li><li><a target="_blank" href="https://data.detroitmi.gov/Property-Parcels/DLBA-Auctions-Closed/tgwk-njih/data">Completed Auction Sales</a></li><li><a target="_blank" href="https://data.detroitmi.gov/Property-Parcels/Own-It-Now-Sales/pyf3-v3vc/data">Completed Own It Now Sales</a></li><li><a target="_blank" href="https://data.detroitmi.gov/Property-Parcels/Side-Lot-Sales/mfsk-uw55/data">Completed Sidelot Sales</a></li></ul></li><li><a target="" href="https://buildingdetroit.org/foia_en/">FOIA</a></li><li><a target="" href="https://buildingdetroit.org/dlba-contracts/">Contracts</a></li><li><a target="" href="https://buildingdetroit.org/ethics-hotline/">Ethics Hotline</a></li></ul></li><li class="dropdown"><a target="" class="dropdown-toggle" data-toggle="dropdown" href="#">Make A Purchase</a><ul class="dropdown-menu"><li><a target="" href="https://buildingdetroit.org/properties/">All Listings</a></li><li><a target="" href="https://buildingdetroit.org/properties/?category=2">Auction</a></li><li><a target="" href="https://buildingdetroit.org/properties/?category=3">Own It Now</a></li><li><a target="" href="https://buildingdetroit.org/rehabbed-ready/">Rehabbed & Ready</a></li><li><a target="" href="https://buildingdetroit.org/community-partnership/">Community Partners</a></li><li><a target="" href="https://buildingdetroit.org/sidelots/">Sidelots</a></li><li><a target="" href="https://buildingdetroit.org/properties/pastlistings/">Past Listings</a></li><li><a target="" href="https://buildingdetroit.org/properties/openhouse/">Open Houses</a></li><li><a target="" href="https://buildingdetroit.org/development-projects/">Development Projects </a></li></ul></li><li class="dropdown"><a target="" class="dropdown-toggle" data-toggle="dropdown" href="#">Important Info</a><ul class="dropdown-menu"><li><a target="" href="https://buildingdetroit.org/rules/">Rules</a></li><li><a target="" href="https://buildingdetroit.org/compliance/">Compliance</a></li><li><a target="" href="https://buildingdetroit.org/nuisance-abatement/">Nuisance Abatement</a></li></ul></li><li class="dropdown"><a target="" class="dropdown-toggle" data-toggle="dropdown" href="#">More</a><ul class="dropdown-menu"><li><a target="" href="https://buildingdetroit.org/careers/career/">Careers</a></li><li><a target="" href="https://buildingdetroit.org/city-of-detroit-discount/">Discounts</a></li><li><a target="" href="https://buildingdetroit.org/open-rfps-and-rfqs/">Open RFPs and RFQs</a></li><li><a target="" href="https://buildingdetroit.org/events/events/">Upcoming Events</a></li></ul></li></ul></div></div></nav></header><div id="maincontent" class="main"><a id="contentarea" tabindex="-1"></a>
+<div class="page messages"><div data-placeholder="messages"></div>
+<div data-bind="scope: 'messages'">
+    <div data-bind="foreach: { data: cookieMessages, as: 'message' }" class="messages">
+        <div data-bind="attr: {
+            class: 'message-' + message.type + ' ' + message.type + ' message',
+            'data-ui-id': 'message-' + message.type
+        }">
+            <div data-bind="html: message.text"></div>
+        </div>
+    </div>
+    <div data-bind="foreach: { data: messages().messages, as: 'message' }" class="messages">
+        <div data-bind="attr: {
+            class: 'message-' + message.type + ' ' + message.type + ' message',
+            'data-ui-id': 'message-' + message.type
+        }">
+            <div data-bind="html: message.text"></div>
+        </div>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                        "messages": {
+                            "component": "Magento_Theme/js/view/messages"
+                        }
+                    }
+                }
+            }
+    }
+</script>
+</div><div class="columns"><div class="column main"><input name="form_key" type="hidden" value="1rlrom8lIUQKSSvD" /><div id="authenticationPopup" data-bind="scope:'authenticationPopup'" style="display: none;">
+    <script>
+        window.authenticationPopup = {"customerRegisterUrl":"https:\/\/buildingdetroit.org\/customer\/account\/create\/","customerForgotPasswordUrl":"https:\/\/buildingdetroit.org\/customer\/account\/forgotpassword\/","baseUrl":"https:\/\/buildingdetroit.org\/"};
+    </script>
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <script type="text/x-magento-init">
+        {
+            "#authenticationPopup": {
+                "Magento_Ui/js/core/app": {"components":{"authenticationPopup":{"children":{"social-buttons":{"component":"DLBA_Customers\/js\/view\/social-buttons","displayArea":"before"},"messages":{"component":"Magento_Ui\/js\/view\/messages","displayArea":"messages"},"captcha":{"component":"Magento_Captcha\/js\/view\/checkout\/loginCaptcha","displayArea":"additional-login-form-fields","formId":"user_login","configSource":"checkout"}},"component":"Magento_Customer\/js\/view\/authentication-popup"}}}            },
+            "*": {
+                "Magento_Ui/js/block-loader": "https://buildingdetroit.org/static/frontend/DLBA/building-detroit/en_US/images/loader-1.gif"
+            }
+        }
+    </script>
+</div>
+<script type="text/x-magento-init">
+{"*":{"Magento_Customer\/js\/section-config":{"sections":{"stores\/store\/switch":"*","directory\/currency\/switch":"*","customer\/account\/editpost":["customer"],"*":["messages"],"customer\/account\/logout":"*","customer\/account\/loginpost":"*","customer\/account\/createpost":"*","customer\/ajax\/login":["checkout-data","cart"],"catalog\/product_compare\/add":["compare-products"],"catalog\/product_compare\/remove":["compare-products"],"catalog\/product_compare\/clear":["compare-products"],"sales\/guest\/reorder":["cart"],"sales\/order\/reorder":["cart"],"checkout\/cart\/add":["cart"],"checkout\/cart\/delete":["cart"],"checkout\/cart\/updatepost":["cart"],"checkout\/cart\/updateitemoptions":["cart"],"checkout\/cart\/couponpost":["cart"],"checkout\/cart\/estimatepost":["cart"],"checkout\/cart\/estimateupdatepost":["cart"],"checkout\/onepage\/saveorder":["cart","checkout-data","last-ordered-items"],"checkout\/sidebar\/removeitem":["cart"],"checkout\/sidebar\/updateitemqty":["cart"],"rest\/*\/v1\/carts\/*\/payment-information":["cart","checkout-data","last-ordered-items"],"rest\/*\/v1\/guest-carts\/*\/payment-information":["cart","checkout-data"],"rest\/*\/v1\/guest-carts\/*\/selected-payment-method":["cart","checkout-data"],"rest\/*\/v1\/carts\/*\/selected-payment-method":["cart","checkout-data"],"multishipping\/checkout\/overviewpost":["cart"],"paypal\/express\/placeorder":["cart","checkout-data"],"paypal\/payflowexpress\/placeorder":["cart","checkout-data"],"review\/product\/post":["review"],"authorizenet\/directpost_payment\/place":["cart","checkout-data"],"braintree\/paypal\/placeorder":["cart","checkout-data"],"wishlist\/index\/add":["wishlist"],"wishlist\/index\/remove":["wishlist"],"wishlist\/index\/updateitemoptions":["wishlist"],"wishlist\/index\/update":["wishlist"],"wishlist\/index\/cart":["wishlist","cart"],"wishlist\/index\/fromcart":["wishlist","cart"],"wishlist\/index\/allcart":["wishlist","cart"],"wishlist\/shared\/allcart":["wishlist","cart"],"wishlist\/shared\/cart":["cart"]},"clientSideSections":["checkout-data"],"baseUrls":["https:\/\/buildingdetroit.org\/"]}}}</script>
+<script type="text/x-magento-init">
+{"*":{"Magento_Customer\/js\/customer-data":{"sectionLoadUrl":"https:\/\/buildingdetroit.org\/customer\/section\/load\/","cookieLifeTime":"600","updateSessionUrl":"https:\/\/buildingdetroit.org\/customer\/account\/updateSession\/"}}}</script>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "pageCache": {"url":"https:\/\/buildingdetroit.org\/page_cache\/block\/render\/","handles":["default","events_meetings_index"],"originalRequest":{"route":"events","controller":"meetings","action":"index","uri":"\/events\/meetings"},"versionCookieName":"private_content_version"}        }
+    }
+</script>
+<!-- Begin --- Main -->
+<section class="page-top" style="background: url( https://s3.us-east-2.amazonaws.com/dlba-production-bucket/banners/fixed-banner.jpg) no-repeat #333;background-size: cover;">
+    <div class="container">
+     <div class="page-top-in">
+       <h2><span>Board Meetings</span></h2>
+      </div>
+    </div>
+</section>
+<!-- End ---page top --><style type="text/css">
+    .modal-header-primary {
+    color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #53ade9;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+}
+#calendar{
+    padding-top: 20px;
+}
+#header{
+    color: #fff;
+}
+.boardmeeting{
+    background-color: #eee;
+    left: 14px;
+    top: 20px;
+}
+</style>
+<div class="container">
+    
+   <div class="row margin">
+        <div class="col-md-5">
+            <!--<h2>Board of Directors</h2>-->
+            <br>
+<ul>
+<li>Erica Ward Gerson, Chair</li>
+<li>Richard Hosey, Vice Chair and Treasurer</li>
+<li>Rasul Raheem, Secretary</li>
+<li>Patricia Pernell Shelton</li>
+<li>Carol Walters</li>
+</ul>
+        </div>
+        <div class="col-md-12" style="z-index: 0;">
+            <div id="calendar"></div>
+        </div>
+    </div>
+    <div class="row margin" style="width: 100%;">
+        <div class="col-md-6" id="down">
+            <h2 style="margin: 15px 0 0 0;">Today Meeting's:</h2>
+                            <p>No meeting today</p>
+                     </div>   
+    </div>
+    <div class="row margin">
+        <div class="col-md-6" id="up">
+            <!-- <h2>Meetings and Minutes:</h2> -->
+            <div class="title_space"></div>
+            <div class="time_space"></div>
+            <p class="meeting-location"><strong></strong></p>
+            <div class="address_space"></div>
+            <div class="city_space"></div>
+            <div class="state_space"></div>
+            <div class="content_space"></div>  
+         </div>
+    </div>
+</div>
+
+<div class="container">
+        <div class="row">
+                <div class="col-md-9 content" style="padding-top: 40px;">
+<div id="accordion" class="panel-group">
+    <div class="panel panel-default pgl-panel">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a class="collapsed" href="#collapse1" data-toggle="collapse" data-parent="#accordion">2018 Board Meetings</a></h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse" style="height: 0px;">
+            <div class="panel-body">
+                <!-- custom data -->
+
+                    <section class="pgl-pro-detail pgl-bg-light">
+                     
+    
+                        <div class="row">
+                            <h3><strong><span style="color: #000000;">DLBA Board Of Director Meetings:</span></strong></h3>
+                        <div class="col-sm-8">
+                
+
+                            <p>January 16 at 11:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/1.16.18_Board_Meeting_Minutes_final..pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>February 13 at 11:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/February_13th.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>March 13 at 11:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/March_13th_2018_Minutes.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>April 17 at 11:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/April_172018_Minutes.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 15 at 11:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/120260_06262018123456.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>June 19 at 11:00 am                                                         
+                            </p>
+                
+
+                            <p>June 19 at 3:00 pm                                                            <strong><span style="color:#ff0000;">CANCELLED</span></strong>
+                                                         
+                            </p>
+                
+
+                            <p>July 17 at 11:00 am                                                         
+                            </p>
+                
+
+                            <p>August 14 at 11:00 am                                                         
+                            </p>
+                
+
+                            <p>September 11 at 11:00 am                                                         
+                            </p>
+                
+
+                            <p>October 16 at 11:00 am                                                         
+                            </p>
+                
+
+                            <p>November 13 at 11:00 am                                                         
+                            </p>
+                
+
+                            <p>December 18 at 11:00 am                                                         
+                            </p>
+                
+                        </div>
+                    </div>
+        
+            </section>
+            <section class="pgl-pro-detail pgl-bg-light">
+                    <div class="row">
+                    <h3><span style="color: #000000;"><strong>DLBA Finance/Audit Committee Meetings:</strong></span></h3>
+                    <div class="col-sm-8">
+                
+                            <p>January 9 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>February 6 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>March 6 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>April 10 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>May 8 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>June 12 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>July 10 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>August 7 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>September 4 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>October 9 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>November 6 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>December 11 at 1:00 pm                                                         
+                            </p>
+                                                </div>
+                </div>
+                                
+
+        </section>
+
+        <section class="pgl-pro-detail pgl-bg-light">
+                <div class="row">
+                <h3><strong><span style="color: #000000;">DLBA Community Engagement&nbsp;Committee&nbsp;Meetings:</span></strong></h3>
+                <div class="col-sm-8">
+            
+                            <p>January 10 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>February 7 at 2:00 pm                                                            <strong><span style="color:#ff0000;">CANCELLED</span></strong>
+                             
+                                                             </p>
+                            
+                            <p>March 7 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>April 11 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>May 9 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>June 13 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>July 11 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>August 8 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>September 5 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>October 10 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>November 7 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>December 12 at 2:00 pm                             
+                                                             </p>
+                                            </div>
+            </div>
+
+            </section>
+
+            <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA Project Review Committee Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+            
+                            <p>January 10 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>February 7 at 1:00 pm                                                            <strong><span style="color:#ff0000;">CANCELLED</span></strong>
+                             
+                                                        </p>
+                
+                            <p>March 7 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>April 11 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>May 9 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>June 13 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>July 11 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>August 8 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>September 5 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>October 10 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>November 7 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>December 12 at 1:00 pm                             
+                                                        </p>
+                                        </div>
+            </div>
+
+            </section>
+
+
+
+              <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA CDC Board of Directors Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+            
+                            <p>July 17 at 12:00 pm                             
+                                                        </p>
+                                        </div>
+            </div>
+
+            </section>
+            <!-- custom data -->
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default pgl-panel">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a class="collapsed" href="#collapse2" data-toggle="collapse" data-parent="#accordion">2017 Board Meetings</a></h4>
+        </div>
+        <div id="collapse2" class="panel-collapse collapse" style="height: 0px;">
+            <div class="panel-body">
+                <!-- custom data -->
+
+                    <section class="pgl-pro-detail pgl-bg-light">
+                     
+    
+                        <div class="row">
+                            <h3><strong><span style="color: #000000;">DLBA Board Of Director Meetings:</span></strong></h3>
+                        <div class="col-sm-8">
+                
+
+                            <p>January 17 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018092043.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>January 24 at 1:30 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018092527.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>February 28 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018092924.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>March 14 at 9:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018093111.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>March 21 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018094721.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>April 18 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018094954.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 9 at 12:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018095238.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 16 at 1:00 pm                                                            <strong><span style="color:#ff0000;">CANCELLED</span></strong>
+                                                         
+                            </p>
+                
+
+                            <p>June 13 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018100354.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>June 22 at 10:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018100523.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>June 29 at 9:00 am                                                         
+                            </p>
+                
+
+                            <p>July 7 at 11:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018100725.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>July 10 at 9:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018101203.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>July 11 at 1:00 pm                                                            <strong><span style="color:#ff0000;">RESCHEDULED ON  July 7  </span></strong>
+                                                         
+                            </p>
+                
+
+                            <p>July 13 at 10:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018101407.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>August 7 at 12:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018090449.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>August 29 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018102135.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>September 19 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018102307.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>October 17 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01152018103044.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>November 14 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018153013.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>December 12 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018153106.pdf"> (Minutes)</a> 
+                            </p>
+                
+                        </div>
+                    </div>
+        
+            </section>
+            <section class="pgl-pro-detail pgl-bg-light">
+                    <div class="row">
+                    <h3><span style="color: #000000;"><strong>DLBA Finance/Audit Committee Meetings:</strong></span></h3>
+                    <div class="col-sm-8">
+                
+                            <p>January 9 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>January 10 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>February 21 at 10:30 am                                                         
+                            </p>
+                            
+                            <p>March 14 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>April 11 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>May 9 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>June 6 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>June 27 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>August 22 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>September 12 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>October 10 at 10:00 am                                                         
+                            </p>
+                            
+                            <p>October 10 at 1:00 pm                                                            <strong><span style="color:#ff0000;">RESCHEDULED ON   October 10 </span></strong>
+                                                         
+                            </p>
+                            
+                            <p>November 7 at 1:00 pm                                                         
+                            </p>
+                            
+                            <p>December 5 at 1:00 pm                                                         
+                            </p>
+                                                </div>
+                </div>
+                                
+
+        </section>
+
+        <section class="pgl-pro-detail pgl-bg-light">
+                <div class="row">
+                <h3><strong><span style="color: #000000;">DLBA Community Engagement&nbsp;Committee&nbsp;Meetings:</span></strong></h3>
+                <div class="col-sm-8">
+            
+                            <p>January 10 at 2:00 pm                             
+                                                             </p>
+                            
+                            <p>January 11 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>February 22 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>March 15 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>April 12 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>May 10 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>June 7 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>June 28 at 10:00 am                             
+                                                             </p>
+                            
+                            <p>August 22 at 11:00 am                             
+                                                             </p>
+                            
+                            <p>September 13 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>October 11 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>November 8 at 1:00 pm                             
+                                                             </p>
+                            
+                            <p>December 6 at 2:00 pm                             
+                                                             </p>
+                                            </div>
+            </div>
+
+            </section>
+
+            <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA Project Review Committee Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+            
+                            <p>January 10 at 1:00 pm                             
+                                                        </p>
+                
+                            <p>January 11 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>February 22 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>March 15 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>April 12 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>May 10 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>June 7 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>June 28 at 11:00 am                             
+                                                        </p>
+                
+                            <p>August 22 at 12:00 pm                             
+                                                        </p>
+                
+                            <p>September 13 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>October 11 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>November 8 at 2:00 pm                             
+                                                        </p>
+                
+                            <p>December 6 at 1:00 pm                                                            <strong><span style="color:#ff0000;">CANCELLED</span></strong>
+                             
+                                                        </p>
+                                        </div>
+            </div>
+
+            </section>
+
+
+
+              <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA CDC Board of Directors Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+                                    </div>
+            </div>
+
+            </section>
+            <!-- custom data -->
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default pgl-panel">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a class="collapsed" href="#collapse3" data-toggle="collapse" data-parent="#accordion">2016 Board Meetings</a></h4>
+        </div>
+        <div id="collapse3" class="panel-collapse collapse" style="height: 0px;">
+            <div class="panel-body">
+                <!-- custom data -->
+
+                    <section class="pgl-pro-detail pgl-bg-light">
+                     
+    
+                        <div class="row">
+                            <h3><strong><span style="color: #000000;">DLBA Board Of Director Meetings:</span></strong></h3>
+                        <div class="col-sm-8">
+                
+
+                            <p>January 29 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018051746.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>March 15 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018051835.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>April 19 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018051933.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 5 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018052253.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 24 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018052341.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>June 7 at 12:15 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018052444.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>June 21 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018052614.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>September 20 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018052842.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>September 29 at 8:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018053014.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>October 25 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018053111.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>November 15 at 3:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018053204.pdf"> (Minutes)</a> 
+                            </p>
+                
+                        </div>
+                    </div>
+        
+            </section>
+            <section class="pgl-pro-detail pgl-bg-light">
+                    <div class="row">
+                    <h3><span style="color: #000000;"><strong>DLBA Finance/Audit Committee Meetings:</strong></span></h3>
+                    <div class="col-sm-8">
+                                    </div>
+                </div>
+                                
+
+        </section>
+
+        <section class="pgl-pro-detail pgl-bg-light">
+                <div class="row">
+                <h3><strong><span style="color: #000000;">DLBA Community Engagement&nbsp;Committee&nbsp;Meetings:</span></strong></h3>
+                <div class="col-sm-8">
+                            </div>
+            </div>
+
+            </section>
+
+            <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA Project Review Committee Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+                                    </div>
+            </div>
+
+            </section>
+
+
+
+              <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA CDC Board of Directors Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+                                    </div>
+            </div>
+
+            </section>
+            <!-- custom data -->
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default pgl-panel">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a class="collapsed" href="#collapse4" data-toggle="collapse" data-parent="#accordion">2015 Board Meetings</a></h4>
+        </div>
+        <div id="collapse4" class="panel-collapse collapse" style="height: 0px;">
+            <div class="panel-body">
+                <!-- custom data -->
+
+                    <section class="pgl-pro-detail pgl-bg-light">
+                     
+    
+                        <div class="row">
+                            <h3><strong><span style="color: #000000;">DLBA Board Of Director Meetings:</span></strong></h3>
+                        <div class="col-sm-8">
+                
+
+                            <p>January 20 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018050133.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>February 24 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018050225.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>April 21 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018050349.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 4 at 11:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018050500.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 28 at 9:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018050604.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>June 16 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018050650.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>July 20 at 10:30 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018050744.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>August 25 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018050906.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>September 9 at 2:30 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018051013.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>October 12 at 9:00 am                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018051150.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>October 20 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018051256.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>November 17 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018051356.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>December 15 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018051457.pdf"> (Minutes)</a> 
+                            </p>
+                
+                        </div>
+                    </div>
+        
+            </section>
+            <section class="pgl-pro-detail pgl-bg-light">
+                    <div class="row">
+                    <h3><span style="color: #000000;"><strong>DLBA Finance/Audit Committee Meetings:</strong></span></h3>
+                    <div class="col-sm-8">
+                                    </div>
+                </div>
+                                
+
+        </section>
+
+        <section class="pgl-pro-detail pgl-bg-light">
+                <div class="row">
+                <h3><strong><span style="color: #000000;">DLBA Community Engagement&nbsp;Committee&nbsp;Meetings:</span></strong></h3>
+                <div class="col-sm-8">
+                            </div>
+            </div>
+
+            </section>
+
+            <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA Project Review Committee Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+                                    </div>
+            </div>
+
+            </section>
+
+
+
+              <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA CDC Board of Directors Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+                                    </div>
+            </div>
+
+            </section>
+            <!-- custom data -->
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default pgl-panel">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a class="collapsed" href="#collapse5" data-toggle="collapse" data-parent="#accordion">2014 Board Meetings</a></h4>
+        </div>
+        <div id="collapse5" class="panel-collapse collapse" style="height: 0px;">
+            <div class="panel-body">
+                <!-- custom data -->
+
+                    <section class="pgl-pro-detail pgl-bg-light">
+                     
+    
+                        <div class="row">
+                            <h3><strong><span style="color: #000000;">DLBA Board Of Director Meetings:</span></strong></h3>
+                        <div class="col-sm-8">
+                
+
+                            <p>January 21 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018085612.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>February 25 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018085714.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>March 11 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018044835.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>April 15 at 1:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018152825.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 5 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018085807.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>May 20 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018045157.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>June 17 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018085903.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>August 19 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018045352.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>September 16 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/02-DLBA-Board-Minutes-20140916.docx"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>October 21 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018045449.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>November 18 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018045550.pdf"> (Minutes)</a> 
+                            </p>
+                
+
+                            <p>December 16 at 2:00 pm                                                                                        <a target="_blank" href="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018090117.pdf"> (Minutes)</a> 
+                            </p>
+                
+                        </div>
+                    </div>
+        
+            </section>
+            <section class="pgl-pro-detail pgl-bg-light">
+                    <div class="row">
+                    <h3><span style="color: #000000;"><strong>DLBA Finance/Audit Committee Meetings:</strong></span></h3>
+                    <div class="col-sm-8">
+                                    </div>
+                </div>
+                                
+
+        </section>
+
+        <section class="pgl-pro-detail pgl-bg-light">
+                <div class="row">
+                <h3><strong><span style="color: #000000;">DLBA Community Engagement&nbsp;Committee&nbsp;Meetings:</span></strong></h3>
+                <div class="col-sm-8">
+                            </div>
+            </div>
+
+            </section>
+
+            <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA Project Review Committee Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+                                    </div>
+            </div>
+
+            </section>
+
+
+
+              <section class="pgl-pro-detail pgl-bg-light">
+            
+                <div class="row">
+                    <h3><strong><span style="color: #000000;">DLBA CDC Board of Directors Meeting:</span></strong></h3>
+                <div class="col-sm-8">
+                                    </div>
+            </div>
+
+            </section>
+            <!-- custom data -->
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div></div></div>  
+   
+<div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h2 id="header">Meetings and Minutes:</h2>
+            </div>
+            <div class="modal-body">
+                 <div class="title_space"></div>
+                <div class="time_space"></div>
+                <strong>Meeting Location:</strong>
+                <div class="address_space"></div>
+                <div class="city_space"></div>
+                <!--<div class="state_space"></div>
+                <div class="content_space"></div>-->
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary closeButton" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    
+     var meeting = [{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting","start":"2017-10-17 13:00:00","end":"2017-10-17 13:00:00","content":"Meeting","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018103044.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2017-12-06 14:00:00","end":"2017-12-06 14:00:00","content":"Meeting ends","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting","start":"2017-10-11 14:00:00","end":"2017-10-11 14:00:00","content":"Meeting","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Rescheduled Community Engagement Committee Meeting","start":"2017-10-11 13:00:00","end":"2017-10-11 13:00:00","content":"Meeting","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2017-10-10 13:00:00","end":"2017-10-10 13:00:00","content":"","address":"500 Griswold  Street","city":"Suite 1200","state":"Detroit, MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"RESCHEDULED"},{"title":"Board Of Director Meeting","title_tmp":" Board of Directors Meeting ","start":"2017-11-14 13:00:00","end":"2017-11-14 13:00:00","content":"November 14 \u2013 Board of Directors Meeting \u2013 1:00 pm","address":"500 Grisworld St, Suite 200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018153013.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting","start":"2017-12-12 13:00:00","end":"2017-12-12 13:00:00","content":"","address":"500 Grisworld St, Suite 200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018153106.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":" Community Engagement Committee Meeting","start":"2017-11-08 13:00:00","end":"2017-11-08 13:00:00","content":"","address":"500 Grisworld St, Suite 200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2017-12-05 13:00:00","end":"2017-12-05 13:00:00","content":"","address":"500 Grisworld St, Suite 200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2017-11-07 13:00:00","end":"2017-11-07 13:00:00","content":"","address":"500 Grisworld St, Suite 200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting","start":"2017-11-08 14:00:00","end":"2017-11-08 14:00:00","content":"","address":"500 Grisworld St, Suite 200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting","start":"2017-12-06 13:00:00","end":"2017-12-06 13:00:00","content":"","address":"500 Grisworld St, Suite 200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CANCELLED"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee Meeting","start":"2018-01-10 13:00:00","end":"2018-01-10 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-01-10 14:00:00","end":"2018-01-10 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-01-16 11:00:00","end":"2018-01-16 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/1.16.18_Board_Meeting_Minutes_final..pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-02-13 11:00:00","end":"2018-02-13 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/February_13th.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-03-13 11:00:00","end":"2018-03-13 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/March_13th_2018_Minutes.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-04-17 11:00:00","end":"2018-04-17 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/April_172018_Minutes.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-05-15 11:00:00","end":"2018-05-15 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/120260_06262018123456.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-06-19 11:00:00","end":"2018-06-19 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-07-17 11:00:00","end":"2018-07-17 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-08-14 11:00:00","end":"2018-08-14 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-09-11 11:00:00","end":"2018-09-11 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-10-16 11:00:00","end":"2018-10-16 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-11-13 11:00:00","end":"2018-11-13 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Director\u2019s Meeting","start":"2018-12-18 11:00:00","end":"2018-12-18 11:00:00","content":"Tuesday\u2019s at 11:00 a.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee","start":"2018-01-09 13:00:00","end":"2018-01-09 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-02-06 13:00:00","end":"2018-02-06 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-03-06 13:00:00","end":"2018-03-06 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-04-10 13:00:00","end":"2018-04-10 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-05-08 13:00:00","end":"2018-05-08 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-06-12 13:00:00","end":"2018-06-12 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-07-10 13:00:00","end":"2018-07-10 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-08-07 13:00:00","end":"2018-08-07 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-09-04 13:00:00","end":"2018-09-04 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-10-09 13:00:00","end":"2018-10-09 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-11-06 13:00:00","end":"2018-11-06 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2018-12-11 13:00:00","end":"2018-12-11 13:00:00","content":"Tuesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-02-07 13:00:00","end":"2018-02-07 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CANCELLED"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-03-07 13:00:00","end":"2018-03-07 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-04-11 13:00:00","end":"2018-04-11 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-05-09 13:00:00","end":"2018-05-09 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-06-13 13:00:00","end":"2018-06-13 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-07-11 13:00:00","end":"2018-07-11 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-08-08 13:00:00","end":"2018-08-08 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-09-05 13:00:00","end":"2018-09-05 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-10-10 13:00:00","end":"2018-10-10 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-11-07 13:00:00","end":"2018-11-07 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Projects Review Committee","start":"2018-12-12 13:00:00","end":"2018-12-12 13:00:00","content":"Wednesday\u2019s at 1:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-02-07 14:00:00","end":"2018-02-07 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CANCELLED"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-03-07 14:00:00","end":"2018-03-07 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-04-11 14:00:00","end":"2018-04-11 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-05-09 14:00:00","end":"2018-05-09 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-06-13 14:00:00","end":"2018-06-13 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-07-11 14:00:00","end":"2018-07-11 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-08-08 14:00:00","end":"2018-08-08 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-09-05 14:00:00","end":"2018-09-05 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-10-10 14:00:00","end":"2018-10-10 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-11-07 14:00:00","end":"2018-11-07 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2018-12-12 14:00:00","end":"2018-12-12 14:00:00","content":"Wednesday\u2019s at 2:00 p.m.","address":"500 Griswold St, Suite 1200","city":"Detroit","state":"Michigan","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Rescheduled Finance\/Audit Committee Meeting","start":"2017-10-10 10:00:00","end":"2017-10-10 10:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2017-01-17 13:00:00","end":"2017-01-17 13:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018092043.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2017-01-24 13:30:00","end":"2017-01-24 13:30:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018092527.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2017-02-28 13:00:00","end":"2017-02-28 13:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018092924.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Special Board of Directors Meeting","start":"2017-03-14 09:00:00","end":"2017-03-14 09:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018093111.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting","start":"2017-03-21 13:00:00","end":"2017-03-21 13:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018094721.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting ","start":"2017-04-18 13:00:00","end":"2017-04-18 13:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018094954.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Special Board of Directors Meeting ","start":"2017-05-09 12:00:00","end":"2017-05-09 12:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018095238.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting ","start":"2017-05-16 13:00:00","end":"2017-05-16 13:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CANCELLED"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting ","start":"2017-06-13 13:00:00","end":"2017-06-13 13:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018100354.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Special Board of Directors Meeting ","start":"2017-06-22 10:00:00","end":"2017-06-22 10:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018100523.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Special DLBA Search Committee Meeting ","start":"2017-06-29 09:00:00","end":"2017-06-29 09:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting","start":"2017-07-10 09:00:00","end":"2017-07-10 09:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018101203.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting","start":"2017-07-11 13:00:00","end":"2017-07-11 13:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"RESCHEDULED"},{"title":"Board Of Director Meeting","title_tmp":"Rescheduled Board of Directors Meeting","start":"2017-07-07 11:00:00","end":"2017-07-07 11:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018100725.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Special Board of Directors Meeting ","start":"2017-07-13 10:00:00","end":"2017-07-13 10:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018101407.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Special Board of Directors Meeting  ","start":"2017-08-07 12:00:00","end":"2017-08-07 12:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018090449.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting ","start":"2017-08-29 13:00:00","end":"2017-08-29 13:00:00","content":"","address":"500 Griswold Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018102135.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board of Directors Meeting ","start":"2017-09-19 13:00:00","end":"2017-09-19 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01152018102307.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2017-01-10 13:00:00","end":"2017-01-10 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting ","start":"2017-02-21 10:30:00","end":"2017-02-21 10:30:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting ","start":"2017-03-14 13:00:00","end":"2017-03-14 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting ","start":"2017-04-11 13:00:00","end":"2017-04-11 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting ","start":"2017-05-09 13:00:00","end":"2017-05-09 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting ","start":"2017-06-06 13:00:00","end":"2017-06-06 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting ","start":"2017-06-27 13:00:00","end":"2017-06-27 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting","start":"2017-08-22 13:00:00","end":"2017-08-22 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting ","start":"2017-09-12 13:00:00","end":"2017-09-12 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Finance\/Audit Committee Meeting","title_tmp":"Finance\/Audit Committee Meeting ","start":"2017-01-09 13:00:00","end":"2017-01-09 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Finance\/Audit Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-01-11 13:00:00","end":"2017-01-11 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting","start":"2017-02-22 13:00:00","end":"2017-02-22 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-03-15 13:00:00","end":"2017-03-15 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-04-12 13:00:00","end":"2017-04-12 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-05-10 13:00:00","end":"2017-05-10 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-06-07 13:00:00","end":"2017-06-07 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-06-28 10:00:00","end":"2017-06-28 10:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-08-22 11:00:00","end":"2017-08-22 11:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-09-13 13:00:00","end":"2017-09-13 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Community Engagement Committee Meeting","title_tmp":"Community Engagement Committee Meeting ","start":"2017-01-10 14:00:00","end":"2017-01-10 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Community Engagement Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-01-11 14:00:00","end":"2017-01-11 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-02-22 14:00:00","end":"2017-02-22 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting","start":"2017-03-15 14:00:00","end":"2017-03-15 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-04-12 14:00:00","end":"2017-04-12 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-05-10 14:00:00","end":"2017-05-10 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-06-07 14:00:00","end":"2017-06-07 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-06-28 11:00:00","end":"2017-06-28 11:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-08-22 12:00:00","end":"2017-08-22 12:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-09-13 14:00:00","end":"2017-09-13 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Project Review Committee Meeting","title_tmp":"Project Review Committee Meeting ","start":"2017-01-10 13:00:00","end":"2017-01-10 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Project Review Committee Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-01-21 14:00:00","end":"2014-01-21 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018085612.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-02-25 14:00:00","end":"2014-02-25 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018085714.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-03-11 14:00:00","end":"2014-03-11 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018044835.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-04-15 13:00:00","end":"2014-04-15 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018152825.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-05-05 14:00:00","end":"2014-05-05 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018085807.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-05-20 14:00:00","end":"2014-05-20 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018045157.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-06-17 14:00:00","end":"2014-06-17 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018085903.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-08-19 14:00:00","end":"2014-08-19 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018045352.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-09-16 14:00:00","end":"2014-09-16 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/02-DLBA-Board-Minutes-20140916.docx","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-10-21 14:00:00","end":"2014-10-21 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018045449.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-11-18 14:00:00","end":"2014-11-18 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018045550.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2014-12-16 14:00:00","end":"2014-12-16 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018090117.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-01-20 14:00:00","end":"2015-01-20 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018050133.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-02-24 14:00:00","end":"2015-02-24 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018050225.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-04-21 14:00:00","end":"2015-04-21 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018050349.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-05-04 11:00:00","end":"2015-05-04 11:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018050500.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-05-28 09:00:00","end":"2015-05-28 09:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018050604.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-06-16 14:00:00","end":"2015-06-16 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018050650.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-07-20 10:30:00","end":"2015-07-20 10:30:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018050744.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-08-25 14:00:00","end":"2015-08-25 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018050906.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-09-09 14:30:00","end":"2015-09-09 14:30:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018051013.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-10-12 09:00:00","end":"2015-10-12 09:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018051150.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-10-20 14:00:00","end":"2015-10-20 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018051256.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-11-17 14:00:00","end":"2015-11-17 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018051356.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2015-12-15 14:00:00","end":"2015-12-15 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018051457.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-01-29 14:00:00","end":"2016-01-29 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018051746.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-03-15 14:00:00","end":"2016-03-15 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018051835.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-04-19 14:00:00","end":"2016-04-19 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018051933.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-05-05 13:00:00","end":"2016-05-05 13:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018052253.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-05-24 14:00:00","end":"2016-05-24 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018052341.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-06-07 12:15:00","end":"2016-06-07 12:15:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018052444.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-06-21 14:00:00","end":"2016-06-21 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018052614.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-09-20 14:00:00","end":"2016-09-20 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018052842.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-09-29 08:00:00","end":"2016-09-29 08:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018053014.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-10-25 14:00:00","end":"2016-10-25 14:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018053111.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"Board Of Director Meeting","start":"2016-11-15 15:00:00","end":"2016-11-15 15:00:00","content":"","address":"500 Griswold  Street, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"https:\/\/s3.us-east-2.amazonaws.com\/dlba-production-bucket\/Meetings\/documents\/01172018053204.pdf","category_type":"Board Of Director Meeting","status":"CONFIRM"},{"title":"Board Of Director Meeting","title_tmp":"CDC Annual Board of Directors Meeting","start":"2018-06-19 15:00:00","end":"2018-06-19 15:00:00","content":"","address":"500 Griswold, Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"Board Of Director Meeting","status":"CANCELLED"},{"title":"CDC Board of Directors Meeting","title_tmp":"CDC Annual Board of Director's Meeting","start":"2018-07-17 12:00:00","end":"2018-07-17 12:00:00","content":"","address":"500 Griswold Suite 1200","city":"Detroit","state":"MI","zipcode":"48226","file_path":"","category_type":"CDC Board of Directors Meeting","status":"CONFIRM"}];
+     //var calendarData = JSON.parse(meeting);
+    
+   	require(['jquery','fullCalendar'],function($,modal){
+        $('#calendar').fullCalendar({
+            eventLimit: true,
+            eventLimitText: "More",
+            contentHeight: 550,
+            height: 550 ,
+            width: 200,
+            eventColor: '#53ade9',
+            events: meeting,
+            eventLimit: 3,
+            displayEventTime : false,
+            eventMouseover: function(event, jsEvent, view) {
+                // $(jsEvent.target).addClass('tooltip-test');
+                // $(jsEvent.target).attr('data-toggle','tooltip');
+                // $(jsEvent.target).attr('data-placement','top');
+                // if(event.cid==0) 
+                //     $(jsEvent.target).attr('title', event.ename + ' ['+ event.length + ']');
+                // else
+                //     $(jsEvent.target).attr('title', event.cname + ' ['+ event.length + ']');    
+                $('.fc-event').css('cursor', 'pointer');
+            },
+            eventRender: function(event, element, view) {
+                // if(event.cid==0) event.color = "#AC8AFE";
+                // else  event.color = "#f8a31f";
+            },
+            dayClick: function(date, allDay, jsEvent, view) {
+               // $("#neweventpanel").html("");
+               // var dataurl=$('#neweventpanel').attr("data-url");
+               // $.ajax({
+               //     type: "GET",
+               //     url: dataurl,
+               //     success: function(data){
+               //         $("#neweventpanel").html(data);
+               //         $('.datepick').datepicker({ format: globaldateformat });
+               //         $("#neweventmodal").modal({
+               //             show:true
+               //         });
+               //     }
+               // });
+            },
+            eventClick:  function(event, jsEvent, view) {
+                // $('.title_space').html(event.title_tmp);
+                $( "div#down" ).replaceWith( $( "#up" ) );
+                window.scroll({ top: 1000, left: 0, behavior: 'smooth' });
+                 $("#up").addClass("boardmeeting");
+                $('.title_space').html("<strong>"+event.title+"</strong>");
+                // $('.time_space').html(event.start); // g:ia \o\n l jS F Y
+                var eventStatus;
+                if (event.status == 'CANCELLED'){
+                    eventStatus='<span style="padding-left: 5px; color: red;font-weight: bold;">' + event.status + '</span>';
+                }
+                else {
+
+                    eventStatus='';
+                }
+                var timeString = event.start.format("MMMM DD, YYYY hh:mm a") + ' ' + eventStatus;
+                $('.time_space').html(timeString); 
+                $('.address_space').html(event.address.replace(/\,/g,',<br/>'));
+                $('.city_space').html(event.city+', '+event.state+' '+event.zipcode);
+                //$('.state_space').html(event.state+' - '+event.zipcode);
+                //$('.content_space').html(event.content);
+                $('.category_type').html(event.category_type);
+                $('.meeting-location').html('<strong>Meeting Location:</strong>');      
+
+            },
+        });
+
+	});
+</script>
+</div></div></div><footer class="page-footer"><footer class="pgl-footer"><div class="container">
+	<div class="pgl-upper-foot">
+		<div class="row">
+			<div class="col-sm-4 footer-opt-1">
+				<h2>Contact details</h2>
+				<p>Detroit Land Bank Authority<br>500 Griswold Street<br>Suite 1200 <br>Detroit , MI  48226</p>
+				<address>
+					<i class="fa fa-phone"></i> Phone: 1-844-BUY-DLBA<br>
+					<i class="fa fa-clock-o"></i> Hours: M-F 9am - 5pm<br>
+					<i class="fa fa-envelope-o"></i> Mail: <a href="mailto:communityrelations@detroitlandbank.org">communityrelations@detroitlandbank.org</a>
+				</address>
+			</div>
+			<div class="col-sm-2 footer-opt-2">
+				<h2>Employment</h2>
+				<ul class="list-unstyled">
+					<li><a href="https://buildingdetroit.org/careers/career">Careers</a></li>
+				</ul>
+			</div>
+			<div class="col-sm-2 footer-opt-3">
+				<h2>Resources</h2>
+				<ul class="list-unstyled">
+					<li><a href="https://buildingdetroit.org/financing">Financing</a></li>
+					<li><a href="https://buildingdetroit.org/faq">FAQ</a></li>
+					<li><a href="https://buildingdetroit.org/resources-helpful-links">Useful Links</a></li>
+					<li><a href="https://buildingdetroit.org/properties/openhouse/">Open House</a></li>
+				</ul>
+			</div>
+			<div class="col-sm-4 footer-opt-4">
+				
+				<div class="row">
+					<div class="col-md-3 footer-icon">
+						<img src="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/banners/equal-housing-logo.png">
+					</div>
+					<div class="col-md-9 footer-icon-txt">
+						<h2>Equal Housing Opportunity</h2>	
+						<p>The Detroit Land Bank is an Equal Housing Opportunity Provider and does not discriminate in the sale&#44; rental&#44; and financing of housing&#44; or in other housing-related transactions&#44; based on race&#44; color&#44; national origin&#44; religion&#44; sex&#44; familial status&#44; age&#44; height&#44; weight&#44; or disability</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="pgl-copyrights">
+		<div class="row">
+		<div class="col-md-6">
+			<div class="dlba_copyrights">
+				Copyright © 2018 Detroit Land Bank Authority
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="ethics-hotline"><a href="https://buildingdetroit.org/ethics-hotline/"><img src="https://s3.us-east-2.amazonaws.com/dlba-production-bucket/banners/ethics.png"><span>ETHICS HOTLINE</span></a></div>
+		</div>
+		</div>
+	</div>
+</div>
+<style type="text/css">
+	#surveyModalAuto {position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, .8); z-index: 1001; display:none;}
+
+.surveyModalContainer {position:fixed; background-image:url(); background-repeat:no-repeat; background-position:20px -20px; left:50%; top:-100%; transform: translate(-50%, -50%); z-index: 1500; border-radius:10px; border:10px solid #FFF; padding:0px; text-align:center; background-color:#FFF; box-shadow:0 8px 17px 0 rgba(0, 0, 0, 0.4); display:none; opacity:0; max-width:600px;width: 100%;}
+.surveyModalTitle {    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    color: #FFF;
+    font-size: 20px;
+    background: #53ade9;
+    font-weight: 300;
+    box-sizing: border-box;
+    text-align: left;}
+.surveyModalText {font-size:14px; text-align:center; margin:0 auto; line-height:18px;}
+.surveyModalText a {text-decoration:none; color:#4FAEDD;}
+.surveyModalBody {padding:20px 0px; color:#4D4D4D; line-height:28px; box-sizing:border-box;}
+.surveyModalBody p.ques
+{
+	text-align: center;
+    font-size: 15px;
+    padding-bottom: 15px;
+}
+/*.surveyModalBody p.answ
+{
+	text-align: left;
+	font-size: 14px;
+	line-height: 1.5;
+}
+*/
+.surveyModalFooter {padding:0px 0 0px 0px; text-align:center;}
+.surveyModalFine {padding:20px 20px; margin:20px auto 0 auto;text-align:left; font-size:13px; letter-spacing:0px; border-top:1px solid #ddd; line-height:18px; box-sizing:border-box;}
+
+.surveyButton {width:80px; height:80px; margin:0px auto 10px auto; content:''; background:url(); background-position:0px 0px; background-size:cover; background-repeat:no-repeat;}
+.surveyButton:hover {background-position:-80px 0px;}
+
+
+#surveyCloseButton {box-sizing:border-box; background:#000; display:block; width:30px; height:30px; border-radius:15px; position:absolute; top:12px; right:10px;  z-index:60; cursor:pointer;}
+/* ---- MODAL CLOSE X STATIC----*/
+#surveyCloseButton:before {background:#F2F2F2; content:''; display:block; width:20px; height:2px; position:absolute; top:14px; transform:rotate(45deg); border-radius:1px; right:5px;-webkit-animation: in1 .3s;}
+#surveyCloseButton span {background:#F2F2F2; content:''; display:block; width:20px; height:2px; position:absolute; top:14px;  transform:rotate(135deg); border-radius:1px; right:5px;-webkit-animation: in2 .3s;}
+/* ---- MODAL CLOSE X HOVER ----*/
+#surveyCloseButton:hover:before {background:#4D4D4D; -webkit-animation: out1 .3s;}
+#surveyCloseButton:hover span {background:#4D4D4D; -webkit-animation: out2 .3s;}
+/* ---- MODAL CLOSE X ANIMATION ----*/
+#surveyCloseButton:hover:before, #surveyCloseButton:hover span {-webkit-transition:none .3s ease 0s; transition:none .3s ease 0s; -webkit-transition-property:transform, top, bottom, right, opacity; transition-property:transform, top, bottom, right, opacity;}
+@-webkit-keyframes in1 {
+    from   { -webkit-transform: rotate(45deg); }
+    to { -webkit-transform: rotate(225deg);}
+}
+@-webkit-keyframes in2 {
+    from   { -webkit-transform: rotate(135deg); }
+    to { -webkit-transform: rotate(315deg);}
+}
+@-webkit-keyframes out1 {
+    from   { -webkit-transform: rotate(225deg); }
+    to { -webkit-transform: rotate(45deg); }
+}
+@-webkit-keyframes out2 {
+    from   { -webkit-transform: rotate(315deg); }
+    to { -webkit-transform: rotate(135deg); }
+}
+
+
+
+                            
+                            .customer-account-create #pageload_uploads {
+                                margin-bottom: 20px;
+                                float: left;
+                                width: 100%;
+                            }
+                            
+                           
+                            #pageload_uploads input[type="radio"],
+                            #pageload_uploads input[type="checkbox"] {
+                                display: none;
+                            }
+                            
+                            #pageload_uploads input[type="radio"] + label,
+                            #pageload_uploads input[type="checkbox"] + label {
+                                position: relative;
+                                display: inline-block;
+                                padding-left: 30px;
+                                margin-right: 2em;
+                                cursor: pointer;
+                                line-height: 2;
+                                font-size: 14px;
+                                -webkit-transition: all 0.3s ease-in-out;
+                                -ms-transition: all 0.3s ease-in-out;
+                                transition: all 0.3s ease-in-out;
+                                padding-top: 1px;
+                            }
+                            #pageload_uploads .radio label
+                            {
+                                line-height: 2;
+                                font-size: 14px;
+                            }
+                            #pageload_uploads .radio p
+                            {
+                                margin-bottom: 15px;
+                                 line-height: 2;
+                                font-size: 14px;
+                            }
+                            
+                            #pageload_uploads input[type="radio"] + label:before,
+                            #pageload_uploads input[type="radio"] + label:after{
+                                content: '';
+                                position: absolute;
+                                top: 6px;
+                                left: 0;
+                                width: 20px;
+                                height: 20px;
+                                text-align: center;
+                                color: white;
+                                font-family: Times;
+                                border-radius: 50%;
+                                -webkit-transition: all .3s ease;
+                                -ms-transition: all .3s ease;
+                                transition: all .3s ease;
+                                line-height: 1;
+                            }
+                            
+                            #pageload_uploads input[type="radio"] + label:before {
+                                -webkit-transition: all .3s ease;
+                                -ms-transition: all .3s ease;
+                                transition: all .3s ease;
+                                box-shadow: inset 0 0 0 2px #908f8f, inset 0 0 0 7px white;
+                            }
+                            
+                            #pageload_uploads input[type="radio"] + label:hover:before {
+                                -webkit-transition: all .3s ease;
+                                -ms-transition: all .3s ease;
+                                transition: all .3s ease;
+                                box-shadow: inset 0 0 0 2px white, inset 0 0 0 7px #428bca;
+                            }
+                            
+                            #pageload_uploads input[type="radio"]:checked + label:before {
+                                -webkit-transition: all .3s ease;
+                                -ms-transition: all .3s ease;
+                                transition: all .3s ease;
+                                box-shadow: inset 0 0 0 2px white, inset 0 0 0 7px #428bca;
+                            }
+                            
+                          
+                            
+                            #pageload_uploads .form-control {
+                                border-radius: 2px;
+                                height: 45px;
+                            }
+                            
+                          
+                            
+                            .pageloadpopup 
+                            {
+                                padding:0px;
+                                text-align: left;
+
+                            }
+                            .pageloadpopup li
+                            {
+                                list-style: none;
+                            }
+                          
+                            .available_funds.textarea
+                            {
+                                width: 100%;
+                                padding: 6px 12px;
+                            }
+                             .visi-hide{
+                        display: none;
+                    }
+                    .ques_ans
+                    {
+                        text-align: left;
+                        float: left;
+                        width: 100%;
+                    }
+                    .applicant
+                    {
+                        padding: 0px 30px;
+                    }
+                    .m_0
+                    {
+                        margin: 0px !important;
+                    }
+                    .auction1,.rehabbedandready1,.ownitnow1
+                    {
+                       /* display: inline-block;
+                        float: left;*/
+                    }
+                    .auctionDiv.hidden,.rehabbedandreadyDiv.hidden,.ownitnowDiv.hidden
+                    {
+                        display: none;
+                    }
+                    .auctionDiv p,.rehabbedandreadyDiv p,.ownitnowDiv p
+                    {
+                        text-align: left;
+                        float: left;
+                        width: 100%;
+                    }
+                    .quickreview.hidden
+                    {
+                        display: none;
+                    }
+                    .quickreview.hidden.show
+                    {
+                        display: block !important;
+                        visibility: visible !important; 
+                    }
+
+                    #thumbnails
+                    {
+                        padding-bottom: 15px;
+                    }
+                    .applicant ul li a {
+                        display: block;
+                        border: none;
+                        text-align: left;
+                        float: left;
+                        font-size: 14px;
+                        color: #4D4D4D;
+                        width: 100%;
+                        font-weight: 700;
+                    }
+                    .applicant ul.row li {
+                        float: left;
+                        list-style: none;
+                        display: block;
+                        width: 100%;
+                        line-height: 1;
+                    }
+                    .applicant ul.row li .thumbnail {   
+                        margin: 0px;
+                        border: none;
+                        background: none;
+                    }
+/*                     .applicant ul.row li:hover .caption {
+                        opacity: 1;
+                        display:block;
+                        transition: opacity 0.2s linear 0s;
+                        border:1px solid #ddd;
+                    } */
+                    .applicant ul.row li .caption {
+                        opacity: 0;
+                        display: none;
+                        overflow: hidden;
+                        float: left;
+                        width: 100%;
+                        text-align: left;
+                        padding: 10px;
+                    }
+/*                     .applicant ul li:hover a
+                    {
+                        font-weight: 700;
+                        background-color: #53ade9;
+                        color: #fff;
+                    } */
+                    .applicant ul.row li .caption p
+                    {
+                        line-height: 1.5;
+                        font-size: 14px;
+                    }
+
+                    
+
+                           
+</style>
+
+<div id="surveyModalAuto">
+  <div class="surveyModalContainer">
+    <div id="surveyCloseButton"><span></span>
+    </div>
+    <div class="surveyModalTitle">Easy Buy
+    </div>
+    <div class="surveyModalBody">
+
+	    <form id="pageload_uploads">
+	    	<div class="row">
+                <div class="col-sm-12">
+                    	<!-- <ul class="pageloadpopup">
+                            <li>
+                                <label class="gfield_label">Want to buy a home?
+                                </label>
+                                <div class="ques_ans">
+                                    <div class="radio">
+                                        <input value="https://buildingdetroit.org/properties/" type="radio" id="qus1_ans1" name="qus1">
+                                        <label for="qus1_ans1">Yes</label>
+                                        <input type="radio" id="qus1_ans2" name="qus1">
+                                        <label for="qus1_ans2">No</label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <label class="gfield_label">Want to buy a SideLot?
+                                </label>
+                                <div class="ques_ans">
+                                    <div class="radio">
+                                        <input value="https://buildingdetroit.org/sidelots/" type="radio" id="qus2_ans1" name="qus1">
+                                        <label for="qus2_ans1">Yes</label>
+                                        <input type="radio" id="qus2_ans2" name="qus1">
+                                        <label for="qus2_ans2">No</label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <label class="gfield_label">Want to become a community partner?
+                                </label>
+                                <div class="ques_ans">
+                                    <div class="radio">
+                                        <input value="https://buildingdetroit.org/community-partnership/" type="radio" id="qus3_ans1" name="qus1">
+                                        <label for="qus3_ans1">Yes</label>
+                                        <input type="radio" id="qus3_ans2" name="qus1">
+                                        <label for="qus3_ans2">No</label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <label class="gfield_label">Are you a development corporation and would like to do a project using DLBA property?
+                                </label>
+                                <div class="ques_ans">
+                                    <div class="radio">
+                                        <input value="https://buildingdetroit.org/" type="radio" id="qus4_ans1" name="qus1">
+                                        <label for="qus4_ans1">Yes</label>
+                                        <input type="radio" id="qus4_ans2" name="qus1">
+                                        <label for="qus4_ans2">No</label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul> -->
+                        <div class="resident_info">
+                            <div class="row">
+                                <div class="col-sm-12 form-group m_0">
+                                    <div class="ques_ans">
+                                        <input  type="radio" id="qus1_ans1" value="yes" class="radio required-entry" name="sidelots_resident_qus1"><label for="qus1_ans1" >Buy Home</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="applicant visi-hide">
+                            <div class="row">
+                                <div class="col-sm-12 form-group m_0">
+                                    <ul class="row" id="thumbnails"> 
+                                        <li class="tyu"> 
+                                            <a href="https://buildingdetroit.org/properties?category=2/"> 
+                                                <div class="thumbnail"> 
+                                                    <p>Auction</p>
+                                                </div> 
+                                            </a>
+                                            <div class="caption">
+                                                <p>Looking to create your dream home? Starting at $1,000, our daily Auctions provide estimated rehab costs and property condition reports to help you get started. </p>
+                                            </div>  
+                                        </li> 
+                                        <li class="tyu"> 
+                                            <a href="https://buildingdetroit.org/properties?category=3/"> 
+                                                <div class="thumbnail"> 
+                                                    <p>Own It Now</p>
+                                                </div> 
+                                            </a>
+                                            <div class="caption">
+                                                 <p>Purchase a home at anytime with our Own It Now program! Own It Now makes properties available 24/7 and uploads new homes regularly. </p>
+                                            </div>  
+                                        </li> 
+                                         <li class="tyu"> 
+                                            <a href="https://buildingdetroit.org/properties?category=8/"> 
+                                                <div class="thumbnail"> 
+                                                    <p>Rehabbed and Ready</p>
+                                                </div> 
+                                            </a>
+                                            <div class="caption">
+                                                <p>The Rehabbed & Ready program offers terrific, totally updated homes in upcoming Detroit neighborhoods. The work has been done for you! </p>
+                                            </div>  
+                                        </li> 
+                                    </ul>
+
+                                    <!-- <div class="ques_ans">
+                                        <div class="auction1 tags" data-target="auctionDiv">
+                                            <input type="radio" id="auction" value="1" class="radio required-entry" name="auction">
+                                            <label for="auction" >Auction</label>
+                                        </div>
+                                        <div id="auctionDiv" class="auctionDiv quickreview hidden">
+                                            <p>Looking to create your dream home? Starting at $1,000, our daily Auctions provide estimated rehab costs and property condition reports to help you get started. </p>
+                                        </div>
+                                        <div class="ownitnow1 tags" data-target="ownitnowDiv">
+                                            <input type="radio" id="ownitnow" value="2" class="radio required-entry"  name="auction">
+                                            <label for="ownitnow" >Own It Now</label>
+                                        </div>
+                                        <div id="ownitnowDiv" class="ownitnowDiv quickreview hidden">
+                                            <p>Purchase a home at anytime with our Own It Now program! Own It Now makes properties available 24/7 and uploads new homes regularly. </p>
+                                        </div>
+                                        <div class="rehabbedandready1 tags" data-target="rehabbedandreadyDiv">
+                                            <input type="radio" id="rehabbedandready" value="3" class="radio required-entry"  name="auction">
+                                            <label for="rehabbedandready" >Rehabbed and Ready</label>
+                                        </div>
+                                        <div id="rehabbedandreadyDiv" class="rehabbedandreadyDiv quickreview hidden">
+                                            <p>The Rehabbed & Ready program offers terrific, totally updated homes in upcoming Detroit neighborhoods. The work has been done for you! </p>
+                                        </div>
+                                    </div> -->
+                                    
+                                    <!-- test dlba -->
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resident_infos">
+                            <div class="row">
+                                <div class="col-sm-12 form-group m_0">
+                                    <div class="ques_ans">
+                                        
+                                        <input  type="radio" id="nexttohome" value="yes" class="radio required-entry" name="nexttohome"><label for="nexttohome" >Buy the lot next to my home </label>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resident_infoss">
+                            <div class="row">
+                                <div class="col-sm-12 form-group m_0">
+                                    <div class="ques_ans">
+                                        
+                                        <input  type="radio" id="citydetroit" value="yes" class="radio required-entry" name="citydetroit"><label for="citydetroit" >Develop property in the City of Detroit</label>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+	    </form>
+    </div>
+  </div>
+</div>
+
+<style>
+	.nav-top{
+		border-right:0px #111 !important;
+	}
+	.nav-top > li{
+		border-left:0px #111 !important;
+	}
+
+	.applicant ul li.hvr a {
+		font-weight: 700;
+		background-color: #53ade9;
+		color: #fff;
+	}
+	.applicant ul.row li.hvr .caption {
+		opacity: 1;
+		display: block;
+		transition: opacity 0.2s linear 0s;
+		border: 1px solid #ddd;
+	}
+	.tyu .thumbnail, #thumbnails a{transition:none;}
+</style><script>
+    require(['jquery', 'maskedinput'], function ($) {
+        var siteUrl = window.location.href;
+        var customurl = "https://buildingdetroit.org/chatsystem/manage/chat";
+        $.ajax({
+            url: customurl,
+            type: 'POST',
+            data: {'action': 'set_siteurl', 'siteUrl': siteUrl},
+        }).done(function (resp) {
+            console.log(resp.site_url);
+        });
+        $('input[type="phone"], input[name="telephone"]').mask("(999) 999-9999");
+        function hideChat() {
+            $('#chat_converse').css('display', 'none');
+            $('#chat_body').css('display', 'none');
+            $('.chat_login').css('display', 'block');
+
+        }
+
+        /* ALLOW ONLY NUMBERS */
+        $(".number-only").keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
+                return false;
+        });
+        $("#dob").keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
+                return false;
+        });
+
+        /* ALLON ONLY ALPHABETS */
+        $("#firstname, #lastname, #region, .alpha-only").on("keydown", function (event) {
+            // Ignore controls such as backspace
+            var arr = [8, 9, 16, 17, 20, 32, 35, 36, 37, 38, 39, 40, 45, 46, 109, 189];
+
+            // Allow letters
+            for (var i = 65; i <= 90; i++) {
+                arr.push(i);
+            }
+
+            if ($.inArray(event.which, arr) === -1) {
+                event.preventDefault();
+            }
+        });
+
+        $('.alpha-numeric').on('keypress', function (e) {
+            var txt = String.fromCharCode(e.which);
+            if (!txt.match(/[A-Za-z0-9-_.]/)) {
+                return false;
+            }
+        });
+
+        $('select').addClass('form-control');
+
+        $(".alpha-spaces-only, input[name='city']").on("keydown", function (event) {
+            // Ignore controls such as backspace
+            var arr = [8, 9, 16, 17, 20, 32, 35, 36, 37, 38, 39, 40, 45, 46, 109, 189];
+
+            // Allow letters
+            for (var i = 65; i <= 90; i++) {
+                arr.push(i);
+            }
+
+            if ($.inArray(event.which, arr) === -1) {
+                event.preventDefault();
+            }
+        });
+
+        $(".exclude-enterkey").on('keydown', function(e){
+            if(e.which == 13 || e.which == 222)
+                return false;
+        });
+
+        function toggleFab() {
+            $('.prime').toggleClass('zmdi-comment-outline');
+            $('.prime').toggleClass('zmdi-close');
+            $('.prime').toggleClass('is-active');
+            $('.prime').toggleClass('is-visible');
+            $('#prime').toggleClass('is-float');
+            $('.chat').toggleClass('is-visible');
+            $('.fab').toggleClass('is-visible');
+        }
+
+        $(function () {
+            'use strict';
+
+            hideChat();
+
+            $('html').click(function () {
+                //Hide the menus if visible
+                $('.register-dropdown').removeClass('is-open');
+            });
+
+            $('.register-dropdown').click(function (event) {
+                event.stopPropagation();
+                $('.register-dropdown').addClass('is-open');
+            });
+
+            $('#prime').click(function () {
+                toggleFab();
+                if ($('.chat').hasClass('is-visible')) {
+                    $('.chat_body .chat-input').val("");
+                }
+                //$('.chat').fadeIn(100);
+                //$( '.chat' ).toggleClass( "is-visible" );
+            });
+
+            $('#chat_first_screen').click(function (e) {
+                hideChat();
+            });
+
+            var $html = $('html');
+
+            $html.on('click.ui.dropdown', '.js-dropdown', function (e) {
+                e.preventDefault();
+                $(this).toggleClass('is-open');
+            });
+
+            $html.on('click.ui.dropdown', '.register-dropdown', function (e) {
+                $(this).toggleClass('is-open');
+            });
+
+
+            $html.on('click.ui.dropdown', '.js-dropdown [data-dropdown-value]', function () {
+                /*e.preventDefault();*/
+                var $item = $(this);
+                var $dropdown = $item.parents('.js-dropdown');
+                $dropdown.find('.js-dropdown__input').val($item.data('dropdown-value'));
+                $dropdown.find('.js-dropdown__current').text($item.text());
+            });
+
+            $html.on('click.ui.dropdown', function (e) {
+                var $target = $(e.target);
+                if (!$target.parents().hasClass('js-dropdown')) {
+                    $('.js-dropdown').removeClass('is-open');
+                }
+            });
+
+            $('.search_icons').click(function () {
+                $('.search_icons, .search-bar').toggleClass('active');
+                // $('.header_input').focus();
+                var thisIcon = $('.header_input');
+
+                if ($('.search_icons').hasClass('active')) {
+                    $('.header_input').focus();
+                } else
+                {
+                    $('.header_input').blur();
+                    $('.header_input').val("");
+                }
+            });
+
+            $('#chat_form').on('submit', function (e) {
+                e.preventDefault();
+                var chat_data = $(this).serialize();
+                $('.chat_body').find('.alert').remove();
+                setTimeout(function () {
+                    if ($('#chat_form').find('.mage-error:visible').length > 0) {
+                        $('.chat_body').find('.alert').remove();
+                        /* $('#chat_form').before("<div class='alert alert-danger'>Please fix form error(s) below.</div>") */
+                    } else {
+                        $('#chat_form').before("<div class='alert alert-info'>Sending your message Please wait...</div>")
+                        $.ajax({
+                            url: customurl,
+                            type: 'POST',
+                            data: {'chat_data': chat_data},
+                        }).done(function (resp) {
+                            $('.chat_body').find('.alert').remove();
+                            if (resp.result == true) {
+                                $('#chat_form').before("<div class='alert alert-success'>" + resp.message + ".</div>");
+                                $('#chat_form').hide();
+                            } else {
+                                $('#chat_form').before("<div class='alert alert-danger'>" + resp.message + ".</div>");
+                            }
+                        });
+                    }
+                }, 1000);
+            });
+        });
+        setTimeout(function () {
+            $('#region_id, #region').attr('data-validate', '{required:true}');
+        }, 5000);
+
+        $(window).load(function () {
+            $('#region_id, #region').attr('data-validate', '{required:true}');
+        });
+
+        $('#dob').bind('keydown', 'keypress', function (event) {
+            var inputLength = event.target.value.length;
+            if (event.keyCode != 8) {
+                if (inputLength === 2 || inputLength === 5) {
+                    var thisVal = event.target.value;
+                    thisVal += '/';
+                    $(event.target).val(thisVal);
+                }
+            }
+        });
+        $('.customer-account-confirmation button[type="submit"]').addClass('btn-primary');
+        $('body').on('change', '#country', function () {
+            $('#region').attr('data-validate', '{required:true}');
+            $('#region_id').attr('data-validate', "{'validate-select':true}");
+            $('#region').val('');
+        });
+    });
+</script></footer></footer></div>    </body>
+</html>
