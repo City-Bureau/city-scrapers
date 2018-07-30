@@ -60,7 +60,6 @@ def test_id(parsed_items):
     assert parsed_items[0][
                'id'] == 'chi_buildings/000000000000/x/administrative_operations_committee_meeting_january_4_2018'
 
-
 def test_event_description(parsed_items):
     assert parsed_items[0]['description'] == ('January 4, 2018  1:00 pm - 2:00 pm</br></br>Agenda\xa0')
 

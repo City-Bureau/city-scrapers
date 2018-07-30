@@ -5,7 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
 import re
-from datetime import datetime
+from datetime import date, time, datetime
 from time import strptime
 
 from city_scrapers.spider import Spider
@@ -14,8 +14,9 @@ from city_scrapers.spider import Spider
 class Chi_pubhealthSpider(Spider):
 
     name = 'chi_pubhealth'
-    long_name = 'Chicago Department of Public Health'
+    agency_id = 'Chicago Department of Public Health'
     allowed_domains = ['www.cityofchicago.org']
+    timezone = 'America/Chicago'
 
     @property
     def start_urls(self):
@@ -48,7 +49,7 @@ class Chi_pubhealthSpider(Spider):
 
         # Extract year and meeting name from title like "2017 Board of Health Meetings"
         parts = re.match(r'(\d{4}) (.*?)s', title)
-        year = int(parts.group(1))
+        self.year = int(parts.group(1))
         name = parts.group(2)
 
         # The description and meeting dates are a series of p elements
@@ -61,69 +62,72 @@ class Chi_pubhealthSpider(Spider):
                 description = item.xpath('text()').extract_first()
                 continue
 
-            # Future meetings are plain text
-            date_text = item.xpath('text()').extract_first()
-
-            if not date_text:
-                # Past meetings are links to the agenda
-                date_text = item.xpath('a/text()').extract_first()
-
-            # Extract date formatted like "January 12"
-            date = datetime.strptime(date_text, '%B %d')
-
-            naive_start_time = datetime(year, date.month, date.day, 9)
-            start_time = self._naive_datetime_to_tz(naive_start_time)
-
-            naive_end_time = datetime(year, date.month, date.day, 10, 30)
-            end_time = self._naive_datetime_to_tz(naive_end_time)
-
             data = {
                 '_type': 'event',
                 'name': name,
-                'description': description,
+                'event_description': description,
                 'classification': self._parse_classification(item),
-                'start_time': start_time,
-                'end_time': end_time,
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
                 'all_day': False,
-                'timezone': 'America/Chicago',
-                'status': self._parse_status(item),
                 'location': self._parse_location(item),
-                'sources': self._parse_sources(response)
+                'sources': self._parse_sources(response),
+                'documents': self._parse_documents(item)
             }
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data, '')
             yield data
+
+    def _parse_date(self, item):
+        """
+        Parse the meeting date.
+        """
+        # Future meetings are plain text
+        date_text = item.xpath('text()').extract_first()
+
+        if not date_text:
+            # Past meetings are links to the agenda
+            date_text = item.xpath('a/text()').extract_first()
+        
+        # Extract date formatted like "January 12"
+        return datetime.strptime(date_text, '%B %d')
+
+    def _parse_start(self, item):
+        """
+        Parse the meeting date and set start time to 9am.
+        """
+        datetime_obj = self._parse_date(item)
+        return {
+            'date': date(self.year, datetime_obj.month, datetime_obj.day),
+            'time': time(9, 0),
+            'note': ''
+        }
+
+    def _parse_end(self, item):
+        """
+        Parse the meeting date and set end time to 10:30am.
+        """
+        datetime_obj = self._parse_date(item)
+        return {
+            'date': date(self.year, datetime_obj.month, datetime_obj.day),
+            'time': time(10, 30),
+            'note': ''
+        }
 
     def _parse_classification(self, item):
         """
         Parse or generate classification (e.g. town hall).
         """
-        return 'committee-meeting'
-
-    def _parse_status(self, item):
-        """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
-        """
-        return 'tentative'
+        return 'board meeting'
 
     def _parse_location(self, item):
         """
         A lot of this info is hard coded as it is unlikely to frequently change.
         """
         return {
-            'url': 'https://www.cityofchicago.org/city/en/depts/cdph.html',
             'name': '2nd Floor Board Room, DePaul Center',
             'address': '333 S. State Street, Chicago, IL',
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            }
+            'neighborhood': 'Loop'
         }
 
     def _parse_all_day(self, item):
@@ -137,3 +141,25 @@ class Chi_pubhealthSpider(Spider):
         Parse sources.
         """
         return [{'url': response.url, 'note': ''}]
+
+    def _parse_documents(self, item):
+        """
+        Parse agenda and minutes, if available.
+        """
+        documents = []
+
+        agenda_relative_url = item.xpath('a/@href').extract_first()
+        if agenda_relative_url:
+            documents.append({
+                'url': 'https://www.cityofchicago.org{}'.format(agenda_relative_url),
+                'note': 'agenda'
+            })
+        
+        minutes_relative_url = item.xpath('following-sibling::ul/li/a/@href').extract_first()
+        if agenda_relative_url:
+            documents.append({
+                'url': 'https://www.cityofchicago.org{}'.format(minutes_relative_url),
+                'note': 'minutes'
+            })
+        return documents
+
