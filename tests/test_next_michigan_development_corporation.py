@@ -98,6 +98,7 @@ def test__type(item):
 test_prev_response = file_response('files/next_michigan_development_corporation_prev.html',
                                    'http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings')
 parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)]
+parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
 
 
 def test_request_count():
@@ -125,7 +126,7 @@ def test_prev_description():
 
 def test_prev_start():
     assert parsed_prev_items[0]['start'] == {
-        'date': date(2017, 6, 27), 'time': None, 'note': ''
+        'date': date(2017, 8, 8), 'time': None, 'note': ''
     }
 
 
@@ -137,7 +138,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0]['id'] \
-           == 'next_michigan_development_corporation/201706270000/x/board_of_directors'
+           == 'next_michigan_development_corporation/201708080000/x/board_of_directors'
 
 
 def test_prev_status():
@@ -157,11 +158,7 @@ def test_prev_sources():
 def test_prev_documents():
     assert parsed_prev_items[0]['documents'] == [
         {
-            'url': 'http://www.degc.org/wp-content/uploads/06-27-17-DNMDC-Board-Meeting-Minutes.pdf',
-            'note': 'minutes',
-        },
-        {
-            'url': 'http://www.degc.org/wp-content/uploads/2017-06-27-DNMDC-Special-Board-Meeting-Agenda-Only-1.pdf',
+            'url': 'http://www.degc.org/wp-content/uploads/2016-08-09-DNMDC-Special-Board-Meeting-Agenda-4-1.pdf',
             'note': 'agenda',
         },
     ]

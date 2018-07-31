@@ -100,6 +100,7 @@ def test__type(item):
 test_prev_response = file_response('files/det_local_development_finance_authority_prev.html',
                                    'http://www.degc.org/public-authorities/ldfa/fy-2017-2018-meetings/')
 parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)]
+parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
 
 
 def test_request_count():
