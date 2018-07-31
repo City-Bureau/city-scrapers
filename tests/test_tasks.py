@@ -9,7 +9,7 @@ from invoke.context import MockContext
 from tests.utils import read_test_file_content
 
 SPIDER_NAME = 'testspider'
-SPIDER_LONG_NAME = 'Test Spider Board Of Trade And Englightenment'
+SPIDER_AGENCY_ID = 'Test Spider Board Of Trade And Englightenment'
 SPIDER_DOMAINS = ['www.citybureau.org']
 SPIDER_START_URLS = ['http://www.citybureau.org/articles',
                      'http://www.citybureau.org/staff',
@@ -37,7 +37,7 @@ def test_render_test():
 
 def test_render_spider():
     test_file_content = read_test_file_content('files/testspider.py.example')
-    rendered_content = tasks._render_content('spider.tmpl', name=SPIDER_NAME, long_name=SPIDER_LONG_NAME, domains=SPIDER_DOMAINS, start_urls=SPIDER_START_URLS)
+    rendered_content = tasks._render_content('spider.tmpl', name=SPIDER_NAME, agency_id=SPIDER_AGENCY_ID, domains=SPIDER_DOMAINS, start_urls=SPIDER_START_URLS)
     assert test_file_content.strip() == rendered_content.strip()
 
 

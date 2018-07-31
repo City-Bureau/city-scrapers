@@ -5,7 +5,7 @@ if [ "$REF" == "" ] ; then
   REF=`git branch -a --contains HEAD | sed -n 2p | awk '{ printf $1 }'`
 fi
 
-if [ "$REF" == "master" ] ; then
+if [[ "$REF" == *"master" ]] ; then
   echo "Running on master; build will continue."
   echo Build completed on `date`
   echo Verifying build

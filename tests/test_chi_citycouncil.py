@@ -1,73 +1,144 @@
 import json
+from datetime import date, time
+from urllib.parse import parse_qs
 
 import pytest
-import betamax
-import requests
+from scrapy.http import TextResponse
 
 from city_scrapers.spiders.chi_citycouncil import Chi_citycouncilSpider
+from tests.utils import file_response, read_test_file_content
 
-test_response = []
-with open('tests/files/chi_citycouncil.json') as f:
-    for line in f:
-        test_response.append(json.loads(line))
+INITIAL_REQUEST = 'https://ocd.datamade.us/events/?' \
+                  'start_date__gt=2017-10-16&' \
+                  'jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government'
 
-
-# Use betamax to record requests
-session = requests.Session()
-recorder = betamax.Betamax(session)
-with recorder.use_cassette('test_chi_citycouncil_ocd_request'):
-    spider = Chi_citycouncilSpider(session=session)
-    parsed_items = [spider._parse_item(item) for item in test_response[0]]
-
-def test_name():
-    assert parsed_items[0]['name'] == 'Joint Committee: Finance; Transportation and Public Way'
+spider = Chi_citycouncilSpider()
 
 
-def test_description():
-    EXPECTED_DESCRIPTION = ("The City of Chicago is divided into fifty legislative districts or wards. "
-                            "Each district is represented by an alderman who is elected by "
-                            "their constituency to serve a 4-year term. "
-                            "In addition to representing the interests of their ward residents, "
-                            "together the 50 aldermen comprise the Chicago City Council, which serves "
-                            "as the legislative branch of government of the City of Chicago.")
-    assert parsed_items[0]['description'] == EXPECTED_DESCRIPTION
+@pytest.fixture('module')
+def parsed_item():
+    item = file_response('files/chi_citycouncil_event.json', url=INITIAL_REQUEST)
+    return spider._parse_item(item)
 
 
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2017-10-16T10:00:00-05:00'
+def test_parse():
+    response = file_response('files/chi_citycouncil_feed.json', url=INITIAL_REQUEST)
+    requests = list(spider.parse(response))
+    assert len(requests) == 2
 
 
-def test_end_time():
-    assert parsed_items[0]['end_time'] is None
+def test_gen_requests():
+    test_response = json.loads(read_test_file_content('files/chi_citycouncil_feed.json'))
+    event_requests = [item for item in spider._gen_requests(test_response)]
+    assert event_requests == [
+        'https://ocd.datamade.us/ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12/',
+        'https://ocd.datamade.us/ocd-event/93d62d20-b1dc-4d71-9e96-60c99c837e90/',
+    ]
 
 
-# def test_id():
-#    assert parsed_items[0]['id'] == 'chi_citycouncil/201710161000/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
+def test_addtl_pages():
+    more = json.loads('{"meta": {"page": 1, "per_page": 100, "total_count": 160, "count": 100, "max_page": 2}}')
+    assert spider._addtl_pages(more) is True
+    no_more = json.loads('{"meta": {"page": 1, "per_page": 100, "total_count": 2, "count": 2, "max_page": 1}}')
+    assert spider._addtl_pages(no_more) is False
 
 
-def test_all_day():
-    assert parsed_items[0]['all_day'] is False
+def test_next_page():
+    more = json.loads('{"meta": {"page": 1, "per_page": 100, "total_count": 160, "count": 100, "max_page": 2}}')
+    original_params = parse_qs(INITIAL_REQUEST)
+    next_page = spider._next_page(more)
+    static_params = {k: v for k, v in original_params.items() if k != 'page'}
+    assert static_params == original_params
+    assert next_page == 2
 
 
-def test_classification():
-    assert parsed_items[0]['classification'] == 'city council meeting'
+def test_parse_documents():
+    documents = [
+        {
+            "date": "",
+            "note": "Notice",
+            "links": [
+                {
+                    "url": "http://media.legistar.com/chic/meetings/633C3556-29C4-4645-A916-E767E00A98CC/Notice,%2003-22-2018.pdf",
+                    "media_type": "application/pdf"
+                }
+            ]
+        }
+    ]
+    assert spider._parse_documents(documents)[0] == \
+           {'url': documents[0]['links'][0]['url'], 'note': "Notice"}
 
 
-def test_status():
-    assert parsed_items[0]['status'] == 'cancelled'
+# Item fields
+def test_start(parsed_item):
+    expected_start = {
+        'date': date(2017, 10, 16),
+        'time': time(15, 00),
+        'note': ''
+    }
+    assert parsed_item['start'] == expected_start
 
 
-def test__type():
-    assert parsed_items[0]['_type'] == 'event'
+def test_end(parsed_item):
+    expected_end = {
+        'date': date(2017, 10, 16),
+        'time': None,
+        'note': ''
+    }
+    assert parsed_item['end'] == expected_end
 
 
-def test_sources():
-    EXPECTED_SOURCES = [{'note': 'ocd-api', 'url': 'https://ocd.datamade.us/ocd-event/86094f46-cf45-46f8-89e2-0bf783e7aa12/'},
-                        {'note': 'web', 'url': 'https://chicago.legistar.com/MeetingDetail.aspx?ID=565455&GUID=B5103C52-1793-4B07-9F28-E0A1223E1540&Options=info&Search='},
-                        {'note': 'api', 'url': 'http://webapi.legistar.com/v1/chicago/events/4954'}]
-    assert parsed_items[0]['sources'] == EXPECTED_SOURCES
+def test_name(parsed_item):
+    assert parsed_item['name'] == 'Joint Committee: Finance; Transportation and Public Way'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
+def test_description(parsed_item):
+    assert parsed_item['event_description'] == ""
+
+
+def test_location(parsed_item):
+    expected_location = {'address': '121 N LaSalle Dr, Chicago, IL',
+                         'name': 'Council Chambers ,  City Hall'}
+    assert parsed_item['location'] == expected_location
+
+
+def test_documents(parsed_item):
+    assert parsed_item['documents'] == [{
+        "url": "http://media.legistar.com/chic/meetings/B5103C52-1793-4B07-9F28-E0A1223E1540/Fin%20CANCELLED%2010-16_20171010085450.pdf",
+        "note": "Cancellation Notice",
+    }]
+
+
+def test_id(parsed_item):
+    assert parsed_item['id'] == \
+           'chi_citycouncil/201710161500/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
+
+
+def test_all_day(parsed_item):
+    assert parsed_item['all_day'] is False
+
+
+def test_classification(parsed_item):
+    assert parsed_item['classification'] == 'City Council'
+
+
+def test_status(parsed_item):
+    assert parsed_item['status'] == 'cancelled'
+
+
+def test__type(parsed_item):
+    assert parsed_item['_type'] == 'event'
+
+
+def test_sources(parsed_item):
+    expected_sources = [
+        {
+            "url": "http://webapi.legistar.com/v1/chicago/events/4954",
+            "note": "api"
+        },
+        {
+            "url": "https://chicago.legistar.com/MeetingDetail.aspx?ID=565455&GUID=B5103C52-1793-4B07-9F28-E0A1223E1540&Options=info&Search=",
+            "note": "web"
+        }
+    ]
+    assert parsed_item['sources'] == expected_sources

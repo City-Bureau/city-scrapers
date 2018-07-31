@@ -5,7 +5,6 @@ from datetime import datetime
 from tests.utils import file_response
 from city_scrapers.spiders.chi_buildings import Chi_buildingsSpider
 
-
 test_json_response = file_response('files/chi_buildings.json')
 test_event_response = file_response('files/chi_buildings.html')
 spider = Chi_buildingsSpider()
@@ -26,55 +25,51 @@ def mock_request(*args, **kwargs):
     return mock
 
 
-setattr(scrapy, 'Request', mock_request)
-parsed_items = [item for item in spider.parse(test_json_response)]
-parsed_event = spider._parse_event(test_event_response)
+@pytest.fixture()
+def parsed_items(monkeypatch):
+    monkeypatch.setattr(scrapy, 'Request', mock_request)
+    parsed_items = [item for item in spider.parse(test_json_response)]
+    return parsed_items
 
 
-def test_name():
+@pytest.fixture()
+def parsed_event():
+    return spider._parse_event(test_event_response)
+
+
+def test_name(parsed_items):
     assert parsed_items[0]['name'] == 'Administrative Operations Committee Meeting – January 4, 2018'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_no_holidays_included(item):
-    assert item['classification'] != 'Holiday'
-
-
-def test_classification():
+def test_classification(parsed_items):
     assert parsed_items[0]['classification'] == 'Admin Opp Committee Meeting'
-    assert parsed_items[1]['classification'] == 'Community Hiring'
-    assert parsed_items[2]['classification'] == 'Board Meeting'
-    assert parsed_items[3]['classification'] == 'Opportunity'
+    assert parsed_items[1]['classification'] == 'Board Meeting'
+    assert parsed_items[2]['classification'] == 'Admin Opp Committee Meeting'
+    assert parsed_items[3]['classification'] == 'Audit Committee'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_description(item):
-    assert item['description'] is None
+def test_start(parsed_items):
+    assert parsed_items[0]['start']['date'].isoformat() == '2018-01-04'
 
 
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2018-01-04T13:00:00-06:00'
+def test_end_time(parsed_items):
+    assert parsed_items[0]['end']['date'].isoformat() == '2018-01-04'
 
 
-def test_end_time():
-    assert parsed_items[0]['end_time'].isoformat() == '2018-01-04T14:00:00-06:00'
+def test_id(parsed_items):
+    assert parsed_items[0][
+               'id'] == 'chi_buildings/000000000000/x/administrative_operations_committee_meeting_january_4_2018'
+
+def test_event_description(parsed_items):
+    assert parsed_items[0]['description'] == ('January 4, 2018  1:00 pm - 2:00 pm</br></br>Agenda\xa0')
 
 
-# def test_id():
-#   assert parsed_items[0]['id'] == 'chi_buildings/201801041300/x/administrative_operations_committee_meeting_january_4_2018'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_all_day(item):
-    assert item['all_day'] is False
-
-
-def test_status():
+def test_status(parsed_items):
     assert parsed_items[0]['status'] == 'passed'
     assert parsed_items[10]['status'] == 'tentative'
 
 
-def test_board_meeting_location():
+def test_board_meeting_location(parsed_items):
     assert parsed_items[0]['location'] == {
         'url': 'https://thedaleycenter.com',
         'name': 'Second Floor Board Room, Richard J. Daley Center',
@@ -86,34 +81,13 @@ def test_board_meeting_location():
     }
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
-
-
-def test_source():
+def test_source(parsed_items):
     assert parsed_items[0]['sources'][0]['url'] == (
         'http://www.pbcchicago.com/events/event/administrative-operations-committee-meeting-january-4-2018/'
     )
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
-
-
-def test_event_description():
-    assert parsed_event['description'] == (
-        'On Wednesday, February 21, 2018, in the McKinley Park Auditorium, located at '
-        '2210 West Pershing Road, Chicago, Illinois 60609, PBC will host a Pre-Bid Meeting '
-        'at 9:30 a.m., a Mandatory Technical Review Meeting at 10:00a.m., and a Non-Mandatory '
-        'Site Visit at 12:00p.m. Attendees are to enter through (North) Main Entrance. Parking '
-        'is available in the parking lot adjacent to the McKinley Park Fieldhouse. Details here: '
-        'http://www.pbcchicago.com/opportunities/chicago-park-district-group-b-c1595/'
-    )
-
-
-def test_event_location():
+def test_event_location(parsed_event):
     assert parsed_event['location'] == {
         'url': None,
         'name': 'McKinley Park Auditorium',
@@ -123,3 +97,15 @@ def test_event_location():
             'longitude': '-87.682445',
         },
     }
+
+
+def test__type(parsed_items):
+    assert {item['_type'] for item in parsed_items} == {'event'}
+
+
+def test_no_holidays_included(parsed_items):
+    assert 'Holiday' not in {item['classification'] for item in parsed_items}
+
+
+def test_all_day(parsed_items):
+    assert {item['all_day'] for item in parsed_items} == {False}

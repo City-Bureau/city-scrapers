@@ -1,8 +1,7 @@
 ## Framework copied from test_ward_night to update
 
 import pytest
-from datetime import date
-from datetime import datetime
+from datetime import date, time, datetime
 from pytz import timezone
 
 from tests.utils import file_response
@@ -14,53 +13,67 @@ spider = chi_LSCMeetingSpider(start_date=datetime(2018, 1, 1))
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-# def test_id():
-#    assert parsed_items[0]['id'] == 'chi_localschoolcouncil/201801081600/x/local_school_council_fort_dearborn_es'
+def test_id():
+    assert parsed_items[0]['id'] == 'chi_localschoolcouncil/201801081600/x/local_school_council_fort_dearborn_es'
 
 
 def test_name():
     assert parsed_items[0]['name'] == 'Local School Council: Fort Dearborn ES'
 
 
-def test_start_time():
-    assert parsed_items[0]['start_time'].isoformat() == '2018-01-08T16:00:00-06:00'
+def test_start():
+    EXPECTED_START = {
+        'date': date(2018, 1, 8),
+        'time': time(16, 0),
+        'note': ''
+    }
+    assert parsed_items[0]['start'] == EXPECTED_START
 
 
-def test_end_time():
-    assert parsed_items[0]['end_time'] == None
+def test_end():
+    EXPECTED_END = {
+        'date': date(2018, 1, 8),
+        'time': time(19, 0),
+        'note': 'estimated 3 hours after start time'
+    }
+    assert parsed_items[0]['end'] == EXPECTED_END
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
+        'name': '',
         'address': '9025 S Throop St 60620',
-        'coordinates': {
-            'latitude': '41.72967267',
-            'longitude': '-87.65548116',
-        }
+        'neighborhood': 'Washington Heights'
     }
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
+def test_status():
+    assert parsed_items[0]['status'] == 'passed'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_all_day(item):
-    assert item['all_day'] is False
+def test_all_day():
+    assert parsed_items[0]['all_day'] is False
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_classification(item):
-    assert item['classification'] is 'meeting'
+def test_description():
+    assert parsed_items[0]['event_description'] == ''
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_status(item):
-    assert item['status'] == 'tentative'
+def test_documents():
+    assert parsed_items[0]['documents'] == []
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
+def test_sources():
+    assert parsed_items[0]['sources'] == [{
+        'url': 'https://docs.google.com/spreadsheets/d/1uzgWLWl19OUK6RhkAuqy6O6p4coTOqA22_nmKfzbakE',
+        'note': 'Google Sheet that Darryl filled out manually'
+    }]
+
+
+def test_classification():
+    assert parsed_items[0]['classification'] is 'committee'
+
+
+def test__type():
+    assert parsed_items[0]['_type'] == 'event'
 

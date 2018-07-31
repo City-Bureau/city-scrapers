@@ -3,7 +3,6 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
-  - pip install pytest pep8 pyflakes
 script:
   - invoke runtests
   - ./travis/validate_spiders.sh

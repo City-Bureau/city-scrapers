@@ -10,7 +10,7 @@ DIR="$( cd "$( dirname `dirname "${BASH_SOURCE[0]}"` )" && pwd )"
 export PYTHONPATH=$PYTHONPATH:$DIR
 
 # Set scrapy settings
-export SCRAPY_SETTINGS_MODULE='travis.travis_settings'
+export SCRAPY_SETTINGS_MODULE='city_scrapers.settings.travis'
 
 # If not a PR build, exit
 # if [ $TRAVIS_PULL_REQUEST == 'false' ]; then echo "Build NOT triggered by a PR. Everything's ok."; exit 0; fi

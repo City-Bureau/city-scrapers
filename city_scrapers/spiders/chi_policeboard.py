@@ -14,11 +14,11 @@ from city_scrapers.spider import Spider
 
 class Chi_policeboardSpider(Spider):
     name = 'chi_policeboard'
+    timezone = 'America/Chicago',
+    agency_id = 'Chicago Police Board'
     long_name = 'Chicago Police Board'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['http://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
-
-    year = str(datetime.now().year)
 
     def parse(self, response):
         """
@@ -31,47 +31,35 @@ class Chi_policeboardSpider(Spider):
         data = {
             '_type': 'event',
             'name': self._parse_name(response),
-            'description': self._parse_description(response),
-            'classification': self._parse_classification(response),
-            'end_time': self._parse_end(response),
-            'all_day': self._parse_all_day(response),
-            'timezone': 'America/Chicago',
+            'event_description': self._parse_description(response),
+            'classification': 'Board',
+            'end': {'date': None, 'time': None, 'note': ''},
+            'all_day': False,
             'location': self._parse_location(response),
-            'sources': self._parse_sources(response)
+            'sources': [{'url': response.url, 'note': ''}],
         }
-        universal_start_time = self._parse_universal_start(response)
-        self._parse_year(response)
+        year = self._parse_year(response)
+        start_time = self._parse_start_time(response)
 
         for item in response.xpath('//p[contains(@style,"padding-left")]'):
-            start_time = self._parse_start(item, universal_start_time)
+            start_date = self._parse_start_date(item, year)
             new_item = {
-                'start_time': start_time,
-                'id': self._generate_id(data)
+                'start': {
+                    'date': start_date,
+                    'time': start_time,
+                    'note': '',
+                },
+                'documents': self._parse_documents(item, response),
             }
             new_item.update(data)
-            new_item['status'] = self._parse_status(new_item['start_time'])
+            new_item['id'] = self._generate_id(new_item)
+            new_item['status'] = self._generate_status(new_item, '')
             yield new_item
 
-    def _parse_classification(self, response):
-        """
-        Parse or generate classification (e.g. town hall).
-        """
-        return 'Not classified'
-
-    def _parse_status(self, start_time):
-        """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
-        """
-        if datetime.now().replace(tzinfo=timezone('America/Chicago')) > start_time:
-            return 'passed'
-        return 'tentative'
+    def _parse_documents(self, item, response):
+        anchors = item.xpath('a')
+        return [{'url': response.urljoin(link.xpath('@href').extract_first('')),
+                 'note': link.xpath('text()').extract_first('')} for link in anchors]
 
     def _parse_location(self, response):
         """
@@ -81,30 +69,22 @@ class Chi_policeboardSpider(Spider):
         bold_text = ' '.join(response.xpath("//strong/text()").extract())
         location_name = bold_text.split('take place at')[-1].split('.')[0].strip()
         return {
-            'url': None,
             'address': location_name,
             'name': None,
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
+            'neighborhood': '',
         }
 
-    def _parse_universal_start(self, response):
+    def _parse_start_time(self, response):
         """
-        Return universal start time in the form %I:%M%p
+        Return start time
         """
         bold_text = ' '.join(response.xpath("//strong/text()").extract())
         match = re.match(r'.*(\d+:\d\d\s*[p|a]\.*m\.*).*', bold_text.lower())
         if match:
-            return match.group(1).replace(' ', '').replace('.', '').upper()
+            cleaned_time = match.group(1).replace(' ', '').replace('.', '').upper()
+            return datetime.strptime(cleaned_time, '%I:%M%p').time()
         return None
 
-    def _parse_all_day(self, response):
-        """
-        Parse or generate all-day status. Defaults to false.
-        """
-        return False
 
     def _parse_name(self, response):
         """
@@ -112,30 +92,20 @@ class Chi_policeboardSpider(Spider):
         """
         return response.css("h1[class='page-heading']::text").extract_first()
 
+
     def _parse_description(self, response):
         """
         Parse or generate event name.
         """
-        all_text = response.xpath("normalize-space(//div[@class='container-fluid page-full-description'])").extract_first()
+        all_text = response.xpath(
+            "normalize-space(//div[@class='container-fluid page-full-description'])").extract_first()
 
         intro, meetings = all_text.split('Regular Meetings')
 
         # Strip 5 characters ("2017 ") off end.
         return intro[:-5].strip()
 
-    def _parse_start(self, item, time):
-        """
-        Parse start date and time.
-        """
-        date = self._parse_start_date(item)
-        datestring = '{0}, {1} {2}'.format(date, self.year, time)
-        date = self._make_date(datestring)
-
-        if date:
-            return date
-        return None
-
-    def _parse_start_date(self, item):
+    def _parse_start_date(self, item, year):
         """
         Parse start date
         """
@@ -144,7 +114,9 @@ class Chi_policeboardSpider(Spider):
         clean_date_match = re.match(r'.*([A-Z][a-z]+ \d+).*', date)
         if not clean_date_match:
             return None
-        return clean_date_match.group(1)
+        date_as_string = clean_date_match.group(1)
+        date_with_year = '{0}, {1}'.format(date_as_string, year)
+        return datetime.strptime(date_with_year, '%B %d, %Y').date()
 
     def _parse_year(self, response):
         """
@@ -154,29 +126,5 @@ class Chi_policeboardSpider(Spider):
         for entry in response.xpath('//h3/text()').extract():
             year_match = re.search(r'([0-9]{4})', entry)
             if year_match:
-                self.year = year_match.group(1)
-                break
+                return year_match.group(1)
 
-    def _make_date(self, datestring):
-        """
-        Combine year, month, day with variable time and export as timezone-aware,
-        ISO-formatted string.
-        """
-        try:
-            naive = datetime.strptime(datestring, '%B %d, %Y %I:%M%p')
-        except ValueError:
-            return None
-
-        return self._naive_datetime_to_tz(naive, 'America/Chicago')
-
-    def _parse_end(self, response):
-        """
-        Parse end date and time.
-        """
-        return None
-
-    def _parse_sources(self, response):
-        """
-        Parse sources.
-        """
-        return [{'url': response.url, 'note': ''}]

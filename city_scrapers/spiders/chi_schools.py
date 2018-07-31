@@ -6,52 +6,47 @@ from city_scrapers.spider import Spider
 
 class Chi_schoolsSpider(Spider):
     name = 'chi_schools'
+    agency_id = 'Chicago Public Schools'
+    timezone = 'America/Chicago'
     long_name = 'Chicago Public Schools Board of Education'
     allowed_domains = ['www.cpsboe.org']
     start_urls = ['http://www.cpsboe.org/meetings/planning-calendar']
     domain_url = 'http://www.cpsboe.org'
 
     def parse(self, response):
+        event_description = self._parse_description(response)
+        documents = self._parse_documents(response)
         for item in response.css('#content-primary tr')[1:]:
-            start_time = self._parse_start_time(item)
-            if start_time is not None:
-                start_time = self._parse_start_time(item)
+            start = self._parse_start_time(item)
+            if start is not None:
+                start = self._parse_start_time(item)
                 data = {
                     '_type': 'event',
                     'name': 'Monthly Board Meeting',
-                    'description': self._parse_description(item),
-                    'classification': self._parse_classification(item),
-                    'start_time': start_time,
+                    'event_description': event_description,
                     'all_day': self._parse_all_day(item),
-                    'timezone': 'America/Chicago',
-                    'status': self._parse_status(item),
+                    'classification': 'Board',
+                    'start': start,
+                    'documents': documents,
                     'location': self._parse_location(item),
-                    'sources': self._parse_sources(response)
+                    'sources': self._parse_sources(response),
                 }
                 data['id'] = self._generate_id(data)
-
+                data['status'] = self._generate_status(data, event_description)
+                data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 yield data
+
+    def _parse_description(self, response):
+        desc_xpath = '//table/following-sibling::ul//text()|//table/following-sibling::p//text()'
+        desc_text = response.xpath(desc_xpath).extract()
+        event_description = ' '.join(desc_text)
+        return event_description
 
     def _remove_line_breaks(self, collection):
         return [x.strip() for x in collection if x.strip() != '']
 
-    def _parse_description(self, item):
-        """
-        Currently every description is the same, but it's
-        unsafe to assume that will always be the case so let's
-        grab it programmatically anyways.
-        """
-        return ("The Chicago Board of Education is responsible for "
-                "the governance, organizational and financial "
-                "oversight of Chicago Public Schools (CPS), "
-                "the third largest school district in the "
-                "United States of America.")
-
     def _parse_classification(self, item):
-        """
-        @TODO Not implemented
-        """
-        return 'Not classified'
+        return 'Board'
 
     def _parse_start_time(self, item):
         raw_strings = item.css('::text').extract()
@@ -60,7 +55,11 @@ class Chi_schoolsSpider(Spider):
         date_string = date_string.replace(',', "").replace(':', " ")
         try:
             date = datetime.strptime(date_string, '%B %d %Y %I %M %p')
-            return self._naive_datetime_to_tz(date, 'America/Chicago')
+            return {
+                'date': date.date(),
+                'time': date.time(),
+                'note': '',
+            }
         except:
             return None
 
@@ -86,13 +85,21 @@ class Chi_schoolsSpider(Spider):
         text_list = [x for x in text_list if '(' not in x and ')' not in x]
         address = " ".join(text_list)
         return {
-            'url': None,
             'address': address,
             'name': None,
-            'coordinates': {
-                'longitude': None,
-                'latitude': None}
+            'neighborhood': None,
         }
+
+    def _parse_documents(self, response):
+        # only extracting participation guidelines now
+        relative_url = response.xpath('//a[contains(text(),"participation")]/@href').extract_first()
+        url = response.urljoin(relative_url)
+        return [
+            {'url': url,
+             'note': 'participation guidelines'
+             }
+        ]
+
 
     def _parse_sources(self, response):
         """

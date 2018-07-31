@@ -6,7 +6,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import IntEnum
 from pytz import timezone
 
@@ -36,13 +36,11 @@ class Row(IntEnum):
     PHONE = 10           # Text, "1(773)535-2680"
     COMMUNITY_AREA = 11  # Text, "Washington Heights"
 
-DESCRIPTION = """\
-Every Chicago public school has a Local School Council (LSC) which consists of parents, community members, teachers, and the principal of the school. All members of the council are elected. which are responsible for three main duties: 1) Approving how school funds and resources are allocated 2) Developing and monitoring the annual School Improvement Plan 3) Evaluating and selecting the school's principal
-"""
 
 class chi_LSCMeetingSpider(Spider):
     name = 'chi_localschoolcouncil'
-    long_name = 'Local School Council'
+    agency_id = 'Chicago Local School Council'
+    timezone = 'America/Chicago'
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = [SPREADSHEET_URL + '/values/A2:L1400?key=' + GOOGLE_API_KEY]
 
@@ -57,7 +55,7 @@ class chi_LSCMeetingSpider(Spider):
 
         rows = json.loads(response.body.decode('utf-8'))['values']
         rows = [row for row in rows if (len(row) == 12)]
-        now = self.start_date.replace(tzinfo=timezone('America/Chicago'))
+        now = self.start_date.replace(tzinfo=timezone(self.timezone))
 
         for row in rows:
             # Strip leading or trailing whitespace from all values
@@ -73,44 +71,80 @@ class chi_LSCMeetingSpider(Spider):
             yield data
 
             # Only work with the next month's worth of meetings
-            # to avoid overloading Airtable
-            delta = data['start_time'] - now
+            # to avoid overloading database
+            delta = self._parse_start_datetime(row).replace(tzinfo=timezone(self.timezone)) - now
             if delta.days > 30 or delta.days < 0:
                 yield None
             else:
                 yield data
 
     def _parse_row(self, row):
-        start_time = self._parse_start_time(row)
-
-        complete_address = "{} {}".format(row[Row.ADDRESS], row[Row.ZIP])
+        """
+        Parse a row in the spreadsheet.
+        """
         data = {
             '_type': 'event',
-            'name': row[Row.NAME],
-            'description': DESCRIPTION,
-            'classification': 'meeting',
-            'start_time': start_time,
-            'end_time': None,
+            'event_description': '',
+            'classification': 'committee',
             'all_day': False,
-            'timezone': 'America/Chicago',
-            'status': 'tentative',
-            'location': {
-                'address': complete_address,
-                'coordinates': {
-                    'latitude': row[Row.LAT],
-                    'longitude': row[Row.LONG],
-                }
-            }
+            'documents': [],
+            'sources': self._parse_sources(),
+            'name': self._parse_name(row),
+            'start': self._parse_start(row),
+            'end': self._parse_end(row),
+            'location': self._parse_location(row)
         }
         data['id'] = self._generate_id(data)
+        data['status'] = self._generate_status(data, '')
         return data
 
-    def _parse_start_time(self, row):
+    def _parse_sources(self):
         """
-        Parse date and time values from spreadsheet row.
+        Return a URL to the google sheet as the source.
+        """
+        return [{
+            'url': 'https://docs.google.com/spreadsheets/d/1uzgWLWl19OUK6RhkAuqy6O6p4coTOqA22_nmKfzbakE',
+            'note': 'Google Sheet that Darryl filled out manually'
+            }]
+
+    def _parse_name(self, row):
+        """
+        Parse name from spreadsheet row.
+        """
+        return row[Row.NAME]
+    def _parse_location(self, row):
+        """
+        Parse location from spreadsheet row.
+        """
+        return {
+            'name': '',
+            'address': "{} {}".format(row[Row.ADDRESS], row[Row.ZIP]),
+            'neighborhood': row[Row.COMMUNITY_AREA]
+        }
+
+    def _parse_start_datetime(self, row):
+        """
+        Parse date and time values from spreadsheet row
+        and returns a datetime object.
         """
         complete_datetime = "{} {}".format(row[Row.DATE], row[Row.TIME])
-        start_time = datetime.strptime(complete_datetime, '%m/%d/%y %I:%M:%S %p')
+        return datetime.strptime(complete_datetime, '%m/%d/%y %I:%M:%S %p')
 
+    def _parse_start(self, row):
+        start_datetime = self._parse_start_datetime(row)
+        return {
+            'date': start_datetime.date(),
+            'time': start_datetime.time(),
+            'note': ''
+        }
 
-        return self._naive_datetime_to_tz(start_time)
+    def _parse_end(self, row):
+        """
+        Estimate the end time to be 3 hours after the start time.
+        """
+        start_datetime = self._parse_start_datetime(row)
+        return {
+            'date': start_datetime.date(),
+            'time': (start_datetime + timedelta(hours=3)).time(),
+            'note': 'estimated 3 hours after start time'
+        }
