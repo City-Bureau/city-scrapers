@@ -11,8 +11,6 @@ USER_AGENT = 'City Scrapers [production mode]. Learn more and say hello at https
 # Or define your own.
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # disabled until we can rebuild it on another provider
-    #'city_scrapers.pipelines.GeocoderPipeline': 200,
     'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
     'city_scrapers.pipelines.s3_item.CityScrapersS3ItemPipeline': 300,
     'city_scrapers.pipelines.AirtablePipeline': 400
