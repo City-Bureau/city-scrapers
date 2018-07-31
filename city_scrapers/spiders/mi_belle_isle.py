@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
-from datetime import datetime
 from dateutil.parser import parse as dateparse
+from collections import defaultdict
 import scrapy
 from city_scrapers.spider import Spider
 
@@ -41,7 +41,7 @@ class MiBelleIsleSpider(Spider):
                 },
                 'all_day': False,
                 'location': self._parse_location(item),
-                'documents': self._parse_documents(item),
+                'documents': self._match_documents(item, response),
                 'sources': [{'url': response.url, 'note': ''}],
             }
 
@@ -85,9 +85,24 @@ class MiBelleIsleSpider(Spider):
             'neighborhood': '',
         }
 
-    # @TODO Get documents from separate list and match up with the date
-    def _parse_documents(self, item):
+    def _parse_documents(self, response):
         """
-        Parse or generate documents.
+        Get documents from separate list.
         """
+        documents_dict = defaultdict(str)
+        for docItem in response.xpath('//div[contains(@id, "comp_101140")]//a'):
+            link_href = docItem.xpath('./@href').extract_first()
+            link_text = docItem.xpath('./text()').extract_first()
+            documents_dict[dateparse(link_text).date()] = link_href
+        return documents_dict
+
+    def _match_documents(self, item, response):
+        """
+        Match up the documents with the date to which they belong
+        """
+        meeting_dates = self._parse_date_and_times(item)
+        meeting_agendas = self._parse_documents(response)
+
+        if meeting_dates[0] in meeting_agendas:
+            return [{'url': self.allowed_domains[0]+meeting_agendas[meeting_dates[0]], 'note': 'Agenda'}]
         return [{'url': '', 'note': ''}]
