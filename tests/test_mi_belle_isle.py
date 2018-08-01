@@ -60,10 +60,7 @@ def test_sources():
 
 
 def test_documents():
-    assert parsed_items[0]['documents'] == [{
-        'url': '',
-        'note': ''
-    }]
+    assert parsed_items[0]['documents'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)
