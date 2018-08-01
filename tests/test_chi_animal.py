@@ -55,7 +55,7 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):
-    assert item['status'] == 'tentative'
+    assert item['status'] == 'passed'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):

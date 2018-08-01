@@ -3,6 +3,7 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
+import datetime
 from dateutil.parser import parse as dateparse
 from city_scrapers.spider import Spider
 
@@ -47,11 +48,11 @@ class Chi_animalSpider(Spider):
                 'end': {},
                 'all_day': self._parse_all_day(text),
                 'timezone': 'America/Chicago',
-                'status': self._parse_status(text),
                 'location': self._parse_location(text),
                 'sources': self._parse_sources(response)
             }
             data['id'] = self._generate_id(data)
+            data['status'] = self._parse_status(data)
 
             yield data
 
@@ -61,7 +62,7 @@ class Chi_animalSpider(Spider):
         """
         return 'Not classified'
 
-    def _parse_status(self, item):
+    def _parse_status(self, data):
         """
         Parse or generate status of meeting. Can be one of:
 
@@ -72,6 +73,14 @@ class Chi_animalSpider(Spider):
 
         By default, return "tentative"
         """
+        start_date = data['start']['date'].date()
+        today = datetime.date.today()
+        if start_date < today:
+            return 'passed'
+
+        if start_date <= (today + datetime.timedelta(days=7)):
+            return 'confirmed'
+
         return 'tentative'
 
     def _parse_location(self, item):
