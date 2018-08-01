@@ -60,7 +60,7 @@ class Chi_animalSpider(Spider):
         """
         Parse or generate classification (e.g. town hall).
         """
-        return 'Not classified'
+        return 'Commission'
 
     def _parse_status(self, data):
         """
@@ -102,7 +102,7 @@ class Chi_animalSpider(Spider):
         """
         Parse or generate event name.
         """
-        return 'Commission meeting'
+        return 'Animal Care and Control Commission meeting'
 
     def _parse_description(self, item):
         """

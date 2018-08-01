@@ -17,7 +17,7 @@ def test_len():
 #    assert parsed_items[0]['id'] == 'chi_animal/201709210000/x/commission_meeting'
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Commission meeting'
+    assert parsed_items[0]['name'] == 'Animal Care and Control Commission meeting'
 
 # Different than last static pull
 def test_start_time():
@@ -34,11 +34,11 @@ def test_allday(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_class(item):
-    assert item['classification'] == 'Not classified'
+    assert item['classification'] == 'Commission'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Commission meeting'
+    assert item['name'] == 'Animal Care and Control Commission meeting'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
