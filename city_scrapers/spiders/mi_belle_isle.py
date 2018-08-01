@@ -105,4 +105,4 @@ class MiBelleIsleSpider(Spider):
 
         if meeting_dates[0] in meeting_agendas:
             return [{'url': self.allowed_domains[0]+meeting_agendas[meeting_dates[0]], 'note': 'Agenda'}]
-        return [{'url': '', 'note': ''}]
+        return []
