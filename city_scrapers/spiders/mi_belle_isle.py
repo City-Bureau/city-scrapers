@@ -88,23 +88,36 @@ class MiBelleIsleSpider(Spider):
 
     def _parse_documents(self, response):
         """
-        Get documents from separate list.
+        Get documents from separate agendas and minutes lists.
         """
-        documents_dict = defaultdict(str)
-        for docItem in response.xpath('//div[contains(@id, "comp_101140")]//a'):
-            link_href = docItem.xpath('./@href').extract_first()
-            link_text = docItem.xpath('./text()').extract_first()
-            documents_dict[dateparse(link_text).date()] = link_href
-        return documents_dict
+        agendas_dict = defaultdict(str)
+        for agendasItem in response.xpath('//div[contains(@id, "comp_101140")]//a'):
+            link_href = agendasItem.xpath('./@href').extract_first()
+            link_text = agendasItem.xpath('./text()').extract_first()
+            agendas_dict[dateparse(link_text).date()] = link_href
+
+        minutes_dict = defaultdict(str)
+        for minutesItem in response.xpath('//div[contains(@id, "comp_101141")]//a'):
+            link_href = minutesItem.xpath('./@href').extract_first()
+            link_text = minutesItem.xpath('./text()').extract_first()
+            minutes_dict[dateparse(link_text).date()] = link_href
+
+        return agendas_dict, minutes_dict
 
     def _match_documents(self, item, response):
         """
         Match up the documents with the date to which they belong
         """
+        matched_docs = []
         meeting_date, *_ = self._parse_date_and_times(item)
-        meeting_agendas = self._parse_documents(response)
+        meeting_agendas, meeting_minutes = self._parse_documents(response)
 
         if meeting_date in meeting_agendas:
             agenda_url = meeting_agendas[meeting_date]
-            return [{'url': urljoin(response.url, agenda_url), 'note': 'Agenda'}]
-        return []
+            matched_docs.append({'url': urljoin(response.url, agenda_url), 'note': 'Agenda'})
+
+        if meeting_date in meeting_minutes:
+            minutes_url = meeting_minutes[meeting_date]
+            matched_docs.append({'url': urljoin(response.url, minutes_url), 'note': 'Minutes'})
+
+        return matched_docs

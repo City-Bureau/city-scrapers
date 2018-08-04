@@ -60,7 +60,10 @@ def test_sources():
 
 
 def test_documents():
-    assert parsed_items[0]['documents'] == []
+    assert parsed_items[0]['documents'] == [{
+        'note': 'Minutes',
+        'url': 'https://www.michigan.gov/documents/dnr/BIPAC011818minutes_612208_7.pdf'
+    }]
 
 
 @pytest.mark.parametrize('item', parsed_items)
