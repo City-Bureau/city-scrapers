@@ -2,6 +2,7 @@
 import re
 from dateutil.parser import parse as dateparse
 from collections import defaultdict
+from urllib.parse import urljoin
 import scrapy
 from city_scrapers.spider import Spider
 
@@ -100,9 +101,10 @@ class MiBelleIsleSpider(Spider):
         """
         Match up the documents with the date to which they belong
         """
-        meeting_dates = self._parse_date_and_times(item)
+        meeting_date, *_ = self._parse_date_and_times(item)
         meeting_agendas = self._parse_documents(response)
 
-        if meeting_dates[0] in meeting_agendas:
-            return [{'url': self.allowed_domains[0]+meeting_agendas[meeting_dates[0]], 'note': 'Agenda'}]
+        if meeting_date in meeting_agendas:
+            agenda_url = meeting_agendas[meeting_date]
+            return [{'url': urljoin(response.url, agenda_url), 'note': 'Agenda'}]
         return []
