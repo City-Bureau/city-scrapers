@@ -93,7 +93,6 @@ class DetCityPlanningSpider(Spider):
         """
         Parse or generate documents.
         """
-        url = urljoin(base_url, url) if url else ''
         if url:
-            return [{'url': url, 'note': 'Agenda'}]
+            return [{'url': urljoin(base_url, url), 'note': 'Agenda'}]
         return []

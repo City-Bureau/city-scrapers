@@ -9,6 +9,7 @@ from city_scrapers.spiders.det_city_planning import DetCityPlanningSpider
 test_response = file_response('files/det_city_planning.html', url='https://www.detroitmi.gov/Government/Boards/City-Planning-Commission-Meetings')
 spider = DetCityPlanningSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = sorted(parsed_items, key=lambda x: x['start']['date'])
 
 
 def test_name():
@@ -20,7 +21,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 7, 19), 'time': time(17, 0), 'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'}
+    assert parsed_items[0]['start'] == {'date': date(2017, 6, 1), 'time': time(17, 0), 'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'}
 
 
 def test_end():
@@ -28,7 +29,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_city_planning/201807191700/x/city_planning_commission_regular_meeting'
+    assert parsed_items[0]['id'] == 'det_city_planning/201706011700/x/city_planning_commission_regular_meeting'
 
 
 def test_status():
@@ -52,7 +53,7 @@ def test_sources():
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-      'url': 'https://www.detroitmi.gov/LinkClick.aspx?fileticket=j7GkSNOvwRA%3d&portalid=0',
+      'url': 'https://www.detroitmi.gov/LinkClick.aspx?fileticket=Cuo4pTDuxak%3d&portalid=0',
       'note': 'Agenda'
     }]
 
