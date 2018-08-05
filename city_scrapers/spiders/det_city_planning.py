@@ -42,7 +42,7 @@ class DetCityPlanningSpider(Spider):
                 'start': {'date': meeting_date_time.date(),
                           'time': time(17, 00),
                           'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'},
-                'end': {'date': None, 'time': None, 'note': ''},
+                'end': {'date': meeting_date_time.date(), 'time': time(20, 00), 'note': ''},
                 'all_day': False,
                 'location': self.location,
                 'documents': self._create_documents(response.url, document_url),

@@ -25,7 +25,7 @@ def test_start():
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] == {'date': date(2017, 6, 1), 'time': time(20, 0), 'note': ''}
 
 
 def test_id():
