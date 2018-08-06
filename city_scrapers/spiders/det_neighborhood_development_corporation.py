@@ -8,8 +8,8 @@ from dateutil.parser import parse
 from city_scrapers.spider import Spider
 
 
-class NeighborhoodDevelopmentCorporationSpider(Spider):
-    name = 'neighborhood_development_corporation'
+class DetNeighborhoodDevelopmentCorporationSpider(Spider):
+    name = 'det_neighborhood_development_corporation'
     agency_id = 'Neighborhood Development Corporation'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']

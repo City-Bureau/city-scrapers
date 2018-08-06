@@ -4,17 +4,17 @@ import pytest
 import scrapy
 from freezegun import freeze_time
 
-from city_scrapers.spiders.neighborhood_development_corporation import NeighborhoodDevelopmentCorporationSpider
+from city_scrapers.spiders.det_neighborhood_development_corporation import DetNeighborhoodDevelopmentCorporationSpider
 from tests.utils import file_response
 
 LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '500 Griswold, Suite 2200, Detroit'}
 
 NAME = 'Board of Directors'
 
-test_response = file_response('files/neighborhood_development_corporation.html',
+test_response = file_response('files/det_neighborhood_development_corporation.html',
                               'http://www.degc.org/public-authorities/ndc/')
 freezer = freeze_time('2018-07-29 12:00:01')
-spider = NeighborhoodDevelopmentCorporationSpider()
+spider = DetNeighborhoodDevelopmentCorporationSpider()
 freezer.start()
 parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
 freezer.stop()
@@ -59,7 +59,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'neighborhood_development_corporation/201807240845/x/board_of_directors'
+    assert parsed_items[0]['id'] == 'det_neighborhood_development_corporation/201807240845/x/board_of_directors'
 
 
 def test_status():
@@ -96,7 +96,7 @@ def test__type(item):
 
 
 # previous meetings e.g. http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/
-test_prev_response = file_response('files/neighborhood_development_corporation_prev.html',
+test_prev_response = file_response('files/det_neighborhood_development_corporation_prev.html',
                                    'http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/')
 parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)]
 parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
@@ -138,7 +138,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0]['id'] \
-           == 'neighborhood_development_corporation/201606270000/x/board_of_directors'
+           == 'det_neighborhood_development_corporation/201606270000/x/board_of_directors'
 
 
 def test_prev_status():
