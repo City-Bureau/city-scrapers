@@ -7,8 +7,8 @@ from dateutil.parser import parse
 from city_scrapers.spider import Spider
 
 
-class BrownfieldRedevelopmentAuthoritySpider(Spider):
-    name = 'brownfield_redevelopment_authority'
+class DetBrownfieldRedevelopmentAuthoritySpider(Spider):
+    name = 'det_brownfield_redevelopment_authority'
     agency_id = 'Brownfield Redevelopment Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']

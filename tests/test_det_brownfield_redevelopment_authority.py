@@ -6,7 +6,7 @@ import pytest
 import scrapy
 from freezegun import freeze_time
 
-from city_scrapers.spiders.brownfield_redevelopment_authority import BrownfieldRedevelopmentAuthoritySpider
+from city_scrapers.spiders.det_brownfield_redevelopment_authority import DetBrownfieldRedevelopmentAuthoritySpider
 from tests.utils import file_response
 
 LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '500 Griswold, Suite 2200, Detroit'}
@@ -14,10 +14,10 @@ LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '5
 DBRA = 'Board of Directors'
 DBRA_CAC = 'Community Advisory Committee'
 
-test_response = file_response('files/brownfield_redevelopment_authority.html',
+test_response = file_response('files/det_brownfield_redevelopment_authority.html',
                               'http://www.degc.org/public-authorities/dbra/')
 freezer = freeze_time('2018-07-28 12:00:01')
-spider = BrownfieldRedevelopmentAuthoritySpider()
+spider = DetBrownfieldRedevelopmentAuthoritySpider()
 freezer.start()
 parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
 freezer.stop()
@@ -68,8 +68,8 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'brownfield_redevelopment_authority/201807251600/x/board_of_directors'
-    assert parsed_items[1]['id'] == 'brownfield_redevelopment_authority/201807251700/x/community_advisory_committee'
+    assert parsed_items[0]['id'] == 'det_brownfield_redevelopment_authority/201807251600/x/board_of_directors'
+    assert parsed_items[1]['id'] == 'det_brownfield_redevelopment_authority/201807251700/x/community_advisory_committee'
 
 
 def test_status():
@@ -106,7 +106,7 @@ def test__type(item):
 
 
 # # previous meetings e.g. http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/
-test_prev_response = file_response('files/brownfield_redevelopment_authority_prev.html',
+test_prev_response = file_response('files/det_brownfield_redevelopment_authority_prev.html',
                                    'http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/')
 parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)]
 parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
@@ -152,7 +152,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0]['id'] \
-           == 'brownfield_redevelopment_authority/201806270000/x/board_of_directors'
+           == 'det_brownfield_redevelopment_authority/201806270000/x/board_of_directors'
 
 
 def test_prev_status():
