@@ -105,7 +105,7 @@ def test_classification():
 
 
 def test_parse_classification():
-    assert spider._parse_classification('PFRS Investment Committee') == ''
+    assert spider._parse_classification('PFRS Investment Committee') == 'Committee'
     assert spider._parse_classification('Board Meeting') == 'Board'
 
 

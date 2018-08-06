@@ -84,6 +84,8 @@ class DetPoliceFireRetirementSpider(Spider):
     def _parse_classification(meeting_name):
         if 'Board' in meeting_name:
             return 'Board'
+        elif 'Committee' in meeting_name:
+            return 'Committee'
         return ''
 
     def _get_location(self, response):
