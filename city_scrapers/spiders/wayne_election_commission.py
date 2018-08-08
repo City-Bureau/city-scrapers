@@ -50,7 +50,7 @@ class WayneElectionCommissionSpider(Spider):
         """
         Parse start date and time.
         """
-        note = 'Meeting time are given in the "Notes" documents'
+        note = 'Meeting time are given in the "Notice" document'
         year_xpath = item.xpath('ancestor::table/thead//strong/text()').extract_first()
         year_regex = re.compile(r'\d{4}')
         year_str = year_regex.findall(year_xpath)[0]
@@ -73,8 +73,7 @@ class WayneElectionCommissionSpider(Spider):
         """
         tds = item.xpath('td[position() >1]')
         documents = [
-                {'url': urljoin(url, td.xpath('a/@href').extract_first()),
-                 'notes': td.xpath('a/text()').extract_first()
-                 } for td in tds if td.xpath('a/@href').extract_first()]
-        print(documents)
+            {'url': urljoin(url, td.xpath('.//@href').extract_first()),
+             'note': td.xpath('.//text()').extract_first()
+             } for td in tds if td.xpath('.//@href').extract_first()]
         return documents

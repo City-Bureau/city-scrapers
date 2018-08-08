@@ -13,7 +13,7 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'EXPECTED NAME'
+    assert parsed_items[0]['name'] == 'Election Commission'
 
 
 def test_description():
@@ -24,7 +24,7 @@ def test_start():
     assert parsed_items[0]['start'] == {
         'date': date(2018, 1, 29),
         'time': None,
-        'note': 'Meeting time are given in the "Notes" documents'
+        'note': 'Meeting time are given in the "Notice" document'
     }
 
 
