@@ -64,13 +64,13 @@ class DetZoningAppealsSpider(Spider):
         """
         Parse or generate documents.
         """
-        agendas_xpath = response.xpath('//div[contains(@id, "dnn_ctr7414_HtmlModule_lblContent")]//a')
+        minutes_xpath = response.xpath('//div[contains(@id, "dnn_ctr7414_HtmlModule_lblContent")]//a')
         meeting_dates = self._parse_start(item)
-        for agenda in agendas_xpath:
-            agenda_date_text = agenda.xpath('text()').extract_first()
-            agenda_date = parse(agenda_date_text)
-            agenda_link = agenda.xpath('@href').extract_first()
-            if agenda_date.date() == meeting_dates['date']:
-                return [{'url': urljoin(response.url, agenda_link), 'note': 'Agenda'}]
+        for minutes_item in minutes_xpath:
+            minutes_date_text = minutes_item.xpath('text()').extract_first()
+            minutes_date = parse(minutes_date_text)
+            minutes_link = minutes_item.xpath('@href').extract_first()
+            if minutes_date.date() == meeting_dates['date']:
+                return [{'url': urljoin(response.url, minutes_link), 'note': 'Minutes'}]
 
         return []

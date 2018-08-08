@@ -62,7 +62,7 @@ def test_sources():
 def test_documents():
     assert parsed_items[0]['documents'] == [{
       'url': 'https://www.detroitmi.gov/LinkClick.aspx?fileticket=YIbtN55o6j8%3d&portalid=0',
-      'note': 'Agenda'
+      'note': 'Minutes'
     }]
 
 
