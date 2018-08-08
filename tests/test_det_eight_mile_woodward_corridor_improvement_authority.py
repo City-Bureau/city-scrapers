@@ -1,6 +1,7 @@
 from datetime import date, time
 
 import pytest
+from freezegun import freeze_time
 
 from city_scrapers.spiders.det_eight_mile_woodward_corridor_improvement_authority import \
     DetEightMileWoodwardCorridorImprovementAuthoritySpider
@@ -15,8 +16,11 @@ NAME = 'Eight Mile Woodward Corridor Improvement Authority'
 
 test_response = file_response('files/det_eight_mile_woodward_corridor_improvement_authority.html',
                               'http://www.degc.org/public-authorities/emwcia/')
+freezer = freeze_time('2018-07-21 12:00:01')
+freezer.start()
 spider = DetEightMileWoodwardCorridorImprovementAuthoritySpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+freezer.stop()
 
 
 # current meeting (e.g. http://www.degc.org/public-authorities/emwcia/)
