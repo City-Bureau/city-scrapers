@@ -27,20 +27,16 @@ class DetPoliceDepartmentSpider(Spider):
         """
         prev_call_count = response.meta.get('prev_call_count', 0)
         if prev_call_count == 0:
-            self.form_params = self._build_form_params(response)
-            yield from self._expand_accordian(response, "Meetings")
-            # yield from self._expand_accordian(response, "Minutes")
+            yield from self._expand_accordian(response)
         if prev_call_count > 0:
             post_request_response = self._convert_response(response)
             yield from self._parse_item(post_request_response)
 
-    def _expand_accordian(self, response, text):
-        accordian_xpath = '//a[child::div[contains(., "{}")]]/@id'.format(text)
-        a_id = response.xpath(accordian_xpath).extract_first()
+    def _expand_accordian(self, response):
         yield scrapy.FormRequest.from_response(
             response,
             formname='Form',
-            formdata=self.form_params[a_id],
+            formdata={'ctx': '1', '__DNNCAPISCI': 'FAQs dnn_ctr7392_FAQs', '__DNNCAPISCP': '1716'},
             meta={'prev_call_count': 1},
         )
 
@@ -101,11 +97,6 @@ class DetPoliceDepartmentSpider(Spider):
     @staticmethod
     def _parse_location(start_time):
         """
-        Parse or generate location. Latitude and longitude can be
-        left blank and will be geocoded later.
-        """
-        # TODO not sure how to handle this...
-        """
          All meetings scheduled for 3:00 pm meet at the Detroit Public Safety Headquarters.
          All meetings scheduled for 6:30 pm are in the community. 
          Community Meetings are subject to change with notice.
@@ -118,26 +109,6 @@ class DetPoliceDepartmentSpider(Spider):
             }
         return {
             'neigborhood': '',
-            'name': 'Community',
-            'address': '',
+            'name': '',
+            'address': 'In the community (see website for details)'
         }
-
-    def _build_form_params(self, response):
-        callbacks = response.xpath('//script[contains(., "ClientCallBackRefdnn")]/text()').extract_first()
-        callbacks = callbacks.split('=', 1)[-1]
-        params = re.findall(r'dnn.xmlhttp.doCallBack\((.+?)\)', callbacks)
-        form_params = {}
-        for param in params:
-            key, p1, p2 = self._unpack_params(param)
-            form_params[key] = {"ctx": "1", "__DNNCAPISCI": p1, "__DNNCAPISCP": p2}
-        return form_params
-
-    @staticmethod
-    def _unpack_params(params_string):
-        """
-        helper to parse out params from CDATA tag in script tag
-        "'FAQs dnn_ctr7392_FAQs', 1716, GetFaqAnswerSuccess, 'dnn_ctr7392_FAQs_lstFAQs_A2_0', GetFaqAnswerError, null, null, null, 0'"
-        """
-        p1, p2, _, key, *_ = [p.replace("'", '') for p in params_string.split(',')]
-        key = re.sub(r'_A(\d+)_', '_Q\g<1>_', key)
-        return key, p1, p2

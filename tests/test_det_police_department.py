@@ -17,20 +17,6 @@ POST_REQUEST_RESPONSE = scrapy.http.TextResponse(
 )
 
 
-def test_form_params():
-    # The parameters required to create the POST requests to expand
-    # various accordions are embeddeded in a CDATA tag like below.
-    # parse this to make it easier to build post requests.
-    """
-    //<![CDATA[
-    var ClientCallBackRefdnn_ctr7392_FAQs_lstFAQs_A2_0= "dnn.xmlhttp.doCallBack('FAQs dnn_ctr7392_FAQs',1716,GetFaqAnswerSuccess,'dnn_ctr7392_FAQs_lstFAQs_A2_0',GetFaqAnswerError,null,null,null,0);".....
-    """
-    form_params = spider._build_form_params(initial_response)
-    meetings_2018 = form_params['dnn_ctr7392_FAQs_lstFAQs_Q2_0']
-    meetings_2018['__DNNCAPISCI'] = 'FAQs dnn_ctr7392_FAQs'
-    meetings_2018['__DNNCAPISCP'] = '1716'
-
-
 def test_initial_request():
     initial_requests = list(spider.parse(initial_response))
     assert len(initial_requests) == 1
@@ -93,7 +79,7 @@ def test_status():
 def test_location():
     det_public_safety_hq = {'neigborhood': '', 'name': 'Detroit Public Safety Headquarters',
                             'address': '1301 3rd Ave, Detroit, MI 48226'}
-    community = {'neigborhood': '', 'name': 'Community', 'address': ''}
+    community = {'neigborhood': '', 'name': '', 'address': 'In the community (see website for details)'}
     public_safety_meetings = [item['location'] for item in parsed_items if item['start']['time'] == time(15, 00)]
     community_meetings = [item['location'] for item in parsed_items if item['start']['time'] != time(15, 00)]
     assert all([location == det_public_safety_hq for location in public_safety_meetings])
@@ -107,11 +93,8 @@ def test_sources():
     }]
 
 
-# def test_documents():
-#     assert parsed_items[0]['documents'] == [{
-#         'url': 'EXPECTED URL',
-#         'note': 'EXPECTED NOTE'
-#     }]
+def test_documents():
+    assert parsed_items[0]['documents'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)
