@@ -61,12 +61,6 @@ class WayneElectionCommissionSpider(Spider):
         except ValueError:
             return {'date': None, 'time': None, 'note': note}
 
-    def _parse_sources(self, item):
-        """
-        Parse or generate sources.
-        """
-        return [{'url': '', 'note': ''}]
-
     def _parse_documents(self, item, url):
         """
         Parse or generate documents.
