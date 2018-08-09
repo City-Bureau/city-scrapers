@@ -4,9 +4,6 @@ from datetime import date, time
 from tests.utils import file_response
 from city_scrapers.spiders.wayne_election_commission import WayneElectionCommissionSpider
 
-# Example:
-# {'_type': 'event', 'name': 'Election Commission', 'event_description': '', 'classification': 'Commission', 'start': {'date': datetime.date(2018, 1, 29), 'time': None, 'note': 'Meeting time are given in the "Notes" documents'}, 'end': {'date': None, 'time': None, 'note': ''}, 'all_day': False, 'location': {'neighborhood': '', 'name': 'Coleman A. Young Municipal Center, Conference Room 700A', 'address': '2 Woodward Avenue, Detroit, MI 48226'}, 'documents': [{'url': '', 'note': ''}], 'sources': [{'url': 'https://www.waynecounty.com/elected/clerk/election-commission.aspx', 'note': ''}], 'status': 'passed', 'id': 'wayne_election_commission/201801290000/x/election_commission', 'agency_name': 'Wayne County Election Commission'}
-
 test_response = file_response('files/wayne_election_commission.html', 'https://www.waynecounty.com/elected/clerk/election-commission.aspx')
 spider = WayneElectionCommissionSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]

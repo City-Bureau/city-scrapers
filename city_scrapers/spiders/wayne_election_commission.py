@@ -26,8 +26,8 @@ class WayneElectionCommissionSpider(Spider):
                     'address': '2 Woodward Avenue, Detroit, MI 48226'}
         meeting_name = 'Election Commission'
 
-        for item in response.xpath('//tbody/tr[child::td]'):
-
+        non_empty_rows_xpath = '//tbody/tr[child::td]'
+        for item in response.xpath(non_empty_rows_xpath):
             data = {
                 '_type': 'event',
                 'name': meeting_name,
@@ -46,7 +46,8 @@ class WayneElectionCommissionSpider(Spider):
 
             yield data
 
-    def _parse_start(self, item):
+    @staticmethod
+    def _parse_start(item):
         """
         Parse start date and time.
         """
@@ -66,8 +67,14 @@ class WayneElectionCommissionSpider(Spider):
         Parse or generate documents.
         """
         tds = item.xpath('td[position() >1]')
-        documents = [
-            {'url': urljoin(url, td.xpath('.//@href').extract_first()),
-             'note': td.xpath('.//text()').extract_first()
-             } for td in tds if td.xpath('.//@href').extract_first()]
-        return documents
+        return [self._build_document(td, url) for td in tds if self._has_url(td)]
+
+    @staticmethod
+    def _has_url(td):
+        return td.xpath('.//@href').extract_first()
+
+    @staticmethod
+    def _build_document(td, url):
+        document_url = urljoin(url, td.xpath('.//@href').extract_first())
+        text = td.xpath('.//text()').extract_first()
+        return {'url': document_url, 'note': text}
