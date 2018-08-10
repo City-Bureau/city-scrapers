@@ -4,14 +4,12 @@ from urllib.parse import parse_qsl
 
 import pytest
 import scrapy
-from freezegun import freeze_time
 
-from tests.utils import file_response
 from city_scrapers.spiders.det_city_council import DetCityCouncilSpider
+from tests.utils import file_response
 
 test_response = file_response('files/det_city_council.html')
 spider = DetCityCouncilSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
 def test_request_count():
@@ -33,10 +31,10 @@ def test_request_count():
     assert len(form_requests) == 1
 
     form_request = form_requests[0]
-    prev_call_count = form_request.meta.get('prev_call_count')
+    months_crawled = form_request.meta.get('months_crawled')
     params = parse_qsl(form_request.body.decode(form_request.encoding))
 
-    assert prev_call_count == 1
+    assert months_crawled == 1
     # ASP.NET page paging has to be done via form request
     # so make sure updated form params are in request
     assert ('__EVENTTARGET', 'dnn$ctr8319$Events$EventMonth$EventCalendar') in params
