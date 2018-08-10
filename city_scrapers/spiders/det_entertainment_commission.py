@@ -54,8 +54,8 @@ class DetEntertainmentCommissionSpider(Spider):
         entries_list = []
         month_day_xpath = response.xpath('//p[span[contains(string(), "Next Meeting Date")]]/following-sibling::p[span]//text()').extract()
         for item in month_day_xpath:
-            goodEntry = re.match(r"\w+ \d{1,2}$", item)
-            if goodEntry:
+            valid_entry = re.match(r"\w+ \d{1,2}$", item)
+            if valid_entry:
                 entries_list.append(item)
         return entries_list
 
