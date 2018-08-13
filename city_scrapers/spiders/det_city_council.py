@@ -14,15 +14,6 @@ class DetCityCouncilSpider(Spider):
     allowed_domains = ['www.detroitmi.gov']
     start_urls = ['http://www.detroitmi.gov/Government/City-Council/City-Council-Sessions']
 
-    # def start_requests(self):
-    #     yield scrapy.FormRequest(
-    #         url=self.start_urls[0],
-    #         formdata={
-    #             '__EVENTARGUMENT': 'V6726',  # June
-    #             '__EVENTTARGET': 'dnn$ctr8319$Events$EventMonth$EventCalendar',
-    #         }
-    #     )
-
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the Event Schema
@@ -93,10 +84,13 @@ class DetCityCouncilSpider(Spider):
         name_value = name_text.split('-')[0].strip()
         return name_value
 
-    @staticmethod
-    def _get_location(response):
+    def _get_location(self, response):
         location_xpath = '//div[span[contains(., "Location")]]/following-sibling::div[1]/span/a/text()'
         location_text = response.xpath(location_xpath).extract_first()
+        return self._choose_location(location_text)
+
+    @staticmethod
+    def _choose_location(location_text):
         if 'YOUNG MUNICIPAL CENTER' in location_text.upper():
             return {
                 'neighborhood': '',

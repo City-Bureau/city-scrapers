@@ -19,13 +19,13 @@ def test_request_count():
     assert len(requests) == number_next_page_request + event_requests
 
     all_calendar_events = {urllib.parse.unquote(request.url) for request in requests if 'Details' in request.url}
-    select_calander_events = {
+    select_calendar_events = {
         "http://www.detroitmi.gov/Government/City-Council/City-Council-Sessions/ModuleID/8319/ItemID/6552/mctl/EventDetails",
         "http://www.detroitmi.gov/Government/City-Council/City-Council-Sessions/ModuleID/8319/ItemID/6580/mctl/EventDetails",
         "http://www.detroitmi.gov/Government/City-Council/City-Council-Sessions/ModuleID/8319/ItemID/6573/mctl/EventDetails",
         "http://www.detroitmi.gov/Government/City-Council/City-Council-Sessions/ModuleID/8319/ItemID/6585/mctl/EventDetails",
     }
-    assert select_calander_events.issubset(all_calendar_events)
+    assert select_calendar_events.issubset(all_calendar_events)
 
     form_requests = [request for request in requests if isinstance(request, scrapy.FormRequest)]
     assert len(form_requests) == 1
@@ -102,6 +102,15 @@ def test_documents():
             'note': 'PLANNING & ECONOMIC DEVELOPMENT Agenda'
         }
     ]
+
+
+def test_choose_location():
+    assert spider._choose_location("Other") == {'neighborhood': '', 'name': '', 'address': "Other"}
+    assert spider._choose_location("Young Municipal Center and stuff") == {
+                'neighborhood': '',
+                'name': 'Coleman A. Young Municipal Center',
+                'address': '2 Woodward Detroit, MI 48226'
+            }
 
 
 def test_classification():
