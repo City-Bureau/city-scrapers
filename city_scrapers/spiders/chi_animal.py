@@ -43,7 +43,6 @@ class Chi_animalSpider(Spider):
                 'event_description': self._parse_description(text),
                 'classification': self._parse_classification(text),
                 'start': self._parse_start(text),
-                'end': {},
                 'all_day': self._parse_all_day(text),
                 'timezone': 'America/Chicago',
                 'location': self._parse_location(text),
@@ -51,6 +50,7 @@ class Chi_animalSpider(Spider):
             }
             data['id'] = self._generate_id(data)
             data['status'] = self._parse_status(data)
+            data['end'] = self._generate_end(data['start'])
 
             yield data
 
@@ -116,6 +116,18 @@ class Chi_animalSpider(Spider):
         return {
             'date': naive_datetime.date(),
             'time': naive_datetime.time(),
+        }
+
+    def _generate_end(self, start):
+        """
+        Estimate end date and time.
+        """
+        start_dt = datetime.datetime.combine(start['date'], start['time'])
+        end_dt = start_dt + datetime.timedelta(hours=3)
+        return {
+            'date': end_dt.date(),
+            'time': end_dt.time(),
+            'note': 'estimated 3 hours after the start time',
         }
 
     def _parse_sources(self, response):

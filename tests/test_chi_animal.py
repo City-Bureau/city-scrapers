@@ -24,6 +24,11 @@ def test_start_time():
     assert parsed_items[0]['start']['date'].isoformat() == '2017-09-21'
     assert parsed_items[0]['start']['time'].isoformat() == '00:00:00'
 
+def test_end_time():
+    assert parsed_items[0]['end']['date'].isoformat() == '2017-09-21'
+    assert parsed_items[0]['end']['time'].isoformat() == '03:00:00'
+    assert parsed_items[0]['end']['note'] == (
+        'estimated 3 hours after the start time')
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_type(item):
@@ -44,10 +49,6 @@ def test_name(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
     assert 'description' not in item
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_end(item):
-    assert item['end'] == {}
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
