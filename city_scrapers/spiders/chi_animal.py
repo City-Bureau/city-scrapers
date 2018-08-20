@@ -10,7 +10,8 @@ from city_scrapers.spider import Spider
 
 class Chi_animalSpider(Spider):
     name = 'chi_animal'
-    long_name = 'Animal Care and Control Commission'
+    agency_id = 'Animal Care and Control Commission'
+    timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html']
 
@@ -44,7 +45,6 @@ class Chi_animalSpider(Spider):
                 'classification': self._parse_classification(text),
                 'start': self._parse_start(text),
                 'all_day': self._parse_all_day(text),
-                'timezone': 'America/Chicago',
                 'location': self._parse_location(text),
                 'sources': self._parse_sources(response)
             }
