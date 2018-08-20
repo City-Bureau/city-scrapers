@@ -42,9 +42,7 @@ class Chi_animalSpider(Spider):
                 'name': self._parse_name(text),
                 'event_description': self._parse_description(text),
                 'classification': self._parse_classification(text),
-                'start': {
-                    'date': self._parse_start(text),
-                },
+                'start': self._parse_start(text),
                 'end': {},
                 'all_day': self._parse_all_day(text),
                 'timezone': 'America/Chicago',
@@ -73,7 +71,7 @@ class Chi_animalSpider(Spider):
 
         By default, return "tentative"
         """
-        start_date = data['start']['date'].date()
+        start_date = data['start']['date']
         today = datetime.date.today()
         if start_date < today:
             return 'passed'
@@ -114,9 +112,11 @@ class Chi_animalSpider(Spider):
         """
         Parse start date and time.
         """
-        item = '-'.join(item.split('-')[:2]).strip()
-        naive_date = dateparse(item)
-        return self._naive_datetime_to_tz(naive_date)
+        naive_datetime = self._naive_datetime_to_tz(dateparse(item))
+        return {
+            'date': naive_datetime.date(),
+            'time': naive_datetime.time(),
+        }
 
     def _parse_sources(self, response):
         """

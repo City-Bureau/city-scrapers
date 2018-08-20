@@ -21,7 +21,8 @@ def test_name():
 
 # Different than last static pull
 def test_start_time():
-    assert parsed_items[0]['start']['date'].isoformat() == '2017-09-21T00:00:00-05:00'
+    assert parsed_items[0]['start']['date'].isoformat() == '2017-09-21'
+    assert parsed_items[0]['start']['time'].isoformat() == '00:00:00'
 
 
 @pytest.mark.parametrize('item', parsed_items)
