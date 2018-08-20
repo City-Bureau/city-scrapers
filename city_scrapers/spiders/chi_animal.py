@@ -46,7 +46,8 @@ class Chi_animalSpider(Spider):
                 'start': self._parse_start(text),
                 'all_day': self._parse_all_day(text),
                 'location': self._parse_location(text),
-                'sources': self._parse_sources(response)
+                'sources': self._parse_sources(response),
+                'documents': self._documents(),
             }
             data['id'] = self._generate_id(data)
             data['status'] = self._parse_status(data)
@@ -135,3 +136,21 @@ class Chi_animalSpider(Spider):
         Parse sources.
         """
         return [{'url': response.url, 'note': ''}]
+
+    def _documents(self):
+        """
+        Add standard documents.
+        """
+        return [{
+            'url': (
+                'https://www.cityofchicago.org/content/dam/city/depts/cacc/'
+                'PDFiles/CACC_Commission_Meeting_Rules2.pdf'),
+            'note': 'Commission Rules for Public Participation',
+        }, {
+            'url': (
+                'https://www.cityofchicago.org/content/dam/city/depts/cacc/'
+                'PDFiles/CACC_FAQs_prior_to_Jan_21_2016_revised_Sept2016.pdf'),
+            'note': (
+                'Answers to Frequently Asked Question at the Commission '
+                'Meetings'),
+        }]

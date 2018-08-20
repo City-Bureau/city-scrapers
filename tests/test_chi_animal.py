@@ -66,4 +66,4 @@ def test_sources(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_documents(item):
-    assert 'documents' not in item
+    assert len(item['documents']) == 2
