@@ -3,13 +3,15 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
+import datetime
 from dateutil.parser import parse as dateparse
 from city_scrapers.spider import Spider
 
 
 class Chi_animalSpider(Spider):
     name = 'chi_animal'
-    long_name = 'Animal Care and Control Commission'
+    agency_id = 'Animal Care and Control Commission'
+    timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html']
 
@@ -39,17 +41,17 @@ class Chi_animalSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': self._parse_name(text),
-                'description': self._parse_description(text),
+                'event_description': self._parse_description(text),
                 'classification': self._parse_classification(text),
-                'start_time': self._parse_start(text),
-                'end_time': self._parse_end(text),
+                'start': self._parse_start(text),
                 'all_day': self._parse_all_day(text),
-                'timezone': 'America/Chicago',
-                'status': self._parse_status(text),
                 'location': self._parse_location(text),
-                'sources': self._parse_sources(response)
+                'sources': self._parse_sources(response),
+                'documents': self._documents(),
             }
             data['id'] = self._generate_id(data)
+            data['status'] = self._parse_status(data)
+            data['end'] = self._generate_end(data['start'])
 
             yield data
 
@@ -57,9 +59,9 @@ class Chi_animalSpider(Spider):
         """
         Parse or generate classification (e.g. town hall).
         """
-        return 'Not classified'
+        return 'Commission'
 
-    def _parse_status(self, item):
+    def _parse_status(self, data):
         """
         Parse or generate status of meeting. Can be one of:
 
@@ -70,21 +72,23 @@ class Chi_animalSpider(Spider):
 
         By default, return "tentative"
         """
+        start_date = data['start']['date']
+        today = datetime.date.today()
+        if start_date < today:
+            return 'passed'
+
+        if start_date <= (today + datetime.timedelta(days=7)):
+            return 'confirmed'
+
         return 'tentative'
 
     def _parse_location(self, item):
         """
-        Parse or generate location. Url, latitude and longitude are all
-        optional and may be more trouble than they're worth to collect.
+        Parse or generate location.
         """
         return {
-            'url': None,
             'name': 'David R. Lee Animal Care Center',
             'address': '2741 S. Western Ave, Chicago, IL 60608',
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
         }
 
     def _parse_all_day(self, item):
@@ -97,7 +101,7 @@ class Chi_animalSpider(Spider):
         """
         Parse or generate event name.
         """
-        return 'Commission meeting'
+        return 'Animal Care and Control Commission meeting'
 
     def _parse_description(self, item):
         """
@@ -109,18 +113,44 @@ class Chi_animalSpider(Spider):
         """
         Parse start date and time.
         """
-        item = '-'.join(item.split('-')[:2]).strip()
-        naive_date = dateparse(item)
-        return self._naive_datetime_to_tz(naive_date)
+        naive_datetime = self._naive_datetime_to_tz(dateparse(item))
+        return {
+            'date': naive_datetime.date(),
+            'time': naive_datetime.time(),
+        }
 
-    def _parse_end(self, item):
+    def _generate_end(self, start):
         """
-        Parse end date and time.
+        Estimate end date and time.
         """
-        return None
+        start_dt = datetime.datetime.combine(start['date'], start['time'])
+        end_dt = start_dt + datetime.timedelta(hours=3)
+        return {
+            'date': end_dt.date(),
+            'time': end_dt.time(),
+            'note': 'estimated 3 hours after the start time',
+        }
 
     def _parse_sources(self, response):
         """
         Parse sources.
         """
         return [{'url': response.url, 'note': ''}]
+
+    def _documents(self):
+        """
+        Add standard documents.
+        """
+        return [{
+            'url': (
+                'https://www.cityofchicago.org/content/dam/city/depts/cacc/'
+                'PDFiles/CACC_Commission_Meeting_Rules2.pdf'),
+            'note': 'Commission Rules for Public Participation',
+        }, {
+            'url': (
+                'https://www.cityofchicago.org/content/dam/city/depts/cacc/'
+                'PDFiles/CACC_FAQs_prior_to_Jan_21_2016_revised_Sept2016.pdf'),
+            'note': (
+                'Answers to Frequently Asked Question at the Commission '
+                'Meetings'),
+        }]
