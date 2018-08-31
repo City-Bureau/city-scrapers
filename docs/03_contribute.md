@@ -47,7 +47,7 @@ Created /Users/eads/Code/city-scrapers/tests/files/chi_housing_thecha.html
 You now have a spider named `chi_housing`. To run it (admittedly, not much will happen until you start editing the scraper), run:
 
 ```
-(city-scrapers)$ scrapy crawl chi_housing
+(city-scrapers)$ scrapy crawl chi_parks
 ```
 
 If there are no error messages, congratulations! You have a barebones spider.
