@@ -5,7 +5,7 @@ from scrapy.exporters import JsonLinesItemExporter
 class CityScrapersJsonLinesItemExporter(JsonLinesItemExporter):
     def serialize_field(self, field, name, value):
         value = self.serialize_datetime_val(value)
-        return super(CityScrapersJsonLinesItemExporter, self).serialize_field(field, name, value)
+        return super().serialize_field(field, name, value)
 
     def serialize_datetime_val(self, value):
         if isinstance(value, datetime):

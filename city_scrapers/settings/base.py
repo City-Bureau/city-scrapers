@@ -100,3 +100,7 @@ CLOSESPIDER_ERRORCOUNT = 5
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 S3_ITEM_BUCKET = os.getenv('S3_ITEM_BUCKET', 'city-scrapers-meetings-staging')
+
+AZURE_ACCOUNT_NAME = os.getenv('AZURE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = os.getenv('AZURE_ACCOUNT_KEY')
+AZURE_CONTAINER = os.getenv('AZURE_CONTAINER')
