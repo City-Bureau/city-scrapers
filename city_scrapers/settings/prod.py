@@ -35,5 +35,5 @@ FEED_FORMAT = 'cityscrapers_jsonlines'
 
 FEED_URI = (
     f'azure://{AZURE_ACCOUNT_NAME}:{AZURE_ACCOUNT_KEY}@{AZURE_CONTAINER}'
-    '/%(name)s/%(year)s/%(month)s/%(day)s/%(hour_min)s.json'
+    '/%(year)s/%(month)s/%(day)s/%(hour_min)s/%(name)s.json'
 )
