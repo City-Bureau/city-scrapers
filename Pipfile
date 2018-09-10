@@ -23,6 +23,7 @@ scrapy = "*"
 scrapy-sentry ="*"
 usaddress = "*"
 ics = "*"
+azure-storage-blob = "*"
 
 [requires]
 python_version = "3.6"

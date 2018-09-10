@@ -23,8 +23,17 @@ EXTENSIONS = {
 
 
 FEED_EXPORTERS = {
-    'cityscrapers_jsonlines': 'city_scrapers.exporters.CityScrapersJsonLinesItemExporter'
+    'cityscrapers_jsonlines':
+        'city_scrapers.exporters.CityScrapersJsonLinesItemExporter'
+}
+
+FEED_STORAGES = {
+    'azure': 'city_scrapers.extensions.feedexport.AzureBlobFeedStorage',
 }
 
 FEED_FORMAT = 'cityscrapers_jsonlines'
-FEED_URI = 's3://city-scrapers-events-feed/%(name)s/%(year)s/%(month)s/%(day)s/%(hour_min)s.json'
+
+FEED_URI = (
+    f'azure://{AZURE_ACCOUNT_NAME}:{AZURE_ACCOUNT_KEY}@{AZURE_CONTAINER}'
+    '/%(year)s/%(month)s/%(day)s/%(hour_min)s/%(name)s.json'
+)
