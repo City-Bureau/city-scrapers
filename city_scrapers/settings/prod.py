@@ -12,7 +12,7 @@ USER_AGENT = 'City Scrapers [production mode]. Learn more and say hello at https
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
-    # 'city_scrapers.pipelines.s3_item.CityScrapersS3ItemPipeline': 300,
+    'city_scrapers.pipelines.s3_item.CityScrapersS3ItemPipeline': 300,
     'city_scrapers.pipelines.AirtablePipeline': 400
 }
 
