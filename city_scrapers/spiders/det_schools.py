@@ -6,7 +6,7 @@ from datetime import datetime
 from city_scrapers.spider import Spider
 
 
-class Det_schoolsSpider(Spider):
+class DetSchoolsSpider(Spider):
     name = 'det_schools'
     long_name = 'Detroit Board of Education'
     allowed_domains = ['detroitk12.org']

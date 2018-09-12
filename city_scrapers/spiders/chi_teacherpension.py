@@ -4,7 +4,7 @@ from city_scrapers.spider import Spider
 from datetime import datetime
 
 
-class Chi_teacherpensionSpider(Spider):
+class ChiTeacherPensionSpider(Spider):
     name = 'chi_teacherpension'
     agency_id = 'Chicago Teachers Pension Fund'
     timezone = 'America/Chicago'

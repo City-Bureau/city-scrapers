@@ -3,11 +3,11 @@ import pytest
 
 from tests.utils import file_response
 from datetime import date, time
-from city_scrapers.spiders.il_labor import Il_laborSpider
+from city_scrapers.spiders.il_labor import IlLaborSpider
 
 
 test_response = file_response('files/il_labor.html', url='https://www.illinois.gov/ilrb/meetings/Pages/default.aspx')
-spider = Il_laborSpider()
+spider = IlLaborSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 def test_name():

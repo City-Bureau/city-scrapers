@@ -5,7 +5,8 @@ from datetime import datetime, timedelta, time
 from dateutil.parser import parse as dateparse
 import re
 
-class Chi_school_community_action_councilSpider(Spider):
+
+class ChiSchoolCommunityActionCouncilSpider(Spider):
     name = 'chi_school_community_action_council'
     agency_id = 'Chicago Public Schools Community Action Councils'
     timezone = 'America/Chicago'

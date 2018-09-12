@@ -13,7 +13,7 @@ import scrapy
 from city_scrapers.spider import Spider
 
 
-class Chi_citycouncilSpider(Spider):
+class ChiCityCouncilSpider(Spider):
     name = 'chi_citycouncil'
     agency_id = 'Chicago City Council'
     timezone = 'America/Chicago'

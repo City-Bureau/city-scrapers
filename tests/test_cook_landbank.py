@@ -1,10 +1,10 @@
 import pytest
 from datetime import date, time
 from tests.utils import file_response
-from city_scrapers.spiders.cook_landbank import Cook_landbankSpider
+from city_scrapers.spiders.cook_landbank import CookLandbankSpider
 
 file = file_response('files/cook_landbank.json')
-spider = Cook_landbankSpider()
+spider = CookLandbankSpider()
 
 test_response = file
 parsed_items = list(spider.parse(test_response))

@@ -4,10 +4,10 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.cook_hospitals import Cook_hospitalsSpider
+from city_scrapers.spiders.cook_hospitals import CookHospitalsSpider
 
 test_response = file_response('files/cook_hospitals.html', url='http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/')
-spider = Cook_hospitalsSpider()
+spider = CookHospitalsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 def test_name():

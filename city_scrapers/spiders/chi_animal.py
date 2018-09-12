@@ -8,7 +8,7 @@ from dateutil.parser import parse as dateparse
 from city_scrapers.spider import Spider
 
 
-class Chi_animalSpider(Spider):
+class ChiAnimalSpider(Spider):
     name = 'chi_animal'
     agency_id = 'Animal Care and Control Commission'
     timezone = 'America/Chicago'

@@ -8,7 +8,7 @@ import dateutil.parser
 from city_scrapers.spider import Spider
 
 
-class Chi_boardofethicsSpider(Spider):
+class ChiBoardOfEthicsSpider(Spider):
     name = 'chi_boardofethics'
     long_name = 'Chicago Board of Ethics'
     allowed_domains = ['www.cityofchicago.org']

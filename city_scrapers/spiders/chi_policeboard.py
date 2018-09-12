@@ -12,7 +12,7 @@ from pytz import timezone
 from city_scrapers.spider import Spider
 
 
-class Chi_policeboardSpider(Spider):
+class ChiPoliceBoardSpider(Spider):
     name = 'chi_policeboard'
     timezone = 'America/Chicago',
     agency_id = 'Chicago Police Board'

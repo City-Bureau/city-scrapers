@@ -10,7 +10,7 @@ from math import floor
 from city_scrapers.spider import Spider
 
 
-class Chi_policeSpider(Spider):
+class ChiPoliceSpider(Spider):
     name = 'chi_police'
     agency_id = 'Chicago Police Department'
     timezone = 'America/Chicago'

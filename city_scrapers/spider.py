@@ -17,7 +17,7 @@ class Spider(scrapy.Spider):
         self.month = now.strftime('%m')
         self.day = now.strftime('%d')
         self.hour_min = now.strftime('%H%M')
-        super(Spider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _generate_id(self, data):
         """

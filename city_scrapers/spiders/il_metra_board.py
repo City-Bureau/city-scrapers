@@ -4,7 +4,7 @@ import re
 
 from city_scrapers.spider import Spider
 
-class Il_metra_boardSpider(Spider):
+class IlMetraBoardSpider(Spider):
     name = 'il_metra_board'
     agency_id = 'Metra'
     timezone = 'America/Chicago'

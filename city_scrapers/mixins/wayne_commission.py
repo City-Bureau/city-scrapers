@@ -7,7 +7,7 @@ from dateutil.parser import parse as dateparse
 from urllib.parse import urljoin
 
 
-class Wayne_commission:
+class WayneCommissionMixin:
     timezone = 'America/Detroit'
     allowed_domains = ['www.waynecounty.com']
     classification = 'Committee'

@@ -5,14 +5,14 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
-from city_scrapers.spiders.wayne_ways_means import Wayne_ways_meansSpider
+from city_scrapers.spiders.wayne_ways_means import WayneWaysMeansSpider
 
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
     'files/wayne_ways_means.html', url='https://www.waynecounty.com/elected/commission/ways-means.aspx')
-spider = Wayne_ways_meansSpider()
+spider = WayneWaysMeansSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 

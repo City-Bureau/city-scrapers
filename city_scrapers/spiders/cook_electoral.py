@@ -10,7 +10,7 @@ from dateutil.parser import parse
 from city_scrapers.spider import Spider
 
 
-class Cook_electoralSpider(Spider):
+class CookElectoralSpider(Spider):
     name = 'cook_electoral'
     long_name = 'Cook County Electoral Board'
     allowed_domains = ['aba.cookcountyclerk.com']

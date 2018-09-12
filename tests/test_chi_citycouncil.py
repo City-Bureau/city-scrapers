@@ -5,14 +5,14 @@ from urllib.parse import parse_qs
 import pytest
 from scrapy.http import TextResponse
 
-from city_scrapers.spiders.chi_citycouncil import Chi_citycouncilSpider
+from city_scrapers.spiders.chi_citycouncil import ChiCityCouncilSpider
 from tests.utils import file_response, read_test_file_content
 
 INITIAL_REQUEST = 'https://ocd.datamade.us/events/?' \
                   'start_date__gt=2017-10-16&' \
                   'jurisdiction=ocd-jurisdiction/country:us/state:il/place:chicago/government'
 
-spider = Chi_citycouncilSpider()
+spider = ChiCityCouncilSpider()
 
 
 @pytest.fixture('module')

@@ -3,14 +3,14 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_plan_commission import Chi_plan_commissionSpider
+from city_scrapers.spiders.chi_plan_commission import ChiPlanCommissionSpider
 
 
 test_response = file_response(
     'files/chi_plan_commission_chicago_plan_commission.html',
     'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html'
 )
-spider = Chi_plan_commissionSpider()
+spider = ChiPlanCommissionSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 

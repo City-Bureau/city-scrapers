@@ -1,11 +1,11 @@
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_animal import Chi_animalSpider
+from city_scrapers.spiders.chi_animal import ChiAnimalSpider
 
 
 test_response = file_response('files/chi_animal.html', url='https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html')
-spider = Chi_animalSpider()
+spider = ChiAnimalSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 

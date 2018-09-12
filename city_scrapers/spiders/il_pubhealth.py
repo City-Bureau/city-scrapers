@@ -9,7 +9,7 @@ from dateutil.parser import parse as dateparse
 from city_scrapers.spider import Spider
 
 
-class Il_pubhealthSpider(Spider):
+class IlPubhealthSpider(Spider):
     name = 'il_pubhealth'
     agency_id = 'Illinois Department of Public Health'
     timezone = 'America/Chicago'

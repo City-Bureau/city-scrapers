@@ -3,7 +3,7 @@ import json
 from datetime import date, time
 
 from freezegun import freeze_time
-from city_scrapers.spiders.chi_parks import Chi_parksSpider
+from city_scrapers.spiders.chi_parks import ChiParksSpider
 
 freezer = freeze_time('2018-01-01 12:00:01')
 freezer.start()
@@ -11,7 +11,7 @@ test_response = []
 with open('tests/files/chi_parks.txt') as f:
     for line in f:
         test_response.append(json.loads(line))
-spider = Chi_parksSpider()
+spider = ChiParksSpider()
 parsed_items = [item for item in spider._parse_events(test_response)]
 freezer.stop()
 

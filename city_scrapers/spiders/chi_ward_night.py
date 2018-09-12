@@ -118,7 +118,7 @@ class ChiWardNightSpider(Spider):
     start_urls = [SPREADSHEET_URL + '/values/A3:N100?key=' + GOOGLE_API_KEY]
 
     def __init__(self, start_date=datetime.today(), *args, **kwargs):
-        super(ChiWardNightSpider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.start_date = start_date
 
     def parse(self, response):

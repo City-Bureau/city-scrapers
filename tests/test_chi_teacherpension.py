@@ -3,11 +3,11 @@ import pytest
 from tests.utils import file_response
 from datetime import datetime
 from datetime import time
-from city_scrapers.spiders.chi_teacherpension import Chi_teacherpensionSpider
+from city_scrapers.spiders.chi_teacherpension import ChiTeacherPensionSpider
 
 
 test_response = file_response('files/chi_teacherpension.htm')
-spider = Chi_teacherpensionSpider()
+spider = ChiTeacherPensionSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 

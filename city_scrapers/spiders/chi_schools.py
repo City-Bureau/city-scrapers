@@ -4,7 +4,7 @@ from datetime import datetime
 from city_scrapers.spider import Spider
 
 
-class Chi_schoolsSpider(Spider):
+class ChiSchoolsSpider(Spider):
     name = 'chi_schools'
     agency_id = 'Chicago Public Schools'
     timezone = 'America/Chicago'

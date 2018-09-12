@@ -7,7 +7,7 @@ import dateutil.parser
 from city_scrapers.spider import Spider
 
 
-class Chi_plan_commissionSpider(Spider):
+class ChiPlanCommissionSpider(Spider):
     name = 'chi_plan_commission'
     agency_id = 'Department of Planning and Development'
     timezone = 'America/Chicago'

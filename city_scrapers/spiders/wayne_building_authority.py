@@ -8,10 +8,10 @@ import re
 from datetime import datetime
 from dateutil.parser import parse as dateparse
 from city_scrapers.spider import Spider
-from city_scrapers.mixins.wayne_commission import Wayne_commission
+from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
 
 
-class Wayne_building_authoritySpider(Wayne_commission, Spider):
+class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
     name = 'wayne_building_authority'
     agency_id = 'Wayne County Building Authority'
     start_urls = ['https://www.waynecounty.com/boards/buildingauthority/meetings.aspx']

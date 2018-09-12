@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 # The RTA's Board and other meetings are are displayed on their
 # website via an iframe from a different domain.
-class RegionaltransitSpider(Spider):
+class IlRegionalTransitSpider(Spider):
     name = 'il_regional_transit'
     agency_id = 'Regional Transportation Authority '
     long_name = 'Regional Transportation Authority'

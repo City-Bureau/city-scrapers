@@ -4,7 +4,7 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.il_regional_transit import RegionaltransitSpider
+from city_scrapers.spiders.il_regional_transit import IlRegionalTransitSpider
 
 events_response = file_response('files/il_regional_transit_calendar.html', url='http://www.rtachicago.org/about-us/board-meetings')
 events_response.meta['event_description'] = (
@@ -14,7 +14,7 @@ events_response.meta['event_description'] = (
         "to the meetings. All RTA Board meetings are audio taped. Recording of meetings "
         "starting December 2014 are available on the ")
 
-spider = RegionaltransitSpider()
+spider = IlRegionalTransitSpider()
 parsed_items = [item for item in spider.parse_iframe(events_response) if isinstance(item, dict)]
 
 

@@ -6,7 +6,7 @@ import scrapy
 from city_scrapers.spider import Spider
 
 
-class Chi_zoning_boardSpider(Spider):
+class ChiZoningBoardSpider(Spider):
     name = 'chi_zoning_board'
     agency_id = 'Department of Planning and Development'
     timezone = 'America/Chicago'                     # timezone of the events in tzinfo format

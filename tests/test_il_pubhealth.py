@@ -4,10 +4,10 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.il_pubhealth import Il_pubhealthSpider
+from city_scrapers.spiders.il_pubhealth import IlPubhealthSpider
 
 test_response = file_response('files/il_pubhealth.html', url='http://www.dph.illinois.gov/events')
-spider = Il_pubhealthSpider()
+spider = IlPubhealthSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 def test_name():

@@ -2,6 +2,7 @@ import requests
 import os
 import time
 import json
+import string
 from collections import defaultdict
 from functools import reduce
 
@@ -70,7 +71,7 @@ def runtests(ctx):
 
 
 def _make_classname(name):
-    return '{0}Spider'.format(name.capitalize())
+    return f'{string.capwords(name, sep="_").replace("_", "")}Spider'
 
 
 def _gen_spider(name, agency_id, domains, start_urls):

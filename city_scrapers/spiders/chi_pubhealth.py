@@ -11,7 +11,7 @@ from time import strptime
 from city_scrapers.spider import Spider
 
 
-class Chi_pubhealthSpider(Spider):
+class ChiPubHealthSpider(Spider):
 
     name = 'chi_pubhealth'
     agency_id = 'Chicago Department of Public Health'

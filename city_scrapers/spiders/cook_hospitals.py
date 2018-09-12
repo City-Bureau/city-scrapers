@@ -5,7 +5,7 @@ from dateutil.parser import parse
 from city_scrapers.spider import Spider
 
 
-class Cook_hospitalsSpider(Spider):
+class CookHospitalsSpider(Spider):
     name = 'cook_hospitals'
     agency_id = 'Cook County Health and Hospitals System'
     timezone = 'America/Chicago'

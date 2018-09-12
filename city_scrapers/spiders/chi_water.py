@@ -7,7 +7,7 @@ from legistar.events import LegistarEventsScraper
 from city_scrapers.spider import Spider
 
 
-class Chi_waterSpider(Spider):
+class ChiWaterSpider(Spider):
     name = 'chi_water'
     agency_id = 'Metropolitan Water Reclamation District of Greater Chicago'
     timezone = 'America/Chicago'

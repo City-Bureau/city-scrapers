@@ -5,14 +5,14 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
-from city_scrapers.spiders.wayne_public_services import Wayne_public_servicesSpider
+from city_scrapers.spiders.wayne_public_services import WaynePublicServicesSpider
 
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
     'files/wayne_public_services.html', url='https://www.waynecounty.com/elected/commission/public-services.aspx')
-spider = Wayne_public_servicesSpider()
+spider = WaynePublicServicesSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 

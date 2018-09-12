@@ -13,7 +13,7 @@ import scrapy
 from city_scrapers.spider import Spider
 
 
-class Chi_buildingsSpider(Spider):
+class ChiBuildingsSpider(Spider):
     name = 'chi_buildings'
     long_name = 'Public Building Commission of Chicago'
     allowed_domains = ['www.pbcchicago.com']

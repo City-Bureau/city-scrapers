@@ -11,7 +11,7 @@ import datetime
 from city_scrapers.spider import Spider
 
 
-class Chi_librarySpider(Spider):
+class ChiLibrarySpider(Spider):
     name = 'chi_library'
     long_name = 'Chicago Public Library'
     allowed_domains = ['https://www.chipublib.org/']

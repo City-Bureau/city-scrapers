@@ -3,11 +3,11 @@ import scrapy
 
 from datetime import datetime
 from tests.utils import file_response
-from city_scrapers.spiders.chi_buildings import Chi_buildingsSpider
+from city_scrapers.spiders.chi_buildings import ChiBuildingsSpider
 
 test_json_response = file_response('files/chi_buildings.json')
 test_event_response = file_response('files/chi_buildings.html')
-spider = Chi_buildingsSpider()
+spider = ChiBuildingsSpider()
 # Setting spider date to time test files were generated
 spider.calendar_date = datetime(2018, 2, 18)
 

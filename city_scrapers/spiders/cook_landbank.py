@@ -13,7 +13,7 @@ import unicodedata
 from city_scrapers.spider import Spider
 
 
-class Cook_landbankSpider(Spider):
+class CookLandbankSpider(Spider):
     """
     Rather than scraping a site, I'm making iterated AJAX requests.
     This means setting up a list of dates to poll for events,

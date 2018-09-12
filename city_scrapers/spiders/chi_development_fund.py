@@ -7,7 +7,7 @@ import scrapy
 from city_scrapers.spider import Spider
 
 
-class Chi_development_fundSpider(Spider):
+class ChiDevelopmentFundSpider(Spider):
     name = 'chi_development_fund'
     agency_id = 'Department of Planning and Development'
     timezone = 'America/Chicago'

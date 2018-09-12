@@ -10,7 +10,7 @@ from datetime import date, time
 from city_scrapers.spider import Spider
 
 
-class Chi_cityCollegeSpider(Spider):
+class ChiCityCollegeSpider(Spider):
     name = 'chi_city_college'
     long_name = 'City Colleges of Chicago'
     allowed_domains = ['www.ccc.edu']

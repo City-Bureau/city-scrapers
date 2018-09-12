@@ -1,12 +1,12 @@
 from datetime import date, time
 
 from tests.utils import file_response
-from city_scrapers.spiders.cook_county import Cook_countySpider
+from city_scrapers.spiders.cook_county import CookCountySpider
 
 
 test_response = file_response('files/cook_county_event.html',
                               url='https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6')
-spider = Cook_countySpider()
+spider = CookCountySpider()
 item = spider._parse_event(test_response)
 
 

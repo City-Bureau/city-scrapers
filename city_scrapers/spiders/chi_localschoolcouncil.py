@@ -37,7 +37,7 @@ class Row(IntEnum):
     COMMUNITY_AREA = 11  # Text, "Washington Heights"
 
 
-class chi_LSCMeetingSpider(Spider):
+class ChiLocalSchoolCouncilSpider(Spider):
     name = 'chi_localschoolcouncil'
     agency_id = 'Chicago Local School Council'
     timezone = 'America/Chicago'
@@ -45,7 +45,7 @@ class chi_LSCMeetingSpider(Spider):
     start_urls = [SPREADSHEET_URL + '/values/A2:L1400?key=' + GOOGLE_API_KEY]
 
     def __init__(self, start_date=datetime.today(), *args, **kwargs):
-        super(chi_LSCMeetingSpider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.start_date = start_date
 
     def parse(self, response):

@@ -11,7 +11,7 @@ from legistar.events import LegistarEventsScraper
 from city_scrapers.spider import Spider
 
 
-class Cook_boardSpider(Spider):
+class CookBoardSpider(Spider):
     name = 'cook_board'
     agency_id = 'Cook County Board of Commissioners'
     timezone = 'America/Chicago'

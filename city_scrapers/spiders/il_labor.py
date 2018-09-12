@@ -10,7 +10,7 @@ from dateutil.parser import parse
 from city_scrapers.spider import Spider
 
 
-class Il_laborSpider(Spider):
+class IlLaborSpider(Spider):
     name = 'il_labor'
     long_name = 'Illinois Labor Relations Board'
     allowed_domains = ['www2.illinois.gov']

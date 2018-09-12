@@ -1,10 +1,10 @@
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.det_schools import Det_schoolsSpider
+from city_scrapers.spiders.det_schools import DetSchoolsSpider
 
 test_response = file_response('files/det_schools.html', url='http://detroitk12.org/board/meetings/')
-spider = Det_schoolsSpider()
+spider = DetSchoolsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 

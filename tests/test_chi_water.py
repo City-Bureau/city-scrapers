@@ -3,12 +3,12 @@ from datetime import date, time
 import pytest
 import json
 
-from city_scrapers.spiders.chi_water import Chi_waterSpider
+from city_scrapers.spiders.chi_water import ChiWaterSpider
 
 test_response = []
 with open('tests/files/chi_water_test.json') as f:
     test_response.extend(json.loads(f.read()))
-spider = Chi_waterSpider()
+spider = ChiWaterSpider()
 # This line throws error
 parsed_items = [item for item in spider._parse_events(test_response)]
 

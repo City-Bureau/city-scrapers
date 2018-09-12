@@ -12,7 +12,7 @@ from dateutil.parser import parse as dateparse
 from city_scrapers.spider import Spider
 
 
-class Cook_housingAuthoritySpider(Spider):
+class CookHousingAuthoritySpider(Spider):
     name = 'cook_housingauthority'
     long_name = 'Housing Authority of Cook County'
     allowed_domains = ['http://thehacc.org/']

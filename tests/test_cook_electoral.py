@@ -2,7 +2,7 @@ import pytest
 
 from datetime import date, time
 from tests.utils import file_response
-from city_scrapers.spiders.cook_electoral import Cook_electoralSpider
+from city_scrapers.spiders.cook_electoral import CookElectoralSpider
 
 
 """
@@ -10,7 +10,7 @@ Uncomment below
 """
 
 test_response = file_response('files/cook_electoral.html')
-spider = Cook_electoralSpider()
+spider = CookElectoralSpider()
 parsed_items = [item for item in spider.parse_results(test_response) if isinstance(item, dict)]
 
 

@@ -13,7 +13,7 @@ from datetime import datetime
 from city_scrapers.spider import Spider
 
 
-class Cook_countySpider(Spider):
+class CookCountySpider(Spider):
     name = 'cook_county'
     agency_id = 'Cook County Government '
     timezone = 'America/Chicago'
