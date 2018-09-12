@@ -12,8 +12,8 @@ test_response = file_response('files/det_charter_school_boards.html',
 freezer = freeze_time('2018-08-15 12:00:01')
 freezer.start()
 spider = DetCharterSchoolBoardsSpider()
-freezer.stop()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+freezer.stop()
 
 
 def test_event_count():
