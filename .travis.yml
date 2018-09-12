@@ -6,3 +6,9 @@ install:
 script:
   - invoke runtests
   - ./travis/validate_spiders.sh
+deploy:
+- skip_cleanup: true
+  provider: script
+  script: ./deploy/deploy_acr.sh
+  on:
+    branch: master
