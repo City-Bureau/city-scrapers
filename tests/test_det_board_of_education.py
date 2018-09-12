@@ -10,8 +10,8 @@ test_response = file_response('files/det_board_of_education.html', 'http://detro
 freezer = freeze_time('2018-08-15 12:00:01')
 freezer.start()
 spider = DetBoardOfEducationSpider()
-freezer.stop()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+freezer.stop()
 
 
 def test_count():
