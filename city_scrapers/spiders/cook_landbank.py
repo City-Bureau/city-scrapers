@@ -197,7 +197,7 @@ class CookLandbankSpider(Spider):
             'string(normalize-space(//div[@itemprop="description"]))'
         ).extract_first()
         normalized_description = unicodedata.normalize("NFKC", raw_description)
-        description = re.sub('\s+', ' ', normalized_description)
+        description = re.sub(r'\s+', ' ', normalized_description)
 
         agenda_sentinal = re.search("agenda", description, re.IGNORECASE)
         if agenda_sentinal:
@@ -207,23 +207,22 @@ class CookLandbankSpider(Spider):
 
         return description
 
-    def _parse_start(self, item):
-        start_date = item.css(
-            '[itemprop=\'startDate\']::attr(datetime)'
-        ).extract_first()
-        start_time = item.css(
-            'em.evo_time span[class=\'start\']::text'
-        ).extract_first()
-        if start_date is None:
+    @staticmethod
+    def _parse_datetime(datetime_str):
+        if datetime_str is None:
             return None
-        start_date_time = dt.datetime.strptime(
-            f'{start_date} {start_time or "12:00 pm"}', '%Y-%m-%d %I:%M %p'
-        )
+        date_time = dt.datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M')
         return {
-            'date': start_date_time.date(),
-            'time': start_date_time.time(),
+            'date': date_time.date(),
+            'time': date_time.time(),
             'note': ''
         }
+
+    def _parse_start(self, item):
+        start_date_str = item.css(
+            '[itemprop=\'startDate\']::attr(content)'
+        ).extract_first()
+        return self._parse_datetime(start_date_str)
 
     def _parse_end(self, item):
         """
@@ -232,15 +231,12 @@ class CookLandbankSpider(Spider):
         to include later.
         """
         end_date_str = item.css(
-            '[itemprop=\'endDate\']::attr(datetime)'
+            '[itemprop=\'endDate\']::attr(content)'
         ).extract_first()
-        end_date = None
-        if end_date_str is not None:
-            end_date = dt.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        # Override time since often invalid (ex: 11:50pm)
         return {
-            'date': end_date,
-            'time': None,
-            'note': ''
+            **self._parse_datetime(end_date_str),
+            'time': None
         }
 
     def _parse_sources(self, item):
@@ -260,7 +256,7 @@ class CookLandbankSpider(Spider):
         if agenda_pdf_link:
             documents.append({
                 'url': agenda_pdf_link,
-                'note': 'agenda'
+                'note': 'Agenda'
             })
 
         return documents

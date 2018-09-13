@@ -1,7 +1,7 @@
 import pytest
 from datetime import date, time
 from tests.utils import file_response
-from city_scrapers.constants import COMMITTEE
+from city_scrapers.constants import COMMITTEE, CONFIRMED
 from city_scrapers.spiders.cook_landbank import CookLandbankSpider
 
 file = file_response('files/cook_landbank.json')
@@ -12,23 +12,21 @@ parsed_items = list(spider.parse(test_response))
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'CCLBA Finance Committee Meeting'
+    assert parsed_items[0]['name'] == 'CCLBA Land Transactions Committee'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_event_description(item):
-    assert item['event_description'] == (
-        'The Cook County Land Bank Authority Finance Committee '
-        'will meet on Wednesday, September 13th, 2017 at the hour '
-        'of 10:00 AM in the Cook County Administration Building '
-        'located at 69 W. Washington St., 22nd Floor, Conference Room '
-        '‘A’, Chicago, Illinois, to consider the following:'
+def test_event_description():
+    assert parsed_items[0]['event_description'] == (
+        'The Land Transactions Committee will convene on Friday, September '
+        '14th at the hour of 10:00 AM at the location of 69 W. Washington '
+        'St., 22nd Floor, Conference Room ‘B”, Chicago, Illinois, to consider '
+        'the following:'
     )
 
 
 def test_start():
     EXPECTED_START = {
-        'date': date(2017, 9, 13),
+        'date': date(2018, 9, 14),
         'time': time(10, 00),
         'note': ''
     }
@@ -37,7 +35,7 @@ def test_start():
 
 def test_end():
     EXPECTED_END = {
-        'date': date(2017, 9, 13),
+        'date': date(2018, 9, 14),
         'time': None,
         'note': ''
     }
@@ -58,21 +56,17 @@ def test_classification():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == CONFIRMED
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
         'url': 'http://www.cookcountylandbank.org/',
         'name': None,
-        'address': (
-            "Cook County Administration Building, 69 W. Washington St., "
-            "22nd Floor, Conference Room 'A', Chicago, IL 60602"
-        ),
+        'address': '69 W. Washington St., Lower Level Conference Room A',
         'coordinates': {
-            'latitude': None,
-            'longitude': None,
-        },
+            'latitude': None, 'longitude': None
+        }
     }
 
 
@@ -80,9 +74,9 @@ def test_sources():
     assert parsed_items[0]['sources'] == [{
         'url': (
             'http://www.cookcountylandbank.org/events/'
-            'cclba-finance-committee-meeting-09132017/'
+            'cclba-land-transactions-committee-09142018/'
         ),
-        'note': "Event Page",
+        'note': 'Event Page'
     }]
 
 
@@ -90,9 +84,8 @@ def test_documents():
     assert parsed_items[0]['documents'] == [{
         'url': (
             'http://www.cookcountylandbank.org/wp-content/'
-            'uploads/2017/09/CCLBA.Finance.Committee_09.13.2017.pdf'
-        ),
-        'note': 'agenda'
+            'uploads/2018/09/CCLBA-Land-Transaction-9-14-18-Agenda.pdf'
+        ), 'note': 'Agenda'
     }]
 
 
