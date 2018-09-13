@@ -21,15 +21,10 @@ class CookHousingAuthoritySpider(Spider):
     events_endpoint = 'http://thehacc.org/wp-json/tribe/events/v1/events/{id}'
 
     def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
-
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
         for url in self._gen_requests(response):
-            yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
+            yield scrapy.Request(
+                url, callback=self._parse_event, dont_filter=True
+            )
 
     def _gen_requests(self, response):
         for link in response.css('guid::text').extract():
@@ -51,7 +46,6 @@ class CookHousingAuthoritySpider(Spider):
             name = event['name']
             sources = [{'note': '', 'url': event['url']}]
             start_time = dateparse(event['startDate'])
-            status = 'tentative'
             tz = r['timezone']
 
             parsed_event = {
@@ -59,15 +53,23 @@ class CookHousingAuthoritySpider(Spider):
                 'all_day': all_date,
                 'classification': BOARD,
                 'description': description,
-                'end_time': end_time,
                 'location': location,
                 'name': name,
                 'sources': sources,
-                'start_time': start_time,
-                'status': status,
+                'start': {
+                    'date': start_time.date(),
+                    'time': start_time.time(),
+                    'note': '',
+                },
+                'end': {
+                    'date': end_time.date(),
+                    'time': end_time.time(),
+                    'note': '',
+                },
                 'timezone': tz,
             }
             parsed_event['id'] = self._generate_id(parsed_event)
+            parsed_event['status'] = self._generate_status(parsed_event, '')
             yield parsed_event
 
     def _parse_location(self, event):

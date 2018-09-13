@@ -34,14 +34,24 @@ class DetSchoolsSpider(Spider):
         items = zip(names, calendar_links, times, addresses)
 
         for item in items:
+            start = self._parse_start(item[2])
+            end = self._parse_end(item[2])
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item[1]),
                 'name': item[0],
                 'description': item[0],
                 'classification': BOARD,
-                'start_time': self._parse_start(item[2]),
-                'end_time': self._parse_end(item[2]),
+                'start': {
+                    'date': start.date(),
+                    'time': start.time(),
+                    'note': ''
+                },
+                'end': {
+                    'date': end.date(),
+                    'time': end.time(),
+                    'note': '',
+                },
                 'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item[3]),
@@ -82,11 +92,11 @@ class DetSchoolsSpider(Spider):
         Parse start date and time.
         """
         components = item.split(' ')
-        start_time = "{month} {day} {year} {hour_and_minutes}{meridiem}".format(
+        start_time = '{month} {day} {year} {hour_min}{meridiem}'.format(
             month=components[0],
             day=components[1],
             year=components[2],
-            hour_and_minutes=components[3],
+            hour_min=components[3],
             meridiem=components[4]
         )
         return datetime.strptime(start_time, "%B %d, %Y %I:%M%p")

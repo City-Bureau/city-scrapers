@@ -67,14 +67,22 @@ class ChiLibrarySpider(Spider):
                 'name': 'Chicago Public Library Board Meeting',
                 'description': description_str,
                 'classification': BOARD,
-                'start_time': start_time,
-                'end_time': None,  # no end time listed
-                'all_day': False,  # default is false
-                'status': self._parse_status(item),  # default is tentative, but there is no status info on site
+                'start': {
+                    'date': start_time.date(),
+                    'time': start_time.time(),
+                    'note': '',
+                },
+                'end': {
+                    'date': None,
+                    'time': None,
+                    'note': '',
+                },
+                'all_day': False,
                 'location': self._parse_location(item, lib_info),
                 'sources': self._parse_sources(response)
             }
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data, '')
             yield data
 
     def _get_lib_info(self):
@@ -90,19 +98,6 @@ class ChiLibrarySpider(Spider):
         Parse or generate classification (e.g. town hall).
         """
         return 'Not classified'
-
-    def _parse_status(self, item):
-        """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        @TODO determine correct status
-        """
-        return TENTATIVE
 
     def find_name(self, li):
         if len(li) == 4:
@@ -149,8 +144,7 @@ class ChiLibrarySpider(Spider):
         date = date.replace(',', '')
         date = date.replace('.', '')
         date = date + ' ' + year
-        datetime_object = datetime.datetime.strptime(date, '%A %B %d %I %p %Y')
-        return self._naive_datetime_to_tz(datetime_object)
+        return datetime.datetime.strptime(date, '%A %B %d %I %p %Y')
 
     def _parse_sources(self, response):
         """
