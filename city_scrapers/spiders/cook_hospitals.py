@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class CookHospitalsSpider(Spider):
     name = 'cook_hospitals'
-    agency_id = 'Cook County Health and Hospitals System'
+    agency_name = 'Cook County Health and Hospitals System'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cookcountyhhs.org']
     start_urls = ['http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/']

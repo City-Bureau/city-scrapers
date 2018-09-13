@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class ChiTeacherPensionSpider(Spider):
     name = 'chi_teacherpension'
-    agency_id = 'Chicago Teachers Pension Fund'
+    agency_name = 'Chicago Teachers Pension Fund'
     timezone = 'America/Chicago'
     allowed_domains = ['www.ctpf.org']
     start_urls = ['https://www.ctpf.org/post/board-meetings']

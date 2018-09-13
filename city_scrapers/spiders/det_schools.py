@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import re
 import urllib.parse
 from datetime import datetime
 
@@ -10,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class DetSchoolsSpider(Spider):
     name = 'det_schools'
-    long_name = 'Detroit Public Schools Board of Education'
+    agency_name = 'Detroit Public Schools Board of Education'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/board/meetings/']

@@ -12,7 +12,7 @@ from city_scrapers.spider import Spider
 
 class ChiAnimalSpider(Spider):
     name = 'chi_animal'
-    agency_id = 'Chicago Animal Care and Control Advisory Board'
+    agency_name = 'Chicago Animal Care and Control Advisory Board'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html']

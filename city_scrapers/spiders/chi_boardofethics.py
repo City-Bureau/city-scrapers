@@ -11,7 +11,7 @@ from city_scrapers.spider import Spider
 
 class ChiBoardOfEthicsSpider(Spider):
     name = 'chi_boardofethics'
-    long_name = 'Chicago Board of Ethics Board of Directors'
+    agency_name = 'Chicago Board of Ethics Board of Directors'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/ethics/supp_info/minutes.html']
 

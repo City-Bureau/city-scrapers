@@ -16,7 +16,7 @@ from city_scrapers.spider import Spider
 
 class ChiCityCouncilSpider(Spider):
     name = 'chi_citycouncil'
-    agency_id = 'Chicago City Council'
+    agency_name = 'Chicago City Council'
     timezone = 'America/Chicago'
     allowed_domains = ['ocd.datamade.us']
 

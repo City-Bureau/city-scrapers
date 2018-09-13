@@ -5,7 +5,7 @@ from city_scrapers.spider import Spider
 
 class TestspiderSpider(Spider):
     name = 'testspider'
-    agency_id = 'Test Spider Board Of Trade And Englightenment'
+    agency_name = 'Test Spider Board Of Trade And Englightenment'
     timezone = 'America/Chicago'
     allowed_domains = ['www.citybureau.org']
     start_urls = ['http://www.citybureau.org/articles', 'http://www.citybureau.org/staff', 'http://www.citybureau.org/is-chicago-any-less-segregated']

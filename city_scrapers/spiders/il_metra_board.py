@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class IlMetraBoardSpider(Spider):
     name = 'il_metra_board'
-    agency_id = 'Illinois Metra'
+    agency_name = 'Illinois Metra'
     timezone = 'America/Chicago'
     allowed_domains = ['metrarail.com']
     start_urls = ['https://metrarr.granicus.com/ViewPublisher.php?view_id=5']

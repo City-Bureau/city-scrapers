@@ -13,7 +13,7 @@ from city_scrapers.spider import Spider
 
 class ChiCityCollegeSpider(Spider):
     name = 'chi_city_college'
-    long_name = 'City Colleges of Chicago Board of Trustees'
+    agency_name = 'City Colleges of Chicago Board of Trustees'
     allowed_domains = ['www.ccc.edu']
 
     start_urls = ['http://www.ccc.edu/events/Pages/default.aspx?dept=Office%20of%20the%20Board%20of%20Trustees']

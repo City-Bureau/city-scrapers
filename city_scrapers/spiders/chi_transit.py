@@ -13,7 +13,7 @@ from city_scrapers.spider import Spider
 
 class ChiTransitSpider(Spider):
     name = 'chi_transit'
-    agency_id = 'Chicago Transit Authority'
+    agency_name = 'Chicago Transit Authority'
     timezone = 'America/Chicago'
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'

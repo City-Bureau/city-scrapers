@@ -18,10 +18,8 @@ from city_scrapers.spider import Spider
 
 class CookCountySpider(Spider):
     name = 'cook_county'
-    agency_id = 'Cook County Government'
+    agency_name = 'Cook County Government'
     timezone = 'America/Chicago'
-
-    long_name = 'Cook County Government'
     allowed_domains = ['www.cookcountyil.gov']
     url = 'https://www.cookcountyil.gov/calendar'
     # filter out non-governing events with query

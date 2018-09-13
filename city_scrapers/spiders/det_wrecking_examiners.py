@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class DetWreckingExaminersSpider(Spider):
     name = 'det_wrecking_examiners'
-    agency_id = 'Detroit Wrecking Contractors Board of Examiners'
+    agency_name = 'Detroit Wrecking Contractors Board of Examiners'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
     start_urls = ['http://www.detroitmi.gov/Government/Boards/Board-of-Wrecking-Contractors-Meetings']

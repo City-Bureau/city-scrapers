@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetRegionalTransitAuthoritySpider(Spider):
     name = 'det_regional_transit_authority'
-    agency_id = 'Regional Transit Authority of Southeast Michigan'
+    agency_name = 'Regional Transit Authority of Southeast Michigan'
     timezone = 'America/Detroit'
     allowed_domains = ['www.rtamichigan.org']
     start_urls = ['http://www.rtamichigan.org/board-and-committee-meetings/']

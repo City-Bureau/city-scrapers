@@ -11,7 +11,7 @@ from city_scrapers.spider import Spider
 
 class DetEntertainmentCommissionSpider(Spider):
     name = 'det_entertainment_commission'
-    agency_id = 'Detroit Entertainment Commission'
+    agency_name = 'Detroit Entertainment Commission'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitsentertainmentcommission.com']
     start_urls = ['https://www.detroitsentertainmentcommission.com/services']

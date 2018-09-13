@@ -13,7 +13,7 @@ from city_scrapers.spider import Spider
 
 class CookElectoralSpider(Spider):
     name = 'cook_electoral'
-    long_name = 'Cook County Electoral Board (Suburban Cook)'
+    agency_name = 'Cook County Electoral Board (Suburban Cook)'
     allowed_domains = ['aba.cookcountyclerk.com']
     start_urls = ['https://aba.cookcountyclerk.com/boardmeetingsearch.aspx']
     download_delay = 1.5

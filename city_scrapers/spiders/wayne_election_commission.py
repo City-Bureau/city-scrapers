@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class WayneElectionCommissionSpider(Spider):
     name = 'wayne_election_commission'
-    agency_id = 'Wayne County Election Commission'
+    agency_name = 'Wayne County Election Commission'
     timezone = 'America/Detroit'
     allowed_domains = ['www.waynecounty.com']
     start_urls = [

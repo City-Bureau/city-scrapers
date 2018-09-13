@@ -62,7 +62,7 @@ class CsvPipeline(object):
         new_item['location_address'] = get_key(new_item, 'location.address')
         new_item['source_url'] = new_item.get('sources', [{'url': ''}])[0].get('url', '')
         new_item['source_note'] = new_item.get('sources', [{'note': ''}])[0].get('note', '')
-        new_item['agency_name'] = spider.long_name
+        new_item['agency_name'] = spider.agency_name
         new_item['scraped_time'] = datetime.datetime.strftime(datetime.datetime.strptime(self.stamp, '%Y%m%d_%H%M'), '%Y-%m-%d %H:%M')
         new_item = {k: self._format_values(k, v) for k, v in new_item.items() if k in self.exporter.fields_to_export}
 

@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class NextMichiganDevelopmentCorporationSpider(Spider):
     name = 'next_michigan_development_corporation'
-    agency_id = (
+    agency_name = (
         'Detroit Next Michigan Development Corporation Board of Directors'
     )
     timezone = 'America/Chicago'

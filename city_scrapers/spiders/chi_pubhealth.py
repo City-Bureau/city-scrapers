@@ -14,7 +14,7 @@ from city_scrapers.spider import Spider
 
 class ChiPubHealthSpider(Spider):
     name = 'chi_pubhealth'
-    agency_id = 'Chicago Department of Public Health Board of Directors'
+    agency_name = 'Chicago Department of Public Health Board of Directors'
     allowed_domains = ['www.cityofchicago.org']
     timezone = 'America/Chicago'
 

@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class CookWaterSpider(Spider):
     name = 'cook_water'
-    agency_id = (
+    agency_name = (
         'Metropolitan Water Reclamation District of Greater Chicago '
         'Board of Commissioners'
     )

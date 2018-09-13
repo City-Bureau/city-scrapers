@@ -11,7 +11,7 @@ from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
 
 class WayneFullCommissionSpider(WayneCommissionMixin, Spider):
     name = 'wayne_full_commission'
-    agency_id = 'Wayne County Full Commission'
+    agency_name = 'Wayne County Full Commission'
     start_urls = ['https://www.waynecounty.com/elected/commission/full-commission.aspx']
     meeting_name = 'Full Commission'
 

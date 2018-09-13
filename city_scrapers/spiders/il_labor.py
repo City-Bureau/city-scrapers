@@ -13,7 +13,7 @@ from city_scrapers.spider import Spider
 
 class IlLaborSpider(Spider):
     name = 'il_labor'
-    long_name = 'Illinois Labor Relations Board'
+    agency_name = 'Illinois Labor Relations Board'
     allowed_domains = ['www2.illinois.gov']
     start_urls = ['https://www2.illinois.gov/ilrb/meetings/Pages/default.aspx']
     event_timezone = 'America/Chicago'

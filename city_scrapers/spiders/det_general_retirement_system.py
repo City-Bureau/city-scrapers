@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class DetGeneralRetirementSystemSpider(Spider):
     name = 'det_general_retirement_system'
-    agency_id = 'Detroit General Retirement System Board of Trustees'
+    agency_name = 'Detroit General Retirement System Board of Trustees'
     timezone = 'America/Detroit'
     allowed_domains = ['www.rscd.org']
     start_urls = ['http://www.rscd.org/grsd/Resources/Meetings']

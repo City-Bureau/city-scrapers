@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetCityCouncilSpider(Spider):
     name = 'det_city_council'
-    agency_id = 'Detroit City Council'
+    agency_name = 'Detroit City Council'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
     start_urls = ['http://www.detroitmi.gov/Government/City-Council/City-Council-Sessions']

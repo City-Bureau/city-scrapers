@@ -13,7 +13,7 @@ from city_scrapers.spider import Spider
 
 class DetCityPlanningSpider(Spider):
     name = 'det_city_planning'
-    agency_id = 'Detroit City Planning Commission'
+    agency_name = 'Detroit City Planning Commission'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
     base_url = 'https://www.detroitmi.gov/'

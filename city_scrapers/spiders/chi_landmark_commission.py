@@ -11,7 +11,7 @@ from city_scrapers.spider import Spider
 
 class ChiLandmarkCommissionSpider(Spider):
     name = 'chi_landmark_commission'
-    agency_id = (
+    agency_name = (
         'Chicago Department of Planning and Development '
         'Commission on Chicago Landmarks'
     )

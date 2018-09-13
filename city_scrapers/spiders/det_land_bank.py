@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class DetLandBankSpider(Spider):
     name = 'det_land_bank'
-    agency_id = 'Detroit Land Bank Authority'
+    agency_name = 'Detroit Land Bank Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['buildingdetroit.org']
     start_urls = ['https://buildingdetroit.org/events/meetings']

@@ -7,7 +7,7 @@ from city_scrapers.spider import Spider
 
 class ChiSchoolsSpider(Spider):
     name = 'chi_schools'
-    agency_id = 'Chicago Public Schools Board of Education'
+    agency_name = 'Chicago Public Schools Board of Education'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cpsboe.org']
     start_urls = ['http://www.cpsboe.org/meetings/planning-calendar']

@@ -23,7 +23,7 @@ class CookLandbankSpider(Spider):
     Yields dict for dates with events.
     """
     name = 'cook_landbank'
-    agency_id = 'Cook County Land Bank Authority'
+    agency_name = 'Cook County Land Bank Authority'
     timezone = 'America/Chicago'
 
     allowed_domains = ['www.cookcountylandbank.org']

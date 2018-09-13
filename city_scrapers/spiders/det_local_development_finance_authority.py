@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetLocalDevelopmentFinanceAuthoritySpider(Spider):
     name = 'det_local_development_finance_authority'
-    agency_id = (
+    agency_name = (
         'Detroit Local Development Finance Authority Board of Directors'
     )
     timezone = 'America/Detroit'

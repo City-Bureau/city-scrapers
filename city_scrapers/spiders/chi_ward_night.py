@@ -110,7 +110,7 @@ class Row(IntEnum):
 
 class ChiWardNightSpider(Spider):
     name = 'chi_ward_night'
-    agency_id = 'Chicago City Council Aldermanic Ward Nights'
+    agency_name = 'Chicago City Council Aldermanic Ward Nights'
     timezone = 'America/Chicago'
 
     allowed_domains = ['sheets.googleapis.com/v4/']

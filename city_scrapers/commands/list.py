@@ -8,5 +8,5 @@ class Command(ExistingListCommand):
             if hasattr(cls, 'long_name'):
                 agency_name = cls.long_name
             else:
-                agency_name = cls.agency_id
+                agency_name = cls.agency_name
             print('{0: <6} |  {1}'.format(s, agency_name))

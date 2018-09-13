@@ -13,7 +13,7 @@ from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
 
 class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
     name = 'wayne_building_authority'
-    agency_id = 'Wayne County Government Building Authority'
+    agency_name = 'Wayne County Government Building Authority'
     start_urls = ['https://www.waynecounty.com/boards/buildingauthority/meetings.aspx']
     meeting_name = 'Wayne County Building Authority'
 

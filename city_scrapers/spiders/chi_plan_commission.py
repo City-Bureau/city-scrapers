@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class ChiPlanCommissionSpider(Spider):
     name = 'chi_plan_commission'
-    agency_id = (
+    agency_name = (
         'Chicago Department of Planning and Development '
         'Chicago Plan Commission'
     )

@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetGreatLakesWaterAuthoritySpider(Spider):
     name = 'det_great_lakes_water_authority'
-    agency_id = 'Detroit Great Lakes Water Authority'
+    agency_name = 'Detroit Great Lakes Water Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['www.glwater.org']
     start_urls = ['http://www.glwater.org/events/']

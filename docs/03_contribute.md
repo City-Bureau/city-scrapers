@@ -120,7 +120,7 @@ class Chi_housingSpider(scrapy.Spider):
     name = 'chi_housing'
     allowed_domains = ['thecha.org']
     start_urls = ['http://thecha.org']
-    agency_id = 'Chicago Housing Authority'
+    agency_name = 'Chicago Housing Authority'
 
     def parse(self, response):
         """

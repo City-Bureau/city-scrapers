@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetBrownfieldRedevelopmentAuthoritySpider(Spider):
     name = 'det_brownfield_redevelopment_authority'
-    agency_id = 'Detroit Brownfield Redevelopment Authority'
+    agency_name = 'Detroit Brownfield Redevelopment Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/dbra/']

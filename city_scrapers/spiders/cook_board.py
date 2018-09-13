@@ -13,7 +13,7 @@ from city_scrapers.spider import Spider
 
 class CookBoardSpider(Spider):
     name = 'cook_board'
-    agency_id = 'Cook County Government Board of Commissioners'
+    agency_name = 'Cook County Government Board of Commissioners'
     timezone = 'America/Chicago'
     allowed_domains = ['cook-county.legistar.com']
     start_urls = ['https://www.cook-county.legistar.com']

@@ -11,7 +11,7 @@ from city_scrapers.spider import Spider
 
 class DetCharterSchoolBoardsSpider(Spider):
     name = 'det_charter_school_boards'
-    agency_id = 'Detroit Public Schools Charter Schools Boards'
+    agency_name = 'Detroit Public Schools Charter Schools Boards'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/admin/charter_schools/boards/']

@@ -13,7 +13,7 @@ from legistar.events import LegistarEventsScraper
 
 class DetWaterSewageDepartmentSpider(Spider):
     name = 'det_water_sewage_department'
-    agency_id = (
+    agency_name = (
         'Detroit Water and Sewage Department Board of Commissioners'
     )
     timezone = 'America/Detroit'

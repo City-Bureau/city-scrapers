@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
     name = 'det_eight_mile_woodward_corridor_improvement_authority'
-    agency_id = (
+    agency_name = (
         'Detroit Eight Mile Woodward Corridor Improvement Authority '
         'Board of Directors'
     )

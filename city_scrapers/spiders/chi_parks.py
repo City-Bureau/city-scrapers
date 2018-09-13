@@ -15,7 +15,7 @@ from city_scrapers.spider import Spider
 
 class ChiParksSpider(Spider):
     name = 'chi_parks'
-    agency_id = 'Chicago Park District Board of Commissioners'
+    agency_name = 'Chicago Park District Board of Commissioners'
     START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = [START_URL]

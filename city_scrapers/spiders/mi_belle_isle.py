@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class MiBelleIsleSpider(Spider):
     name = 'mi_belle_isle'
-    agency_id = 'Michigan Belle Isle Advisory Committee'
+    agency_name = 'Michigan Belle Isle Advisory Committee'
     timezone = 'America/Detroit'
     allowed_domains = ['www.michigan.gov']
     start_urls = [

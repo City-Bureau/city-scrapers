@@ -12,10 +12,8 @@ from city_scrapers.spider import Spider
 
 class IlPubhealthSpider(Spider):
     name = 'il_pubhealth'
-    agency_id = 'Illinois Department of Public Health'
+    agency_name = 'Illinois Department of Public Health'
     timezone = 'America/Chicago'
-
-    long_name = 'Illinois Department of Public Health'
     allowed_domains = ['www.dph.illinois.gov']
     start_urls = ['http://www.dph.illinois.gov/events']
     domain_root = 'http://www.dph.illinois.gov'

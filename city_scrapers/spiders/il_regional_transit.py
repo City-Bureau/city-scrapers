@@ -14,7 +14,7 @@ from city_scrapers.spider import Spider
 # website via an iframe from a different domain.
 class IlRegionalTransitSpider(Spider):
     name = 'il_regional_transit'
-    agency_id = 'Regional Transportation Authority'
+    agency_name = 'Regional Transportation Authority'
     timezone = 'America/Chicago'
 
     allowed_domains = ['www.rtachicago.org', 'rtachicago.granicus.com']

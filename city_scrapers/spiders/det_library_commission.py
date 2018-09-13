@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class DetLibraryCommissionSpider(Spider):
     name = 'det_library_commission'
-    agency_id = 'Detroit Public Library Library Commissioners'
+    agency_name = 'Detroit Public Library Library Commissioners'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitpubliclibrary.org']
     start_urls = ['https://detroitpubliclibrary.org/about/commission']

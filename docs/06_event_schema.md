@@ -68,6 +68,6 @@ In addition, each spider records the following data as attributes:
 ```python
 class ChiAnimalSpider(Spider):
     name = 'chi_animal'                              # name of spider in lowercase
-    agency_id = 'Animal Care and Control Commission' # name of agency
+    agency_name = 'Animal Care and Control Commission' # name of agency
     timezone = 'America/Chicago'                     # timezone of the events in tzinfo format
 ```

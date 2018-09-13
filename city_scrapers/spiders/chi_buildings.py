@@ -6,7 +6,6 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import re
 import pytz
 import json
-import unicodedata
 from datetime import datetime
 
 import scrapy
@@ -17,7 +16,7 @@ from city_scrapers.spider import Spider
 
 class ChiBuildingsSpider(Spider):
     name = 'chi_buildings'
-    long_name = 'Public Building Commission of Chicago'
+    agency_name = 'Public Building Commission of Chicago'
     allowed_domains = ['www.pbcchicago.com']
     base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     calendar_date = datetime.now()
