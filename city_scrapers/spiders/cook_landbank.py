@@ -107,6 +107,9 @@ class CookLandbankSpider(Spider):
         item = scrapy.Selector(text=data['content'], type="html")
 
         if not item.css('div.eventon_list_event p.no_events'):
+            start_dict = self._parse_start(item)
+            if start_dict is None:
+                yield
             data = {
                 '_type': 'event',
                 'id': self._parse_id(item),
@@ -116,11 +119,11 @@ class CookLandbankSpider(Spider):
                 'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'timezone': 'America/Chicago',
-                'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item),
                 'documents': self._parse_documents(item),
             }
+            data['status'] = self._generate_status(data, '')
             data['classification'] = self._generate_classification(
                 data['name']
             )
@@ -149,20 +152,6 @@ class CookLandbankSpider(Spider):
         ).extract_first()
         return event_id
 
-    def _parse_status(self, item):
-        """
-        Checks date. Returns 'passed' if before today. Else 'tentative.'
-        No other indicator available.
-        """
-        start_date = item.css(
-            '[itemprop=\'startDate\']::attr(datetime)'
-        ).extract_first()
-        if dt.datetime.today() > dt.datetime.strptime(start_date, '%Y-%m-%d'):
-            status = 'passed'
-        else:
-            status = 'tentative'
-        return status
-
     def _parse_street_address(self, item):
         street_address = item.css(
             'item [itemprop=\'streetAddress\']::text'
@@ -178,10 +167,14 @@ class CookLandbankSpider(Spider):
         location_detail = item.css(
             'span[class=\'evcal_desc evo_info \']::attr(data-location_name)'
         ).extract_first()
+        if location_detail is not None:
+            address = f'{location_detail}, {street_address}'
+        else:
+            address = street_address
         return {
             'url': 'http://www.cookcountylandbank.org/',
             'name': None,
-            'address': location_detail + ", " + street_address,
+            'address': address,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
@@ -221,6 +214,8 @@ class CookLandbankSpider(Spider):
         start_time = item.css(
             'em.evo_time span[class=\'start\']::text'
         ).extract_first()
+        if start_date is None:
+            return None
         start_date_time = dt.datetime.strptime(
             f'{start_date} {start_time or "12:00 pm"}', '%Y-%m-%d %I:%M %p'
         )
@@ -239,8 +234,11 @@ class CookLandbankSpider(Spider):
         end_date_str = item.css(
             '[itemprop=\'endDate\']::attr(datetime)'
         ).extract_first()
+        end_date = None
+        if end_date_str is not None:
+            end_date = dt.datetime.strptime(end_date_str, '%Y-%m-%d').date()
         return {
-            'date': dt.datetime.strptime(end_date_str, '%Y-%m-%d').date(),
+            'date': end_date,
             'time': None,
             'note': ''
         }
