@@ -24,6 +24,8 @@ class IlRegionalTransitSpider(Spider):
     def parse_iframe(self, response):
         for item in response.css('.committee'):
             start = self._parse_start(item)
+            if start is None:
+                continue
             name = self._parse_name(item)
             data = {
                 '_type': 'event',
@@ -39,13 +41,15 @@ class IlRegionalTransitSpider(Spider):
             }
             data['id'] = self._generate_id(data)
             data['status'] = self._generate_status(data, '')
-            data['classification'] = self._parse_classification(data.get('name', ''))
+            data['classification'] = self._parse_classification(
+                data.get('name', NOT_CLASSIFIED)
+            )
             yield data
 
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
+        event standard http://docs.opencivicdata.org/en/latest/data/event.html
         """
         url = response.css('iframe::attr(src)').extract_first()
         desc_xpath = '//*[text()[contains(.,"The RTA Board")]]/text()'
@@ -71,8 +75,8 @@ class IlRegionalTransitSpider(Spider):
     @staticmethod
     def _parse_location():
         """
-        The location is hard coded based on the value shown on the meetings page. It
-        is not expected to change often, so this is probably OK.
+        The location is hard coded based on the value shown on the meetings
+        page. It is not expected to change often, so this is probably OK.
         """
         return {
             'name': 'RTA Administrative Offices',
@@ -94,7 +98,11 @@ class IlRegionalTransitSpider(Spider):
         """
         title = item.css('.committee::text').extract_first()
         m = re.search('(\d{4})-(\d{1,2})-(\d{1,2})', title)
-        naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
+        if m is None:
+            return None
+        naive_dt = datetime(
+            int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30
+        )
         return {
             'date': naive_dt.date(),
             'time': naive_dt.time(),

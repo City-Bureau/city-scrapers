@@ -2,7 +2,6 @@
 from dateutil.parser import parse
 import re
 from urllib.parse import urljoin
-import scrapy
 
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
@@ -13,7 +12,9 @@ class WayneElectionCommissionSpider(Spider):
     agency_id = 'Wayne County Election Commission'
     timezone = 'America/Detroit'
     allowed_domains = ['www.waynecounty.com']
-    start_urls = ['https://www.waynecounty.com/elected/clerk/election-commission.aspx']
+    start_urls = [
+        'https://www.waynecounty.com/elected/clerk/election-commission.aspx'
+    ]
 
     def parse(self, response):
         """
@@ -23,16 +24,17 @@ class WayneElectionCommissionSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        location = {'neighborhood': '',
-                    'name': 'Coleman A. Young Municipal Center, Conference Room 700A',
-                    'address': '2 Woodward Avenue, Detroit, MI 48226'}
-        meeting_name = 'Election Commission'
+        location = {
+            'neighborhood': '',
+            'name': 'Coleman A. Young Municipal Center, Conference Room 700A',
+            'address': '2 Woodward Avenue, Detroit, MI 48226'
+        }
 
         non_empty_rows_xpath = '//tbody/tr[child::td]'
         for item in response.xpath(non_empty_rows_xpath):
             data = {
                 '_type': 'event',
-                'name': meeting_name,
+                'name': 'Election Commission',
                 'event_description': '',
                 'classification': COMMISSION,
                 'start': self._parse_start(item),
@@ -54,7 +56,9 @@ class WayneElectionCommissionSpider(Spider):
         Parse start date and time.
         """
         note = 'Meeting time are given in the "Notice" document'
-        year_xpath = item.xpath('ancestor::table/thead//strong/text()').extract_first()
+        year_xpath = item.xpath(
+            'ancestor::table/thead//strong/text()'
+        ).extract_first()
         year_regex = re.compile(r'\d{4}')
         year_str = year_regex.findall(year_xpath)[0]
         month_day_str = item.xpath('td[1]//text()').extract_first()
@@ -69,7 +73,10 @@ class WayneElectionCommissionSpider(Spider):
         Parse or generate documents.
         """
         tds = item.xpath('td[position() >1]')
-        return [self._build_document(td, url) for td in tds if self._has_url(td)]
+        return [
+            self._build_document(td, url) for td in tds
+            if self._has_url(td)
+        ]
 
     @staticmethod
     def _has_url(td):

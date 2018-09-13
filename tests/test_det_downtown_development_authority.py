@@ -5,11 +5,18 @@ import scrapy
 from freezegun import freeze_time
 
 from tests.utils import file_response
-from city_scrapers.spiders.det_downtown_development_authority import DetDowntownDevelopmentAuthoritySpider
+from city_scrapers.constants import BOARD, CONFIRMED, PASSED
+from city_scrapers.spiders.det_downtown_development_authority import (
+    DetDowntownDevelopmentAuthoritySpider
+)
 
 # Shared properties between two different page / meeting types
 
-LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '500 Griswold, Suite 2200, Detroit'}
+LOCATION = {
+    'neighborhood': '',
+    'name': 'DEGC, Guardian Building',
+    'address': '500 Griswold, Suite 2200, Detroit',
+}
 
 NAME = 'Board of Directors'
 
@@ -18,7 +25,10 @@ test_response = file_response('files/det_downtown_development_authority.html',
 freezer = freeze_time('2018-07-25 12:00:01')
 spider = DetDowntownDevelopmentAuthoritySpider()
 freezer.start()
-parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
+parsed_items = [
+    item for item in spider._next_meeting(test_response)
+    if isinstance(item, dict)
+]
 freezer.stop()
 
 
@@ -60,11 +70,14 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_downtown_development_authority/201807251500/x/board_of_directors'
+    assert parsed_items[0]['id'] == (
+        'det_downtown_development_authority/'
+        '201807251500/x/board_of_directors'
+    )
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'confirmed'
+    assert parsed_items[0]['status'] == CONFIRMED
 
 
 def test_location():
@@ -79,8 +92,11 @@ def test_sources():
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-        'url': 'http://www.degc.org/wp-content/uploads/07-25-18-DDA-Board-Meeting-Agenda-Only.pdf',
-        'note': 'agenda'
+        'url': (
+            'http://www.degc.org/wp-content/uploads'
+            '/07-25-18-DDA-Board-Meeting-Agenda-Only.pdf'
+        ),
+        'note': 'Agenda'
     }]
 
 
@@ -91,19 +107,27 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board'
+    assert item['classification'] == BOARD
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
+def test_type(item):
     assert item['_type'] == 'event'
 
 
-# previous meetings e.g. http://www.degc.org/public-authorities/dda/dda-fy-2016-2017-meetings/
-test_prev_response = file_response('files/det_downtown_development_authority_prev.html',
-                                   'http://www.degc.org/public-authorities/dda/dda-fy-2016-2017-meetings/')
-parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)]
-parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
+# previous meetings e.g.
+# http://www.degc.org/public-authorities/dda/dda-fy-2016-2017-meetings/
+test_prev_response = file_response(
+    'files/det_downtown_development_authority_prev.html',
+    'http://www.degc.org/public-authorities/dda/dda-fy-2016-2017-meetings/'
+)
+parsed_prev_items = [
+    item for item in spider._parse_prev_meetings(test_prev_response)
+    if isinstance(item, dict)
+]
+parsed_prev_items = sorted(
+    parsed_prev_items, key=lambda x: x['start']['date'], reverse=True
+)
 
 
 def test_request_count():
@@ -142,12 +166,14 @@ def test_prev_end():
 
 
 def test_prev_id():
-    assert parsed_prev_items[0]['id'] == \
-           'det_downtown_development_authority/201706280000/x/board_of_directors'
+    assert parsed_prev_items[0]['id'] == (
+        'det_downtown_development_authority/201706280000/'
+        'x/board_of_directors'
+    )
 
 
 def test_prev_status():
-    assert parsed_prev_items[0]['status'] == 'passed'
+    assert parsed_prev_items[0]['status'] == PASSED
 
 
 def test_prev_location():
@@ -156,41 +182,59 @@ def test_prev_location():
 
 def test_prev_sources():
     assert parsed_prev_items[0]['sources'] == [
-        {'url': 'http://www.degc.org/public-authorities/dda/dda-fy-2016-2017-meetings/', 'note': ''}
+        {
+            'url': (
+                'http://www.degc.org/public-authorities/'
+                'dda/dda-fy-2016-2017-meetings/'
+            ),
+            'note': ''
+        }
     ]
 
 
 def test_prev_documents():
     assert parsed_prev_items[0]['documents'] == [
         {
-            'url': 'http://www.degc.org/wp-content/uploads/2017-06-28-dda-special-board-meeting-materials.pdf',
-            'note': 'meeting materials',
+            'url': (
+                'http://www.degc.org/wp-content/uploads'
+                '/2017-06-28-dda-special-board-meeting-materials.pdf'
+            ),
+            'note': 'Meeting Materials',
         },
         {
-            'url': 'http://www.degc.org/wp-content/uploads/2017-06-28-Attachment-D.pdf',
-            'note': 'attachment d',
+            'url': (
+                'http://www.degc.org/wp-content/uploads'
+                '/2017-06-28-Attachment-D.pdf'
+            ),
+            'note': 'Attachment D',
         },
         {
-            'url': 'http://www.degc.org/wp-content/uploads/2017-06-28-Attachment-K.pdf',
-            'note': 'attachment k',
+            'url': (
+                'http://www.degc.org/wp-content/uploads'
+                '/2017-06-28-Attachment-K.pdf'
+            ),
+            'note': 'Attachment k',
         },
         {
-            'url': 'http://www.degc.org/wp-content/uploads/2017-06-28-DDA-Board-Meeting-Minutes.pdf',
-            'note': 'minutes',
+            'url': (
+                'http://www.degc.org/wp-content/uploads'
+                '/2017-06-28-DDA-Board-Meeting-Minutes.pdf'
+            ),
+            'note': 'Minutes',
         },
     ]
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_all_day(item):
+@pytest.mark.parametrize('item', parsed_prev_items)
+def test_prev_all_day(item):
     assert item['all_day'] is False
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_classification(item):
-    assert item['classification'] is 'Board'
+@pytest.mark.parametrize('item', parsed_prev_items)
+def test_prev_classification(item):
+    assert item['classification'] is BOARD
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
+@pytest.mark.parametrize('item', parsed_prev_items)
+def test_prev_type(item):
     assert item['_type'] == 'event'

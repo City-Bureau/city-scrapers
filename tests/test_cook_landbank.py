@@ -17,7 +17,13 @@ def test_name():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    assert item['event_description'] == ("The Cook County Land Bank Authority Finance Committee will meet on Wednesday, September 13th, 2017 at the hour of 10:00 AM in the Cook County Administration Building located at 69 W. Washington St., 22nd Floor, Conference Room ‘A’, Chicago, Illinois, to consider the following:")
+    assert item['event_description'] == (
+        'The Cook County Land Bank Authority Finance Committee '
+        'will meet on Wednesday, September 13th, 2017 at the hour '
+        'of 10:00 AM in the Cook County Administration Building '
+        'located at 69 W. Washington St., 22nd Floor, Conference Room '
+        '‘A’, Chicago, Illinois, to consider the following:'
+    )
 
 
 def test_start():
@@ -31,7 +37,7 @@ def test_start():
 
 def test_end():
     EXPECTED_END = {
-        'date': None,
+        'date': date(2017, 9, 13),
         'time': None,
         'note': ''
     }
@@ -41,10 +47,6 @@ def test_end():
 @pytest.mark.parametrize('item', parsed_items)
 def test_timezone(item):
     assert item['timezone'] == 'America/Chicago'
-
-
-# def test_id():
-#    assert parsed_items[0]['id'] == 'cook_landbank/201709131000/3381/cclba_finance_committee_meeting'
 
 
 def test_all_day():
@@ -63,7 +65,10 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'url': 'http://www.cookcountylandbank.org/',
         'name': None,
-        'address': "Cook County Administration Building, 69 W. Washington St., 22nd Floor, Conference Room 'A', Chicago, IL 60602",
+        'address': (
+            "Cook County Administration Building, 69 W. Washington St., "
+            "22nd Floor, Conference Room 'A', Chicago, IL 60602"
+        ),
         'coordinates': {
             'latitude': None,
             'longitude': None,
@@ -73,13 +78,20 @@ def test_location():
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
-        'url': 'http://www.cookcountylandbank.org/events/cclba-finance-committee-meeting-09132017/',
+        'url': (
+            'http://www.cookcountylandbank.org/events/'
+            'cclba-finance-committee-meeting-09132017/'
+        ),
         'note': "Event Page",
     }]
 
+
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-        'url': 'http://www.cookcountylandbank.org/wp-content/uploads/2017/09/CCLBA.Finance.Committee_09.13.2017.pdf',
+        'url': (
+            'http://www.cookcountylandbank.org/wp-content/'
+            'uploads/2017/09/CCLBA.Finance.Committee_09.13.2017.pdf'
+        ),
         'note': 'agenda'
     }]
 
