@@ -5,12 +5,13 @@ from datetime import timedelta
 
 import dateutil.parser
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
-class Chi_boardofethicsSpider(Spider):
+class ChiBoardOfEthicsSpider(Spider):
     name = 'chi_boardofethics'
-    long_name = 'Chicago Board of Ethics'
+    agency_name = 'Chicago Board of Ethics Board of Directors'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/ethics/supp_info/minutes.html']
 
@@ -37,9 +38,9 @@ class Chi_boardofethicsSpider(Spider):
         for meeting_date in meeting_dates:
             data = {
                 '_type': 'event',
-                'name': 'Chicago Board of Ethics',
+                'name': 'Board of Ethics',
                 'event_description': description,
-                'classification': 'Board Meeting',
+                'classification': BOARD,
                 'start': self._parse_start(meeting_date, start_time),
                 'end': {},
                 'status': 'tentative',

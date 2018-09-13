@@ -6,12 +6,13 @@ from datetime import time
 import scrapy
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class DetPoliceDepartmentSpider(Spider):
     name = 'det_police_department'
-    agency_id = 'Police Department'
+    agency_name = 'Detroit Police Department Board of Commissioners'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
     start_urls = ['http://www.detroitmi.gov/Government/Detroit-Police-Commissioners-Meetings']
@@ -59,7 +60,7 @@ class DetPoliceDepartmentSpider(Spider):
                 'all_day': False,
                 'sources': [{'url': post_request_response.url, 'note': ''}],
                 'documents': [],
-                'classification': 'Board'
+                'classification': BOARD
             }
             data['location'] = self._parse_location(data['start']['time'])
             data['id'] = self._generate_id(data)

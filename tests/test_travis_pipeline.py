@@ -17,12 +17,14 @@ def _str_to_time(time_string):
     except:
         return None
 
+
 def load_valid_item():
     fixtures = json.loads(read_test_file_content('files/travis_fixture.json'))
     valid_item = fixtures[0]
     valid_item['start']['date'] = _str_to_date(valid_item['start']['date'])
     valid_item['start']['time'] = _str_to_time(valid_item['start']['time'])
     return valid_item
+
 
 valid_item = load_valid_item()
 pipeline = TravisValidationPipeline()

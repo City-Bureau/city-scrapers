@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
-class Chi_schoolsSpider(Spider):
+class ChiSchoolsSpider(Spider):
     name = 'chi_schools'
-    agency_id = 'Chicago Public Schools'
+    agency_name = 'Chicago Public Schools Board of Education'
     timezone = 'America/Chicago'
-    long_name = 'Chicago Public Schools Board of Education'
     allowed_domains = ['www.cpsboe.org']
     start_urls = ['http://www.cpsboe.org/meetings/planning-calendar']
     domain_url = 'http://www.cpsboe.org'
@@ -25,7 +25,7 @@ class Chi_schoolsSpider(Spider):
                     'name': 'Monthly Board Meeting',
                     'event_description': event_description,
                     'all_day': self._parse_all_day(item),
-                    'classification': 'Board',
+                    'classification': BOARD,
                     'start': start,
                     'documents': documents,
                     'location': self._parse_location(item),
@@ -44,9 +44,6 @@ class Chi_schoolsSpider(Spider):
 
     def _remove_line_breaks(self, collection):
         return [x.strip() for x in collection if x.strip() != '']
-
-    def _parse_classification(self, item):
-        return 'Board'
 
     def _parse_start_time(self, item):
         raw_strings = item.css('::text').extract()

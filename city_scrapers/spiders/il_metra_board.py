@@ -2,11 +2,15 @@
 from datetime import datetime
 import re
 
+from city_scrapers.constants import (
+    ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
+)
 from city_scrapers.spider import Spider
 
-class Il_metra_boardSpider(Spider):
+
+class IlMetraBoardSpider(Spider):
     name = 'il_metra_board'
-    agency_id = 'Metra'
+    agency_name = 'Illinois Metra'
     timezone = 'America/Chicago'
     allowed_domains = ['metrarail.com']
     start_urls = ['https://metrarr.granicus.com/ViewPublisher.php?view_id=5']
@@ -58,13 +62,13 @@ class Il_metra_boardSpider(Spider):
         full_name = item.css('td[headers=Name]::text').extract_first()
 
         if "Metra" in full_name and "Board Meeting" in full_name:
-            return "Board Meeting"
+            return BOARD
         elif "Citizens Advisory" in full_name:
-            return "Citizens Advisory"
+            return ADVISORY_COMMITTEE
         elif "Committee Meeting" in full_name:
-            return "Committee Meeting"
+            return COMMITTEE
         else:
-            return ''
+            return NOT_CLASSIFIED
 
     def _parse_start(self, item):
         """

@@ -3,7 +3,8 @@ import json
 from datetime import date, time
 
 from freezegun import freeze_time
-from city_scrapers.spiders.chi_parks import Chi_parksSpider
+from city_scrapers.constants import BOARD
+from city_scrapers.spiders.chi_parks import ChiParksSpider
 
 freezer = freeze_time('2018-01-01 12:00:01')
 freezer.start()
@@ -11,7 +12,7 @@ test_response = []
 with open('tests/files/chi_parks.txt') as f:
     for line in f:
         test_response.append(json.loads(line))
-spider = Chi_parksSpider()
+spider = ChiParksSpider()
 parsed_items = [item for item in spider._parse_events(test_response)]
 freezer.stop()
 
@@ -43,7 +44,9 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_parks/201712131530/x/board_of_commissioners'
+    assert parsed_items[0]['id'] == (
+        'chi_parks/201712131530/x/board_of_commissioners'
+    )
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -52,7 +55,7 @@ def test_all_day(item):
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Board of Commissioners'
+    assert parsed_items[0]['classification'] == BOARD
 
 
 def test_status():
@@ -61,7 +64,11 @@ def test_status():
 
 def test_location():
     EXPECTED_LOCATION = {
-        'address': 'Board Room ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 8TH FLOOR BOARD ROOM',
+        'address': (
+            'Board Room ADMINISTRATION BUILDING AT 541 '
+            'NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 '
+            '8TH FLOOR BOARD ROOM'
+        ),
         'name': '',
         'neighborhood': ''
     }
@@ -71,11 +78,19 @@ def test_location():
 def test_documents():
     EXPECTED_DOCUMENTS = [
         {
-            'url': 'https://chicagoparkdistrict.legistar.com/MeetingDetail.aspx?ID=521450&GUID=4D888BE3-BD28-4F58-AEE3-76627090F26D&Options=info&Search=',
+            'url': (
+                'https://chicagoparkdistrict.legistar.com/'
+                'MeetingDetail.aspx?ID=521450&GUID=4D888BE3-BD28-'
+                '4F58-AEE3-76627090F26D&Options=info&Search='
+            ),
             'note': 'Meeting Details'
         },
         {
-            'url': 'https://chicagoparkdistrict.legistar.com/View.ashx?M=A&ID=521450&GUID=4D888BE3-BD28-4F58-AEE3-76627090F26D',
+            'url': (
+                'https://chicagoparkdistrict.legistar.com/'
+                'View.ashx?M=A&ID=521450&GUID=4D888BE3-BD28-'
+                '4F58-AEE3-76627090F26D'
+            ),
             'note': 'Agenda'
         }
     ]

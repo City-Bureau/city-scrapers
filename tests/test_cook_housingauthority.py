@@ -1,11 +1,11 @@
 # import pytest
 
-# from city_scrapers.spiders.cook_housingauthority import Cook_housingAuthoritySpider
+# from city_scrapers.spiders.cook_housingauthority import CookHousingAuthoritySpider
 # from tests.utils import file_response
 
 
 # # def test_gen_requests():
-# #     spider = Cook_housingAuthoritySpider()
+# #     spider = CookHousingAuthoritySpider()
 # #     test_response = file_response('files/hacc_feed.txt', 'http://thehacc.org/events/feed/')
 # #     requests = list(spider._gen_requests(test_response))
 # #     assert requests == [
@@ -20,7 +20,7 @@
 
 # # @pytest.fixture(scope='module')
 # # def item():
-# #     spider = Cook_housingAuthoritySpider()
+# #     spider = CookHousingAuthoritySpider()
 # #     test_response = file_response('files/hacc_event.json', 'http://thehacc.org/wp-json/tribe/events/v1/events/2644')
 # #     yield from spider._parse_event(test_response)
 

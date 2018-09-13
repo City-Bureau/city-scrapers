@@ -2,12 +2,13 @@
 import scrapy
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
 class DetGeneralRetirementSystemSpider(Spider):
     name = 'det_general_retirement_system'
-    agency_id = 'General Retirement System'
+    agency_name = 'Detroit General Retirement System Board of Trustees'
     timezone = 'America/Detroit'
     allowed_domains = ['www.rscd.org']
     start_urls = ['http://www.rscd.org/grsd/Resources/Meetings']
@@ -81,8 +82,8 @@ class DetGeneralRetirementSystemSpider(Spider):
     @staticmethod
     def _parse_classification(meeting_name):
         if 'Board' in meeting_name:
-            return 'Board'
-        return ''
+            return BOARD
+        return NOT_CLASSIFIED
 
     @staticmethod
     def _get_location(response):

@@ -7,12 +7,13 @@ import scrapy
 import re
 from datetime import date, time
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
-class Chi_cityCollegeSpider(Spider):
+class ChiCityCollegeSpider(Spider):
     name = 'chi_city_college'
-    long_name = 'City Colleges of Chicago'
+    agency_name = 'City Colleges of Chicago Board of Trustees'
     allowed_domains = ['www.ccc.edu']
 
     start_urls = ['http://www.ccc.edu/events/Pages/default.aspx?dept=Office%20of%20the%20Board%20of%20Trustees']
@@ -35,7 +36,7 @@ class Chi_cityCollegeSpider(Spider):
             '_type': 'event',
             'name': self._parse_name(response),
             'event_description': self._parse_description(response),
-            'classification': self._parse_classification(),
+            'classification': BOARD,
             'start': {
                 'date': date,
                 'time': start_time,
@@ -53,12 +54,6 @@ class Chi_cityCollegeSpider(Spider):
         }
         data['id'] = self._generate_id(data)
         return data
-
-    def _parse_classification(self):
-        """
-        Parse or generate classification (e.g. town hall).
-        """
-        return 'Not classified'
 
     def _parse_status(self):
         """

@@ -5,13 +5,14 @@ import unicodedata
 import scrapy
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class DetCharterSchoolBoardsSpider(Spider):
     name = 'det_charter_school_boards'
-    agency_id = 'Charter Schools Boards'
-    timezone = 'America/Chicago'
+    agency_name = 'Detroit Public Schools Charter Schools Boards'
+    timezone = 'America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/admin/charter_schools/boards/']
 
@@ -34,7 +35,7 @@ class DetCharterSchoolBoardsSpider(Spider):
                 '_type': 'event',
                 'name': self._parse_name_non_calendar(item),
                 'event_description': self._parse_description_non_calendar(item, i),
-                'classification': 'Board',
+                'classification': BOARD,
                 'start': start,
                 'end': end,
                 'all_day': False,
@@ -58,7 +59,7 @@ class DetCharterSchoolBoardsSpider(Spider):
                 '_type': 'event',
                 'name': item.xpath('text()').extract_first('').strip(),
                 'event_description': '',
-                'classification': 'Board',
+                'classification': BOARD,
                 'start': start,
                 'end': end,
                 'all_day': False,

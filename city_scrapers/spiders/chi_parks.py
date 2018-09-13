@@ -9,12 +9,13 @@ import urllib3
 from datetime import datetime, date, time, timedelta
 from legistar.events import LegistarEventsScraper
 
+from city_scrapers.constants import BOARD, FORUM
 from city_scrapers.spider import Spider
 
 
-class Chi_parksSpider(Spider):
+class ChiParksSpider(Spider):
     name = 'chi_parks'
-    agency_id = 'Chicago Park District'
+    agency_name = 'Chicago Park District Board of Commissioners'
     START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = [START_URL]
@@ -83,7 +84,9 @@ class Chi_parksSpider(Spider):
         """
         Differentiate board meetings from public hearings.
         """
-        return item['Name']
+        if 'hearing' in item['Name'].lower():
+            return FORUM
+        return BOARD
 
     def _parse_documents(self, item):
         """

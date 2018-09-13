@@ -5,14 +5,14 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
-from city_scrapers.spiders.wayne_health_human_services import Wayne_health_human_servicesSpider
+from city_scrapers.spiders.wayne_health_human_services import WayneHealthHumanServicesSpider
 
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
     'files/wayne_health_human_services.html', url='https://www.waynecounty.com/elected/commission/health-human-services.aspx')
-spider = Wayne_health_human_servicesSpider()
+spider = WayneHealthHumanServicesSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
@@ -36,7 +36,7 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Wayne County Committee on Health and Human Services'
+    assert item['name'] == 'Committee on Health and Human Services'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -87,7 +87,7 @@ def test_start():
     }
 
 def test_id():
-    assert parsed_items[0]['id'] == 'wayne_health_human_services/201801091330/x/wayne_county_committee_on_health_and_human_services'
+    assert parsed_items[0]['id'] == 'wayne_health_human_services/201801091330/x/committee_on_health_and_human_services'
 
 def test_status():
     assert parsed_items[0]['status'] == 'passed'

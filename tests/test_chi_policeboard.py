@@ -2,10 +2,10 @@ from datetime import date, time
 
 import pytest
 from tests.utils import file_response
-from city_scrapers.spiders.chi_policeboard import Chi_policeboardSpider
+from city_scrapers.spiders.chi_policeboard import ChiPoliceBoardSpider
 
 test_response = file_response('files/chi_policeboard_public_meetings.html', url='https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html')
-spider = Chi_policeboardSpider()
+spider = ChiPoliceBoardSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 

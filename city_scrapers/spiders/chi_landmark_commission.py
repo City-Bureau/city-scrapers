@@ -4,12 +4,17 @@ from datetime import time
 
 import dateutil.parser
 import scrapy
+
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
-class Chi_landmark_commissionSpider(Spider):
+class ChiLandmarkCommissionSpider(Spider):
     name = 'chi_landmark_commission'
-    agency_id = 'Department of Planning and Development'
+    agency_name = (
+        'Chicago Department of Planning and Development '
+        'Commission on Chicago Landmarks'
+    )
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html']
@@ -35,7 +40,7 @@ class Chi_landmark_commissionSpider(Spider):
                     '_type': 'event',
                     'name': "Commission on Chicago Landmarks",
                     'event_description': description,
-                    'classification': 'Commission',
+                    'classification': COMMISSION,
                     'start': self._parse_start(meeting, year),
                     # Based on meeting minutes, board meetings appear to be several hours
                     'all_day': False,

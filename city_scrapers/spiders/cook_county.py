@@ -10,15 +10,16 @@ import scrapy
 
 from datetime import datetime
 
+from city_scrapers.constants import (
+    ADVISORY_COMMITTEE, BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
+)
 from city_scrapers.spider import Spider
 
 
-class Cook_countySpider(Spider):
+class CookCountySpider(Spider):
     name = 'cook_county'
-    agency_id = 'Cook County Government '
+    agency_name = 'Cook County Government'
     timezone = 'America/Chicago'
-
-    long_name = 'Cook County Government'
     allowed_domains = ['www.cookcountyil.gov']
     url = 'https://www.cookcountyil.gov/calendar'
     # filter out non-governing events with query
@@ -82,14 +83,14 @@ class Cook_countySpider(Spider):
     def _parse_classification(name):
         name = name.upper()
         if re.search(r'A(C|(DVISORY)) (COMMITTEE|COUNCIL)', name):
-            return 'Advisory Committee'
+            return ADVISORY_COMMITTEE
         if 'BOARD' in name:
-            return 'Board'
+            return BOARD
         if 'COMMITTEE' in name:
-            return 'Committee'
+            return COMMITTEE
         if 'COMMISSION' in name:
-            return 'Commission'
-        return 'Not classified'
+            return COMMISSION
+        return NOT_CLASSIFIED
 
     def _parse_location(self, response):
         """

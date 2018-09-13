@@ -5,20 +5,32 @@ import scrapy
 from freezegun import freeze_time
 
 from tests.utils import file_response
-from city_scrapers.spiders.det_economic_development_corporation import DetEconomicDevelopmentCorporationSpider
+from city_scrapers.constants import BOARD, PASSED, TENTATIVE
+from city_scrapers.spiders.det_economic_development_corporation import (
+    DetEconomicDevelopmentCorporationSpider
+)
 
 # Shared properties between two different page / meeting types
 
-LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '500 Griswold, Suite 2200, Detroit'}
+LOCATION = {
+    'neighborhood': '',
+    'name': 'DEGC, Guardian Building',
+    'address': '500 Griswold, Suite 2200, Detroit',
+}
 
 NAME = 'Board of Directors'
 
-test_response = file_response('files/det_economic_development_corporation.html',
-                              'http://www.degc.org/public-authorities/edc/')
+test_response = file_response(
+    'files/det_economic_development_corporation.html',
+    'http://www.degc.org/public-authorities/edc/',
+)
 freezer = freeze_time('2018-07-27 12:00:01')
 spider = DetEconomicDevelopmentCorporationSpider()
 freezer.start()
-parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
+parsed_items = [
+    item for item in spider._next_meeting(test_response)
+    if isinstance(item, dict)
+]
 freezer.stop()
 
 
@@ -61,11 +73,14 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_economic_development_corporation/201808140830/x/board_of_directors'
+    assert parsed_items[0]['id'] == (
+        'det_economic_development_corporation/201808140830/'
+        'x/board_of_directors'
+    )
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'tentative'
+    assert parsed_items[0]['status'] == TENTATIVE
 
 
 def test_location():
@@ -89,7 +104,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board'
+    assert item['classification'] == BOARD
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -97,11 +112,19 @@ def test__type(item):
     assert item['_type'] == 'event'
 
 
-# # previous meetings e.g. http://www.degc.org/public-authorities/edc/fy-2017-2018-meetings/
-test_prev_response = file_response('files/det_economic_development_corporation_prev.html',
-                                   'http://www.degc.org/public-authorities/edc/fy-2017-2018-meetings/')
-parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)]
-parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
+# previous meetings e.g.
+# http://www.degc.org/public-authorities/edc/fy-2017-2018-meetings/
+test_prev_response = file_response(
+    'files/det_economic_development_corporation_prev.html',
+    'http://www.degc.org/public-authorities/edc/fy-2017-2018-meetings/',
+)
+parsed_prev_items = [
+    item for item in spider._parse_prev_meetings(test_prev_response)
+    if isinstance(item, dict)
+]
+parsed_prev_items = sorted(
+    parsed_prev_items, key=lambda x: x['start']['date'], reverse=True
+)
 
 
 def test_request_count():
@@ -141,12 +164,14 @@ def test_prev_end():
 
 
 def test_prev_id():
-    assert parsed_prev_items[0]['id'] \
-           == 'det_economic_development_corporation/201806260000/x/board_of_directors'
+    assert parsed_prev_items[0]['id'] == (
+        'det_economic_development_corporation/201806260000/'
+        'x/board_of_directors'
+    )
 
 
 def test_prev_status():
-    assert parsed_prev_items[0]['status'] == 'passed'
+    assert parsed_prev_items[0]['status'] == PASSED
 
 
 def test_prev_location():
@@ -155,33 +180,45 @@ def test_prev_location():
 
 def test_prev_sources():
     assert parsed_prev_items[0]['sources'] == [
-        {'url': 'http://www.degc.org/public-authorities/edc/fy-2017-2018-meetings/', 'note': ''}
+        {
+            'url': (
+                'http://www.degc.org/public-authorities/'
+                'edc/fy-2017-2018-meetings/'
+            ),
+            'note': ''
+        }
     ]
 
 
 def test_prev_documents():
     assert parsed_prev_items[0]['documents'] == [
         {
-            'url': 'http://www.degc.org/wp-content/uploads/06-26-18-EDC-Board-Meeting-Minutes.pdf',
-            'note': 'minutes',
+            'url': (
+                'http://www.degc.org/wp-content/uploads/'
+                '06-26-18-EDC-Board-Meeting-Minutes.pdf'
+            ),
+            'note': 'Minutes',
         },
         {
-            'url': 'http://www.degc.org/wp-content/uploads/06-26-18-EDC-Board-Meeting-Agenda-Only.pdf',
-            'note': 'agenda',
+            'url': (
+                'http://www.degc.org/wp-content/uploads/'
+                '06-26-18-EDC-Board-Meeting-Agenda-Only.pdf'
+            ),
+            'note': 'Agenda',
         },
     ]
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_all_day(item):
+@pytest.mark.parametrize('item', parsed_prev_items)
+def test_prev_all_day(item):
     assert item['all_day'] is False
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_classification(item):
-    assert item['classification'] is 'Board'
+@pytest.mark.parametrize('item', parsed_prev_items)
+def test_prev_classification(item):
+    assert item['classification'] == BOARD
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
+@pytest.mark.parametrize('item', parsed_prev_items)
+def test_prev_type(item):
     assert item['_type'] == 'event'

@@ -6,16 +6,17 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import re
 import pytz
 import json
-import unicodedata
 from datetime import datetime
 
 import scrapy
+
+from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
-class Chi_buildingsSpider(Spider):
+class ChiBuildingsSpider(Spider):
     name = 'chi_buildings'
-    long_name = 'Public Building Commission of Chicago'
+    agency_name = 'Public Building Commission of Chicago'
     allowed_domains = ['www.pbcchicago.com']
     base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     calendar_date = datetime.now()
@@ -44,7 +45,7 @@ class Chi_buildingsSpider(Spider):
                         'id': self._generate_id({'name': item['title']}),
                         'name': item['title'],
                         'description': self._parse_description(item),
-                        'classification': self._parse_classification(item),
+                        'classification': self._parse_classification(item.get('category')[0]),
                         'start': self._parse_time_dict(start_date),
                         'end': self._parse_time_dict(end_date),
                         'all_day': item['allDay'],
@@ -73,13 +74,17 @@ class Chi_buildingsSpider(Spider):
         item.update(response.meta.get('item', {}))
         return item
 
-    def _parse_classification(self, item):
+    def _parse_classification(self, meeting_type):
         """
         Parse or generate classification (e.g. town hall).
 
         PBCC has relatively helpful classifications in its WordPress categories.
         """
-        return ' '.join([w.capitalize() for w in item['category'][0].split('-')])
+        if 'committee' in meeting_type:
+            return COMMITTEE
+        elif 'board' in meeting_type:
+            return BOARD
+        return NOT_CLASSIFIED
 
     def _parse_status(self, item, start_time):
         """

@@ -4,12 +4,13 @@ from collections import defaultdict
 
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class DetEconomicDevelopmentCorporationSpider(Spider):
     name = 'det_economic_development_corporation'
-    agency_id = 'Economic Development Corporation'
+    agency_name = 'Detroit Economic Development Corporation Board of Directors'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/edc/']
@@ -26,14 +27,19 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
         yield from self._next_meeting(response)
 
     def _next_meeting(self, response):
-        next_meeting_xpath = '//p[contains(., "The next Regular Board meeting is")]//text()'
-        next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
+        next_meeting_xpath = (
+            '//p[contains(., "The next Regular Board meeting is")]//text()'
+        )
+        next_meeting_text = ' '.join(
+            response.xpath(next_meeting_xpath).extract()
+        )
         data = self._set_meeting_defaults(response)
         data['start'] = self._parse_start(next_meeting_text)
-        data['documents'] = []
-        data['status'] = self._generate_status(data, text='')
-        data['id'] = self._generate_id(data)
-        yield data
+        if data['start']['date']:
+            data['documents'] = []
+            data['status'] = self._generate_status(data, text='')
+            data['id'] = self._generate_id(data)
+            yield data
 
     def _prev_meetings(self, response):
         prev_meetings_xpath = '//a[contains(., "Agendas and Minutes")]'
@@ -44,11 +50,18 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
     def _parse_start(self, date_time_text):
         time_match = self._parse_time(date_time_text)
         date_match = self._parse_date(date_time_text)
+        empty_start = {'date': None, 'time': None, 'note': ''}
         try:
-            dt = parse(date_match.group(1) + ' ' + time_match.group(1), fuzzy=True)
-            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+            if date_match and time_match:
+                dt = parse(
+                    f'{date_match.group(1)} {time_match.group(1)}',
+                    fuzzy=True,
+                )
+                return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+            else:
+                return empty_start
         except ValueError:
-            return {'date': None, 'time': None, 'note': ''}
+            return empty_start
 
     def _parse_time(self, date_time_text):
         time_regex = re.compile(r'((1[012]|[1-9]):([0-5][0-9])\s?[ap].?m\.?)')
@@ -61,7 +74,9 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
         prev_meeting_docs = self._parse_prev_docs(response)
         for meeting_date in prev_meeting_docs:
             data = self._set_meeting_defaults(response)
-            data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
+            data['start'] = {
+                'date': meeting_date.date(), 'time': None, 'note': ''
+            }
             data['documents'] = prev_meeting_docs[meeting_date]
             data['status'] = self._generate_status(data, text='')
             data['id'] = self._generate_id(data)
@@ -85,10 +100,10 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
         desc = link_text.split(date)[-1]
         url = link.xpath("@href").extract_first('')
         if 'AGENDA' in desc.upper():
-            return {'url': url, 'note': 'agenda'}
+            return {'url': url, 'note': 'Agenda'}
         if 'MINUTES' in desc.upper():
-            return {'url': url, 'note': 'minutes'}
-        return {'url': url, 'note': desc.lower().strip()}
+            return {'url': url, 'note': 'Minutes'}
+        return {'url': url, 'note': desc.strip()}
 
     @staticmethod
     def _parse_date(text):
@@ -101,7 +116,7 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
             '_type': 'event',
             'name': 'Board of Directors',
             'event_description': '',
-            'classification': 'Board',
+            'classification': BOARD,
             'end': {'date': None, 'time': None, 'note': ''},
             'all_day': False,
             'location': {

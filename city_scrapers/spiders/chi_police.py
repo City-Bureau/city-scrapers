@@ -7,12 +7,13 @@ import json
 from datetime import datetime, date, time
 from math import floor
 
+from city_scrapers.constants import COMMITTEE, POLICE_BEAT
 from city_scrapers.spider import Spider
 
 
-class Chi_policeSpider(Spider):
+class ChiPoliceSpider(Spider):
     name = 'chi_police'
-    agency_id = 'Chicago Police Department'
+    agency_name = 'Chicago Police Department Beat and District Meetings'
     timezone = 'America/Chicago'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
     start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
@@ -73,9 +74,9 @@ class Chi_policeSpider(Spider):
         * ''
         """
         if ('district advisory committee' in item['title'].lower()) or ('DAC' in item['title']):
-            return 'District Advisory Committee (DAC)'
+            return COMMITTEE
         elif 'beat' in item['title'].lower():
-            return 'Beat Meeting'
+            return POLICE_BEAT
         else:
             return ''
 
@@ -83,9 +84,9 @@ class Chi_policeSpider(Spider):
         """
         Generate a name based on the classfication.
         """
-        if classification == 'District Advisory Committee (DAC)':
+        if classification == COMMITTEE:
             return classification
-        elif classification == 'Beat Meeting':
+        elif classification == POLICE_BEAT:
             district = self._parse_district(item)
             if district:
                 return 'Beat Meeting, District {}'.format(district).strip()
@@ -136,19 +137,19 @@ class Chi_policeSpider(Spider):
         """
         Generate event description based on classification.
         """
-        if classification == 'Beat Meeting':
+        if classification == COMMITTEE:
+            return ("Each District Commander has a District Advisory Committee which serves "
+                    "to provide advice and community based strategies that address underlying conditions "
+                    "contributing to crime and disorder in the district. Each District Advisory Committee "
+                    "should represent the broad spectrum of stakeholders in the community including "
+                    "residents, businesses, houses of worship, libraries, parks, schools and community-based organizations.")
+        else:
             return ("CPD Beat meetings, held on all 279 police "
                     "beats in the City, provide a regular opportunity "
                     "for police officers, residents, and other community "
                     "stakeholders to exchange information, identify and "
                     "prioritize problems, and begin developing solutions "
                     "to those problems.")
-        elif classification == 'District Advisory Committee (DAC)':
-            return ("Each District Commander has a District Advisory Committee which serves "
-                    "to provide advice and community based strategies that address underlying conditions "
-                    "contributing to crime and disorder in the district. Each District Advisory Committee "
-                    "should represent the broad spectrum of stakeholders in the community including "
-                    "residents, businesses, houses of worship, libraries, parks, schools and community-based organizations.")
 
     def _parse_start(self, item):
         """
@@ -179,6 +180,7 @@ class Chi_policeSpider(Spider):
                 'time': datetime_obj.time(),
                 'note': ''
             }
+
     def _parse_sources(self, item):
         """
         Parse sources.

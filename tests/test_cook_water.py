@@ -3,12 +3,12 @@ from datetime import date, time
 import pytest
 import json
 
-from city_scrapers.spiders.chi_water import Chi_waterSpider
+from city_scrapers.spiders.cook_water import CookWaterSpider
 
 test_response = []
-with open('tests/files/chi_water_test.json') as f:
+with open('tests/files/cook_water_test.json') as f:
     test_response.extend(json.loads(f.read()))
-spider = Chi_waterSpider()
+spider = CookWaterSpider()
 # This line throws error
 parsed_items = [item for item in spider._parse_events(test_response)]
 
@@ -28,7 +28,7 @@ def test_start_time():
             }
 
 def test_id():
-   assert parsed_items[0]['id'] == 'chi_water/201812201030/x/board_of_commissioners'
+   assert parsed_items[0]['id'] == 'cook_water/201812201030/x/board_of_commissioners'
 
 def test_location():
     assert parsed_items[0]['location'] == {

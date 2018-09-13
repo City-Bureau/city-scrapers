@@ -5,7 +5,7 @@ from city_scrapers.spider import Spider
 
 class {{ classname }}(Spider):
     name = '{{ name }}'
-    agency_id = '{{ agency_id }}'
+    agency_name = '{{ agency_name }}'
     timezone = 'America/Chicago'
     allowed_domains = [{{ domains|quote_list|join(', ') }}]
     start_urls = [{{ start_urls|quote_list|join(', ') }}]

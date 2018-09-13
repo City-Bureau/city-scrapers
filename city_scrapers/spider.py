@@ -5,6 +5,8 @@ from pytz import timezone
 from inflector import Inflector, English
 import scrapy
 
+from city_scrapers.constants import CANCELED, CONFIRMED, PASSED, TENTATIVE
+
 
 class Spider(scrapy.Spider):
     inflector = Inflector(English)
@@ -17,7 +19,7 @@ class Spider(scrapy.Spider):
         self.month = now.strftime('%m')
         self.day = now.strftime('%d')
         self.hour_min = now.strftime('%H%M')
-        super(Spider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _generate_id(self, data):
         """
@@ -49,17 +51,17 @@ class Spider(scrapy.Spider):
         * confirmed: either an agenda is posted or the event will happen in <= 7 days
         * passed: event happened in the past
         """
-        if ('cancelled' in text.lower()) or ('rescheduled' in text.lower()):
-            return 'cancelled'
+        if ('cancel' in text.lower()) or ('rescheduled' in text.lower()):
+            return CANCELED
 
         try:
             start = data['start']['date']
             # check if event is in the past
             if start < date.today():
-                return 'passed'
+                return PASSED
             # check if the event is within 7 days
             elif (start - date.today()).days <= 7:
-                return 'confirmed'
+                return CONFIRMED
         except (KeyError, TypeError):
             pass
 
@@ -67,9 +69,9 @@ class Spider(scrapy.Spider):
         documents = data.get('documents', [])
         for doc in documents:
             if 'agenda' in doc.get('note', '').lower():
-                return 'confirmed'
+                return CONFIRMED
 
-        return 'tentative'
+        return TENTATIVE
 
     def _naive_datetime_to_tz(self, datetime_object, source_tz='America/Chicago'):
         """

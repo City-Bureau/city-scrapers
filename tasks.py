@@ -2,6 +2,7 @@ import requests
 import os
 import time
 import json
+import string
 from collections import defaultdict
 from functools import reduce
 
@@ -34,7 +35,7 @@ env.filters["quote_list"] = quote_list
 
 
 @task()
-def genspider(ctx, name, agency_id, start_urls):
+def genspider(ctx, name, agency_name, start_urls):
     """
     Make a new HTML scraping spider.
 
@@ -55,7 +56,7 @@ def genspider(ctx, name, agency_id, start_urls):
     """
     start_urls = start_urls.split(',')
     domains = _get_domains(start_urls)
-    _gen_spider(name, agency_id, domains, start_urls)
+    _gen_spider(name, agency_name, domains, start_urls)
     _gen_tests(name)
     _gen_html(name, start_urls)
 
@@ -70,14 +71,14 @@ def runtests(ctx):
 
 
 def _make_classname(name):
-    return '{0}Spider'.format(name.capitalize())
+    return f'{string.capwords(name, sep="_").replace("_", "")}Spider'
 
 
-def _gen_spider(name, agency_id, domains, start_urls):
+def _gen_spider(name, agency_name, domains, start_urls):
     filename = '{0}/{1}.py'.format(SPIDERS_DIR, name)
 
     with open(filename, 'w') as f:
-        content = _render_content('spider.tmpl', name=name, agency_id=agency_id, domains=domains, start_urls=start_urls)
+        content = _render_content('spider.tmpl', name=name, agency_name=agency_name, domains=domains, start_urls=start_urls)
         f.write(content)
 
     print('Created {0}'.format(filename))
@@ -141,11 +142,11 @@ def _gen_html(name, start_urls, session=requests.Session()):
     return files
 
 
-def _render_content(template, name, agency_id=None, domains=None, start_urls=None):
+def _render_content(template, name, agency_name=None, domains=None, start_urls=None):
     jinja_template = env.get_template(template)
     classname = _make_classname(name)
     return jinja_template.render(
-        name=name, agency_id=agency_id, domains=domains, classname=classname, start_urls=start_urls)
+        name=name, agency_name=agency_name, domains=domains, classname=classname, start_urls=start_urls)
 
 
 def _get_domains(start_urls):

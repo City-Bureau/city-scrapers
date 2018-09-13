@@ -5,15 +5,15 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
 from datetime import datetime, timedelta
-from pytz import timezone
 from legistar.events import LegistarEventsScraper
 
+from city_scrapers.constants import BOARD, COMMITTEE
 from city_scrapers.spider import Spider
 
 
-class Cook_boardSpider(Spider):
+class CookBoardSpider(Spider):
     name = 'cook_board'
-    agency_id = 'Cook County Board of Commissioners'
+    agency_name = 'Cook County Government Board of Commissioners'
     timezone = 'America/Chicago'
     allowed_domains = ['cook-county.legistar.com']
     start_urls = ['https://www.cook-county.legistar.com']
@@ -81,9 +81,9 @@ class Cook_boardSpider(Spider):
         based on event name.
         """
         if 'board' in name.lower():
-            return 'Board'
+            return BOARD
         else:
-            return 'Committee'
+            return COMMITTEE
 
     def _parse_location(self, item):
         """

@@ -3,11 +3,11 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_zoning_board import Chi_zoning_boardSpider
+from city_scrapers.spiders.chi_zoning_board import ChiZoningBoardSpider
 
 
 test_response = file_response('files/chi_zoning_board.html', 'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html')
-spider = Chi_zoning_boardSpider()
+spider = ChiZoningBoardSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
@@ -25,7 +25,7 @@ def test__type():
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Zoning Board of Appeals'
+    assert parsed_items[0]['name'] == 'Zoning Board of Appeals Meeting'
 
 
 def test_description():
@@ -56,7 +56,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_zoning_board/201801190900/x/zoning_board_of_appeals'
+    assert parsed_items[0]['id'] == 'chi_zoning_board/201801190900/x/zoning_board_of_appeals_meeting'
 
 
 def test_status():

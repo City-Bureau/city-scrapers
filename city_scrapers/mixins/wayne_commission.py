@@ -6,11 +6,13 @@ from datetime import datetime
 from dateutil.parser import parse as dateparse
 from urllib.parse import urljoin
 
+from city_scrapers.constants import CANCELED, COMMITTEE
 
-class Wayne_commission:
+
+class WayneCommissionMixin:
     timezone = 'America/Detroit'
     allowed_domains = ['www.waynecounty.com']
-    classification = 'Committee'
+    classification = COMMITTEE
     location = {
         'name': '7th floor meeting room, Guardian Building',
         'address': '500 Griswold St, Detroit, MI 48226',
@@ -85,7 +87,7 @@ class Wayne_commission:
         status_str = item.xpath('.//td[4]//text()').extract_first()
         # If the agenda column text contains "postpone" or "cancel" we consider it cancelled.
         if ('cancel' in status_str.lower()) or ('postpone' in status_str.lower()):
-            return 'cancelled'
+            return CANCELED
         # If it's not one of the above statuses, use the status logic from spider.py
         else:
             return self._generate_status(data, '')

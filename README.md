@@ -58,65 +58,6 @@ A. We have ongoing conversations about what sort of data we should collect and h
 
 B. Research sources for public meetings. Answer questions like: Are we scraping events from the right websites? Are there local agencies that we're missing? Should events be updated manually or by a scraper? [Triage events sources on these issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22non-coding%3A+triage+events+source%22).
 
-## Scraper Status
-
-### Chicago
-
-| Status / Last Ran | Scraper |
-|---------|--------|
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_ward_night.svg) | Aldermanic Ward Nights |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_animal.svg) | Animal Care and Control Commission |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_boardofethics.svg) | Board of Ethics |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_buildings.svg) | Building Commission of Chicago |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_city_college.svg) | City College of Chicago |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_citycouncil.svg) | City Council |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_pubhealth.svg) | Department of Public Health |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_infra.svg) | Infrastructure Trust |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_localschoolcouncil.svg) | Local School Council |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_parks.svg) | Parks District |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_police.svg) | Police Department |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_policeboard.svg) | Police Board |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_library.svg) | Public Library |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_schools.svg) | Public Schools: Board of Education |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_school_actions.svg) | Public Schools: School Actions |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_school_community_action_council.svg) | Public Schools: Community Action Council |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_transit.svg) | Transit Authority |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/chi_water.svg) | Metropolitan Water Reclamation District of Greater Chicago |
-
-
-### Cook County
-
-| Status / Last Ran | Scraper |
-|---------|--------|
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_board.svg) | Board of Commissioners |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_pubhealth.svg) | Department of Public Health |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_electoral.svg) | Electoral Board |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_county.svg) | Government |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_hospitals.svg) | Health and Hospitals System |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_landbank.svg) | Land Bank |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/cook_housingauthority.svg) | Housing Authority |
-
-### Illinois
-
-| Status / Last Ran | Scraper |
-|---------|--------|
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/il_labor.svg) | Illinois Labor Relations Board |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/metra_board.svg) | Metra Board of Directors |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/il_pubhealth.svg) | Illinois Department of Public Health |
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/il_regional_transit.svg) | Regional Transportation Authority |
-
-### Detroit
-
-| Status / Last Ran | Scraper |
-|---------|--------|
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/det_schools.svg) | Detroit Board of Education |
-
-### Wayne County, Michigan
-
-| Status / Last Ran | Scraper |
-|---------|--------|
-| ![Status](https://s3.amazonaws.com/city-scrapers-status/wayne_cow.svg) | Committee of the Whole |
-
 ## Support this work
 
 This project is organized and maintained by [City Bureau](http://www.citybureau.org/).

@@ -12,6 +12,7 @@ from pytz import timezone
 
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 
+from city_scrapers.constants import COMMITTEE
 from city_scrapers.spider import Spider
 
 GOOGLE_API_KEY = os.environ.get('CITY_SCRAPERS_GOOGLE_API_KEY') or 'test-token'
@@ -37,15 +38,15 @@ class Row(IntEnum):
     COMMUNITY_AREA = 11  # Text, "Washington Heights"
 
 
-class chi_LSCMeetingSpider(Spider):
+class ChiLocalSchoolCouncilSpider(Spider):
     name = 'chi_localschoolcouncil'
-    agency_id = 'Chicago Local School Council'
+    agency_name = 'Chicago Public Schools Local School Councils'
     timezone = 'America/Chicago'
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = [SPREADSHEET_URL + '/values/A2:L1400?key=' + GOOGLE_API_KEY]
 
     def __init__(self, start_date=datetime.today(), *args, **kwargs):
-        super(chi_LSCMeetingSpider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.start_date = start_date
 
     def parse(self, response):
@@ -85,7 +86,7 @@ class chi_LSCMeetingSpider(Spider):
         data = {
             '_type': 'event',
             'event_description': '',
-            'classification': 'committee',
+            'classification': COMMITTEE,
             'all_day': False,
             'documents': [],
             'sources': self._parse_sources(),
@@ -112,6 +113,7 @@ class chi_LSCMeetingSpider(Spider):
         Parse name from spreadsheet row.
         """
         return row[Row.NAME]
+
     def _parse_location(self, row):
         """
         Parse location from spreadsheet row.

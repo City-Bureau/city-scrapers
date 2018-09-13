@@ -4,12 +4,14 @@ from datetime import datetime, time
 from dateutil.parser import parse
 
 import scrapy
+
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
 class DetEntertainmentCommissionSpider(Spider):
     name = 'det_entertainment_commission'
-    agency_id = 'Detroit Entertainment Commission'
+    agency_name = 'Detroit Entertainment Commission'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitsentertainmentcommission.com']
     start_urls = ['https://www.detroitsentertainmentcommission.com/services']
@@ -22,8 +24,6 @@ class DetEntertainmentCommissionSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        meeting_name = 'Detroit Entertainment Commission'
-        classification = 'Commission'
         location = {
             'name': 'Coleman A. Young Municipal Center',
             'address': '2 Woodward Avenue, Detroit, MI 48226',
@@ -34,9 +34,9 @@ class DetEntertainmentCommissionSpider(Spider):
 
             data = {
                 '_type': 'event',
-                'name': meeting_name,
+                'name': 'Detroit Entertainment Commission',
                 'event_description': '',
-                'classification': classification,
+                'classification': COMMISSION,
                 'start': self._parse_start(item, response),
                 'end': {'date': None, 'time': None, 'note': ''},
                 'all_day': False,

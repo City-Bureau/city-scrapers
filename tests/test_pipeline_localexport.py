@@ -2,9 +2,9 @@ import json
 from datetime import datetime
 from tests.utils import read_test_file_content
 from city_scrapers.pipelines import CsvPipeline
-from city_scrapers.spiders.chi_buildings import Chi_buildingsSpider
+from city_scrapers.spiders.chi_buildings import ChiBuildingsSpider
 
-testSpider = Chi_buildingsSpider()
+testSpider = ChiBuildingsSpider()
 
 
 def _str_to_datetime(date_string, spider_in=testSpider):

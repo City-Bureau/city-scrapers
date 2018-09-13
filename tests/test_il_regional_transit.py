@@ -4,7 +4,8 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.il_regional_transit import RegionaltransitSpider
+from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE
+from city_scrapers.spiders.il_regional_transit import IlRegionalTransitSpider
 
 events_response = file_response('files/il_regional_transit_calendar.html', url='http://www.rtachicago.org/about-us/board-meetings')
 events_response.meta['event_description'] = (
@@ -14,7 +15,7 @@ events_response.meta['event_description'] = (
         "to the meetings. All RTA Board meetings are audio taped. Recording of meetings "
         "starting December 2014 are available on the ")
 
-spider = RegionaltransitSpider()
+spider = IlRegionalTransitSpider()
 parsed_items = [item for item in spider.parse_iframe(events_response) if isinstance(item, dict)]
 
 
@@ -67,16 +68,16 @@ def test_documents():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Board'
-    assert parsed_items[1]['classification'] == 'Committee'
+    assert parsed_items[0]['classification'] == BOARD
+    assert parsed_items[1]['classification'] == COMMITTEE
 
 
 def test_parse_classification():
-    assert spider._parse_classification('Board of Directors') == 'Board'
-    assert spider._parse_classification('Audit Committee') == 'Committee'
-    assert spider._parse_classification('Citizens Advisory Committee') == 'Citizens Advisory Council'
-    assert spider._parse_classification('Citizens Advisory Council') == 'Citizens Advisory Council'
-    assert spider._parse_classification('Citizens Advisory Board') == 'Citizens Advisory Council'
+    assert spider._parse_classification('Board of Directors') == BOARD
+    assert spider._parse_classification('Audit Committee') == COMMITTEE
+    assert spider._parse_classification('Citizens Advisory Committee') == ADVISORY_COMMITTEE
+    assert spider._parse_classification('Citizens Advisory Council') == ADVISORY_COMMITTEE
+    assert spider._parse_classification('Citizens Advisory Board') == ADVISORY_COMMITTEE
 
 
 @pytest.mark.parametrize('item', parsed_items)

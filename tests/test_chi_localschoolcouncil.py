@@ -5,11 +5,12 @@ from datetime import date, time, datetime
 from pytz import timezone
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_localschoolcouncil import chi_LSCMeetingSpider
+from city_scrapers.constants import COMMITTEE
+from city_scrapers.spiders.chi_localschoolcouncil import ChiLocalSchoolCouncilSpider
 from textwrap import dedent
 
 test_response = file_response('files/tests_chilocal_events.json')
-spider = chi_LSCMeetingSpider(start_date=datetime(2018, 1, 1))
+spider = ChiLocalSchoolCouncilSpider(start_date=datetime(2018, 1, 1))
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
@@ -71,7 +72,7 @@ def test_sources():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] is 'committee'
+    assert parsed_items[0]['classification'] is COMMITTEE
 
 
 def test__type():

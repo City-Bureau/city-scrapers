@@ -3,11 +3,13 @@ import scrapy
 
 from datetime import datetime
 from tests.utils import file_response
-from city_scrapers.spiders.chi_buildings import Chi_buildingsSpider
+
+from city_scrapers.constants import BOARD, COMMITTEE
+from city_scrapers.spiders.chi_buildings import ChiBuildingsSpider
 
 test_json_response = file_response('files/chi_buildings.json')
 test_event_response = file_response('files/chi_buildings.html')
-spider = Chi_buildingsSpider()
+spider = ChiBuildingsSpider()
 # Setting spider date to time test files were generated
 spider.calendar_date = datetime(2018, 2, 18)
 
@@ -42,10 +44,10 @@ def test_name(parsed_items):
 
 
 def test_classification(parsed_items):
-    assert parsed_items[0]['classification'] == 'Admin Opp Committee Meeting'
-    assert parsed_items[1]['classification'] == 'Board Meeting'
-    assert parsed_items[2]['classification'] == 'Admin Opp Committee Meeting'
-    assert parsed_items[3]['classification'] == 'Audit Committee'
+    assert parsed_items[0]['classification'] == COMMITTEE
+    assert parsed_items[1]['classification'] == BOARD
+    assert parsed_items[2]['classification'] == COMMITTEE
+    assert parsed_items[3]['classification'] == COMMITTEE
 
 
 def test_start(parsed_items):

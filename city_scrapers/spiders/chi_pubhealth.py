@@ -8,13 +8,13 @@ import re
 from datetime import date, time, datetime
 from time import strptime
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
-class Chi_pubhealthSpider(Spider):
-
+class ChiPubHealthSpider(Spider):
     name = 'chi_pubhealth'
-    agency_id = 'Chicago Department of Public Health'
+    agency_name = 'Chicago Department of Public Health Board of Directors'
     allowed_domains = ['www.cityofchicago.org']
     timezone = 'America/Chicago'
 
@@ -66,7 +66,7 @@ class Chi_pubhealthSpider(Spider):
                 '_type': 'event',
                 'name': name,
                 'event_description': description,
-                'classification': self._parse_classification(item),
+                'classification': BOARD,
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
                 'all_day': False,
@@ -88,7 +88,7 @@ class Chi_pubhealthSpider(Spider):
         if not date_text:
             # Past meetings are links to the agenda
             date_text = item.xpath('a/text()').extract_first()
-        
+
         # Extract date formatted like "January 12"
         return datetime.strptime(date_text, '%B %d')
 
@@ -113,12 +113,6 @@ class Chi_pubhealthSpider(Spider):
             'time': time(10, 30),
             'note': ''
         }
-
-    def _parse_classification(self, item):
-        """
-        Parse or generate classification (e.g. town hall).
-        """
-        return 'board meeting'
 
     def _parse_location(self, item):
         """
@@ -154,7 +148,7 @@ class Chi_pubhealthSpider(Spider):
                 'url': 'https://www.cityofchicago.org{}'.format(agenda_relative_url),
                 'note': 'agenda'
             })
-        
+
         minutes_relative_url = item.xpath('following-sibling::ul/li/a/@href').extract_first()
         if agenda_relative_url:
             documents.append({
@@ -162,4 +156,3 @@ class Chi_pubhealthSpider(Spider):
                 'note': 'minutes'
             })
         return documents
-

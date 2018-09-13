@@ -5,14 +5,14 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
-from city_scrapers.spiders.wayne_full_commission import Wayne_full_commissionSpider
+from city_scrapers.spiders.wayne_full_commission import WayneFullCommissionSpider
 
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
     'files/wayne_full_commission.html', url='https://www.waynecounty.com/elected/commission/full-commission.aspx')
-spider = Wayne_full_commissionSpider()
+spider = WayneFullCommissionSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
@@ -36,7 +36,7 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Wayne County Full Commission'
+    assert item['name'] == 'Full Commission'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -88,7 +88,7 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'wayne_full_commission/201801111000/x/wayne_county_full_commission'
+    assert parsed_items[0]['id'] == 'wayne_full_commission/201801111000/x/full_commission'
 
 
 def test_status():

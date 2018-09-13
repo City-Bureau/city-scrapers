@@ -4,12 +4,17 @@ from datetime import time
 
 import dateutil.parser
 import scrapy
+
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
-class Chi_development_fundSpider(Spider):
+class ChiDevelopmentFundSpider(Spider):
     name = 'chi_development_fund'
-    agency_id = 'Department of Planning and Development'
+    agency_name = (
+        'Chicago Department of Planning and Development '
+        'Chicago Development Fund Commission'
+    )
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_developmentfund.html']
@@ -35,7 +40,7 @@ class Chi_development_fundSpider(Spider):
                 data = {'_type': 'event',
                         'name': "Chicago Development Fund ({})".format(name),
                         'event_description': description,
-                        'classification': 'Commission',
+                        'classification': COMMISSION,
                         'start': start,
                         'all_day': False,
                         'location': {'neighborhood': '',

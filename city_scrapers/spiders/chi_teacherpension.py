@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-import scrapy
+import re
+from datetime import datetime, time
+
+from city_scrapers.constants import BOARD, COMMITTEE
 from city_scrapers.spider import Spider
-from datetime import datetime
 
 
-class Chi_teacherpensionSpider(Spider):
+class ChiTeacherPensionSpider(Spider):
     name = 'chi_teacherpension'
-    agency_id = 'Chicago Teachers Pension Fund'
+    agency_name = 'Chicago Teachers Pension Fund'
     timezone = 'America/Chicago'
     allowed_domains = ['www.ctpf.org']
     start_urls = ['https://www.ctpf.org/post/board-meetings']
@@ -19,131 +21,128 @@ class Chi_teacherpensionSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        
-        for i in range(1,4): 
-
-            dates = self.get_dates(response, i)
-            for date in dates:
-
-                data = {
-                            '_type': 'event',
-                            'name': self._parse_name(response, i),
-                            'description': self._parse_description(response, i),
-                            'classification': self._parse_classification(i),
-                            'start': self._parse_start(response, date, i),
-                            'end': self._parse_end(date),
-                            'status': self._parse_status(),
-                            'all_day': self._parse_all_day(),
-                            'location': self._parse_location(),
-                            'sources': self._parse_sources(response),
-                        }
-
-                data['id'] = self._generate_id(data)
-
-                yield data
-
-
-    def get_dates(self, response, i):
-        if i == 1:
-            raw = response.xpath('//*[@id="node-full"]/div/div[2]/h3[1]/following-sibling::p[1]/text()').extract()
-        else:
-            raw = response.xpath('//*[@id="node-full"]/div/div[2]/h3['+str(i)+']/following-sibling::p[2]/text()').extract()
-        
-        return [date.strip() for date in raw]
-
-    def _parse_name(self, response, i):
-        """
-        Parse or generate event name.
-        """
-        cut = len(' Schedule')
-
-        if i == 3:
-        	name = response.xpath('//*[@id="node-full"]/div/div[2]/h4[1]/text()').extract_first()
-        else:
-        	name = response.xpath('//*[@id="node-full"]/div/div[2]/h3['+str(i)+']/text()').extract_first()
-        
-        return name[0:len(name)-cut]
-
-    def _parse_description(self, response, i):
-        """
-        Parse or generate event description.
-        """
-        if i == 1:
-        	return response.xpath('//*[@id="node-full"]/div/div[2]/p[1]/text()').extract_first()
-        elif i ==2:
-        	return response.xpath('//*[@id="node-full"]/div/div[2]/p[3]/text()').extract_first()
-        else:
-        	return response.xpath('//*[@id="node-full"]/div/div[2]/p[5]/text()').extract_first()
-        
-
-    def _parse_classification(self, i):
-        """
-        Parse or generate classification (e.g. public health, education, etc).
-        """
-        if i == 1:
-        	return 'board meeting'
-        else:
-        	return 'committee meeting'
-
-    def _parse_start(self, response, date, i):
-        """
-        Parse start date and time.
-        """
-        date = datetime.strptime(date, '%A, %B %d, %Y')
-        
-        if i ==3:
-        	time = None
-        	note = response.xpath('//*[@id="node-full"]/div/div[2]/p[5]/text()').extract_first()
-        else:
-        	time = datetime.strptime('9:30am', '%H:%M%p').time()
-        	note = ''
-        
-        return {
-                    'date': date,
-                    'time': time,
-                    'note': note
-                }
-
-
-    def _parse_end(self, date):
-        """
-        Parse end date and time.
-        """
-        date = datetime.strptime(date, '%A, %B %d, %Y')
-
-        return {
-                    'date': date,
-                    'time': None,
-                    'note': ''
-                }
-
-    def _parse_all_day(self):
-        """
-        Parse or generate all-day status. Defaults to False.
-        """
-        return False
-
-    def _parse_location(self):
-        """
-        Parse or generate location. Latitude and longitude can be
-        left blank and will be geocoded later.
-        """
-        return {
+        LOCATION = {
             'address': '203 North LaSalle Street, Suite 2600, Board Room',
             'name': 'CTPF office',
             'neighborhood': 'Loop'
         }
+        # Iterate through headers which mark the meeting groups
+        for meeting_group in response.css('#node-full .node-content h3, h4'):
+            group_name = self._parse_name(meeting_group)
+            if 'minutes' in group_name.lower():
+                continue
+            # Go through each sibling to get the next paragraph tag
+            next_sib = meeting_group.xpath('following-sibling::*[1]')
+            while len(next_sib) and next_sib[0].root.tag == 'p':
+                # Only use line if it includes a year
+                sib_text = next_sib.xpath('./text()').extract_first()
+                if re.match(r'.*\d{4}.*', sib_text) is None:
+                    next_sib = next_sib.xpath('following-sibling::*[1]')
+                    continue
+                # Get all text nodes and spans (containing links)
+                item_list = next_sib.xpath('./text()|span')
+                next_sib = next_sib.xpath('following-sibling::*[1]')
+                for idx, item in enumerate(item_list):
+                    # Ignore span elements that have links since these are
+                    # handled for documents separately
+                    if hasattr(item.root, 'tag') and item.root.tag == 'span':
+                        continue
+                    item_text = item.extract()
+                    date_obj, time_obj = self._parse_datetime(item_text)
+                    data = {
+                        '_type': 'event',
+                        'name': group_name,
+                        'description': '',
+                        'classification': self._parse_classification(
+                            group_name
+                        ),
+                        'start': self._parse_start(date_obj, time_obj),
+                        'end': self._parse_end(date_obj),
+                        'all_day': False,
+                        'location': LOCATION,
+                        'sources': self._parse_sources(response),
+                        'documents': [],
+                    }
+                    data['id'] = self._generate_id(data)
+                    data['status'] = self._generate_status(data, '')
+                    # Add agenda if available as next element in the span tag
+                    if (
+                        len(item_list) > idx + 1 and
+                        hasattr(item_list[idx + 1].root, 'tag') and
+                        item_list[idx + 1].root.tag == 'span'
+                    ):
+                        data['documents'] = self._parse_documents(
+                            item_list[idx + 1]
+                        )
+                    yield data
 
-    def _parse_status(self):
+    def _parse_name(self, meeting_group):
         """
-        Parse or generate status of meeting. Can be one of:
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-        By default, return "tentative"
+        Parse or generate event name.
         """
-        return 'tentative'
+        return meeting_group.xpath(
+            './text()'
+        ).extract_first().replace(' Schedule', '').replace('\xa0', ' ')
+
+    def _parse_classification(self, group_name):
+        """
+        Parse or generate classification (e.g. public health, education, etc).
+        """
+        if 'board' in group_name.lower():
+            return BOARD
+        else:
+            return COMMITTEE
+
+    @staticmethod
+    def _parse_datetime(datetime_str):
+        date_clean_re = r'[^:,\s\w\d]'
+        datetime_split = datetime_str.split(',')
+        date_str = ','.join(datetime_str.split(',')[:3])
+        date_obj = datetime.strptime(
+            re.sub(date_clean_re, '', date_str).strip(),
+            '%A, %B %d, %Y',
+        ).date()
+
+        time_obj = None
+        if len(datetime_split) > 3:
+            time_str = re.sub(
+                date_clean_re, '', datetime_split[3].replace('at', '')
+            )
+            time_obj = datetime.strptime(
+                time_str.strip(), '%I:%M %p'
+            ).time()
+        return date_obj, time_obj
+
+    def _parse_start(self, date_obj, time_obj):
+        """
+        Parse start date and time.
+        """
+        return {
+            'date': date_obj,
+            'time': time_obj or time(9, 30),
+            'note': '',
+        }
+
+    def _parse_end(self, date_obj):
+        """
+        Parse end date and time.
+        """
+        return {
+            'date': date_obj,
+            'time': None,
+            'note': '',
+        }
+
+    def _parse_documents(self, item):
+        if len(item.xpath('./a')) == 0:
+            return []
+        link = item.xpath('./a')[0]
+        return [{
+            'note': link.xpath('.//text()').extract_first(),
+            'url': (
+                f'https://www.ctpf.org{link.xpath("./@href").extract_first()}'
+            ),
+        }]
 
     def _parse_sources(self, response):
         """
@@ -153,4 +152,3 @@ class Chi_teacherpensionSpider(Spider):
             'url': response.url,
             'note': ''
         }]
-

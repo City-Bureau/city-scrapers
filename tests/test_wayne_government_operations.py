@@ -5,14 +5,15 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
-from city_scrapers.spiders.wayne_government_operations import Wayne_government_operationsSpider
+from city_scrapers.constants import CANCELED
+from city_scrapers.spiders.wayne_government_operations import WayneGovernmentOperationsSpider
 
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
     'files/wayne_government-operations.html', url='https://www.waynecounty.com/elected/commission/government-operations.aspx')
-spider = Wayne_government_operationsSpider()
+spider = WayneGovernmentOperationsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
@@ -36,7 +37,7 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Wayne County Committee on Government Operations'
+    assert item['name'] == 'Committee on Government Operations'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -85,8 +86,8 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'wayne_government_operations/201801090930/x/wayne_county_committee_on_government_operations'
+    assert parsed_items[0]['id'] == 'wayne_government_operations/201801090930/x/committee_on_government_operations'
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'cancelled'
+    assert parsed_items[0]['status'] == CANCELED

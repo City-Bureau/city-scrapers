@@ -5,11 +5,11 @@
 # YOU CAN OVERRIDE THE MIXIN HERE BY CREATING YOUR OWN DEFINITION.
 
 from city_scrapers.spider import Spider
-from city_scrapers.mixins.wayne_commission import Wayne_commission
+from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
 
 
-class Wayne_cowSpider(Wayne_commission, Spider):
+class WayneCommitteeWholeSpider(WayneCommissionMixin, Spider):
     name = 'wayne_cow'
-    agency_id = 'Detroit Committee of the Whole'
+    agency_name = 'Wayne County Government Committee of the Whole'
     start_urls = ['https://www.waynecounty.com/elected/commission/committee-of-the-whole.aspx']
-    meeting_name = 'Wayne County Committee of the Whole'
+    meeting_name = 'Committee of the Whole'

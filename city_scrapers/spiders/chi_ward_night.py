@@ -110,15 +110,14 @@ class Row(IntEnum):
 
 class ChiWardNightSpider(Spider):
     name = 'chi_ward_night'
-    agency_id = 'City Council'
+    agency_name = 'Chicago City Council Aldermanic Ward Nights'
     timezone = 'America/Chicago'
-    long_name = 'Ward Nights'
 
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = [SPREADSHEET_URL + '/values/A3:N100?key=' + GOOGLE_API_KEY]
 
     def __init__(self, start_date=datetime.today(), *args, **kwargs):
-        super(ChiWardNightSpider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.start_date = start_date
 
     def parse(self, response):

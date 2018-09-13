@@ -1,11 +1,13 @@
 from datetime import date, time
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_city_college import Chi_cityCollegeSpider
+
+from city_scrapers.constants import BOARD
+from city_scrapers.spiders.chi_city_college import ChiCityCollegeSpider
 
 
 test_response = file_response('files/chi_city_college.html')
-spider = Chi_cityCollegeSpider()
+spider = ChiCityCollegeSpider()
 item = spider.parse_event_page(test_response)
 
 
@@ -29,7 +31,7 @@ def test_all_day():
     assert item['all_day'] is False
 
 def test_classification():
-    assert item['classification'] == 'Not classified'
+    assert item['classification'] == BOARD
 
 def test_status():
     assert item['status'] == 'tentative'

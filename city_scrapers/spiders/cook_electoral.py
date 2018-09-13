@@ -7,12 +7,13 @@ import scrapy
 from datetime import datetime
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
-class Cook_electoralSpider(Spider):
+class CookElectoralSpider(Spider):
     name = 'cook_electoral'
-    long_name = 'Cook County Electoral Board'
+    agency_name = 'Cook County Electoral Board (Suburban Cook)'
     allowed_domains = ['aba.cookcountyclerk.com']
     start_urls = ['https://aba.cookcountyclerk.com/boardmeetingsearch.aspx']
     download_delay = 1.5
@@ -60,7 +61,7 @@ class Cook_electoralSpider(Spider):
             '_type': 'event',
             'name': self._parse_name(item),
             'description': self._parse_description(item),
-            'classification': self._parse_classification(item),
+            'classification': BOARD,
             'start': self._parse_start(item),
             'end': self._parse_end(item),
             'timezone': self._parse_timezone(item),
@@ -108,12 +109,6 @@ class Cook_electoralSpider(Spider):
         Parse or generate event description.
         """
         return ''
-
-    def _parse_classification(self, item):
-        """
-        Parse or generate classification (e.g. public health, education, etc).
-        """
-        return 'board-meeting'
 
     def _parse_start(self, item):
         """

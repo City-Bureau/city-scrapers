@@ -6,34 +6,37 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import re
 
 from datetime import datetime, timedelta
-from pytz import timezone
-from city_scrapers.spider import Spider
 
+from city_scrapers.constants import BOARD, COMMITTEE
+from city_scrapers.spider import Spider
 
 
 class ChiTransitSpider(Spider):
     name = 'chi_transit'
-    agency_id = 'Chicago Transit Authority'
+    agency_name = 'Chicago Transit Authority'
     timezone = 'America/Chicago'
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
-    start_urls = ['https://www.transitchicago.com/board/notices-agendas-minutes/']
+    start_urls = [
+        'https://www.transitchicago.com/board/notices-agendas-minutes/'
+    ]
 
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
+        event standard http://docs.opencivicdata.org/en/latest/data/event.html
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        today = datetime.now()
-        response_items = response.css('.agendaminuteDataTbl tr:not(:first-child)')
+        response_items = response.css(
+            '.agendaminuteDataTbl tr:not(:first-child)'
+        )
         for idx, item in enumerate(response_items):
             # Including previous item for meetings where it's needed
             prev_item = response_items[idx - 1] if idx > 0 else None
             start_datetime = self._parse_start_datetime(item, prev_item)
-            if start_datetime: #and today < start_datetime:
+            if start_datetime:
                 item_data = {
                     '_type': 'event',
                     'name': self._parse_name(item),
@@ -47,7 +50,9 @@ class ChiTransitSpider(Spider):
                     'documents': self._parse_documents(item)
                 }
                 item_data['id'] = self._generate_id(item_data)
-                item_data['status'] = self._generate_status(item_data, item_data['name'])
+                item_data['status'] = self._generate_status(
+                    item_data, item_data['name']
+                )
                 yield item_data
 
     def _parse_description(self, item):
@@ -62,9 +67,9 @@ class ChiTransitSpider(Spider):
         """
         name = item.css('td:nth-child(3)::text').extract_first().lower()
         if 'board' in name:
-            return 'board meeting'
+            return BOARD
         else:
-            return 'committee meeting'
+            return COMMITTEE
 
     def _parse_location(self, item):
         """
@@ -73,8 +78,16 @@ class ChiTransitSpider(Spider):
         """
         location_str = item.css('td:nth-child(4)::text').extract_first()
         # Always 537 W Lake, so handle that if provided (but allow for change)
-        if re.search(r'567 (W.|W|West) Lake.*|board\s?room', location_str, re.IGNORECASE) \
-            or re.search(r'cta.*board.*room', location_str, re.IGNORECASE):
+        if (
+            location_str and (
+                re.search(
+                    r'567 (W.|W|West) Lake.*|board\s?room',
+                    location_str,
+                    re.IGNORECASE,
+                )
+                or re.search(r'cta.*board.*room', location_str, re.IGNORECASE)
+            )
+        ):
             return {
                 'neighborhood': 'west loop',
                 'name': 'Chicago Transit Authority 2nd Floor Boardroom',
@@ -137,7 +150,7 @@ class ChiTransitSpider(Spider):
         # start time of the previous meeting
         elif prev_item is not None:
             return self._parse_start_datetime(prev_item)
-              
+
     def _parse_sources(self, response):
         """
         Parse sources.

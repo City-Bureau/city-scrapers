@@ -3,13 +3,18 @@ import re
 from datetime import datetime, time
 
 import scrapy
+
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
-class Chi_zoning_boardSpider(Spider):
+class ChiZoningBoardSpider(Spider):
     name = 'chi_zoning_board'
-    agency_id = 'Department of Planning and Development'
-    timezone = 'America/Chicago'                     # timezone of the events in tzinfo format
+    agency_name = (
+        'Chicago Department of Planning and Development '
+        'Zoning Board of Appeals'
+    )
+    timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html']
 
@@ -29,9 +34,9 @@ class Chi_zoning_boardSpider(Spider):
             for meeting in meetings:
                 data = {
                     '_type': 'event',
-                    'name': "Zoning Board of Appeals",
+                    'name': 'Zoning Board of Appeals Meeting',
                     'event_description': description,
-                    'classification': 'Commission',
+                    'classification': COMMISSION,
                     'start': self._parse_start(meeting, year),
                     # Based on meeting minutes, board meetings appear to be all day
                     'all_day': True,

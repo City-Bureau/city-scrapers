@@ -4,10 +4,10 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_schools import Chi_schoolsSpider
+from city_scrapers.spiders.chi_schools import ChiSchoolsSpider
 
 test_response = file_response('files/cpsboe.html', url='http://www.cpsboe.org/meetings/planning-calendar')
-spider = Chi_schoolsSpider()
+spider = ChiSchoolsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 

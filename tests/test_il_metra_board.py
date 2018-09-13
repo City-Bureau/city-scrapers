@@ -3,11 +3,13 @@ import pytest
 from tests.utils import file_response
 from datetime import date
 from datetime import time
-from city_scrapers.spiders.il_metra_board import Il_metra_boardSpider
+
+from city_scrapers.constants import BOARD
+from city_scrapers.spiders.il_metra_board import IlMetraBoardSpider
 
 
 test_response = file_response('files/il_metra_board.html')
-spider = Il_metra_boardSpider()
+spider = IlMetraBoardSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
@@ -15,7 +17,7 @@ def test_name():
     assert parsed_items[0]['name'] == 'Metra February 2018 Board Meeting'
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Board Meeting'
+    assert parsed_items[0]['classification'] == BOARD
 
 def test_start():
     EXPECTED_START = {

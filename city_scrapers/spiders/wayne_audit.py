@@ -5,11 +5,11 @@
 # YOU CAN OVERRIDE THE MIXIN HERE BY CREATING YOUR OWN DEFINITION.
 
 from city_scrapers.spider import Spider
-from city_scrapers.mixins.wayne_commission import Wayne_commission
+from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
 
 
-class Wayne_auditSpider(Wayne_commission, Spider):
+class WayneAuditSpider(WayneCommissionMixin, Spider):
     name = 'wayne_audit'
-    agency_id = 'Wayne County Audit Committee'
+    agency_name = 'Wayne County Government Audit Committee'
     start_urls = ['https://www.waynecounty.com/elected/commission/audit.aspx']
-    meeting_name = 'Wayne County Audit Committee'
+    meeting_name = 'Audit Committee'

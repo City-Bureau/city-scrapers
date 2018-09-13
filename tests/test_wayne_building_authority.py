@@ -5,14 +5,15 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
-from city_scrapers.spiders.wayne_building_authority import Wayne_building_authoritySpider
+from city_scrapers.constants import CANCELED, COMMITTEE
+from city_scrapers.spiders.wayne_building_authority import WayneBuildingAuthoritySpider
 
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
     'files/wayne_building_authority_meetings.html', url='https://www.waynecounty.com/boards/buildingauthority/meetings.aspx')
-spider = Wayne_building_authoritySpider()
+spider = WayneBuildingAuthoritySpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
@@ -55,7 +56,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Committee'
+    assert item['classification'] == COMMITTEE
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -89,4 +90,4 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[-1]['status'] == 'cancelled'
+    assert parsed_items[-1]['status'] == CANCELED

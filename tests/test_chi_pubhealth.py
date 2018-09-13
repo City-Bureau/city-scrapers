@@ -2,10 +2,11 @@ import pytest
 from datetime import date, time
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_pubhealth import Chi_pubhealthSpider
+from city_scrapers.constants import BOARD
+from city_scrapers.spiders.chi_pubhealth import ChiPubHealthSpider
 
 test_response = file_response('files/chi_pubhealth.html', url='https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2018-board-of-health-meetings.html')
-spider = Chi_pubhealthSpider()
+spider = ChiPubHealthSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 def test_meeting_count():
@@ -72,7 +73,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'board meeting'
+    assert item['classification'] == BOARD
 
 
 @pytest.mark.parametrize('item', parsed_items)

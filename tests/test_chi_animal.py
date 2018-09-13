@@ -1,11 +1,12 @@
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_animal import Chi_animalSpider
+from city_scrapers.constants import ADVISORY_COMMITTEE
+from city_scrapers.spiders.chi_animal import ChiAnimalSpider
 
 
 test_response = file_response('files/chi_animal.html', url='https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html')
-spider = Chi_animalSpider()
+spider = ChiAnimalSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
@@ -15,9 +16,6 @@ def test_len():
 # Different that last static pull
 # def test_id():
 #    assert parsed_items[0]['id'] == 'chi_animal/201709210000/x/commission_meeting'
-
-def test_name():
-    assert parsed_items[0]['name'] == 'Animal Care and Control Commission meeting'
 
 # Different than last static pull
 def test_start_time():
@@ -40,11 +38,11 @@ def test_allday(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_class(item):
-    assert item['classification'] == 'Commission'
+    assert item['classification'] == ADVISORY_COMMITTEE
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Animal Care and Control Commission meeting'
+    assert item['name'] == 'Advisory Board Meeting'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):

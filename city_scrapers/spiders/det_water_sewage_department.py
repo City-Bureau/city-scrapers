@@ -5,13 +5,17 @@ import dateutil
 import scrapy
 
 import dateutil.parser
+
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 from legistar.events import LegistarEventsScraper
 
 
 class DetWaterSewageDepartmentSpider(Spider):
     name = 'det_water_sewage_department'
-    agency_id = 'Water and Sewage Department'
+    agency_name = (
+        'Detroit Water and Sewage Department Board of Commissioners'
+    )
     timezone = 'America/Detroit'
     start_urls = ['https://dwsd.legistar.com']
     allowed_domains = ['dwsd.legistar.com']
@@ -41,7 +45,7 @@ class DetWaterSewageDepartmentSpider(Spider):
                 '_type': 'event',
                 'name': item['Name'],
                 'event_description': '',
-                'classification': 'Board',
+                'classification': BOARD,
                 'start': self._parse_start(item),
                 'end': {'date': None, 'time': None, 'note': ''},
                 'all_day': False,

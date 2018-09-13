@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from city_scrapers.spider import Spider
 import json
 from dateutil.parser import parse as dateparse
+
+from city_scrapers.constants import BOARD, COMMITTEE
+from city_scrapers.spider import Spider
 
 
 class DetLandBankSpider(Spider):
     name = 'det_land_bank'
-    agency_id = 'Detroit Land Bank Authority'
+    agency_name = 'Detroit Land Bank Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['buildingdetroit.org']
     start_urls = ['https://buildingdetroit.org/events/meetings']
@@ -48,8 +50,8 @@ class DetLandBankSpider(Spider):
         Parse or generate classification (e.g. public health, education, etc).
         """
         if 'board of director' in item['category_type'].lower():
-            return 'Board'
-        return 'Committee'
+            return BOARD
+        return COMMITTEE
 
     def _parse_start(self, item):
         """

@@ -2,15 +2,17 @@
 import re
 from collections import defaultdict
 
-import scrapy
-from city_scrapers.spider import Spider
-
 from dateutil.parser import parse
+
+from city_scrapers.constants import BOARD
+from city_scrapers.spider import Spider
 
 
 class NextMichiganDevelopmentCorporationSpider(Spider):
     name = 'next_michigan_development_corporation'
-    agency_id = 'Next Michigan Development Corporation'
+    agency_name = (
+        'Detroit Next Michigan Development Corporation Board of Directors'
+    )
     timezone = 'America/Chicago'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/d-nmdc/']
@@ -31,14 +33,19 @@ class NextMichiganDevelopmentCorporationSpider(Spider):
         yield from self._next_page_prev_meetings(response)
 
     def _next_meeting(self, response):
-        next_meeting_xpath = '//p[contains(., "The next D-NMDC meeting is")]//text()'
-        next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
+        next_meeting_xpath = (
+            '//p[contains(., "The next D-NMDC meeting is")]//text()'
+        )
+        next_meeting_text = ' '.join(
+            response.xpath(next_meeting_xpath).extract()
+        )
         data = self._set_meeting_defaults(response)
         data['start'] = self._parse_start(next_meeting_text)
-        data['documents'] = []
-        data['status'] = self._generate_status(data, text='')
-        data['id'] = self._generate_id(data)
-        yield data
+        if data['start']['date']:
+            data['documents'] = []
+            data['status'] = self._generate_status(data, text='')
+            data['id'] = self._generate_id(data)
+            yield data
 
     def _next_page_prev_meetings(self, response):
         prev_meetings_xpath = '//a[contains(., "Agendas and Minutes")]'
@@ -51,7 +58,9 @@ class NextMichiganDevelopmentCorporationSpider(Spider):
         other_prev_meetings = self._parse_prev_docs(other_prev_meetings)
         for meeting_date in other_prev_meetings:
             docs = other_prev_meetings[meeting_date]
-            yield self._create_meeting_from_meeting_docs(meeting_date, docs, response)
+            yield self._create_meeting_from_meeting_docs(
+                meeting_date, docs, response
+            )
 
     def _parse_prev_meetings(self, response):
         # there are only documents for prev meetings,
@@ -60,23 +69,34 @@ class NextMichiganDevelopmentCorporationSpider(Spider):
         prev_meeting_docs = self._parse_prev_docs(list_items)
         for meeting_date in prev_meeting_docs:
             docs = prev_meeting_docs[meeting_date]
-            yield self._create_meeting_from_meeting_docs(meeting_date, docs, response)
+            yield self._create_meeting_from_meeting_docs(
+                meeting_date, docs, response
+            )
 
     def _parse_start(self, date_time_text):
         time_match = self._parse_time(date_time_text)
         date_match = self._parse_date(date_time_text)
+        empty_start = {'date': None, 'time': None, 'note': ''}
         try:
-            dt = parse(date_match.group(1) + ' ' + time_match.group(1), fuzzy=True)
-            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+            if date_match and time_match:
+                dt = parse(
+                    f'{date_match.group(1)} {time_match.group(1)}',
+                    fuzzy=True,
+                )
+                return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+            else:
+                return empty_start
         except ValueError:
-            return {'date': None, 'time': None, 'note': ''}
+            return empty_start
 
     def _parse_time(self, date_time_text):
         time_regex = re.compile(r'((1[012]|[1-9]):([0-5][0-9])\s?[AP]M)')
         time_text = time_regex.search(date_time_text, re.IGNORECASE)
         return time_text
 
-    def _create_meeting_from_meeting_docs(self, meeting_date, meeting_docs, response):
+    def _create_meeting_from_meeting_docs(
+        self, meeting_date, meeting_docs, response
+    ):
         data = self._set_meeting_defaults(response)
         data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
         data['documents'] = meeting_docs
@@ -117,7 +137,7 @@ class NextMichiganDevelopmentCorporationSpider(Spider):
             '_type': 'event',
             'name': 'Board of Directors',
             'event_description': '',
-            'classification': 'Board',
+            'classification': BOARD,
             'end': {'date': None, 'time': None, 'note': ''},
             'all_day': False,
             'location': {

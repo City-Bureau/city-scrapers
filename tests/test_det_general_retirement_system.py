@@ -6,6 +6,7 @@ import pytest
 import scrapy
 from freezegun import freeze_time
 
+from city_scrapers.constants import BOARD, NOT_CLASSIFIED
 from city_scrapers.spiders.det_general_retirement_system import DetGeneralRetirementSystemSpider
 from tests.utils import file_response
 
@@ -104,12 +105,12 @@ def test_documents():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Board'
+    assert parsed_items[0]['classification'] == BOARD
 
 
 def test_parse_classification():
-    assert spider._parse_classification('EBP Meeting') == ''
-    assert spider._parse_classification('Board Meeting') == 'Board'
+    assert spider._parse_classification('EBP Meeting') == NOT_CLASSIFIED
+    assert spider._parse_classification('Board Meeting') == BOARD
 
 
 @pytest.mark.parametrize('item', parsed_items)

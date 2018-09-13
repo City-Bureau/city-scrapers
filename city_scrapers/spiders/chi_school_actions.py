@@ -2,13 +2,13 @@
 import itertools
 from datetime import datetime
 
+from city_scrapers.constants import FORUM
 from city_scrapers.spider import Spider
 
 
 class ChiSchoolActionsSpider(Spider):
     name = 'chi_school_actions'
-    agency_id = 'Chicago Public Schools'
-    long_name = 'Chicago Public Schools: School Actions'
+    agency_name = 'Chicago Public Schools School Actions'
     timezone = 'America/Chicago'
     allowed_domains = ['schoolinfo.cps.edu']
     start_urls = ['http://schoolinfo.cps.edu/SchoolActions/Documentation.aspx']
@@ -27,7 +27,7 @@ class ChiSchoolActionsSpider(Spider):
             school_docs = self._parse_documentation(school)
 
             for meeting_section in school.css('#main-body > table > tr > td > table > tr'):
-                meeting_type = self._parse_classification(meeting_section, school_action)
+                meeting_type = self._parse_meeting_type(meeting_section, school_action)
                 for meeting in meeting_section.css('td > table'):
                     start = self._parse_start(meeting)
                     end = self._parse_end(meeting)
@@ -37,7 +37,7 @@ class ChiSchoolActionsSpider(Spider):
                         'name': item_name,
                         'all_day': False,
                         'event_description': self._parse_description(school_name, meeting_type),
-                        'classification': meeting_type,
+                        'classification': FORUM,
                         'start': start,
                         'end': end,
                         'documents': school_docs,
@@ -62,10 +62,7 @@ class ChiSchoolActionsSpider(Spider):
         return '{} {}'.format(school_name, meeting_type)
 
     @staticmethod
-    def _parse_classification(item, school_action):
-        """
-        Parse or generate classification (e.g. public health, education, etc).
-        """
+    def _parse_meeting_type(item, school_action):
         return '{}: {}'.format(
             item.css('td > p.sub-title:first-of-type::text').extract_first(),
             school_action

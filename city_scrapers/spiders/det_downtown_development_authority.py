@@ -4,12 +4,15 @@ from collections import defaultdict
 
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class DetDowntownDevelopmentAuthoritySpider(Spider):
     name = 'det_downtown_development_authority'
-    agency_id = 'Downtown Development Authority'
+    agency_name = (
+        'Detroit Downtown Development Authority Board of Directors'
+    )
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/dda/']
@@ -26,14 +29,21 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
         yield from self._next_meeting(response)
 
     def _next_meeting(self, response):
-        next_meeting_xpath = '//text()[contains(., "The next Regular DDA Board meeting is")]'
-        next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
+        next_meeting_xpath = (
+            '//text()[contains(., "The next Regular DDA Board meeting is")]'
+        )
+        next_meeting_text = ' '.join(
+            response.xpath(next_meeting_xpath).extract()
+        )
         data = self._set_meeting_defaults(response)
         data['start'] = self._parse_start(next_meeting_text)
-        data['documents'] = self._parse_docs(response, data['start']['date'])
-        data['status'] = self._generate_status(data, text='')
-        data['id'] = self._generate_id(data)
-        yield data
+        if data['start']['date'] is not None:
+            data['documents'] = self._parse_docs(
+                response, data['start']['date']
+            )
+            data['status'] = self._generate_status(data, text='')
+            data['id'] = self._generate_id(data)
+            yield data
 
     def _prev_meetings(self, response):
         prev_meetings_xpath = '//a[contains(., "Agendas and Minutes")]'
@@ -55,7 +65,9 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
         prev_meeting_docs = self._parse_prev_docs(response)
         for meeting_date in prev_meeting_docs:
             data = self._set_meeting_defaults(response)
-            data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
+            data['start'] = {
+                'date': meeting_date.date(), 'time': None, 'note': ''
+            }
             data['documents'] = prev_meeting_docs[meeting_date]
             data['status'] = self._generate_status(data, text='')
             data['id'] = self._generate_id(data)
@@ -90,10 +102,10 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
         desc = link_text.split(date)[-1]
         url = link.xpath("@href").extract_first('')
         if 'AGENDA' in desc.upper():
-            return {'url': url, 'note': 'agenda'}
+            return {'url': url, 'note': 'Agenda'}
         if 'MINUTES' in desc.upper():
-            return {'url': url, 'note': 'minutes'}
-        return {'url': url, 'note': desc.lower().strip()}
+            return {'url': url, 'note': 'Minutes'}
+        return {'url': url, 'note': desc.strip()}
 
     def _matches_meeting_date(self, link, meeting_date):
         link_text = link.xpath('span/text()').extract_first('')
@@ -114,7 +126,7 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
             '_type': 'event',
             'name': 'Board of Directors',
             'event_description': '',
-            'classification': 'Board',
+            'classification': BOARD,
             'end': {'date': None, 'time': None, 'note': ''},
             'all_day': False,
             'location': {

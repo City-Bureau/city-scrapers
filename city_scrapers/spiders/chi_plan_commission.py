@@ -4,12 +4,16 @@ from datetime import datetime, time
 
 import dateutil.parser
 
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
-class Chi_plan_commissionSpider(Spider):
+class ChiPlanCommissionSpider(Spider):
     name = 'chi_plan_commission'
-    agency_id = 'Department of Planning and Development'
+    agency_name = (
+        'Chicago Department of Planning and Development '
+        'Chicago Plan Commission'
+    )
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html']
@@ -31,9 +35,9 @@ class Chi_plan_commissionSpider(Spider):
             for meeting in meetings:
                 data = {
                     '_type': 'event',
-                    'name': "Chicago Plan Commission",
+                    'name': 'Chicago Plan Commission',
                     'event_description': description,
-                    'classification': 'Commission',
+                    'classification': COMMISSION,
                     'start': self._parse_start(meeting, year),
                     # Based on meeting minutes, board meetings appear to be all day
                     'all_day': True,

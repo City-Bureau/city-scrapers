@@ -1,6 +1,7 @@
 import re
 from datetime import date, time
-from pytz import timezone
+
+from city_scrapers.constants import CLASSIFICATIONS, STATUSES
 
 
 class TravisValidationPipeline(object):
@@ -11,8 +12,12 @@ class TravisValidationPipeline(object):
         'name': {'required': True, 'type': str},
         'event_description': {'required': False, 'type': str},
         'all_day': {'required': True, 'type': bool},
-        'status': {'required': True, 'type': str, 'values': ['cancelled', 'tentative', 'confirmed', 'passed']},
-        'classification': {'required': False, 'type': str},
+        'status': {'required': True, 'type': str, 'values': STATUSES},
+        'classification': {
+            'required': False,
+            'type': str,
+            'values': CLASSIFICATIONS,
+        },
         'start': {'required': True, 'type': dict},
         'end': {'required': True, 'type': dict},
         'location': {'required': True, 'type': dict},
@@ -70,13 +75,33 @@ class TravisValidationPipeline(object):
             location = {}
 
         # Add validation fields from self.START_SCHEMA and self.END_SCHEMA
-        validation_record.update(self._validate_against_schema(start, self.START_SCHEMA, 'start'))
-        validation_record.update(self._validate_against_schema(end, self.END_SCHEMA, 'end'))
-        validation_record.update(self._validate_against_schema(location, self.LOCATION_SCHEMA, 'loc'))
+        validation_record.update(
+            self._validate_against_schema(
+                start, self.START_SCHEMA, 'start'
+            )
+        )
+        validation_record.update(
+            self._validate_against_schema(
+                end, self.END_SCHEMA, 'end'
+            )
+        )
+        validation_record.update(
+            self._validate_against_schema(
+                location, self.LOCATION_SCHEMA, 'loc'
+            )
+        )
 
         # Add validation fields from self.DOCUMENTS_SCHEMA, self.SOURCES_SCHEMA
-        validation_record.update(self._validate_list(item.get('documents', []), self.DOCUMENTS_SCHEMA, 'doc'))
-        validation_record.update(self._validate_list(item.get('sources', []), self.SOURCES_SCHEMA, 'sources'))
+        validation_record.update(
+            self._validate_list(
+                item.get('documents', []), self.DOCUMENTS_SCHEMA, 'doc'
+            )
+        )
+        validation_record.update(
+            self._validate_list(
+                item.get('sources', []), self.SOURCES_SCHEMA, 'sources'
+            )
+        )
 
         # Add validation fields to item
         item.update(validation_record)
@@ -85,34 +110,41 @@ class TravisValidationPipeline(object):
     def _validate_list(self, list_of_items, schema, prefix=''):
         """
         Validates a list of items against a schema. Returns a dictionary of
-        validation fields with value = 1 if ALL of the items are valid and 
+        validation fields with value = 1 if ALL of the items are valid and
         value = 0 if ANY one of the items is invalid.
         """
         if not list_of_items:
             return {}
         list_of_validations = []
         combined_validation = {}
-        
-        # Validate each item against the schema to get a list of validation dicts
-        for item in list_of_items:
-            list_of_validations.append(self._validate_against_schema(item, schema, prefix))
 
-        # Combine all the validation dicts into one dictionary that has value = 1
-        # if ALL the items are valid, and 0 if ANY one of the items is invalid
+        # Validate each item against the schema to get a
+        # list of validation dicts
+        for item in list_of_items:
+            list_of_validations.append(
+                self._validate_against_schema(item, schema, prefix)
+            )
+
+        # Combine all the validation dicts into one dictionary that has value
+        # = 1 if ALL the items are valid, and 0 if ANY one of the items is
+        # invalid
         for key in list_of_validations[0].keys():
-            combined_validation[key] = all([d[key] for d in list_of_validations])
+            combined_validation[key] = all([
+                d[key] for d in list_of_validations
+            ])
         return combined_validation
 
     def _validate_against_schema(self, item, schema, prefix=''):
         """
-        Returns a dictionary with key='val_{field}', 
-        value = 1 if item[field] is valid, and value = 0 if item[field] is invalid
-        according to the schema.
+        Returns a dictionary with key='val_{field}',
+        value = 1 if item[field] is valid, and value = 0 if item[field]
+        is invalid according to the schema.
 
         Examples:
         >> schema = {
             'name': {'required': True, 'type': str},  # required field
-            'event_description': {'required': False, 'type': str}  # not required
+            'event_description': {'required': False, 'type': str}
+            # not required
         }
         >> item1 = {
             'name': 'A Committee Meeting on Pedestrian Safety',  # valid
@@ -145,10 +177,14 @@ class TravisValidationPipeline(object):
                 if is_required:
                     is_valid = not (item.get(field, None) in self.NULL_VALUES)
                 if 'type' in schema[field]:
-                    correct_type = isinstance(item.get(field, None), schema[field]['type'])
+                    correct_type = isinstance(
+                        item.get(field, None), schema[field]['type']
+                    )
                     is_valid = is_valid and correct_type
                 if 'values' in schema[field]:
-                    in_values = (item.get(field, None) in schema[field]['values'])
+                    in_values = (
+                        item.get(field, None) in schema[field]['values']
+                    )
                     is_valid = is_valid and in_values
                 if 'format_str' in schema[field]:
                     pattern = re.compile(schema[field]['format_str'])

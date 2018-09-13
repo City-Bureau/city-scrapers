@@ -7,9 +7,12 @@ from legistar.events import LegistarEventsScraper
 from city_scrapers.spider import Spider
 
 
-class Chi_waterSpider(Spider):
-    name = 'chi_water'
-    agency_id = 'Metropolitan Water Reclamation District of Greater Chicago'
+class CookWaterSpider(Spider):
+    name = 'cook_water'
+    agency_name = (
+        'Metropolitan Water Reclamation District of Greater Chicago '
+        'Board of Commissioners'
+    )
     timezone = 'America/Chicago'
     allowed_domains = ['mwrd.legistar.com']
     event_timezone = 'America/Chicago'

@@ -3,6 +3,7 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
+from city_scrapers.constants import FORUM
 from city_scrapers.spiders.chi_school_actions import ChiSchoolActionsSpider
 
 test_response = file_response('files/chi_school_actions.html')
@@ -19,7 +20,7 @@ def test_description():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Community Meetings: Consolidation'
+    assert parsed_items[0]['classification'] == FORUM
 
 
 def test_start():

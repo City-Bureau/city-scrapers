@@ -4,12 +4,16 @@ from datetime import time
 
 import dateutil.parser
 
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
 class ChiCommunityDevelopmentSpider(Spider):
     name = 'chi_community_development'
-    agency_id = 'Department of Planning and Development'
+    agency_name = (
+        'Chicago Department of Planning and Development '
+        'Community Development Commission'
+    )
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/community_developmentcommission.html']
@@ -31,7 +35,7 @@ class ChiCommunityDevelopmentSpider(Spider):
             meetings = self.format_meetings(meetings)
             for meeting in meetings:
                 data = {'_type': 'event',
-                        'name': "Community Development Commission",
+                        'name': 'Community Development Commission',
                         'event_description': description,
                         'classification': 'Commission',
                         'start': self._parse_start(meeting, year), 'all_day': False,

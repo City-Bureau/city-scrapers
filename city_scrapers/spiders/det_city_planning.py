@@ -2,22 +2,22 @@
 import re
 from collections import defaultdict
 from datetime import datetime, time
-from dateutil.parser import parse as dateparse
+from dateutil.parser import parse
 from urllib.parse import urljoin
 
 import scrapy
+
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
-from dateutil.parser import parse
 
 
 class DetCityPlanningSpider(Spider):
     name = 'det_city_planning'
-    agency_id = 'Detroit City Planning Commission'
+    agency_name = 'Detroit City Planning Commission'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
     base_url = 'https://www.detroitmi.gov/'
     start_urls = ['https://www.detroitmi.gov/Government/Boards/City-Planning-Commission-Meetings']
-    classification = 'Committee'
     location = {
         'name': 'Committee of the Whole Room, 13th floor, Coleman A. Young Municipal Center',
         'address': '2 Woodward Avenue, Detroit, MI 48226',
@@ -38,7 +38,7 @@ class DetCityPlanningSpider(Spider):
                 '_type': 'event',
                 'name': 'City Planning Commission Regular Meeting',
                 'event_description': '',
-                'classification': self.classification,
+                'classification': COMMISSION,
                 'start': {'date': meeting_date_time.date(),
                           'time': time(17, 00),
                           'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'},

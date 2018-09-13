@@ -4,14 +4,14 @@ import pytest
 # Adapted from test_chi_parks.py
 from freezegun import freeze_time
 
-from city_scrapers.spiders.wayne_cow import Wayne_cowSpider
+from city_scrapers.spiders.wayne_cow import WayneCommitteeWholeSpider
 from tests.utils import file_response
 
 freezer = freeze_time('2018-04-26 12:00:01')
 freezer.start()
 test_response = file_response(
     'files/wayne_cow.html', url='https://www.waynecounty.com/elected/commission/committee-of-the-whole.aspx')
-spider = Wayne_cowSpider()
+spider = WayneCommitteeWholeSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
@@ -35,7 +35,7 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Wayne County Committee of the Whole'
+    assert item['name'] == 'Committee of the Whole'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -91,4 +91,4 @@ def test_status():
 
 
 def test_id():
-   assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/wayne_county_committee_of_the_whole'
+   assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/committee_of_the_whole'

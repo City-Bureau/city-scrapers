@@ -1,5 +1,6 @@
 from city_scrapers.utils import report_error
 
+
 class CityScrapersItemPipeline(object):
     """
     Pipeline for doing any custom processing on individual
@@ -10,5 +11,5 @@ class CityScrapersItemPipeline(object):
         if hasattr(spider, 'long_name'):
             item['agency_name'] = spider.long_name
         else:
-            item['agency_name'] = spider.agency_id
+            item['agency_name'] = spider.agency_name
         return item

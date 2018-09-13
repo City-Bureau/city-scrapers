@@ -7,16 +7,14 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 from datetime import datetime
 import re
 
-from pytz import timezone
-
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
-class Chi_policeboardSpider(Spider):
+class ChiPoliceBoardSpider(Spider):
     name = 'chi_policeboard'
     timezone = 'America/Chicago',
-    agency_id = 'Chicago Police Board'
-    long_name = 'Chicago Police Board'
+    agency_name = 'Chicago Police Board Board of Directors'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['http://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
 
@@ -32,7 +30,7 @@ class Chi_policeboardSpider(Spider):
             '_type': 'event',
             'name': self._parse_name(response),
             'event_description': self._parse_description(response),
-            'classification': 'Board',
+            'classification': BOARD,
             'end': {'date': None, 'time': None, 'note': ''},
             'all_day': False,
             'location': self._parse_location(response),
@@ -85,13 +83,11 @@ class Chi_policeboardSpider(Spider):
             return datetime.strptime(cleaned_time, '%I:%M%p').time()
         return None
 
-
     def _parse_name(self, response):
         """
         Parse or generate event name.
         """
         return response.css("h1[class='page-heading']::text").extract_first()
-
 
     def _parse_description(self, response):
         """
@@ -127,4 +123,3 @@ class Chi_policeboardSpider(Spider):
             year_match = re.search(r'([0-9]{4})', entry)
             if year_match:
                 return year_match.group(1)
-

@@ -6,15 +6,14 @@ import scrapy
 import usaddress
 from dateutil.parser import parse as dateparse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
-class Il_pubhealthSpider(Spider):
+class IlPubhealthSpider(Spider):
     name = 'il_pubhealth'
-    agency_id = 'Illinois Department of Public Health'
+    agency_name = 'Illinois Department of Public Health'
     timezone = 'America/Chicago'
-
-    long_name = 'Illinois Department of Public Health'
     allowed_domains = ['www.dph.illinois.gov']
     start_urls = ['http://www.dph.illinois.gov/events']
     domain_root = 'http://www.dph.illinois.gov'
@@ -31,7 +30,7 @@ class Il_pubhealthSpider(Spider):
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'event_description': self._parse_description(item),
-                'classification': 'Not classified',
+                'classification': BOARD,
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),

@@ -2,14 +2,14 @@ import pytest
 import json
 from datetime import date, time
 
-from city_scrapers.spiders.cook_board import Cook_boardSpider
+from city_scrapers.spiders.cook_board import CookBoardSpider
 
 
 test_response = []
 with open('tests/files/cook_board.txt') as f:
     for line in f:
         test_response.append(json.loads(line))
-spider = Cook_boardSpider()
+spider = CookBoardSpider()
 parsed_items = [item for item in spider._parse_events(test_response)]
 
 
