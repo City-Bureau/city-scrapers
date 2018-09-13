@@ -2,6 +2,7 @@
 import scrapy
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
@@ -83,10 +84,10 @@ class DetPoliceFireRetirementSpider(Spider):
     @staticmethod
     def _parse_classification(meeting_name):
         if 'Board' in meeting_name:
-            return 'Board'
+            return BOARD
         elif 'Committee' in meeting_name:
-            return 'Committee'
-        return ''
+            return COMMITTEE
+        return NOT_CLASSIFIED
 
     def _get_location(self, response):
         location_xpath = '//div[contains(@id, "divEventDetailsTemplate3")]//p[contains(., "Address")]/following-sibling::p/text()'

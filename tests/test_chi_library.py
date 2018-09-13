@@ -3,6 +3,7 @@ import betamax
 import requests
 
 from tests.utils import file_response
+from city_scrapers.constants import BOARD
 from city_scrapers.spiders.chi_library import ChiLibrarySpider
 
 # Use betamax to record requests
@@ -59,7 +60,7 @@ def test_name_param(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board meeting'
+    assert item['classification'] == BOARD
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end(item):
@@ -68,10 +69,6 @@ def test_end(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day_param(item):
     assert item['all_day'] is False
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):

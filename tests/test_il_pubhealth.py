@@ -4,6 +4,7 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
+from city_scrapers.constants import BOARD
 from city_scrapers.spiders.il_pubhealth import IlPubhealthSpider
 
 test_response = file_response('files/il_pubhealth.html', url='http://www.dph.illinois.gov/events')
@@ -51,7 +52,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Not classified'
+    assert item['classification'] == BOARD
 
 
 @pytest.mark.parametrize('item', parsed_items)

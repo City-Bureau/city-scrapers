@@ -9,12 +9,13 @@ import urllib3
 from datetime import datetime, date, time, timedelta
 from legistar.events import LegistarEventsScraper
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class ChiParksSpider(Spider):
     name = 'chi_parks'
-    agency_id = 'Chicago Park District'
+    agency_id = 'Chicago Park District Board of Commissioners'
     START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = [START_URL]

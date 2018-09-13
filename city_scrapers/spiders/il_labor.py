@@ -7,6 +7,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
@@ -48,7 +49,7 @@ class IlLaborSpider(Spider):
                 '_type': 'event',
                 'name': name,
                 'event_description': self._parse_description(response),
-                'classification': self._parse_classification(item),
+                'classification': BOARD,
                 'start': { 'date': start_datetime.date(), 'time': start_datetime.time() },
                 'end': { 'date': start_datetime.date(), 'time': (start_datetime + timedelta(hours=3)).time() },
                 'all_day': self._parse_all_day(item),
@@ -60,13 +61,6 @@ class IlLaborSpider(Spider):
             }
             data['id'] = self._generate_id(data)
             yield data
-
-    def _parse_classification(self, item):
-        """
-        These are `board meetings`, but set to `committee meeting` as specified
-        in event schema
-        """
-        return 'committee-meeting'
 
     def _parse_status(self, item):
         """

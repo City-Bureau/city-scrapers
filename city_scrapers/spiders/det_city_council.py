@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 import scrapy
 from dateutil.parser import parse
 
+from city_scrapers.constants import COMMITTEE
 from city_scrapers.spider import Spider
 
 
@@ -59,7 +60,7 @@ class DetCityCouncilSpider(Spider):
             '_type': 'event',
             'name': name,
             'event_description': description,
-            'classification': 'Committee',
+            'classification': COMMITTEE,
             'start': start,
             'end': end,
             'all_day': False,

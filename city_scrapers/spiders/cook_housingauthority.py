@@ -9,12 +9,13 @@ import urllib.parse as urlparse
 import scrapy
 from dateutil.parser import parse as dateparse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class CookHousingAuthoritySpider(Spider):
     name = 'cook_housingauthority'
-    long_name = 'Housing Authority of Cook County'
+    long_name = 'Housing Authority of Cook County Board of Commissioners'
     allowed_domains = ['http://thehacc.org/']
     start_urls = ['http://thehacc.org/events/feed/']
     events_endpoint = 'http://thehacc.org/wp-json/tribe/events/v1/events/{id}'
@@ -44,7 +45,6 @@ class CookHousingAuthoritySpider(Spider):
         else:
             event = r['json_ld']
             all_date = r['all_day']
-            classification = 'Not classified'
             description = self._extract_text(r['description'])
             end_time = dateparse(event['endDate'])
             location = self._parse_location(event)
@@ -57,7 +57,7 @@ class CookHousingAuthoritySpider(Spider):
             parsed_event = {
                 '_type': 'event',
                 'all_day': all_date,
-                'classification': classification,
+                'classification': BOARD,
                 'description': description,
                 'end_time': end_time,
                 'location': location,

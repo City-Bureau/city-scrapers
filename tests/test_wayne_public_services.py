@@ -36,7 +36,7 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Wayne County Committee on Public Services'
+    assert item['name'] == 'Committee on Public Services'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -88,7 +88,7 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'wayne_public_services/201801171100/x/wayne_county_committee_on_public_services'
+    assert parsed_items[0]['id'] == 'wayne_public_services/201801171100/x/committee_on_public_services'
 
 
 def test_status():

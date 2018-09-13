@@ -8,12 +8,14 @@ import requests
 import json
 import datetime
 
+from city_scrapers.constants import BOARD, TENTATIVE
 from city_scrapers.spider import Spider
 
 
 class ChiLibrarySpider(Spider):
     name = 'chi_library'
-    long_name = 'Chicago Public Library'
+    agency_id = 'Chicago Public Library Board of Directors'
+    timezone = 'America/Chicago'
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
 
@@ -64,11 +66,10 @@ class ChiLibrarySpider(Spider):
                 '_type': 'event',
                 'name': 'Chicago Public Library Board Meeting',
                 'description': description_str,
-                'classification': 'Board meeting',
+                'classification': BOARD,
                 'start_time': start_time,
                 'end_time': None,  # no end time listed
                 'all_day': False,  # default is false
-                'timezone': 'America/Chicago',
                 'status': self._parse_status(item),  # default is tentative, but there is no status info on site
                 'location': self._parse_location(item, lib_info),
                 'sources': self._parse_sources(response)
@@ -101,7 +102,7 @@ class ChiLibrarySpider(Spider):
 
         @TODO determine correct status
         """
-        return 'tentative'
+        return TENTATIVE
 
     def find_name(self, li):
         if len(li) == 4:

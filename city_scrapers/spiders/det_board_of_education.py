@@ -2,12 +2,13 @@
 import scrapy
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class DetBoardOfEducationSpider(Spider):
     name = 'det_board_of_education'
-    agency_id = 'Board of Education'
+    agency_id = 'Detroit Public Schools Board of Education'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/board/meetings/']
@@ -26,7 +27,7 @@ class DetBoardOfEducationSpider(Spider):
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'event_description': '',
-                'classification': 'Board',
+                'classification': BOARD,
                 'start': start,
                 'end': end,
                 'all_day': False,

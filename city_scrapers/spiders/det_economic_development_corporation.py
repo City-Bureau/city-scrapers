@@ -4,12 +4,13 @@ from collections import defaultdict
 
 from dateutil.parser import parse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class DetEconomicDevelopmentCorporationSpider(Spider):
     name = 'det_economic_development_corporation'
-    agency_id = 'Economic Development Corporation'
+    agency_id = 'Detroit Economic Development Corporation Board of Directors'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/edc/']
@@ -101,7 +102,7 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
             '_type': 'event',
             'name': 'Board of Directors',
             'event_description': '',
-            'classification': 'Board',
+            'classification': BOARD,
             'end': {'date': None, 'time': None, 'note': ''},
             'all_day': False,
             'location': {

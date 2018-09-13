@@ -10,6 +10,8 @@ import unicodedata
 from datetime import datetime
 
 import scrapy
+
+from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
@@ -44,7 +46,7 @@ class ChiBuildingsSpider(Spider):
                         'id': self._generate_id({'name': item['title']}),
                         'name': item['title'],
                         'description': self._parse_description(item),
-                        'classification': self._parse_classification(item),
+                        'classification': self._parse_classification(item.get('category')[0]),
                         'start': self._parse_time_dict(start_date),
                         'end': self._parse_time_dict(end_date),
                         'all_day': item['allDay'],
@@ -73,13 +75,17 @@ class ChiBuildingsSpider(Spider):
         item.update(response.meta.get('item', {}))
         return item
 
-    def _parse_classification(self, item):
+    def _parse_classification(self, meeting_type):
         """
         Parse or generate classification (e.g. town hall).
 
         PBCC has relatively helpful classifications in its WordPress categories.
         """
-        return ' '.join([w.capitalize() for w in item['category'][0].split('-')])
+        if 'committee' in meeting_type:
+            return COMMITTEE
+        elif 'board' in meeting_type:
+            return BOARD
+        return NOT_CLASSIFIED
 
     def _parse_status(self, item, start_time):
         """

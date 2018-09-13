@@ -4,12 +4,14 @@ from dateutil.parser import parse as dateparse
 from collections import defaultdict
 from urllib.parse import urljoin
 import scrapy
+
+from city_scrapers.constants import ADVISORY_COMMITTEE
 from city_scrapers.spider import Spider
 
 
 class MiBelleIsleSpider(Spider):
     name = 'mi_belle_isle'
-    agency_id = 'Belle Isle Advisory Committee'
+    agency_id = 'Michigan Belle Isle Advisory Committee'
     timezone = 'America/Detroit'
     allowed_domains = ['www.michigan.gov']
     start_urls = ["https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html"]
@@ -29,7 +31,7 @@ class MiBelleIsleSpider(Spider):
                 '_type': 'event',
                 'name': 'Committee Meeting',
                 'event_description': '',
-                'classification': 'Committee',
+                'classification': ADVISORY_COMMITTEE,
                 'start': {
                     'date': date,
                     'time': start_time,

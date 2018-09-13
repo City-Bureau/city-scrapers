@@ -2,6 +2,7 @@ import pytest
 
 from freezegun import freeze_time
 from tests.utils import file_response
+from city_scrapers.constants import COMMITTEE
 from city_scrapers.spiders.chi_transit import ChiTransitSpider
 from datetime import date, time
 
@@ -46,7 +47,7 @@ def test_end():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'committee meeting'
+    assert parsed_items[0]['classification'] == COMMITTEE
 
 
 def test_id():

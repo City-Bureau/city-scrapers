@@ -2,6 +2,9 @@
 
 from dateutil.parser import parse
 
+from city_scrapers.constants import (
+    ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
+)
 from city_scrapers.spider import Spider
 
 
@@ -69,15 +72,15 @@ class DetRegionalTransitAuthoritySpider(Spider):
         Parse or generate classification (e.g. public health, education, etc).
         """
         classifications = {
-            'Board of Directors': 'Board',
-            'Citizens Advisory Committee': 'Advisory Committee',
-            'Executive and Policy Committee': 'Committee',
-            'Finance and Budget Committee': 'Committee',
-            'Funding Allocation Committee': 'Committee',
-            'Planning and Service Coordination Committee': 'Committee',
-            'Providers Advisory Council	Advisory': 'Committee'
+            'Board of Directors': BOARD,
+            'Citizens Advisory Committee': ADVISORY_COMMITTEE,
+            'Executive and Policy Committee': COMMITTEE,
+            'Finance and Budget Committee': COMMITTEE,
+            'Funding Allocation Committee': COMMITTEE,
+            'Planning and Service Coordination Committee': COMMITTEE,
+            'Providers Advisory Council	Advisory': COMMITTEE
         }
-        return classifications.get(item, '')
+        return classifications.get(item, NOT_CLASSIFIED)
 
     @staticmethod
     def _parse_start(row):

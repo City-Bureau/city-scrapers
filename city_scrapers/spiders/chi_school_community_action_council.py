@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from city_scrapers.spider import Spider
 from datetime import datetime, timedelta, time
 from dateutil.parser import parse as dateparse
 import re
+
+from city_scrapers.constants import COMMITTEE
+from city_scrapers.spider import Spider
 
 
 class ChiSchoolCommunityActionCouncilSpider(Spider):
@@ -37,7 +39,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
                         '_type': 'event',
                         'name': self._parse_name(item),
                         'event_description': self._parse_description(),
-                        'classification': self._parse_classification(),
+                        'classification': COMMITTEE,
                         'start': self._parse_start(item, month_counter),
                         'all_day': self._parse_all_day(item),
                         'location': self._parse_location(item),
@@ -80,12 +82,6 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         Parse or generate event description.
         """
         return ''
-
-    def _parse_classification(self):
-        """
-        Parse or generate classification (e.g. public health, education, etc).
-        """
-        return 'committee'
 
     def _parse_start(self, item, month_counter):
         """
@@ -175,7 +171,6 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
                 'time': end_datetime.time(),
                 'note': 'Estimated 3 hours after the start time'
             }
-        
 
     def _parse_all_day(self, item):
         """

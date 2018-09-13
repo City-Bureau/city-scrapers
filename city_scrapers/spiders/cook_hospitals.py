@@ -2,6 +2,8 @@
 
 from datetime import datetime, timedelta
 from dateutil.parser import parse
+
+from city_scrapers.constants import BOARD, COMMITTEE
 from city_scrapers.spider import Spider
 
 
@@ -9,8 +11,6 @@ class CookHospitalsSpider(Spider):
     name = 'cook_hospitals'
     agency_id = 'Cook County Health and Hospitals System'
     timezone = 'America/Chicago'
-
-    long_name = 'Cook County Health and Hospitals System'
     allowed_domains = ['www.cookcountyhhs.org']
     start_urls = ['http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/']
     domain_root = 'http://www.cookcountyhhs.org'
@@ -48,8 +48,8 @@ class CookHospitalsSpider(Spider):
     @staticmethod
     def _parse_classification(name):
         if 'BOARD' in name.upper():
-            return 'Board'
-        return 'Committee'
+            return BOARD
+        return COMMITTEE
 
     @staticmethod
     def _parse_documents(subitem):

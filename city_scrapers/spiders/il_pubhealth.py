@@ -6,6 +6,7 @@ import scrapy
 import usaddress
 from dateutil.parser import parse as dateparse
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
@@ -31,7 +32,7 @@ class IlPubhealthSpider(Spider):
                 'id': self._parse_id(item),
                 'name': self._parse_name(item),
                 'event_description': self._parse_description(item),
-                'classification': 'Not classified',
+                'classification': BOARD,
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),

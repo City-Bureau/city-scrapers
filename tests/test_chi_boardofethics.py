@@ -2,6 +2,7 @@ from datetime import date, time
 
 import pytest
 
+from city_scrapers.constants import BOARD
 from city_scrapers.spiders.chi_boardofethics import ChiBoardOfEthicsSpider
 from tests.utils import file_response
 
@@ -17,7 +18,7 @@ def test_items():
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Chicago Board of Ethics'
+    assert parsed_items[0]['name'] == 'Board of Ethics'
 
 
 def test_description():
@@ -37,7 +38,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_boardofethics/201806151200/x/chicago_board_of_ethics'
+    assert parsed_items[0]['id'] == 'chi_boardofethics/201806151200/x/board_of_ethics'
 
 
 def test_location():
@@ -63,7 +64,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board Meeting'
+    assert item['classification'] == BOARD
 
 
 @pytest.mark.parametrize('item', parsed_items)

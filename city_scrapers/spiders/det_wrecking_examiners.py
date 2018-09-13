@@ -2,12 +2,14 @@
 from dateutil.parser import parse
 from datetime import time
 import scrapy
+
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
 class DetWreckingExaminersSpider(Spider):
     name = 'det_wrecking_examiners'
-    agency_id = 'Detroit Board of Wrecking Contractors Examiners'
+    agency_id = 'Detroit Wrecking Contractors Board of Examiners'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
     start_urls = ['http://www.detroitmi.gov/Government/Boards/Board-of-Wrecking-Contractors-Meetings']
@@ -31,7 +33,7 @@ class DetWreckingExaminersSpider(Spider):
                 '_type': 'event',
                 'name': meeting_name,
                 'event_description': '',
-                'classification': 'Board',
+                'classification': BOARD,
                 'start': self._parse_start(item),
                 'end': {'date': None, 'time': None, 'note': ''},
                 'all_day': False,

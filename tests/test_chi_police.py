@@ -1,6 +1,7 @@
 from datetime import date, time
 import pytest
 from tests.utils import file_response
+from city_scrapers.constants import POLICE_BEAT
 from city_scrapers.spiders.chi_police import ChiPoliceSpider
 
 test_response = file_response('files/chi_police.json')
@@ -55,7 +56,7 @@ def test_status():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Beat Meeting'
+    assert parsed_items[0]['classification'] == POLICE_BEAT
 
 
 def test_documents():

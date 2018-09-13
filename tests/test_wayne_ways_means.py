@@ -5,6 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
+from city_scrapers.constants import CANCELED
 from city_scrapers.spiders.wayne_ways_means import WayneWaysMeansSpider
 
 
@@ -36,7 +37,7 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Wayne County Ways and Means Committee'
+    assert item['name'] == 'Ways and Means Committee'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -85,8 +86,8 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'wayne_ways_means/201801091200/x/wayne_county_ways_and_means_committee'
+    assert parsed_items[0]['id'] == 'wayne_ways_means/201801091200/x/ways_and_means_committee'
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'cancelled'
+    assert parsed_items[0]['status'] == CANCELED

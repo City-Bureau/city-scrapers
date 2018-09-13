@@ -4,6 +4,9 @@ import scrapy
 import re
 from datetime import datetime
 
+from city_scrapers.constants import (
+    ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
+)
 from city_scrapers.spider import Spider
 
 
@@ -11,8 +14,7 @@ from city_scrapers.spider import Spider
 # website via an iframe from a different domain.
 class IlRegionalTransitSpider(Spider):
     name = 'il_regional_transit'
-    agency_id = 'Regional Transportation Authority '
-    long_name = 'Regional Transportation Authority'
+    agency_id = 'Regional Transportation Authority'
     timezone = 'America/Chicago'
 
     allowed_domains = ['www.rtachicago.org', 'rtachicago.granicus.com']
@@ -59,12 +61,12 @@ class IlRegionalTransitSpider(Spider):
     def _parse_classification(name):
         name = name.upper()
         if 'CITIZENS ADVISORY' in name:
-            return 'Citizens Advisory Council'
+            return ADVISORY_COMMITTEE
         if 'COMMITTEE' in name:
-            return 'Committee'
+            return COMMITTEE
         if 'BOARD' in name:
-            return 'Board'
-        return 'Not classified'
+            return BOARD
+        return NOT_CLASSIFIED
 
     @staticmethod
     def _parse_location():

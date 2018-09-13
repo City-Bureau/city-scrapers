@@ -3,6 +3,7 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
+from city_scrapers.constants import COMMITTEE
 from city_scrapers.spiders.chi_school_community_action_council import ChiSchoolCommunityActionCouncilSpider
 
 freezer = freeze_time('2018-06-01 12:00:01')
@@ -83,7 +84,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'committee'
+    assert item['classification'] == COMMITTEE
 
 
 @pytest.mark.parametrize('item', parsed_items)

@@ -3,6 +3,7 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
+from city_scrapers.constants import ADVISORY_COMMITTEE
 from city_scrapers.spiders.mi_belle_isle import MiBelleIsleSpider
 
 
@@ -73,7 +74,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Committee'
+    assert item['classification'] == ADVISORY_COMMITTEE
 
 
 @pytest.mark.parametrize('item', parsed_items)

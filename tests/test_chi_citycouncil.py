@@ -5,6 +5,7 @@ from urllib.parse import parse_qs
 import pytest
 from scrapy.http import TextResponse
 
+from city_scrapers.constants import CITY_COUNCIL
 from city_scrapers.spiders.chi_citycouncil import ChiCityCouncilSpider
 from tests.utils import file_response, read_test_file_content
 
@@ -119,7 +120,7 @@ def test_all_day(parsed_item):
 
 
 def test_classification(parsed_item):
-    assert parsed_item['classification'] == 'City Council'
+    assert parsed_item['classification'] == CITY_COUNCIL
 
 
 def test_status(parsed_item):

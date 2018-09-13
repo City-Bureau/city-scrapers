@@ -5,12 +5,14 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import datetime
 from dateutil.parser import parse as dateparse
+
+from city_scrapers.constants import ADVISORY_COMMITTEE
 from city_scrapers.spider import Spider
 
 
 class ChiAnimalSpider(Spider):
     name = 'chi_animal'
-    agency_id = 'Animal Care and Control Commission'
+    agency_id = 'Chicago Animal Care and Control Advisory Board'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html']
@@ -40,9 +42,9 @@ class ChiAnimalSpider(Spider):
             # Parse the item
             data = {
                 '_type': 'event',
-                'name': self._parse_name(text),
+                'name': 'Advisory Board Meeting',
                 'event_description': self._parse_description(text),
-                'classification': self._parse_classification(text),
+                'classification': ADVISORY_COMMITTEE,
                 'start': self._parse_start(text),
                 'all_day': self._parse_all_day(text),
                 'location': self._parse_location(text),
@@ -54,12 +56,6 @@ class ChiAnimalSpider(Spider):
             data['end'] = self._generate_end(data['start'])
 
             yield data
-
-    def _parse_classification(self, item):
-        """
-        Parse or generate classification (e.g. town hall).
-        """
-        return 'Commission'
 
     def _parse_status(self, data):
         """
@@ -96,12 +92,6 @@ class ChiAnimalSpider(Spider):
         Parse or generate all-day status. Defaults to false.
         """
         return False
-
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
-        return 'Animal Care and Control Commission meeting'
 
     def _parse_description(self, item):
         """

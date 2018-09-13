@@ -10,6 +10,7 @@ import datetime as dt
 import re
 import unicodedata
 
+from city_scrapers.constants import BOARD, COMMITTEE
 from city_scrapers.spider import Spider
 
 
@@ -23,7 +24,6 @@ class CookLandbankSpider(Spider):
     """
     name = 'cook_landbank'
     agency_id = 'Cook County Land Bank Authority'
-    long_name = 'Cook County Land Bank'
     timezone = 'America/Chicago'
 
     allowed_domains = ['www.cookcountylandbank.org']
@@ -245,6 +245,6 @@ class CookLandbankSpider(Spider):
 
     def _generate_classification(self, name):
         if re.search("Board of Directors", name, re.IGNORECASE):
-            return 'board meeting'
+            return BOARD
         else:
-            return 'committee meeting'
+            return COMMITTEE

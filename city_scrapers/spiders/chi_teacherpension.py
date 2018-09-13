@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from city_scrapers.spider import Spider
 from datetime import datetime
+
+from city_scrapers.constants import BOARD, COMMITTEE, TENTATIVE
+from city_scrapers.spider import Spider
 
 
 class ChiTeacherPensionSpider(Spider):
@@ -81,9 +83,9 @@ class ChiTeacherPensionSpider(Spider):
         Parse or generate classification (e.g. public health, education, etc).
         """
         if i == 1:
-        	return 'board meeting'
+        	return BOARD
         else:
-        	return 'committee meeting'
+        	return COMMITTEE
 
     def _parse_start(self, response, date, i):
         """
@@ -143,7 +145,7 @@ class ChiTeacherPensionSpider(Spider):
         * passed
         By default, return "tentative"
         """
-        return 'tentative'
+        return TENTATIVE
 
     def _parse_sources(self, response):
         """

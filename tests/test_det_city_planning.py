@@ -3,6 +3,7 @@ from datetime import date, time
 
 
 from tests.utils import file_response
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spiders.det_city_planning import DetCityPlanningSpider
 
 
@@ -65,7 +66,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] is 'Committee'
+    assert item['classification'] is COMMISSION
 
 
 @pytest.mark.parametrize('item', parsed_items)

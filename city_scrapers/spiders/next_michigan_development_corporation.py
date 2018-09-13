@@ -3,14 +3,15 @@ import re
 from collections import defaultdict
 
 import scrapy
-from city_scrapers.spider import Spider
-
 from dateutil.parser import parse
+
+from city_scrapers.constants import BOARD
+from city_scrapers.spider import Spider
 
 
 class NextMichiganDevelopmentCorporationSpider(Spider):
     name = 'next_michigan_development_corporation'
-    agency_id = 'Next Michigan Development Corporation'
+    agency_id = 'Detroit Next Michigan Development Corporation Board of Directors'
     timezone = 'America/Chicago'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/d-nmdc/']
@@ -117,7 +118,7 @@ class NextMichiganDevelopmentCorporationSpider(Spider):
             '_type': 'event',
             'name': 'Board of Directors',
             'event_description': '',
-            'classification': 'Board',
+            'classification': BOARD,
             'end': {'date': None, 'time': None, 'note': ''},
             'all_day': False,
             'location': {

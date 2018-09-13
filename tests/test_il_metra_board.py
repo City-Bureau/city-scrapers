@@ -3,6 +3,8 @@ import pytest
 from tests.utils import file_response
 from datetime import date
 from datetime import time
+
+from city_scrapers.constants import BOARD
 from city_scrapers.spiders.il_metra_board import IlMetraBoardSpider
 
 
@@ -15,7 +17,7 @@ def test_name():
     assert parsed_items[0]['name'] == 'Metra February 2018 Board Meeting'
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Board Meeting'
+    assert parsed_items[0]['classification'] == BOARD
 
 def test_start():
     EXPECTED_START = {

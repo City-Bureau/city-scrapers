@@ -3,12 +3,15 @@ import scrapy
 import re
 import urllib.parse
 from datetime import datetime
+
+from city_scrapers.constants import BOARD, TENTATIVE
 from city_scrapers.spider import Spider
 
 
 class DetSchoolsSpider(Spider):
     name = 'det_schools'
-    long_name = 'Detroit Board of Education'
+    long_name = 'Detroit Public Schools Board of Education'
+    timezone = 'America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/board/meetings/']
 
@@ -37,10 +40,9 @@ class DetSchoolsSpider(Spider):
                 'id': self._parse_id(item[1]),
                 'name': item[0],
                 'description': item[0],
-                'classification': self._parse_classification(item),
+                'classification': BOARD,
                 'start_time': self._parse_start(item[2]),
                 'end_time': self._parse_end(item[2]),
-                'timezone': 'America/Detroit',
                 'status': self._parse_status(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item[3]),
@@ -75,12 +77,6 @@ class DetSchoolsSpider(Spider):
         Parse or generate event name.
         """
         return ''
-
-    def _parse_classification(self, item):
-        """
-        Parse or generate classification (e.g. public health, education, etc).
-        """
-        return 'education'
 
     def _parse_start(self, item):
         """
@@ -140,7 +136,7 @@ class DetSchoolsSpider(Spider):
         * passed
         By default, return "tentative"
         """
-        return 'tentative'
+        return TENTATIVE
 
     def _parse_sources(self, response):
         """

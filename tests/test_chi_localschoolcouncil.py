@@ -5,6 +5,7 @@ from datetime import date, time, datetime
 from pytz import timezone
 
 from tests.utils import file_response
+from city_scrapers.constants import COMMITTEE
 from city_scrapers.spiders.chi_localschoolcouncil import ChiLocalSchoolCouncilSpider
 from textwrap import dedent
 
@@ -71,7 +72,7 @@ def test_sources():
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] is 'committee'
+    assert parsed_items[0]['classification'] is COMMITTEE
 
 
 def test__type():

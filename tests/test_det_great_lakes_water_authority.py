@@ -2,6 +2,7 @@ from datetime import date, time
 
 import pytest
 
+from city_scrapers.constants import CANCELED
 from city_scrapers.spiders.det_great_lakes_water_authority import DetGreatLakesWaterAuthoritySpider
 from tests.utils import file_response
 import scrapy
@@ -61,7 +62,7 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'cancelled'
+    assert parsed_items[0]['status'] == CANCELED
 
 
 def test_location():

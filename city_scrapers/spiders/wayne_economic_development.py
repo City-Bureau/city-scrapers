@@ -10,6 +10,6 @@ from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
 
 class WayneEconomicDevelopmentSpider(WayneCommissionMixin, Spider):
     name = 'wayne_economic_development'
-    agency_id = 'Wayne County Committee on Economic Development'
+    agency_id = 'Wayne County Government Committee on Economic Development'
     start_urls = ['https://www.waynecounty.com/elected/commission/economic-development.aspx']
-    meeting_name = 'Wayne County Committee on Economic Development'
+    meeting_name = 'Committee on Economic Development'

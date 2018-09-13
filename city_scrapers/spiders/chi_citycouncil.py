@@ -10,6 +10,7 @@ from urllib.parse import urljoin, parse_qs
 import dateutil.parser
 import scrapy
 
+from city_scrapers.constants import CITY_COUNCIL
 from city_scrapers.spider import Spider
 
 
@@ -17,7 +18,6 @@ class ChiCityCouncilSpider(Spider):
     name = 'chi_citycouncil'
     agency_id = 'Chicago City Council'
     timezone = 'America/Chicago'
-    classification = 'City Council'
     allowed_domains = ['ocd.datamade.us']
 
     endpoint = "https://ocd.datamade.us/events/"
@@ -77,7 +77,7 @@ class ChiCityCouncilSpider(Spider):
             'location': location,
             'id': data['id'],
             'event_description': data['description'],
-            'classification': self.classification,
+            'classification': CITY_COUNCIL,
             'start': start,
             'end': end,
             'all_day': data['all_day'],

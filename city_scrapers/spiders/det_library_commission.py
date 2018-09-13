@@ -2,12 +2,14 @@
 import urllib.parse
 from dateutil.parser import parse
 import scrapy
+
+from city_scrapers.constants import COMMISSION, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
 class DetLibraryCommissionSpider(Spider):
     name = 'det_library_commission'
-    agency_id = 'Detroit Public Library'
+    agency_id = 'Detroit Public Library Library Commissioners'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitpubliclibrary.org']
     start_urls = ['https://detroitpubliclibrary.org/about/commission']
@@ -67,8 +69,8 @@ class DetLibraryCommissionSpider(Spider):
     @staticmethod
     def _parse_classification(meeting_name):
         if 'Commission' in meeting_name:
-            return 'Commission'
-        return ''
+            return COMMISSION
+        return NOT_CLASSIFIED
 
     @staticmethod
     def _get_location(response):

@@ -5,6 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 from tests.utils import file_response
+from city_scrapers.constants import CANCELED, COMMITTEE
 from city_scrapers.spiders.wayne_building_authority import WayneBuildingAuthoritySpider
 
 
@@ -55,7 +56,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Committee'
+    assert item['classification'] == COMMITTEE
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -89,4 +90,4 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[-1]['status'] == 'cancelled'
+    assert parsed_items[-1]['status'] == CANCELED

@@ -1,6 +1,7 @@
 import pytest
 
 from tests.utils import file_response
+from city_scrapers.constants import BOARD
 from city_scrapers.spiders.det_schools import DetSchoolsSpider
 
 test_response = file_response('files/det_schools.html', url='http://detroitk12.org/board/meetings/')
@@ -49,11 +50,7 @@ def test_type(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'education'
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Detroit'
+    assert item['classification'] == BOARD
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_status(item):

@@ -3,6 +3,8 @@ from dateutil.parser import parse
 import re
 from urllib.parse import urljoin
 import scrapy
+
+from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
@@ -32,7 +34,7 @@ class WayneElectionCommissionSpider(Spider):
                 '_type': 'event',
                 'name': meeting_name,
                 'event_description': '',
-                'classification': 'Commission',
+                'classification': COMMISSION,
                 'start': self._parse_start(item),
                 'end': {'date': None, 'time': None, 'note': ''},
                 'all_day': False,

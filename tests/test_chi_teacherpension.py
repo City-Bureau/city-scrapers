@@ -3,6 +3,7 @@ import pytest
 from tests.utils import file_response
 from datetime import datetime
 from datetime import time
+from city_scrapers.constants import BOARD
 from city_scrapers.spiders.chi_teacherpension import ChiTeacherPensionSpider
 
 
@@ -35,7 +36,7 @@ def test_id():
     assert parsed_items[0]['id'] == 'chi_teacherpension/201805170930/x/regular_board_meeting'
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'board meeting'
+    assert parsed_items[0]['classification'] == BOARD
 
 
 ##### Parametrized Tests ####

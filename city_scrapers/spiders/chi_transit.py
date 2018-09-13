@@ -6,7 +6,8 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import re
 
 from datetime import datetime, timedelta
-from pytz import timezone
+
+from city_scrapers.constants import BOARD, COMMITTEE
 from city_scrapers.spider import Spider
 
 
@@ -62,9 +63,9 @@ class ChiTransitSpider(Spider):
         """
         name = item.css('td:nth-child(3)::text').extract_first().lower()
         if 'board' in name:
-            return 'board meeting'
+            return BOARD
         else:
-            return 'committee meeting'
+            return COMMITTEE
 
     def _parse_location(self, item):
         """
