@@ -42,7 +42,7 @@ just clone the main City-Bureau repo.*
 
 ## Step 2: Local Python 3 and Virtualenv
 
-You'll need a fairly standard Python development stack. If you're on OS X, the [NPR Visuals guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
+You'll need a fairly standard Python development stack, which Python 3.6 installed. If you're on OS X, the [NPR Visuals guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
 
 The following assumes you have `virtualenv` and `virtualenv-wrapper` installed.
 If you are using a different virtual environment manager, please refer to its
