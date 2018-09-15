@@ -46,6 +46,13 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
                     'sources': self._parse_sources(),
                 }
 
+                '''
+                TO-DO: Determine whether defaulting to tentative (because there
+                is never an agenda) is the correct thing to do. The site is
+                slightly ambiguous about how deviations from the schedule will
+                be reported, e.g., "meetings are _generally_ at such and such
+                time."
+                '''
                 data['status'] = self._generate_status(data, text='')
                 data['id'] = self._generate_id(data)
 
@@ -97,7 +104,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
         return {
             'date': date,
             'time': datetime.time(15, 0),
-            'note': 'Unless otherwise noted'
+            'note': 'Start at 3 p.m. unless otherwise noted'
         }
 
     def _parse_end(self, item):
@@ -108,7 +115,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
 
         return {
             'date': date,
-            'time': 'None',
+            'time': None,
             'note': ''
         }
 
@@ -133,7 +140,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
         """
         Parse or generate documents.
         """
-        return [{'url': '', 'note': ''}]
+        return []
 
     def _parse_sources(self):
         """

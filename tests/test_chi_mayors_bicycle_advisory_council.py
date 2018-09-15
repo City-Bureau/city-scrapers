@@ -1,79 +1,77 @@
+import datetime
+
 import pytest
 
 from tests.utils import file_response
 from city_scrapers.spiders.chi_mayors_bicycle_advisory_council import ChiMayorsBicycleAdvisoryCouncilSpider
 
 
-def test_tests():
-    print('Please write some tests for this spider or at least disable this one.')
-    assert False
+test_response = file_response('files/chi_mayors_bicycle_advisory_council.html')
+spider = ChiMayorsBicycleAdvisoryCouncilSpider()
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
-"""
-Uncomment below
-"""
-
-# test_response = file_response('files/chi_mayors_bicycle_advisory_council.html')
-# spider = ChiMayorsBicycleAdvisoryCouncilSpider()
-# parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+@pytest.mark.parametrize('item', parsed_items)
+def test_name(item):
+    assert item['name'] == "Mayor's Bicycle Advisory Council"
 
 
-# def test_name():
-    # assert parsed_items[0]['name'] == 'EXPECTED NAME'
+@pytest.mark.parametrize('item', parsed_items)
+def test_description(item):
+    assert item['event_description'] == 'MBAC focuses on a wide range of bicycle issues: safety, ' + \
+        'education, enforcement, and infrastructure investment. The Council ' + \
+        'will help identify issues, discuss ideas and set priorities for ' + \
+        'bicycle planning in Chicago.'
 
 
-# def test_description():
-    # assert parsed_items[0]['event_description'] == 'EXPECTED DESCRIPTION'
+def test_start():
+    assert parsed_items[0]['start'] == {'date': datetime.date(2018, 3, 7), 'time': datetime.time(15, 0), 'note': 'Start at 3 p.m. unless otherwise noted'}
 
 
-# def test_start():
-    # assert parsed_items[0]['start'] == {'date': None, 'time': None, 'note': 'EXPECTED DATE AND TIME'}
+def test_end():
+    assert parsed_items[0]['end'] == {'date': datetime.date(2018, 3, 7), 'time': None, 'note': ''}
 
 
-# def test_end():
-    # assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': 'EXPECTED DATE AND TIME'}
+def test_id():
+    assert parsed_items[0]['id'] == 'chi_mayors_bicycle_advisory_council/201803071500/x/mayor_s_bicycle_advisory_council'
 
 
-# def test_id():
-    # assert parsed_items[0]['id'] == 'EXPECTED ID'
+def test_status():
+    assert parsed_items[0]['status'] == 'passed'
 
 
-# def test_status():
-    # assert parsed_items[0]['status'] == 'EXPECTED STATUS'
+@pytest.mark.parametrize('item', parsed_items)
+def test_location(item):
+    assert item['location'] == {
+        'address': '121 N LaSalle Dr, Chicago, IL',
+        'name': 'City Hall, Room 1103',
+        'neighborhood': 'Loop',
+    }
 
 
-# def test_location():
-    # assert parsed_items[0]['location'] == {
-        # 'neighborhood': 'EXPECTED URL',
-        # 'name': 'EXPECTED NAME',
-        # 'address': 'EXPECTED ADDRESS'
-    # }
+@pytest.mark.parametrize('item', parsed_items)
+def test_sources(item):
+    assert item['sources'] == [{
+        'url': 'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/',
+        'note': ''
+    }]
 
 
-# def test_sources():
-    # assert parsed_items[0]['sources'] == [{
-        # 'url': 'EXPECTED URL',
-        # 'note': 'EXPECTED NOTE'
-    # }]
+@pytest.mark.parametrize('item', parsed_items)
+def test_documents(item):
+    assert item['documents'] == []
 
 
-# def test_documents():
-    # assert parsed_items[0]['documents'] == [{
-      # 'url': 'EXPECTED URL',
-      # 'note': 'EXPECTED NOTE'
-    # }]
+@pytest.mark.parametrize('item', parsed_items)
+def test_all_day(item):
+    assert item['all_day'] is False
 
 
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_all_day(item):
-    # assert item['all_day'] is False
+@pytest.mark.parametrize('item', parsed_items)
+def test_classification(item):
+    assert item['classification'] == 'Advisory Committee'
 
 
-# @pytest.mark.parametrize('item', parsed_items)
-# def test_classification(item):
-    # assert item['classification'] is None
-
-
-# @pytest.mark.parametrize('item', parsed_items)
-# def test__type(item):
-    # assert parsed_items[0]['_type'] == 'event'
+@pytest.mark.parametrize('item', parsed_items)
+def test__type(item):
+    assert item['_type'] == 'event'
