@@ -2,6 +2,7 @@
 import datetime
 import re
 
+from lxml import etree
 import scrapy
 
 from city_scrapers.constants import ADVISORY_COMMITTEE
@@ -14,6 +15,11 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
     timezone = 'America/Chicago'
     allowed_domains = ['chicagocompletestreets.org']
     start_urls = ['http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/']
+    archive_url = 'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/'
+
+    def start_requests(self):
+        yield scrapy.Request(self.archive_url, callback=self._parse_documents)
+        yield from super().start_requests()
 
     def parse(self, response):
         """
@@ -32,6 +38,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
 
             if date.strip():
                 date_with_year = '{date}, {year}'.format(date=date, year=self.year)
+                dict_key = ','.join(date_with_year.split(',')[1:]).strip()
 
                 data = {
                     '_type': 'event',
@@ -42,17 +49,10 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
                     'end': self._parse_end(date_with_year),
                     'all_day': self._parse_all_day(),
                     'location': self._parse_location(),
-                    'documents': self._parse_documents(),
+                    'documents': self.document_dict.get(dict_key, []),
                     'sources': self._parse_sources(),
                 }
 
-                '''
-                TO-DO: Determine whether defaulting to tentative (because there
-                is never an agenda) is the correct thing to do. The site is
-                slightly ambiguous about how deviations from the schedule will
-                be reported, e.g., "meetings are _generally_ at such and such
-                time."
-                '''
                 data['status'] = self._generate_status(data, text='')
                 data['id'] = self._generate_id(data)
 
@@ -136,11 +136,46 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
             'neighborhood': 'Loop',
         }
 
-    def _parse_documents(self):
+    def _parse_documents(self, response):
         """
         Parse or generate documents.
         """
-        return []
+        def first_text(el):
+            return el.xpath('text()')[0].extract()
+
+        archive_blobs = [p for p in response.xpath('//p') if p.xpath('text()') and re.match(r'\d{4}', first_text(p))]
+
+        document_dict = {}
+
+        for blob in archive_blobs:
+            date, documents = self._parse_blob(blob)
+            document_dict[date] = documents
+
+        self.document_dict = document_dict
+
+    def _p_from_piece(self, piece):
+        '''
+        Coerce HTML fragments into parse-able blobs.
+        '''
+        return etree.HTML(piece).xpath('//p')[0]
+
+    def _parse_blob(self, blob):
+        lines = [l for l in blob.extract().splitlines()]
+
+        for line in lines[1:]:
+            element, = etree.HTML(line).xpath('//p')
+
+            date = element.text.strip()
+
+            documents = []
+
+            for supplement in element.iterchildren('a'):
+                documents.append({
+                    'url': supplement.attrib['href'],
+                    'note': supplement.text.lower(),
+                })
+
+            return date, documents
 
     def _parse_sources(self):
         """
