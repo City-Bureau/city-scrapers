@@ -8,7 +8,7 @@ import requests
 import json
 import datetime
 
-from city_scrapers.constants import BOARD, TENTATIVE
+from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
@@ -19,11 +19,12 @@ class ChiLibrarySpider(Spider):
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
 
-    def __init__(self, session=requests.Session()):
+    def __init__(self, *args, session=requests.Session(), **kwargs):
         """
         Initialize a spider with a session object to use in the
         _get_lib_info function.
         """
+        super().__init__(*args, **kwargs)
         self.session = session
 
     def parse(self, response):
