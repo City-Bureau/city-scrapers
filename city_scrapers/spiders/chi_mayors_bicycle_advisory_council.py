@@ -9,7 +9,49 @@ from city_scrapers.constants import ADVISORY_COMMITTEE
 from city_scrapers.spider import Spider
 
 
-class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
+class ArchiveParserMixin:
+    def _parse_archive_documents(self, response):
+        '''
+        Documents live in a series of <p> elements, structured like:
+
+            Year
+            Month Day, Year Agenda – Meeting Minutes – Presentations
+
+        There is a line for each scheduled meeting. Agenda, Meeting Minutes,
+        and Presentations are links, where there is a document available.
+        '''
+        for p in response.xpath('//p'):
+            if self._contains_year(p):
+                blob = p.extract().splitlines()
+                yield from self._parse_document_blob(blob)
+
+    def _contains_year(self, element):
+        return element.xpath('text()') and \
+            re.match(r'\d{4}', element.xpath('text()')[0].extract())
+
+    def _tree_from_fragment(self, fragment):
+        '''
+        Coerce HTML fragments from into parse-able blobs.
+        '''
+        return etree.HTML(fragment).xpath('//p')[0]
+
+    def _parse_document_blob(self, blob):
+        for line in blob[1:]:  # Omit header
+            element = self._tree_from_fragment(line)
+
+            date = element.text.strip()
+
+            documents = []
+
+            for doc in element.iterchildren('a'):
+                documents.append({
+                    'url': doc.attrib['href'],
+                    'note': doc.text.lower(),
+                })
+
+            yield date, documents
+
+class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
     name = 'chi_mayors_bicycle_advisory_council'
     agency_name = "Mayor's Bicycle Advisory Council"
     timezone = 'America/Chicago'
@@ -18,7 +60,19 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
     archive_url = 'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/'
 
     def start_requests(self):
-        yield scrapy.Request(self.archive_url, callback=self._parse_documents)
+        yield scrapy.Request(self.archive_url, callback=self._assemble_archive)
+
+    def _assemble_archive(self, response):
+        """
+        Parse or generate documents.
+        """
+        document_archive = {}
+
+        for date, documents in self._parse_archive_documents(response):
+            document_archive[date] = documents
+
+        self.document_archive = document_archive
+
         yield from super().start_requests()
 
     def parse(self, response):
@@ -49,7 +103,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
                     'end': self._parse_end(date_with_year),
                     'all_day': self._parse_all_day(),
                     'location': self._parse_location(),
-                    'documents': self.document_dict.get(dict_key, []),
+                    'documents': self.document_archive.get(dict_key, []),
                     'sources': self._parse_sources(),
                 }
 
@@ -135,47 +189,6 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider):
             'name': 'City Hall, Room 1103',
             'neighborhood': 'Loop',
         }
-
-    def _parse_documents(self, response):
-        """
-        Parse or generate documents.
-        """
-        def first_text(el):
-            return el.xpath('text()')[0].extract()
-
-        archive_blobs = [p for p in response.xpath('//p') if p.xpath('text()') and re.match(r'\d{4}', first_text(p))]
-
-        document_dict = {}
-
-        for blob in archive_blobs:
-            date, documents = self._parse_blob(blob)
-            document_dict[date] = documents
-
-        self.document_dict = document_dict
-
-    def _p_from_piece(self, piece):
-        '''
-        Coerce HTML fragments into parse-able blobs.
-        '''
-        return etree.HTML(piece).xpath('//p')[0]
-
-    def _parse_blob(self, blob):
-        lines = [l for l in blob.extract().splitlines()]
-
-        for line in lines[1:]:
-            element, = etree.HTML(line).xpath('//p')
-
-            date = element.text.strip()
-
-            documents = []
-
-            for supplement in element.iterchildren('a'):
-                documents.append({
-                    'url': supplement.attrib['href'],
-                    'note': supplement.text.lower(),
-                })
-
-            return date, documents
 
     def _parse_sources(self):
         """
