@@ -10,9 +10,7 @@ from city_scrapers.spider import Spider
 
 class NextMichiganDevelopmentCorporationSpider(Spider):
     name = 'next_michigan_development_corporation'
-    agency_name = (
-        'Detroit Next Michigan Development Corporation Board of Directors'
-    )
+    agency_name = 'Detroit Next Michigan Development Corporation'
     timezone = 'America/Chicago'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/d-nmdc/']

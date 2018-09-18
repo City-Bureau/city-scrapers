@@ -10,6 +10,6 @@ from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
 
 class WayneGovernmentOperationsSpider(WayneCommissionMixin, Spider):
     name = 'wayne_government_operations'
-    agency_name = 'Wayne County Government Committe on Government Operations'
+    agency_name = 'Wayne County Government'
     start_urls = ['https://www.waynecounty.com/elected/commission/government-operations.aspx']
     meeting_name = 'Committee on Government Operations'
