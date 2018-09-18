@@ -1,14 +1,20 @@
 import pytest
 from datetime import date, time
+from freezegun import freeze_time
 from tests.utils import file_response
 from city_scrapers.constants import COMMITTEE, CONFIRMED
 from city_scrapers.spiders.cook_landbank import CookLandbankSpider
+
+freezer = freeze_time('2018-09-13 12:00:00')
+freezer.start()
 
 file = file_response('files/cook_landbank.json')
 spider = CookLandbankSpider()
 
 test_response = file
 parsed_items = list(spider.parse(test_response))
+
+freezer.stop()
 
 
 def test_name():
