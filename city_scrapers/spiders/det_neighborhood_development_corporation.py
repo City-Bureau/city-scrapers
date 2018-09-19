@@ -11,9 +11,7 @@ from city_scrapers.spider import Spider
 
 class DetNeighborhoodDevelopmentCorporationSpider(Spider):
     name = 'det_neighborhood_development_corporation'
-    agency_name = (
-        'Detroit Neighborhood Development Corporation Board of Directors'
-    )
+    agency_name = 'Detroit Neighborhood Development Corporation'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/ndc/']

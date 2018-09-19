@@ -59,7 +59,7 @@ class CookElectoralSpider(Spider):
     def parse_results(self, item):
         data = {
             '_type': 'event',
-            'name': self._parse_name(item),
+            'name': 'Electoral Board (Suburban Cook)',
             'description': self._parse_description(item),
             'classification': BOARD,
             'start': self._parse_start(item),
@@ -97,12 +97,6 @@ class CookElectoralSpider(Spider):
         chi_buildings/201710161230/2176/daley_plaza_italian_exhibit
         """
         return ''
-
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
-        return 'Board Meeting'
 
     def _parse_description(self, item):
         """

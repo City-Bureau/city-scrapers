@@ -10,10 +10,7 @@ from city_scrapers.spider import Spider
 
 class ChiPlanCommissionSpider(Spider):
     name = 'chi_plan_commission'
-    agency_name = (
-        'Chicago Department of Planning and Development '
-        'Chicago Plan Commission'
-    )
+    agency_name = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html']

@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class DetGeneralRetirementSystemSpider(Spider):
     name = 'det_general_retirement_system'
-    agency_name = 'Detroit General Retirement System Board of Trustees'
+    agency_name = 'Detroit General Retirement System'
     timezone = 'America/Detroit'
     allowed_domains = ['www.rscd.org']
     start_urls = ['http://www.rscd.org/grsd/Resources/Meetings']
@@ -77,7 +77,7 @@ class DetGeneralRetirementSystemSpider(Spider):
     def _parse_name(response):
         name_xpath = '//div[@id="dnn_ctr531_EventDetails_divEventDetails1"]//span[contains(@class, "Head")]/text()'
         name = response.xpath(name_xpath).extract_first()
-        return name
+        return 'Board of Trustees: {}'.format(name)
 
     @staticmethod
     def _parse_classification(meeting_name):

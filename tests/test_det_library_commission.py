@@ -32,7 +32,7 @@ freezer.stop()
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Regular Commission Meeting'
+    assert parsed_items[0]['name'] == 'Library Commissioners: Regular Commission Meeting'
 
 
 def test_description():
@@ -48,7 +48,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_library_commission/201809181330/x/regular_commission_meeting'
+    assert parsed_items[0]['id'] == 'det_library_commission/201809181330/x/library_commissioners_regular_commission_meeting'
 
 
 def test_status():

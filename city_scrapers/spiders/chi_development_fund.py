@@ -11,10 +11,7 @@ from city_scrapers.spider import Spider
 
 class ChiDevelopmentFundSpider(Spider):
     name = 'chi_development_fund'
-    agency_name = (
-        'Chicago Department of Planning and Development '
-        'Chicago Development Fund Commission'
-    )
+    agency_name = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_developmentfund.html']
@@ -38,7 +35,7 @@ class ChiDevelopmentFundSpider(Spider):
             for meeting in meetings:
                 name, start = self._parse_start(meeting)
                 data = {'_type': 'event',
-                        'name': "Chicago Development Fund ({})".format(name),
+                        'name': "Chicago Development Fund: {}".format(name),
                         'event_description': description,
                         'classification': COMMISSION,
                         'start': start,

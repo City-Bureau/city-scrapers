@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class ChiSchoolActionsSpider(Spider):
     name = 'chi_school_actions'
-    agency_name = 'Chicago Public Schools School Actions'
+    agency_name = 'Chicago Public Schools'
     timezone = 'America/Chicago'
     allowed_domains = ['schoolinfo.cps.edu']
     start_urls = ['http://schoolinfo.cps.edu/SchoolActions/Documentation.aspx']
@@ -52,7 +52,7 @@ class ChiSchoolActionsSpider(Spider):
         """
         Parse or generate event name.
         """
-        return '{} {}'.format(school_name, meeting_type)
+        return 'School Actions: {} {}'.format(school_name, meeting_type)
 
     @staticmethod
     def _parse_description(school_name, meeting_type):

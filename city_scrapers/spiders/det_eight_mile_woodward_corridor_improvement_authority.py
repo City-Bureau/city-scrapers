@@ -10,10 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
     name = 'det_eight_mile_woodward_corridor_improvement_authority'
-    agency_name = (
-        'Detroit Eight Mile Woodward Corridor Improvement Authority '
-        'Board of Directors'
-    )
+    agency_name = 'Detroit Eight Mile Woodward Corridor Improvement Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/emwcia/']
@@ -47,7 +44,7 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
     def _set_meeting_defaults(response):
         data = {
             '_type': 'event',
-            'name': 'Eight Mile Woodward Corridor Improvement Authority',
+            'name': 'Board of Directors',
             'event_description': '',
             'classification': BOARD,
             'end': {'date': None, 'time': None, 'note': ''},

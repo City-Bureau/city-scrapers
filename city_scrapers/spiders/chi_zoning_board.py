@@ -10,10 +10,7 @@ from city_scrapers.spider import Spider
 
 class ChiZoningBoardSpider(Spider):
     name = 'chi_zoning_board'
-    agency_name = (
-        'Chicago Department of Planning and Development '
-        'Zoning Board of Appeals'
-    )
+    agency_name = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html']
@@ -34,7 +31,7 @@ class ChiZoningBoardSpider(Spider):
             for meeting in meetings:
                 data = {
                     '_type': 'event',
-                    'name': 'Zoning Board of Appeals Meeting',
+                    'name': 'Zoning Board of Appeals',
                     'event_description': description,
                     'classification': COMMISSION,
                     'start': self._parse_start(meeting, year),

@@ -26,7 +26,7 @@ def test__type():
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Chicago Development Fund (Advisory Board)'
+    assert parsed_items[0]['name'] == 'Chicago Development Fund: Advisory Board'
 
 
 def test_description():

@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class DetLibraryCommissionSpider(Spider):
     name = 'det_library_commission'
-    agency_name = 'Detroit Public Library Library Commissioners'
+    agency_name = 'Detroit Public Library'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitpubliclibrary.org']
     start_urls = ['https://detroitpubliclibrary.org/about/commission']
@@ -64,7 +64,7 @@ class DetLibraryCommissionSpider(Spider):
     def _parse_name(response):
         name_xpath = '//header/h1/text()'
         name = response.xpath(name_xpath).extract_first()
-        return name
+        return 'Library Commissioners: {}'.format(name)
 
     @staticmethod
     def _parse_classification(meeting_name):

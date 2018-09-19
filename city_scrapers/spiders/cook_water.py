@@ -9,11 +9,7 @@ from city_scrapers.spider import Spider
 
 class CookWaterSpider(Spider):
     name = 'cook_water'
-    agency_name = (
-        'Metropolitan Water Reclamation District of Greater Chicago '
-        'Board of Commissioners'
-    )
-    timezone = 'America/Chicago'
+    agency_name = 'Metropolitan Water Reclamation District of Greater Chicago'
     allowed_domains = ['mwrd.legistar.com']
     event_timezone = 'America/Chicago'
     start_urls = ['https://mwrd.legistar.com']

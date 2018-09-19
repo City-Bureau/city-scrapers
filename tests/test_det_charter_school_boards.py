@@ -36,7 +36,7 @@ def test_starts_with_day_of_week():
 
 
 def test_name():
-    assert parsed_items[2]['name'] == 'Annual Boards of Directors Conference'
+    assert parsed_items[2]['name'] == 'Charter Schools Boards: Annual Boards of Directors Conference'
 
 
 def test_description():
@@ -63,7 +63,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[2]['id'] == 'det_charter_school_boards/201804210830/x/annual_boards_of_directors_conference'
+    assert parsed_items[2]['id'] == 'det_charter_school_boards/201804210830/x/charter_schools_boards_annual_boards_of_directors_conference'
 
 
 def test_status():
@@ -90,7 +90,7 @@ def test_documents():
 
 
 def test_name_calendar():
-    assert parsed_items[8]['name'] == 'MacDowell Preparatory Academy Board Meeting'
+    assert parsed_items[8]['name'] == 'Charter Schools Boards: MacDowell Preparatory Academy Board Meeting'
 
 
 def test_description_calendar():
@@ -115,7 +115,7 @@ def test_end_calendar():
 
 def test_id_calendar():
     assert parsed_items[8]['id'] == \
-           'det_charter_school_boards/201808151800/x/mac_dowell_preparatory_academy_board_meeting'
+           'det_charter_school_boards/201808151800/x/charter_schools_boards_mac_dowell_preparatory_academy_board_meeting'
 
 
 def test_status_calendar():

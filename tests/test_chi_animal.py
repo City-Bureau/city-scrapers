@@ -42,7 +42,7 @@ def test_class(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Advisory Board Meeting'
+    assert item['name'] == 'Advisory Board'
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):

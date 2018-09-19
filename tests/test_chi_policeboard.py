@@ -10,7 +10,7 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-    assert parsed_items[8]['name'] == 'Public Meetings of the Police Board'
+    assert parsed_items[8]['name'] == 'Board of Directors'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -41,7 +41,7 @@ def test_end_time(item):
 
 
 def test_id():
-   assert parsed_items[8]['id'] == 'chi_policeboard/201709181930/x/public_meetings_of_the_police_board'
+   assert parsed_items[8]['id'] == 'chi_policeboard/201709181930/x/board_of_directors'
 
 
 @pytest.mark.parametrize('item', parsed_items)

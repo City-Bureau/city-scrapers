@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class DetBoardOfEducationSpider(Spider):
     name = 'det_board_of_education'
-    agency_name = 'Detroit Public Schools Board of Education'
+    agency_name = 'Detroit Public Schools Community District'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/board/meetings/']
@@ -43,7 +43,9 @@ class DetBoardOfEducationSpider(Spider):
 
     @staticmethod
     def _parse_name(item):
-        return item.xpath('a/text()').extract_first('')
+        return 'Board of Education: {}'.format(
+            item.xpath('a/text()').extract_first('')
+        )
 
     def _parse_start_end(self, item):
         # date text apparently just floats in main div

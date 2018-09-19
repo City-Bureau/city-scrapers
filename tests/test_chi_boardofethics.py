@@ -18,7 +18,7 @@ def test_items():
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Board of Ethics'
+    assert parsed_items[0]['name'] == 'Board of Directors'
 
 
 def test_description():
@@ -38,7 +38,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_boardofethics/201806151200/x/board_of_ethics'
+    assert parsed_items[0]['id'] == 'chi_boardofethics/201806151200/x/board_of_directors'
 
 
 def test_location():

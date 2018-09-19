@@ -22,7 +22,7 @@ parsed_items = sorted(
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Committee Meeting'
+    assert parsed_items[0]['name'] == 'Belle Isle Advisory Committee'
 
 
 def test_description():
@@ -47,7 +47,7 @@ def test_end():
 
 def test_id():
     assert parsed_items[0]['id'] == (
-        'mi_belle_isle/201801180900/x/committee_meeting'
+        'mi_belle_isle/201801180900/x/belle_isle_advisory_committee'
     )
 
 
