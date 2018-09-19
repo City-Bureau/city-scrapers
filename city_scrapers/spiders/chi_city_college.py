@@ -77,14 +77,18 @@ class ChiCityCollegeSpider(Spider):
         text = response.css('#ctl00_PlaceHolderMain_FullDescription__ControlWrapper_RichHtmlField span::text').extract_first()
         match = re.search(r'\.m\.,([^,]+),(.+)', text)
 
-        name = match.group(1).strip()
-        address = match.group(2).strip().rstrip('.')
-
-        return {
-            'name': name,
-            'address': address,
-            'neighborhood': None,
-        }
+        if match is not None:
+            return {
+                'name': match.group(1).strip(),
+                'address': match.group(2).strip().rstrip('.'),
+                'neighborhood': None,
+            }
+        else:
+            return {
+                'name': None,
+                'address': '',
+                'neighborhood': None,
+            }
 
     def _parse_all_day(self):
         """
