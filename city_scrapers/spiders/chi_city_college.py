@@ -84,9 +84,10 @@ class ChiCityCollegeSpider(Spider):
                 'neighborhood': None,
             }
         else:
+            # Default to Harold Washington College
             return {
-                'name': None,
-                'address': '',
+                'name': 'Harold Washington College',
+                'address': '30 E. Lake Street Chicago, IL 60601',
                 'neighborhood': None,
             }
 
