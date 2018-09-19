@@ -14,7 +14,7 @@ parsed_items = sorted(parsed_items, key=lambda x: x['start']['date'])
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'City Planning Commission Regular Meeting'
+    assert parsed_items[0]['name'] == 'City Planning Commission'
 
 
 def test_description():
@@ -30,7 +30,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_city_planning/201706011700/x/city_planning_commission_regular_meeting'
+    assert parsed_items[0]['id'] == 'det_city_planning/201706011700/x/city_planning_commission'
 
 
 def test_status():

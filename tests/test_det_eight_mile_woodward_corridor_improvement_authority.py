@@ -12,8 +12,6 @@ SOURCES = [{'url': 'http://www.degc.org/public-authorities/emwcia/', 'note': ''}
 
 LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '500 Griswold, Suite 2200, Detroit'}
 
-NAME = 'Eight Mile Woodward Corridor Improvement Authority'
-
 test_response = file_response('files/det_eight_mile_woodward_corridor_improvement_authority.html',
                               'http://www.degc.org/public-authorities/emwcia/')
 freezer = freeze_time('2018-07-21 12:00:01')
@@ -25,7 +23,7 @@ freezer.stop()
 
 # current meeting (e.g. http://www.degc.org/public-authorities/emwcia/)
 def test_name():
-    assert parsed_items[0]['name'] == NAME
+    assert parsed_items[0]['name'] == 'Board of Directors'
 
 
 def test_description():
@@ -46,7 +44,7 @@ def test_end():
 
 def test_id():
     assert parsed_items[0][
-               'id'] == 'det_eight_mile_woodward_corridor_improvement_authority/201808141400/x/eight_mile_woodward_corridor_improvement_authority'
+               'id'] == 'det_eight_mile_woodward_corridor_improvement_authority/201808141400/x/board_of_directors'
 
 
 def test_status():
@@ -106,7 +104,7 @@ def test_prev_meeting_count():
 
 
 def test_prev_name():
-    assert parsed_prev_items[0]['name'] == NAME
+    assert parsed_prev_items[0]['name'] == 'Board of Directors'
 
 
 def test_prev_description():
@@ -127,7 +125,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0][
-               'id'] == 'det_eight_mile_woodward_corridor_improvement_authority/201706130000/x/eight_mile_woodward_corridor_improvement_authority'
+               'id'] == 'det_eight_mile_woodward_corridor_improvement_authority/201706130000/x/board_of_directors'
 
 
 def test_prev_status():

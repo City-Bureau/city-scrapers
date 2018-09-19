@@ -32,7 +32,7 @@ class MiBelleIsleSpider(Spider):
             date, start_time, end_time = self._parse_date_and_times(item)
             data = {
                 '_type': 'event',
-                'name': 'Committee Meeting',
+                'name': 'Belle Isle Advisory Committee',
                 'event_description': '',
                 'classification': ADVISORY_COMMITTEE,
                 'start': {

@@ -12,7 +12,7 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Detroit Entertainment Commission'
+    assert parsed_items[0]['name'] == 'Entertainment Commission'
 
 
 def test_description():
@@ -36,7 +36,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_entertainment_commission/201807161700/x/detroit_entertainment_commission'
+    assert parsed_items[0]['id'] == 'det_entertainment_commission/201807161700/x/entertainment_commission'
 
 
 def test_status():

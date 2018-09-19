@@ -12,7 +12,7 @@ item = spider.parse_event_page(test_response)
 
 
 def test_name():
-    assert item['name'] == 'November 2018 Regular Board Meeting'
+    assert item['name'] == 'Board of Trustees: November 2018 Regular Board Meeting'
 
 def test_start_time():
     assert item['start']['time'] == time(9, 0)
@@ -25,7 +25,7 @@ def test_end_time():
     assert item['end']['note'] is None
 
 def test_id():
-   assert item['id'] == 'chi_city_college/201811010900/x/november_2018_regular_board_meeting'
+   assert item['id'] == 'chi_city_college/201811010900/x/board_of_trustees_november_2018_regular_board_meeting'
 
 def test_all_day():
     assert item['all_day'] is False

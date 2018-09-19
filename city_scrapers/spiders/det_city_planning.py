@@ -36,7 +36,7 @@ class DetCityPlanningSpider(Spider):
         for meeting_date_time, document_url in meetings.items():
             data = {
                 '_type': 'event',
-                'name': 'City Planning Commission Regular Meeting',
+                'name': 'City Planning Commission',
                 'event_description': '',
                 'classification': COMMISSION,
                 'start': {'date': meeting_date_time.date(),

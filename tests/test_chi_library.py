@@ -26,7 +26,7 @@ with recorder.use_cassette('test_chi_library_libinfo'):
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Chicago Public Library Board Meeting'
+    assert parsed_items[0]['name'] == 'Board of Directors'
 
 
 def test_description():
@@ -43,7 +43,7 @@ def test_start():
 
 def test_id():
     assert parsed_items[0]['id'] == (
-        'chi_library/201701170900/x/chicago_public_library_board_meeting'
+        'chi_library/201701170900/x/board_of_directors'
     )
 
 
@@ -74,7 +74,7 @@ def test_type(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name_param(item):
-    assert item['name'] == 'Chicago Public Library Board Meeting'
+    assert item['name'] == 'Board of Directors'
 
 
 @pytest.mark.parametrize('item', parsed_items)

@@ -15,7 +15,7 @@ parsed_items = [item for item in spider.parse_results(test_response) if isinstan
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Board Meeting'
+    assert parsed_items[0]['name'] == 'Electoral Board (Suburban Cook)'
 
 
 def test_description():
@@ -32,7 +32,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'cook_electoral/201801090900/x/board_meeting'
+    assert parsed_items[0]['id'] == 'cook_electoral/201801090900/x/electoral_board_suburban_cook'
 
 
 def test_location():

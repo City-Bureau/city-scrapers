@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class DetPoliceFireRetirementSpider(Spider):
     name = 'det_police_fire_retirement'
-    agency_name = 'Police and Fire Retirement System'
+    agency_name = 'Detroit Police and Fire Retirement System'
     timezone = 'America/Detroit'
     allowed_domains = ['www.pfrsdetroit.org']
     start_urls = ['http://www.pfrsdetroit.org/Resources/Meetings']

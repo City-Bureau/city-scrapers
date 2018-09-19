@@ -14,7 +14,7 @@ from city_scrapers.spider import Spider
 class ChiPoliceBoardSpider(Spider):
     name = 'chi_policeboard'
     timezone = 'America/Chicago',
-    agency_name = 'Chicago Police Board Board of Directors'
+    agency_name = 'Chicago Police Board'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['http://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
 
@@ -28,7 +28,7 @@ class ChiPoliceBoardSpider(Spider):
         """
         data = {
             '_type': 'event',
-            'name': self._parse_name(response),
+            'name': 'Board of Directors',
             'event_description': self._parse_description(response),
             'classification': BOARD,
             'end': {'date': None, 'time': None, 'note': ''},
@@ -82,12 +82,6 @@ class ChiPoliceBoardSpider(Spider):
             cleaned_time = match.group(1).replace(' ', '').replace('.', '').upper()
             return datetime.strptime(cleaned_time, '%I:%M%p').time()
         return None
-
-    def _parse_name(self, response):
-        """
-        Parse or generate event name.
-        """
-        return response.css("h1[class='page-heading']::text").extract_first()
 
     def _parse_description(self, response):
         """

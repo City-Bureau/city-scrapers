@@ -12,7 +12,7 @@ from city_scrapers.spider import Spider
 
 class ChiAnimalSpider(Spider):
     name = 'chi_animal'
-    agency_name = 'Chicago Animal Care and Control Advisory Board'
+    agency_name = 'Chicago Animal Care and Control'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html']
@@ -42,7 +42,7 @@ class ChiAnimalSpider(Spider):
             # Parse the item
             data = {
                 '_type': 'event',
-                'name': 'Advisory Board Meeting',
+                'name': 'Advisory Board',
                 'event_description': self._parse_description(text),
                 'classification': ADVISORY_COMMITTEE,
                 'start': self._parse_start(text),

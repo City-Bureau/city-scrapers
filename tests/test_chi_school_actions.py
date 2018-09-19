@@ -12,7 +12,7 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Castellanos - Cardenas Community Meetings: Consolidation'
+    assert parsed_items[0]['name'] == 'School Actions: Castellanos - Cardenas Community Meetings: Consolidation'
 
 
 def test_description():
@@ -43,7 +43,7 @@ def test_end():
 
 def test_id():
     assert parsed_items[0]['id'] == \
-           'chi_school_actions/201801091800/x/castellanos_cardenas_community_meetings_consolidation'
+           'chi_school_actions/201801091800/x/school_actions_castellanos_cardenas_community_meetings_consolidation'
 
 
 def test_location():

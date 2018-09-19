@@ -11,7 +11,7 @@ from city_scrapers.spider import Spider
 
 class DetZoningAppealsSpider(Spider):
     name = 'det_zoning_appeals'
-    agency_name = 'Detroit Zoning Division Board of Zoning Appeals'
+    agency_name = 'Detroit Zoning Division'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
     start_urls = ['https://www.detroitmi.gov/Government/Boards/Board-of-Zoning-Appeals-Meeting']

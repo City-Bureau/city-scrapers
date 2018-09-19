@@ -11,7 +11,7 @@ from city_scrapers.spider import Spider
 
 class ChiBoardOfEthicsSpider(Spider):
     name = 'chi_boardofethics'
-    agency_name = 'Chicago Board of Ethics Board of Directors'
+    agency_name = 'Chicago Board of Ethics'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/ethics/supp_info/minutes.html']
 
@@ -38,7 +38,7 @@ class ChiBoardOfEthicsSpider(Spider):
         for meeting_date in meeting_dates:
             data = {
                 '_type': 'event',
-                'name': 'Board of Ethics',
+                'name': 'Board of Directors',
                 'event_description': description,
                 'classification': BOARD,
                 'start': self._parse_start(meeting_date, start_time),

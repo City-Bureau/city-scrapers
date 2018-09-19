@@ -21,12 +21,12 @@ def test_type(item):
 
 
 def test_id():
-   assert parsed_items[0]['id'] == 'chi_schools/201707261030/x/monthly_board_meeting'
+   assert parsed_items[0]['id'] == 'chi_schools/201707261030/x/board_of_education'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Monthly Board Meeting'
+    assert item['name'] == 'Board of Education'
 
 
 @pytest.mark.parametrize('item', parsed_items)

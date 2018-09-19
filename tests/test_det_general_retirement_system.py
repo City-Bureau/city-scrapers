@@ -53,7 +53,7 @@ freezer.stop()
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Board Meeting'
+    assert parsed_items[0]['name'] == 'Board of Trustees: Board Meeting'
 
 
 def test_description():
@@ -74,7 +74,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_general_retirement_system/201808011000/x/board_meeting'
+    assert parsed_items[0]['id'] == 'det_general_retirement_system/201808011000/x/board_of_trustees_board_meeting'
 
 
 def test_status():

@@ -12,7 +12,7 @@ from city_scrapers.spider import Spider
 
 class DetPoliceDepartmentSpider(Spider):
     name = 'det_police_department'
-    agency_name = 'Detroit Police Department Board of Commissioners'
+    agency_name = 'Detroit Police Department'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
     start_urls = ['http://www.detroitmi.gov/Government/Detroit-Police-Commissioners-Meetings']
@@ -53,7 +53,7 @@ class DetPoliceDepartmentSpider(Spider):
                 continue
             data = {
                 '_type': 'event',
-                'name': 'Detroit Police Commissioners Meetings',
+                'name': 'Board of Commissioners',
                 'event_description': meeting_presenter,
                 'start': start,
                 'end': {'date': None, 'time': None, 'note': ''},

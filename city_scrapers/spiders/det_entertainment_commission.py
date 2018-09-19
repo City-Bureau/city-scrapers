@@ -34,7 +34,7 @@ class DetEntertainmentCommissionSpider(Spider):
 
             data = {
                 '_type': 'event',
-                'name': 'Detroit Entertainment Commission',
+                'name': 'Entertainment Commission',
                 'event_description': '',
                 'classification': COMMISSION,
                 'start': self._parse_start(item, response),

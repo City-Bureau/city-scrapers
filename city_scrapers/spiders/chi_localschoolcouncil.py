@@ -40,7 +40,7 @@ class Row(IntEnum):
 
 class ChiLocalSchoolCouncilSpider(Spider):
     name = 'chi_localschoolcouncil'
-    agency_name = 'Chicago Public Schools Local School Councils'
+    agency_name = 'Chicago Public Schools'
     timezone = 'America/Chicago'
     allowed_domains = ['sheets.googleapis.com/v4/']
     start_urls = [SPREADSHEET_URL + '/values/A2:L1400?key=' + GOOGLE_API_KEY]

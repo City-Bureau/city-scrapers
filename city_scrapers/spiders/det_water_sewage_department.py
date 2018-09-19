@@ -13,9 +13,7 @@ from legistar.events import LegistarEventsScraper
 
 class DetWaterSewageDepartmentSpider(Spider):
     name = 'det_water_sewage_department'
-    agency_name = (
-        'Detroit Water and Sewage Department Board of Commissioners'
-    )
+    agency_name = 'Detroit Water and Sewage Department'
     timezone = 'America/Detroit'
     start_urls = ['https://dwsd.legistar.com']
     allowed_domains = ['dwsd.legistar.com']

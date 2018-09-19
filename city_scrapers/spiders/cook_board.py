@@ -13,7 +13,7 @@ from city_scrapers.spider import Spider
 
 class CookBoardSpider(Spider):
     name = 'cook_board'
-    agency_name = 'Cook County Government Board of Commissioners'
+    agency_name = 'Cook County Government'
     timezone = 'America/Chicago'
     allowed_domains = ['cook-county.legistar.com']
     start_urls = ['https://www.cook-county.legistar.com']
@@ -106,7 +106,10 @@ class CookBoardSpider(Spider):
         """
         Parse or generate event name.
         """
-        return item['Name']['label']
+        BOARD_NAME = 'Board of Commissioners'
+        if item['Name']['label'] != BOARD_NAME:
+            return '{}: {}'.format(BOARD_NAME, item['Name']['label'])
+        return BOARD_NAME
 
     def _parse_description(self, item):
         """

@@ -15,7 +15,7 @@ from city_scrapers.spider import Spider
 
 class ChiParksSpider(Spider):
     name = 'chi_parks'
-    agency_name = 'Chicago Park District Board of Commissioners'
+    agency_name = 'Chicago Park District'
     START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = [START_URL]
@@ -78,7 +78,10 @@ class ChiParksSpider(Spider):
         """
         Parse or generate event name.
         """
-        return item['Name']
+        board_str = 'Board of Commissioners'
+        if item['Name'].strip() == board_str:
+            return board_str
+        return '{}: {}'.format(board_str, item['Name'])
 
     def _parse_classification(self, item):
         """

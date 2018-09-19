@@ -15,7 +15,7 @@ from city_scrapers.spider import Spider
 
 class CookHousingAuthoritySpider(Spider):
     name = 'cook_housingauthority'
-    agency_name = 'Housing Authority of Cook County Board of Commissioners'
+    agency_name = 'Housing Authority of Cook County'
     allowed_domains = ['http://thehacc.org/']
     start_urls = ['http://thehacc.org/events/feed/']
     events_endpoint = 'http://thehacc.org/wp-json/tribe/events/v1/events/{id}'

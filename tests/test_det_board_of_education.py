@@ -19,7 +19,7 @@ def test_count():
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Policy Ad-hoc Sub-Committee Meeting (Open)'
+    assert parsed_items[0]['name'] == 'Board of Education: Policy Ad-hoc Sub-Committee Meeting (Open)'
 
 
 def test_description():
@@ -39,7 +39,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_board_of_education/201808210900/x/policy_ad_hoc_sub_committee_meeting_open'
+    assert parsed_items[0]['id'] == 'det_board_of_education/201808210900/x/board_of_education_policy_ad_hoc_sub_committee_meeting_open'
 
 
 def test_status():

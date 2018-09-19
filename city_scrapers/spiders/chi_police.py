@@ -13,7 +13,7 @@ from city_scrapers.spider import Spider
 
 class ChiPoliceSpider(Spider):
     name = 'chi_police'
-    agency_name = 'Chicago Police Department Beat and District Meetings'
+    agency_name = 'Chicago Police Department'
     timezone = 'America/Chicago'
     allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
     start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']

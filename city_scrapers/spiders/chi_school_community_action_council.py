@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class ChiSchoolCommunityActionCouncilSpider(Spider):
     name = 'chi_school_community_action_council'
-    agency_name = 'Chicago Public Schools Community Action Councils'
+    agency_name = 'Chicago Public Schools'
     timezone = 'America/Chicago'
     allowed_domains = ['cps.edu']
     start_urls = ['http://cps.edu/FACE/Pages/CAC.aspx']

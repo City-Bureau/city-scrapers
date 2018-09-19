@@ -25,7 +25,7 @@ def test__type():
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Zoning Board of Appeals Meeting'
+    assert parsed_items[0]['name'] == 'Zoning Board of Appeals'
 
 
 def test_description():
@@ -56,7 +56,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_zoning_board/201801190900/x/zoning_board_of_appeals_meeting'
+    assert parsed_items[0]['id'] == 'chi_zoning_board/201801190900/x/zoning_board_of_appeals'
 
 
 def test_status():

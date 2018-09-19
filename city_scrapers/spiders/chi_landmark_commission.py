@@ -3,7 +3,6 @@ import re
 from datetime import time
 
 import dateutil.parser
-import scrapy
 
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
@@ -11,10 +10,7 @@ from city_scrapers.spider import Spider
 
 class ChiLandmarkCommissionSpider(Spider):
     name = 'chi_landmark_commission'
-    agency_name = (
-        'Chicago Department of Planning and Development '
-        'Commission on Chicago Landmarks'
-    )
+    agency_name = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html']

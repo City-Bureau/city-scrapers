@@ -10,9 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetDowntownDevelopmentAuthoritySpider(Spider):
     name = 'det_downtown_development_authority'
-    agency_name = (
-        'Detroit Downtown Development Authority Board of Directors'
-    )
+    agency_name = 'Detroit Downtown Development Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/dda/']

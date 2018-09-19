@@ -14,7 +14,7 @@ from city_scrapers.spider import Spider
 
 class ChiLibrarySpider(Spider):
     name = 'chi_library'
-    agency_name = 'Chicago Public Library Board of Directors'
+    agency_name = 'Chicago Public Library'
     timezone = 'America/Chicago'
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
@@ -65,7 +65,7 @@ class ChiLibrarySpider(Spider):
             start_time = self._parse_start(item, yr)
             data = {
                 '_type': 'event',
-                'name': 'Chicago Public Library Board Meeting',
+                'name': 'Board of Directors',
                 'description': description_str,
                 'classification': BOARD,
                 'start': {
