@@ -1,17 +1,21 @@
 import pytest
 
 from tests.utils import file_response
-from datetime import date
-from datetime import time
+from datetime import date, time
+from freezegun import freeze_time
 from city_scrapers.constants import BOARD, PASSED, CONFIRMED, TENTATIVE
 from city_scrapers.spiders.chi_teacherpension import ChiTeacherPensionSpider
 
+freezer = freeze_time('2018-09-13 12:00:00')
+freezer.start()
 
 test_response = file_response('files/chi_teacherpension.htm')
 spider = ChiTeacherPensionSpider()
 parsed_items = [
     item for item in spider.parse(test_response) if isinstance(item, dict)
 ]
+
+freezer.stop()
 
 
 def test_name():
