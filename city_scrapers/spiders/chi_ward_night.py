@@ -16,6 +16,23 @@ from city_scrapers.spider import Spider
 GOOGLE_API_KEY = os.environ.get('CITY_SCRAPERS_GOOGLE_API_KEY') or 'test-token'
 SPREADSHEET_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1xnt4kZI9Ruinw91wM-nnWftsFD-ZaKaozepdNXeIrpo'
 
+DESCRIPTION_TEMPLATE = (
+    'Ward Night with Ald. {ald} (Ward {ward})\n\n'
+    'Frequency: {frequency}\n'
+    'Day of the Week: {weekday}\n'
+    'Requires Sign-Up: {signup}\n'
+    'Phone: {phone}\n'
+    'Email: {email}\n'
+    'Website: {website}\n'
+    'Notes: {notes}\n\n'
+    'Aldermanic Ward Nights are unofficial convenings not subject to the Open '
+    'Meetings Act. Ward Nights are held for constituents to meet with the '
+    'alderperson and his or her staff regarding various matters related to '
+    'their ward. Most Ward Nights operate on a first-come, first-served '
+    'basis and often do not require reservations. Concerns, questions or '
+    'comments may be brought to Ward Nights for discussion.'
+)
+
 
 class Calendar(object):
     """
@@ -91,21 +108,22 @@ class Row(IntEnum):
 
     ALDERMAN = 0            # Text
     PHONE = 1               # Text
-    WEBSITE = 2             # Text
-    WARD = 3                # Text
-    DOCUMENTER = 4          # Text
-    HAS_WARD_NIGHTS = 5     # Yes, No, Unknown
-    ADDRESS = 6             # Text
-    FREQUENCY = 7           # Weekly, Monthly (1st occurrence), Monthly (2nd occurrence),
+    EMAIL = 2               # Text
+    WEBSITE = 3             # Text
+    WARD = 4                # Text
+    DOCUMENTER = 5          # Text
+    HAS_WARD_NIGHTS = 6     # Yes, No, Unknown
+    ADDRESS = 7             # Text
+    FREQUENCY = 8           # Weekly, Monthly (1st occurrence), Monthly (2nd occurrence),
     #                         Monthly (3rd occurrence), Monthly (4th occurrence),
     #                         Monthly (last occurrence), Irregularly
-    DAY_OF_WEEK = 8         # Monday, Tuesday, Wednesday, Thursday, Friday,
+    DAY_OF_WEEK = 9         # Monday, Tuesday, Wednesday, Thursday, Friday,
     #                         Saturday, Sunday
-    START_TIME = 9          # [h]h:mm am
-    END_TIME = 10           # [h]h:mm am
-    SIGN_UP_REQUIRED = 11   # Yes, No
-    SIGN_UP_INFO = 12       # Text
-    INFO = 13               # Text
+    START_TIME = 10         # [h]h:mm am
+    END_TIME = 11           # [h]h:mm am
+    SIGN_UP_REQUIRED = 12   # Yes, No
+    SIGN_UP_INFO = 13       # Text
+    INFO = 14               # Text
 
 
 class ChiWardNightSpider(Spider):
@@ -114,7 +132,7 @@ class ChiWardNightSpider(Spider):
     timezone = 'America/Chicago'
 
     allowed_domains = ['sheets.googleapis.com/v4/']
-    start_urls = [SPREADSHEET_URL + '/values/A3:N100?key=' + GOOGLE_API_KEY]
+    start_urls = [SPREADSHEET_URL + '/values/A3:O100?key=' + GOOGLE_API_KEY]
 
     def __init__(self, start_date=datetime.today(), *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -126,16 +144,15 @@ class ChiWardNightSpider(Spider):
         """
 
         rows = json.loads(response.body.decode('utf-8'))['values']
-
         for row in rows:
             # Strip leading or trailing whitespace from all values
             for i in range(len(row)):
                 row[i] = row[i].strip()
 
             # The JSON omits values for trailing columns with no values. By padding
-            # the rows out, the rest of the code can assume there will always be 14
+            # the rows out, the rest of the code can assume there will always be 15
             # columns.
-            missing_values = 14 - len(row)
+            missing_values = 15 - len(row)
             row.extend([''] * missing_values)
             for result in self._parse_row(row):
                 yield result
@@ -157,7 +174,6 @@ class ChiWardNightSpider(Spider):
             return []
 
     def _parse_row(self, row):
-
         if row[Row.HAS_WARD_NIGHTS] != 'Yes':
             return []
 
@@ -194,13 +210,7 @@ class ChiWardNightSpider(Spider):
         """
         Create event name
         """
-
-        values = {
-            'ward': row[Row.WARD],
-            'alderman': row[Row.ALDERMAN],
-        }
-        name = 'Ward Night: Ward {ward}'.format(**values)
-        return name
+        return 'Ward Night: Ward {ward}'.format(ward=row[Row.WARD])
 
     def _parse_location(self, row):
         """
@@ -217,14 +227,17 @@ class ChiWardNightSpider(Spider):
         """
         Parse or generate event name.
         """
-
-        values = {
-            'ward': row[Row.WARD],
-            'alderman': row[Row.ALDERMAN],
-        }
-        template = 'Ward Night with Alderman {alderman} (Ward {ward}).\n'
-        summary = template.format(**values)
-        return summary + row[Row.INFO]
+        return DESCRIPTION_TEMPLATE.format(
+            ald=row[Row.ALDERMAN],
+            ward=row[Row.WARD],
+            frequency=row[Row.FREQUENCY],
+            weekday=row[Row.DAY_OF_WEEK],
+            signup=row[Row.SIGN_UP_REQUIRED],
+            phone=row[Row.PHONE],
+            email=row[Row.EMAIL],
+            website=row[Row.WEBSITE],
+            notes=row[Row.INFO],
+        )
 
     def _parse_date_time(self, row, day):
         """
