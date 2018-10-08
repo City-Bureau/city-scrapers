@@ -24,13 +24,7 @@ DESCRIPTION_TEMPLATE = (
     'Phone: {phone}\n'
     'Email: {email}\n'
     'Website: {website}\n'
-    'Notes: {notes}\n\n'
-    'Aldermanic Ward Nights are unofficial convenings not subject to the Open '
-    'Meetings Act. Ward Nights are held for constituents to meet with the '
-    'alderperson and his or her staff regarding various matters related to '
-    'their ward. Most Ward Nights operate on a first-come, first-served '
-    'basis and often do not require reservations. Concerns, questions or '
-    'comments may be brought to Ward Nights for discussion.'
+    'Notes: {notes}'
 )
 
 
