@@ -59,7 +59,7 @@ def test_id():
 def test_location():
     assert parsed_items[0]['location'] == {
             'name': 'Michele Clark HS',
-            'address': '5101 W Harrison St.',
+            'address': '5101 W Harrison St. Chicago, IL',
             'neighborhood': 'Austin'
         }
 

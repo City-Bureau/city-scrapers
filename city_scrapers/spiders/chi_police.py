@@ -3,9 +3,9 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
+import re
 import json
-from datetime import datetime, date, time
-from math import floor
+from datetime import datetime
 
 from city_scrapers.constants import COMMITTEE, POLICE_BEAT
 from city_scrapers.spider import Spider
@@ -41,7 +41,7 @@ class ChiPoliceSpider(Spider):
                 '_type': 'event',
                 'id': self._parse_id(item),
                 'name': self._parse_name(classification, item),
-                'event_description': self._parse_description(classification),
+                'event_description': '',
                 'classification': classification,
                 'all_day': False,
                 'start': self._parse_start(item),
@@ -73,7 +73,10 @@ class ChiPoliceSpider(Spider):
         * Beat Meeting
         * ''
         """
-        if ('district advisory committee' in item['title'].lower()) or ('DAC' in item['title']):
+        if (
+            ('district advisory committee' in item['title'].lower())
+            or ('DAC' in item['title'])
+        ):
             return COMMITTEE
         elif 'beat' in item['title'].lower():
             return POLICE_BEAT
@@ -87,30 +90,26 @@ class ChiPoliceSpider(Spider):
         if classification == COMMITTEE:
             return classification
         elif classification == POLICE_BEAT:
-            district = self._parse_district(item)
-            if district:
-                return 'Beat Meeting, District {}'.format(district).strip()
-            else:
-                return 'Beat Meeting'
+            return 'CAPS District {}, Beat {}'.format(
+                item['calendarId'], self._parse_beat(item)
+            ).strip()
         else:
             return None
 
-    def _parse_district(self, item):
-        """
-        Parse the district number for beat meetings by
-        using the biggest number found in the item's title.
-        """
-        title = [w.replace(',', '').replace('(', '').replace(')', '') for w in item['title'].split()]
-        numbers_only = [w for w in title if w.replace('-', '').replace('/', '').isdigit()]
-        clean_numbers = [x for w in numbers_only for x in w.split('/')]
-        clean_numbers = [x for w in clean_numbers for x in w.split('-')]
-        clean_numbers = [int(x) for x in clean_numbers if x]
-        if not clean_numbers:
-            return None
-        else:
-            biggest_number = max(clean_numbers)
-            district = int(floor(biggest_number / 100))
-            return district
+    def _parse_beat(self, item):
+        district = str(item['calendarId'])
+        beat_split = re.sub(r'[\D]+', ' ', item['title']).split()
+        beat_list = []
+        for beat_num in beat_split:
+            if len(beat_num) > 2 and beat_num.startswith(district):
+                beat_list.append(beat_num[len(district):])
+            else:
+                beat_list.append(beat_num)
+        if len(beat_list) == 1:
+            return beat_list[0]
+        elif len(beat_list) > 1:
+            return '{} and {}'.format(', '.join(beat_list[:-1]), beat_list[-1])
+        return ''
 
     def _parse_location(self, item):
         """
@@ -132,24 +131,6 @@ class ChiPoliceSpider(Spider):
         Parse or generate all-day status. Defaults to false.
         """
         return False
-
-    def _parse_description(self, classification):
-        """
-        Generate event description based on classification.
-        """
-        if classification == COMMITTEE:
-            return ("Each District Commander has a District Advisory Committee which serves "
-                    "to provide advice and community based strategies that address underlying conditions "
-                    "contributing to crime and disorder in the district. Each District Advisory Committee "
-                    "should represent the broad spectrum of stakeholders in the community including "
-                    "residents, businesses, houses of worship, libraries, parks, schools and community-based organizations.")
-        else:
-            return ("CPD Beat meetings, held on all 279 police "
-                    "beats in the City, provide a regular opportunity "
-                    "for police officers, residents, and other community "
-                    "stakeholders to exchange information, identify and "
-                    "prioritize problems, and begin developing solutions "
-                    "to those problems.")
 
     def _parse_start(self, item):
         """

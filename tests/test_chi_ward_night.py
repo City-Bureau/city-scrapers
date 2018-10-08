@@ -3,15 +3,18 @@ from datetime import date, time
 
 from tests.utils import file_response
 from city_scrapers.spiders.chi_ward_night import ChiWardNightSpider, Calendar
-from textwrap import dedent
 
-test_response = file_response('files/ward_night.json')
+test_response = file_response('files/test_chi_ward_night.json')
 spider = ChiWardNightSpider(start_date=date(2017, 11, 1))
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [
+    item for item in spider.parse(test_response) if isinstance(item, dict)
+]
 
 
 def test_id():
-   assert parsed_items[0]['id'] == 'chi_ward_night/201711071600/x/ward_night_ward_1'
+    assert parsed_items[0]['id'] == (
+        'chi_ward_night/201711071600/x/ward_night_ward_1'
+    )
 
 
 def test_name():
@@ -19,17 +22,28 @@ def test_name():
 
 
 def test_event_description():
-    expected = dedent("""\
-    Ward Night with Alderman Joe Moreno (Ward 1).
-    first come first served, one-on-one meetings usually about 10-20 minutes""")
-
-    assert parsed_items[0]['event_description'] == expected
+    assert parsed_items[0]['event_description'] == (
+        'Ward Night with Ald. Joe Moreno (Ward 1)\n\n'
+        'Frequency: Weekly\n'
+        'Day of the Week: Tuesday\n'
+        'Requires Sign-Up: No\n'
+        'Phone: 773.278.0101\n'
+        'Email: ward01@cityofchicago.org\n'
+        'Website: https://www.aldermanmoreno.com/\n'
+        'Notes: first come first served, one-on-one meetings usually about 10-20 minutes\n\n'
+        'Aldermanic Ward Nights are unofficial convenings not subject to the '
+        'Open Meetings Act. Ward Nights are held for constituents to meet '
+        'with the alderperson and his or her staff regarding various matters '
+        'related to their ward. Most Ward Nights operate on a first-come, '
+        'first-served basis and often do not require reservations. Concerns, '
+        'questions or comments may be brought to Ward Nights for discussion.'
+    )
 
 
 def test_start():
     assert parsed_items[0]['start'] == {
         'date': date(2017, 11, 7),
-        'time': time(16,00)
+        'time': time(16, 00)
     }
 
 
@@ -43,7 +57,7 @@ def test_end():
 def test_location():
     assert parsed_items[0]['location'] == {
         'name': '',
-        'address': '2740 W North Ave, Chicago',
+        'address': '2740 W North Ave, Chicago IL',
         'neighborhood': ''
     }
 
@@ -84,6 +98,7 @@ def test_weekly_generation():
     row = [
         'Gregory Mitchell',
         '773.731.7777',
+        'test@example.com',
         'https://www.gregmitchell7thward.org/',
         '7',
         'Bridget Newsham',
@@ -113,8 +128,8 @@ def test_weekly_generation():
     assert events[0]['id'] == 'chi_ward_night/201711061500/x/ward_night_ward_7'
 
     assert events[1]['start'] == {
-        'date': date(2017,11,13),
-        'time': time(15,00),
+        'date': date(2017, 11, 13),
+        'time': time(15, 00),
     }
     assert events[1]['end'] == {
         'date': date(2017, 11, 13),
@@ -123,8 +138,8 @@ def test_weekly_generation():
     assert events[1]['id'] == 'chi_ward_night/201711131500/x/ward_night_ward_7'
 
     assert events[2]['start'] == {
-        'date': date(2017,11,20),
-        'time': time(15,00),
+        'date': date(2017, 11, 20),
+        'time': time(15, 00),
     }
     assert events[2]['end'] == {
         'date': date(2017, 11, 20),
@@ -137,6 +152,7 @@ def test_monthly_generation():
     row = [
         'Leslie Hairston',
         '773.324.5555',
+        'test@example.com',
         'http://leslieahairston.com/',
         '5',
         'Bridget Newsham',
