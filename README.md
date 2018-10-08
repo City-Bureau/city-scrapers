@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/City-Bureau/city-scrapers.svg?branch=master)](https://travis-ci.org/City-Bureau/city-scrapers)
+# City Scrapers
 
-[![Deploy Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZUwxa3FleE42andOVVZhUytOSXFQOE5QMnYwN3Jxa2FmWTBoMk5XZmJTb05OSmtIcXc4SW5ycjZua2x0Zy9SQzN2Q3ZTVW1xRWFrTGRUSVhna2Y3NWtnPSIsIml2UGFyYW1ldGVyU3BlYyI6IklRdldCcXJKMm4zTmFtZXEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://console.aws.amazon.com/codebuild/home?region=us-east-1#/projects/DocumentersAggregator/view)
+[![Build Status](https://travis-ci.org/City-Bureau/city-scrapers.svg?branch=master)](https://travis-ci.org/City-Bureau/city-scrapers)
 
 ## Who are the City Bureau Documenters, and why do they want to scrape websites?
 
@@ -12,7 +12,7 @@ That’s why City Bureau is working together with a team of civic coders to deve
 
 ## What are the City Scrapers?
 
-The City Scrapers collect information about public meetings. Everyday, the City Scrapers go out and fetch information about new meetings from Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them. 
+The City Scrapers collect information about public meetings. Everyday, the City Scrapers go out and fetch information about new meetings from Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them.
 
 Community members are also welcome to use this code to set up their own databases.
 
@@ -21,7 +21,7 @@ Community members are also welcome to use this code to set up their own database
 A lot about the City of Chicago! What is City Council talking about this week? What are the local school councils, and what community power do they have? What neighborhoods is the police department doing outreach in? Who governs our water?
 
 From building a scraper, you'll gain experience with:  
-- how the web works (HTTP requests and responses, reading HTML)  
+- how the web works (HTTP requests and responses, reading HTML)
 - writing functions and tests in Python
 - version control and collaborative coding (git and Github)
 - a basic data file format (json), working with a schema and data validation
@@ -30,10 +30,11 @@ From building a scraper, you'll gain experience with:
 ## Community Mission
 
 The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
- 
+
 We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both our community and Chicago’s tech and media scenes at large.
 
 ## Governance Structure
+
 The City Scrapers project is governed by a committee of rotating volunteer project leaders in collaboration with project contributors. The committee’s role is to 1) Make decisions through consensus on issues that haven't been resolved among volunteers and informal conversations 2) Onboard and advise volunteers who want to get involved in the City Scrapers project 3) Review, approve and enact project agendas OR 3) Manage the project on behalf of the City Bureau Documenters Program use case (prioritize issues, review pull requests, etc) 4) Lead regular meet-ups open to all Labs members and 5) Uphold the City Bureau Labs mission.
 
 Current committee members: Jim Benton, David Eads, Bonnie Fan, Cat Greim, Darryl Holliday, Rebecca Wei
@@ -62,9 +63,8 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 
 This project is organized and maintained by [City Bureau](http://www.citybureau.org/).
 
-* [City Bureau](https://www.citybureau.org/)
-  * [Donate](https://www.citybureau.org/press-club)
-  * [Subscribe](https://citybureau.com/newsletter/)
-  * [Twitter @city_bureau](https://twitter.com/city_bureau/)
-  * [Facebook](https://www.facebook.com/CityBureau/)
-
+* [City Bureau website](https://www.citybureau.org/)
+    * [Donate](https://www.citybureau.org/press-club)
+    * [Subscribe](https://citybureau.com/newsletter/)
+    * [Twitter @city_bureau](https://twitter.com/city_bureau/)
+    * [Facebook](https://www.facebook.com/CityBureau/)
