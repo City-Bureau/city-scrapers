@@ -10,19 +10,11 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Beat Meeting, District 25'
+    assert parsed_items[0]['name'] == 'CAPS District 25, Beat 14'
 
 
 def test_description():
-    EXPECTED_DESCRIPTION = (
-        "CPD Beat meetings, held on all 279 police "
-        "beats in the City, provide a regular opportunity "
-        "for police officers, residents, and other community "
-        "stakeholders to exchange information, identify and "
-        "prioritize problems, and begin developing solutions "
-        "to those problems."
-    )
-    assert parsed_items[0]['event_description'] == EXPECTED_DESCRIPTION
+    assert parsed_items[0]['event_description'] == ''
 
 
 def test_start():
@@ -44,7 +36,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_police/201712281830/25/beat_meeting_district_25'
+    assert parsed_items[0]['id'] == 'chi_police/201712281830/25/caps_district_25_beat_14'
 
 
 def test_all_day():

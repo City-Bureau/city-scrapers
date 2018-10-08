@@ -181,11 +181,12 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         left blank and will be geocoded later.
         """
         source = item.css('li::text').extract()[1]
+        address = source[source.find("(") + 1:source.find(")")]
         return {
             'name': source[
                 source.find('at') + 2:source.find('(')
             ].replace('the', '').strip(),
-            'address': source[source.find("(")+1:source.find(")")],
+            'address': '{} Chicago, IL'.format(address),
             'neighborhood': self._parse_community_area(item)
         }
 
