@@ -30,13 +30,7 @@ def test_event_description():
         'Phone: 773.278.0101\n'
         'Email: ward01@cityofchicago.org\n'
         'Website: https://www.aldermanmoreno.com/\n'
-        'Notes: first come first served, one-on-one meetings usually about 10-20 minutes\n\n'
-        'Aldermanic Ward Nights are unofficial convenings not subject to the '
-        'Open Meetings Act. Ward Nights are held for constituents to meet '
-        'with the alderperson and his or her staff regarding various matters '
-        'related to their ward. Most Ward Nights operate on a first-come, '
-        'first-served basis and often do not require reservations. Concerns, '
-        'questions or comments may be brought to Ward Nights for discussion.'
+        'Notes: first come first served, one-on-one meetings usually about 10-20 minutes'
     )
 
 
