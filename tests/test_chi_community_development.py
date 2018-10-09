@@ -3,14 +3,19 @@ from datetime import date, time
 import pytest
 
 from tests.utils import file_response
-from city_scrapers.spiders.chi_community_development import ChiCommunityDevelopmentSpider
+from city_scrapers.constants import COMMISSION
+from city_scrapers.spiders.chi_community_development import (
+    ChiCommunityDevelopmentSpider
+)
 
 test_response = file_response(
     'files/chi_development_community_developmentcommission.html',
     'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/community_developmentcommission.html'
 )
 spider = ChiCommunityDevelopmentSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [
+    item for item in spider.parse(test_response) if isinstance(item, dict)
+]
 
 
 def test_meeting_count():
@@ -44,7 +49,7 @@ def test_description():
 def test_start():
     assert parsed_items[0]['start'] == {
         'date': date(2018, 1, 16),
-        'time': time(1, 00),
+        'time': time(13, 0),
         'note': ''
     }
 
@@ -58,11 +63,11 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_community_development/201801160100/x/community_development_commission'
+    assert parsed_items[0]['id'] == 'chi_community_development/201801161300/x/community_development_commission'
 
 
 def test_status():
-   assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == 'passed'
 
 
 def test_location():
@@ -108,4 +113,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Commission'
+    assert item['classification'] == COMMISSION
