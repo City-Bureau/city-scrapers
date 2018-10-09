@@ -34,7 +34,7 @@ class ChiCommunityDevelopmentSpider(Spider):
                 data = {'_type': 'event',
                         'name': 'Community Development Commission',
                         'event_description': description,
-                        'classification': 'Commission',
+                        'classification': COMMISSION,
                         'start': self._parse_start(meeting, year), 'all_day': False,
                         'location': {'neighborhood': '',
                                      'name': 'City Hall',
@@ -72,7 +72,7 @@ class ChiCommunityDevelopmentSpider(Spider):
         m = re.search(r'(?P<month>\w+)\.?\s(?P<day>\d+).*', meeting.strip())
         dt = dateutil.parser.parse(m.group('month') + ' ' + m.group('day') + ' ' + year)
         # time based on examining meeting minutes
-        return {'date': dt.date(), 'time': time(1, 00), 'note': ''}
+        return {'date': dt.date(), 'time': time(13, 0), 'note': ''}
 
     def _parse_documents(self, item, meeting, response):
         # Find <a> tags where 1st, non-blank, preceding text = meeting (e.g. 'Jan 16')
