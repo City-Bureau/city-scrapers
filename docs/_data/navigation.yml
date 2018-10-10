@@ -1,0 +1,84 @@
+main:
+  - title: "Introduction"
+    url: /docs/introduction/
+  - title: "Getting Started"
+    url: /docs/getting-started/
+  - title: Tools
+    url: /docs/tools/
+  - title: Team
+    url: /docs/team/
+  - title: Development
+    url: /docs/development/
+  - title: "Next Steps"
+    url: /docs/next-steps/
+  - title: "Further Reading"
+    url: /docs/further-reading/
+
+docs:
+  - title: Introduction
+    url: /docs/introduction/
+    children:
+      - title: City Scrapers Mission
+        url: /docs/introduction/#city-scrapers-mission
+      - title: "City Bureau, City Scrapers and the Documenters Program"
+        url: /docs/introduction/#city-bureau-city-scrapers-and-the-documenters-program
+      - title: "Define your goals"
+        url: /docs/introduction/#define-your-goals
+  - title: Getting Started
+    url: /docs/getting-started/
+    children:
+      - title: "Review your state's Open Meetings Act (OMA)"
+        url: /docs/getting-started/#review-your-states-open-meetings-act-oma
+      - title: "Define your local agency map"
+        url: /docs/getting-started/#define-your-local-agency-map
+      - title: Templates
+        url: /docs/getting-started/#templates
+      - title: "Best Practices"
+        url: /docs/getting-started/#best-practices
+  - title: Tools
+    url: /docs/tools/
+    children:
+      - title: "Google Sheets"
+        url: /docs/tools/#google-sheets
+      - title: "Scrapy"
+        url: /docs/tools/#scrapy
+  - title: Team
+    url: /docs/team/
+    children:
+      - title: "Staff developer"
+        url: /docs/team/#staff-developer
+      - title: "Contract developer(s)"
+        url: /docs/team/#contract-developers
+      - title: Volunteer Coding Community
+        url: /docs/team/#volunteer-coding-community
+  - title: Development
+    url: /docs/development/
+    children:
+      - title: Installation
+        url: /docs/development/#installation
+      - title: Contribute
+        url: /docs/development/#contribute
+      - title: Event Schema
+        url: /docs/development/#event-schema
+  - title: Next Steps
+    url: /docs/next-steps/
+    children:
+      - title: Publication
+        url: /docs/next-steps/#publication
+      - title: Distribution
+        url: /docs/next-steps/#distribution
+      - title: Contact Us
+        url: /docs/next-steps/#contact-us
+  - title: Further Reading
+    url: /docs/further-reading/
+    children:
+      - title: "Glossary of City Scrapers Terms"
+        url: /docs/further-reading/#glossary-of-city-scrapers-terms
+      - title: Resources
+        url: /docs/further-reading/#resources
+      - title: Blogs
+        url: /docs/further-reading/#blogs
+      - title: Acknowledgements
+        url: /docs/further-reading/#acknowledgements
+      - title: "City Scrapers founding contributors and foundation partners"
+        url: /docs/further-reading/#city-scrapers-founding-contributors-and-foundation-partners

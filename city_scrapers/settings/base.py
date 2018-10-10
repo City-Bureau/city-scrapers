@@ -19,9 +19,7 @@ NEWSPIDER_MODULE = 'city_scrapers.spiders'
 USER_AGENT = 'City Scrapers [development mode]. Learn more and say hello at https://www.citybureau.org/city-scrapers/'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False
-CITY_SCRAPERS_ROBOTSTXT_OBEY = True
-CITY_SCRAPERS_ROBOTSTXT_LOGONLY = True
+ROBOTSTXT_OBEY = True
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
@@ -61,7 +59,7 @@ ITEM_PIPELINES = {
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'city_scrapers.middlewares.CityScrapersRobotsTxtMiddleware': 543,
+    'scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware': 543,
 }
 
 COMMANDS_MODULE = 'city_scrapers.commands'

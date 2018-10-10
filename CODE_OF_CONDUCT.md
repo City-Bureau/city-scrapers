@@ -1,4 +1,4 @@
-# Documenters Aggregator Contributor Covenant Code of Conduct
+# City Scrapers Contributor Covenant Code of Conduct
 
 ## Our Pledge
 
