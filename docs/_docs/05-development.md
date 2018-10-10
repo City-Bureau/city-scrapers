@@ -112,7 +112,7 @@ $ git checkout -b XXXX-spider-NAMEOFAGENCY
 
 `XXXX` is the zero-padded issue number and `NAMEOFAGENCY` should be something like `chi_housing`. For example, for ticket number 53 entitled "SPIDER: Chicago Housing Authority", create a branch named `0053-spider-chi_housing`.
 
-#### 3. Create a spider**
+#### 3. Create a spider
 
 Run the `genspider` task with a spider slug, spider name, and URL to start scraping. Following the previous example:
 
