@@ -127,11 +127,15 @@ def _gen_html(name, start_urls, session=requests.Session()):
             continue
 
         content = r.text.strip()
+        filename = '{0}/{1}.html'.format(FILES_DIR, name)
 
         url_suffix = url.split('/')[-1]
         if '.' in url_suffix:
             url_suffix = url_suffix.split('.')[-2]
-        filename = '{0}/{1}_{2}.html'.format(FILES_DIR, name, url_suffix)
+        if url_suffix:
+            filename = '{0}/{1}_{2}.html'.format(FILES_DIR, name, url_suffix)
+        else:
+            filename = '{0}/{1}.html'.format(FILES_DIR, name)
 
         with open(filename, 'w') as f:
             f.write(content)
