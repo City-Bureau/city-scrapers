@@ -10,13 +10,11 @@ toc: true
 
 <iframe width="600" height="371" frameborder="0" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSNsgDne-Hu_gilU6lS-Xnuwo35l9CtFZdWmhdawSpC23U1A4Zd769W8et5HRE8uYURKRq8Wdl7rQ8Y/pubhtml?widget=true&amp;headers=false"></iframe>
 
-
 ## Resources
 
 - [Open Civic Data Project](https://opencivicdata.readthedocs.io/en/latest/)
 
 ## Blogs
-
 
 - [City Bureau and ProPublica Illinois Partner on Public Meeting Data](https://www.propublica.org/nerds/city-bureau-propublica-illinois-public-meeting-data)
 - [Investing in Our Documenters = Investing in Our Community](https://medium.com/city-bureau/investing-in-our-documenters-investing-in-our-community-ec360cc5e32e)

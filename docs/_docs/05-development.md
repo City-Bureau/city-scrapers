@@ -257,19 +257,19 @@ The `ChiHousingSpider.parse(...)` method is a standard part of Scrapy and handle
 
 There are pre-defined helper methods for every major field in the data. It's your job to fill them in. **See the Event Schema** to see what is required in each field.
 
-For example, `_parse_classification` could be:
+For example, `_parse_name` could be:
 
 ```python
 class Chi_housingSpider(scrapy.Spider):
 
     # ...
 
-    def _parse_classification(self, item):
+    def _parse_name(self, item):
         """
-        Parse or generate classification.
+        Parse or generate event name.
         """
-        classification = item.css('.classification::text').extract_first()
-        return classification
+        name = item.css('.name::text').extract_first()
+        return name
 
     # ...
 ```
@@ -295,12 +295,12 @@ def test_name():
     assert parsed_items[2]['name'] == 'PAC: Maternal Mortality Review Committee Meeting'
 ```
 
-It is also possible to execute a function over every element in the `parsed_items` list. In the following example, the `test_classification` function will be invoked once for each element in `parsed_items` list.
+It is also possible to execute a function over every element in the `parsed_items` list. In the following example, the `test_all_day` function will be invoked once for each element in `parsed_items` list.
 
 ```python
 @pytest.mark.parametrize('item', parsed_items)
-def test_classification(item):
-    assert item['classification'] == 'Not classified'
+def test_all_day(item):
+    assert item['all_day'] == False
 ```
 
 Parameterized test functions are best used to assert something about every event such as the existence of a field or a value all events will share.
@@ -339,26 +339,26 @@ Our data model for events is based on the [Event object](http://docs.opencivicda
   
   'all_day': False,                              # required boolean, whether or not the event lasts all day
   
-  'status': 'tentative',                         # required string, one of the following:
-                                                # 'cancelled': event is listed as cancelled or rescheduled
+  'status': 'tentative',                        # required string, one of the options in constants.py
+                                                # 'canceled': event is listed as canceled or rescheduled
                                                 # 'tentative': event both does not have an agenda and the event is > 7 days away
                                                 # 'confirmed': either an agenda is posted or the event will happen in <= 7 days
                                                 # 'passed': event happened in the past
   
-  'classification': 'board meeting',             # optional string. This field is used by some spiders
+  'classification': 'Board',                    # optional string. This field is used by some spiders
                                                 # to differentiate between board and various committee
-                                                # meetings. Ask @diaholliday if unsure.
+                                                # Options are defined in constants.py
 
   'start': {                                     # required dictionary
     'date': date(2018, 12, 31),                  # required datetime.date object in local timezone
     'time': None,                                # optional datetime.time object in local timezone
-    'note': 'in the afternoon'                   # optional string, supplementary information if there’s no start time
+    'note': 'in the afternoon'                   # optional string, supplementary information if there's no start time
   },
   
   'end': {                                       # required dictionary
     'date': date(2018, 12, 31),                  # optional datetime.date object in local timezone
     'time': time(13, 30),                        # optional datetime.time object in local timezone
-    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there’s no end time
+    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there's no end time
   },   
 
   'location': {                                  # required dict of event locations
