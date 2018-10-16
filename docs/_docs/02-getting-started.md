@@ -30,7 +30,7 @@ We focused our universe of meetings on the local- and county-level, at agencies 
 
 ## Templates
 
-Before you start building spiders, organize the information of your relevant agencies in a spreadsheet (click here for our downloadable template ([TEMPLATE](https://docs.google.com/spreadsheets/d/1egRcdp5JPnRjk04gvNA-DrGP7TJg01hvPlDPnkjYCa0/edit#gid=1059508700)) ([EXAMPLE](https://docs.google.com/spreadsheets/d/1egRcdp5JPnRjk04gvNA-DrGP7TJg01hvPlDPnkjYCa0/edit#gid=0)). Because we aimed to create a public-facing tool, we collected information like agency name, meeting-holding body name, jurisdiction, official website, topical tags, contact information and social media handles. As we began coding we added fields to track progress of each scraper.
+Before you start building spiders, organize the information of your relevant agencies in a spreadsheet (you can start from our [downloadable template](https://docs.google.com/spreadsheets/d/1egRcdp5JPnRjk04gvNA-DrGP7TJg01hvPlDPnkjYCa0/edit#gid=1059508700) or see our [example spreadsheet](https://docs.google.com/spreadsheets/d/1egRcdp5JPnRjk04gvNA-DrGP7TJg01hvPlDPnkjYCa0/edit#gid=0)). Because we aimed to create a public-facing tool, we collected information like agency name, meeting-holding body name, jurisdiction, official website, topical tags, contact information and social media handles. As we began coding we added fields to track progress of each scraper.
 
 ## Best Practices
 

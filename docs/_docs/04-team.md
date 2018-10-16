@@ -70,7 +70,7 @@ We found that the biggest draw for City Scrapers volunteers was the practical va
 
 Pair-sharing: Pair programming is the practice of pairing up coders to work on programming tasks. This can be done by pairing up two developers seated at the same computer, sharing a keyboard and monitor but with the increasing popularity of remote coding platforms, it’s now possible to pair-share from anywhere in the world. Pair-sharing typically involved role-swapping, where one coder (typically the more advanced of the pair, demonstrates a skill while the other watches then demonstrates the same skill. Lessons learned during pair-sharing can then be repeated and expanded upon during independent work sessions.  We found that pair-sharing worked especially well in the City Scarpers project because of our emphasis on coders with varying skill levels working together toward a common goal. This involved assessing the skill level of incoming coders and matching them with less experienced developers on a recurring basis, typically at each in-person meeting. Pair-sharing can last for any length of time as coders learn new skills and pass on their skills to others.
 
-Platforms like X and X can be used to pair-share, while programs like [Donut](https://www.donut.com/?ref=slackdirectory) can be integrated with Slack.
+Programs like [Donut](https://www.donut.com/?ref=slackdirectory) can be integrated with Slack.
 
 ### Maintaining your community
 
@@ -94,15 +94,13 @@ Define a process for lead staff/volunteers at each meeting. Our Coding Session S
 
 ### Developing a Code of Conduct
 
-This step is often overlooked but often critical to success. Define a Code of Conduct that all coding community agree to abide by throughout their time on the project. The [Contributor Covenant](https://www.contributor-covenant.org/) inspired an early mission for the open-membership, open-source City Scrapers project, outlined in the project [README file](../README.md) located on Github. In addition to the Covenant, this document states that "The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
+This step is often overlooked but often critical to success. Define a Code of Conduct that all coding community agree to abide by throughout their time on the project. The [Contributor Covenant](https://www.contributor-covenant.org/) inspired an early mission for the open-membership, open-source City Scrapers project, outlined in the project [README file](https://github.com/City-Bureau/city-scrapers/blob/master/README.md) located on Github. In addition to the Covenant, this document states that "The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
 
 We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both our community and Chicago's tech and media scenes at large."
 
 Here's the Chicago City Scrapers Code of Conduct as an example (feel free to adapt as needed).
 
 ### Reward your team
-
-TK
 
 ### Additional Resources
 
