@@ -10,7 +10,7 @@ toc: true
 
 - Simple: A Google sheets document with with your scraped meeting information can easily be made public.
 - Intermediate: The output of the scrapers can be written to a cloud storage service like AWS S3 or Azure Blob Storage, and then read from a static web app without requiring a persistent web server. This basic events calendar from the City Scrapers project is one example [City-Bureau/city-scrapers-events](https://github.com/City-Bureau/city-scrapers-events)
-- Documenters.org: If you’ve used our City Scrapers system, your meetings may be added to Documenters.org free of charge and made available to the public. Contact us to learn more.
+- Documenters.org: If you've used our City Scrapers system, your meetings may be added to Documenters.org free of charge and made available to the public. Contact us to learn more.
 
 ## Distribution
 

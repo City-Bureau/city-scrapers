@@ -8,7 +8,7 @@ toc: true
 
 ## Review your state's Open Meetings Act (OMA)
 
-Each state has its own Open Meetings Act. With reasonable exceptions, all public bodies are required to hold meetings open to public and to give adequate notice of when these meetings are held. It’s a good idea to familiarize yourself with your state’s open meetings laws and Ballotpedia’s state-by-state [list](https://ballotpedia.org/State_open_meetings_laws) is a great place to start.
+Each state has its own Open Meetings Act. With reasonable exceptions, all public bodies are required to hold meetings open to public and to give adequate notice of when these meetings are held. It's a good idea to familiarize yourself with your state's open meetings laws and Ballotpedia's state-by-state [list](https://ballotpedia.org/State_open_meetings_laws) is a great place to start.
 
 ## Define your local agency map
 
@@ -34,4 +34,4 @@ Before you start building spiders, organize the information of your relevant age
 
 ## Best Practices
 
-Get a sense of how meeting-holding bodies are scheduling public meetings. Do any agencies use a management tool like [Legistar](https://chicago.legistar.com/Calendar.aspx) or [Municode](https://library.municode.com/il/cook_county) that will be easier to scrape data from? Are any meeting dates stored in formats that are particularly difficult to access, such as in a PDF? If so, call the agency out on it! Given specific, structured feedback on how they could make their calendars more accessible, the public officials we met with were typically willing to do so. What’s more, it may save some work on your end. Check out our best practices guides for [event managers](https://docs.google.com/document/d/1JpeHVw0H6ghRi3EkvqRa3sDAXkfc_goP33CAtdFPEbA/edit) and [technical managers](https://docs.google.com/document/d/15A5hD8OM3RhRO0dfPw9vgRig4oZF4qzlATrAGjV1ZxM/edit) to get started.
+Get a sense of how meeting-holding bodies are scheduling public meetings. Do any agencies use a management tool like [Legistar](https://chicago.legistar.com/Calendar.aspx) or [Municode](https://library.municode.com/il/cook_county) that will be easier to scrape data from? Are any meeting dates stored in formats that are particularly difficult to access, such as in a PDF? If so, call the agency out on it! Given specific, structured feedback on how they could make their calendars more accessible, the public officials we met with were typically willing to do so. What's more, it may save some work on your end. Check out our best practices guides for [event managers](https://docs.google.com/document/d/1JpeHVw0H6ghRi3EkvqRa3sDAXkfc_goP33CAtdFPEbA/edit) and [technical managers](https://docs.google.com/document/d/15A5hD8OM3RhRO0dfPw9vgRig4oZF4qzlATrAGjV1ZxM/edit) to get started.

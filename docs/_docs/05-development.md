@@ -352,13 +352,13 @@ Our data model for events is based on the [Event object](http://docs.opencivicda
   'start': {                                     # required dictionary
     'date': date(2018, 12, 31),                  # required datetime.date object in local timezone
     'time': None,                                # optional datetime.time object in local timezone
-    'note': 'in the afternoon'                   # optional string, supplementary information if there’s no start time
+    'note': 'in the afternoon'                   # optional string, supplementary information if there's no start time
   },
   
   'end': {                                       # required dictionary
     'date': date(2018, 12, 31),                  # optional datetime.date object in local timezone
     'time': time(13, 30),                        # optional datetime.time object in local timezone
-    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there’s no end time
+    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there's no end time
   },   
 
   'location': {                                  # required dict of event locations

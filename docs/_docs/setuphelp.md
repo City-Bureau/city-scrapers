@@ -12,7 +12,7 @@ This document covers some of the issues associated with first-time development e
 
 ### Creating a GitHub account
 
-If you do not have an account already, go to github.com and sign up for an account.
+If you do not have an account already, go to [GitHub](https://github.com) and sign up for an account.
 
 ### Installing Git
 
