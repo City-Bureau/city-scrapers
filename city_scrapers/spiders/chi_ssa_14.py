@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class ChiSsa14Spider(Spider):
     name = 'chi_ssa_14'
-    agency_name = 'Chicago SSA #14 Marquette Park'
+    agency_name = 'Chicago Special Service Area #14 Marquette Park'
     timezone = 'America/Chicago'
     allowed_domains = ['www.mp-security.org']
     start_urls = ['http://www.mp-security.org/public-meetings']
