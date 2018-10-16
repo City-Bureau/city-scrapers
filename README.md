@@ -43,7 +43,7 @@ Point of contact: Rebecca Wei (@r-wei)
 
 ## Ready to code with us?
 
-1. [Fill out this form](https://airtable.com/shrsdRcYVzp019U22) to join our [slack channel](https://citybureau.slack.com/#labs_city_scrapers) and meet the community.
+1. [Fill out this form](https://airtable.com/shrsdRcYVzp019U22) to join our [Slack channel](https://citybureau.slack.com/#labs_city_scrapers) and meet the community.
 2. Read about [how we collaborate](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md) and review our [Code of Conduct](https://github.com/City-Bureau/city-scrapers/blob/master/CODE_OF_CONDUCT.md).
 3. Check out our [documentation](https://cityscrapers.org/docs/development/), and get started with [Installation](https://cityscrapers.org/docs/development/#installation) and [Contributing a spider](https://cityscrapers.org/docs/development/#contribute).
 
@@ -53,7 +53,7 @@ For those familiar with the project, please see the [help-wanted GitHub issues](
 
 ## Don't want to code?
 
-[Join our slack channel](https://airtable.com/shrsdRcYVzp019U22) (chatroom) to discuss ideas and meet the community!
+[Join our Slack channel](https://airtable.com/shrsdRcYVzp019U22) (chatroom) to discuss ideas and meet the community!
 
 A. We have ongoing conversations about what sort of data we should collect and how it should be collected. Help us make these decisions by commenting on [issues with a non-coding label](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3Anon-coding).
 

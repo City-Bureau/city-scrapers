@@ -8,6 +8,42 @@ minimal_mistakes_skin: "contrast"
 project:
     version: 0.1.0
 
+# Site Settings
+locale: "en-US"
+title: "City Scrapers"
+title_separator: "|"
+name: "City Bureau"
+description: "Website for City Bureau's City Scrapers project"
+url: "https://cityscrapers.org"
+repository: "City-Bureau/city-scrapers"
+teaser: "/assets/images/citybureau.png"
+
+# Social
+twitter:
+  username: city_bureau
+facebook:
+  username: CityBureau
+og_image: "/assets/images/citybureau.png"
+
+# Analytics
+# analytics:
+#   provider               : false # false (default), "google", "google-universal", "custom"
+#   google:
+#     tracking_id          :
+#     anonymize_ip         : # true, false (default)
+
+footer:
+  links:
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/city_bureau"
+    - label: "Facebook"
+      icon: "fab fa-fw fa-facebook-square"
+      url: "https://www.facebook.com/CityBureau/"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/City-Bureau/city-scrapers/"
+
 # Conversion
 markdown: kramdown
 highlighter: rouge
