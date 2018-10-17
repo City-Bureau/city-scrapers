@@ -92,7 +92,8 @@ class DetCityCouncilSpider(Spider):
 
     @staticmethod
     def _choose_location(location_text):
-        if 'YOUNG MUNICIPAL CENTER' in location_text.upper():
+        # Default to Coleman A. Young Municipal center if no location found
+        if not location_text or 'YOUNG MUNICIPAL' in location_text.upper():
             return {
                 'neighborhood': '',
                 'name': 'Coleman A. Young Municipal Center',
