@@ -29,7 +29,10 @@ class ChiPoliceSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        data = json.loads(response.body_as_unicode())
+        try:
+            data = json.loads(response.body_as_unicode())
+        except json.decoder.JSONDecodeError:
+            return
 
         for item in data:
             # Drop events that aren't Beat meetings or DAC meetings

@@ -73,10 +73,17 @@ class ChiCityCollegeSpider(Spider):
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
-
+        # Default to Harold Washington College
+        default_location = {
+            'name': 'Harold Washington College',
+            'address': '30 E. Lake Street Chicago, IL 60601',
+            'neighborhood': None,
+        }
         text = response.css('#ctl00_PlaceHolderMain_FullDescription__ControlWrapper_RichHtmlField span::text').extract_first()
-        match = re.search(r'\.m\.,([^,]+),(.+)', text)
+        if not text:
+            return default_location
 
+        match = re.search(r'\.m\.,([^,]+),(.+)', text)
         if match is not None:
             return {
                 'name': match.group(1).strip(),
@@ -84,12 +91,7 @@ class ChiCityCollegeSpider(Spider):
                 'neighborhood': None,
             }
         else:
-            # Default to Harold Washington College
-            return {
-                'name': 'Harold Washington College',
-                'address': '30 E. Lake Street Chicago, IL 60601',
-                'neighborhood': None,
-            }
+            return default_location
 
     def _parse_all_day(self):
         """
