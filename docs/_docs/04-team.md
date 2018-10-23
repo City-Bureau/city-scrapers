@@ -10,13 +10,13 @@ The City Scrapers project was a diverse, inclusive open-source project. We're pr
 
 ## Staff developer
 
-Follow your organization's guidelines
+Follow your organization's guidelines.
 
 ## Contract developer(s)
 
 ### Contracting
 
-Follow your organization's guidelines
+Follow your organization's guidelines.
 
 ### Bounty system
 
@@ -57,7 +57,7 @@ If starting from scratch, be sure to create an easy to use sign-up form (we reco
 >
    --------------------------------------------------
 >
-   To sign up: https://airtable.com/shrQN3vROKb2LRyCO
+   To sign up: `link`
 >
    For more information: https://docs.google.com/document/d/1sXS2VaCRpzr6ENd7loCNBqTeNniJ3nQUF-c0nwfhnfg/edit?usp=sharing
 
