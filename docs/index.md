@@ -4,6 +4,7 @@ permalink: /
 header:
   overlay_color: "#5e616c"
   overlay_image: /assets/images/map-bg.png
+  og_image: /assets/images/cityscrapers.png
 nav: docs
 ---
 
