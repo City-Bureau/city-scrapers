@@ -17,14 +17,14 @@ description: "Website for City Bureau's City Scrapers project"
 url: "https://cityscrapers.org"
 baseurl: ""
 repository: "City-Bureau/city-scrapers"
-teaser: "/assets/images/citybureau.png"
+teaser: "/assets/images/cityscrapers.png"
 
 # Social
 twitter:
   username: city_bureau
 facebook:
   username: CityBureau
-og_image: "/assets/images/citybureau.png"
+og_image: "/assets/images/cityscrapers.png"
 
 analytics:
   provider: "google-gtag"
