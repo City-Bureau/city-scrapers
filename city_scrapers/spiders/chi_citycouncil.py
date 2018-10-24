@@ -8,6 +8,7 @@ import json
 from urllib.parse import urljoin, parse_qs
 
 import dateutil.parser
+import pytz
 import scrapy
 
 from city_scrapers.constants import CITY_COUNCIL
@@ -101,7 +102,8 @@ class ChiCityCouncilSpider(Spider):
         if len(timestamp) <= 0:
             return {'date': None, 'time': None, 'note': ''}
 
-        dt = dateutil.parser.parse(timestamp)
+        tz = pytz.timezone(self.timezone)
+        dt = dateutil.parser.parse(timestamp).astimezone(tz)
         return {
             'date': dt.date(),
             'time': dt.time(),
