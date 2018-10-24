@@ -3,7 +3,7 @@ from datetime import date, time
 from urllib.parse import parse_qs
 
 import pytest
-from scrapy.http import TextResponse
+from freezegun import freeze_time
 
 from city_scrapers.constants import CITY_COUNCIL
 from city_scrapers.spiders.chi_citycouncil import ChiCityCouncilSpider
@@ -18,8 +18,12 @@ spider = ChiCityCouncilSpider()
 
 @pytest.fixture('module')
 def parsed_item():
+    freezer = freeze_time('2018-01-01 12:00:01')
+    freezer.start()
     item = file_response('files/chi_citycouncil_event.json', url=INITIAL_REQUEST)
-    return spider._parse_item(item)
+    parsed = spider._parse_item(item)
+    freezer.stop()
+    return parsed
 
 
 def test_parse():
@@ -74,7 +78,7 @@ def test_parse_documents():
 def test_start(parsed_item):
     expected_start = {
         'date': date(2017, 10, 16),
-        'time': time(15, 00),
+        'time': time(10, 00),
         'note': ''
     }
     assert parsed_item['start'] == expected_start
@@ -112,7 +116,7 @@ def test_documents(parsed_item):
 
 def test_id(parsed_item):
     assert parsed_item['id'] == \
-           'chi_citycouncil/201710161500/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
+           'chi_citycouncil/201710161000/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
 
 
 def test_all_day(parsed_item):
