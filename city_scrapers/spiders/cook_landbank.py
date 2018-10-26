@@ -168,7 +168,7 @@ class CookLandbankSpider(Spider):
             'span[class=\'evcal_desc evo_info \']::attr(data-location_name)'
         ).extract_first()
         if location_detail is not None:
-            address = f'{location_detail}, {street_address}'
+            address = '{}, {}'.format(location_detail, street_address)
         else:
             address = street_address
         return {

@@ -28,7 +28,9 @@ class ChiSsa14Spider(Spider):
         year = re.search(r'\d{4}', schedule_note).group()
         # Generate dates for current year's meetings
         meeting_dates = [
-            datetime.strptime(f'{year} {meeting.extract()}', '%Y %B %d').date()
+            datetime.strptime(
+                '{} {}'.format(year, meeting.extract()), '%Y %B %d'
+            ).date()
             for meeting in response.css('.col2 .announcement strong::text')
         ]
 
@@ -115,6 +117,6 @@ class ChiSsa14Spider(Spider):
         Parse or generate documents.
         """
         return [{
-            'url': f'http://www.mp-security.org{item.attrib["href"]}',
+            'url': 'http://www.mp-security.org{}'.format(item.attrib['href']),
             'note': 'Minutes',
         }]

@@ -34,6 +34,10 @@ FEED_STORAGES = {
 FEED_FORMAT = 'cityscrapers_jsonlines'
 
 FEED_URI = (
-    f'azure://{AZURE_ACCOUNT_NAME}:{AZURE_ACCOUNT_KEY}@{AZURE_CONTAINER}'
+    'azure://{account_name}:{account_key}@{container}'
     '/%(year)s/%(month)s/%(day)s/%(hour_min)s/%(name)s.json'
+).format(
+    account_name=AZURE_ACCOUNT_NAME,
+    account_key=AZURE_ACCOUNT_KEY,
+    container=AZURE_CONTAINER,
 )

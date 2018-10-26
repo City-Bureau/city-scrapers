@@ -54,7 +54,7 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
         try:
             if date_match and time_match:
                 dt = parse(
-                    f'{date_match.group(1)} {time_match.group(1)}',
+                    '{} {}'.format(date_match.group(1), time_match.group(1)),
                     fuzzy=True,
                 )
                 return {'date': dt.date(), 'time': dt.time(), 'note': ''}

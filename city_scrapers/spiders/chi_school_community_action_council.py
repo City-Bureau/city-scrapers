@@ -75,7 +75,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         CAC_NAME = 'Community Action Council'
         community_area = self._parse_community_area(item)
         if community_area:
-            return f'{community_area} {CAC_NAME}'
+            return '{} {}'.format(community_area, CAC_NAME)
         return CAC_NAME
 
     @staticmethod

@@ -42,7 +42,7 @@ def upload_status_svg(scraper_name, status):
     )
     blob_service.create_blob_from_text(
         STATUS_CONTAINER,
-        f'{scraper_name}.svg',
+        '{}.svg'.format(scraper_name),
         STATUS_ICON.format(
             color=STATUS_COLOR_MAP[status],
             status=status,

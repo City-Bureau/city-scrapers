@@ -139,8 +139,8 @@ class ChiTeacherPensionSpider(Spider):
         link = item.xpath('./a')[0]
         return [{
             'note': link.xpath('.//text()').extract_first(),
-            'url': (
-                f'https://www.ctpf.org{link.xpath("./@href").extract_first()}'
+            'url': 'https://www.ctpf.org{}'.format(
+                link.xpath("./@href").extract_first()
             ),
         }]
 
