@@ -104,7 +104,7 @@ class ChiCityCollegeSpider(Spider):
         Parse or generate event name.
         """
         title = response.css('h1::text').extract_first()
-        return f'Board of Trustees: {title}'
+        return 'Board of Trustees: {}'.format(title)
 
     def _parse_description(self, response):
         """

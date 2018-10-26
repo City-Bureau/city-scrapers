@@ -71,7 +71,7 @@ def runtests(ctx):
 
 
 def _make_classname(name):
-    return f'{string.capwords(name, sep="_").replace("_", "")}Spider'
+    return '{}Spider'.format(string.capwords(name, sep='_').replace('_', ''))
 
 
 def _gen_spider(name, agency_name, domains, start_urls):
