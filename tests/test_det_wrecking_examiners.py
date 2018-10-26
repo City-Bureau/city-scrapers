@@ -4,7 +4,7 @@ from tests.utils import file_response
 from city_scrapers.spiders.det_wrecking_examiners import DetWreckingExaminersSpider
 
 
-test_response = file_response('files/det_wrecking_examiners.html', 'http://www.detroitmi.gov/Government/Boards/Board-of-Wrecking-Contractors-Meetings')
+test_response = file_response('files/det_wrecking_examiners.html', 'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings')
 spider = DetWreckingExaminersSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -43,7 +43,7 @@ def test_location():
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
-        'url': 'http://www.detroitmi.gov/Government/Boards/Board-of-Wrecking-Contractors-Meetings',
+        'url': 'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings',
         'note': ''
     }]
 

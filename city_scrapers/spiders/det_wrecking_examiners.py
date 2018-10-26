@@ -12,7 +12,7 @@ class DetWreckingExaminersSpider(Spider):
     agency_name = 'Detroit Wrecking Contractors Board of Examiners'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
-    start_urls = ['http://www.detroitmi.gov/Government/Boards/Board-of-Wrecking-Contractors-Meetings']
+    start_urls = ['https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings']
 
     def parse(self, response):
         """
@@ -27,7 +27,7 @@ class DetWreckingExaminersSpider(Spider):
                     'address': '2 Woodward Avenue, Detroit, MI 48226'}
         meeting_name = 'Board of Wrecking Contractors Examiners'
 
-        for item in response.xpath('//div[contains(@id, "dnn_ctr10027_HtmlModule_lblContent")]/p[2]/following-sibling::p/text()').extract():
+        for item in response.xpath('//div[contains(@class, "view-header")]//p[strong[contains(string(), "The Board of Wrecking Contractors")]]/following-sibling::p/text()').extract():
 
             data = {
                 '_type': 'event',
