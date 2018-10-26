@@ -59,6 +59,8 @@ class IlRegionalTransitSpider(Spider):
             # Disable built-in RobotsTxt middleware for this request.
             'dont_obey_robotstxt': True,
         }
+        if url.startswith('//'):
+            url = 'http:{}'.format(url)
         yield scrapy.Request(url, callback=self.parse_iframe, meta=meta)
 
     @staticmethod

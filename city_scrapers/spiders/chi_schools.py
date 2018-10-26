@@ -47,7 +47,10 @@ class ChiSchoolsSpider(Spider):
 
     def _parse_start_time(self, item):
         raw_strings = item.css('::text').extract()
-        date_string = self._remove_line_breaks(raw_strings)[0]
+        date_string_list = self._remove_line_breaks(raw_strings)
+        date_string = ''
+        if len(date_string_list) > 0:
+            date_string = date_string_list[0]
         date_string = date_string.replace(' at', '')
         date_string = date_string.replace(',', "").replace(':', " ")
         try:
