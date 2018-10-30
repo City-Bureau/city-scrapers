@@ -3,10 +3,10 @@ import pytest
 from tests.utils import file_response
 from datetime import date, time
 from freezegun import freeze_time
-from city_scrapers.constants import BOARD, PASSED, CONFIRMED, TENTATIVE
+from city_scrapers.constants import BOARD, CONFIRMED, TENTATIVE
 from city_scrapers.spiders.chi_teacherpension import ChiTeacherPensionSpider
 
-freezer = freeze_time('2018-09-13 12:00:00')
+freezer = freeze_time('2018-10-30 12:00:00')
 freezer.start()
 
 test_response = file_response('files/chi_teacherpension.htm')
@@ -24,19 +24,19 @@ def test_name():
 
 def test_start_time():
     assert parsed_items[0]['start'] == {
-        'date': date(2018, 5, 17), 'time': time(9, 30), 'note': ''
+        'date': date(2018, 11, 13), 'time': time(9, 30), 'note': ''
     }
 
 
 def test_end_time():
     assert parsed_items[0]['end'] == {
-        'date': date(2018, 5, 17), 'time': None, 'note': ''
+        'date': date(2018, 11, 13), 'time': None, 'note': ''
     }
 
 
 def test_id():
     assert parsed_items[0]['id'] == (
-        'chi_teacherpension/201805170930/'
+        'chi_teacherpension/201811130930/'
         'x/regular_board_meeting'
     )
 
@@ -46,9 +46,22 @@ def test_classification():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == PASSED
+    assert parsed_items[0]['status'] == TENTATIVE
     assert parsed_items[4]['status'] == CONFIRMED
     assert parsed_items[5]['status'] == TENTATIVE
+
+
+def test_documents():
+    assert parsed_items[0]['documents'] == []
+    assert parsed_items[2]['documents'] == [
+        {
+            'note': 'Meeting Agenda - November 1',
+            'url': (
+                'https://www.ctpf.org/sites/main/files/'
+                'file-attachments/communications_committee_meeting.pdf'
+            )
+        }
+    ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
