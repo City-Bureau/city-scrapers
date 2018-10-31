@@ -71,7 +71,7 @@ class ChiPoliceSpider(Spider):
 
     def _parse_classification(self, item):
         """
-        Returns one of the following: 
+        Returns one of the following:
         * District Advisory Committee (DAC)
         * Beat Meeting
         * ''
@@ -91,7 +91,7 @@ class ChiPoliceSpider(Spider):
         Generate a name based on the classfication.
         """
         if classification == COMMITTEE:
-            return classification
+            return 'District Advisory Committee'
         elif classification == POLICE_BEAT:
             return 'CAPS District {}, Beat {}'.format(
                 item['calendarId'], self._parse_beat(item)
