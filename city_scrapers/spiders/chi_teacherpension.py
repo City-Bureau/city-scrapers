@@ -33,21 +33,9 @@ class ChiTeacherPensionSpider(Spider):
                 continue
             # Go through each sibling to get the next paragraph tag
             next_sib = meeting_group.xpath('following-sibling::*[1]')
-            while len(next_sib) and next_sib[0].root.tag == 'p':
-                # Only use line if it includes a year
-                sib_text = next_sib.xpath('./text()').extract_first()
-                if re.match(r'.*\d{4}.*', sib_text) is None:
-                    next_sib = next_sib.xpath('following-sibling::*[1]')
-                    continue
-                # Get all text nodes and spans (containing links)
-                item_list = next_sib.xpath('./text()|span')
-                next_sib = next_sib.xpath('following-sibling::*[1]')
-                for idx, item in enumerate(item_list):
-                    # Ignore span elements that have links since these are
-                    # handled for documents separately
-                    if hasattr(item.root, 'tag') and item.root.tag == 'span':
-                        continue
-                    item_text = item.extract()
+            while len(next_sib) and next_sib[0].root.tag == 'ul':
+                for item in next_sib.xpath('li'):
+                    item_text = item.xpath('text()').extract_first()
                     date_obj, time_obj = self._parse_datetime(item_text)
                     data = {
                         '_type': 'event',
@@ -61,19 +49,11 @@ class ChiTeacherPensionSpider(Spider):
                         'all_day': False,
                         'location': LOCATION,
                         'sources': self._parse_sources(response),
-                        'documents': [],
+                        'documents': self._parse_documents(item.xpath('span')),
                     }
                     data['id'] = self._generate_id(data)
                     data['status'] = self._generate_status(data, '')
-                    # Add agenda if available as next element in the span tag
-                    if (
-                        len(item_list) > idx + 1 and
-                        hasattr(item_list[idx + 1].root, 'tag') and
-                        item_list[idx + 1].root.tag == 'span'
-                    ):
-                        data['documents'] = self._parse_documents(
-                            item_list[idx + 1]
-                        )
+                    next_sib = next_sib.xpath('following-sibling::*[1]')
                     yield data
 
     def _parse_name(self, meeting_group):
@@ -134,7 +114,7 @@ class ChiTeacherPensionSpider(Spider):
         }
 
     def _parse_documents(self, item):
-        if len(item.xpath('./a')) == 0:
+        if not item or len(item.xpath('./a')) == 0:
             return []
         link = item.xpath('./a')[0]
         return [{
