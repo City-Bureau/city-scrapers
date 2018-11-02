@@ -18,7 +18,7 @@ Follow the following directions for cloning the repository and installing requir
 * Python 3.6 installed
 * Virtual environment manager
 
-If in doubt, please also refer to the SETUP HELP, which should be useful for common first-time setup issues.
+If in doubt, please also refer to the [Setup Help](/docs/setup-help/), which should be useful for common first-time setup issues.
 
 ### Windows Limitations
 
