@@ -78,19 +78,23 @@ class ChiTeacherPensionSpider(Spider):
         date_clean_re = r'[^:,\s\w\d]'
         datetime_split = datetime_str.split(',')
         date_str = ','.join(datetime_str.split(',')[:3])
+        time_str = None
+        if len(datetime_split) > 3:
+            time_str = datetime_split[3].replace('at', '')
+        if ' at ' in date_str:
+            date_str, time_str = date_str.split(' at ')
         date_obj = datetime.strptime(
             re.sub(date_clean_re, '', date_str).strip(),
             '%A, %B %d, %Y',
         ).date()
 
-        time_obj = None
-        if len(datetime_split) > 3:
-            time_str = re.sub(
-                date_clean_re, '', datetime_split[3].replace('at', '')
-            )
+        if time_str:
+            time_str = re.sub(date_clean_re, '', time_str)
             time_obj = datetime.strptime(
                 time_str.strip(), '%I:%M %p'
             ).time()
+        else:
+            time_obj = None
         return date_obj, time_obj
 
     def _parse_start(self, date_obj, time_obj):
