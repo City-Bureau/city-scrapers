@@ -8,8 +8,8 @@ from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
 
 
-class NextMichiganDevelopmentCorporationSpider(Spider):
-    name = 'next_michigan_development_corporation'
+class DetNextMichiganDevelopmentCorporationSpider(Spider):
+    name = 'det_next_michigan_development_corporation'
     agency_name = 'Detroit Next Michigan Development Corporation'
     timezone = 'America/Chicago'
     allowed_domains = ['www.degc.org']
