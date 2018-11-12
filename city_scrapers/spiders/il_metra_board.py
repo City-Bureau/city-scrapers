@@ -84,16 +84,14 @@ class IlMetraBoardSpider(Spider):
             return None
 
         try:
-            naive = datetime.strptime(date_time_str, '%b %d, %Y - %I:%M %p')
+            dt = datetime.strptime(date_time_str, '%b %d, %Y - %I:%M %p')
             return {
-                'date': naive.date(),
-                'time': naive.time(),
+                'date': dt.date(),
+                'time': dt.time(),
                 'note': '',
             }
         except ValueError:
             return None
-
-        return self._naive_datetime_to_tz(naive, 'America/Chicago')
 
     def _parse_documents(self, item):
         """Parse documents from current and past meetings"""

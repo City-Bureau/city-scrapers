@@ -103,10 +103,10 @@ class ChiAnimalSpider(Spider):
         """
         Parse start date and time.
         """
-        naive_datetime = self._naive_datetime_to_tz(dateparse(item))
+        dt = dateparse(item)
         return {
-            'date': naive_datetime.date(),
-            'time': naive_datetime.time(),
+            'date': dt.date(),
+            'time': dt.time(),
         }
 
     def _generate_end(self, start):

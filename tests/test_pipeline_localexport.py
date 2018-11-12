@@ -10,8 +10,7 @@ testSpider = ChiBuildingsSpider()
 def _str_to_datetime(date_string, spider_in=testSpider):
     if not date_string:
         return testSpider
-    naive = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
-    return spider_in._naive_datetime_to_tz(naive)
+    return datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
 
 
 def load_valid_item():
