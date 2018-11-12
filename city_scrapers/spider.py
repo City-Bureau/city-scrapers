@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 from datetime import datetime, date
 from pytz import timezone
 from inflector import Inflector, English
@@ -20,6 +21,13 @@ class Spider(scrapy.Spider):
         self.day = now.strftime('%d')
         self.hour_min = now.strftime('%H%M')
         super().__init__(*args, **kwargs)
+
+    def _clean_name(self, name):
+        """Remove canceled strings from name"""
+        return re.sub(
+            r'([\s:-]{1,3})?(cancel\w+|rescheduled)([\s:-]{1,3})?',
+            '', name, flags=re.IGNORECASE,
+        )
 
     def _generate_id(self, data):
         """
@@ -45,11 +53,8 @@ class Spider(scrapy.Spider):
 
     def _generate_status(self, data, text):
         """
-        Generates one of the following statuses:
-        * cancelled: the word 'cancelled' or 'rescheduled' is `text`
-        * tentative: event both does not have an agenda and the event is > 7 days away
-        * confirmed: either an agenda is posted or the event will happen in <= 7 days
-        * passed: event happened in the past
+        Generates one of the allowed statuses from constants based on
+        the name and time of the meeting
         """
         if ('cancel' in text.lower()) or ('rescheduled' in text.lower()):
             return CANCELED
@@ -72,11 +77,3 @@ class Spider(scrapy.Spider):
                 return CONFIRMED
 
         return TENTATIVE
-
-    def _naive_datetime_to_tz(self, datetime_object, source_tz='America/Chicago'):
-        """
-        Converts a naive datetime (one without timezone information) by
-        interpreting it using the source_tz.
-        """
-        tz = timezone(source_tz)
-        return tz.localize(datetime_object)
