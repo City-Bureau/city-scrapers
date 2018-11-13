@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import re
 import scrapy
-import dateutil.parser 
+from datetime import date
 from html.parser import HTMLParser
+
+from dateutil.parser import parse as dtparse
+
 from city_scrapers.spider import Spider
+from city_scrapers.constants import *
 
 
 
@@ -29,11 +33,11 @@ class PittHousingSpider(Spider):
                 '_type': 'event',
                 'name': 'Housing Authority of the City of Pittsburgh',
                 'event_description': 'Board of Commissioners meeting',
-                'classification': 'Board',
+                'classification': BOARD,
                 'start': self._parse_start(item),
-                'end': '',
+                'end': None,
                 'all_day': False,
-                'location': '',
+                'location': None,
                 'documents': self._parse_documents(item),
                 'sources': self._parse_sources(item),
             }
@@ -81,10 +85,10 @@ class PittHousingSpider(Spider):
 
         date_string = item[0]
         try:
-            dt = dateutil.parser.parse(date_string)
-            return {'date': dt.date(), 'time': '', 'note': ''}
+            dt = dtparse(date_string)
+            return {'date': dt.date(), 'time': None, 'note': None}
         except ValueError:
-            return {'date': None, 'time': None, 'note': ''}
+            return {'date': None, 'time': None, 'note': None}
 
     def _parse_documents(self, item):
         """
@@ -108,7 +112,7 @@ class PittHousingSpider(Spider):
         """
         Parse or generate sources.
         """
-        return [{'url': self.start_urls, 'note': ''}]
+        return [{'url': self.start_urls[0], 'note': ''}]
 
 class MyHTMLParser(HTMLParser):
     """"
