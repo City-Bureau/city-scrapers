@@ -31,7 +31,7 @@ def test_start():
     assert parsed_items[0]['start'] == {'date': date(2018, 1, 25), 'time': None, 'note': None}
 
 def test_end():
-    assert parsed_items[0]['end'] == ''
+    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': None}
 
 
 def test_id():
@@ -43,7 +43,10 @@ def test_status():
 
 
 def test_location():
-    assert parsed_items[0]['location'] == ''
+    assert parsed_items[0]['location'] == {'address': '',
+                    'name': '',
+                    'neighborhood': ''
+                }
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{

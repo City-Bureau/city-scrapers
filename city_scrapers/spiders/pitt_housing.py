@@ -27,7 +27,7 @@ class PittHousingSpider(Spider):
         needs.
         """
 
-        for item in self._create_meetings(response):      
+        for item in self._create_meetings(response): 
 
             data = {
                 '_type': 'event',
@@ -35,9 +35,13 @@ class PittHousingSpider(Spider):
                 'event_description': 'Board of Commissioners meeting',
                 'classification': BOARD,
                 'start': self._parse_start(item),
-                'end': '',
+                'end': {'date': None, 'time': None, 'note': None},
                 'all_day': False,
-                'location': '',
+                'location': {
+                    'address': '',
+                    'name': '',
+                    'neighborhood': ''
+                },
                 'documents': self._parse_documents(item),
                 'sources': self._parse_sources(item),
             }
