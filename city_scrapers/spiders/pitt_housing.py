@@ -35,9 +35,9 @@ class PittHousingSpider(Spider):
                 'event_description': 'Board of Commissioners meeting',
                 'classification': BOARD,
                 'start': self._parse_start(item),
-                'end': None,
+                'end': '',
                 'all_day': False,
-                'location': None,
+                'location': '',
                 'documents': self._parse_documents(item),
                 'sources': self._parse_sources(item),
             }

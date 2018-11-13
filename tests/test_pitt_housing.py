@@ -10,7 +10,6 @@ from city_scrapers.spiders.pitt_housing import PittHousingSpider
 #     print('Please write some tests for this spider or at least disable this one.')
 #     assert False
 
-
 """
 Uncomment below
 """
@@ -32,7 +31,7 @@ def test_start():
     assert parsed_items[0]['start'] == {'date': date(2018, 1, 25), 'time': None, 'note': None}
 
 def test_end():
-    assert parsed_items[0]['end'] == None
+    assert parsed_items[0]['end'] == ''
 
 
 def test_id():
@@ -44,7 +43,7 @@ def test_status():
 
 
 def test_location():
-    assert parsed_items[0]['location'] == None
+    assert parsed_items[0]['location'] == ''
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
