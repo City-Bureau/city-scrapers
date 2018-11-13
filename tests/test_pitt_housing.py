@@ -43,9 +43,10 @@ def test_status():
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {'address': '',
-                    'name': '',
-                    'neighborhood': ''
+    assert parsed_items[0]['location'] == {
+        'address': 'Civic Building, 200 Ross St., Pittsburgh, PA, 15219',
+        'name': '',
+        'neighborhood': ''
                 }
 
 def test_sources():

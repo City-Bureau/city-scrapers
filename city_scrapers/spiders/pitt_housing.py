@@ -38,7 +38,7 @@ class PittHousingSpider(Spider):
                 'end': {'date': None, 'time': None, 'note': None},
                 'all_day': False,
                 'location': {
-                    'address': '',
+                    'address': 'Civic Building, 200 Ross St., Pittsburgh, PA, 15219',
                     'name': '',
                     'neighborhood': ''
                 },
