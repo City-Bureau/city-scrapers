@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 import scrapy
 from datetime import date
 from html.parser import HTMLParser
@@ -31,8 +30,8 @@ class PittHousingSpider(Spider):
 
             data = {
                 '_type': 'event',
-                'name': 'Housing Authority of the City of Pittsburgh',
-                'event_description': 'Board of Commissioners meeting',
+                'name': 'Board of Commissioners',
+                'event_description': '',
                 'classification': BOARD,
                 'start': self._parse_start(item),
                 'end': {'date': None, 'time': None, 'note': None},
@@ -43,7 +42,9 @@ class PittHousingSpider(Spider):
                     'neighborhood': ''
                 },
                 'documents': self._parse_documents(item),
-                'sources': self._parse_sources(item),
+                'sources': [{
+                    'url': self.start_urls[0],
+                    'note': ''}]
             }
 
             data['status'] = self._generate_status(data, text='')
@@ -103,20 +104,14 @@ class PittHousingSpider(Spider):
         # to each agenda or minutes document found.
         documents = []
         for doc in item[1]: 
-            if re.search(r'Agenda',doc):
+            if 'agenda' in doc.lower():
                 agenda = {'url': doc, 'note': 'agenda'}
                 documents.append(agenda)
-            elif re.search(r'Minutes', doc):
+            elif 'minutes' in doc.lower():
                 minutes = {'url': doc, 'note': 'minutes'}
                 documents.append(minutes)
 
         return documents
-
-    def _parse_sources(self, item):
-        """
-        Parse or generate sources.
-        """
-        return [{'url': self.start_urls[0], 'note': ''}]
 
 class MyHTMLParser(HTMLParser):
     """"
@@ -140,6 +135,6 @@ class MyHTMLParser(HTMLParser):
             self.doc_url = ''
 
     def handle_data(self, data):
-        slice_index = re.search(r'-',data).start()
+        slice_index = data.index('-')
         self.date = data[:slice_index].rstrip()
 

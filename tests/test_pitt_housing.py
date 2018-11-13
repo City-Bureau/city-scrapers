@@ -5,26 +5,17 @@ from tests.utils import file_response
 from city_scrapers.constants import *
 from city_scrapers.spiders.pitt_housing import PittHousingSpider
 
-
-# def test_tests():
-#     print('Please write some tests for this spider or at least disable this one.')
-#     assert False
-
-"""
-Uncomment below
-"""
-
 test_response = file_response('files/pitt_housing_board-info.html')
 spider = PittHousingSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Housing Authority of the City of Pittsburgh'
+    assert parsed_items[0]['name'] == 'Board of Commissioners'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == 'Board of Commissioners meeting'
+    assert parsed_items[0]['event_description'] == ''
 
 
 def test_start():
@@ -35,7 +26,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'pitt_housing/201801250000/x/housing_authority_of_the_city_of_pittsburgh'
+    assert parsed_items[0]['id'] == 'pitt_housing/201801250000/x/board_of_commissioners'
 
 
 def test_status():
