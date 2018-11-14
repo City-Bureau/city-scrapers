@@ -10,8 +10,8 @@ toc: true
 
 See Agency Map and Next Steps
 
-![Google Sheets example](/assets/images/google_sheets.png "Google Sheets example")
+![Google Sheets example](/assets/images/google_sheets.png "Google Sheets example"){:target="_blank"}
 
 ## Scrapy
 
-You can build scrapers in any language on any set-up—We recommend using [Scrapy](https://scrapy.org/), which is written in Python.
+You can build scrapers in any language on any set-up—We recommend using [Scrapy](https://scrapy.org/){:target="_blank"}, which is written in Python.

@@ -48,7 +48,7 @@ $ cd city-scrapers
 
 ## Local Python3 and Virtualenv
 
-You'll need a fairly standard Python development stack, which Python 3.6 installed. If you're on OS X, the [NPR Visuals Guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html) is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
+You'll need a fairly standard Python development stack, which Python 3.6 installed. If you're on OS X, the [NPR Visuals Guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html){:target="_blank"} is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
 
 The following assumes you have `virtualenv` and `virtualenv-wrapper` installed.
 If you are using a different virtual environment manager, please refer to its
@@ -84,11 +84,11 @@ Should you need to deactivate the virtual environment, it is as simple as:
 
 ### Ways to contribute
 
-There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [Slack](https://citybureau.slack.com/) about code and design choices.
+There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [Slack](https://citybureau.slack.com/){:target="_blank"} about code and design choices.
 
 The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on Slack for support--we can meet up in person to troubleshoot some headaches like virtual environment issues.
 
-To contribute infrastructure and utilities, see the [help-wanted GitHub issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+To contribute infrastructure and utilities, see the [help-wanted GitHub issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="_blank"}.
 
 ### Familiarize yourself with how we work!
 
@@ -98,7 +98,7 @@ To contribute infrastructure and utilities, see the [help-wanted GitHub issues](
 
 #### 1. Find a site to scrape and create an issues
 
-First, find an unclaimed event source within the project's [issues](https://github.com/City-Bureau/city-scrapers/issues). Any unassigned issue is fair game. Add a comment indicating that you're interested in the work.
+First, find an unclaimed event source within the project's [issues](https://github.com/City-Bureau/city-scrapers/issues){:target="_blank"}. Any unassigned issue is fair game. Add a comment indicating that you're interested in the work.
 
 Save and note the issue number.
 
@@ -142,7 +142,7 @@ Additionally, each time you run your scraper, you can see your results as a csv 
 
 #### 5. Run the automated tests
 
-We use the [`pytest`](https://docs.pytest.org/en/latest/) testing framework to verify the behavior of the project's code and [`pyflakes`](https://docs.pytest.org/en/latest/) and [`pep8`](https://pypi.python.org/pypi/pep8) to check that all code is written in the proper style.
+We use the [`pytest`](https://docs.pytest.org/en/latest/){:target="_blank"} testing framework to verify the behavior of the project's code and [`pyflakes`](https://docs.pytest.org/en/latest/){:target="_blank"} and [`pep8`](https://pypi.python.org/pypi/pep8){:target="_blank"} to check that all code is written in the proper style.
 
 To run these tools, use the `invoke runtests` command:
 
@@ -305,7 +305,7 @@ def test_all_day(item):
 
 Parameterized test functions are best used to assert something about every event such as the existence of a field or a value all events will share.
 
-You can read more about parameterized test functions [in the pytest docs](https://docs.pytest.org/en/latest/parametrize.html#pytest-mark-parametrize).
+You can read more about parameterized test functions [in the pytest docs](https://docs.pytest.org/en/latest/parametrize.html#pytest-mark-parametrize){:target="_blank"}.
 
 You generally want to verify that a spider:
 
@@ -317,11 +317,11 @@ You generally want to verify that a spider:
 
 If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project. In this case, please prefix your pull request name with `WIP` so that everyone knows what kind of feedback you are looking for.
 
-Additionally, please use the pull request description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md) for more details.
+Additionally, please use the pull request description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="_blank"} for more details.
 
 ## Event Schema
 
-Our data model for events is based on the [Event object](http://docs.opencivicdata.org/en/latest/data/event.html) from the [Open Civic Data](http://docs.opencivicdata.org) project.
+Our data model for events is based on the [Event object](http://docs.opencivicdata.org/en/latest/data/event.html){:target="_blank"} from the [Open Civic Data](http://docs.opencivicdata.org){:target="_blank"} project.
 
 "Required" means that the value cannot be `None`, an empty string, empty dictionary nor empty list. "Optional" means that `None` or empty values are ok.
 

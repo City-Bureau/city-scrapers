@@ -22,7 +22,7 @@ Follow your organization's guidelines.
 
 A bounty is a cash reward offered for development. Bounties are usually offered as an incentive for fixing software bugs or implementing minor features but, paired with a hands-on approach to project management, they can also be used for short-term, well-defined projects such as the City Scrapers project. To implement a bounty system, select coders who you know and trust, work out a rate per spider built by each coder and bundle similar scapers in groups on your Agency Table for more efficient development. Bundling scrapers has the added benefit of allowing coders of varying skill levels to work independently while helping each other along the way. In June 2018, City Bureau commissioned a set of public meeting scrapers for Detroit that operated on a bounty system.
 
-Web tools like [Bountysource](https://www.bountysource.com/) and [Bountify](https://bountify.co/) can simplify this process.
+Web tools like [Bountysource](https://www.bountysource.com/){:target="_blank"} and [Bountify](https://bountify.co/){:target="_blank"} can simplify this process.
 
 ## Volunteer Coding Community
 
@@ -36,7 +36,7 @@ Answering these questions and others before work begins will have a profound eff
 
 Begin with a list of independent coders, developers who operate networks of coders (such as your local Code for America) and adjacent technologists who can serve as ambassadors for your project within your local tech community.
 
-If starting from scratch, be sure to create an easy to use sign-up form (we recommend a Google Form or Airtable) and add a link in your message. Go the extra mile and draft a informational document that all interest organizations and individuals can refer to in deciding whether they'd like to participate. Explanatory language that can be emailed widely to folks on you list will give responders a central place to view content (Hint: using Google Docs can reduce the number of emails sent as a result of any changes in the project plan). [Click here](https://docs.google.com/document/d/1sXS2VaCRpzr6ENd7loCNBqTeNniJ3nQUF-c0nwfhnfg/edit) to see our informational document. And here's an email example from the Chicago City Scrapers project:
+If starting from scratch, be sure to create an easy to use sign-up form (we recommend a Google Form or Airtable) and add a link in your message. Go the extra mile and draft a informational document that all interest organizations and individuals can refer to in deciding whether they'd like to participate. Explanatory language that can be emailed widely to folks on you list will give responders a central place to view content (Hint: using Google Docs can reduce the number of emails sent as a result of any changes in the project plan). [Click here](https://docs.google.com/document/d/1sXS2VaCRpzr6ENd7loCNBqTeNniJ3nQUF-c0nwfhnfg/edit){:target="_blank"} to see our informational document. And here's an email example from the Chicago City Scrapers project:
 
 >
    Hi all,
@@ -70,7 +70,7 @@ We found that the biggest draw for City Scrapers volunteers was the practical va
 
 Pair-sharing: Pair programming is the practice of pairing up coders to work on programming tasks. This can be done by pairing up two developers seated at the same computer, sharing a keyboard and monitor but with the increasing popularity of remote coding platforms, it's now possible to pair-share from anywhere in the world. Pair-sharing typically involved role-swapping, where one coder (typically the more advanced of the pair, demonstrates a skill while the other watches then demonstrates the same skill. Lessons learned during pair-sharing can then be repeated and expanded upon during independent work sessions.  We found that pair-sharing worked especially well in the City Scarpers project because of our emphasis on coders with varying skill levels working together toward a common goal. This involved assessing the skill level of incoming coders and matching them with less experienced developers on a recurring basis, typically at each in-person meeting. Pair-sharing can last for any length of time as coders learn new skills and pass on their skills to others.
 
-Programs like [Donut](https://www.donut.com/?ref=slackdirectory) can be integrated with Slack.
+Programs like [Donut](https://www.donut.com/?ref=slackdirectory){:target="_blank"} can be integrated with Slack.
 
 ### Maintaining your community
 
@@ -86,7 +86,7 @@ Define a process for lead staff/volunteers at each meeting. Our Coding Session S
 
 #### One-time events
 
-- Our [Design-a-thon](https://www.citybureau.org/design-day/) was a one-day challenge to design a tool that uses the data collected by the scrapers. It helped us collect ideas about how to best share the information with the public, boosted our visibility and was a fun time to generally make connections in the Chicago tech scene.
+- Our [Design-a-thon](https://www.citybureau.org/design-day/){:target="_blank"} was a one-day challenge to design a tool that uses the data collected by the scrapers. It helped us collect ideas about how to best share the information with the public, boosted our visibility and was a fun time to generally make connections in the Chicago tech scene.
 
 #### Online communication
 
@@ -94,7 +94,7 @@ Define a process for lead staff/volunteers at each meeting. Our Coding Session S
 
 ### Developing a Code of Conduct
 
-This step is often overlooked but often critical to success. Define a Code of Conduct that all coding community agree to abide by throughout their time on the project. The [Contributor Covenant](https://www.contributor-covenant.org/) inspired an early mission for the open-membership, open-source City Scrapers project, outlined in the project [README file](https://github.com/City-Bureau/city-scrapers/blob/master/README.md) located on GitHub. In addition to the Covenant, this document states that "The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
+This step is often overlooked but often critical to success. Define a Code of Conduct that all coding community agree to abide by throughout their time on the project. The [Contributor Covenant](https://www.contributor-covenant.org/){:target="_blank"} inspired an early mission for the open-membership, open-source City Scrapers project, outlined in the project [README file](https://github.com/City-Bureau/city-scrapers/blob/master/README.md){:target="_blank"} located on GitHub. In addition to the Covenant, this document states that "The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
 
 We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both our community and Chicago's tech and media scenes at large."
 
@@ -104,10 +104,10 @@ Here's the Chicago City Scrapers Code of Conduct as an example (feel free to ada
 
 ### Additional Resources
 
-Our lead coding committee volunteer Rebecca Wei produced a series of [video tutorials](https://www.citybureau.org/city-scrapers-tutorials) that can you and your staff/coding community navigate and troubleshoot common issues.
+Our lead coding committee volunteer Rebecca Wei produced a series of [video tutorials](https://www.citybureau.org/city-scrapers-tutorials){:target="_blank"} that can you and your staff/coding community navigate and troubleshoot common issues.
 
-- [Github for Non-Coders, part 1](https://www.youtube.com/watch?list=PLyCZ96_3y5LXfPVZkHjhHRuIWhcjvCyQA&v=m_MjzgvVZ28)
-- [Github for Non-Coders, part 2](https://www.youtube.com/watch?v=T4Pe_SK5knc&list=PLyCZ96_3y5LXfPVZkHjhHRuIWhcjvCyQA&index=5)
-- [How to Run a Spider (Scraper)](https://www.youtube.com/watch?v=UgroG8CARWc)
-- [Test Code with Scrapy Shell](https://www.youtube.com/watch?list=PLyCZ96_3y5LXfPVZkHjhHRuIWhcjvCyQA&v=7PJ02VtjKhs)
-- [Build and Use Scrapy Pipelines](https://www.youtube.com/watch?list=PLyCZ96_3y5LXfPVZkHjhHRuIWhcjvCyQA&v=MtU4xuI8v4c)
+- [Github for Non-Coders, part 1](https://www.youtube.com/watch?list=PLyCZ96_3y5LXfPVZkHjhHRuIWhcjvCyQA&v=m_MjzgvVZ28){:target="_blank"}
+- [Github for Non-Coders, part 2](https://www.youtube.com/watch?v=T4Pe_SK5knc&list=PLyCZ96_3y5LXfPVZkHjhHRuIWhcjvCyQA&index=5){:target="_blank"}
+- [How to Run a Spider (Scraper)](https://www.youtube.com/watch?v=UgroG8CARWc){:target="_blank"}
+- [Test Code with Scrapy Shell](https://www.youtube.com/watch?list=PLyCZ96_3y5LXfPVZkHjhHRuIWhcjvCyQA&v=7PJ02VtjKhs){:target="_blank"}
+- [Build and Use Scrapy Pipelines](https://www.youtube.com/watch?list=PLyCZ96_3y5LXfPVZkHjhHRuIWhcjvCyQA&v=MtU4xuI8v4c){:target="_blank"}
