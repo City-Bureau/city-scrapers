@@ -51,7 +51,7 @@ class ChiPoliceBoardSpider(Spider):
             }
             new_item.update(data)
             new_item['id'] = self._generate_id(new_item)
-            new_item['status'] = self._generate_status(new_item, '')
+            new_item['status'] = self._generate_status(new_item)
             yield new_item
 
     def _parse_documents(self, item, response):

@@ -69,7 +69,7 @@ class DetCityCouncilSpider(Spider):
             'sources': [{'url': response.url, 'note': ''}],
         }
         data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(data, text='')
+        data['status'] = self._generate_status(data)
         yield data
 
     @staticmethod

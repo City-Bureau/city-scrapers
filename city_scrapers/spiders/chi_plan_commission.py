@@ -46,7 +46,7 @@ class ChiPlanCommissionSpider(Spider):
                 data['documents'] = self._parse_documents(column, data, response)
                 data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data, '')
+                data['status'] = self._generate_status(data)
                 yield data
 
     @staticmethod

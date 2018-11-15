@@ -46,7 +46,7 @@ class ChiParksSpider(Spider):
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'event_description': '',
-                'all_day': self._parse_all_day(item),
+                'all_day': False,
                 'classification': self._parse_classification(item),
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
@@ -55,7 +55,9 @@ class ChiParksSpider(Spider):
                 'sources': self._parse_sources(item),
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, '')
+            data['status'] = self._generate_status(
+                data, text=item['Meeting Location']
+            )
             yield data
 
     def _parse_location(self, item):
@@ -67,12 +69,6 @@ class ChiParksSpider(Spider):
             'name': '',
             'neighborhood': ''
         }
-
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to false.
-        """
-        return False
 
     def _parse_name(self, item):
         """
@@ -96,24 +92,9 @@ class ChiParksSpider(Spider):
         Parse or generate documents.
         """
         documents = []
-
-        # Add meetings details if available
-        info = item['Meeting Details']
-        try:
-            url = info['url']
-        except (TypeError, KeyError):
-            pass
-        else:
-            documents.append({'url': url, 'note': 'Meeting Details'})
-
-        # Add agenda if available
-        info = item['Agenda']
-        try:
-            url = info['url']
-        except (TypeError, KeyError):
-            pass
-        else:
-            documents.append({'url': url, 'note': 'Agenda'})
+        for doc in ['Agenda', 'Minutes']:
+            if item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     def _parse_start_datetime(self, item):

@@ -123,7 +123,7 @@ class CookLandbankSpider(Spider):
                 'sources': self._parse_sources(item),
                 'documents': self._parse_documents(item),
             }
-            data['status'] = self._generate_status(data, '')
+            data['status'] = self._generate_status(data)
             data['classification'] = self._generate_classification(
                 data['name']
             )

@@ -26,9 +26,13 @@ class ChiCityCollegeSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for link in response.css('.event-entry .event-title a::attr(href)').extract():
+        for link in response.css(
+            '.event-entry .event-title a::attr(href)'
+        ).extract():
             next_url = "http://www.ccc.edu" + link
-            yield scrapy.Request(next_url, callback=self.parse_event_page, dont_filter=True)
+            yield scrapy.Request(
+                next_url, callback=self.parse_event_page, dont_filter=True
+            )
 
     def parse_event_page(self, response):
         date, start_time, end_time = self._parse_date_and_times(response)
@@ -47,26 +51,15 @@ class ChiCityCollegeSpider(Spider):
                 'time': end_time,
                 'note': None,
             },
-            'all_day': self._parse_all_day(),
-            'status': self._parse_status(),
+            'all_day': False,
             'location': self._parse_location(response),
             'sources': self._parse_sources(response)
         }
         data['id'] = self._generate_id(data)
+        data['status'] = self._generate_status(
+            data, text=' '.join([data['name'], data['event_description']])
+        )
         return data
-
-    def _parse_status(self):
-        """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
-        """
-        return 'tentative'
 
     def _parse_location(self, response):
         """
@@ -79,7 +72,10 @@ class ChiCityCollegeSpider(Spider):
             'address': '30 E. Lake Street Chicago, IL 60601',
             'neighborhood': None,
         }
-        text = response.css('#ctl00_PlaceHolderMain_FullDescription__ControlWrapper_RichHtmlField span::text').extract_first()
+        text = response.css(
+            '#ctl00_PlaceHolderMain_FullDescription__'
+            'ControlWrapper_RichHtmlField span::text'
+        ).extract_first()
         if not text:
             return default_location
 
@@ -93,12 +89,6 @@ class ChiCityCollegeSpider(Spider):
         else:
             return default_location
 
-    def _parse_all_day(self):
-        """
-        Parse or generate all-day status. Defaults to false.
-        """
-        return False
-
     def _parse_name(self, response):
         """
         Parse or generate event name.
@@ -110,10 +100,11 @@ class ChiCityCollegeSpider(Spider):
         """
         Static description as given in Issue #275
         """
-        return ("The Board of Trustees is the governing body of City Colleges "
-                "of Chicago Community College District No. 508. City Colleges "
-                "of Chicago currently operates seven accredited colleges "
-                "located throughout Chicago.")
+        return (' '.join([
+            el.extract().strip() for el in response.css(
+                '.page-content > div:not([style="display:none"] *::text'
+            )
+        ])).strip()
 
     def _time_from_parts(self, hour_string, minute_string, suffix):
         hour = int(hour_string)
@@ -130,15 +121,25 @@ class ChiCityCollegeSpider(Spider):
         date_text = response.css('#formatDateA::text').extract_first()
         date_match = re.search(r"(\d+)\/(\d+)\/(\d+)", date_text)
         if date_match:
-            date_value = date(month=int(date_match.group(1)), day=int(date_match.group(2)), year=int(date_match.group(3)))
+            date_value = date(
+                month=int(date_match.group(1)),
+                day=int(date_match.group(2)),
+                year=int(date_match.group(3)),
+            )
         else:
             date_value = None
 
         time_text = response.css('.hours::text').extract_first()
 
-        start_time_parts, end_time_parts = re.findall(r"(\d+):(\d{2})\s(AM|PM|noon)", time_text)
+        start_time_parts, end_time_parts = re.findall(
+            r"(\d+):(\d{2})\s(AM|PM|noon)", time_text
+        )
 
-        return date_value, self._time_from_parts(*start_time_parts), self._time_from_parts(*end_time_parts),
+        return (
+            date_value,
+            self._time_from_parts(*start_time_parts),
+            self._time_from_parts(*end_time_parts),
+        )
 
     def _parse_sources(self, response):
         """

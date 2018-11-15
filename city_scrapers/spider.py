@@ -51,7 +51,7 @@ class Spider(scrapy.Spider):
         parts = [self.name, start_str, id, name]
         return '/'.join(parts)
 
-    def _generate_status(self, data, text):
+    def _generate_status(self, data, text=''):
         """
         Generates one of the allowed statuses from constants based on
         the name and time of the meeting

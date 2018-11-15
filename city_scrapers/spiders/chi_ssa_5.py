@@ -66,7 +66,7 @@ class ChiSsa5Spider(Spider):
                 'time': None,
                 'note': '',
             }
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             event_items.append(data)
         return event_items
@@ -107,7 +107,7 @@ class ChiSsa5Spider(Spider):
                     'documents': documents,
                     'sources': [{'url': response.url, 'note': ''}],
                 }
-                data['status'] = self._generate_status(data, text='')
+                data['status'] = self._generate_status(data)
                 data['id'] = self._generate_id(data)
                 items.append(data)
         for item in items:

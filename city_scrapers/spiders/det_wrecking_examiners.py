@@ -42,7 +42,7 @@ class DetWreckingExaminersSpider(Spider):
                 'sources': [{'url': response.url, 'note': ''}],
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data

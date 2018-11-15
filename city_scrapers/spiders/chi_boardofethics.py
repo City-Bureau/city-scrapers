@@ -43,7 +43,6 @@ class ChiBoardOfEthicsSpider(Spider):
                 'classification': BOARD,
                 'start': self._parse_start(meeting_date, start_time),
                 'end': {},
-                'status': 'tentative',
                 'all_day': False,
                 'location': location,
                 'documents': [],
@@ -51,6 +50,7 @@ class ChiBoardOfEthicsSpider(Spider):
             }
             data['end'] = self._parse_end(data)
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data, text=meeting_date)
             yield data
 
     @staticmethod
@@ -58,11 +58,12 @@ class ChiBoardOfEthicsSpider(Spider):
         """
         Parse state date and time.
         """
-        dt = dateutil.parser.parse('{date} {time}'.format(date=date, time=time))
-        return {'date': dt.date(),
-                'time': dt.time(),
-                'note': ''
-                }
+        dt = dateutil.parser.parse('{} {}'.format(date, time))
+        return {
+            'date': dt.date(),
+            'time': dt.time(),
+            'note': ''
+        }
 
     @staticmethod
     def _parse_end(item):
@@ -74,7 +75,9 @@ class ChiBoardOfEthicsSpider(Spider):
         end = {}
         end['date'] = item['start']['date']
         end['note'] = item['start']['note']
-        dt = datetime.datetime.combine(datetime.date(1, 1, 1), item['start']['time'])
+        dt = datetime.datetime.combine(
+            datetime.date(1, 1, 1), item['start']['time']
+        )
         end['time'] = (dt + timedelta(hours=2)).time()
         return end
 

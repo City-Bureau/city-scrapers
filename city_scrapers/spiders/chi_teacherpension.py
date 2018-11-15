@@ -52,7 +52,7 @@ class ChiTeacherPensionSpider(Spider):
                         'documents': self._parse_documents(item.xpath('span')),
                     }
                     data['id'] = self._generate_id(data)
-                    data['status'] = self._generate_status(data, '')
+                    data['status'] = self._generate_status(data)
                     next_sib = next_sib.xpath('following-sibling::*[1]')
                     yield data
 

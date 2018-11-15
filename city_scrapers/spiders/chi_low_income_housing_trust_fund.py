@@ -72,7 +72,7 @@ class ChiLowIncomeHousingTrustFundSpider(Spider):
             **self._parse_start_end_time(response),
             'location': self._parse_location(response),
         }
-        data['status'] = self._generate_status(data, text='')
+        data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
         return data
 
