@@ -12,14 +12,6 @@ parsed_items = ([item for item in spider.parse(test_response)
                 if isinstance(item, dict)])
 
 
-"""
-Uncomment below
-"""
-
-# test_response = file_response('files/alle_city.html')
-# spider = AlleCitySpider()
-
-
 @pytest.mark.parametrize('item',
                          [parsed_items[0]['name']])
 def test_name(item):
