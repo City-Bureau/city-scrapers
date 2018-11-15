@@ -36,7 +36,7 @@ class ChiSchoolActionsSpider(Spider):
                         '_type': 'event',
                         'name': item_name,
                         'all_day': False,
-                        'event_description': self._parse_description(school_name, meeting_type),
+                        'event_description': '',
                         'classification': FORUM,
                         'start': start,
                         'end': end,
@@ -45,7 +45,7 @@ class ChiSchoolActionsSpider(Spider):
                         'sources': self._parse_sources(),
                     }
                     item['id'] = self._generate_id(item)
-                    item['status'] = self._generate_status(item, '')
+                    item['status'] = self._generate_status(item)
                     yield item
 
     def _parse_name(self, school_name, meeting_type):
@@ -53,13 +53,6 @@ class ChiSchoolActionsSpider(Spider):
         Parse or generate event name.
         """
         return 'School Actions: {} {}'.format(school_name, meeting_type)
-
-    @staticmethod
-    def _parse_description(school_name, meeting_type):
-        """
-        Parse or generate event description.
-        """
-        return '{} {}'.format(school_name, meeting_type)
 
     @staticmethod
     def _parse_meeting_type(item, school_action):

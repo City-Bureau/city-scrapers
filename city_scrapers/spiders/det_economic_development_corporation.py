@@ -37,7 +37,7 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
         data['start'] = self._parse_start(next_meeting_text)
         if data['start']['date']:
             data['documents'] = []
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 
@@ -78,7 +78,7 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
                 'date': meeting_date.date(), 'time': None, 'note': ''
             }
             data['documents'] = prev_meeting_docs[meeting_date]
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 

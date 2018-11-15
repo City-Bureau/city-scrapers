@@ -75,7 +75,7 @@ class ChiPubHealthSpider(Spider):
                 'documents': self._parse_documents(item)
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, '')
+            data['status'] = self._generate_status(data)
             yield data
 
     def _parse_date(self, item):
@@ -123,12 +123,6 @@ class ChiPubHealthSpider(Spider):
             'address': '333 S. State Street, Chicago, IL',
             'neighborhood': 'Loop'
         }
-
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to false.
-        """
-        return False
 
     def _parse_sources(self, response):
         """

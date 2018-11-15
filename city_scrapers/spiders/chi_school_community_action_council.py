@@ -51,7 +51,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
                     }
 
                     data['id'] = self._generate_id(data)
-                    data['status'] = self._generate_status(data, text='')
+                    data['status'] = self._generate_status(data)
                     data['end'] = self._parse_end(data['start'])
                     yield data
             month_counter += 1

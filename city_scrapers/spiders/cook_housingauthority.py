@@ -69,7 +69,7 @@ class CookHousingAuthoritySpider(Spider):
                 'timezone': tz,
             }
             parsed_event['id'] = self._generate_id(parsed_event)
-            parsed_event['status'] = self._generate_status(parsed_event, '')
+            parsed_event['status'] = self._generate_status(parsed_event)
             yield parsed_event
 
     def _parse_location(self, event):

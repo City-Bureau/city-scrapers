@@ -40,21 +40,25 @@ class ChiLandmarkCommissionSpider(Spider):
                     'start': self._parse_start(meeting, year),
                     # Based on meeting minutes, board meetings appear to be several hours
                     'all_day': False,
-                    'location': {'neighborhood': '',
-                                 'name': 'City Hall',
-                                 'address': '121 N. LaSalle St., Room 201-A'},
+                    'location': {
+                        'neighborhood': '',
+                        'name': 'City Hall',
+                        'address': '121 N. LaSalle St., Room 201-A'
+                    },
                     'sources': [{'url': response.url, 'note': ''}],
                 }
                 data['documents'] = self._parse_documents(column, data, response)
                 data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data, '')
+                data['status'] = self._generate_status(data, description)
                 yield data
 
     @staticmethod
     def format_meetings(meetings):
         # translate and filter out non-printable spaces
-        meetings = [meeting.replace('\xa0', ' ').strip() for meeting in meetings]
+        meetings = [
+            meeting.replace('\xa0', ' ').strip() for meeting in meetings
+        ]
         meetings = list(filter(None, meetings))
         return meetings
 

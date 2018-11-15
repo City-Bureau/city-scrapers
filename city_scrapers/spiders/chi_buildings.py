@@ -64,7 +64,9 @@ class ChiBuildingsSpider(Spider):
                     'timezone': self.timezone,
                     'sources': self._parse_sources(item)
                 }
-                item_data['status'] = self._generate_status(item_data, text='')
+                item_data['status'] = self._generate_status(
+                    item_data, text=' '.join([name, item['description']])
+                )
                 item_data['id'] = self._generate_id(item_data)
 
                 # If it's a board meeting, return description

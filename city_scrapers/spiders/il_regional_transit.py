@@ -40,7 +40,7 @@ class IlRegionalTransitSpider(Spider):
                 'sources': [{'url': response.url, 'note': ''}],
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, '')
+            data['status'] = self._generate_status(data)
             data['classification'] = self._parse_classification(
                 data.get('name', NOT_CLASSIFIED)
             )

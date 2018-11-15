@@ -83,7 +83,7 @@ class ChiLibrarySpider(Spider):
                 'sources': self._parse_sources(response)
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, '')
+            data['status'] = self._generate_status(data, text=description_str)
             yield data
 
     def _get_lib_info(self):

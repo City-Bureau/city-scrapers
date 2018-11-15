@@ -40,7 +40,7 @@ class CookHospitalsSpider(Spider):
                 }
                 new_item.update(data)
                 new_item.update(self._parse_times(subitem))
-                new_item['status'] = self._generate_status(new_item, '')
+                new_item['status'] = self._generate_status(new_item)
                 new_item['id'] = self._generate_id(new_item)
                 new_item['classification'] = self._parse_classification(new_item['name'])
                 yield new_item

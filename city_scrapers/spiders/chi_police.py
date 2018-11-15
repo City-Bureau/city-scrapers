@@ -54,7 +54,7 @@ class ChiPoliceSpider(Spider):
                 'sources': self._parse_sources(item)
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._parse_status(data, item) 
+            data['status'] = self._parse_status(data, item)
             yield data
 
     def _parse_status(self, data, item):

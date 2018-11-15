@@ -96,7 +96,7 @@ class ChiLocalSchoolCouncilSpider(Spider):
             'location': self._parse_location(row)
         }
         data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(data, '')
+        data['status'] = self._generate_status(data)
         return data
 
     def _parse_sources(self):

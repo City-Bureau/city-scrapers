@@ -39,7 +39,7 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
             data['documents'] = self._parse_docs(
                 response, data['start']['date']
             )
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 
@@ -67,7 +67,7 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
                 'date': meeting_date.date(), 'time': None, 'note': ''
             }
             data['documents'] = prev_meeting_docs[meeting_date]
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 

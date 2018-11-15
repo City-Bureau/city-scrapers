@@ -40,7 +40,7 @@ class ChiSsa1Spider(Spider):
                 'time': None,
                 'note': '',
             }
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data, text=item.extract())
             data['id'] = self._generate_id(data)
             yield data
 
