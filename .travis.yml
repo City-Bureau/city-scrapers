@@ -1,17 +1,22 @@
 language: python
 python:
+  - "3.5"
   - "3.6"
+  - "3.7"
 sudo: required
 services:
   - docker
 install:
-  - pip install -r requirements.txt
+  - pip install pipenv
+  - pip install --dev
 script:
-  - invoke runtests
+  - pipenv run pytest
+  - pipenv run flake8
+  - pipenv run isort
   - ./travis/validate_spiders.sh
 deploy:
-- skip_cleanup: true
-  provider: script
-  script: ./deploy/deploy_acr.sh
-  on:
-    branch: master
+  - skip_cleanup: true
+    provider: script
+    script: ./deploy/deploy_acr.sh
+    on:
+      branch: master

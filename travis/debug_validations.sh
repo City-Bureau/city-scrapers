@@ -21,4 +21,4 @@ find city_scrapers/spiders -name "$SPIDERS" | \
 if [ $? -ne 0 ]; then exit 1; fi
 
 # Validate saved output
-find travis -name "*.json" | xargs -I{} invoke validate-spider {}
+find travis -name "*.json" | xargs -I{} python scripts/validate_spider.py {}
