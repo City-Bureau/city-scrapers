@@ -1,10 +1,14 @@
-import pytest
-from datetime import date, time
+from datetime import date
 
+import pytest
 from tests.utils import file_response
+
 from city_scrapers.spiders.wayne_election_commission import WayneElectionCommissionSpider
 
-test_response = file_response('files/wayne_election_commission.html', 'https://www.waynecounty.com/elected/clerk/election-commission.aspx')
+test_response = file_response(
+    'files/wayne_election_commission.html',
+    'https://www.waynecounty.com/elected/clerk/election-commission.aspx'
+)
 spider = WayneElectionCommissionSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -53,19 +57,16 @@ def test_sources():
 
 
 def test_documents():
-    assert parsed_items[1]['documents'] == [
-        {
-          'url': 'https://www.waynecounty.com/documents/clerk/wecn2518.pdf',
-          'note': 'Notice'
-        },
-        {
-          'url': 'https://www.waynecounty.com/documents/clerk/eca20518.pdf',
-          'note': 'Agenda'
-        },
-        {
-          'url': 'https://www.waynecounty.com/documents/clerk/ecm20518.pdf',
-          'note': 'Minutes'
-        }]
+    assert parsed_items[1]['documents'] == [{
+        'url': 'https://www.waynecounty.com/documents/clerk/wecn2518.pdf',
+        'note': 'Notice'
+    }, {
+        'url': 'https://www.waynecounty.com/documents/clerk/eca20518.pdf',
+        'note': 'Agenda'
+    }, {
+        'url': 'https://www.waynecounty.com/documents/clerk/ecm20518.pdf',
+        'note': 'Minutes'
+    }]
 
 
 @pytest.mark.parametrize('item', parsed_items)

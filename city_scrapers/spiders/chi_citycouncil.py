@@ -5,7 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import datetime
 import json
-from urllib.parse import urljoin, parse_qs
+from urllib.parse import parse_qs, urljoin
 
 import dateutil.parser
 import pytz
@@ -31,7 +31,9 @@ class ChiCityCouncilSpider(Spider):
     address = '121 N LaSalle Dr, Chicago, IL'
 
     def start_requests(self):
-        yield scrapy.FormRequest(url=self.endpoint, method='GET', formdata=self.query, callback=self.parse)
+        yield scrapy.FormRequest(
+            url=self.endpoint, method='GET', formdata=self.query, callback=self.parse
+        )
 
     def parse(self, response):
         """
@@ -48,7 +50,9 @@ class ChiCityCouncilSpider(Spider):
         if self._addtl_pages(data):
             params = parse_qs(response.url)
             params['page'] = self._next_page(data)
-            yield scrapy.FormRequest(url=self.endpoint, method='GET', formdata=params, callback=self.parse)
+            yield scrapy.FormRequest(
+                url=self.endpoint, method='GET', formdata=params, callback=self.parse
+            )
 
     def _gen_requests(self, data):
         for result in data['results']:

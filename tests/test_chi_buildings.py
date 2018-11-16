@@ -1,6 +1,5 @@
 import pytest
 import scrapy
-
 from freezegun import freeze_time
 from tests.utils import file_response
 
@@ -66,9 +65,7 @@ def test_id(parsed_items):
 
 
 def test_event_description(parsed_items):
-    assert parsed_items[0]['description'] == (
-        'November 7, 2018 </br></br>Notice Agenda\xa0'
-    )
+    assert parsed_items[0]['description'] == ('November 7, 2018 </br></br>Notice Agenda\xa0')
 
 
 def test_status(parsed_items):

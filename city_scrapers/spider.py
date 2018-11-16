@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import re
-from datetime import datetime, date
-from pytz import timezone
-from inflector import Inflector, English
+from datetime import date, datetime
+
 import scrapy
+from inflector import English, Inflector
+from pytz import timezone
 
 from city_scrapers.constants import CANCELED, CONFIRMED, PASSED, TENTATIVE
 
@@ -25,8 +26,7 @@ class Spider(scrapy.Spider):
     def _clean_name(self, name):
         """Remove canceled strings from name"""
         return re.sub(
-            r'([\s:-]{1,3})?(cancel\w+|rescheduled)([\s:-]{1,3})?',
-            '', name, flags=re.IGNORECASE,
+            r'([\s:-]{1,3})?(cancel\w+|rescheduled)([\s:-]{1,3})?', '', name, flags=re.IGNORECASE
         )
 
     def _generate_id(self, data):

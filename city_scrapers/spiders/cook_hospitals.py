@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
+from datetime import timedelta
+
 from dateutil.parser import parse
 
 from city_scrapers.constants import BOARD, COMMITTEE
@@ -25,12 +26,17 @@ class CookHospitalsSpider(Spider):
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'all_day': False,
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
             aria_control = item.xpath("@aria-controls").extract_first()
             item_uncollapsed = item.xpath(
-                "//div[@id='{}']//tbody//td[@data-title='Meeting Information']".format(aria_control))
+                "//div[@id='{}']//tbody//td[@data-title='Meeting Information']".
+                format(aria_control)
+            )
             for subitem in item_uncollapsed:
                 new_item = {
                     # TODO unsure where this should come from
@@ -103,7 +109,7 @@ class CookHospitalsSpider(Spider):
                 'time': time.time(),
                 'note': ''
             },
-            'end' : {
+            'end': {
                 'date': date.date()
             }
         }

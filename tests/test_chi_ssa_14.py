@@ -1,12 +1,11 @@
 from datetime import date, time
 
 import pytest
-
-from tests.utils import file_response
 from freezegun import freeze_time
-from city_scrapers.constants import PASSED, TENTATIVE, COMMISSION
-from city_scrapers.spiders.chi_ssa_14 import ChiSsa14Spider
+from tests.utils import file_response
 
+from city_scrapers.constants import COMMISSION, PASSED, TENTATIVE
+from city_scrapers.spiders.chi_ssa_14 import ChiSsa14Spider
 
 test_response = file_response('files/chi_ssa_14.html')
 spider = ChiSsa14Spider()
@@ -14,26 +13,17 @@ spider = ChiSsa14Spider()
 freezer = freeze_time('2018-10-12 12:00:00')
 freezer.start()
 
-parsed_items = [
-    item for item in spider.parse(test_response)
-    if isinstance(item, dict)
-]
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 freezer.stop()
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 4, 25),
-        'time': time(19, 0),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 4, 25), 'time': time(19, 0), 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == (
-        'chi_ssa_14/201804251900/x/ssa_governing_commission'
-    )
+    assert parsed_items[0]['id'] == 'chi_ssa_14/201804251900/x/ssa_governing_commission'
 
 
 def test_status():
@@ -43,8 +33,8 @@ def test_status():
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-      'url': 'http://www.mp-security.org/images/stories/minutes25april2018.pdf',
-      'note': 'Minutes',
+        'url': 'http://www.mp-security.org/images/stories/minutes25april2018.pdf',
+        'note': 'Minutes',
     }]
     assert parsed_items[-1]['documents'] == []
 

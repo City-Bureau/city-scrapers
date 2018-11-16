@@ -1,16 +1,12 @@
 import os
 import subprocess
 from datetime import datetime, timedelta
-from azure.storage.blob import BlockBlobService, ContentSettings
-import rediswq
 
+import rediswq
+from azure.storage.blob import BlockBlobService, ContentSettings
 
 STATUS_CONTAINER = os.getenv('AZURE_STATUS_CONTAINER', 'city-scrapers-status')
-STATUS_COLOR_MAP = {
-    'running': '#44cc11',
-    'failing': '#cb2431',
-    'unclear': '#dfb317'
-}
+STATUS_COLOR_MAP = {'running': '#44cc11', 'failing': '#cb2431', 'unclear': '#dfb317'}
 STATUS_ICON = '''
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144" height="20">
     <linearGradient id="b" x2="0" y2="100%">
@@ -32,7 +28,7 @@ STATUS_ICON = '''
         <text x="1045" y="140" transform="scale(.1)">{date}</text>
     </g>
 </svg>
-'''
+'''  # noqa
 
 
 def upload_status_svg(scraper_name, status):
@@ -48,9 +44,7 @@ def upload_status_svg(scraper_name, status):
             status=status,
             date=(datetime.utcnow() - timedelta(hours=6)).strftime('%Y-%m-%d'),
         ),
-        content_settings=ContentSettings(
-            content_type='image/svg+xml', cache_control='no-cache'
-        ),
+        content_settings=ContentSettings(content_type='image/svg+xml', cache_control='no-cache'),
     )
 
 
@@ -65,9 +59,7 @@ if __name__ == '__main__':
         if item is not None:
             scraper_name = item.decode('utf-8')
             try:
-                subprocess.check_call(
-                    ['scrapy', 'crawl', scraper_name], env=os.environ
-                )
+                subprocess.check_call(['scrapy', 'crawl', scraper_name], env=os.environ)
                 status = 'running'
             except subprocess.CalledProcessError:
                 status = 'failing'

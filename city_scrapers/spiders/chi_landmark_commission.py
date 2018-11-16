@@ -13,7 +13,9 @@ class ChiLandmarkCommissionSpider(Spider):
     agency_name = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
-    start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html']
+    start_urls = [
+        'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html'
+    ]
 
     def parse(self, response):
         """
@@ -45,7 +47,10 @@ class ChiLandmarkCommissionSpider(Spider):
                         'name': 'City Hall',
                         'address': '121 N. LaSalle St., Room 201-A'
                     },
-                    'sources': [{'url': response.url, 'note': ''}],
+                    'sources': [{
+                        'url': response.url,
+                        'note': ''
+                    }],
                 }
                 data['documents'] = self._parse_documents(column, data, response)
                 data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
@@ -56,9 +61,7 @@ class ChiLandmarkCommissionSpider(Spider):
     @staticmethod
     def format_meetings(meetings):
         # translate and filter out non-printable spaces
-        meetings = [
-            meeting.replace('\xa0', ' ').strip() for meeting in meetings
-        ]
+        meetings = [meeting.replace('\xa0', ' ').strip() for meeting in meetings]
         meetings = list(filter(None, meetings))
         return meetings
 
@@ -89,7 +92,8 @@ class ChiLandmarkCommissionSpider(Spider):
         xp = './/a[contains(@title, "{0}")]'.format(month)
         documents = item.xpath(xp)
         if len(documents) >= 0:
-            return [{'url': response.urljoin(document.xpath('@href').extract_first()),
-                     'note': document.xpath('text()').extract_first()}
-                    for document in documents]
-        return [{}]
+            return [{
+                'url': response.urljoin(document.xpath('@href').extract_first()),
+                'note': document.xpath('text()').extract_first()
+            } for document in documents]
+        return []

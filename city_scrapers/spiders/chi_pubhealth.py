@@ -5,8 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
 import re
-from datetime import date, time, datetime
-from time import strptime
+from datetime import date, datetime, time
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
@@ -26,8 +25,8 @@ class ChiPubHealthSpider(Spider):
         format, as well as known variants, in hopes DPH sticks to one of their
         conventions and this scraper does not need to be updated annually.
         """
-        standard_url = 'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/{}-board-of-health-meetings.html'
-        url_variant_1 = 'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/{}-board-of-health.html'
+        standard_url = 'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/{}-board-of-health-meetings.html'  # noqa
+        url_variant_1 = 'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/{}-board-of-health.html'  # noqa
 
         current_year = datetime.now().year
 

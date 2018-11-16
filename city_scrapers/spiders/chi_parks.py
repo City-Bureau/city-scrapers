@@ -4,9 +4,9 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-import urllib3
+from datetime import datetime, timedelta
 
-from datetime import datetime, date, time, timedelta
+import urllib3
 from legistar.events import LegistarEventsScraper
 
 from city_scrapers.constants import BOARD, FORUM
@@ -33,7 +33,7 @@ class ChiParksSpider(Spider):
 
     def _make_legistar_call(self, since=None):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        les = LegistarEventsScraper(requests_per_minute=0)
+        les = LegistarEventsScraper()
         les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
         les.BASE_URL = self.START_URL
         if not since:
@@ -55,9 +55,7 @@ class ChiParksSpider(Spider):
                 'sources': self._parse_sources(item),
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(
-                data, text=item['Meeting Location']
-            )
+            data['status'] = self._generate_status(data, text=item['Meeting Location'])
             yield data
 
     def _parse_location(self, item):
@@ -93,7 +91,7 @@ class ChiParksSpider(Spider):
         """
         documents = []
         for doc in ['Agenda', 'Minutes']:
-            if item[doc].get('url'):
+            if isinstance(item[doc], dict) and item[doc].get('url'):
                 documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
@@ -111,11 +109,7 @@ class ChiParksSpider(Spider):
         Parse start date and time.
         """
         datetime_obj = self._parse_start_datetime(item)
-        return {
-            'date': datetime_obj.date(),
-            'time': datetime_obj.time(),
-            'note': ''
-        }
+        return {'date': datetime_obj.date(), 'time': datetime_obj.time(), 'note': ''}
 
     def _parse_end(self, item):
         """
@@ -134,7 +128,7 @@ class ChiParksSpider(Spider):
         """
         try:
             url = item['Name']['url']
-        except:
+        except Exception:
             url = self.START_URL + '/Calendar.aspx'
         return [{'url': url, 'note': ''}]
 

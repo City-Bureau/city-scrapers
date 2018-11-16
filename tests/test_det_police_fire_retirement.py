@@ -5,11 +5,13 @@ from urllib.parse import parse_qsl
 import pytest
 import scrapy
 from freezegun import freeze_time
-
-from city_scrapers.spiders.det_police_fire_retirement import DetPoliceFireRetirementSpider
 from tests.utils import file_response
 
-test_response = file_response('files/det_police_fire_retirement.html', 'http://www.pfrsdetroit.org/Resources/Meetings')
+from city_scrapers.spiders.det_police_fire_retirement import DetPoliceFireRetirementSpider
+
+test_response = file_response(
+    'files/det_police_fire_retirement.html', 'http://www.pfrsdetroit.org/Resources/Meetings'
+)
 spider = DetPoliceFireRetirementSpider()
 
 
@@ -17,7 +19,11 @@ def test_request_count():
     requests = list(spider.parse(test_response))
     assert len(requests) == 5
 
-    calendar_events_urls = {urllib.parse.unquote(request.url) for request in requests if 'Details' in request.url}
+    calendar_events_urls = {
+        urllib.parse.unquote(request.url)
+        for request in requests
+        if 'Details' in request.url
+    }
     assert calendar_events_urls == {
         "http://www.pfrsdetroit.org/Resources/Meetings/ctl/Details/Mid/1010/ItemID/1523",
         "http://www.pfrsdetroit.org/Resources/Meetings/ctl/Details/Mid/1010/ItemID/1525",
@@ -58,15 +64,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 8, 2), 'time': time(9, 0), 'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 8, 2), 'time': time(9, 0), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2018, 8, 2), 'time': time(14, 0), 'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': date(2018, 8, 2), 'time': time(14, 0), 'note': ''}
 
 
 def test_id():

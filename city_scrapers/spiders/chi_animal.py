@@ -4,6 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import datetime
+
 from dateutil.parser import parse as dateparse
 
 from city_scrapers.constants import ADVISORY_COMMITTEE
@@ -43,7 +44,7 @@ class ChiAnimalSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': 'Advisory Board',
-                'event_description': self._parse_description(text),
+                'event_description': '',
                 'classification': ADVISORY_COMMITTEE,
                 'start': self._parse_start(text),
                 'all_day': False,

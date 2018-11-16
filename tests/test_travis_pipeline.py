@@ -1,20 +1,22 @@
 import json
-from datetime import datetime, date, time
+from datetime import datetime
+
 from tests.utils import read_test_file_content
+
 from city_scrapers.pipelines import TravisValidationPipeline
-from city_scrapers.spider import Spider
 
 
 def _str_to_date(date_string):
-    try: 
+    try:
         return datetime.strptime(date_string, "%Y-%m-%d").date()
-    except:
-        return None 
+    except Exception:
+        return None
+
 
 def _str_to_time(time_string):
-    try: 
-        return datetime.strptime(date_string, "%Y-%m-%d").time()
-    except:
+    try:
+        return datetime.strptime(time_string, "%Y-%m-%d").time()
+    except Exception:
         return None
 
 

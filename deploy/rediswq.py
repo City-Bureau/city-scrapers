@@ -1,6 +1,7 @@
-import redis
-import uuid
 import hashlib
+import uuid
+
+import redis
 
 
 class RedisWQ:
@@ -15,6 +16,7 @@ class RedisWQ:
     This object is not intended to be used by multiple threads
     concurrently.
     """
+
     def __init__(self, name, **redis_kwargs):
         """The default connection parameters are: host='localhost', port=6379, db=0
         The work queue is identified by "name".  The library may create other
@@ -69,9 +71,7 @@ class RedisWQ:
         If optional args block is true and timeout is None (the default), block
         if necessary until an item is available."""
         if block:
-            item = self._db.brpoplpush(
-                self._main_q_key, self._processing_q_key, timeout=timeout
-            )
+            item = self._db.brpoplpush(self._main_q_key, self._processing_q_key, timeout=timeout)
         else:
             item = self._db.rpoplpush(self._main_q_key, self._processing_q_key)
         if item:
@@ -80,9 +80,7 @@ class RedisWQ:
             # Note: if we crash at this line of the program, then GC will
             # see no lease for this item a later return it to the main queue.
             itemkey = self._itemkey(item)
-            self._db.setex(
-                self._lease_key_prefix + itemkey, lease_secs, self._session
-            )
+            self._db.setex(self._lease_key_prefix + itemkey, lease_secs, self._session)
         return item
 
     def complete(self, value):

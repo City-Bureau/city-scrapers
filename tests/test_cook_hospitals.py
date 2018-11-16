@@ -2,13 +2,17 @@
 from datetime import date, time
 
 import pytest
-
 from tests.utils import file_response
+
 from city_scrapers.spiders.cook_hospitals import CookHospitalsSpider
 
-test_response = file_response('files/cook_hospitals.html', url='http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/')
+test_response = file_response(
+    'files/cook_hospitals.html',
+    url='http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/'
+)
 spider = CookHospitalsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+
 
 def test_name():
     assert parsed_items[0]['name'] == 'Meetings of the Board of Directors'
@@ -19,11 +23,7 @@ def test_description():
 
 
 def test_times():
-    assert parsed_items[0]['start'] == {
-        'date': date(2017, 1, 27),
-        'time': time(9, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2017, 1, 27), 'time': time(9, 00), 'note': ''}
 
     assert parsed_items[0]['end'] == {
         'date': date(2017, 1, 27),
@@ -31,18 +31,26 @@ def test_times():
         'note': 'End time is estimated to be 3 hours after the start time'
     }
 
+
 def test_documents():
     assert parsed_items[0]['documents'] == [
-        {'url': 'http://www.cookcountyhhs.org/wp-content/uploads/2016/01/01-27-17-Board-Agenda.pdf',
-         'note': 'agenda and materials'},
-        {'url': 'http://www.cookcountyhhs.org/wp-content/uploads/2017/02/01-27-17-Board-scan-Minutes.pdf',
-         'note': 'minutes'},
+        {
+            'url':
+                'http://www.cookcountyhhs.org/wp-content/uploads/2016/01/01-27-17-Board-Agenda.pdf',
+            'note': 'agenda and materials'
+        },
+        {
+            'url':
+                'http://www.cookcountyhhs.org/wp-content/uploads/2017/02/01-27-17-Board-scan-Minutes.pdf',  # noqa
+            'note': 'minutes'
+        },
     ]
     assert parsed_items[-1]['documents'] == []
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'cook_hospitals/201701270900/x/meetings_of_the_board_of_directors'
+    assert parsed_items[0]['id'
+                           ] == 'cook_hospitals/201701270900/x/meetings_of_the_board_of_directors'
 
 
 def test_status():
@@ -74,7 +82,7 @@ def test__type(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
-    assert item['sources'] == [
-        {'url': 'http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/',
-         'note': ''}
-    ]
+    assert item['sources'] == [{
+        'url': 'http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/',
+        'note': ''
+    }]

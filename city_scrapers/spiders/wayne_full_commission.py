@@ -5,8 +5,8 @@
 # YOU CAN OVERRIDE THE MIXIN HERE BY CREATING YOUR OWN DEFINITION.
 
 from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
 from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
+from city_scrapers.spider import Spider
 
 
 class WayneFullCommissionSpider(WayneCommissionMixin, Spider):

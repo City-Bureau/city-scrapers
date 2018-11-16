@@ -103,7 +103,11 @@ class DetLocalDevelopmentFinanceAuthoritySpider(Spider):
             'name': 'Board of Directors',
             'event_description': '',
             'classification': BOARD,
-            'end': {'date': None, 'time': None, 'note': ''},
+            'end': {
+                'date': None,
+                'time': None,
+                'note': ''
+            },
             'all_day': False,
             'location': {
                 'neighborhood': '',
@@ -111,6 +115,9 @@ class DetLocalDevelopmentFinanceAuthoritySpider(Spider):
                 'address': '500 Griswold, Suite 2200, Detroit'
             },
             'documents': [],
-            'sources': [{'url': response.url, 'note': ''}]
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }]
         }
         return data

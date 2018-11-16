@@ -1,13 +1,14 @@
 from datetime import date, time
 
 import pytest
+from tests.utils import file_response
 
 from city_scrapers.constants import CANCELED
 from city_scrapers.spiders.det_great_lakes_water_authority import DetGreatLakesWaterAuthoritySpider
-from tests.utils import file_response
-import scrapy
 
-test_response = file_response('files/det_great_lakes_water_authority.html', 'http://www.glwater.org/events/')
+test_response = file_response(
+    'files/det_great_lakes_water_authority.html', 'http://www.glwater.org/events/'
+)
 spider = DetGreatLakesWaterAuthoritySpider()
 requests = [request for request in spider.parse(test_response)]
 test_ics_response = file_response(
@@ -42,23 +43,16 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 6, 27),
-        'time': time(13, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 6, 27), 'time': time(13, 00), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2018, 6, 27),
-        'time': time(14, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': date(2018, 6, 27), 'time': time(14, 00), 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_great_lakes_water_authority/201806271300/x/legal_committee_meeting'
+    assert parsed_items[0][
+        'id'] == 'det_great_lakes_water_authority/201806271300/x/legal_committee_meeting'
 
 
 def test_status():

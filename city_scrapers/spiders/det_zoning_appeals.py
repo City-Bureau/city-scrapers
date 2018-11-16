@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from dateutil.parser import parse
 from datetime import time
 from urllib.parse import urljoin
 
-import scrapy
+from dateutil.parser import parse
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
@@ -36,11 +35,18 @@ class DetZoningAppealsSpider(Spider):
                 'event_description': '',
                 'classification': BOARD,
                 'start': self._parse_start(item),
-                'end': {'date': None, 'time': None, 'note': ''},
+                'end': {
+                    'date': None,
+                    'time': None,
+                    'note': ''
+                },
                 'all_day': False,
                 'location': location,
                 'documents': self._parse_documents(response, item),
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
             data['status'] = self._generate_status(data)
@@ -62,7 +68,9 @@ class DetZoningAppealsSpider(Spider):
         """
         Parse or generate documents.
         """
-        minutes_xpath = response.xpath('//div[contains(@id, "dnn_ctr7414_HtmlModule_lblContent")]//a')
+        minutes_xpath = response.xpath(
+            '//div[contains(@id, "dnn_ctr7414_HtmlModule_lblContent")]//a'
+        )
         meeting_dates = self._parse_start(item)
         for minutes_item in minutes_xpath:
             minutes_date_text = minutes_item.xpath('text()').extract_first()

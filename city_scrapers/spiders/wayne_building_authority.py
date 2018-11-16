@@ -4,11 +4,12 @@
 # MIXINS ARE STORED IN /city-scrapers/city-scrapers/mixins
 # YOU CAN OVERRIDE THE MIXIN HERE BY CREATING YOUR OWN DEFINITION.
 
-import re
 from datetime import datetime
+
 from dateutil.parser import parse as dateparse
-from city_scrapers.spider import Spider
+
 from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
+from city_scrapers.spider import Spider
 
 
 class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
@@ -26,7 +27,9 @@ class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
 
     def _parse_entries(self, response):
         current_year = datetime.now().year
-        current_year_non_empty_rows = response.xpath('//section[contains(.,"%s")]//tbody/tr[child::td/text()]' %current_year)
+        current_year_non_empty_rows = response.xpath(
+            '//section[contains(.,"%s")]//tbody/tr[child::td/text()]' % current_year
+        )
 
         return current_year_non_empty_rows
 

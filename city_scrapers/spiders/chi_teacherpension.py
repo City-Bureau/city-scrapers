@@ -41,9 +41,7 @@ class ChiTeacherPensionSpider(Spider):
                         '_type': 'event',
                         'name': group_name,
                         'description': '',
-                        'classification': self._parse_classification(
-                            group_name
-                        ),
+                        'classification': self._parse_classification(group_name),
                         'start': self._parse_start(date_obj, time_obj),
                         'end': self._parse_end(date_obj),
                         'all_day': False,
@@ -60,9 +58,8 @@ class ChiTeacherPensionSpider(Spider):
         """
         Parse or generate event name.
         """
-        return meeting_group.xpath(
-            './text()'
-        ).extract_first().replace(' Schedule', '').replace('\xa0', ' ')
+        return meeting_group.xpath('./text()').extract_first().replace(' Schedule',
+                                                                       '').replace('\xa0', ' ')
 
     def _parse_classification(self, group_name):
         """
@@ -90,9 +87,7 @@ class ChiTeacherPensionSpider(Spider):
 
         if time_str:
             time_str = re.sub(date_clean_re, '', time_str)
-            time_obj = datetime.strptime(
-                time_str.strip(), '%I:%M %p'
-            ).time()
+            time_obj = datetime.strptime(time_str.strip(), '%I:%M %p').time()
         else:
             time_obj = None
         return date_obj, time_obj
@@ -123,16 +118,11 @@ class ChiTeacherPensionSpider(Spider):
         link = item.xpath('./a')[0]
         return [{
             'note': link.xpath('.//text()').extract_first(),
-            'url': 'https://www.ctpf.org{}'.format(
-                link.xpath("./@href").extract_first()
-            ),
+            'url': 'https://www.ctpf.org{}'.format(link.xpath("./@href").extract_first()),
         }]
 
     def _parse_sources(self, response):
         """
         Parse or generate sources.
         """
-        return [{
-            'url': response.url,
-            'note': ''
-        }]
+        return [{'url': response.url, 'note': ''}]

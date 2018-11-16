@@ -3,10 +3,11 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import re
-import requests
-import json
 import datetime
+import json
+import re
+
+import requests
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
@@ -37,8 +38,8 @@ class ChiLibrarySpider(Spider):
         """
         # the following code turns the HTML glob into an array of lists of strings, one list
         # per event. The first line is *always* the date, the last line is *always* the address.
-        # IF the event has 3 lines, then line 2 and 3 should be concatenated to be the location.
-        #Otherwise, the event has 3 lines and the middle line is the location.
+        # If the event has 3 lines, then line 2 and 3 should be concatenated to be the location.
+        # Otherwise, the event has 3 lines and the middle line is the location.
         events = response.css('div.entry-content p').extract()
         year = response.css('div.entry-content h2').extract()
 
@@ -134,7 +135,8 @@ class ChiLibrarySpider(Spider):
         for i in range(len(lib_info)):
             if item[addr] == lib_info[i]['address']:
                 match = lib_info[i]
-                return match['address'] + ', ' + match['city'] + ' ' + match['state'] + ' ' + match['zip']
+                return match['address'] + ', ' + match['city'] + ' ' + match['state'] + ' ' + match[
+                    'zip']
 
     def _parse_start(self, item, year):
         """

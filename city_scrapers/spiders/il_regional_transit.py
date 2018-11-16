@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import scrapy
-
 import re
 from datetime import datetime
 
-from city_scrapers.constants import (
-    ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
-)
+import scrapy
+
+from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
@@ -32,18 +30,23 @@ class IlRegionalTransitSpider(Spider):
                 'name': name,
                 'event_description': response.meta['event_description'],
                 'start': start,
-                'end': {'date': None, 'time': None, 'note': ''},
+                'end': {
+                    'date': None,
+                    'time': None,
+                    'note': ''
+                },
                 'all_day': False,
                 'timezone': 'America/Chicago',
                 'location': self._parse_location(),
                 'documents': self._parse_documents(item),
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
             data['id'] = self._generate_id(data)
             data['status'] = self._generate_status(data)
-            data['classification'] = self._parse_classification(
-                data.get('name', NOT_CLASSIFIED)
-            )
+            data['classification'] = self._parse_classification(data.get('name', NOT_CLASSIFIED))
             yield data
 
     def parse(self, response):
@@ -99,17 +102,11 @@ class IlRegionalTransitSpider(Spider):
         Retrieve the event date, always using 8:30am as the time.
         """
         title = item.css('.committee::text').extract_first()
-        m = re.search('(\d{4})-(\d{1,2})-(\d{1,2})', title)
+        m = re.search(r'(\d{4})-(\d{1,2})-(\d{1,2})', title)
         if m is None:
             return None
-        naive_dt = datetime(
-            int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30
-        )
-        return {
-            'date': naive_dt.date(),
-            'time': naive_dt.time(),
-            'note': ''
-        }
+        naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
+        return {'date': naive_dt.date(), 'time': naive_dt.time(), 'note': ''}
 
     @staticmethod
     def _parse_documents(item):

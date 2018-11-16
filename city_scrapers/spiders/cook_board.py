@@ -5,6 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
 from datetime import datetime, timedelta
+
 from legistar.events import LegistarEventsScraper
 
 from city_scrapers.constants import BOARD, COMMITTEE
@@ -30,7 +31,7 @@ class CookBoardSpider(Spider):
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
-        les = LegistarEventsScraper(requests_per_minute=0)
+        les = LegistarEventsScraper()
         les.EVENTSPAGE = 'https://cook-county.legistar.com/Calendar.aspx'
         les.BASE_URL = 'https://cook-county.legistar.com'
         if not since:
@@ -63,16 +64,10 @@ class CookBoardSpider(Spider):
         documents = []
         details = item['Meeting Details']
         if type(details) == dict:
-            documents.append({
-                'note': 'Meeting Details',
-                'url': details['url']
-            })
+            documents.append({'note': 'Meeting Details', 'url': details['url']})
         agenda = item['Agenda']
         if type(agenda) == dict:
-            documents.append({
-                'note': 'Agenda',
-                'url': agenda['url']
-            })
+            documents.append({'note': 'Agenda', 'url': agenda['url']})
         return documents
 
     def _parse_classification(self, name):
@@ -90,11 +85,7 @@ class CookBoardSpider(Spider):
         Parse or generate location.
         """
         address = item['Meeting Location'].split('/n')[0]
-        return {
-            'address': address,
-            'name': '',
-            'neighborhood': ''
-        }
+        return {'address': address, 'name': '', 'neighborhood': ''}
 
     def _parse_all_day(self, item):
         """
@@ -134,16 +125,8 @@ class CookBoardSpider(Spider):
         """
         start_datetime = self._parse_start_datetime(item)
         if start_datetime:
-            return {
-                'date': start_datetime.date(),
-                'time': start_datetime.time(),
-                'note': ''
-            }
-        return {
-            'date': None,
-            'time': None,
-            'note': ''
-        }
+            return {'date': start_datetime.date(), 'time': start_datetime.time(), 'note': ''}
+        return {'date': None, 'time': None, 'note': ''}
 
     def _parse_end(self, item):
         """
@@ -157,11 +140,7 @@ class CookBoardSpider(Spider):
                 'time': (start_datetime + timedelta(hours=3)).time(),
                 'note': 'Estimated 3 hours after start time'
             }
-        return {
-            'date': None,
-            'time': None,
-            'note': ''
-        }
+        return {'date': None, 'time': None, 'note': ''}
 
     def _parse_sources(self, item):
         """
@@ -169,6 +148,6 @@ class CookBoardSpider(Spider):
         """
         try:
             url = item['Name']['url']
-        except:
+        except Exception:
             url = 'https://cook-county.legistar.com/Calendar.aspx'
         return [{'url': url, 'note': ''}]

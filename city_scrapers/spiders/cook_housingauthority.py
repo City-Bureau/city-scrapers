@@ -22,9 +22,7 @@ class CookHousingAuthoritySpider(Spider):
 
     def parse(self, response):
         for url in self._gen_requests(response):
-            yield scrapy.Request(
-                url, callback=self._parse_event, dont_filter=True
-            )
+            yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
     def _gen_requests(self, response):
         for link in response.css('guid::text').extract():

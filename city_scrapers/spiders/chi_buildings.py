@@ -3,8 +3,8 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import re
 import json
+import re
 from datetime import datetime
 
 import scrapy
@@ -19,9 +19,7 @@ class ChiBuildingsSpider(Spider):
     allowed_domains = ['www.pbcchicago.com']
     base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     timezone = 'America/Chicago'
-    start_urls = ['{}&start={}'.format(
-        base_url, datetime.now().strftime('%Y-%m-%d')
-    )]
+    start_urls = ['{}&start={}'.format(base_url, datetime.now().strftime('%Y-%m-%d'))]
 
     def parse(self, response):
         """
@@ -31,23 +29,14 @@ class ChiBuildingsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        meeting_types = [
-            'admin-opp-committee-meeting', 'audit-committee', 'board-meeting'
-        ]
+        meeting_types = ['admin-opp-committee-meeting', 'audit-committee', 'board-meeting']
 
         data = json.loads(response.text)
         for item in data:
-            if (
-                item.get('category') != []
-                and item.get('category')[0] in meeting_types
-            ):
+            if (item.get('category') != [] and item.get('category')[0] in meeting_types):
                 name, dt_time = self._parse_name_time(item['title'])
-                start = self._parse_time_dict(
-                    self._parse_datetime(item['start']), dt_time
-                )
-                end = self._parse_time_dict(
-                    self._parse_datetime(item['end']), dt_time
-                )
+                start = self._parse_time_dict(self._parse_datetime(item['start']), dt_time)
+                end = self._parse_time_dict(self._parse_datetime(item['end']), dt_time)
                 end['date'] = start['date']
                 if start['time'] == end['time']:
                     end['time'] = None
@@ -55,9 +44,7 @@ class ChiBuildingsSpider(Spider):
                     '_type': 'event',
                     'name': name,
                     'description': item['description'],
-                    'classification': self._parse_classification(
-                        item.get('category')[0]
-                    ),
+                    'classification': self._parse_classification(item.get('category')[0]),
                     'start': start,
                     'end': end,
                     'all_day': False,
@@ -70,9 +57,7 @@ class ChiBuildingsSpider(Spider):
                 item_data['id'] = self._generate_id(item_data)
 
                 # If it's a board meeting, return description
-                if item['category'][0] in [
-                    'board-meeting', 'admin-opp-committee-meeting'
-                ]:
+                if item['category'][0] in ['board-meeting', 'admin-opp-committee-meeting']:
                     yield self._board_meeting(item_data)
                 else:
                     # Request each relevant event page,

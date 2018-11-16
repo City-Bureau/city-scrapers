@@ -22,15 +22,11 @@ class ChiSsa14Spider(Spider):
         needs.
         """
         location = self._parse_location(response)
-        schedule_note = response.css(
-            '.col2 span[style]'
-        )[0].xpath('*/text()').extract_first()
+        schedule_note = response.css('.col2 span[style]')[0].xpath('*/text()').extract_first()
         year = re.search(r'\d{4}', schedule_note).group()
         # Generate dates for current year's meetings
         meeting_dates = [
-            datetime.strptime(
-                '{} {}'.format(year, meeting.extract()), '%Y %B %d'
-            ).date()
+            datetime.strptime('{} {}'.format(year, meeting.extract()), '%Y %B %d').date()
             for meeting in response.css('.col2 .announcement strong::text')
         ]
 
@@ -72,7 +68,10 @@ class ChiSsa14Spider(Spider):
                 },
                 'all_day': False,
                 'location': location,
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
             data['status'] = self._generate_status(data)
@@ -104,10 +103,11 @@ class ChiSsa14Spider(Spider):
         Parse or generate location.
         """
         return {
-            'address': ' '.join([
-                t.extract() for t in
-                response.css('.moduletable-info strong:nth-of-type(1)::text')
-            ]).replace('  ', ' '),
+            'address':
+                ' '.join([
+                    t.extract()
+                    for t in response.css('.moduletable-info strong:nth-of-type(1)::text')
+                ]).replace('  ', ' '),
             'name': 'Lithuanian Human Services Council',
             'neighborhood': '',
         }

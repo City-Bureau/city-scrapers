@@ -4,15 +4,19 @@ python:
   - "3.6"
   - "3.7"
 sudo: required
+env:
+  global:
+    - PIPENV_VENV_IN_PROJECT=1
+    - PIPENV_IGNORE_VIRTUALENVS=1
 services:
   - docker
 install:
   - pip install pipenv
-  - pip install --dev
+  - pipenv install --dev --three --system
 script:
-  - pipenv run pytest
-  - pipenv run flake8
-  - pipenv run isort
+  - isort --check-only --diff || exit 1
+  - flake8
+  - pytest
   - ./travis/validate_spiders.sh
 deploy:
   - skip_cleanup: true

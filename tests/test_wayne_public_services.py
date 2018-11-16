@@ -1,23 +1,23 @@
 from datetime import date, time
 
 import pytest
-# Adapted from test_chi_parks.py
 from freezegun import freeze_time
-
 from tests.utils import file_response
-from city_scrapers.spiders.wayne_public_services import WaynePublicServicesSpider
 
+from city_scrapers.spiders.wayne_public_services import WaynePublicServicesSpider
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
-    'files/wayne_public_services.html', url='https://www.waynecounty.com/elected/commission/public-services.aspx')
+    'files/wayne_public_services.html',
+    url='https://www.waynecounty.com/elected/commission/public-services.aspx'
+)
 spider = WaynePublicServicesSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
-
 # PARAMETRIZED TESTS
+
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
@@ -88,7 +88,8 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'wayne_public_services/201801171100/x/committee_on_public_services'
+    assert parsed_items[0]['id'
+                           ] == 'wayne_public_services/201801171100/x/committee_on_public_services'
 
 
 def test_status():
