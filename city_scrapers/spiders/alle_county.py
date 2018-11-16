@@ -7,7 +7,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 import urllib3
 from datetime import datetime, timedelta
 from legistar.events import LegistarEventsScraper
-from city_scrapers.constants import BOARD, FORUM
+from city_scrapers.constants import FORUM, COMMITTEE, CITY_COUNCIL
 from city_scrapers.spider import Spider
 
 
@@ -92,9 +92,12 @@ class AlleCountySpider(Spider):
         """
         Differentiate board meetings from public hearings.
         """
-        if 'hearing' in item['Meeting Location'].lower():
+        meeting_loc_str = item['Meeting Location'].lower()
+        if 'hearing' in meeting_loc_str:
             return FORUM
-        return BOARD
+        if 'committee' in meeting_loc_str:
+            return 'COMMITTEE'
+        return CITY_COUNCIL
 
     def _parse_documents(self, item):
         """
