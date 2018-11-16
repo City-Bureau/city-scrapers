@@ -74,7 +74,7 @@ class DetPoliceDepartmentSpider(Spider):
             }
             data['location'] = self._parse_location(data['start']['time'])
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, meeting_presenter)
+            data['status'] = self._generate_status(data)
             yield data
 
     @staticmethod

@@ -45,7 +45,7 @@ class ChiTransitSpider(Spider):
                     'documents': self._parse_documents(item)
                 }
                 item_data['id'] = self._generate_id(item_data)
-                item_data['status'] = self._generate_status(item_data, item_data['name'])
+                item_data['status'] = self._generate_status(item_data)
                 yield item_data
 
     def _parse_description(self, item):

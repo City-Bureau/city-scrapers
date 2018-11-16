@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import scrapy
 from city_scrapers.spider import Spider
 
 
@@ -19,7 +18,6 @@ class {{ classname }}(Spider):
         needs.
         """
         for item in response.css('.eventspage'):
-
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),

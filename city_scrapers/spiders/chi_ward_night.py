@@ -204,7 +204,7 @@ class ChiWardNightSpider(Spider):
                 'location': self._parse_location(row),
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, data['event_description'])
+            data['status'] = self._generate_status(data)
             return data
 
         days = self._days_for_frequency(row[Row.FREQUENCY], row[Row.DAY_OF_WEEK])

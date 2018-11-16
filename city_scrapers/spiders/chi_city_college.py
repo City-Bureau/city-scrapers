@@ -56,9 +56,7 @@ class ChiCityCollegeSpider(Spider):
             'sources': self._parse_sources(response)
         }
         data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(
-            data, text=' '.join([data['name'], data['event_description']])
-        )
+        data['status'] = self._generate_status(data)
         return data
 
     def _parse_location(self, response):

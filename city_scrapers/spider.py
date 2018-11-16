@@ -56,7 +56,13 @@ class Spider(scrapy.Spider):
         Generates one of the allowed statuses from constants based on
         the name and time of the meeting
         """
-        if ('cancel' in text.lower()) or ('rescheduled' in text.lower()):
+        # Combine all relevant meeting text to find words relating to meeting status changes
+        meeting_text = ' '.join([
+            data.get('name', ''),
+            data.get('event_description', ''),
+            text,
+        ]).lower()
+        if any(word in meeting_text for word in ['cancel', 'rescheduled']):
             return CANCELED
 
         try:

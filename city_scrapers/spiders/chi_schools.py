@@ -32,7 +32,7 @@ class ChiSchoolsSpider(Spider):
                     'sources': self._parse_sources(response),
                 }
                 data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data, event_description)
+                data['status'] = self._generate_status(data)
                 data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 yield data
 
