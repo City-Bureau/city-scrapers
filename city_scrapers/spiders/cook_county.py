@@ -66,7 +66,7 @@ class CookCountySpider(Spider):
             'sources': self._parse_sources(response)
         }
         data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(data, data['event_description'])
+        data['status'] = self._generate_status(data)
         data['classification'] = self._parse_classification(data['name'])
         return data
 

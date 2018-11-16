@@ -50,7 +50,7 @@ class IlMetraBoardSpider(Spider):
             }
 
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, data['name'])
+            data['status'] = self._generate_status(data)
             yield data
 
     def _parse_name(self, item):

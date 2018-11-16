@@ -52,7 +52,7 @@ class ChiDevelopmentFundSpider(Spider):
                 }
                 data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data, text=description)
+                data['status'] = self._generate_status(data)
                 yield data
 
     @staticmethod
