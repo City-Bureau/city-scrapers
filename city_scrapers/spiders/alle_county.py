@@ -96,7 +96,7 @@ class AlleCountySpider(Spider):
         if 'hearing' in meeting_loc_str:
             return FORUM
         if 'committee' in meeting_loc_str:
-            return 'COMMITTEE'
+            return COMMITTEE
         return CITY_COUNCIL
 
     def _parse_documents(self, item):
