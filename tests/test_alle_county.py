@@ -5,9 +5,7 @@ from tests.utils import file_response
 from city_scrapers.spiders.alle_county import AlleCountySpider
 
 spider = AlleCountySpider()
-test_response = file_response('files/alle_county_Calendar.html',
-                              url=('https://alleghenycounty'
-                                   '.legistar.com/Calendar.aspx'))
+test_response = file_response('files/alle_county_Calendar.html')
 parsed_items = ([item for item in spider.parse(test_response)
                 if isinstance(item, dict)])
 
@@ -23,33 +21,32 @@ def test_description():
 
 
 def test_start():
-    assert (parsed_items[0]['start_time'] ==
-            {'date': datetime.date(2018, 11, 15),
+    assert (parsed_items[0]['start'] ==
+            {'date': datetime.date(2018, 11, 20),
              'time': datetime.time(17, 0),
              'note': ''})
 
 
 def test_end():
-    assert (parsed_items[0]['end_time'] ==
-            {'date': datetime.date(2018, 11, 15),
+    assert (parsed_items[0]['end'] ==
+            {'date': datetime.date(2018, 11, 20),
              'time': datetime.time(20, 0),
              'note': 'Estimated 3 hours after start time'})
 
 
 def test_id():
     assert (parsed_items[0]['id'] ==
-            'alle_county/201811151700/x/county_council')
+            'alle_county/201811201700/x/county_council')
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == 'confirmed'
 
 
 def test_location():
     assert (parsed_items[0]['location'] ==
-            {'address': ('2018 Budget Public Hearing, '
-                         'Fourth Floor, Gold Room\r\nBudget & '
-                         'Finance Chair Paul Klein Presiding, '
+            {'address': ('Regular Meeting, '
+                         'Fourth Floor, Gold Room, '
                          '436 Grant Street, Pittsburgh, PA 15219'),
              'name': '',
              'neighborhood': ''})
@@ -66,9 +63,9 @@ def test_sources():
 
 def test_documents():
     assert (parsed_items[0]['documents'][0]['url'] ==
-            ('https://alleghenycounty.'
-             'legistar.com/MeetingDetail.aspx?ID=651745&GUID=63EDD993-558F'
-             '-4CC7-9E2A-2D11E82DA693&Options=info&Search='))
+            ('https://alleghenycounty.legistar.com/'
+             'View.ashx?M=A&ID=651919&GUID=771C0CE1'
+             '-F9A0-4AEF-959D-EBE83EC92059'))
 
 
 @pytest.mark.parametrize('item',
@@ -78,7 +75,7 @@ def test_all_day(item):
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Forum'
+    assert parsed_items[0]['classification'] == 'Board'
 
 
 @pytest.mark.parametrize('item', parsed_items)

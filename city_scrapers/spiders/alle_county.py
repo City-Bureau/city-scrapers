@@ -42,8 +42,6 @@ class AlleCountySpider(Spider):
 
     def _parse_events(self, events):
         for item, _ in events:
-            start_time = self._parse_start(item)
-            end_time = self._parse_end(item)
             data = {
                 'timezone': self.timezone,
                 '_type': 'event',
@@ -51,18 +49,15 @@ class AlleCountySpider(Spider):
                 'event_description': '',
                 'all_day': self._parse_all_day(item),
                 'classification': self._parse_classification(item),
-                # _generate_id takes `start` instead of start_time.
-                # `start` is only used internally.
-                'start': start_time,
-                'start_time': start_time,
-                'end_time': end_time,
-                'end': end_time,
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
                 'location': self._parse_location(item),
                 'documents': self._parse_documents(item),
                 'sources': self._parse_sources(item),
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, '')
+            data['status'] = self._generate_status(data,
+                                                   item['Meeting Location'])
             yield data
 
     def _parse_location(self, item):
@@ -106,24 +101,18 @@ class AlleCountySpider(Spider):
         Parse or generate documents.
         """
         documents = []
-
-        # Add meetings details if available
-        info = item['Meeting Details']
-        try:
-            url = info['url']
-        except (TypeError, KeyError):
-            pass
-        else:
-            documents.append({'url': url, 'note': 'Meeting Details'})
-
-        # Add agenda if available
-        info = item['Agenda']
-        try:
-            url = info['url']
-        except (TypeError, KeyError):
-            pass
-        else:
-            documents.append({'url': url, 'note': 'Agenda'})
+        details = item['Minutes']
+        if isinstance(details, dict):
+            documents.append({
+                'note': 'Minutes',
+                'url': details['url']
+            })
+        agenda = item['Agenda']
+        if isinstance(agenda, dict):
+            documents.append({
+                'note': 'Agenda',
+                'url': agenda['url']
+            })
         return documents
 
     def _parse_start_datetime(self, item):
