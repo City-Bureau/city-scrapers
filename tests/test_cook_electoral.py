@@ -1,13 +1,8 @@
-import pytest
-
 from datetime import date, time
+
 from tests.utils import file_response
+
 from city_scrapers.spiders.cook_electoral import CookElectoralSpider
-
-
-"""
-Uncomment below
-"""
 
 test_response = file_response('files/cook_electoral.html')
 spider = CookElectoralSpider()
@@ -51,15 +46,18 @@ def test_documents():
         },
         {
             'note': 'January 9, 2018 Consent Agenda - Second Set',
-            'url': 'http://aba-clerk.s3-website-us-east-1.amazonaws.com/PostBoardAgenda_pdf_010918_490.pdf'
+            'url':
+                'http://aba-clerk.s3-website-us-east-1.amazonaws.com/PostBoardAgenda_pdf_010918_490.pdf'  # noqa
         },
         {
             'note': 'January 9, 2018 Consent Agenda - Third Set',
-            'url': 'http://aba-clerk.s3-website-us-east-1.amazonaws.com/NewItemsAgenda_pdf_010918_490.pdf'
+            'url':
+                'http://aba-clerk.s3-website-us-east-1.amazonaws.com/NewItemsAgenda_pdf_010918_490.pdf'  # noqa
         },
         {
             'note': 'January 9, 2018 Resolutions',
-            'url': 'http://aba-clerk.s3-website-us-east-1.amazonaws.com/Resolution_pdf_010918_490.pdf'
+            'url':
+                'http://aba-clerk.s3-website-us-east-1.amazonaws.com/Resolution_pdf_010918_490.pdf'
         },
         {
             'note': 'January 9, 2018 Consent Journal of Proceedings',
@@ -73,4 +71,3 @@ def test_sources():
         'url': 'https://www.cookcountyclerk.com/service/board-meetings',
         'note': 'Must submit form to see any dates'
     }]
-

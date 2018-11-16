@@ -2,10 +2,9 @@
 import re
 from collections import defaultdict
 from datetime import datetime, time
-from dateutil.parser import parse
 from urllib.parse import urljoin
 
-import scrapy
+from dateutil.parser import parse
 
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
@@ -39,14 +38,23 @@ class DetCityPlanningSpider(Spider):
                 'name': 'City Planning Commission',
                 'event_description': '',
                 'classification': COMMISSION,
-                'start': {'date': meeting_date_time.date(),
-                          'time': time(17, 00),
-                          'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'},
-                'end': {'date': meeting_date_time.date(), 'time': time(20, 00), 'note': ''},
+                'start': {
+                    'date': meeting_date_time.date(),
+                    'time': time(17, 00),
+                    'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'
+                },
+                'end': {
+                    'date': meeting_date_time.date(),
+                    'time': time(20, 00),
+                    'note': ''
+                },
                 'all_day': False,
                 'location': self.location,
                 'documents': self._create_documents(response.url, document_url),
-                'sources': [{'url': response.url, 'note': ''}]
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }]
             }
 
             data['status'] = self._generate_status(data)
@@ -67,7 +75,7 @@ class DetCityPlanningSpider(Spider):
         year_str = datetime.now().year
         meetings = defaultdict(str)
         meetings_text = response.xpath('//tr/td/text()').extract()
-        month_day_regex = re.compile("\w+\s\d+")
+        month_day_regex = re.compile(r"\w+\s\d+")
         for meeting in meetings_text:
             # Check if cell is actual text
             if meeting[0].isalpha():
@@ -79,7 +87,7 @@ class DetCityPlanningSpider(Spider):
     @staticmethod
     def _parse_has_agenda_meetings(response):
         meetings = defaultdict(str)
-        date_regex = re.compile("\w+\s\d+,\s\d{4}")
+        date_regex = re.compile(r"\w+\s\d+,\s\d{4}")
         meeting_agendas = response.xpath('//div[@id="dnn_ctr9526_HtmlModule_lblContent"]//li')
         for agenda in meeting_agendas:
             agenda_link = agenda.xpath('./a/@href').extract_first()

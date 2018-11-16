@@ -34,7 +34,10 @@ class DetCityCouncilSpider(Spider):
         event_target, event_argument = response.xpath(form_params_xpath).re(r'\'(.*?)\'')
         yield scrapy.FormRequest(
             url=response.url,
-            formdata={'__EVENTTARGET': event_target, '__EVENTARGUMENT': event_argument},
+            formdata={
+                '__EVENTTARGET': event_target,
+                '__EVENTARGUMENT': event_argument
+            },
             meta={'months_crawled': months_crawled + 1},
         )
 
@@ -66,7 +69,10 @@ class DetCityCouncilSpider(Spider):
             'all_day': False,
             'location': location,
             'documents': documents,
-            'sources': [{'url': response.url, 'note': ''}],
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }],
         }
         data['id'] = self._generate_id(data)
         data['status'] = self._generate_status(data)
@@ -74,7 +80,9 @@ class DetCityCouncilSpider(Spider):
 
     @staticmethod
     def _parse_description(response):
-        description_xpath = '//div[span[contains(., "Description")]]/following-sibling::div//p/text()'
+        description_xpath = (
+            '//div[span[contains(., "Description")]]/following-sibling::div//p/text()'
+        )
         description = response.xpath(description_xpath).extract_first('').strip()
         return description
 
@@ -86,7 +94,9 @@ class DetCityCouncilSpider(Spider):
         return name_value
 
     def _get_location(self, response):
-        location_xpath = '//div[span[contains(., "Location")]]/following-sibling::div[1]/span/a/text()'
+        location_xpath = (
+            '//div[span[contains(., "Location")]]/following-sibling::div[1]/span/a/text()'
+        )
         location_text = response.xpath(location_xpath).extract_first()
         return self._choose_location(location_text)
 
@@ -103,7 +113,8 @@ class DetCityCouncilSpider(Spider):
 
     @staticmethod
     def _get_date(response, contains):
-        date_xpath = '//div[span[contains(., "{}")]]/following-sibling::div[1]/span[1]/text()'.format(contains)
+        date_xpath = ('//div[span[contains(., "{}")]]/following-sibling::div[1]/span[1]/text()'
+                      ).format(contains)
         date_text = response.xpath(date_xpath).extract_first()
         if date_text:
             dt = parse(date_text)

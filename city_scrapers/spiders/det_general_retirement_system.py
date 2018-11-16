@@ -33,12 +33,15 @@ class DetGeneralRetirementSystemSpider(Spider):
             yield scrapy.FormRequest.from_response(
                 response,
                 formname='Form',
-                formdata={'__EVENTTARGET': event_target, '__EVENTARGUMENT': event_argument},
+                formdata={
+                    '__EVENTTARGET': event_target,
+                    '__EVENTARGUMENT': event_argument
+                },
                 meta={'prev_call_count': prev_call_count + 1},
             )
 
     def _generate_requests(self, response):
-        anchor_xpath = '//table[@id="dnn_ctr531_Events_EventMonth_EventCalendar"]//a[contains(@id, "ctlEvents")]'
+        anchor_xpath = '//table[@id="dnn_ctr531_Events_EventMonth_EventCalendar"]//a[contains(@id, "ctlEvents")]'  # noqa
         anchors = response.xpath(anchor_xpath)
         for a in anchors:
             yield response.follow(a, self._parse_item)
@@ -61,7 +64,10 @@ class DetGeneralRetirementSystemSpider(Spider):
             'all_day': False,
             'location': location,
             'documents': [],
-            'sources': [{'url': response.url, 'note': ''}],
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }],
         }
         data['id'] = self._generate_id(data)
         data['status'] = self._generate_status(data)
@@ -69,13 +75,13 @@ class DetGeneralRetirementSystemSpider(Spider):
 
     @staticmethod
     def _parse_description(response):
-        description_xpath = '//div[span[contains(., "Description")]]/following-sibling::div//p/text()'
+        description_xpath = '//div[span[contains(., "Description")]]/following-sibling::div//p/text()'  # noqa
         description = response.xpath(description_xpath).extract_first().strip()
         return description
 
     @staticmethod
     def _parse_name(response):
-        name_xpath = '//div[@id="dnn_ctr531_EventDetails_divEventDetails1"]//span[contains(@class, "Head")]/text()'
+        name_xpath = '//div[@id="dnn_ctr531_EventDetails_divEventDetails1"]//span[contains(@class, "Head")]/text()'  # noqa
         name = response.xpath(name_xpath).extract_first()
         return 'Board of Trustees: {}'.format(name)
 
@@ -99,7 +105,8 @@ class DetGeneralRetirementSystemSpider(Spider):
 
     @staticmethod
     def _get_date(response, contains):
-        date_xpath = '//div[span[contains(., "{}")]]/following-sibling::div[1]/span[1]/text()'.format(contains)
+        date_xpath = ('//div[span[contains(., "{}")]]/following-sibling::div[1]/span[1]/text()'
+                      ).format(contains)
         date_text = response.xpath(date_xpath).extract_first()
         if date_text:
             dt = parse(date_text)

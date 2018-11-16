@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import re
 import datetime
+import re
 from datetime import timedelta
 
 import dateutil.parser
@@ -46,7 +46,10 @@ class ChiBoardOfEthicsSpider(Spider):
                 'all_day': False,
                 'location': location,
                 'documents': [],
-                'sources': [{'url': self.start_urls[0], 'note': ''}],
+                'sources': [{
+                    'url': self.start_urls[0],
+                    'note': ''
+                }],
             }
             data['end'] = self._parse_end(data)
             data['id'] = self._generate_id(data)
@@ -59,11 +62,7 @@ class ChiBoardOfEthicsSpider(Spider):
         Parse state date and time.
         """
         dt = dateutil.parser.parse('{} {}'.format(date, time))
-        return {
-            'date': dt.date(),
-            'time': dt.time(),
-            'note': ''
-        }
+        return {'date': dt.date(), 'time': dt.time(), 'note': ''}
 
     @staticmethod
     def _parse_end(item):
@@ -75,9 +74,7 @@ class ChiBoardOfEthicsSpider(Spider):
         end = {}
         end['date'] = item['start']['date']
         end['note'] = item['start']['note']
-        dt = datetime.datetime.combine(
-            datetime.date(1, 1, 1), item['start']['time']
-        )
+        dt = datetime.datetime.combine(datetime.date(1, 1, 1), item['start']['time'])
         end['time'] = (dt + timedelta(hours=2)).time()
         return end
 

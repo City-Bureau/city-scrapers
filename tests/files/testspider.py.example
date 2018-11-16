@@ -12,8 +12,8 @@ class TestspiderSpider(Spider):
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` a dict that follows a modified
+        OCD event schema (docs/_docs/05-development.md#event-schema)
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
@@ -33,7 +33,7 @@ class TestspiderSpider(Spider):
                 'sources': self._parse_sources(item),
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data

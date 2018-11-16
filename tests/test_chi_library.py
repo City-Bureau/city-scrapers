@@ -1,9 +1,10 @@
 from datetime import date, time
-import pytest
-import betamax
-import requests
 
+import betamax
+import pytest
+import requests
 from tests.utils import file_response
+
 from city_scrapers.constants import BOARD, PASSED
 from city_scrapers.spiders.chi_library import ChiLibrarySpider
 
@@ -13,16 +14,11 @@ recorder = betamax.Betamax(session)
 with recorder.use_cassette('test_chi_library_libinfo'):
     test_response = file_response(
         'files/chi_library.html',
-        url=(
-            'https://www.chipublib.org/'
-            'board-of-directors/board-meeting-schedule/'
-        ),
+        url=('https://www.chipublib.org/'
+             'board-of-directors/board-meeting-schedule/'),
     )
     spider = ChiLibrarySpider(session=session)
-    parsed_items = [
-        item for item in spider.parse(test_response)
-        if isinstance(item, dict)
-    ]
+    parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
 def test_name():
@@ -42,9 +38,7 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == (
-        'chi_library/201701170900/x/board_of_directors'
-    )
+    assert parsed_items[0]['id'] == ('chi_library/201701170900/x/board_of_directors')
 
 
 def test_status():
@@ -58,11 +52,12 @@ def test_all_day():
 def test_location():
     assert parsed_items[0]['location'] == {
         'address': '400 S. State Street, CHICAGO IL 60605',
-        'coordinates': {'latitude': None, 'longitude': None},
-        'name': (
-            'Harold Washington Library Center, '
-            'Multi-Purpose Room, Lower Level'
-        ),
+        'coordinates': {
+            'latitude': None,
+            'longitude': None
+        },
+        'name': ('Harold Washington Library Center, '
+                 'Multi-Purpose Room, Lower Level'),
         'url': None
     }
 
@@ -95,9 +90,7 @@ def test_all_day_param(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
     assert item['sources'] == [{
-        'url': (
-            'https://www.chipublib.org/board-of-directors'
-            '/board-meeting-schedule/'
-        ),
+        'url': ('https://www.chipublib.org/board-of-directors'
+                '/board-meeting-schedule/'),
         'note': ''
     }]

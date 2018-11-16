@@ -1,8 +1,8 @@
 import json
-import boto3
-from botocore.exceptions import ClientError
 from datetime import date, datetime, time
 
+import boto3
+from botocore.exceptions import ClientError
 from scrapy.utils.project import get_project_settings
 
 s3_client = boto3.client('s3')

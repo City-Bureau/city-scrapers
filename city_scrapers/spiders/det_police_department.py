@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-import re
 from datetime import time
 
 import scrapy
@@ -37,7 +36,11 @@ class DetPoliceDepartmentSpider(Spider):
         yield scrapy.FormRequest.from_response(
             response,
             formname='Form',
-            formdata={'ctx': '1', '__DNNCAPISCI': 'FAQs dnn_ctr7392_FAQs', '__DNNCAPISCP': '1716'},
+            formdata={
+                'ctx': '1',
+                '__DNNCAPISCI': 'FAQs dnn_ctr7392_FAQs',
+                '__DNNCAPISCP': '1716'
+            },
             meta={'prev_call_count': 1},
         )
 
@@ -56,9 +59,16 @@ class DetPoliceDepartmentSpider(Spider):
                 'name': 'Board of Commissioners',
                 'event_description': meeting_presenter,
                 'start': start,
-                'end': {'date': None, 'time': None, 'note': ''},
+                'end': {
+                    'date': None,
+                    'time': None,
+                    'note': ''
+                },
                 'all_day': False,
-                'sources': [{'url': post_request_response.url, 'note': ''}],
+                'sources': [{
+                    'url': post_request_response.url,
+                    'note': ''
+                }],
                 'documents': [],
                 'classification': BOARD
             }
@@ -93,13 +103,15 @@ class DetPoliceDepartmentSpider(Spider):
     def _convert_response(response):
         response_body = response.xpath('//textarea/text()').extract_first()
         html = json.loads(response_body)
-        return scrapy.http.TextResponse(url=response.url, body=html['d'], encoding=response.encoding)
+        return scrapy.http.TextResponse(
+            url=response.url, body=html['d'], encoding=response.encoding
+        )
 
     @staticmethod
     def _parse_location(start_time):
         """
          All meetings scheduled for 3:00 pm meet at the Detroit Public Safety Headquarters.
-         All meetings scheduled for 6:30 pm are in the community. 
+         All meetings scheduled for 6:30 pm are in the community.
          Community Meetings are subject to change with notice.
         """
         if start_time == time(15, 00):

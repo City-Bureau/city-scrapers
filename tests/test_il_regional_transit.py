@@ -2,18 +2,22 @@
 from datetime import date, time
 
 import pytest
-
 from tests.utils import file_response
+
 from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE
 from city_scrapers.spiders.il_regional_transit import IlRegionalTransitSpider
 
-events_response = file_response('files/il_regional_transit_calendar.html', url='http://www.rtachicago.org/about-us/board-meetings')
+events_response = file_response(
+    'files/il_regional_transit_calendar.html',
+    url='http://www.rtachicago.org/about-us/board-meetings'
+)
 events_response.meta['event_description'] = (
-        "The RTA Board of Directors typically meets each month on a Thursday at "
-        "175 W. Jackson Blvd, Suite 1650 in Chicago. Board committee meetings "
-        "typically begin at 8:30 a.m. Agendas are posted at least 48 hours prior "
-        "to the meetings. All RTA Board meetings are audio taped. Recording of meetings "
-        "starting December 2014 are available on the ")
+    "The RTA Board of Directors typically meets each month on a Thursday at "
+    "175 W. Jackson Blvd, Suite 1650 in Chicago. Board committee meetings "
+    "typically begin at 8:30 a.m. Agendas are posted at least 48 hours prior "
+    "to the meetings. All RTA Board meetings are audio taped. Recording of meetings "
+    "starting December 2014 are available on the "
+)
 
 spider = IlRegionalTransitSpider()
 parsed_items = [item for item in spider.parse_iframe(events_response) if isinstance(item, dict)]
@@ -29,15 +33,12 @@ def test_description():
         "175 W. Jackson Blvd, Suite 1650 in Chicago. Board committee meetings "
         "typically begin at 8:30 a.m. Agendas are posted at least 48 hours prior "
         "to the meetings. All RTA Board meetings are audio taped. Recording of meetings "
-        "starting December 2014 are available on the ")
+        "starting December 2014 are available on the "
+    )
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 6, 21),
-        'time': time(8, 30),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 6, 21), 'time': time(8, 30), 'note': ''}
 
 
 def test_end_time():
@@ -49,7 +50,7 @@ def test_end_time():
 
 
 def test_id():
-   assert parsed_items[0]['id'] == 'il_regional_transit/201806210830/x/board_of_directors'
+    assert parsed_items[0]['id'] == 'il_regional_transit/201806210830/x/board_of_directors'
 
 
 def test_status():
@@ -59,12 +60,10 @@ def test_status():
 
 def test_documents():
     assert parsed_items[0]['documents'] == []
-    assert parsed_items[1]['documents'] == [
-        {
-         'url': 'http://rtachicago.granicus.com/AgendaViewer.php?view_id=5&event_id=325',
-         'note': 'agenda'
-         }
-    ]
+    assert parsed_items[1]['documents'] == [{
+        'url': 'http://rtachicago.granicus.com/AgendaViewer.php?view_id=5&event_id=325',
+        'note': 'agenda'
+    }]
 
 
 def test_classification():
@@ -105,5 +104,7 @@ def test__type(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
-    assert item['sources'] == [{'url': 'http://www.rtachicago.org/about-us/board-meetings',
-                                'note': ''}]
+    assert item['sources'] == [{
+        'url': 'http://www.rtachicago.org/about-us/board-meetings',
+        'note': ''
+    }]

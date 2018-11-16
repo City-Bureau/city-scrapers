@@ -1,11 +1,11 @@
 import os
+import string
 import sys
 import time
-import string
+from urllib.parse import urlparse
 
 import requests
 from jinja2 import Environment, FileSystemLoader
-from urllib.parse import urlparse
 
 BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')

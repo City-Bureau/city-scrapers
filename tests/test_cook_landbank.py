@@ -1,7 +1,9 @@
-import pytest
 from datetime import date, time
+
+import pytest
 from freezegun import freeze_time
 from tests.utils import file_response
+
 from city_scrapers.constants import COMMITTEE, CONFIRMED
 from city_scrapers.spiders.cook_landbank import CookLandbankSpider
 
@@ -31,20 +33,12 @@ def test_event_description():
 
 
 def test_start():
-    EXPECTED_START = {
-        'date': date(2018, 9, 14),
-        'time': time(10, 00),
-        'note': ''
-    }
+    EXPECTED_START = {'date': date(2018, 9, 14), 'time': time(10, 00), 'note': ''}
     assert parsed_items[0]['start'] == EXPECTED_START
 
 
 def test_end():
-    EXPECTED_END = {
-        'date': date(2018, 9, 14),
-        'time': None,
-        'note': ''
-    }
+    EXPECTED_END = {'date': date(2018, 9, 14), 'time': None, 'note': ''}
     assert parsed_items[0]['end'] == EXPECTED_END
 
 
@@ -71,7 +65,8 @@ def test_location():
         'name': None,
         'address': '69 W. Washington St., Lower Level Conference Room A',
         'coordinates': {
-            'latitude': None, 'longitude': None
+            'latitude': None,
+            'longitude': None
         }
     }
 
@@ -91,7 +86,8 @@ def test_documents():
         'url': (
             'http://www.cookcountylandbank.org/wp-content/'
             'uploads/2018/09/CCLBA-Land-Transaction-9-14-18-Agenda.pdf'
-        ), 'note': 'Agenda'
+        ),
+        'note': 'Agenda'
     }]
 
 

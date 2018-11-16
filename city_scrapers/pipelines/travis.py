@@ -8,7 +8,7 @@ class TravisValidationPipeline(object):
     NULL_VALUES = [None, '']
     SCHEMA = {
         '_type': {'required': True, 'type': str, 'values': ['event']},
-        'id': {'required': True, 'type': str, 'format_str': '.+/\d{12}/.+/.+'},
+        'id': {'required': True, 'type': str, 'format_str': r'.+/\d{12}/.+/.+'},
         'name': {'required': True, 'type': str},
         'event_description': {'required': False, 'type': str},
         'all_day': {'required': True, 'type': bool},

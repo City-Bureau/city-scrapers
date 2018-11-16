@@ -60,7 +60,10 @@ class ChiSsa42Spider(Spider):
                 'all_day': False,
                 'location': self.location,
                 'documents': self._parse_documents(item),
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
             data['status'] = self._generate_status(data, text=text)
             data['id'] = self._generate_id(data)
@@ -79,14 +82,13 @@ class ChiSsa42Spider(Spider):
         """
         Parse start date and time.
         """
-        date_match = re.search(
-            r'[a-zA-Z]{3,9} \d{1,2}([a-z,]{1,3})? \d{4}', text
-        )
+        date_match = re.search(r'[a-zA-Z]{3,9} \d{1,2}([a-z,]{1,3})? \d{4}', text)
         time_match = re.search(r'\d{1,2}:\d{2}[ pam\.]{2,5}', text)
         if date_match:
             try:
                 date_str = re.sub(
-                    r'(?<=\d)[a-z]{2}', '',
+                    r'(?<=\d)[a-z]{2}',
+                    '',
                     date_match.group().replace(',', ''),
                 )
                 dt = datetime.strptime(date_str, '%B %d %Y').date()
@@ -116,8 +118,5 @@ class ChiSsa42Spider(Spider):
                 doc_note = 'Minutes'
             else:
                 doc_note = doc_text
-            docs.append({
-                'url': doc.attrib['href'],
-                'note': doc_note
-            })
+            docs.append({'url': doc.attrib['href'], 'note': doc_note})
         return docs

@@ -1,12 +1,14 @@
-import pytest
 from datetime import date, time
 
-
+import pytest
 from tests.utils import file_response
+
 from city_scrapers.spiders.det_entertainment_commission import DetEntertainmentCommissionSpider
 
-
-test_response = file_response('files/det_entertainment_commission.html', 'https://www.detroitsentertainmentcommission.com/services')
+test_response = file_response(
+    'files/det_entertainment_commission.html',
+    'https://www.detroitsentertainmentcommission.com/services'
+)
 spider = DetEntertainmentCommissionSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -20,23 +22,16 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 7, 16),
-        'time': time(17, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 7, 16), 'time': time(17, 00), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': None,
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_entertainment_commission/201807161700/x/entertainment_commission'
+    assert parsed_items[0][
+        'id'] == 'det_entertainment_commission/201807161700/x/entertainment_commission'
 
 
 def test_status():

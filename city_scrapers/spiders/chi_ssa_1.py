@@ -2,8 +2,8 @@
 import re
 from datetime import datetime, time
 
-from city_scrapers.spider import Spider
 from city_scrapers.constants import COMMISSION
+from city_scrapers.spider import Spider
 
 
 class ChiSsa1Spider(Spider):
@@ -32,7 +32,10 @@ class ChiSsa1Spider(Spider):
                 'all_day': False,
                 'location': location,
                 'documents': self._parse_documents(item),
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
             data['end'] = {
@@ -77,8 +80,5 @@ class ChiSsa1Spider(Spider):
         """
         item_link = item.css('a::attr(href)').extract_first()
         if item_link:
-            return [{
-                'url': 'https://loopchicago.com{}'.format(item_link),
-                'note': 'Minutes'
-            }]
+            return [{'url': 'https://loopchicago.com{}'.format(item_link), 'note': 'Minutes'}]
         return []

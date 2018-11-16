@@ -31,12 +31,8 @@ class DetNextMichiganDevelopmentCorporationSpider(Spider):
         yield from self._next_page_prev_meetings(response)
 
     def _next_meeting(self, response):
-        next_meeting_xpath = (
-            '//p[contains(., "The next D-NMDC meeting is")]//text()'
-        )
-        next_meeting_text = ' '.join(
-            response.xpath(next_meeting_xpath).extract()
-        )
+        next_meeting_xpath = ('//p[contains(., "The next D-NMDC meeting is")]//text()')
+        next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
         data = self._set_meeting_defaults(response)
         data['start'] = self._parse_start(next_meeting_text)
         if data['start']['date']:
@@ -56,9 +52,7 @@ class DetNextMichiganDevelopmentCorporationSpider(Spider):
         other_prev_meetings = self._parse_prev_docs(other_prev_meetings)
         for meeting_date in other_prev_meetings:
             docs = other_prev_meetings[meeting_date]
-            yield self._create_meeting_from_meeting_docs(
-                meeting_date, docs, response
-            )
+            yield self._create_meeting_from_meeting_docs(meeting_date, docs, response)
 
     def _parse_prev_meetings(self, response):
         # there are only documents for prev meetings,
@@ -67,9 +61,7 @@ class DetNextMichiganDevelopmentCorporationSpider(Spider):
         prev_meeting_docs = self._parse_prev_docs(list_items)
         for meeting_date in prev_meeting_docs:
             docs = prev_meeting_docs[meeting_date]
-            yield self._create_meeting_from_meeting_docs(
-                meeting_date, docs, response
-            )
+            yield self._create_meeting_from_meeting_docs(meeting_date, docs, response)
 
     def _parse_start(self, date_time_text):
         time_match = self._parse_time(date_time_text)
@@ -92,9 +84,7 @@ class DetNextMichiganDevelopmentCorporationSpider(Spider):
         time_text = time_regex.search(date_time_text, re.IGNORECASE)
         return time_text
 
-    def _create_meeting_from_meeting_docs(
-        self, meeting_date, meeting_docs, response
-    ):
+    def _create_meeting_from_meeting_docs(self, meeting_date, meeting_docs, response):
         data = self._set_meeting_defaults(response)
         data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
         data['documents'] = meeting_docs
@@ -136,7 +126,11 @@ class DetNextMichiganDevelopmentCorporationSpider(Spider):
             'name': 'Board of Directors',
             'event_description': '',
             'classification': BOARD,
-            'end': {'date': None, 'time': None, 'note': ''},
+            'end': {
+                'date': None,
+                'time': None,
+                'note': ''
+            },
             'all_day': False,
             'location': {
                 'neighborhood': '',
@@ -144,6 +138,9 @@ class DetNextMichiganDevelopmentCorporationSpider(Spider):
                 'address': '500 Griswold, Suite 2200, Detroit'
             },
             'documents': [],
-            'sources': [{'url': response.url, 'note': ''}]
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }]
         }
         return data

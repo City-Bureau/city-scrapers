@@ -1,5 +1,5 @@
-from scrapy.extensions.feedexport import BlockingFeedStorage
 from azure.storage.blob import BlockBlobService
+from scrapy.extensions.feedexport import BlockingFeedStorage
 
 
 class AzureBlobFeedStorage(BlockingFeedStorage):
@@ -23,6 +23,4 @@ class AzureBlobFeedStorage(BlockingFeedStorage):
 
     def _store_in_thread(self, file):
         file.seek(0)
-        self.blob_service.create_blob_from_stream(
-            self.container, self.filename, file
-        )
+        self.blob_service.create_blob_from_stream(self.container, self.filename, file)

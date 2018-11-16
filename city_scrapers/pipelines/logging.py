@@ -4,5 +4,9 @@ class CityScrapersLoggingPipeline(object):
     turn on some kind of backend storage pipeline.
     """
     def process_item(self, item, spider):
-        spider.logger.warn('Processing {0}. Enable a database pipeline to save items.'.format(item.get('title', 'No title found')))
+        spider.logger.warn(
+            'Processing {0}. Enable a database pipeline to save items.'.format(
+                item.get('title', 'No title found')
+            )
+        )
         return item

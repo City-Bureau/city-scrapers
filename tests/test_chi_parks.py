@@ -1,8 +1,9 @@
-import pytest
 import json
 from datetime import date, time
 
+import pytest
 from freezegun import freeze_time
+
 from city_scrapers.constants import BOARD
 from city_scrapers.spiders.chi_parks import ChiParksSpider
 
@@ -26,11 +27,7 @@ def test_description():
 
 
 def test_start():
-    EXPECTED_START = {
-        'date': date(2017, 12, 13),
-        'time': time(15, 30),
-        'note': ''
-    }
+    EXPECTED_START = {'date': date(2017, 12, 13), 'time': time(15, 30), 'note': ''}
     assert parsed_items[0]['start'] == EXPECTED_START
 
 
@@ -44,9 +41,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == (
-        'chi_parks/201712131530/x/board_of_commissioners'
-    )
+    assert parsed_items[0]['id'] == ('chi_parks/201712131530/x/board_of_commissioners')
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -80,19 +75,11 @@ def test_documents():
         {
             'url': (
                 'https://chicagoparkdistrict.legistar.com/'
-                'MeetingDetail.aspx?ID=521450&GUID=4D888BE3-BD28-'
-                '4F58-AEE3-76627090F26D&Options=info&Search='
-            ),
-            'note': 'Meeting Details'
-        },
-        {
-            'url': (
-                'https://chicagoparkdistrict.legistar.com/'
                 'View.ashx?M=A&ID=521450&GUID=4D888BE3-BD28-'
                 '4F58-AEE3-76627090F26D'
             ),
             'note': 'Agenda'
-        }
+        },
     ]
     assert parsed_items[2]['documents'] == EXPECTED_DOCUMENTS
 

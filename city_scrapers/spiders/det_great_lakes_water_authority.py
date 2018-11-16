@@ -26,7 +26,9 @@ class DetGreatLakesWaterAuthoritySpider(Spider):
         next_page = response.css('.tribe-events-nav-next')[0].xpath('a/@href').extract_first()
         if next_page:
             yield scrapy.Request(next_page, callback=self.parse)
-        yield scrapy.Request(response.url + '?ical=1&tribe_display=month', callback=self._parse_ical)
+        yield scrapy.Request(
+            response.url + '?ical=1&tribe_display=month', callback=self._parse_ical
+        )
 
     def _parse_ical(self, ical_event):
         cal = Calendar(ical_event.text)
@@ -38,12 +40,27 @@ class DetGreatLakesWaterAuthoritySpider(Spider):
                 'name': desc.group('name').strip(),
                 'event_description': event.description,
                 'classification': self._parse_classification(desc.group('name')),
-                'start': {'date': event.begin.date(), 'time': event.begin.time(), 'note': ''},
-                'end': {'date': event.end.date(), 'time': event.end.time(), 'note': ''},
+                'start': {
+                    'date': event.begin.date(),
+                    'time': event.begin.time(),
+                    'note': ''
+                },
+                'end': {
+                    'date': event.end.date(),
+                    'time': event.end.time(),
+                    'note': ''
+                },
                 'all_day': event.all_day,
-                'location': {'name': '', 'address': event.location, 'neighborhood': ''},
+                'location': {
+                    'name': '',
+                    'address': event.location,
+                    'neighborhood': ''
+                },
                 'documents': [],
-                'sources': [{'url': event.url, 'note': ''}]
+                'sources': [{
+                    'url': event.url,
+                    'note': ''
+                }]
             }
             data['id'] = self._generate_id(data)
             data['status'] = self._generate_status(data, desc.group(0))

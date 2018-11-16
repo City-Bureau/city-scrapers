@@ -1,14 +1,16 @@
-from datetime import time, date
+from datetime import date, time
 from urllib.parse import parse_qsl
 
 import pytest
 import scrapy
-
-from city_scrapers.spiders.det_police_department import DetPoliceDepartmentSpider
 from tests.files.det_police_department_post import POST_REQUEST_RESPONSE_BODY
 from tests.utils import file_response
 
-initial_response = file_response('files/det_police_department_detroit_police_commissioners_meetings.html')
+from city_scrapers.spiders.det_police_department import DetPoliceDepartmentSpider
+
+initial_response = file_response(
+    'files/det_police_department_detroit_police_commissioners_meetings.html'
+)
 spider = DetPoliceDepartmentSpider()
 POST_REQUEST_RESPONSE = scrapy.http.TextResponse(
     url="http://www.detroitmi.gov/Government/Detroit-Police-Commissioners-Meetings",
@@ -55,17 +57,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 1, 4),
-        'time': time(15, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 1, 4), 'time': time(15, 00), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': None, 'time': None, 'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_id():
@@ -77,11 +73,22 @@ def test_status():
 
 
 def test_location():
-    det_public_safety_hq = {'neigborhood': '', 'name': 'Detroit Public Safety Headquarters',
-                            'address': '1301 3rd Ave, Detroit, MI 48226'}
-    community = {'neigborhood': '', 'name': '', 'address': 'In the community (see website for details)'}
-    public_safety_meetings = [item['location'] for item in parsed_items if item['start']['time'] == time(15, 00)]
-    community_meetings = [item['location'] for item in parsed_items if item['start']['time'] != time(15, 00)]
+    det_public_safety_hq = {
+        'neigborhood': '',
+        'name': 'Detroit Public Safety Headquarters',
+        'address': '1301 3rd Ave, Detroit, MI 48226'
+    }
+    community = {
+        'neigborhood': '',
+        'name': '',
+        'address': 'In the community (see website for details)'
+    }
+    public_safety_meetings = [
+        item['location'] for item in parsed_items if item['start']['time'] == time(15, 00)
+    ]
+    community_meetings = [
+        item['location'] for item in parsed_items if item['start']['time'] != time(15, 00)
+    ]
     assert all([location == det_public_safety_hq for location in public_safety_meetings])
     assert all([location == community for location in community_meetings])
 

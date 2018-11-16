@@ -1,10 +1,12 @@
-from scrapy.xlib.pydispatch import dispatcher
+import datetime
+import subprocess
+from os import remove
+
 from scrapy import signals
 from scrapy.exporters import CsvItemExporter
+from scrapy.xlib.pydispatch import dispatcher
+
 from city_scrapers.utils import get_key
-import datetime
-from os import remove
-import subprocess
 
 
 class CsvPipeline(object):
@@ -13,7 +15,9 @@ class CsvPipeline(object):
     Outputs csv files for local development to the /local_output/ folder
     """
 
-    path = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode("utf-8").rstrip()  + '/city_scrapers/local_outputs/'
+    path = '{}/city_scrapers/local_outputs/'.format(
+        subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode("utf-8").rstrip()
+    )
 
     def __init__(self):
         dispatcher.connect(self.spider_opened, signals.spider_opened)
@@ -50,12 +54,16 @@ class CsvPipeline(object):
 
         # flatten location
         try:
-            new_item['start_time'] = datetime.datetime.strftime(new_item['start_time'], '%Y-%m-%d %H:%M')
-        except:
+            new_item['start_time'] = datetime.datetime.strftime(
+                new_item['start_time'], '%Y-%m-%d %H:%M'
+            )
+        except Exception:
             pass
         try:
-            new_item['end_time'] = datetime.datetime.strftime(new_item['end_time'], '%Y-%m-%d %H:%M')
-        except:
+            new_item['end_time'] = datetime.datetime.strftime(
+                new_item['end_time'], '%Y-%m-%d %H:%M'
+            )
+        except Exception:
             pass
         new_item['location_url'] = get_key(new_item, 'location.url')
         new_item['location_name'] = get_key(new_item, 'location.name')
@@ -63,8 +71,13 @@ class CsvPipeline(object):
         new_item['source_url'] = new_item.get('sources', [{'url': ''}])[0].get('url', '')
         new_item['source_note'] = new_item.get('sources', [{'note': ''}])[0].get('note', '')
         new_item['agency_name'] = spider.agency_name
-        new_item['scraped_time'] = datetime.datetime.strftime(datetime.datetime.strptime(self.stamp, '%Y%m%d_%H%M'), '%Y-%m-%d %H:%M')
-        new_item = {k: self._format_values(k, v) for k, v in new_item.items() if k in self.exporter.fields_to_export}
+        new_item['scraped_time'] = datetime.datetime.strftime(
+            datetime.datetime.strptime(self.stamp, '%Y%m%d_%H%M'), '%Y-%m-%d %H:%M'
+        )
+        new_item = {
+            k: self._format_values(k, v) for k, v in new_item.items()
+            if k in self.exporter.fields_to_export
+        }
 
         self.exporter.export_item(new_item)
         return new_item

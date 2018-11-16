@@ -1,11 +1,13 @@
-import pytest
 from datetime import date, time
 
+import pytest
 from tests.utils import file_response
+
 from city_scrapers.spiders.det_land_bank import DetLandBankSpider
 
-
-test_response = file_response('files/det_land_bank.html', 'https://buildingdetroit.org/events/meetings')
+test_response = file_response(
+    'files/det_land_bank.html', 'https://buildingdetroit.org/events/meetings'
+)
 spider = DetLandBankSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 parsed_items = sorted(parsed_items, key=lambda x: (x['start']['date'], x['start']['time']))
@@ -20,11 +22,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2014, 1, 21),
-        'time': time(14, 0),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2014, 1, 21), 'time': time(14, 0), 'note': ''}
 
 
 def test_end():
@@ -56,8 +54,9 @@ def test_sources():
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-      'url': 'https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018085612.pdf',
-      'note': 'minutes'
+        'url':
+            'https://s3.us-east-2.amazonaws.com/dlba-production-bucket/Meetings/documents/01172018085612.pdf',  # noqa
+        'note': 'minutes'
     }]
 
 

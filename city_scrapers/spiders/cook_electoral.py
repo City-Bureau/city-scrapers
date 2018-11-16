@@ -3,8 +3,9 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
 from datetime import datetime
+
+import scrapy
 from dateutil.parser import parse
 
 from city_scrapers.constants import BOARD
@@ -20,7 +21,8 @@ class CookElectoralSpider(Spider):
 
     custom_settings = {
         'COOKIES_ENABLED': True,
-        'USER_AGENT': 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1',
+        'USER_AGENT':
+            'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1',  # noqa
         'USER_AGENT_CACHE_KEY_LENGTH': '256'
     }
 
@@ -39,8 +41,10 @@ class CookElectoralSpider(Spider):
                     'ddlMeetingDate': day,
                     'ddlMeetingYear': str(datetime.now().year),
                     '__VIEWSTATE': response.css('input#__VIEWSTATE::attr(value)').extract_first(),
-                    '__VIEWSTATEGENERATOR': response.css('input#__VIEWSTATEGENERATOR::attr(value)').extract_first(),
-                    '__EVENTVALIDATION': response.css('input#__EVENTVALIDATION::attr(value)').extract_first(),
+                    '__VIEWSTATEGENERATOR':
+                        response.css('input#__VIEWSTATEGENERATOR::attr(value)').extract_first(),
+                    '__EVENTVALIDATION':
+                        response.css('input#__EVENTVALIDATION::attr(value)').extract_first(),
                     '__EVENTTARGET': '',
                     '__EVENTARGUMENT': '',
                     '__LASTFOCUS': '',
@@ -109,12 +113,12 @@ class CookElectoralSpider(Spider):
         Parse start date and time.
         """
 
-        datetime = parse(item.css('span#lblMeetingTime ::text').extract_first() + item.css('span#lblDuration ::text').extract_first())
+        datetime = parse(
+            item.css('span#lblMeetingTime ::text').extract_first() +
+            item.css('span#lblDuration ::text').extract_first()
+        )
 
-        return  {
-            'date': datetime.date(),
-            'time': datetime.time()
-        }
+        return {'date': datetime.date(), 'time': datetime.time()}
 
     def _parse_end(self, item):
         """
@@ -142,7 +146,9 @@ class CookElectoralSpider(Spider):
         return {
             'url': '',
             'name': item.css('span#lblLocation ::text').extract_first(),
-            'address': item.css('span#lblAddress ::text').extract_first() + ', ' + item.css('span#lblCity ::text').extract_first()
+            'address':
+                item.css('span#lblAddress ::text').extract_first() + ', ' +
+                item.css('span#lblCity ::text').extract_first()
         }
 
     def _parse_status(self, item):

@@ -2,7 +2,6 @@
 import re
 from collections import defaultdict
 
-import scrapy
 from dateutil.parser import parse
 
 from city_scrapers.constants import BOARD
@@ -119,7 +118,11 @@ class DetNeighborhoodDevelopmentCorporationSpider(Spider):
             'name': 'Board of Directors',
             'event_description': '',
             'classification': BOARD,
-            'end': {'date': None, 'time': None, 'note': ''},
+            'end': {
+                'date': None,
+                'time': None,
+                'note': ''
+            },
             'all_day': False,
             'location': {
                 'neighborhood': '',
@@ -127,6 +130,9 @@ class DetNeighborhoodDevelopmentCorporationSpider(Spider):
                 'address': '500 Griswold, Suite 2200, Detroit'
             },
             'documents': [],
-            'sources': [{'url': response.url, 'note': ''}]
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }]
         }
         return data

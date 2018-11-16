@@ -1,8 +1,9 @@
-import pytest
-
-from tests.utils import file_response
 from datetime import date, time
+
+import pytest
 from freezegun import freeze_time
+from tests.utils import file_response
+
 from city_scrapers.constants import BOARD, CONFIRMED, TENTATIVE
 from city_scrapers.spiders.chi_teacherpension import ChiTeacherPensionSpider
 
@@ -11,9 +12,7 @@ freezer.start()
 
 test_response = file_response('files/chi_teacherpension.htm')
 spider = ChiTeacherPensionSpider()
-parsed_items = [
-    item for item in spider.parse(test_response) if isinstance(item, dict)
-]
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 freezer.stop()
 
@@ -23,22 +22,15 @@ def test_name():
 
 
 def test_start_time():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 11, 13), 'time': time(9, 30), 'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 11, 13), 'time': time(9, 30), 'note': ''}
 
 
 def test_end_time():
-    assert parsed_items[0]['end'] == {
-        'date': date(2018, 11, 13), 'time': None, 'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': date(2018, 11, 13), 'time': None, 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == (
-        'chi_teacherpension/201811130930/'
-        'x/regular_board_meeting'
-    )
+    assert parsed_items[0]['id'] == ('chi_teacherpension/201811130930/' 'x/regular_board_meeting')
 
 
 def test_classification():
@@ -53,15 +45,13 @@ def test_status():
 
 def test_documents():
     assert parsed_items[0]['documents'] == []
-    assert parsed_items[2]['documents'] == [
-        {
-            'note': 'Meeting Agenda - November 1',
-            'url': (
-                'https://www.ctpf.org/sites/main/files/'
-                'file-attachments/communications_committee_meeting.pdf'
-            )
-        }
-    ]
+    assert parsed_items[2]['documents'] == [{
+        'note': 'Meeting Agenda - November 1',
+        'url': (
+            'https://www.ctpf.org/sites/main/files/'
+            'file-attachments/communications_committee_meeting.pdf'
+        )
+    }]
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -90,6 +80,4 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
-    assert item['sources'] == [{
-        'url': 'http://www.example.com', 'note': ''
-    }]
+    assert item['sources'] == [{'url': 'http://www.example.com', 'note': ''}]

@@ -1,14 +1,15 @@
-import os
 import datetime
 import json
+import os
 import time
+from random import randint
 
 from airtable import Airtable
-from city_scrapers.utils import get_key
-from random import randint
+from pytz import utc
 from requests.exceptions import HTTPError
 from scrapy.exceptions import DropItem
-from pytz import utc
+
+from city_scrapers.utils import get_key
 
 AIRTABLE_BASE_KEY = os.environ.get('CITY_SCRAPERS_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('CITY_SCRAPERS_AIRTABLE_DATA_TABLE')
@@ -34,7 +35,9 @@ class AirtablePipeline(object):
         # opencivicdata standard
 
         if item.get('start_time') is None:
-            spider.logger.debug('AIRTABLE PIPELINE: Ignoring event without start_time {0}'.format(item['id']))
+            spider.logger.debug(
+                'AIRTABLE PIPELINE: Ignoring event without start_time {0}'.format(item['id'])
+            )
             return item
 
         dt = item['start_time']
@@ -65,7 +68,7 @@ class AirtablePipeline(object):
             spider.logger.exception('Original message')
             spider.logger.error(json.dumps(new_item, indent=4, sort_keys=True))
             raise DropItem('Could not save {0}'.format(new_item['id']))
-        except Exception as e:
+        except Exception:
             spider.logger.exception('Unknown error')
 
     def _format_values(self, k, v):
