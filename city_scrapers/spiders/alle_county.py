@@ -11,8 +11,8 @@ from city_scrapers.constants import BOARD, FORUM
 from city_scrapers.spider import Spider
 
 
-class AlleCitySpider(Spider):
-    name = 'alle_city'
+class AlleCountySpider(Spider):
+    name = 'alle_county'
     agency_name = 'Allegheny County Government'
     timezone = 'America/New_York'
     allowed_domains = ['alleghenycounty.legistar.com']
@@ -42,14 +42,21 @@ class AlleCitySpider(Spider):
 
     def _parse_events(self, events):
         for item, _ in events:
+            start_time = self._parse_start(item)
+            end_time = self._parse_end(item)
             data = {
+                'timezone': self.timezone,
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'event_description': '',
                 'all_day': self._parse_all_day(item),
                 'classification': self._parse_classification(item),
-                'start': self._parse_start(item),
-                'end': self._parse_end(item),
+                # _generate_id takes `start` instead of start_time.
+                # `start` is only used internally.
+                'start': start_time,
+                'start_time': start_time,
+                'end_time': end_time,
+                'end': end_time,
                 'location': self._parse_location(item),
                 'documents': self._parse_documents(item),
                 'sources': self._parse_sources(item),
@@ -126,7 +133,8 @@ class AlleCitySpider(Spider):
         time = item.get('Meeting Time', None)
         date = item.get('Meeting Date', None)
         time_string = '{0} {1}'.format(date, time)
-        return datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
+        return (datetime.strptime(time_string,
+                                  '%m/%d/%Y %I:%M %p'))
 
     def _parse_start(self, item):
         """
@@ -145,8 +153,9 @@ class AlleCitySpider(Spider):
         """
         datetime_obj = self._parse_start_datetime(item)
         return {
-            'date': datetime_obj.date(),
-            'time': (datetime_obj + timedelta(hours=3)).time(),
+            'date':  datetime_obj.date(),
+            'time': ((datetime_obj + timedelta(hours=3))
+                     .time()),
             'note': 'Estimated 3 hours after start time'
         }
 

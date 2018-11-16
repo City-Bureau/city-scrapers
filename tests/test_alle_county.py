@@ -2,10 +2,10 @@ import pytest
 import datetime
 
 from tests.utils import file_response
-from city_scrapers.spiders.alle_city import AlleCitySpider
+from city_scrapers.spiders.alle_county import AlleCountySpider
 
-spider = AlleCitySpider()
-test_response = file_response('files/alle_city_Calendar.html',
+spider = AlleCountySpider()
+test_response = file_response('files/alle_county_Calendar.html',
                               url=('https://alleghenycounty'
                                    '.legistar.com/Calendar.aspx'))
 parsed_items = ([item for item in spider.parse(test_response)
@@ -23,13 +23,14 @@ def test_description():
 
 
 def test_start():
-    assert (parsed_items[0]['start'] ==
+    assert (parsed_items[0]['start_time'] ==
             {'date': datetime.date(2018, 11, 15),
-            'time': datetime.time(17, 0), 'note': ''})
+             'time': datetime.time(17, 0),
+             'note': ''})
 
 
 def test_end():
-    assert (parsed_items[0]['end'] ==
+    assert (parsed_items[0]['end_time'] ==
             {'date': datetime.date(2018, 11, 15),
              'time': datetime.time(20, 0),
              'note': 'Estimated 3 hours after start time'})
@@ -37,11 +38,11 @@ def test_end():
 
 def test_id():
     assert (parsed_items[0]['id'] ==
-            'alle_city/201811151700/x/county_council')
+            'alle_county/201811151700/x/county_council')
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'confirmed'
+    assert parsed_items[0]['status'] == 'passed'
 
 
 def test_location():
