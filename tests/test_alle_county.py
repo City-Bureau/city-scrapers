@@ -1,7 +1,8 @@
-import pytest
 import datetime
 
+import pytest
 from tests.utils import file_response
+
 from city_scrapers.spiders.alle_county import AlleCountySpider
 
 spider = AlleCountySpider()

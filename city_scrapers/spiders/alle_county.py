@@ -4,10 +4,12 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
-import urllib3
 from datetime import datetime, timedelta
+
+import urllib3
 from legistar.events import LegistarEventsScraper
-from city_scrapers.constants import FORUM, COMMITTEE, CITY_COUNCIL
+
+from city_scrapers.constants import CITY_COUNCIL, COMMITTEE, FORUM
 from city_scrapers.spider import Spider
 
 
