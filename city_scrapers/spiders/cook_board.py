@@ -59,15 +59,12 @@ class CookBoardSpider(Spider):
 
     def _parse_documents(self, item):
         """
-        Returns meeting details and agenda if available.
+        Returns meeting minutes and agenda if available.
         """
         documents = []
-        details = item['Meeting Details']
-        if type(details) == dict:
-            documents.append({'note': 'Meeting Details', 'url': details['url']})
-        agenda = item['Agenda']
-        if type(agenda) == dict:
-            documents.append({'note': 'Agenda', 'url': agenda['url']})
+        for doc in ['Agenda', 'Minutes']:
+            if isinstance(item[doc], dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     def _parse_classification(self, name):

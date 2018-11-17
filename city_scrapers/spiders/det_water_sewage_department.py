@@ -60,10 +60,10 @@ class DetWaterSewageDepartmentSpider(Spider):
 
     def _parse_documents(self, item):
         """
-        Parse meeting details and agenda if available.
+        Parse meeting minutes and agenda if available.
         """
         documents = []
-        for key in ['Meeting Details', 'Agenda', 'Minutes']:
+        for key in ['Agenda', 'Minutes']:
             document = self._get_doc(item, key)
             if document:
                 documents.append(document)
