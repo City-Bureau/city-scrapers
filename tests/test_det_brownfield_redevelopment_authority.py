@@ -112,7 +112,7 @@ test_prev_response = file_response(
 parsed_prev_items = [
     item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)
 ]
-parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
+parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['id'], reverse=True)
 
 
 def test_request_count():
@@ -134,7 +134,7 @@ def test_prev_meeting_count():
 
 
 def test_prev_name():
-    assert parsed_prev_items[0]['name'] == DBRA
+    assert parsed_prev_items[0]['name'] == DBRA_CAC
 
 
 def test_prev_description():
@@ -150,8 +150,9 @@ def test_prev_end():
 
 
 def test_prev_id():
-    assert parsed_prev_items[0]['id'] \
-           == 'det_brownfield_redevelopment_authority/201806270000/x/board_of_directors'
+    assert parsed_prev_items[0][
+        'id'
+    ] == 'det_brownfield_redevelopment_authority/201806270000/x/community_advisory_committee'  # noqa
 
 
 def test_prev_status():
@@ -171,14 +172,15 @@ def test_prev_sources():
 
 def test_prev_documents():
     assert parsed_prev_items[0]['documents'] == [{
-        'url': 'http://www.degc.org/wp-content/uploads/DBRA-062718-Regular-Meeting-Agenda-Only.pdf',
-        'note': 'agenda',
+        'url':
+            'http://www.degc.org/wp-content/uploads/DBRACAC-062718-Regular-Meeting-Cancellation.pdf',  # noqa
+        'note': 'regular meeting cancellation notice',
     }]
 
 
 def test_prev_classification():
-    assert parsed_prev_items[0]['classification'] == 'Board'
-    assert parsed_prev_items[1]['classification'] == 'Advisory Committee'
+    assert parsed_prev_items[0]['classification'] == 'Advisory Committee'
+    assert parsed_prev_items[1]['classification'] == 'Board'
 
 
 @pytest.mark.parametrize('item', parsed_prev_items)
