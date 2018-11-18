@@ -2,8 +2,9 @@
 import os
 import unicodedata
 from datetime import datetime
-from city_scrapers.spider import Spider
+
 from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
+from city_scrapers.spider import Spider
 
 
 class PittAlleghenyLeagueSpider(Spider):
