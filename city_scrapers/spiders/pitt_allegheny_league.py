@@ -71,7 +71,7 @@ class PittAlleghenyLeagueSpider(Spider):
         """
         start, _ = item[2].split('-')
         datetime_obj = datetime.strptime(start.strip(),
-                                 '%B %d, %Y @ %I:%M %p')
+                                         '%B %d, %Y @ %I:%M %p')
         return {
             'date': datetime_obj.date(),
             'time': datetime_obj.time(),
@@ -84,8 +84,8 @@ class PittAlleghenyLeagueSpider(Spider):
         """
         _, end = item[2].split('-')
         datetime_obj = datetime.strptime(('{date} {time}'
-                                 .format(date=item[0], time=end)),
-                                 '%B %d, %Y %I:%M %p')
+                                          .format(date=item[0], time=end)),
+                                         '%B %d, %Y %I:%M %p')
         return {
             'date': datetime_obj.date(),
             'time': datetime_obj.time(),
