@@ -9,7 +9,6 @@ spider = PittAlleghenyLeagueSpider()
 test_response = file_response('files/pitt_allegheny_league.html')
 parsed_items = ([item for item in spider.parse(test_response)
                 if isinstance(item, dict)])
-import pdb;pdb.set_trace()
 
 
 def test_name():
@@ -37,7 +36,7 @@ def test_end():
 def test_id():
     assert (parsed_items[0]['id'] ==
             'pitt_allegheny_league/201812061800/'
-            'x/acba_general_membership_meeting' )
+            'x/acba_general_membership_meeting')
 
 
 def test_status():
@@ -55,19 +54,19 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': ('https://www.google.com/calendar/'
-                'event?eid=NGpqNjBuNzFhdHF2ZGNoNTdmbTAyd'
-                'WhkcmcgYWxvbWNhbGVuZGFyQG0&ctz=America/New_York'),
-                'note': ''}]
+    assert (parsed_items[0]['sources'] == [{
+            'url': ('https://www.google.com/calendar/'
+                    'event?eid=NGpqNjBuNzFhdHF2ZGNoNTdmbTAyd'
+                    'WhkcmcgYWxvbWNhbGVuZGFyQG0&ctz=America/New_York'),
+            'note': ''}])
 
 
 def test_documents():
-    assert parsed_items[0]['sources'] == [{
-        'url': ('https://www.google.com/calendar/'
-                'event?eid=NGpqNjBuNzFhdHF2ZGNoNTdmbTAyd'
-                'WhkcmcgYWxvbWNhbGVuZGFyQG0&ctz=America/New_York'),
-                'note': ''}]
+    assert (parsed_items[0]['sources'] == [{
+            'url': ('https://www.google.com/calendar/'
+                    'event?eid=NGpqNjBuNzFhdHF2ZGNoNTdmbTAyd'
+                    'WhkcmcgYWxvbWNhbGVuZGFyQG0&ctz=America/New_York'),
+            'note': ''}])
 
 
 @pytest.mark.parametrize('item', parsed_items)
