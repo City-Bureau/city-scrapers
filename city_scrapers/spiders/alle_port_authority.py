@@ -1,37 +1,41 @@
 # -*- coding: utf-8 -*-
-from city_scrapers.spider import Spider
-from lxml import html
 import unicodedata
 from datetime import datetime, timedelta
+
 from dateutil.parser import parse
+from lxml import html
+
 from city_scrapers.constants import BOARD, COMMITTEE
+from city_scrapers.spider import Spider
+
 
 class AllePortAuthoritySpider(Spider):
     name = 'alle_port_authority'
     agency_name = 'Port Authority of Allegheny County'
     timezone = 'America/New_York'
     allowed_domains = ['www.portauthority.org']
-    start_urls = ['https://www.portauthority.org/paac/CompanyInfoProjects/BoardofDirectors/MeetingAgendasResolutions.aspx']
+    start_urls = ['https://www.portauthority.org/paac/CompanyInfoProjects/'
+                  'BoardofDirectors/MeetingAgendasResolutions.aspx']
     event_year = str(datetime.now().year)
 
-    def _build_datatable(self,response):
+    def _build_datatable(self, response):
         alist_tbody = (response
-                 .xpath('//table[1]/tbody//td')
-                 .extract()
-                )
+                       .xpath('//table[1]/tbody//td')
+                       .extract()
+                       )
 
-        atable=[]
-        arow=[]
+        atable = []
+        arow = []
 
         for item in alist_tbody:
             tree = html.fragment_fromstring(item)
-            #pdb.set_trace()
+            # pdb.set_trace()
             text = tree.text_content()
 
             url = tree.xpath('//a/@href')
             find_att_b = tree.xpath('//b/text()|//strong/text()')
-            if len(find_att_b)>=1:
-                continue;
+            if len(find_att_b) >= 1:
+                continue
             if url:
                 arow.append('{text}: {url}'
                             .format(text=text, url=url[0]))
@@ -40,7 +44,6 @@ class AllePortAuthoritySpider(Spider):
             if len(arow) == 6:
                 atable.append(arow)
                 arow = []
-        #import pdb;pdb.set_trace()
         return atable
 
     def parse(self, response):
@@ -52,7 +55,6 @@ class AllePortAuthoritySpider(Spider):
         needs.
         """
         atable = self._build_datatable(response)
-        #import pdb;pdb.set_trace()
         for row in atable:
             data = {
                 'timezone': self.timezone,
@@ -72,11 +74,6 @@ class AllePortAuthoritySpider(Spider):
             data['id'] = self._generate_id(data)
 
             yield data
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
 
     def _parse_name(self, item):
         """
@@ -114,7 +111,7 @@ class AllePortAuthoritySpider(Spider):
             else:
                 time = '9:30 a.m.'
         else:
-             time = item[1]
+            time = item[1]
         date = ('{year} {date}'
                 .format(year=self.event_year, date=item[2]))
 
