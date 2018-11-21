@@ -11,6 +11,8 @@ main:
     url: /docs/next-steps/
   - title: "Further Reading"
     url: /docs/further-reading/
+  - title: Donate
+    url: https://www.citybureau.org/press-club
 
 docs:
   - title: Introduction
@@ -31,6 +33,8 @@ docs:
         url: /docs/getting-started/#define-your-local-agency-map
       - title: Web Scrapers
         url: /docs/getting-started/#web-scrapers
+      - title: GitHub and Open Source
+        url: /docs/getting-started/#github-and-open-source
       - title: Templates
         url: /docs/getting-started/#templates
       - title: "Best Practices"
