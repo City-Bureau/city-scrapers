@@ -3,8 +3,6 @@ main:
     url: /docs/introduction/
   - title: "Getting Started"
     url: /docs/getting-started/
-  - title: Tools
-    url: /docs/tools/
   - title: Team
     url: /docs/team/
   - title: Development
@@ -31,17 +29,12 @@ docs:
         url: /docs/getting-started/#review-your-states-open-meetings-act-oma
       - title: "Define your local agency map"
         url: /docs/getting-started/#define-your-local-agency-map
+      - title: Web Scrapers
+        url: /docs/getting-started/#web-scrapers
       - title: Templates
         url: /docs/getting-started/#templates
       - title: "Best Practices"
         url: /docs/getting-started/#best-practices
-  - title: Tools
-    url: /docs/tools/
-    children:
-      - title: "Google Sheets"
-        url: /docs/tools/#google-sheets
-      - title: "Scrapy"
-        url: /docs/tools/#scrapy
   - title: Team
     url: /docs/team/
     children:

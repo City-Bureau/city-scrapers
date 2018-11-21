@@ -20,7 +20,8 @@ Community members are also welcome to use this code to set up their own database
 
 A lot about the City of Chicago! What is City Council talking about this week? What are the local school councils, and what community power do they have? What neighborhoods is the police department doing outreach in? Who governs our water?
 
-From building a scraper, you'll gain experience with:  
+From building a scraper, you'll gain experience with:
+
 - how the web works (HTTP requests and responses, reading HTML)
 - writing functions and tests in Python
 - version control and collaborative coding (git and Github)
@@ -39,7 +40,7 @@ The City Scrapers project is governed by a committee of rotating volunteer proje
 
 Current committee members: Jim Benton, David Eads, Bonnie Fan, Cat Greim, Darryl Holliday, Rebecca Wei
 
-Point of contact: Rebecca Wei (@r-wei)
+Point of contact: Darryl Holliday [@diaholliday](https://github.com/diaholliday)
 
 ## Ready to code with us?
 
@@ -63,8 +64,8 @@ B. Research sources for public meetings. Answer questions like: Are we scraping 
 
 This project is organized and maintained by [City Bureau](http://www.citybureau.org/).
 
-* [City Bureau website](https://www.citybureau.org/)
-    * [Donate](https://www.citybureau.org/press-club)
-    * [Subscribe](https://citybureau.com/newsletter/)
-    * [Twitter @city_bureau](https://twitter.com/city_bureau/)
-    * [Facebook](https://www.facebook.com/CityBureau/)
+- [City Bureau website](https://www.citybureau.org/)
+  - [Donate](https://www.citybureau.org/press-club)
+  - [Subscribe](https://citybureau.com/newsletter/)
+  - [Twitter @city_bureau](https://twitter.com/city_bureau/)
+  - [Facebook](https://www.facebook.com/CityBureau/)
