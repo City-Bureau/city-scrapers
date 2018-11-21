@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-import os
-import unicodedata
 from datetime import datetime
 
 from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
-class PittAlleghenyLeagueSpider(Spider):
-    name = 'pitt_allegheny_league'
+class AlleLeagueSpider(Spider):
+    name = 'alle_league'
     agency_name = 'Allegheny League of Municipalities'
-    timezone = 'America/Chicago'
+    timezone = 'America/New_York'
     allowed_domains = ['alleghenyleague.org']
-    start_urls = ['http://alleghenyleague.org/']
+    start_urls = ['http://alleghenyleague.org/calendar-of-events']
 
     def parse(self, response):
         """
@@ -24,39 +22,35 @@ class PittAlleghenyLeagueSpider(Spider):
         """
         # meeting_titles = response.css('span.simcal-event-title::text').extract()
         # meeting_titles = response.xpath('//span[@class="simcal-event-title"]/text()').extract()
-        calendar_data = response.xpath('string(//div[@class='
-                                       '"simcal-calendar simcal-default-calendar '
-                                       'simcal-default-calendar-list simcal-default'
-                                       '-calendar-light"]/*)').extract()[0]
 
-        # Remove \xa0 \xa
-        calendar_data = unicodedata.normalize("NFKD", calendar_data)
-        # Split events
-        calendar_data = calendar_data.split('\n See more details')
-        calendar_href = response.xpath('//div[@class="simcal-event-details"]//a/@href').extract()
+        meeting_titles = response.xpath('//div//span[@itemprop="name"]//text()').extract()
+        startDate = response.xpath('//div//span[@itemprop="startDate"]//text()').extract()
+        endDate = response.xpath('//div//span[@itemprop="endDate"]//text()').extract()
+        # calendar_data = response.xpath('string(//div[@class='
+        #                                '"simcal-calendar simcal-default-calendar '
+        #                                'simcal-default-calendar-list simcal-default'
+        #                                '-calendar-light"]/*)').extract()[0]
 
-        for index, item in enumerate(calendar_data):
-            item = os.linesep.join([s.replace('\t', '').strip()
-                                   for s in item.splitlines()
-                                   if s.rstrip()]).split('\n')
+        calendar_href = response.xpath('//div[@class="simcal-event-details '
+                                       'simcal-tooltip-content"]//a/@href').extract()
+        start_date, end_date = self._prep_date_time(startDate, endDate)
+        for index, item in enumerate(meeting_titles):
 
-            if len(item) < 3:
-                continue
             data = {
                 '_type': 'event',
-                'name': item[1],
-                'event_description': item[1],
+                'name': item,
+                'event_description': item,
                 'classification': self._parse_classification(item),
-                'start': self._parse_start(item),
-                'end': self._parse_end(item),
+                'start': self._parse_start(start_date[index]),
+                'end': self._parse_end(end_date[index]),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
-                'documents': self._parse_documents(calendar_href[index]),
+                'documents': '',
                 'sources': self._parse_sources(calendar_href[index]),
             }
 
             data['status'] = self._generate_status(data,
-                                                   item[-1])
+                                                   item)
             data['id'] = self._generate_id(data)
 
             yield data
@@ -65,27 +59,54 @@ class PittAlleghenyLeagueSpider(Spider):
         # uncomment to find a "next" url
         # yield self._parse_next(response)
 
-    def _parse_start(self, item):
+    def _prep_date_time(self, startDate, endDate):
+        """
+        Re-arrage date-time string:
+        """
+        start_date = []
+        end_date = []
+        while len(startDate) > 0:
+            _start_date = startDate.pop(0)
+            if startDate[0].endswith(('pm', 'am')):
+                _end_time = endDate.pop(0)
+                end_date.append(_start_date+' '+_end_time)
+                _start_time = startDate.pop(0)
+                _start_date = _start_date + ' ' + _start_time
+            else:
+                end_date.append(_start_date)
+
+            start_date.append(_start_date)
+        return (start_date, end_date)
+
+    def convert_datetime(self, Date):
+        """
+        Convert datetime string to datetime object.
+        """
+        if Date.endswith(('pm', 'am')):
+            datetime_obj = datetime.strptime(Date,
+                                             '%B %d, %Y %I:%M %p')
+        else:
+            datetime_obj = datetime.strptime(Date,
+                                             '%B %d, %Y')
+        return datetime_obj
+
+    def _parse_start(self, start):
         """
         Parse start date and time.
         """
-        start, _ = item[2].split('-')
-        datetime_obj = datetime.strptime(start.strip(),
-                                         '%B %d, %Y @ %I:%M %p')
+        datetime_obj = self.convert_datetime(start)
         return {
             'date': datetime_obj.date(),
             'time': datetime_obj.time(),
             'note': ''
         }
 
-    def _parse_end(self, item):
+    def _parse_end(self, end):
         """
         Parse end date and time.
         """
-        _, end = item[2].split('-')
-        datetime_obj = datetime.strptime(('{date} {time}'
-                                          .format(date=item[0], time=end)),
-                                         '%B %d, %Y %I:%M %p')
+
+        datetime_obj = self.convert_datetime(end)
         return {
             'date': datetime_obj.date(),
             'time': datetime_obj.time(),
@@ -113,7 +134,7 @@ class PittAlleghenyLeagueSpider(Spider):
         """
         Parse or generate documents.
         """
-        return [{'url': item, 'note': ''}]
+        return [{'url': '', 'note': ''}]
 
     def _parse_sources(self, item):
         """
@@ -125,7 +146,7 @@ class PittAlleghenyLeagueSpider(Spider):
         """
         Differentiate board meetings from public hearings.
         """
-        meeting_description = item[1].lower()
+        meeting_description = item
         if ('bod' or 'board') in meeting_description:
             return BOARD
         if 'membership' in meeting_description:
