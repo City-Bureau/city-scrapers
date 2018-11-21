@@ -1,14 +1,18 @@
 import datetime
 
 import pytest
+from freezegun import freeze_time
 from tests.utils import file_response
 
 from city_scrapers.spiders.alle_county import AlleCountySpider
 
+freezer = freeze_time('2018-11-16')
+freezer.start()
 spider = AlleCountySpider()
 test_response = file_response('files/alle_county_Calendar.html')
 parsed_items = ([item for item in spider.parse(test_response)
                 if isinstance(item, dict)])
+freezer.stop()
 
 
 @pytest.mark.parametrize('item',
