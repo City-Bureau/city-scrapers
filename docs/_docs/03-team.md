@@ -100,7 +100,7 @@ Here's the [Chicago City Scrapers Code of Conduct](https://github.com/City-Burea
 
 ### Reward your team
 
-Pizza party? BBQ? Field Day? Reward hard work with a collective gathering that reflects your team’s mission—a simple survey or to solicit good dates and times is helpful to make sure as many people as possible can attend.
+Pizza party? BBQ? Field Day? Reward hard work with a collective gathering that reflects your team’s mission—a simple survey or Doodle poll to solicit good dates and times is helpful to make sure as many people as possible can attend.
 
 ### Additional Resources
 
