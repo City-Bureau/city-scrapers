@@ -30,16 +30,11 @@ class CsvPipeline(object):
         file = open(self.fname, 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
-        self.exporter.fields_to_export = ['agency_name', '_type',
-                                          'id', 'name', 'description',
-                                          'classification', 'start_time',
-                                          'end_time', 'timezone', 'status',
-                                          'all_day', 'location_name',
-                                          'location_url',
-                                          'location_address',
-                                          'source_url', 'source_note',
-                                          'scraped_time'
-                                          ]
+        self.exporter.fields_to_export = [
+            'agency_name', '_type', 'id', 'name', 'description', 'classification', 'start_time',
+            'end_time', 'timezone', 'status', 'all_day', 'location_name', 'location_url',
+            'location_address', 'source_url', 'source_note', 'scraped_time'
+        ]
         self.exporter.start_exporting()
 
     def spider_closed(self, spider, deleteme=False):
@@ -75,7 +70,8 @@ class CsvPipeline(object):
             datetime.datetime.strptime(self.stamp, '%Y%m%d_%H%M'), '%Y-%m-%d %H:%M'
         )
         new_item = {
-            k: self._format_values(k, v) for k, v in new_item.items()
+            k: self._format_values(k, v)
+            for k, v in new_item.items()
             if k in self.exporter.fields_to_export
         }
 

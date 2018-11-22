@@ -15,6 +15,7 @@ class CityScrapersS3ItemPipeline(object):
     with its ID as the key. Checks if the key exists, and only
     updates it if it does if the contents have changed
     """
+
     def process_item(self, item, spider):
         item_obj = self.serialize_dict(item)
         bucket = settings.get('S3_ITEM_BUCKET')
