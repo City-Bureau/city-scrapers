@@ -7,45 +7,120 @@ from city_scrapers.constants import CLASSIFICATIONS, STATUSES
 class TravisValidationPipeline(object):
     NULL_VALUES = [None, '']
     SCHEMA = {
-        '_type': {'required': True, 'type': str, 'values': ['event']},
-        'id': {'required': True, 'type': str, 'format_str': r'.+/\d{12}/.+/.+'},
-        'name': {'required': True, 'type': str},
-        'event_description': {'required': False, 'type': str},
-        'all_day': {'required': True, 'type': bool},
-        'status': {'required': True, 'type': str, 'values': STATUSES},
+        '_type': {
+            'required': True,
+            'type': str,
+            'values': ['event']
+        },
+        'id': {
+            'required': True,
+            'type': str,
+            'format_str': r'.+/\d{12}/.+/.+'
+        },
+        'name': {
+            'required': True,
+            'type': str
+        },
+        'event_description': {
+            'required': False,
+            'type': str
+        },
+        'all_day': {
+            'required': True,
+            'type': bool
+        },
+        'status': {
+            'required': True,
+            'type': str,
+            'values': STATUSES
+        },
         'classification': {
             'required': False,
             'type': str,
             'values': CLASSIFICATIONS,
         },
-        'start': {'required': True, 'type': dict},
-        'end': {'required': True, 'type': dict},
-        'location': {'required': True, 'type': dict},
-        'documents': {'required': False, 'type': list},
-        'sources': {'required': True, 'type': list}
+        'start': {
+            'required': True,
+            'type': dict
+        },
+        'end': {
+            'required': True,
+            'type': dict
+        },
+        'location': {
+            'required': True,
+            'type': dict
+        },
+        'documents': {
+            'required': False,
+            'type': list
+        },
+        'sources': {
+            'required': True,
+            'type': list
+        }
     }
     START_SCHEMA = {
-        'date': {'required': True, 'type': date},
-        'time': {'required': False, 'type': time},
-        'note': {'required': False, 'type': str}
+        'date': {
+            'required': True,
+            'type': date
+        },
+        'time': {
+            'required': False,
+            'type': time
+        },
+        'note': {
+            'required': False,
+            'type': str
+        }
     }
     END_SCHEMA = {
-        'date': {'required': False, 'type': date},
-        'time': {'required': False, 'type': time},
-        'note': {'required': False, 'type': str}
+        'date': {
+            'required': False,
+            'type': date
+        },
+        'time': {
+            'required': False,
+            'type': time
+        },
+        'note': {
+            'required': False,
+            'type': str
+        }
     }
     LOCATION_SCHEMA = {
-        'name': {'required': False, 'type': str},
-        'address': {'required': True, 'type': str},
-        'neighborhood': {'required': False, 'type': str}
+        'name': {
+            'required': False,
+            'type': str
+        },
+        'address': {
+            'required': True,
+            'type': str
+        },
+        'neighborhood': {
+            'required': False,
+            'type': str
+        }
     }
     DOCUMENTS_SCHEMA = {
-        'url': {'required': True, 'type': str},
-        'note': {'required': True, 'type': str}
+        'url': {
+            'required': True,
+            'type': str
+        },
+        'note': {
+            'required': True,
+            'type': str
+        }
     }
     SOURCES_SCHEMA = {
-        'url': {'required': True, 'type': str},
-        'note': {'required': False, 'type': str}
+        'url': {
+            'required': True,
+            'type': str
+        },
+        'note': {
+            'required': False,
+            'type': str
+        }
     }
 
     def process_item(self, item, spider):
@@ -75,32 +150,18 @@ class TravisValidationPipeline(object):
             location = {}
 
         # Add validation fields from self.START_SCHEMA and self.END_SCHEMA
+        validation_record.update(self._validate_against_schema(start, self.START_SCHEMA, 'start'))
+        validation_record.update(self._validate_against_schema(end, self.END_SCHEMA, 'end'))
         validation_record.update(
-            self._validate_against_schema(
-                start, self.START_SCHEMA, 'start'
-            )
-        )
-        validation_record.update(
-            self._validate_against_schema(
-                end, self.END_SCHEMA, 'end'
-            )
-        )
-        validation_record.update(
-            self._validate_against_schema(
-                location, self.LOCATION_SCHEMA, 'loc'
-            )
+            self._validate_against_schema(location, self.LOCATION_SCHEMA, 'loc')
         )
 
         # Add validation fields from self.DOCUMENTS_SCHEMA, self.SOURCES_SCHEMA
         validation_record.update(
-            self._validate_list(
-                item.get('documents', []), self.DOCUMENTS_SCHEMA, 'doc'
-            )
+            self._validate_list(item.get('documents', []), self.DOCUMENTS_SCHEMA, 'doc')
         )
         validation_record.update(
-            self._validate_list(
-                item.get('sources', []), self.SOURCES_SCHEMA, 'sources'
-            )
+            self._validate_list(item.get('sources', []), self.SOURCES_SCHEMA, 'sources')
         )
 
         # Add validation fields to item
@@ -121,17 +182,13 @@ class TravisValidationPipeline(object):
         # Validate each item against the schema to get a
         # list of validation dicts
         for item in list_of_items:
-            list_of_validations.append(
-                self._validate_against_schema(item, schema, prefix)
-            )
+            list_of_validations.append(self._validate_against_schema(item, schema, prefix))
 
         # Combine all the validation dicts into one dictionary that has value
         # = 1 if ALL the items are valid, and 0 if ANY one of the items is
         # invalid
         for key in list_of_validations[0].keys():
-            combined_validation[key] = all([
-                d[key] for d in list_of_validations
-            ])
+            combined_validation[key] = all([d[key] for d in list_of_validations])
         return combined_validation
 
     def _validate_against_schema(self, item, schema, prefix=''):
@@ -177,14 +234,10 @@ class TravisValidationPipeline(object):
                 if is_required:
                     is_valid = not (item.get(field, None) in self.NULL_VALUES)
                 if 'type' in schema[field]:
-                    correct_type = isinstance(
-                        item.get(field, None), schema[field]['type']
-                    )
+                    correct_type = isinstance(item.get(field, None), schema[field]['type'])
                     is_valid = is_valid and correct_type
                 if 'values' in schema[field]:
-                    in_values = (
-                        item.get(field, None) in schema[field]['values']
-                    )
+                    in_values = (item.get(field, None) in schema[field]['values'])
                     is_valid = is_valid and in_values
                 if 'format_str' in schema[field]:
                     pattern = re.compile(schema[field]['format_str'])

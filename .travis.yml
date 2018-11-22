@@ -11,6 +11,7 @@ install:
   - pipenv install --dev --three --system
 script:
   - isort --check-only --diff || exit 1
+  - yapf --diff --recursive ./city_scrapers/ ./deploy/ ./scripts/ ./tests/ || exit 1
   - flake8
   - pytest
   - ./travis/validate_spiders.sh
