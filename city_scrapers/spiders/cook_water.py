@@ -70,15 +70,12 @@ class CookWaterSpider(Spider):
 
     def _parse_documents(self, item):
         """
-        Parse meeting details and agenda if available.
+        Parse meeting minutes and agenda if available.
         """
         documents = []
-        details = item['Meeting Details']
-        if type(details) == dict:
-            documents.append({'url': details['url'], 'note': 'Meeting details'})
-        agenda = item['Agenda']
-        if type(agenda) == dict:
-            documents.append({'url': agenda['url'], 'note': 'Agenda'})
+        for doc in ['Agenda', 'Minutes']:
+            if isinstance(item[doc], dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     def _parse_classification(self, name):

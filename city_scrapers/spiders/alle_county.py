@@ -35,7 +35,7 @@ class AlleCountySpider(Spider):
 
     def _make_legistar_call(self, since=None):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        les = LegistarEventsScraper(requests_per_minute=0)
+        les = LegistarEventsScraper()
         les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
         les.BASE_URL = self.START_URL
         if not since:
