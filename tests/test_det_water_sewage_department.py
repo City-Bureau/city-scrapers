@@ -60,11 +60,6 @@ def test_documents():
     assert parsed_items[3]['documents'] == [
         {
             'url':
-                'https://dwsd.legistar.com/MeetingDetail.aspx?ID=612621&GUID=3F812456-D392-4F0F-B111-136AA94A96A3&Options=info&Search=',  # noqa
-            'note': 'Meeting Details'
-        },
-        {
-            'url':
                 'https://dwsd.legistar.com/View.ashx?M=A&ID=612621&GUID=3F812456-D392-4F0F-B111-136AA94A96A3',  # noqa
             'note': 'Agenda'
         },
