@@ -18,8 +18,8 @@ freezer.stop()
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Regular Commission Meeting'
-    assert parsed_items[4]['name'] == 'Special Commission Meeting'
+    assert parsed_items[0]['name'] == 'Regular Commission'
+    assert parsed_items[4]['name'] == 'Special Commission'
 
 
 def test_start():
@@ -27,7 +27,7 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == ('chi_ssa_5/201801251400/x/regular_commission_meeting')
+    assert parsed_items[0]['id'] == ('chi_ssa_5/201801251400/x/regular_commission')
 
 
 def test_status():
