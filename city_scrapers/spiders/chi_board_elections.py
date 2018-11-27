@@ -5,6 +5,7 @@
 # -*- coding: utf-8 -*-
 from city_scrapers.spider import Spider
 from city_scrapers.constants import COMMISSION
+import re
 
 
 
@@ -24,9 +25,41 @@ class ChiBoardElectionsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+        yield from self._prev_meetings(response)
+        yield from self._next_meeting(response)
+
+
+        # self._parse_next(response) yields more responses to parse if necessary.
+        # uncomment to find a "next" url
+        # yield self._parse_next(response)
+
+    def _next_meeting(self, response):
+        next_meeting = response.xpath('//div[@class="copy"]/text()').extract()[2]
+        meetingdate = re.search(r'\d{1}:.{24}', next_meeting).group(0)
+        data = {
+            '_type': 'event',
+            'name': "Chicago Board of Election Commissioners",
+            'event_description': "Meeting",
+            'classification': COMMISSION,
+            'start': meetingdate,
+            'end': {},
+            'all_day': False,
+            'location': {},
+            'documents': {},
+            'sources': {},
+        }
+
+        data['status'] = self._generate_status(data)
+        data['id'] = self._generate_id(data)
+
+
+    def _prev_meetings(self, response):
+        """
+        TODO:
+        -Add time 9:30 as default for the dates.
+        """
         meetings = response.xpath("//a/text()").extract()
         meetingdates = [meeting[22:] for meeting in meetings if "Minutes" not in meeting]
-
         for meetingdate in meetingdates:
             data = {
                 '_type': 'event',
@@ -46,9 +79,6 @@ class ChiBoardElectionsSpider(Spider):
 
             yield data
 
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
 
     def _parse_next(self, response):
         """
