@@ -8,8 +8,6 @@ from city_scrapers.constants import COMMISSION
 import re
 
 
-
-
 class ChiBoardElectionsSpider(Spider):
     name = 'chi_board_elections'
     agency_name = 'Chicago Board of Elections'
@@ -28,7 +26,6 @@ class ChiBoardElectionsSpider(Spider):
         yield from self._prev_meetings(response)
         yield from self._next_meeting(response)
 
-
         # self._parse_next(response) yields more responses to parse if necessary.
         # uncomment to find a "next" url
         # yield self._parse_next(response)
@@ -41,23 +38,22 @@ class ChiBoardElectionsSpider(Spider):
             'name': "Chicago Board of Election Commissioners",
             'event_description': "Meeting",
             'classification': COMMISSION,
-            'start': meetingdate,
+            'start': self._parse_start(meetingdate),
             'end': {},
             'all_day': False,
-            'location': {},
-            'documents': {},
-            'sources': {},
+            'location': self._parse_location(response),
+            'documents': [],
+            'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
         }
 
         data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
-
+        yield data
 
     def _prev_meetings(self, response):
-        """
-        TODO:
-        -Add time 9:30 as default for the dates.
-        """
         meetings = response.xpath("//a/text()").extract()
         meetingdates = [meeting[22:] for meeting in meetings if "Minutes" not in meeting]
         for meetingdate in meetingdates:
@@ -66,19 +62,21 @@ class ChiBoardElectionsSpider(Spider):
                 'name': "Chicago Board of Election Commissioners",
                 'event_description': "Meeting",
                 'classification': COMMISSION,
-                'start': meetingdate,
+                'start': {'date': meetingdate, 'time': '', 'note': ''},
                 'end': {},
                 'all_day': False,
-                'location': {},
-                'documents': {},
-                'sources': {},
+                'location': self._parse_location(response),
+                'documents': [],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
             data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
-
 
     def _parse_next(self, response):
         """
@@ -110,7 +108,11 @@ class ChiBoardElectionsSpider(Spider):
         """
         Parse start date and time.
         """
-        return item.xpath('//div[@class="copy"]/text()').extract()[2]
+        date = item[13:]
+        time = item[:9]
+        dict = {'date': date, 'time': time, 'note': ''}
+        return dict
+
 
     def _parse_end(self, item):
         """
@@ -130,8 +132,8 @@ class ChiBoardElectionsSpider(Spider):
         left blank and will be geocoded later.
         """
         return {
-            'address': '',
-            'name': '',
+            'address': '8th Floor Office, 69 W. Washington St.',
+            'name': 'Cook County Administration Building',
             'neighborhood': '',
         }
 
