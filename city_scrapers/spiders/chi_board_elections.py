@@ -5,6 +5,7 @@
 # -*- coding: utf-8 -*-
 from city_scrapers.spider import Spider
 from city_scrapers.constants import COMMISSION
+from datetime import datetime
 import re
 
 
@@ -57,12 +58,13 @@ class ChiBoardElectionsSpider(Spider):
         meetings = response.xpath("//a/text()").extract()
         meetingdates = [meeting[22:] for meeting in meetings if "Minutes" not in meeting]
         for meetingdate in meetingdates:
+            meetingdate = "9:30 a.m. on " + meetingdate
             data = {
                 '_type': 'event',
                 'name': "Chicago Board of Election Commissioners",
                 'event_description': "Meeting",
                 'classification': COMMISSION,
-                'start': {'date': meetingdate, 'time': '', 'note': ''},
+                'start': self._parse_start(meetingdate),
                 'end': {},
                 'all_day': False,
                 'location': self._parse_location(response),
@@ -108,9 +110,10 @@ class ChiBoardElectionsSpider(Spider):
         """
         Parse start date and time.
         """
-        date = item[13:]
-        time = item[:9]
-        dict = {'date': date, 'time': time, 'note': ''}
+        formatitem = item.replace("a.m.", "AM")
+        formatitem = formatitem.replace("p.m.", "PM")
+        datetime_item = datetime.strptime(formatitem, '%I:%M %p on %b. %d, %Y')
+        dict = {'date': datetime_item.date(), 'time': datetime_item.time(), 'note': ''}
         return dict
 
 

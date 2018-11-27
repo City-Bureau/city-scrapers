@@ -17,8 +17,8 @@ def test_description():
     assert parsed_items[0]['event_description'] == 'Meeting'
 
 
-# def test_start():
-#     assert parsed_items[0]['start'] == {'date': 'Nov. 27, 2018', 'time': '9:30 a.m', 'note': ''}
+def test_start():
+    assert parsed_items[0]['start'] == {'date': 'Nov. 27, 2018', 'time': '9:30 a.m', 'note': ''}
 
 
 def test_end():
