@@ -14,7 +14,7 @@ class ChiBoardElectionsSpider(Spider):
     agency_name = 'Chicago Board of Elections'
     timezone = 'America/Chicago'
     allowed_domains = ['chicagoelections.com']
-    start_urls = ['https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx']
+    start_urls = ['https://app.chicagoelections.com/pages/en/board-meetings.aspx', 'https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx']
 
     def parse(self, response):
         """
@@ -24,8 +24,10 @@ class ChiBoardElectionsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        yield from self._prev_meetings(response)
-        yield from self._next_meeting(response)
+        if response.url == "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx":
+            yield from self._prev_meetings(response)
+        if response.url == "https://app.chicagoelections.com/pages/en/board-meetings.aspx":
+            yield from self._next_meeting(response)
 
         # self._parse_next(response) yields more responses to parse if necessary.
         # uncomment to find a "next" url
@@ -45,7 +47,7 @@ class ChiBoardElectionsSpider(Spider):
             'location': self._parse_location(response),
             'documents': [],
             'sources': [{
-                    'url': response.url,
+                    'url': "https://app.chicagoelections.com/pages/en/board-meetings.aspx",
                     'note': ''
                 }],
         }
@@ -70,7 +72,7 @@ class ChiBoardElectionsSpider(Spider):
                 'location': self._parse_location(response),
                 'documents': [],
                 'sources': [{
-                    'url': response.url,
+                    'url': "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx",
                     'note': ''
                 }],
             }
