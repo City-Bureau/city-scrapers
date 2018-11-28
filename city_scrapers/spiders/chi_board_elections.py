@@ -58,7 +58,8 @@ class ChiBoardElectionsSpider(Spider):
 
     def _prev_meetings(self, response):
         meetings = response.xpath("//a/text()").extract()
-        meetingdates = [meeting[22:] for meeting in meetings if "Minutes" not in meeting]
+        meetingdates = [meeting[22:] for meeting in meetings if "Minutes" not in meeting and "mode" not in meeting
+                        and meeting is not " "]
         for meetingdate in meetingdates:
             meetingdate = "9:30 a.m. on " + meetingdate
             data = {
@@ -114,7 +115,11 @@ class ChiBoardElectionsSpider(Spider):
         """
         formatitem = item.replace("a.m.", "AM")
         formatitem = formatitem.replace("p.m.", "PM")
-        datetime_item = datetime.strptime(formatitem, '%I:%M %p on %b. %d, %Y')
+        formatitem = formatitem.replace("Sept", "Sep")
+        try:
+            datetime_item = datetime.strptime(formatitem, '%I:%M %p on %b. %d, %Y')
+        except ValueError:  # Some months are abbreviated, some are not
+            datetime_item = datetime.strptime(formatitem, '%I:%M %p on %B %d, %Y')
         dict = {'date': datetime_item.date(), 'time': datetime_item.time(), 'note': ''}
         return dict
 
