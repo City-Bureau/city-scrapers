@@ -38,10 +38,10 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]['location'] == {
-            'address': '8th Floor Office, 69 W. Washington St.',
-            'name': 'Cook County Administration Building',
-            'neighborhood': '',
-        }
+        'address': '8th Floor Office, 69 W. Washington St.',
+        'name': 'Cook County Administration Building',
+        'neighborhood': '',
+    }
 
 
 def test_sources():
@@ -69,8 +69,8 @@ def test_classification(item):
 def test__type(item):
     assert parsed_items[0]['_type'] == 'event'
 
-# Previous meetings on different page
 
+# Previous meetings on different page
 
 test_response_prev = file_response('files/chi_board_elections_prev.html')
 parsed_items_prev = \
@@ -105,10 +105,10 @@ def test_status_prev():
 
 def test_location_prev():
     assert parsed_items_prev[0]['location'] == {
-            'address': '8th Floor Office, 69 W. Washington St.',
-            'name': 'Cook County Administration Building',
-            'neighborhood': '',
-        }
+        'address': '8th Floor Office, 69 W. Washington St.',
+        'name': 'Cook County Administration Building',
+        'neighborhood': '',
+    }
 
 
 def test_sources_prev():

@@ -13,8 +13,10 @@ class ChiBoardElectionsSpider(Spider):
     agency_name = 'Chicago Board of Elections'
     timezone = 'America/Chicago'
     allowed_domains = ['chicagoelections.com']
-    start_urls = ['https://app.chicagoelections.com/pages/en/board-meetings.aspx',
-                  'https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx']
+    start_urls = [
+        'https://app.chicagoelections.com/pages/en/board-meetings.aspx',
+        'https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx'
+    ]
 
     def parse(self, response):
         """
@@ -49,9 +51,9 @@ class ChiBoardElectionsSpider(Spider):
             'location': self._parse_location(response),
             'documents': [],
             'sources': [{
-                    'url': "https://app.chicagoelections.com/pages/en/board-meetings.aspx",
-                    'note': ''
-                }],
+                'url': "https://app.chicagoelections.com/pages/en/board-meetings.aspx",
+                'note': ''
+            }],
         }
 
         data['status'] = self._generate_status(data)
@@ -60,8 +62,11 @@ class ChiBoardElectionsSpider(Spider):
 
     def _prev_meetings(self, response):
         meetings = response.xpath("//a/text()").extract()
-        meetingdates = [meeting[22:] for meeting in meetings if "Minutes" not in meeting
-                        and "mode" not in meeting and meeting is not " "]
+        meetingdates = [
+            meeting[22:]
+            for meeting in meetings
+            if "Minutes" not in meeting and "mode" not in meeting and meeting is not " "
+        ]
         for meetingdate in meetingdates:
             meetingdate = "9:30 a.m. on " + meetingdate
             data = {
@@ -75,8 +80,7 @@ class ChiBoardElectionsSpider(Spider):
                 'location': self._parse_location(response),
                 'documents': [],
                 'sources': [{
-                    'url':
-                        "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx",
+                    'url': "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx",
                     'note': ''
                 }],
             }
