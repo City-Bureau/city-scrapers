@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
 from datetime import datetime
+
 import scrapy
+
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 

@@ -1,10 +1,10 @@
 from datetime import date, time
-from tests.utils import file_response
+
 import pytest
+from tests.utils import file_response
+
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spiders.chi_board_elections import ChiBoardElectionsSpider
-
-
 
 test_response = file_response('files/chi_board_elections.html')
 spider = ChiBoardElectionsSpider()
