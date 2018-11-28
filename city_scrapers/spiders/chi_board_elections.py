@@ -80,7 +80,8 @@ class ChiBoardElectionsSpider(Spider):
                 'location': self._parse_location(response),
                 'documents': [],
                 'sources': [{
-                    'url': "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx",
+                    'url':
+                        "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx",
                     'note': ''
                 }],
             }
