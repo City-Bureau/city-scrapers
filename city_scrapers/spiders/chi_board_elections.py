@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 import re
-from datetime import datetime
 import scrapy
 from city_scrapers.constants import COMMISSION
-# -*- coding: utf-8 -*-
 from city_scrapers.spider import Spider
+from datetime import datetime
 
 
 class ChiBoardElectionsSpider(Spider):
