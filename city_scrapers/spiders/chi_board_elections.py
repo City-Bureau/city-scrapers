@@ -5,8 +5,8 @@
 # -*- coding: utf-8 -*-
 from city_scrapers.spider import Spider
 from city_scrapers.constants import COMMISSION
-
-
+from datetime import datetime
+import re
 
 
 class ChiBoardElectionsSpider(Spider):
@@ -14,7 +14,7 @@ class ChiBoardElectionsSpider(Spider):
     agency_name = 'Chicago Board of Elections'
     timezone = 'America/Chicago'
     allowed_domains = ['chicagoelections.com']
-    start_urls = ['https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx']
+    start_urls = ['https://app.chicagoelections.com/pages/en/board-meetings.aspx', 'https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx']
 
     def parse(self, response):
         """
@@ -24,31 +24,64 @@ class ChiBoardElectionsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        meetings = response.xpath("//a/text()").extract()
-        meetingdates = [meeting[22:] for meeting in meetings if "Minutes" not in meeting]
+        if response.url == "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx":
+            yield from self._prev_meetings(response)
+        if response.url == "https://app.chicagoelections.com/pages/en/board-meetings.aspx":
+            yield from self._next_meeting(response)
 
+        # self._parse_next(response) yields more responses to parse if necessary.
+        # uncomment to find a "next" url
+        # yield self._parse_next(response)
+
+    def _next_meeting(self, response):
+        next_meeting = response.xpath('//div[@class="copy"]/text()').extract()[2]
+        meetingdate = re.search(r'\d{1}:.{24}', next_meeting).group(0)
+        data = {
+            '_type': 'event',
+            'name': "Chicago Board of Election Commissioners",
+            'event_description': "Meeting",
+            'classification': COMMISSION,
+            'start': self._parse_start(meetingdate),
+            'end': {},
+            'all_day': False,
+            'location': self._parse_location(response),
+            'documents': [],
+            'sources': [{
+                    'url': "https://app.chicagoelections.com/pages/en/board-meetings.aspx",
+                    'note': ''
+                }],
+        }
+
+        data['status'] = self._generate_status(data)
+        data['id'] = self._generate_id(data)
+        yield data
+
+    def _prev_meetings(self, response):
+        meetings = response.xpath("//a/text()").extract()
+        meetingdates = [meeting[22:] for meeting in meetings if "Minutes" not in meeting and "mode" not in meeting
+                        and meeting is not " "]
         for meetingdate in meetingdates:
+            meetingdate = "9:30 a.m. on " + meetingdate
             data = {
                 '_type': 'event',
                 'name': "Chicago Board of Election Commissioners",
                 'event_description': "Meeting",
                 'classification': COMMISSION,
-                'start': meetingdate,
+                'start': self._parse_start(meetingdate),
                 'end': {},
                 'all_day': False,
-                'location': {},
-                'documents': {},
-                'sources': {},
+                'location': self._parse_location(response),
+                'documents': [],
+                'sources': [{
+                    'url': "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx",
+                    'note': ''
+                }],
             }
 
             data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
 
     def _parse_next(self, response):
         """
@@ -80,7 +113,16 @@ class ChiBoardElectionsSpider(Spider):
         """
         Parse start date and time.
         """
-        return item.xpath('//div[@class="copy"]/text()').extract()[2]
+        formatitem = item.replace("a.m.", "AM")
+        formatitem = formatitem.replace("p.m.", "PM")
+        formatitem = formatitem.replace("Sept", "Sep")
+        try:
+            datetime_item = datetime.strptime(formatitem, '%I:%M %p on %b. %d, %Y')
+        except ValueError:  # Some months are abbreviated, some are not
+            datetime_item = datetime.strptime(formatitem, '%I:%M %p on %B %d, %Y')
+        dict = {'date': datetime_item.date(), 'time': datetime_item.time(), 'note': ''}
+        return dict
+
 
     def _parse_end(self, item):
         """
@@ -100,8 +142,8 @@ class ChiBoardElectionsSpider(Spider):
         left blank and will be geocoded later.
         """
         return {
-            'address': '',
-            'name': '',
+            'address': '8th Floor Office, 69 W. Washington St.',
+            'name': 'Cook County Administration Building',
             'neighborhood': '',
         }
 
