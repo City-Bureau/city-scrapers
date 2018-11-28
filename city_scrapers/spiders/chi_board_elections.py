@@ -8,7 +8,6 @@ from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
-
 class ChiBoardElectionsSpider(Spider):
     name = 'chi_board_elections'
     agency_name = 'Chicago Board of Elections'
