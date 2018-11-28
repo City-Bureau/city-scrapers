@@ -1,9 +1,10 @@
-import pytest
 from datetime import date, time
-from tests.utils import file_response
-from city_scrapers.spiders.chi_board_elections import ChiBoardElectionsSpider
-from city_scrapers.constants import COMMISSION
 
+import pytest
+from tests.utils import file_response
+
+from city_scrapers.constants import COMMISSION
+from city_scrapers.spiders.chi_board_elections import ChiBoardElectionsSpider
 
 test_response = file_response('files/chi_board_elections.html')
 spider = ChiBoardElectionsSpider()
@@ -27,7 +28,8 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_board_elections/201811270930/x/chicago_board_of_election_commissioners'
+    assert parsed_items[0]['id'] == \
+           'chi_board_elections/201811270930/x/chicago_board_of_election_commissioners'
 
 
 def test_status():
@@ -69,8 +71,10 @@ def test__type(item):
 
 # Previous meetings on different page
 
+
 test_response_prev = file_response('files/chi_board_elections_prev.html')
-parsed_items_prev = [item for item in spider._prev_meetings(test_response_prev) if isinstance(item, dict)]
+parsed_items_prev = \
+    [item for item in spider._prev_meetings(test_response_prev) if isinstance(item, dict)]
 
 
 def test_name_prev():
@@ -82,7 +86,8 @@ def test_description_prev():
 
 
 def test_start_prev():
-    assert parsed_items_prev[0]['start'] == {'date': date(2018, 11, 13), 'time': time(9, 30), 'note': ''}
+    assert parsed_items_prev[0]['start'] == \
+           {'date': date(2018, 11, 13), 'time': time(9, 30), 'note': ''}
 
 
 def test_end_prev():
@@ -90,7 +95,8 @@ def test_end_prev():
 
 
 def test_id_prev():
-    assert parsed_items_prev[0]['id'] == 'chi_board_elections/201811130930/x/chicago_board_of_election_commissioners'
+    assert parsed_items_prev[0]['id'] == \
+           'chi_board_elections/201811130930/x/chicago_board_of_election_commissioners'
 
 
 def test_status_prev():
@@ -129,4 +135,3 @@ def test_classification_prev(item):
 @pytest.mark.parametrize('item', parsed_items_prev)
 def test__type_prev(item):
     assert parsed_items_prev[0]['_type'] == 'event'
-
