@@ -26,36 +26,33 @@ class ChiBoardElectionsSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        if response.url == \
-                "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx":
+        if "minutes" in response.url:  # Current meetings and past meetings on differerent pages
             yield from self._prev_meetings(response)
-        if response.url == \
-                "https://app.chicagoelections.com/pages/en/board-meetings.aspx":
+        else:
             yield from self._next_meeting(response)
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
 
     def _next_meeting(self, response):
         next_meeting = response.xpath('//div[@class="copy"]/text()').extract()[2]
-        meetingdate = re.search(r'\d{1}:.{24}', next_meeting).group(0)
+        meetingdate = re.search(r'\d{1,2}:.*\d{4}', next_meeting).group(0)
         data = {
             '_type': 'event',
-            'name': "Chicago Board of Election Commissioners",
-            'event_description': "Meeting",
+            'name': "Electoral Board",
+            'event_description': "",
             'classification': COMMISSION,
             'start': self._parse_start(meetingdate),
-            'end': {},
             'all_day': False,
             'location': self._parse_location(response),
             'documents': [],
             'sources': [{
-                'url': "https://app.chicagoelections.com/pages/en/board-meetings.aspx",
+                'url': response.url,
                 'note': ''
             }],
         }
-
+        data['end'] = {
+            'date': data['start']['date'],
+            'time': None,
+            'note': '',
+        }
         data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
         yield data
@@ -71,43 +68,32 @@ class ChiBoardElectionsSpider(Spider):
             meetingdate = "9:30 a.m. on " + meetingdate
             data = {
                 '_type': 'event',
-                'name': "Chicago Board of Election Commissioners",
-                'event_description': "Meeting",
+                'name': "Electoral Board",
+                'event_description': "",
                 'classification': COMMISSION,
                 'start': self._parse_start(meetingdate),
-                'end': {},
                 'all_day': False,
                 'location': self._parse_location(response),
                 'documents': [],
                 'sources': [{
                     'url':
-                        "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx",
+                        response.url,
                     'note': ''
                 }],
             }
-
+            data['end'] = {
+                'date': data['start']['date'],
+                'time': None,
+                'note': '',
+            }
             data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
 
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
-
     def _parse_name(self, item):
         """
         Parse or generate event name.
-        """
-        return ''
-
-    def _parse_description(self, item):
-        """
-        Parse or generate event description.
         """
         return ''
 
@@ -131,18 +117,6 @@ class ChiBoardElectionsSpider(Spider):
         dict = {'date': datetime_item.date(), 'time': datetime_item.time(), 'note': ''}
         return dict
 
-    def _parse_end(self, item):
-        """
-        Parse end date and time.
-        """
-        return ''
-
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to False.
-        """
-        return False
-
     def _parse_location(self, item):
         """
         Parse or generate location. Latitude and longitude can be
@@ -157,11 +131,5 @@ class ChiBoardElectionsSpider(Spider):
     def _parse_documents(self, item):
         """
         Parse or generate documents.
-        """
-        return [{'url': '', 'note': ''}]
-
-    def _parse_sources(self, item):
-        """
-        Parse or generate sources.
         """
         return [{'url': '', 'note': ''}]

@@ -12,11 +12,11 @@ parsed_items = [item for item in spider._next_meeting(test_response) if isinstan
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Chicago Board of Election Commissioners'
+    assert parsed_items[0]['name'] == 'Electoral Board'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == 'Meeting'
+    assert parsed_items[0]['event_description'] == ''
 
 
 def test_start():
@@ -24,7 +24,7 @@ def test_start():
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {}
+    assert parsed_items[0]['end'] == {'date': date(2018, 11, 27), 'time': None, 'note': ''}
 
 
 def test_id():
@@ -78,11 +78,11 @@ parsed_items_prev = \
 
 
 def test_name_prev():
-    assert parsed_items_prev[0]['name'] == 'Chicago Board of Election Commissioners'
+    assert parsed_items_prev[0]['name'] == 'Electoral Board'
 
 
 def test_description_prev():
-    assert parsed_items_prev[0]['event_description'] == 'Meeting'
+    assert parsed_items_prev[0]['event_description'] == ''
 
 
 def test_start_prev():
@@ -91,7 +91,7 @@ def test_start_prev():
 
 
 def test_end_prev():
-    assert parsed_items_prev[0]['end'] == {}
+    assert parsed_items_prev[0]['end'] == {'date': date(2018, 11, 13), 'time': None, 'note': ''}
 
 
 def test_id_prev():
