@@ -11,7 +11,8 @@ freezer = freeze_time('2018-11-30 12:00:01')
 freezer.start()
 test_response = file_response(
     'files/chi_board_elections.html',
-    url='https://app.chicagoelections.com/pages/en/board-meetings.aspx')
+    url='https://app.chicagoelections.com/pages/en/board-meetings.aspx'
+)
 spider = ChiBoardElectionsSpider()
 parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
 freezer.stop()
