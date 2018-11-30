@@ -41,13 +41,17 @@ class ChiBoardElectionsSpider(Spider):
             'classification': COMMISSION,
             'start': self._parse_start(meetingdate),
             'all_day': False,
-            'location': self._parse_location(response),
             'documents': [],
             'sources': [{
                 'url': response.url,
                 'note': ''
             }],
         }
+        if "69" in next_meeting:
+            data['location'] = self._parse_location(response)
+        else:
+            raise ValueError("The address has changed.")
+
         data['end'] = {
             'date': data['start']['date'],
             'time': None,
@@ -55,6 +59,7 @@ class ChiBoardElectionsSpider(Spider):
         }
         data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
+
         yield data
 
     def _prev_meetings(self, response):
