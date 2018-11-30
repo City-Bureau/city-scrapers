@@ -79,8 +79,7 @@ class ChiBoardElectionsSpider(Spider):
                 'location': self._parse_location(response),
                 'documents': [],
                 'sources': [{
-                    'url':
-                        response.url,
+                    'url': response.url,
                     'note': ''
                 }],
             }

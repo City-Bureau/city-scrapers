@@ -9,8 +9,9 @@ from city_scrapers.spiders.chi_board_elections import ChiBoardElectionsSpider
 
 freezer = freeze_time('2018-11-30 12:00:01')
 freezer.start()
-test_response = file_response('files/chi_board_elections.html',
-                              url='https://app.chicagoelections.com/pages/en/board-meetings.aspx')
+test_response = file_response(
+    'files/chi_board_elections.html',
+    url='https://app.chicagoelections.com/pages/en/board-meetings.aspx')
 spider = ChiBoardElectionsSpider()
 parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
 freezer.stop()
@@ -78,8 +79,7 @@ def test__type(item):
 # Previous meetings on different page
 freezer.start()
 prev_url = "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx"
-test_response_prev = file_response('files/chi_board_elections_prev.html',
-                                   url=prev_url)
+test_response_prev = file_response('files/chi_board_elections_prev.html', url=prev_url)
 parsed_items_prev = \
     [item for item in spider._prev_meetings(test_response_prev) if isinstance(item, dict)]
 freezer.stop()
