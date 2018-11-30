@@ -1,14 +1,19 @@
 from datetime import date, time
 
 import pytest
+from freezegun import freeze_time
 from tests.utils import file_response
 
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spiders.chi_board_elections import ChiBoardElectionsSpider
 
-test_response = file_response('files/chi_board_elections.html')
+freezer = freeze_time('2018-11-30 12:00:01')
+freezer.start()
+test_response = file_response('files/chi_board_elections.html',
+                              url='https://app.chicagoelections.com/pages/en/board-meetings.aspx')
 spider = ChiBoardElectionsSpider()
 parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
+freezer.stop()
 
 
 def test_name():
@@ -29,7 +34,7 @@ def test_end():
 
 def test_id():
     assert parsed_items[0]['id'] == \
-           'chi_board_elections/201811270930/x/chicago_board_of_election_commissioners'
+           'chi_board_elections/201811270930/x/electoral_board'
 
 
 def test_status():
@@ -71,10 +76,13 @@ def test__type(item):
 
 
 # Previous meetings on different page
-
-test_response_prev = file_response('files/chi_board_elections_prev.html')
+freezer.start()
+prev_url = "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx"
+test_response_prev = file_response('files/chi_board_elections_prev.html',
+                                   url=prev_url)
 parsed_items_prev = \
     [item for item in spider._prev_meetings(test_response_prev) if isinstance(item, dict)]
+freezer.stop()
 
 
 def test_name_prev():
@@ -96,7 +104,7 @@ def test_end_prev():
 
 def test_id_prev():
     assert parsed_items_prev[0]['id'] == \
-           'chi_board_elections/201811130930/x/chicago_board_of_election_commissioners'
+           'chi_board_elections/201811130930/x/electoral_board'
 
 
 def test_status_prev():
