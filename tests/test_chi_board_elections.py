@@ -15,7 +15,6 @@ test_response = file_response(
 )
 spider = ChiBoardElectionsSpider()
 parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
-freezer.stop()
 
 
 def test_name():
@@ -78,7 +77,6 @@ def test__type(item):
 
 
 # Previous meetings on different page
-freezer.start()
 prev_url = "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx"
 test_response_prev = file_response('files/chi_board_elections_prev.html', url=prev_url)
 parsed_items_prev = \
