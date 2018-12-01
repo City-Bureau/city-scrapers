@@ -13,7 +13,9 @@ class ChiLandmarkCommissionSpider(Spider):
     agency_name = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
-    start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html']
+    start_urls = [
+        'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html'
+    ]
 
     def parse(self, response):
         """
@@ -40,15 +42,20 @@ class ChiLandmarkCommissionSpider(Spider):
                     'start': self._parse_start(meeting, year),
                     # Based on meeting minutes, board meetings appear to be several hours
                     'all_day': False,
-                    'location': {'neighborhood': '',
-                                 'name': 'City Hall',
-                                 'address': '121 N. LaSalle St., Room 201-A'},
-                    'sources': [{'url': response.url, 'note': ''}],
+                    'location': {
+                        'neighborhood': '',
+                        'name': 'City Hall',
+                        'address': '121 N. LaSalle St., Room 201-A'
+                    },
+                    'sources': [{
+                        'url': response.url,
+                        'note': ''
+                    }],
                 }
                 data['documents'] = self._parse_documents(column, data, response)
                 data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data, '')
+                data['status'] = self._generate_status(data)
                 yield data
 
     @staticmethod
@@ -85,7 +92,8 @@ class ChiLandmarkCommissionSpider(Spider):
         xp = './/a[contains(@title, "{0}")]'.format(month)
         documents = item.xpath(xp)
         if len(documents) >= 0:
-            return [{'url': response.urljoin(document.xpath('@href').extract_first()),
-                     'note': document.xpath('text()').extract_first()}
-                    for document in documents]
-        return [{}]
+            return [{
+                'url': response.urljoin(document.xpath('@href').extract_first()),
+                'note': document.xpath('text()').extract_first()
+            } for document in documents]
+        return []

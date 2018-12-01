@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import scrapy
 import json
+
 from dateutil.parser import parse as dateparse
 
 from city_scrapers.constants import BOARD, COMMITTEE
@@ -22,7 +22,10 @@ class DetLandBankSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        data = response.xpath('substring-before(substring-after(//script[contains(text(), "var meeting =")]/text(), "var meeting ="), "\n")').extract_first()
+        data = response.xpath(
+            'substring-before(substring-after(//script[contains(text(), "var meeting =")]/text()'
+            ', "var meeting ="), "\n")'
+        ).extract_first()
         entries = json.loads(data.strip()[:-1])
 
         for item in entries:
@@ -33,14 +36,21 @@ class DetLandBankSpider(Spider):
                 'event_description': item['content'],
                 'classification': self._parse_classification(item),
                 'start': self._parse_start(item),
-                'end': {'date': None, 'time': None, 'note': ''},
+                'end': {
+                    'date': None,
+                    'time': None,
+                    'note': ''
+                },
                 'all_day': False,
                 'location': self._parse_location(item),
                 'documents': self._parse_documents(item),
-                'sources': [{'url': response.url, 'note': ''}]
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }]
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
@@ -66,7 +76,8 @@ class DetLandBankSpider(Spider):
         left blank and will be geocoded later.
         """
         return {
-            'address': item['address'] + " " + item['city'] + ", " + item['state'] + " " + item['zipcode'],
+            'address':
+                item['address'] + " " + item['city'] + ", " + item['state'] + " " + item['zipcode'],
             'name': '',
             'neighborhood': '',
         }

@@ -1,13 +1,21 @@
-import pytest
 from datetime import date, time
 
+import pytest
 from tests.utils import file_response
+
 from city_scrapers.constants import BOARD
 from city_scrapers.spiders.chi_pubhealth import ChiPubHealthSpider
 
-test_response = file_response('files/chi_pubhealth.html', url='https://www.cityofchicago.org/city/en/depts/cdph/supp_info/boh/2018-board-of-health-meetings.html')
+test_response = file_response(
+    'files/chi_pubhealth.html',
+    url=(
+        'https://www.cityofchicago.org/city/en/depts/cdph/supp_info/'
+        'boh/2018-board-of-health-meetings.html'
+    )
+)
 spider = ChiPubHealthSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+
 
 def test_meeting_count():
     # 1 meeting per month
@@ -23,24 +31,21 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == 'The Chicago Board of Health is scheduled to meet on the third Wednesday of each month from 9:00am-10:30am. The meetings are held at the Chicago Department of Public Health, DePaul Center, 333 S. State Street, 2nd Floor Board Room. The specific dates, by month, for 2018 are:'
+    assert parsed_items[0]['event_description'] == (
+        'The Chicago Board of Health is scheduled to meet on the third Wednesday of each month '
+        'from 9:00am-10:30am. The meetings are held at the Chicago Department of Public Health, '
+        'DePaul Center, 333 S. State Street, 2nd Floor Board Room. The specific dates, by month, '
+        'for 2018 are:'
+    )
 
 
 def test_start():
-    EXPECTED_START = {
-        'date': date(2018, 1, 17),
-        'time': time(9, 0),
-        'note': ''
-    }
+    EXPECTED_START = {'date': date(2018, 1, 17), 'time': time(9, 0), 'note': ''}
     assert parsed_items[0]['start'] == EXPECTED_START
 
 
 def test_end():
-    EXPECTED_END = {
-        'date': date(2018, 1, 17),
-        'time': time(10, 30),
-        'note': ''
-    }
+    EXPECTED_END = {'date': date(2018, 1, 17), 'time': time(10, 30), 'note': ''}
     assert parsed_items[0]['end'] == EXPECTED_END
 
 
@@ -56,11 +61,13 @@ def test_documents():
     EXPECTED_DOCUMENTS = [
         {
             'note': 'agenda',
-            'url': 'https://www.cityofchicago.org/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Agenda_Jan172018.pdf'
+            'url':
+                'https://www.cityofchicago.org/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Agenda_Jan172018.pdf'  # noqa
         },
         {
             'note': 'minutes',
-            'url': 'https://www.cityofchicago.org/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Minutes_Jan172018.pdf'
+            'url':
+                'https://www.cityofchicago.org/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Minutes_Jan172018.pdf'  # noqa
         }
     ]
     assert parsed_items[0]['documents'] == EXPECTED_DOCUMENTS

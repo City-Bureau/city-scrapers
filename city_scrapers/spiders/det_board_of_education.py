@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import scrapy
 from dateutil.parser import parse
 
 from city_scrapers.constants import BOARD
@@ -33,19 +32,20 @@ class DetBoardOfEducationSpider(Spider):
                 'all_day': False,
                 'location': self._parse_location(item),
                 'documents': [],
-                'sources': [{'url': response.url, 'note': ''}]
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }]
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
 
     @staticmethod
     def _parse_name(item):
-        return 'Board of Education: {}'.format(
-            item.xpath('a/text()').extract_first('')
-        )
+        return 'Board of Education: {}'.format(item.xpath('a/text()').extract_first(''))
 
     def _parse_start_end(self, item):
         # date text apparently just floats in main div

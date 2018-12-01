@@ -4,7 +4,6 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-
 from datetime import datetime, timedelta
 
 from city_scrapers.constants import BOARD, COMMITTEE
@@ -17,9 +16,7 @@ class ChiTransitSpider(Spider):
     timezone = 'America/Chicago'
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
-    start_urls = [
-        'https://www.transitchicago.com/board/notices-agendas-minutes/'
-    ]
+    start_urls = ['https://www.transitchicago.com/board/notices-agendas-minutes/']
 
     def parse(self, response):
         """
@@ -29,9 +26,7 @@ class ChiTransitSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        response_items = response.css(
-            '.agendaminuteDataTbl tr:not(:first-child)'
-        )
+        response_items = response.css('.agendaminuteDataTbl tr:not(:first-child)')
         for idx, item in enumerate(response_items):
             # Including previous item for meetings where it's needed
             prev_item = response_items[idx - 1] if idx > 0 else None
@@ -50,9 +45,7 @@ class ChiTransitSpider(Spider):
                     'documents': self._parse_documents(item)
                 }
                 item_data['id'] = self._generate_id(item_data)
-                item_data['status'] = self._generate_status(
-                    item_data, item_data['name']
-                )
+                item_data['status'] = self._generate_status(item_data)
                 yield item_data
 
     def _parse_description(self, item):
@@ -84,8 +77,7 @@ class ChiTransitSpider(Spider):
                     r'567 (W.|W|West) Lake.*|board\s?room',
                     location_str,
                     re.IGNORECASE,
-                )
-                or re.search(r'cta.*board.*room', location_str, re.IGNORECASE)
+                ) or re.search(r'cta.*board.*room', location_str, re.IGNORECASE)
             )
         ):
             return {
@@ -121,18 +113,14 @@ class ChiTransitSpider(Spider):
 
     def _parse_start(self, item, prev_item):
         start_datetime = self._parse_start_datetime(item, prev_item)
-        return {
-                'date': start_datetime.date(),
-                'time': start_datetime.time(),
-                'note': ''
-        }
+        return {'date': start_datetime.date(), 'time': start_datetime.time(), 'note': ''}
 
     def _parse_end(self, item, prev_item):
         start_datetime = self._parse_start_datetime(item, prev_item)
         return {
-                'date': start_datetime.date(),
-                'time': (start_datetime + timedelta(hours=3)).time(),
-                'note': 'estimated 3 hours after start time'
+            'date': start_datetime.date(),
+            'time': (start_datetime + timedelta(hours=3)).time(),
+            'note': 'estimated 3 hours after start time'
         }
 
     def _parse_start_datetime(self, item, prev_item=None):

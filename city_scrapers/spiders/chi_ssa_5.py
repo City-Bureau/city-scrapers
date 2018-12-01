@@ -59,14 +59,17 @@ class ChiSsa5Spider(Spider):
                 'all_day': False,
                 'location': self.location,
                 'documents': self._parse_documents(item.get('agenda')),
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
             data['end'] = {
                 'date': data['start']['date'],
                 'time': None,
                 'note': '',
             }
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             event_items.append(data)
         return event_items
@@ -84,10 +87,7 @@ class ChiSsa5Spider(Spider):
                 'url': item.attrib['href'],
                 'note': 'Minutes',
             }]
-            date_match = [
-                idx for idx, i in enumerate(items)
-                if i['start']['date'] == start['date']
-            ]
+            date_match = [idx for idx, i in enumerate(items) if i['start']['date'] == start['date']]
             if len(date_match):
                 items[date_match[0]]['documents'].extend(documents)
             else:
@@ -105,9 +105,12 @@ class ChiSsa5Spider(Spider):
                     'all_day': False,
                     'location': self.location,
                     'documents': documents,
-                    'sources': [{'url': response.url, 'note': ''}],
+                    'sources': [{
+                        'url': response.url,
+                        'note': ''
+                    }],
                 }
-                data['status'] = self._generate_status(data, text='')
+                data['status'] = self._generate_status(data)
                 data['id'] = self._generate_id(data)
                 items.append(data)
         for item in items:
@@ -118,8 +121,8 @@ class ChiSsa5Spider(Spider):
         Parse or generate event name.
         """
         if 'special' in text.lower():
-            return 'Special Commission Meeting'
-        return 'Regular Commission Meeting'
+            return 'Special Commission'
+        return 'Regular Commission'
 
     def _parse_start(self, text, minutes=False):
         """
@@ -129,15 +132,11 @@ class ChiSsa5Spider(Spider):
         if minutes:
             date_match = re.search(r'\d{2}/\d{2}/\d{4}', text)
             if date_match:
-                parsed_date = datetime.strptime(
-                    date_match.group(), '%m/%d/%Y'
-                )
+                parsed_date = datetime.strptime(date_match.group(), '%m/%d/%Y')
         else:
             date_match = re.search(r'\w{3,9} \d{1,2}, \d{4}', text)
             if date_match:
-                parsed_date = datetime.strptime(
-                    date_match.group(), '%B %d, %Y'
-                )
+                parsed_date = datetime.strptime(date_match.group(), '%B %d, %Y')
         if parsed_date:
             return {
                 'date': parsed_date.date(),

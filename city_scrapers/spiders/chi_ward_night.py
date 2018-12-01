@@ -4,17 +4,17 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
-import os
 import json
+import os
 from datetime import datetime
 from enum import IntEnum
 
-from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
+from dateutil.rrule import FR, MO, MONTHLY, SA, SU, TH, TU, WE, WEEKLY, rrule
 
 from city_scrapers.spider import Spider
 
 GOOGLE_API_KEY = os.environ.get('CITY_SCRAPERS_GOOGLE_API_KEY') or 'test-token'
-SPREADSHEET_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1xnt4kZI9Ruinw91wM-nnWftsFD-ZaKaozepdNXeIrpo'
+SPREADSHEET_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1xnt4kZI9Ruinw91wM-nnWftsFD-ZaKaozepdNXeIrpo'  # noqa
 
 DESCRIPTION_TEMPLATE = (
     'Ward Night with Ald. {ald} (Ward {ward})\n\n'
@@ -34,8 +34,15 @@ class Calendar(object):
     much simpler interface that can handle our limited set of use cases.
     """
 
-    DAYS = {'Monday': MO, 'Tuesday': TU, 'Wednesday': WE, 'Thursday': TH,
-            'Friday': FR, 'Saturday': SA, 'Sunday': SU}
+    DAYS = {
+        'Monday': MO,
+        'Tuesday': TU,
+        'Wednesday': WE,
+        'Thursday': TH,
+        'Friday': FR,
+        'Saturday': SA,
+        'Sunday': SU
+    }
 
     def __init__(self, start_date=datetime.today()):
         self.start_date = start_date
@@ -87,12 +94,13 @@ class Calendar(object):
         self._assert_day_of_week(day_of_week)
 
         day = self.DAYS[day_of_week]
-        datetimes = list(rrule(WEEKLY, count=count, byweekday=day,
-                         dtstart=self.start_date))
+        datetimes = list(rrule(WEEKLY, count=count, byweekday=day, dtstart=self.start_date))
         return [datetime.date(d) for d in datetimes]
 
     def _assert_day_of_week(self, day_of_week):
-        assert day_of_week in self.DAYS, '{0} must be one of {1}'.format(day_of_week, ', '.join(self.DAYS.keys()))
+        assert day_of_week in self.DAYS, '{0} must be one of {1}'.format(
+            day_of_week, ', '.join(self.DAYS.keys())
+        )
 
 
 class Row(IntEnum):
@@ -100,24 +108,24 @@ class Row(IntEnum):
     This enum makes working with the data rows more pleasant.
     """
 
-    ALDERMAN = 0            # Text
-    PHONE = 1               # Text
-    EMAIL = 2               # Text
-    WEBSITE = 3             # Text
-    WARD = 4                # Text
-    DOCUMENTER = 5          # Text
-    HAS_WARD_NIGHTS = 6     # Yes, No, Unknown
-    ADDRESS = 7             # Text
-    FREQUENCY = 8           # Weekly, Monthly (1st occurrence), Monthly (2nd occurrence),
+    ALDERMAN = 0  # Text
+    PHONE = 1  # Text
+    EMAIL = 2  # Text
+    WEBSITE = 3  # Text
+    WARD = 4  # Text
+    DOCUMENTER = 5  # Text
+    HAS_WARD_NIGHTS = 6  # Yes, No, Unknown
+    ADDRESS = 7  # Text
+    FREQUENCY = 8  # Weekly, Monthly (1st occurrence), Monthly (2nd occurrence),
     #                         Monthly (3rd occurrence), Monthly (4th occurrence),
     #                         Monthly (last occurrence), Irregularly
-    DAY_OF_WEEK = 9         # Monday, Tuesday, Wednesday, Thursday, Friday,
+    DAY_OF_WEEK = 9  # Monday, Tuesday, Wednesday, Thursday, Friday,
     #                         Saturday, Sunday
-    START_TIME = 10         # [h]h:mm am
-    END_TIME = 11           # [h]h:mm am
-    SIGN_UP_REQUIRED = 12   # Yes, No
-    SIGN_UP_INFO = 13       # Text
-    INFO = 14               # Text
+    START_TIME = 10  # [h]h:mm am
+    END_TIME = 11  # [h]h:mm am
+    SIGN_UP_REQUIRED = 12  # Yes, No
+    SIGN_UP_INFO = 13  # Text
+    INFO = 14  # Text
 
 
 class ChiWardNightSpider(Spider):
@@ -153,8 +161,10 @@ class ChiWardNightSpider(Spider):
 
     def _days_for_frequency(self, frequency, day_of_week):
         calendar = Calendar(self.start_date)
-        occurance_map = ['Monthly (1st occurrence)', 'Monthly (2nd occurrence)',
-                         'Monthly (3rd occurrence)', 'Monthly (4th occurrence)']
+        occurance_map = [
+            'Monthly (1st occurrence)', 'Monthly (2nd occurrence)', 'Monthly (3rd occurrence)',
+            'Monthly (4th occurrence)'
+        ]
 
         if frequency in occurance_map:
             n = occurance_map.index(frequency) + 1
@@ -174,7 +184,7 @@ class ChiWardNightSpider(Spider):
         try:
             assert len(row[Row.START_TIME]) > 0, 'start time must have a value'
             assert len(row[Row.END_TIME]) > 0, 'end time must have a value'
-        except:
+        except Exception:
             self.logger.error('event has invalid start or end time:')
             self.logger.error(row)
             return []
@@ -194,7 +204,7 @@ class ChiWardNightSpider(Spider):
                 'location': self._parse_location(row),
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, data['event_description'])
+            data['status'] = self._generate_status(data)
             return data
 
         days = self._days_for_frequency(row[Row.FREQUENCY], row[Row.DAY_OF_WEEK])
@@ -244,6 +254,12 @@ class ChiWardNightSpider(Spider):
         end_datetime = datetime.combine(day, end_time.time())
 
         return {
-            'start': {'date': start_datetime.date(), 'time': start_datetime.time()},
-            'end': {'date': end_datetime.date(), 'time': end_datetime.time()},
+            'start': {
+                'date': start_datetime.date(),
+                'time': start_datetime.time()
+            },
+            'end': {
+                'date': end_datetime.date(),
+                'time': end_datetime.time()
+            },
         }

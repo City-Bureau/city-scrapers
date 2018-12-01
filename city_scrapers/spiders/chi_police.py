@@ -3,8 +3,8 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import re
 import json
+import re
 from datetime import datetime
 
 from city_scrapers.constants import COMMITTEE, POLICE_BEAT
@@ -15,10 +15,15 @@ class ChiPoliceSpider(Spider):
     name = 'chi_police'
     agency_name = 'Chicago Police Department'
     timezone = 'America/Chicago'
-    allowed_domains = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
-    start_urls = ['https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/']
+    allowed_domains = [
+        'https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/'  # noqa
+    ]
+    start_urls = [
+        'https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/'  # noqa
+    ]
     custom_settings = {
-        'USER_AGENT': 'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'
+        'USER_AGENT':
+            'Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>'  # noqa
     }
 
     def parse(self, response):
@@ -54,7 +59,7 @@ class ChiPoliceSpider(Spider):
                 'sources': self._parse_sources(item)
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._parse_status(data, item) 
+            data['status'] = self._parse_status(data, item)
             yield data
 
     def _parse_status(self, data, item):
@@ -76,10 +81,7 @@ class ChiPoliceSpider(Spider):
         * Beat Meeting
         * ''
         """
-        if (
-            ('district advisory committee' in item['title'].lower())
-            or ('DAC' in item['title'])
-        ):
+        if (('district advisory committee' in item['title'].lower()) or ('DAC' in item['title'])):
             return COMMITTEE
         elif 'beat' in item['title'].lower():
             return POLICE_BEAT
@@ -93,9 +95,8 @@ class ChiPoliceSpider(Spider):
         if classification == COMMITTEE:
             return 'District Advisory Committee'
         elif classification == POLICE_BEAT:
-            return 'CAPS District {}, Beat {}'.format(
-                item['calendarId'], self._parse_beat(item)
-            ).strip()
+            return 'CAPS District {}, Beat {}'.format(item['calendarId'],
+                                                      self._parse_beat(item)).strip()
         else:
             return None
 
@@ -123,11 +124,7 @@ class ChiPoliceSpider(Spider):
             address = item['location'] + ' Chicago, IL'
         else:
             address = None
-        return {
-            'address': address,
-            'name': '',
-            'neighborhood': ''
-        }
+        return {'address': address, 'name': '', 'neighborhood': ''}
 
     def _parse_all_day(self, item):
         """
@@ -140,11 +137,7 @@ class ChiPoliceSpider(Spider):
         Parse start date and time.
         """
         datetime_obj = datetime.strptime(item['start'], "%Y-%m-%dT%H:%M:%S")
-        return {
-            'date': datetime_obj.date(),
-            'time': datetime_obj.time(),
-            'note': ''
-        }
+        return {'date': datetime_obj.date(), 'time': datetime_obj.time(), 'note': ''}
 
     def _parse_end(self, item):
         """
@@ -153,22 +146,18 @@ class ChiPoliceSpider(Spider):
         try:
             datetime_obj = datetime.strptime(item['end'], "%Y-%m-%dT%H:%M:%S")
         except TypeError:
-            return {
-                'date': None,
-                'time': None,
-                'note': 'no end time listed'
-            }
+            return {'date': None, 'time': None, 'note': 'no end time listed'}
         else:
-            return {
-                'date': datetime_obj.date(),
-                'time': datetime_obj.time(),
-                'note': ''
-            }
+            return {'date': datetime_obj.date(), 'time': datetime_obj.time(), 'note': ''}
 
     def _parse_sources(self, item):
         """
         Parse sources.
         """
-        return [{'url':
-                 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
-                 'note': ''}]
+        return [{
+            'url': (
+                'https://home.chicagopolice.org/get-involved-with-caps/'
+                'all-community-event-calendars'
+            ),
+            'note': ''
+        }]

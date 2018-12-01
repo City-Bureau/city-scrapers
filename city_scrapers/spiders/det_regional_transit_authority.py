@@ -2,9 +2,7 @@
 
 from dateutil.parser import parse
 
-from city_scrapers.constants import (
-    ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
-)
+from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
@@ -23,9 +21,11 @@ class DetRegionalTransitAuthoritySpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        location = {'neighborhood': '',
-                    'name': 'RTA Office',
-                    'address': '1001 Woodward Avenue, Suite 1400, Detroit, MI 48226'}
+        location = {
+            'neighborhood': '',
+            'name': 'RTA Office',
+            'address': '1001 Woodward Avenue, Suite 1400, Detroit, MI 48226'
+        }
         for item in self._parse_meetings(response):
             name = item.xpath('text()').extract_first('')
             table_rows_excluding_header = item.xpath('following::table[1]//tr[position() > 1]')
@@ -40,11 +40,18 @@ class DetRegionalTransitAuthoritySpider(Spider):
                     'event_description': '',
                     'classification': self._parse_classification(name),
                     'start': start,
-                    'end': {'date': None, 'time': None, 'note': ''},
+                    'end': {
+                        'date': None,
+                        'time': None,
+                        'note': ''
+                    },
                     'all_day': False,
                     'location': location,
                     'documents': self._parse_documents(row),
-                    'sources': [{'url': response.url, 'note': ''}]
+                    'sources': [{
+                        'url': response.url,
+                        'note': ''
+                    }]
                 }
                 alert = row.xpath('td[3]/text()').extract_first('')
                 data['status'] = self._generate_status(data, text=alert)
@@ -58,7 +65,7 @@ class DetRegionalTransitAuthoritySpider(Spider):
             text() = "Board of Directors" or
             text() = "Citizens Advisory Committee" or
             text() = "Executive and Policy Committee" or
-            text() = "Finance and Budget Committee" or 
+            text() = "Finance and Budget Committee" or
             text() = "Funding Allocation Committee" or
             text() = "Planning and Service Coordination Committee" or
             text() = "Providers Advisory Council"
@@ -102,6 +109,7 @@ class DetRegionalTransitAuthoritySpider(Spider):
         Parse or generate documents.
         """
         anchors = item.xpath('.//a')
-        return [{'url': anchor.xpath('@href').extract_first(''),
-                 'note': anchor.xpath('.//text()').extract_first('')}
-                for anchor in anchors]
+        return [{
+            'url': anchor.xpath('@href').extract_first(''),
+            'note': anchor.xpath('.//text()').extract_first('')
+        } for anchor in anchors]

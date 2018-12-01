@@ -1,10 +1,14 @@
-import pytest
 import datetime
+
+import pytest
 from tests.utils import file_response
+
 from city_scrapers.spiders.det_wrecking_examiners import DetWreckingExaminersSpider
 
-
-test_response = file_response('files/det_wrecking_examiners.html', 'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings')
+test_response = file_response(
+    'files/det_wrecking_examiners.html',
+    'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings'  # noqa
+)
 spider = DetWreckingExaminersSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -18,7 +22,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': datetime.date(2018, 2, 14), 'time': datetime.time(13, 0), 'note': ''}
+    assert parsed_items[0]['start'] == {
+        'date': datetime.date(2018, 2, 14),
+        'time': datetime.time(13, 0),
+        'note': ''
+    }
 
 
 def test_end():
@@ -26,7 +34,8 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_wrecking_examiners/201802141300/x/board_of_wrecking_contractors_examiners'
+    assert parsed_items[0][
+        'id'] == 'det_wrecking_examiners/201802141300/x/board_of_wrecking_contractors_examiners'
 
 
 def test_status():
@@ -43,7 +52,8 @@ def test_location():
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
-        'url': 'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings',
+        'url':
+            'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings',  # noqa
         'note': ''
     }]
 

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
 import re
+from datetime import datetime
 
-from city_scrapers.constants import (
-    ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
-)
+from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
@@ -45,11 +43,14 @@ class IlMetraBoardSpider(Spider):
                     'address': '547 West Jackson Boulevard, Chicago, IL',
                 },
                 'documents': self._parse_documents(item),
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, data['name'])
+            data['status'] = self._generate_status(data)
             yield data
 
     def _parse_name(self, item):
@@ -98,23 +99,12 @@ class IlMetraBoardSpider(Spider):
         documents = []
         agenda_url = item.css('a[href*=Agenda]::attr(href)').extract_first()
         if agenda_url:
-            documents.append({
-                'url': agenda_url,
-                'note': 'Agenda'
-            })
+            documents.append({'url': agenda_url, 'note': 'Agenda'})
         minutes_url = item.css('a[href*=Minutes]::attr(href)').extract_first()
         if minutes_url:
-            documents.append({
-                'url': minutes_url,
-                'note': 'Minutes'
-            })
-        video_url = item.css(
-            'td[headers~=VideoLink] a::attr(onclick)'
-        ).extract_first()
+            documents.append({'url': minutes_url, 'note': 'Minutes'})
+        video_url = item.css('td[headers~=VideoLink] a::attr(onclick)').extract_first()
         video_url_match = re.search(r'http.*(?=\',\'p)', video_url or '')
         if video_url and video_url_match:
-            documents.append({
-                'url': video_url_match.group(),
-                'note': 'Video'
-            })
+            documents.append({'url': video_url_match.group(), 'note': 'Video'})
         return documents

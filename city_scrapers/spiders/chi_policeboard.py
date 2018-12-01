@@ -4,8 +4,8 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
-from datetime import datetime
 import re
+from datetime import datetime
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
@@ -31,10 +31,17 @@ class ChiPoliceBoardSpider(Spider):
             'name': 'Board of Directors',
             'event_description': self._parse_description(response),
             'classification': BOARD,
-            'end': {'date': None, 'time': None, 'note': ''},
+            'end': {
+                'date': None,
+                'time': None,
+                'note': ''
+            },
             'all_day': False,
             'location': self._parse_location(response),
-            'sources': [{'url': response.url, 'note': ''}],
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }],
         }
         year = self._parse_year(response)
         start_time = self._parse_start_time(response)
@@ -51,13 +58,15 @@ class ChiPoliceBoardSpider(Spider):
             }
             new_item.update(data)
             new_item['id'] = self._generate_id(new_item)
-            new_item['status'] = self._generate_status(new_item, '')
+            new_item['status'] = self._generate_status(new_item)
             yield new_item
 
     def _parse_documents(self, item, response):
         anchors = item.xpath('a')
-        return [{'url': response.urljoin(link.xpath('@href').extract_first('')),
-                 'note': link.xpath('text()').extract_first('')} for link in anchors]
+        return [{
+            'url': response.urljoin(link.xpath('@href').extract_first('')),
+            'note': link.xpath('text()').extract_first('')
+        } for link in anchors]
 
     def _parse_location(self, response):
         """
@@ -88,7 +97,8 @@ class ChiPoliceBoardSpider(Spider):
         Parse or generate event name.
         """
         all_text = response.xpath(
-            "normalize-space(//div[@class='container-fluid page-full-description'])").extract_first()
+            "normalize-space(//div[@class='container-fluid page-full-description'])"
+        ).extract_first()
 
         intro, meetings = all_text.split('Regular Meetings')
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from dateutil.parser import parse
 from datetime import time
-import scrapy
+
+from dateutil.parser import parse
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
@@ -12,7 +12,9 @@ class DetWreckingExaminersSpider(Spider):
     agency_name = 'Detroit Wrecking Contractors Board of Examiners'
     timezone = 'America/Detroit'
     allowed_domains = ['www.detroitmi.gov']
-    start_urls = ['https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings']
+    start_urls = [
+        'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings'  # noqa
+    ]
 
     def parse(self, response):
         """
@@ -22,12 +24,17 @@ class DetWreckingExaminersSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        location = {'neighborhood': '',
-                    'name': 'Coleman A. Young Municipal Center, Room 412',
-                    'address': '2 Woodward Avenue, Detroit, MI 48226'}
+        location = {
+            'neighborhood': '',
+            'name': 'Coleman A. Young Municipal Center, Room 412',
+            'address': '2 Woodward Avenue, Detroit, MI 48226'
+        }
         meeting_name = 'Board of Wrecking Contractors Examiners'
 
-        for item in response.xpath('//div[contains(@class, "view-header")]//p[strong[contains(string(), "The Board of Wrecking Contractors")]]/following-sibling::p/text()').extract():
+        for item in response.xpath(
+            '//div[contains(@class, "view-header")]//p[strong[contains(string(), '
+            '"The Board of Wrecking Contractors")]]/following-sibling::p/text()'
+        ).extract():
 
             data = {
                 '_type': 'event',
@@ -35,14 +42,21 @@ class DetWreckingExaminersSpider(Spider):
                 'event_description': '',
                 'classification': BOARD,
                 'start': self._parse_start(item),
-                'end': {'date': None, 'time': None, 'note': ''},
+                'end': {
+                    'date': None,
+                    'time': None,
+                    'note': ''
+                },
                 'all_day': False,
                 'location': location,
                 'documents': [],
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data

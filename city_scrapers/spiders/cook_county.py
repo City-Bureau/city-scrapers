@@ -4,15 +4,11 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-from urllib import parse
+from datetime import datetime
 
 import scrapy
 
-from datetime import datetime
-
-from city_scrapers.constants import (
-    ADVISORY_COMMITTEE, BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
-)
+from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
@@ -33,7 +29,9 @@ class CookCountySpider(Spider):
     }
 
     def start_requests(self):
-        yield scrapy.FormRequest(url=self.url, method='GET', formdata=self.query, callback=self.parse)
+        yield scrapy.FormRequest(
+            url=self.url, method='GET', formdata=self.query, callback=self.parse
+        )
 
     def parse(self, response):
         """
@@ -68,7 +66,7 @@ class CookCountySpider(Spider):
             'sources': self._parse_sources(response)
         }
         data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(data, data['event_description'])
+        data['status'] = self._generate_status(data)
         data['classification'] = self._parse_classification(data['name'])
         return data
 
@@ -97,7 +95,8 @@ class CookCountySpider(Spider):
         Parse or generate location. Url, latitude and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
-        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()').extract()
+        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()'
+                                 ).extract()
         address = ' '.join([x.strip() for x in address])
         address = address.replace('Location:', '').strip()
         return {
@@ -110,7 +109,8 @@ class CookCountySpider(Spider):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()').extract()
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
         date = ''.join(date).upper()
         return 'ALL DAY' in date
 
@@ -124,7 +124,9 @@ class CookCountySpider(Spider):
         """
         Parse or generate event description.
         """
-        category_field = response.xpath("//div[contains(., 'Category:') and contains(@class, 'field-label')]")
+        category_field = response.xpath(
+            "//div[contains(., 'Category:') and contains(@class, 'field-label')]"
+        )
         field_items = category_field.xpath("./following::div[contains(@class, 'field-items')]")
         return ' '.join(
             field_items.xpath('.//p/text()').extract() +
@@ -135,7 +137,8 @@ class CookCountySpider(Spider):
         """
         Parse start date and time.
         """
-        start = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()').extract()
+        start = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                               ).extract()
         start = ''.join(start).upper()
         start = start.split(' TO ')[0].strip()
         start = start.replace('(ALL DAY)', '12:00AM')
@@ -147,7 +150,8 @@ class CookCountySpider(Spider):
         """
         Parse end date and time.
         """
-        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()').extract()
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
         date = ''.join(date).upper()
         date.replace('(ALL DAY)', 'TO 11:59PM')
         start_end = date.split(' TO ')
@@ -169,5 +173,7 @@ class CookCountySpider(Spider):
 
     def _parse_documents(self, response):
         files = response.css('span.file a')
-        return [{'url': f.xpath('./@href').extract_first(),
-                 'note': f.xpath('./text()').extract_first()} for f in files]
+        return [{
+            'url': f.xpath('./@href').extract_first(),
+            'note': f.xpath('./text()').extract_first()
+        } for f in files]

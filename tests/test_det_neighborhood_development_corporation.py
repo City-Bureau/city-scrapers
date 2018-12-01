@@ -3,16 +3,24 @@ from datetime import date, time
 import pytest
 import scrapy
 from freezegun import freeze_time
-
-from city_scrapers.spiders.det_neighborhood_development_corporation import DetNeighborhoodDevelopmentCorporationSpider
 from tests.utils import file_response
 
-LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '500 Griswold, Suite 2200, Detroit'}
+from city_scrapers.spiders.det_neighborhood_development_corporation import (
+    DetNeighborhoodDevelopmentCorporationSpider
+)
+
+LOCATION = {
+    'neighborhood': '',
+    'name': 'DEGC, Guardian Building',
+    'address': '500 Griswold, Suite 2200, Detroit'
+}
 
 NAME = 'Board of Directors'
 
-test_response = file_response('files/det_neighborhood_development_corporation.html',
-                              'http://www.degc.org/public-authorities/ndc/')
+test_response = file_response(
+    'files/det_neighborhood_development_corporation.html',
+    'http://www.degc.org/public-authorities/ndc/'
+)
 freezer = freeze_time('2018-07-29 12:00:01')
 spider = DetNeighborhoodDevelopmentCorporationSpider()
 freezer.start()
@@ -43,23 +51,16 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 7, 24),
-        'time': time(8, 45),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 7, 24), 'time': time(8, 45), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': None,
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_neighborhood_development_corporation/201807240845/x/board_of_directors'
+    assert parsed_items[0][
+        'id'] == 'det_neighborhood_development_corporation/201807240845/x/board_of_directors'
 
 
 def test_status():
@@ -71,9 +72,10 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [
-        {'url': 'http://www.degc.org/public-authorities/ndc/', 'note': ''}
-    ]
+    assert parsed_items[0]['sources'] == [{
+        'url': 'http://www.degc.org/public-authorities/ndc/',
+        'note': ''
+    }]
 
 
 def test_documents():
@@ -96,9 +98,13 @@ def test__type(item):
 
 
 # previous meetings e.g. http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/
-test_prev_response = file_response('files/det_neighborhood_development_corporation_prev.html',
-                                   'http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/')
-parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)]
+test_prev_response = file_response(
+    'files/det_neighborhood_development_corporation_prev.html',
+    'http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/'
+)
+parsed_prev_items = [
+    item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)
+]
 parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
 
 
@@ -125,15 +131,11 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == {
-        'date': date(2016, 6, 27), 'time': None, 'note': ''
-    }
+    assert parsed_prev_items[0]['start'] == {'date': date(2016, 6, 27), 'time': None, 'note': ''}
 
 
 def test_prev_end():
-    assert parsed_prev_items[0]['end'] == {
-        'date': None, 'time': None, 'note': ''
-    }
+    assert parsed_prev_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_prev_id():
@@ -150,9 +152,10 @@ def test_prev_location():
 
 
 def test_prev_sources():
-    assert parsed_prev_items[0]['sources'] == [
-        {'url': 'http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/', 'note': ''}
-    ]
+    assert parsed_prev_items[0]['sources'] == [{
+        'url': 'http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/',
+        'note': ''
+    }]
 
 
 def test_prev_documents():

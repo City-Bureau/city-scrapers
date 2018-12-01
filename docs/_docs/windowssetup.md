@@ -10,7 +10,7 @@ This tutorial uses Codeanywhere as an alternative to developing on Windows. Code
 
 ## Setup Codeanywhere
 
-1. Get a free tier Codeanywhere account at [https://codeanywhere.com/signup](https://codeanywhere.com/signup)
+1. Get a free tier Codeanywhere account at [https://codeanywhere.com/signup](https://codeanywhere.com/signup){:target="_blank"}
 2. Login to Codeanywhere
 3. Start a new Container by going to File -> New Connections -> Container.
 4. Choose the **Blank: Ubuntu 14.04** container. Name it something that makes sense to you.

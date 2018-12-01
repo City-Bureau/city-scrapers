@@ -32,7 +32,7 @@ class ChiSchoolsSpider(Spider):
                     'sources': self._parse_sources(response),
                 }
                 data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data, event_description)
+                data['status'] = self._generate_status(data)
                 data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 yield data
 
@@ -60,7 +60,7 @@ class ChiSchoolsSpider(Spider):
                 'time': date.time(),
                 'note': '',
             }
-        except:
+        except Exception:
             return None
 
     def _parse_all_day(self, item):
@@ -94,12 +94,7 @@ class ChiSchoolsSpider(Spider):
         # only extracting participation guidelines now
         relative_url = response.xpath('//a[contains(text(),"participation")]/@href').extract_first()
         url = response.urljoin(relative_url)
-        return [
-            {'url': url,
-             'note': 'participation guidelines'
-             }
-        ]
-
+        return [{'url': url, 'note': 'participation guidelines'}]
 
     def _parse_sources(self, response):
         """

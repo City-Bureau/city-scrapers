@@ -3,12 +3,12 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import scrapy
-
-import json
 import datetime as dt
+import json
 import re
 import unicodedata
+
+import scrapy
 
 from city_scrapers.constants import BOARD, COMMITTEE
 from city_scrapers.spider import Spider
@@ -28,13 +28,11 @@ class CookLandbankSpider(Spider):
 
     allowed_domains = ['www.cookcountylandbank.org']
     start_urls = ['http://www.cookcountylandbank.org/wp-admin/admin-ajax.php']
-
     """
     Set 90 day time horizon
     ie, will poll all dates 90 days from today for events.
     """
     time_horizon = 90
-
     """
     A little concerned about getting banned :( so being very conservative;
     downloading one at a time; One second per request. The rest - I believe
@@ -49,11 +47,8 @@ class CookLandbankSpider(Spider):
         'NEWSPIDER_MODULE': 'city_scrapers.spiders',
         'ROBOTSTXT_OBEY': True,
         'SPIDER_MODULES': ['city_scrapers.spiders'],
-        'USER_AGENT': (
-            'Documenters Aggregator (learn more and say hello at https://TKTK)'
-        )
+        'USER_AGENT': ('Documenters Aggregator (learn more and say hello at https://TKTK)')
     }
-
     """
     For each date, yields get_events_info which requests info for that
     date with parse() as callback
@@ -123,10 +118,8 @@ class CookLandbankSpider(Spider):
                 'sources': self._parse_sources(item),
                 'documents': self._parse_documents(item),
             }
-            data['status'] = self._generate_status(data, '')
-            data['classification'] = self._generate_classification(
-                data['name']
-            )
+            data['status'] = self._generate_status(data)
+            data['classification'] = self._generate_classification(data['name'])
             data['id'] = self._generate_id(data)
             yield data
         else:
@@ -147,15 +140,11 @@ class CookLandbankSpider(Spider):
         self.logger.error(repr(failure))
 
     def _parse_id(self, item):
-        event_id = item.css(
-            'div[data-event_id]::attr(data-event_id)'
-        ).extract_first()
+        event_id = item.css('div[data-event_id]::attr(data-event_id)').extract_first()
         return event_id
 
     def _parse_street_address(self, item):
-        street_address = item.css(
-            'item [itemprop=\'streetAddress\']::text'
-        ).extract_first()
+        street_address = item.css('item [itemprop=\'streetAddress\']::text').extract_first()
         return street_address
 
     def _parse_location(self, item):
@@ -188,14 +177,11 @@ class CookLandbankSpider(Spider):
         return False
 
     def _parse_name(self, item):
-        return item.css(
-            'span[class=\'evcal_desc2 evcal_event_title\']::text'
-        ).extract_first()
+        return item.css('span[class=\'evcal_desc2 evcal_event_title\']::text').extract_first()
 
     def _parse_description(self, item):
-        raw_description = item.xpath(
-            'string(normalize-space(//div[@itemprop="description"]))'
-        ).extract_first()
+        raw_description = item.xpath('string(normalize-space(//div[@itemprop="description"]))'
+                                     ).extract_first()
         normalized_description = unicodedata.normalize("NFKC", raw_description)
         description = re.sub(r'\s+', ' ', normalized_description)
 
@@ -212,16 +198,10 @@ class CookLandbankSpider(Spider):
         if datetime_str is None:
             return None
         date_time = dt.datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M')
-        return {
-            'date': date_time.date(),
-            'time': date_time.time(),
-            'note': ''
-        }
+        return {'date': date_time.date(), 'time': date_time.time(), 'note': ''}
 
     def _parse_start(self, item):
-        start_date_str = item.css(
-            '[itemprop=\'startDate\']::attr(content)'
-        ).extract_first()
+        start_date_str = item.css('[itemprop=\'startDate\']::attr(content)').extract_first()
         return self._parse_datetime(start_date_str)
 
     def _parse_end(self, item):
@@ -230,23 +210,14 @@ class CookLandbankSpider(Spider):
         Left commented the code to pull the end date if you want
         to include later.
         """
-        end_date_str = item.css(
-            '[itemprop=\'endDate\']::attr(content)'
-        ).extract_first()
+        end_date_str = item.css('[itemprop=\'endDate\']::attr(content)').extract_first()
         # Override time since often invalid (ex: 11:50pm)
-        return {
-            **self._parse_datetime(end_date_str),
-            'time': None
-        }
+        return {**self._parse_datetime(end_date_str), 'time': None}
 
     def _parse_sources(self, item):
-        source_url = item.css(
-            'div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)'
-        ).extract_first()
-        return [{
-            'url': source_url,
-            'note': 'Event Page'
-        }]
+        source_url = item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)'
+                              ).extract_first()
+        return [{'url': source_url, 'note': 'Event Page'}]
 
     def _parse_documents(self, item):
         documents = []
@@ -254,10 +225,7 @@ class CookLandbankSpider(Spider):
             '//div[@itemprop="description"]//a[contains(@href, "pdf")]/@href'
         ).extract_first()
         if agenda_pdf_link:
-            documents.append({
-                'url': agenda_pdf_link,
-                'note': 'Agenda'
-            })
+            documents.append({'url': agenda_pdf_link, 'note': 'Agenda'})
 
         return documents
 

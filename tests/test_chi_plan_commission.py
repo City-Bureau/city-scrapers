@@ -1,10 +1,9 @@
 from datetime import date, time
 
 import pytest
-
 from tests.utils import file_response
-from city_scrapers.spiders.chi_plan_commission import ChiPlanCommissionSpider
 
+from city_scrapers.spiders.chi_plan_commission import ChiPlanCommissionSpider
 
 test_response = file_response(
     'files/chi_plan_commission_chicago_plan_commission.html',
@@ -46,19 +45,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 1, 18),
-        'time': time(10, 0),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 1, 18), 'time': time(10, 0), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2018, 1, 18),
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': date(2018, 1, 18), 'time': None, 'note': ''}
 
 
 def test_id():
@@ -66,7 +57,7 @@ def test_id():
 
 
 def test_status():
-   assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == 'passed'
 
 
 def test_location():
@@ -79,7 +70,8 @@ def test_location():
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
-        'url': 'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html',
+        'url':
+            'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html',  # noqa
         'note': ''
     }]
 
@@ -87,13 +79,16 @@ def test_sources():
 def test_documents():
     assert parsed_items[0]['documents'] == [
         {
-            'url': 'https://www.cityofchicago.org/content/dam/city/depts/zlup/Planning_and_Policy/Minutes/CPC_Jan_2018_Minutes.pdf',
+            'url':
+                'https://www.cityofchicago.org/content/dam/city/depts/zlup/Planning_and_Policy/Minutes/CPC_Jan_2018_Minutes.pdf',  # noqa
             'note': 'Minutes'
-        }, {
-            'url': 'https://www.cityofchicago.org/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Jan_2018_Map_rev.pdf',
+        },
+        {
+            'url':
+                'https://www.cityofchicago.org/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Jan_2018_Map_rev.pdf',  # noqa
             'note': 'Map'
-
-        }]
+        }
+    ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -104,6 +99,3 @@ def test_all_day(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
     assert item['classification'] == 'Commission'
-
-
-

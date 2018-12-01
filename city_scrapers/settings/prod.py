@@ -21,10 +21,8 @@ EXTENSIONS = {
     'scrapy.extensions.closespider.CloseSpider': None,
 }
 
-
 FEED_EXPORTERS = {
-    'cityscrapers_jsonlines':
-        'city_scrapers.exporters.CityScrapersJsonLinesItemExporter'
+    'cityscrapers_jsonlines': 'city_scrapers.exporters.CityScrapersJsonLinesItemExporter'
 }
 
 FEED_STORAGES = {

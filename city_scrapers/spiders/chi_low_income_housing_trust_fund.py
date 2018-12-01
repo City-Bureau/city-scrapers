@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 
 import scrapy
+
 from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
@@ -42,9 +43,7 @@ class ChiLowIncomeHousingTrustFundSpider(Spider):
         Get next page. You must add logic to `next_url` and
         return a scrapy request.
         """
-        next_url = response.css(
-            '.calendar-next a::attr(href)'
-        ).extract_first()
+        next_url = response.css('.calendar-next a::attr(href)').extract_first()
         return scrapy.Request(next_url, callback=self.parse)
 
     def _parse_calendar(self, response):
@@ -72,7 +71,7 @@ class ChiLowIncomeHousingTrustFundSpider(Spider):
             **self._parse_start_end_time(response),
             'location': self._parse_location(response),
         }
-        data['status'] = self._generate_status(data, text='')
+        data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
         return data
 
@@ -86,9 +85,8 @@ class ChiLowIncomeHousingTrustFundSpider(Spider):
         """
         Parse or generate event description.
         """
-        return item.xpath(
-            './/span[@class="event-content-break"]/following-sibling::text()'
-        ).extract_first()
+        return item.xpath('.//span[@class="event-content-break"]/following-sibling::text()'
+                          ).extract_first()
 
     def _parse_classification(self, name):
         """
@@ -104,9 +102,7 @@ class ChiLowIncomeHousingTrustFundSpider(Spider):
         """
         Parse start date and time.
         """
-        time_str = response.css(
-            '.cc-panel .cc-block > span::text'
-        ).extract_first()
+        time_str = response.css('.cc-panel .cc-block > span::text').extract_first()
         time_str = re.sub(r'\s+', ' ', time_str)
         date_str = re.search(r'(?<=day, ).*(?= fro)', time_str).group().strip()
         start_str = re.search(r'(?<=from ).*(?= to)', time_str).group().strip()
@@ -129,18 +125,12 @@ class ChiLowIncomeHousingTrustFundSpider(Spider):
         """
         Parse or generate location.
         """
-        addr_sel = response.css(
-            '.cc-panel .cc-block:nth-child(2) > span:nth-of-type(2)::text'
-        )
+        addr_sel = response.css('.cc-panel .cc-block:nth-child(2) > span:nth-of-type(2)::text')
         if not addr_sel:
-            addr_sel = response.css(
-                '#span_event_where_multiline p:first-of-type::text'
-            )
+            addr_sel = response.css('#span_event_where_multiline p:first-of-type::text')
         addr_lines = addr_sel.extract()
         return {
-            'address': ' '.join([
-                re.sub(r'\s+', ' ', line).strip() for line in addr_lines
-            ]),
+            'address': ' '.join([re.sub(r'\s+', ' ', line).strip() for line in addr_lines]),
             'name': '',
             'neighborhood': '',
         }

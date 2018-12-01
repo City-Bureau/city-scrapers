@@ -1,7 +1,7 @@
+import json
 from datetime import date, time
 
 import pytest
-import json
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spiders.cook_water import CookWaterSpider
@@ -44,23 +44,23 @@ def test_location():
 def test_sources():
     assert parsed_items[0]['sources'] == [{
         'note': '',
-        'url': 'https://mwrd.legistar.com/DepartmentDetail.aspx?ID=1622&GUID=5E16B4CD-0692-4016-959D-3F080D6CFFB4'
+        'url':
+            'https://mwrd.legistar.com/DepartmentDetail.aspx?ID=1622&GUID=5E16B4CD-0692-4016-959D-3F080D6CFFB4'  # noqa
     }]
 
 
 def test_documents():
-    assert parsed_items[0]['documents'] == [{
-        'url': 'https://mwrd.legistar.com/MeetingDetail.aspx?ID=570944&GUID=DF1E81E4-2660-42AF-A398-8296420B9341&Options=info&Search=',
-        'note': 'Meeting details'
-    }]
+    assert parsed_items[0]['documents'] == []
     assert parsed_items[-2]['documents'] == [
         {
-            'url': 'https://mwrd.legistar.com/MeetingDetail.aspx?ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5&Options=info&Search=',
-            'note': 'Meeting details'
+            'url':
+                'https://mwrd.legistar.com/View.ashx?M=A&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
+            'note': 'Agenda'
         },
         {
-            'url': 'https://mwrd.legistar.com/View.ashx?M=A&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',
-            'note': 'Agenda'
+            'url':
+                'https://mwrd.legistar.com/View.ashx?M=M&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
+            'note': 'Minutes'
         },
     ]
 
@@ -91,8 +91,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end_time(item):
-    assert item['end'] == {
-        'date': item['start']['date'],
-        'time': None,
-        'note': ''
-    }
+    assert item['end'] == {'date': item['start']['date'], 'time': None, 'note': ''}

@@ -1,13 +1,15 @@
-import pytest
 from datetime import date, time
 
-
+import pytest
 from tests.utils import file_response
+
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spiders.det_city_planning import DetCityPlanningSpider
 
-
-test_response = file_response('files/det_city_planning.html', url='https://www.detroitmi.gov/Government/Boards/City-Planning-Commission-Meetings')
+test_response = file_response(
+    'files/det_city_planning.html',
+    url='https://www.detroitmi.gov/Government/Boards/City-Planning-Commission-Meetings'
+)
 spider = DetCityPlanningSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 parsed_items = sorted(parsed_items, key=lambda x: x['start']['date'])
@@ -22,7 +24,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2017, 6, 1), 'time': time(17, 0), 'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'}
+    assert parsed_items[0]['start'] == {
+        'date': date(2017, 6, 1),
+        'time': time(17, 0),
+        'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'
+    }
 
 
 def test_end():
@@ -54,8 +60,8 @@ def test_sources():
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-      'url': 'https://www.detroitmi.gov/LinkClick.aspx?fileticket=Cuo4pTDuxak%3d&portalid=0',
-      'note': 'Agenda'
+        'url': 'https://www.detroitmi.gov/LinkClick.aspx?fileticket=Cuo4pTDuxak%3d&portalid=0',
+        'note': 'Agenda'
     }]
 
 

@@ -1,22 +1,21 @@
 from datetime import date, time
 
 import pytest
-# Adapted from test_chi_parks.py
 from freezegun import freeze_time
-
 from tests.utils import file_response
+
 from city_scrapers.constants import CANCELED, COMMITTEE
 from city_scrapers.spiders.wayne_building_authority import WayneBuildingAuthoritySpider
-
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
-    'files/wayne_building_authority_meetings.html', url='https://www.waynecounty.com/boards/buildingauthority/meetings.aspx')
+    'files/wayne_building_authority_meetings.html',
+    url='https://www.waynecounty.com/boards/buildingauthority/meetings.aspx'
+)
 spider = WayneBuildingAuthoritySpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
-
 
 # PARAMETRIZED TESTS
 

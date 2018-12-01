@@ -29,13 +29,15 @@ class DetBrownfieldRedevelopmentAuthoritySpider(Spider):
     def _next_meeting(self, response):
         # the two meetings seem to always be held back-to-back,
         # so generate two meetings for each entry
-        next_meeting_xpath = '//p[contains(., "The next regularly scheduled DBRA meeting ")]//text()'
+        next_meeting_xpath = (
+            '//p[contains(., "The next regularly scheduled DBRA meeting ")]//text()'
+        )
         next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
         for i, meeting in enumerate(('Board of Directors', 'Community Advisory Committee')):
             data = self._set_meeting_defaults(response, meeting)
             data['start'] = self._parse_start(next_meeting_text, i)
             data['documents'] = []
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 
@@ -62,7 +64,7 @@ class DetBrownfieldRedevelopmentAuthoritySpider(Spider):
             data = self._set_meeting_defaults(response, meeting_name)
             data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
             data['documents'] = prev_meeting_docs[(meeting_name, meeting_date)]
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 
@@ -104,7 +106,11 @@ class DetBrownfieldRedevelopmentAuthoritySpider(Spider):
             'name': name,
             'event_description': '',
             'classification': classification,
-            'end': {'date': None, 'time': None, 'note': ''},
+            'end': {
+                'date': None,
+                'time': None,
+                'note': ''
+            },
             'all_day': False,
             'location': {
                 'neighborhood': '',
@@ -112,7 +118,10 @@ class DetBrownfieldRedevelopmentAuthoritySpider(Spider):
                 'address': '500 Griswold, Suite 2200, Detroit'
             },
             'documents': [],
-            'sources': [{'url': response.url, 'note': ''}]
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }]
         }
         return data
 

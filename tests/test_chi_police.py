@@ -1,6 +1,7 @@
 from datetime import date, time
-import pytest
+
 from tests.utils import file_response
+
 from city_scrapers.constants import POLICE_BEAT
 from city_scrapers.spiders.chi_police import ChiPoliceSpider
 
@@ -18,20 +19,12 @@ def test_description():
 
 
 def test_start():
-    EXPECTED_START = {
-        'date': date(2017, 12, 28),
-        'time': time(18, 30),
-        'note': ''
-    }
+    EXPECTED_START = {'date': date(2017, 12, 28), 'time': time(18, 30), 'note': ''}
     assert parsed_items[0]['start'] == EXPECTED_START
 
 
 def test_end_time():
-    EXPECTED_END = {
-        'date': date(2017, 12, 28),
-        'time': time(19, 30),
-        'note': ''
-    }
+    EXPECTED_END = {'date': date(2017, 12, 28), 'time': time(19, 30), 'note': ''}
     assert parsed_items[0]['end'] == EXPECTED_END
 
 
@@ -57,9 +50,9 @@ def test_documents():
 
 def test_location():
     EXPECTED_LOCATION = {
-            'address': "St. Ferdinand's3115 N. Mason Chicago, IL",
-            'name': '',
-            'neighborhood': ''
+        'address': "St. Ferdinand's3115 N. Mason Chicago, IL",
+        'name': '',
+        'neighborhood': ''
     }
     assert parsed_items[0]['location'] == EXPECTED_LOCATION
 
@@ -69,6 +62,8 @@ def test__type():
 
 
 def test_sources():
-    EXPECTED_SOURCES = [{'url': 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',
-                         'note': ''}]
+    EXPECTED_SOURCES = [{
+        'url': 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',  # noqa
+        'note': ''
+    }]
     assert parsed_items[0]['sources'] == EXPECTED_SOURCES

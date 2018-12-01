@@ -1,31 +1,33 @@
-import os
 import datetime
 import json
+import os
 import time
+from random import randint
 
 from airtable import Airtable
-from city_scrapers.utils import get_key
-from random import randint
+from pytz import utc
 from requests.exceptions import HTTPError
 from scrapy.exceptions import DropItem
-from pytz import utc
+
+from city_scrapers.utils import get_key
 
 AIRTABLE_BASE_KEY = os.environ.get('CITY_SCRAPERS_AIRTABLE_BASE_KEY')
 AIRTABLE_DATA_TABLE = os.environ.get('CITY_SCRAPERS_AIRTABLE_DATA_TABLE')
-KEEP_FIELDS = ['id', 'name', 'description', 'classification', 'start_time', 'end_time',
-               'timezone', 'agency_name', 'location_name', 'location_url',
-               'location_address', 'location_latitude', 'location_longitude',
-               'geocode', 'url', 'community_area', 'scrape_date_initial',
-               'scrape_date_update', 'val_id', 'val_name', 'val_description',
-               'val_classification', 'val_start_time', 'val_end_time',
-               'val_timezone', 'val_loc_name', 'val_loc_url', 'val_loc_address',
-               'val_coord_latitude', 'val_coord_longitude', 'val_sources']
+KEEP_FIELDS = [
+    'id', 'name', 'description', 'classification', 'start_time', 'end_time', 'timezone',
+    'agency_name', 'location_name', 'location_url', 'location_address', 'location_latitude',
+    'location_longitude', 'geocode', 'url', 'community_area', 'scrape_date_initial',
+    'scrape_date_update', 'val_id', 'val_name', 'val_description', 'val_classification',
+    'val_start_time', 'val_end_time', 'val_timezone', 'val_loc_name', 'val_loc_url',
+    'val_loc_address', 'val_coord_latitude', 'val_coord_longitude', 'val_sources'
+]
 
 
 class AirtablePipeline(object):
     """
     Stub pipeline to save to AirTable.
     """
+
     def __init__(self):
         self.airtable = Airtable(AIRTABLE_BASE_KEY, AIRTABLE_DATA_TABLE)
 
@@ -34,7 +36,9 @@ class AirtablePipeline(object):
         # opencivicdata standard
 
         if item.get('start_time') is None:
-            spider.logger.debug('AIRTABLE PIPELINE: Ignoring event without start_time {0}'.format(item['id']))
+            spider.logger.debug(
+                'AIRTABLE PIPELINE: Ignoring event without start_time {0}'.format(item['id'])
+            )
             return item
 
         dt = item['start_time']
@@ -65,7 +69,7 @@ class AirtablePipeline(object):
             spider.logger.exception('Original message')
             spider.logger.error(json.dumps(new_item, indent=4, sort_keys=True))
             raise DropItem('Could not save {0}'.format(new_item['id']))
-        except Exception as e:
+        except Exception:
             spider.logger.exception('Unknown error')
 
     def _format_values(self, k, v):

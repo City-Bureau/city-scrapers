@@ -2,13 +2,11 @@
 from datetime import datetime
 
 import dateutil
-import scrapy
-
 import dateutil.parser
+from legistar.events import LegistarEventsScraper
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
-from legistar.events import LegistarEventsScraper
 
 
 class DetWaterSewageDepartmentSpider(Spider):
@@ -19,7 +17,7 @@ class DetWaterSewageDepartmentSpider(Spider):
     allowed_domains = ['dwsd.legistar.com']
 
     def _make_legistar_call(self, since=None):
-        les = LegistarEventsScraper(requests_per_minute=0)
+        les = LegistarEventsScraper()
         les.EVENTSPAGE = 'https://dwsd.legistar.com/Calendar.aspx'
         les.BASE_URL = 'https://dwsd.legistar.com'
         if not since:
@@ -45,7 +43,11 @@ class DetWaterSewageDepartmentSpider(Spider):
                 'event_description': '',
                 'classification': BOARD,
                 'start': self._parse_start(item),
-                'end': {'date': None, 'time': None, 'note': ''},
+                'end': {
+                    'date': None,
+                    'time': None,
+                    'note': ''
+                },
                 'all_day': False,
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(item),
@@ -58,10 +60,10 @@ class DetWaterSewageDepartmentSpider(Spider):
 
     def _parse_documents(self, item):
         """
-        Parse meeting details and agenda if available.
+        Parse meeting minutes and agenda if available.
         """
         documents = []
-        for key in ['Meeting Details', 'Agenda', 'Minutes']:
+        for key in ['Agenda', 'Minutes']:
             document = self._get_doc(item, key)
             if document:
                 documents.append(document)
@@ -103,6 +105,6 @@ class DetWaterSewageDepartmentSpider(Spider):
         """
         try:
             url = item['Name']['url']
-        except:
+        except Exception:
             url = 'https://mwrd.legistar.com/Calendar.aspx'
         return [{'url': url, 'note': ''}]

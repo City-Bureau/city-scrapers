@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-import re
-from datetime import time
-
 import dateutil.parser
-import scrapy
 
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
@@ -14,7 +10,9 @@ class ChiDevelopmentFundSpider(Spider):
     agency_name = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
-    start_urls = ['https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_developmentfund.html']
+    start_urls = [
+        'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_developmentfund.html'
+    ]
 
     def parse(self, response):
         """
@@ -34,20 +32,27 @@ class ChiDevelopmentFundSpider(Spider):
             meetings = self.format_meetings(meetings)
             for meeting in meetings:
                 name, start = self._parse_start(meeting)
-                data = {'_type': 'event',
-                        'name': "Chicago Development Fund: {}".format(name),
-                        'event_description': description,
-                        'classification': COMMISSION,
-                        'start': start,
-                        'all_day': False,
-                        'location': {'neighborhood': '',
-                                     'name': 'City Hall',
-                                     'address': '121 N. LaSalle St., Room 1000'},
-                        'sources': [{'url': response.url, 'note': ''}],
-                        'documents': self._parse_documents(column, meeting, response)}
+                data = {
+                    '_type': 'event',
+                    'name': "Chicago Development Fund: {}".format(name),
+                    'event_description': description,
+                    'classification': COMMISSION,
+                    'start': start,
+                    'all_day': False,
+                    'location': {
+                        'neighborhood': '',
+                        'name': 'City Hall',
+                        'address': '121 N. LaSalle St., Room 1000'
+                    },
+                    'sources': [{
+                        'url': response.url,
+                        'note': ''
+                    }],
+                    'documents': self._parse_documents(column, meeting, response),
+                }
                 data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data, '')
+                data['status'] = self._generate_status(data)
                 yield data
 
     @staticmethod
@@ -59,9 +64,7 @@ class ChiDevelopmentFundSpider(Spider):
 
     @staticmethod
     def parse_description(response):
-        desc_xpath = """
-            //p[contains(text(), "The Chicago City Council established")]//text()
-        """
+        desc_xpath = '//p[contains(text(), "The Chicago City Council established")]//text()'
         description = ' '.join(t.strip() for t in response.xpath(desc_xpath).extract())
         return description
 
@@ -79,12 +82,26 @@ class ChiDevelopmentFundSpider(Spider):
         # and return none if not possible
         try:
             dt, other_text = dateutil.parser.parse(meeting, fuzzy_with_tokens=True)
-            # based on Agenda mtg time seems to vary but time not stated mtg desc
+            # based on Agenda time seems to vary but time not stated desc
             name = [s.strip() for s in other_text if s.strip()]
-            return ' '.join(name), {'date': dt.date(), 'time': None, 'note': 'see agenda document for time'}
+            return (
+                ' '.join(name),
+                {
+                    'date': dt.date(),
+                    'time': None,
+                    'note': 'see agenda document for time'
+                },
+            )
         except TypeError:
             name = ' '.join(meeting.split(' ')[:-3])
-            return name, {'date': None, 'time': None, 'note': 'see agenda document for time'}
+            return (
+                name,
+                {
+                    'date': None,
+                    'time': None,
+                    'note': 'see agenda document for time'
+                },
+            )
 
     def _parse_documents(self, item, meeting, response):
         # Find <a> tags where 1st, non-blank, preceding text = meeting (e.g. 'Jan 16')
@@ -96,7 +113,8 @@ class ChiDevelopmentFundSpider(Spider):
         """.format(meeting, meeting)
         documents = item.xpath(anchor_xpath)
         if len(documents) >= 0:
-            return [{'url': response.urljoin(document.xpath('@href').extract_first()),
-                     'note': document.xpath('text()').extract_first()}
-                    for document in documents]
-        return [{}]
+            return [{
+                'url': response.urljoin(document.xpath('@href').extract_first()),
+                'note': document.xpath('text()').extract_first()
+            } for document in documents]
+        return []

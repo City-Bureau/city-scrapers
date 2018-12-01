@@ -4,10 +4,10 @@ from urllib.parse import parse_qs
 
 import pytest
 from freezegun import freeze_time
+from tests.utils import file_response, read_test_file_content
 
 from city_scrapers.constants import CITY_COUNCIL
 from city_scrapers.spiders.chi_citycouncil import ChiCityCouncilSpider
-from tests.utils import file_response, read_test_file_content
 
 INITIAL_REQUEST = 'https://ocd.datamade.us/events/?' \
                   'start_date__gt=2017-10-16&' \
@@ -42,14 +42,20 @@ def test_gen_requests():
 
 
 def test_addtl_pages():
-    more = json.loads('{"meta": {"page": 1, "per_page": 100, "total_count": 160, "count": 100, "max_page": 2}}')
+    more = json.loads(
+        '{"meta": {"page": 1, "per_page": 100, "total_count": 160, "count": 100, "max_page": 2}}'
+    )
     assert spider._addtl_pages(more) is True
-    no_more = json.loads('{"meta": {"page": 1, "per_page": 100, "total_count": 2, "count": 2, "max_page": 1}}')
+    no_more = json.loads(
+        '{"meta": {"page": 1, "per_page": 100, "total_count": 2, "count": 2, "max_page": 1}}'
+    )
     assert spider._addtl_pages(no_more) is False
 
 
 def test_next_page():
-    more = json.loads('{"meta": {"page": 1, "per_page": 100, "total_count": 160, "count": 100, "max_page": 2}}')
+    more = json.loads(
+        '{"meta": {"page": 1, "per_page": 100, "total_count": 160, "count": 100, "max_page": 2}}'
+    )
     original_params = parse_qs(INITIAL_REQUEST)
     next_page = spider._next_page(more)
     static_params = {k: v for k, v in original_params.items() if k != 'page'}
@@ -58,38 +64,31 @@ def test_next_page():
 
 
 def test_parse_documents():
-    documents = [
-        {
-            "date": "",
-            "note": "Notice",
-            "links": [
-                {
-                    "url": "http://media.legistar.com/chic/meetings/633C3556-29C4-4645-A916-E767E00A98CC/Notice,%2003-22-2018.pdf",
-                    "media_type": "application/pdf"
-                }
-            ]
-        }
-    ]
-    assert spider._parse_documents(documents)[0] == \
-           {'url': documents[0]['links'][0]['url'], 'note': "Notice"}
+    documents = [{
+        "date": "",
+        "note": "Notice",
+        "links": [{
+            "url": (
+                "http://media.legistar.com/chic/meetings/633C3556-29C4-4645-A916-E767E00A98CC/"
+                "Notice,%2003-22-2018.pdf"
+            ),
+            "media_type": "application/pdf"
+        }]
+    }]
+    assert spider._parse_documents(documents)[0] == {
+        'url': documents[0]['links'][0]['url'],
+        'note': "Notice"
+    }
 
 
 # Item fields
 def test_start(parsed_item):
-    expected_start = {
-        'date': date(2017, 10, 16),
-        'time': time(10, 00),
-        'note': ''
-    }
+    expected_start = {'date': date(2017, 10, 16), 'time': time(10, 00), 'note': ''}
     assert parsed_item['start'] == expected_start
 
 
 def test_end(parsed_item):
-    expected_end = {
-        'date': date(2017, 10, 16),
-        'time': None,
-        'note': ''
-    }
+    expected_end = {'date': date(2017, 10, 16), 'time': None, 'note': ''}
     assert parsed_item['end'] == expected_end
 
 
@@ -102,21 +101,24 @@ def test_description(parsed_item):
 
 
 def test_location(parsed_item):
-    expected_location = {'address': '121 N LaSalle Dr, Chicago, IL',
-                         'name': 'Council Chambers ,  City Hall'}
+    expected_location = {
+        'address': '121 N LaSalle Dr, Chicago, IL',
+        'name': 'Council Chambers ,  City Hall'
+    }
     assert parsed_item['location'] == expected_location
 
 
 def test_documents(parsed_item):
     assert parsed_item['documents'] == [{
-        "url": "http://media.legistar.com/chic/meetings/B5103C52-1793-4B07-9F28-E0A1223E1540/Fin%20CANCELLED%2010-16_20171010085450.pdf",
+        "url":
+            "http://media.legistar.com/chic/meetings/B5103C52-1793-4B07-9F28-E0A1223E1540/Fin%20CANCELLED%2010-16_20171010085450.pdf",  # noqa
         "note": "Cancellation Notice",
     }]
 
 
 def test_id(parsed_item):
     assert parsed_item['id'] == \
-           'chi_citycouncil/201710161000/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'
+           'chi_citycouncil/201710161000/ocd-event-86094f46-cf45-46f8-89e2-0bf783e7aa12/joint_committee_finance_transportation_and_public_way'  # noqa
 
 
 def test_all_day(parsed_item):
@@ -142,7 +144,8 @@ def test_sources(parsed_item):
             "note": "api"
         },
         {
-            "url": "https://chicago.legistar.com/MeetingDetail.aspx?ID=565455&GUID=B5103C52-1793-4B07-9F28-E0A1223E1540&Options=info&Search=",
+            "url":
+                "https://chicago.legistar.com/MeetingDetail.aspx?ID=565455&GUID=B5103C52-1793-4B07-9F28-E0A1223E1540&Options=info&Search=",  # noqa
             "note": "web"
         }
     ]

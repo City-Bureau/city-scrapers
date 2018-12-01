@@ -3,8 +3,8 @@ from datetime import date, time
 import pytest
 import scrapy
 from freezegun import freeze_time
-
 from tests.utils import file_response
+
 from city_scrapers.constants import BOARD, CONFIRMED, PASSED
 from city_scrapers.spiders.det_downtown_development_authority import (
     DetDowntownDevelopmentAuthoritySpider
@@ -20,15 +20,13 @@ LOCATION = {
 
 NAME = 'Board of Directors'
 
-test_response = file_response('files/det_downtown_development_authority.html',
-                              'http://www.degc.org/public-authorities/dda/')
+test_response = file_response(
+    'files/det_downtown_development_authority.html', 'http://www.degc.org/public-authorities/dda/'
+)
 freezer = freeze_time('2018-07-25 12:00:01')
 spider = DetDowntownDevelopmentAuthoritySpider()
 freezer.start()
-parsed_items = [
-    item for item in spider._next_meeting(test_response)
-    if isinstance(item, dict)
-]
+parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
 freezer.stop()
 
 
@@ -54,19 +52,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 7, 25),
-        'time': time(15, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 7, 25), 'time': time(15, 00), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': None,
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_id():
@@ -85,9 +75,10 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [
-        {'url': 'http://www.degc.org/public-authorities/dda/', 'note': ''}
-    ]
+    assert parsed_items[0]['sources'] == [{
+        'url': 'http://www.degc.org/public-authorities/dda/',
+        'note': ''
+    }]
 
 
 def test_documents():
@@ -122,12 +113,9 @@ test_prev_response = file_response(
     'http://www.degc.org/public-authorities/dda/dda-fy-2016-2017-meetings/'
 )
 parsed_prev_items = [
-    item for item in spider._parse_prev_meetings(test_prev_response)
-    if isinstance(item, dict)
+    item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)
 ]
-parsed_prev_items = sorted(
-    parsed_prev_items, key=lambda x: x['start']['date'], reverse=True
-)
+parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
 
 
 def test_request_count():
@@ -154,15 +142,11 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == {
-        'date': date(2017, 6, 28), 'time': None, 'note': ''
-    }
+    assert parsed_prev_items[0]['start'] == {'date': date(2017, 6, 28), 'time': None, 'note': ''}
 
 
 def test_prev_end():
-    assert parsed_prev_items[0]['end'] == {
-        'date': None, 'time': None, 'note': ''
-    }
+    assert parsed_prev_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_prev_id():
@@ -181,15 +165,11 @@ def test_prev_location():
 
 
 def test_prev_sources():
-    assert parsed_prev_items[0]['sources'] == [
-        {
-            'url': (
-                'http://www.degc.org/public-authorities/'
-                'dda/dda-fy-2016-2017-meetings/'
-            ),
-            'note': ''
-        }
-    ]
+    assert parsed_prev_items[0]['sources'] == [{
+        'url': ('http://www.degc.org/public-authorities/'
+                'dda/dda-fy-2016-2017-meetings/'),
+        'note': ''
+    }]
 
 
 def test_prev_documents():
@@ -202,17 +182,13 @@ def test_prev_documents():
             'note': 'Meeting Materials',
         },
         {
-            'url': (
-                'http://www.degc.org/wp-content/uploads'
-                '/2017-06-28-Attachment-D.pdf'
-            ),
+            'url': ('http://www.degc.org/wp-content/uploads'
+                    '/2017-06-28-Attachment-D.pdf'),
             'note': 'Attachment D',
         },
         {
-            'url': (
-                'http://www.degc.org/wp-content/uploads'
-                '/2017-06-28-Attachment-K.pdf'
-            ),
+            'url': ('http://www.degc.org/wp-content/uploads'
+                    '/2017-06-28-Attachment-K.pdf'),
             'note': 'Attachment k',
         },
         {

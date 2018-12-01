@@ -25,11 +25,13 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
         """
         yield from self._prev_meetings(response)
 
-        next_board_meeting_xpath = '//p[.//text()[contains(., "The next Regular Board meeting is")]]//text()'
+        next_board_meeting_xpath = (
+            '//p[.//text()[contains(., "The next Regular Board meeting is")]]//text()'
+        )
         next_board_text = ' '.join(response.xpath(next_board_meeting_xpath).extract())
         data = self._set_meeting_defaults(response)
         data['start'] = self._parse_start(next_board_text)
-        data['status'] = self._generate_status(data, text='')
+        data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
 
         yield data
@@ -47,7 +49,11 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
             'name': 'Board of Directors',
             'event_description': '',
             'classification': BOARD,
-            'end': {'date': None, 'time': None, 'note': ''},
+            'end': {
+                'date': None,
+                'time': None,
+                'note': ''
+            },
             'all_day': False,
             'location': {
                 'neighborhood': '',
@@ -55,7 +61,10 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
                 'address': '500 Griswold, Suite 2200, Detroit'
             },
             'documents': [],
-            'sources': [{'url': response.url, 'note': ''}]
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }]
         }
         return data
 
@@ -79,7 +88,7 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
             data = self._set_meeting_defaults(response)
             data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
             data['documents'] = docs[meeting_date]
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 

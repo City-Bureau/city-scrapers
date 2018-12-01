@@ -41,9 +41,7 @@ class ChiTeacherPensionSpider(Spider):
                         '_type': 'event',
                         'name': group_name,
                         'description': '',
-                        'classification': self._parse_classification(
-                            group_name
-                        ),
+                        'classification': self._parse_classification(group_name),
                         'start': self._parse_start(date_obj, time_obj),
                         'end': self._parse_end(date_obj),
                         'all_day': False,
@@ -52,7 +50,7 @@ class ChiTeacherPensionSpider(Spider):
                         'documents': self._parse_documents(item.xpath('span')),
                     }
                     data['id'] = self._generate_id(data)
-                    data['status'] = self._generate_status(data, '')
+                    data['status'] = self._generate_status(data)
                     next_sib = next_sib.xpath('following-sibling::*[1]')
                     yield data
 
@@ -60,9 +58,8 @@ class ChiTeacherPensionSpider(Spider):
         """
         Parse or generate event name.
         """
-        return meeting_group.xpath(
-            './text()'
-        ).extract_first().replace(' Schedule', '').replace('\xa0', ' ')
+        return meeting_group.xpath('./text()').extract_first().replace(' Schedule',
+                                                                       '').replace('\xa0', ' ')
 
     def _parse_classification(self, group_name):
         """
@@ -75,7 +72,7 @@ class ChiTeacherPensionSpider(Spider):
 
     @staticmethod
     def _parse_datetime(datetime_str):
-        date_clean_re = r'[^:,\s\w\d]'
+        date_clean_re = r'[^:\s\w\d]'
         datetime_split = datetime_str.split(',')
         date_str = ','.join(datetime_str.split(',')[:3])
         time_str = None
@@ -85,14 +82,12 @@ class ChiTeacherPensionSpider(Spider):
             date_str, time_str = date_str.split(' at ')
         date_obj = datetime.strptime(
             re.sub(date_clean_re, '', date_str).strip(),
-            '%A, %B %d, %Y',
+            '%A %B %d %Y',
         ).date()
 
         if time_str:
             time_str = re.sub(date_clean_re, '', time_str)
-            time_obj = datetime.strptime(
-                time_str.strip(), '%I:%M %p'
-            ).time()
+            time_obj = datetime.strptime(time_str.strip(), '%I:%M %p').time()
         else:
             time_obj = None
         return date_obj, time_obj
@@ -123,16 +118,11 @@ class ChiTeacherPensionSpider(Spider):
         link = item.xpath('./a')[0]
         return [{
             'note': link.xpath('.//text()').extract_first(),
-            'url': 'https://www.ctpf.org{}'.format(
-                link.xpath("./@href").extract_first()
-            ),
+            'url': 'https://www.ctpf.org{}'.format(link.xpath("./@href").extract_first()),
         }]
 
     def _parse_sources(self, response):
         """
         Parse or generate sources.
         """
-        return [{
-            'url': response.url,
-            'note': ''
-        }]
+        return [{'url': response.url, 'note': ''}]

@@ -22,9 +22,7 @@ class CookHousingAuthoritySpider(Spider):
 
     def parse(self, response):
         for url in self._gen_requests(response):
-            yield scrapy.Request(
-                url, callback=self._parse_event, dont_filter=True
-            )
+            yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
     def _gen_requests(self, response):
         for link in response.css('guid::text').extract():
@@ -69,7 +67,7 @@ class CookHousingAuthoritySpider(Spider):
                 'timezone': tz,
             }
             parsed_event['id'] = self._generate_id(parsed_event)
-            parsed_event['status'] = self._generate_status(parsed_event, '')
+            parsed_event['status'] = self._generate_status(parsed_event)
             yield parsed_event
 
     def _parse_location(self, event):

@@ -28,10 +28,24 @@ We focused our universe of meetings on the local- and county-level, at agencies 
   - Sub-committees
   - Advisory boards
 
+## Web Scrapers
+
+Given the amount of different agencies we wanted to pull information from, we realized early on that checking each agency website manually would take too much time to be sustainable. By looking at patterns in how each website lists its meetings, we can write small programs that visit these web pages and follow custom rules to pull information for each site. This process is called [web scraping](https://en.wikipedia.org/wiki/Web_scraping){:target="\_blank"}, and we saved time by using freely available open source libraries like [Scrapy](https://scrapy.org/){:target="\_blank"} as a foundation for our code.
+
+## GitHub and Open Source
+
+Our project is on GitHub at [City-Bureau/city-scrapers](https://github.com/City-Bureau/city-scrapers/){:target="\_blank"} which makes it easier to manage tasks and lowers the barrier to entry for new contributors.
+
+[GitHub](https://github.com/){:target="\_blank"} is a web application for managing software projects with functionality for organizing tasks, project documentation, and onboarding. Through our [GitHub issues](https://github.com/City-Bureau/city-scrapers/issues/){:target="\_blank"} we can track the status of work and assign scrapers or other issues to anyone who expresses interest. It also has tools for deploying updates to the code, reviewing submitted work, and publishing static HTML sites (including this one).
+
+We also made the project open source, which for our specific license means all of the code we've written is available for others to copy and modify so long as they attribute the original creation to us. You can learn more about different options for open source software licenses at [choosealicense.com](https://choosealicense.com/){:target="\_blank"}.
+
 ## Templates
 
-Before you start building spiders, organize the information of your relevant agencies in a spreadsheet (you can start from our [downloadable template](https://docs.google.com/spreadsheets/d/1egRcdp5JPnRjk04gvNA-DrGP7TJg01hvPlDPnkjYCa0/edit#gid=1059508700) or see our [example spreadsheet](https://docs.google.com/spreadsheets/d/1egRcdp5JPnRjk04gvNA-DrGP7TJg01hvPlDPnkjYCa0/edit#gid=0)). Because we aimed to create a public-facing tool, we collected information like agency name, meeting-holding body name, jurisdiction, official website, topical tags, contact information and social media handles. As we began coding we added fields to track progress of each scraper.
+Before you start building scrapers, organize the information of your relevant agencies in a spreadsheet (you can start from our [downloadable template](https://docs.google.com/spreadsheets/d/1egRcdp5JPnRjk04gvNA-DrGP7TJg01hvPlDPnkjYCa0/edit#gid=1059508700){:target="\_blank"} or see our [example spreadsheet](https://docs.google.com/spreadsheets/d/1egRcdp5JPnRjk04gvNA-DrGP7TJg01hvPlDPnkjYCa0/edit#gid=0){:target="\_blank"}). Because we aimed to create a public-facing tool, we collected information like agency name, meeting-holding body name, jurisdiction, official website, topical tags, contact information and social media handles. As we began coding we added fields to track progress of each scraper.
+
+![Google Sheets example](/assets/images/google_sheets.png "Google Sheets example"){:target="\_blank"}
 
 ## Best Practices
 
-Get a sense of how meeting-holding bodies are scheduling public meetings. Do any agencies use a management tool like [Legistar](https://chicago.legistar.com/Calendar.aspx) or [Municode](https://library.municode.com/il/cook_county) that will be easier to scrape data from? Are any meeting dates stored in formats that are particularly difficult to access, such as in a PDF? If so, call the agency out on it! Given specific, structured feedback on how they could make their calendars more accessible, the public officials we met with were typically willing to do so. What's more, it may save some work on your end. Check out our best practices guides for [event managers](https://docs.google.com/document/d/1JpeHVw0H6ghRi3EkvqRa3sDAXkfc_goP33CAtdFPEbA/edit) and [technical managers](https://docs.google.com/document/d/15A5hD8OM3RhRO0dfPw9vgRig4oZF4qzlATrAGjV1ZxM/edit) to get started.
+Get a sense of how meeting-holding bodies are scheduling public meetings. Do any agencies use a management tool like [Legistar](https://chicago.legistar.com/Calendar.aspx){:target="\_blank"} or [Municode](https://library.municode.com/il/cook_county){:target="\_blank"} that will be easier to scrape data from? Are any meeting dates stored in formats that are particularly difficult to access, such as in a PDF? If so, call the agency out on it! Given specific, structured feedback on how they could make their calendars more accessible, the public officials we met with were typically willing to do so. What's more, it may save some work on your end. Check out our best practices guides for [event managers](/assets/pdf/PublicMeetingsBestPractices.pdf){:target="\_blank"} and [technical managers](/assets/pdf/PublicMeetingsBestPractices.pdf){:target="\_blank"} to get started.

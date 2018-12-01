@@ -4,7 +4,6 @@ from .travis import TravisValidationPipeline
 from .csv import CsvPipeline
 from .item import CityScrapersItemPipeline
 
-
 __all__ = (
     'CityScrapersLoggingPipeline',
     'AirtablePipeline',

@@ -4,6 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import datetime
+
 from dateutil.parser import parse as dateparse
 
 from city_scrapers.constants import ADVISORY_COMMITTEE
@@ -43,61 +44,22 @@ class ChiAnimalSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': 'Advisory Board',
-                'event_description': self._parse_description(text),
+                'event_description': '',
                 'classification': ADVISORY_COMMITTEE,
                 'start': self._parse_start(text),
-                'all_day': self._parse_all_day(text),
-                'location': self._parse_location(text),
+                'all_day': False,
+                'location': {
+                    'name': 'David R. Lee Animal Care Center',
+                    'address': '2741 S. Western Ave, Chicago, IL 60608',
+                },
                 'sources': self._parse_sources(response),
-                'documents': self._documents(),
+                'documents': [],
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._parse_status(data)
             data['end'] = self._generate_end(data['start'])
+            data['status'] = self._generate_status(data, text=text)
 
             yield data
-
-    def _parse_status(self, data):
-        """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
-        """
-        start_date = data['start']['date']
-        today = datetime.date.today()
-        if start_date < today:
-            return 'passed'
-
-        if start_date <= (today + datetime.timedelta(days=7)):
-            return 'confirmed'
-
-        return 'tentative'
-
-    def _parse_location(self, item):
-        """
-        Parse or generate location.
-        """
-        return {
-            'name': 'David R. Lee Animal Care Center',
-            'address': '2741 S. Western Ave, Chicago, IL 60608',
-        }
-
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to false.
-        """
-        return False
-
-    def _parse_description(self, item):
-        """
-        Parse or generate event name.
-        """
-        return None
 
     def _parse_start(self, item):
         """
@@ -126,21 +88,3 @@ class ChiAnimalSpider(Spider):
         Parse sources.
         """
         return [{'url': response.url, 'note': ''}]
-
-    def _documents(self):
-        """
-        Add standard documents.
-        """
-        return [{
-            'url': (
-                'https://www.cityofchicago.org/content/dam/city/depts/cacc/'
-                'PDFiles/CACC_Commission_Meeting_Rules2.pdf'),
-            'note': 'Commission Rules for Public Participation',
-        }, {
-            'url': (
-                'https://www.cityofchicago.org/content/dam/city/depts/cacc/'
-                'PDFiles/CACC_FAQs_prior_to_Jan_21_2016_revised_Sept2016.pdf'),
-            'note': (
-                'Answers to Frequently Asked Question at the Commission '
-                'Meetings'),
-        }]

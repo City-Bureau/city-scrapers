@@ -1,11 +1,13 @@
 from datetime import date, time
 
 from tests.utils import file_response
+
 from city_scrapers.spiders.cook_county import CookCountySpider
 
-
-test_response = file_response('files/cook_county_event.html',
-                              url='https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6')
+test_response = file_response(
+    'files/cook_county_event.html',
+    url='https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6'
+)
 spider = CookCountySpider()
 item = spider._parse_event(test_response)
 
@@ -15,11 +17,7 @@ def test_name():
 
 
 def test_start_time():
-    assert item['start'] == {
-        'date': date(2017, 11, 15),
-        'time': time(13, 00),
-        'note': ''
-    }
+    assert item['start'] == {'date': date(2017, 11, 15), 'time': time(13, 00), 'note': ''}
 
 
 def test_end_time():
@@ -31,7 +29,7 @@ def test_end_time():
 
 
 def test_id():
-   assert item['id'] == 'cook_county/201711151300/x/zba_public_hearing'
+    assert item['id'] == 'cook_county/201711151300/x/zba_public_hearing'
 
 
 def test_all_day():
@@ -40,11 +38,17 @@ def test_all_day():
 
 def test_classification():
     assert spider._parse_classification('Board of Commissioners') == 'Board'
-    assert spider._parse_classification('Economic Development Advisory Committee') == 'Advisory Committee'
+    assert spider._parse_classification(
+        'Economic Development Advisory Committee'
+    ) == 'Advisory Committee'
     assert spider._parse_classification('Finance Committee') == 'Committee'
     assert spider._parse_classification('Finance Subcommittee on Litigation') == 'Committee'
-    assert spider._parse_classification('Finance Subcommittee on Workers Compensation') == 'Committee'
-    assert spider._parse_classification('Committee of Suburban Cook County Commissioners - PACE') == 'Committee'
+    assert spider._parse_classification(
+        'Finance Subcommittee on Workers Compensation'
+    ) == 'Committee'
+    assert spider._parse_classification(
+        'Committee of Suburban Cook County Commissioners - PACE'
+    ) == 'Committee'
     assert spider._parse_classification('Rules & Administration Committee') == 'Committee'
     assert spider._parse_classification('Roads & Bridges Committee') == 'Committee'
     assert spider._parse_classification('Zoning & Building Committee') == 'Committee'
@@ -69,8 +73,10 @@ def test__type():
 
 
 def test_sources():
-    assert item['sources'] == [{'url': 'https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6',
-                                'note': ''}]
+    assert item['sources'] == [{
+        'url': 'https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6',
+        'note': ''
+    }]
 
 
 def test_description():
@@ -78,7 +84,8 @@ def test_description():
         'Public Hearing '
         'A public hearing has been scheduled for the Cook County Zoning Board of Appeals on '
         'Wednesday, November 15, 2017, 1:00PM at '
-        '69 W. Washington, 22nd Floor Conference Room, Chicago, Illinois 60602.')
+        '69 W. Washington, 22nd Floor Conference Room, Chicago, Illinois 60602.'
+    )
 
 
 def test_documents():

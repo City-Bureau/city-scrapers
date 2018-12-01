@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+
 from legistar.events import LegistarEventsScraper
 
 from city_scrapers.constants import BOARD, COMMITTEE, FORUM
@@ -31,7 +32,7 @@ class CookWaterSpider(Spider):
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
-        les = LegistarEventsScraper(requests_per_minute=0)
+        les = LegistarEventsScraper()
         les.EVENTSPAGE = 'https://mwrd.legistar.com/Calendar.aspx'
         les.BASE_URL = 'https://mwrd.legistar.com'
         if not since:
@@ -63,27 +64,18 @@ class CookWaterSpider(Spider):
                 'sources': self._parse_sources(item),
                 'documents': self._parse_documents(item)
             }
-            data['status'] = self._generate_status(
-                data, item['Meeting Location']
-            )
+            data['status'] = self._generate_status(data, item['Meeting Location'])
             data['id'] = self._generate_id(data)
             yield data
 
     def _parse_documents(self, item):
         """
-        Parse meeting details and agenda if available.
+        Parse meeting minutes and agenda if available.
         """
         documents = []
-        details = item['Meeting Details']
-        if type(details) == dict:
-            documents.append({
-                'url': details['url'], 'note': 'Meeting details'
-            })
-        agenda = item['Agenda']
-        if type(agenda) == dict:
-            documents.append({
-                'url': agenda['url'], 'note': 'Agenda'
-            })
+        for doc in ['Agenda', 'Minutes']:
+            if isinstance(item[doc], dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     def _parse_classification(self, name):
@@ -124,15 +116,11 @@ class CookWaterSpider(Spider):
         if date and time:
             time_string = '{0} {1}'.format(date, time)
             naive = datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
-            return {'date': naive.date(),
-                    'time': naive.time(),
-                    'note': ''}
+            return {'date': naive.date(), 'time': naive.time(), 'note': ''}
         elif not time:
             time_string = '{0}'.format(date)
             naive = datetime.strptime(time_string, '%m/%d/%Y')
-            return {'date': naive.date(),
-                    'time': None,
-                    'note': ''}
+            return {'date': naive.date(), 'time': None, 'note': ''}
 
     def _parse_sources(self, item):
         """
@@ -140,6 +128,6 @@ class CookWaterSpider(Spider):
         """
         try:
             url = item['Name']['url']
-        except:
+        except Exception:
             url = 'https://mwrd.legistar.com/Calendar.aspx'
         return [{'url': url, 'note': ''}]

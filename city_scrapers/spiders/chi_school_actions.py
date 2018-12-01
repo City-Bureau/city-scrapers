@@ -36,7 +36,7 @@ class ChiSchoolActionsSpider(Spider):
                         '_type': 'event',
                         'name': item_name,
                         'all_day': False,
-                        'event_description': self._parse_description(school_name, meeting_type),
+                        'event_description': '',
                         'classification': FORUM,
                         'start': start,
                         'end': end,
@@ -45,7 +45,7 @@ class ChiSchoolActionsSpider(Spider):
                         'sources': self._parse_sources(),
                     }
                     item['id'] = self._generate_id(item)
-                    item['status'] = self._generate_status(item, '')
+                    item['status'] = self._generate_status(item)
                     yield item
 
     def _parse_name(self, school_name, meeting_type):
@@ -55,17 +55,9 @@ class ChiSchoolActionsSpider(Spider):
         return 'School Actions: {} {}'.format(school_name, meeting_type)
 
     @staticmethod
-    def _parse_description(school_name, meeting_type):
-        """
-        Parse or generate event description.
-        """
-        return '{} {}'.format(school_name, meeting_type)
-
-    @staticmethod
     def _parse_meeting_type(item, school_action):
         return '{}: {}'.format(
-            item.css('td > p.sub-title:first-of-type::text').extract_first(),
-            school_action
+            item.css('td > p.sub-title:first-of-type::text').extract_first(), school_action
         )
 
     @staticmethod
@@ -100,11 +92,7 @@ class ChiSchoolActionsSpider(Spider):
         date_str = self._parse_date_str(item)
         time = item.css('.time::text').extract_first()
         dt = self._parse_datetime_str(date_str, time.split('-')[0])
-        return {
-            'date': dt.date(),
-            'time': dt.time(),
-            'note': ''
-        }
+        return {'date': dt.date(), 'time': dt.time(), 'note': ''}
 
     def _parse_end(self, item):
         """
@@ -115,11 +103,7 @@ class ChiSchoolActionsSpider(Spider):
         split_time = time.split('-')
         if len(split_time) > 1:
             dt = self._parse_datetime_str(date_str, split_time[1])
-            return {
-                'date': dt.date(),
-                'time': dt.time(),
-                'note': ''
-            }
+            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
         else:
             return self._parse_start(item)
 
@@ -152,10 +136,10 @@ class ChiSchoolActionsSpider(Spider):
         note_link_items = school.css('ul.bullets:nth-of-type(2) li')
 
         for item in itertools.chain(doc_link_items, note_link_items):
-            doc_link_list.append(
-                {
-                    'note': item.css('a::text').extract_first(),
-                    'url': 'http://schoolinfo.cps.edu/SchoolActions/' + item.css('a::attr(href)').extract_first(),
-                }
-            )
+            doc_link_list.append({
+                'note': item.css('a::text').extract_first(),
+                'url':
+                    'http://schoolinfo.cps.edu/SchoolActions/' +
+                    item.css('a::attr(href)').extract_first(),
+            })
         return doc_link_list

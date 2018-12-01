@@ -12,14 +12,14 @@ toc: true
 
 ## Resources
 
-- [Open Civic Data Project](https://opencivicdata.readthedocs.io/en/latest/)
+- [Open Civic Data Project](https://opencivicdata.readthedocs.io/en/latest/){:target="_blank"}
 
 ## Blogs
 
-- [City Bureau and ProPublica Illinois Partner on Public Meeting Data](https://www.propublica.org/nerds/city-bureau-propublica-illinois-public-meeting-data)
-- [Investing in Our Documenters = Investing in Our Community](https://medium.com/city-bureau/investing-in-our-documenters-investing-in-our-community-ec360cc5e32e)
-- [City Scrapers Helps the Code-Curious Get Involved in Civic Tech](https://medium.com/city-bureau/city-scrapers-helps-the-code-curious-get-involved-in-civic-tech-cba16fc3888b)
-- [Q&A: Darryl Holliday, News Lab Director & Co-Founder @ City Bureau](https://medium.com/the-idea/q-a-darryl-holliday-news-lab-director-co-founder-city-bureau-968a76d0ff99)
+- [City Bureau and ProPublica Illinois Partner on Public Meeting Data](https://www.propublica.org/nerds/city-bureau-propublica-illinois-public-meeting-data){:target="_blank"}
+- [Investing in Our Documenters = Investing in Our Community](https://medium.com/city-bureau/investing-in-our-documenters-investing-in-our-community-ec360cc5e32e){:target="_blank"}
+- [City Scrapers Helps the Code-Curious Get Involved in Civic Tech](https://medium.com/city-bureau/city-scrapers-helps-the-code-curious-get-involved-in-civic-tech-cba16fc3888b){:target="_blank"}
+- [Q&A: Darryl Holliday, News Lab Director & Co-Founder @ City Bureau](https://medium.com/the-idea/q-a-darryl-holliday-news-lab-director-co-founder-city-bureau-968a76d0ff99){:target="_blank"}
 
 ## Acknowledgements
 
