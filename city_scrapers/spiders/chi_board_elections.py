@@ -39,7 +39,7 @@ class ChiBoardElectionsSpider(Spider):
             'classification': COMMISSION,
             'start': self._parse_start(meetingdate),
             'all_day': False,
-            'documents': [],
+            'documents': self._parse_documents(response),
             'sources': [{
                 'url': response.url,
                 'note': ''
@@ -134,4 +134,7 @@ class ChiBoardElectionsSpider(Spider):
         """
         Parse or generate documents.
         """
-        return [{'url': '', 'note': ''}]
+        link = item.xpath("//a/@href").extract_first()
+        if link:
+            return [{'url': "https://app.chicagoelections.com{}".format(link),
+                     'note': 'Regular Board Meeting Agenda'}]
