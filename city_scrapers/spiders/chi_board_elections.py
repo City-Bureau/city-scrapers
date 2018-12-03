@@ -6,13 +6,6 @@ from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
 
-"""
-TODO
--Fix parse_location
--Find out why the documents are working
-"""
-
-
 class ChiBoardElectionsSpider(Spider):
     name = 'chi_board_elections'
     agency_name = 'Chicago Board of Elections'
@@ -160,7 +153,6 @@ class ChiBoardElectionsSpider(Spider):
         """
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
-        response.xpath('//div[@class="copy"]/text()').extract()[2]
         """
 
         return {
@@ -173,8 +165,10 @@ class ChiBoardElectionsSpider(Spider):
         """
         Parse or generate documents.
         """
-        return [{'url': "https://app.chicagoelections.com{}".format(link),
-                'note': 'Regular Board Meeting Agenda'}]
+        return [{
+            'url': "https://app.chicagoelections.com{}".format(link),
+            'note': 'Regular Board Meeting Agenda'
+        }]
 
     def _parse_exception(self, time):
         """

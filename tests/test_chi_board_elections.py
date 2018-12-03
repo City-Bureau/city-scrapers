@@ -58,10 +58,12 @@ def test_sources():
 
 
 def test_documents():
-    assert parsed_items[0]['documents'] == [
-        {'note': 'Regular Board Meeting Agenda',
-         'url': 'https://app.chicagoelections.com/documents/'
-         'general/Standard-Board-Meeting-Agenda.pdf'}]
+    assert parsed_items[0]['documents'] == [{
+        'note': 'Regular Board Meeting Agenda',
+        'url':
+            'https://app.chicagoelections.com/documents/'
+            'general/Standard-Board-Meeting-Agenda.pdf'
+    }]
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -98,6 +100,7 @@ def test_description_prev():
 def test_start_prev():
     assert parsed_items_prev[0]['start'] == \
            {'date': date(2018, 11, 27), 'time': time(9, 30), 'note': ''}
+    
 
 # def test_start_full():
 #     listy = []
