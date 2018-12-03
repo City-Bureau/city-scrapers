@@ -39,7 +39,7 @@ class ChiBoardElectionsSpider(Spider):
             'classification': COMMISSION,
             'start': self._parse_start(meetingdate),
             'all_day': False,
-            'documents': self._parse_documents(response),
+            'documents': [],
             'sources': [{
                 'url': response.url,
                 'note': ''
@@ -55,43 +55,68 @@ class ChiBoardElectionsSpider(Spider):
             'time': None,
             'note': '',
         }
+
+        link = response.xpath("//a/@href").extract_first()
+        if link:
+            data["documents"] = self._parse_documents(link)
         data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
 
         yield data
 
     def _prev_meetings(self, response):
-        meetings = response.xpath("//a/text()").extract()
-        meetingdates = [
-            meeting[22:]
-            for meeting in meetings
-            if "Minutes" not in meeting and "mode" not in meeting and meeting is not " "
-        ]
-        for meetingdate in meetingdates:
-            meetingdate = "9:30 a.m. on " + meetingdate
-            data = {
-                '_type': 'event',
-                'name': "Electoral Board",
-                'event_description': "",
-                'classification': COMMISSION,
-                'start': self._parse_start(meetingdate),
-                'all_day': False,
-                'location': self._parse_location(response),
-                'documents': [],
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }],
-            }
-            data['end'] = {
-                'date': data['start']['date'],
-                'time': None,
-                'note': '',
-            }
-            data['status'] = self._generate_status(data)
-            data['id'] = self._generate_id(data)
+        """
+        If there's video in the entry, check that the last date doesn't match. If it doesn't, then enter.
+        If video not in entry, then minutes in entry, if so extract date and data.
+        -Hang up: How do I get data that doesn't use span?
 
-            yield data
+         for meeting in meetings:
+...     try:
+...             meetingdates.append(re.search(r'(–|- |-)(.+[0-9]{4})', meeting).group(2))
+...     except AttributeError:
+...             continue
+        """
+
+        meetings = response.xpath("//a").extract()
+        meetingdates = []
+        prevdate = None
+        for meeting in meetings:
+            meeting.replace('\xa0', ' ')  # Gets rid of non-breaking space character
+            try:
+                meetingdate = re.search(r'(–|- |-)(.+[0-9]{4})', meeting).group(2)
+                while len(meetingdate) > 30:
+                    meetingdate = re.search(r'(–|- |-)(.+[0-9]{4})', meetingdate).group(2)
+                meetingdate.lstrip()
+                if prevdate != meetingdate:  # To acount for duplicates
+                    meetingdatetime = "9:30 a.m. on " + meetingdate
+                    data = {
+                        '_type': 'event',
+                        'name': "Electoral Board",
+                        'event_description': "",
+                        'classification': COMMISSION,
+                        'start': self._parse_start(meetingdatetime),
+                        'all_day': False,
+                        'location': self._parse_location(response),
+                        'documents': [],
+                        'sources': [{
+                            'url': response.url,
+                            'note': ''
+                        }],
+                    }
+                    data['end'] = {
+                        'date': data['start']['date'],
+                        'time': None,
+                        'note': '',
+                    }
+                    if "Minutes" in meeting:
+                        minuteslink = re.search(r'="(.+)"', meeting).group(1)
+                        data["documents"] = self._parse_documents(minuteslink)
+                    data['status'] = self._generate_status(data)
+                    data['id'] = self._generate_id(data)
+                    yield data
+                prevdate = meetingdate
+            except AttributeError:  # Sometimes meetings will return None
+                continue
 
     def _parse_name(self, item):
         """
@@ -130,11 +155,9 @@ class ChiBoardElectionsSpider(Spider):
             'neighborhood': '',
         }
 
-    def _parse_documents(self, item):
+    def _parse_documents(self, link):
         """
         Parse or generate documents.
         """
-        link = item.xpath("//a/@href").extract_first()
-        if link:
-            return [{'url': "https://app.chicagoelections.com{}".format(link),
-                     'note': 'Regular Board Meeting Agenda'}]
+        return [{'url': "https://app.chicagoelections.com{}".format(link),
+                'note': 'Regular Board Meeting Agenda'}]
