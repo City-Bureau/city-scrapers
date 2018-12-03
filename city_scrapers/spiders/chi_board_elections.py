@@ -5,6 +5,7 @@ from datetime import datetime
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
+
 """
 TODO
 -Fix parse_location
@@ -62,9 +63,8 @@ class ChiBoardElectionsSpider(Spider):
             'note': '',
         }
 
-        link = response.xpath("//a/@href").extract_first()
-        if link:
-            data["documents"] = self._parse_documents(link)
+        link = response.xpath("//a/@href").extract()[2]
+        data['documents'] = self._parse_documents(link)
         data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
 
@@ -72,18 +72,12 @@ class ChiBoardElectionsSpider(Spider):
 
     def _prev_meetings(self, response):
         """
-        Meetingdate regex first searches for the 3 types of hyphens that chi_board_elections uses (they like
-        switching it up), and then finds a year number, and returns everything in between.
-
-         for meeting in meetings:
-...     try:
-...             meetingdates.append(re.search(r'(–|- |-)(.+[0-9]{4})', meeting).group(2))
-...     except AttributeError:
-...             continue
+        Meetingdate regex first searches for the 3 types of hyphens that chi_board_elections
+        uses (they like switching it up), and then finds a year number,
+        and returns everything in between.
         """
 
         meetings = response.xpath("//a").extract()
-        meetingdates = []
         prevdate = None
         for meeting in meetings:
             meeting.replace('\xa0', ' ')  # Gets rid of non-breaking space character
@@ -118,9 +112,9 @@ class ChiBoardElectionsSpider(Spider):
                     data['status'] = self._generate_status(data)
                     data['id'] = self._generate_id(data)
                     yield data
-                if not self._different_time(meeting):
+                if not self._different_time(meeting):  # To handle the odd 7 AM/7PM meetings
                     prevdate = meetingdate
-                if "Nov. 13" in meetingdate:
+                if "Nov. 13" in meetingdate:  # To handle the one date that falls outside of scraper
                     yield self._parse_exception("a.m.")
                     yield self._parse_exception("p.m.")
             except AttributeError:  # Sometimes meetings will return None
@@ -166,7 +160,9 @@ class ChiBoardElectionsSpider(Spider):
         """
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
+        response.xpath('//div[@class="copy"]/text()').extract()[2]
         """
+
         return {
             'address': '8th Floor Office, 69 W. Washington St.',
             'name': 'Cook County Administration Building',
