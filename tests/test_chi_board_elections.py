@@ -100,9 +100,7 @@ def test_start_full():
     listy = []
     for x in parsed_items_prev:
         listy.append(x['start'])
-    assert listy == []
-
-
+    assert listy == ["Just for demonstration purposes"]
 
 def test_end_prev():
     assert parsed_items_prev[0]['end'] == {'date': date(2018, 11, 27), 'time': None, 'note': ''}
@@ -133,7 +131,9 @@ def test_sources_prev():
 
 
 def test_documents_prev():
-    assert parsed_items_prev[0]['documents'] == []
+    assert parsed_items_prev[4]['documents'] == \
+           [{'url': 'https://app.chicagoelections.com/documents/general/BoardMeetingMinutes-2018-10-30.pdf',
+            'note': 'Regular Board Meeting Agenda'}]
 
 
 @pytest.mark.parametrize('item', parsed_items_prev)

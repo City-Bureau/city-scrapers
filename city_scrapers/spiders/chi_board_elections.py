@@ -5,6 +5,12 @@ from datetime import datetime
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
 
+"""
+TODO
+-Fix parse_location
+-Find out why the documents are working
+"""
+
 
 class ChiBoardElectionsSpider(Spider):
     name = 'chi_board_elections'
@@ -37,7 +43,7 @@ class ChiBoardElectionsSpider(Spider):
             'name': "Electoral Board",
             'event_description': "",
             'classification': COMMISSION,
-            'start': self._parse_start(meetingdate),
+            'start': self._parse_start(meetingdate, next_meeting),
             'all_day': False,
             'documents': [],
             'sources': [{
@@ -66,9 +72,8 @@ class ChiBoardElectionsSpider(Spider):
 
     def _prev_meetings(self, response):
         """
-        If there's video in the entry, check that the last date doesn't match. If it doesn't, then enter.
-        If video not in entry, then minutes in entry, if so extract date and data.
-        -Hang up: How do I get data that doesn't use span?
+        Meetingdate regex first searches for the 3 types of hyphens that chi_board_elections uses (they like
+        switching it up), and then finds a year number, and returns everything in between.
 
          for meeting in meetings:
 ...     try:
@@ -88,13 +93,12 @@ class ChiBoardElectionsSpider(Spider):
                     meetingdate = re.search(r'(–|- |-)(.+[0-9]{4})', meetingdate).group(2)
                 meetingdate.lstrip()
                 if prevdate != meetingdate:  # To acount for duplicates
-                    meetingdatetime = "9:30 a.m. on " + meetingdate
                     data = {
                         '_type': 'event',
                         'name': "Electoral Board",
                         'event_description': "",
                         'classification': COMMISSION,
-                        'start': self._parse_start(meetingdatetime),
+                        'start': self._parse_start(meetingdate, meeting),
                         'all_day': False,
                         'location': self._parse_location(response),
                         'documents': [],
@@ -114,7 +118,11 @@ class ChiBoardElectionsSpider(Spider):
                     data['status'] = self._generate_status(data)
                     data['id'] = self._generate_id(data)
                     yield data
-                prevdate = meetingdate
+                if not self._different_time(meeting):
+                    prevdate = meetingdate
+                if "Nov. 13" in meetingdate:
+                    yield self._parse_exception("a.m.")
+                    yield self._parse_exception("p.m.")
             except AttributeError:  # Sometimes meetings will return None
                 continue
 
@@ -130,19 +138,29 @@ class ChiBoardElectionsSpider(Spider):
         """
         return ''
 
-    def _parse_start(self, item):
+    def _parse_start(self, meetingdate, meeting):
         """
         Parse start date and time.
         """
-        formatitem = item.replace("a.m.", "AM")
+        meetingtime = "9:30 AM on "
+        if "7 " in meeting:
+            time = re.search(r'7.+\S[m,.]', meeting).group(0)
+            str(time)
+            time = time.replace("7 ", "7:00 ")
+            meetingtime = "{} on ".format(time)
+
+        if "9:30" not in meeting:
+            meetingdate = meetingtime + meetingdate
+        formatitem = meetingdate.replace("a.m.", "AM")
+        formatitem = formatitem.replace("am", "AM")
         formatitem = formatitem.replace("p.m.", "PM")
         formatitem = formatitem.replace("Sept", "Sep")
         try:
             datetime_item = datetime.strptime(formatitem, '%I:%M %p on %b. %d, %Y')
         except ValueError:  # Some months are abbreviated, some are not
             datetime_item = datetime.strptime(formatitem, '%I:%M %p on %B %d, %Y')
-        dict = {'date': datetime_item.date(), 'time': datetime_item.time(), 'note': ''}
-        return dict
+        dicti = {'date': datetime_item.date(), 'time': datetime_item.time(), 'note': ''}
+        return dicti
 
     def _parse_location(self, item):
         """
@@ -161,3 +179,40 @@ class ChiBoardElectionsSpider(Spider):
         """
         return [{'url': "https://app.chicagoelections.com{}".format(link),
                 'note': 'Regular Board Meeting Agenda'}]
+
+    def _parse_exception(self, time):
+        """
+        The one date that's not bounded by <a> tags (and also has no Minutes or videos) is Nov. 6
+        """
+        meeting = "7 {} ".format(time)
+        meetingdate = "Nov. 6, 2018"
+        data = {
+            '_type': 'event',
+            'name': "Electoral Board",
+            'event_description': "",
+            'classification': COMMISSION,
+            'start': self._parse_start(meetingdate, meeting),
+            'all_day': False,
+            'location': self._parse_location(""),
+            'documents': [],
+            'sources': [{
+                'url': '',
+                'note': ''
+            }],
+        }
+        data['end'] = {
+            'date': data['start']['date'],
+            'time': None,
+            'note': '',
+        }
+        data['status'] = self._generate_status(data)
+        data['id'] = self._generate_id(data)
+        return data
+
+    def _different_time(self, meeting):
+        """
+        Checks if the meeting is an AM meeting, in which case there would
+        be a 7 a.m. and 7 p.m. meeting on the same day, so we flag the bot to run again.
+        """
+        time = re.search(r'7.+[m,.]', meeting)
+        return True if time else False
