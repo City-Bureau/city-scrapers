@@ -2,6 +2,7 @@ import os
 import string
 import sys
 import time
+from datetime import date
 from urllib.parse import urlparse
 
 import requests
@@ -143,7 +144,8 @@ def _render_content(template, name, agency_name=None, domains=None, start_urls=N
         agency_name=agency_name,
         domains=domains,
         classname=classname,
-        start_urls=start_urls
+        start_urls=start_urls,
+        date_str=date.today().strftime('%Y-%m-%d'),
     )
 
 

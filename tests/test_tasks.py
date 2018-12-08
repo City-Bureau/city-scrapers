@@ -3,6 +3,7 @@ from unittest.mock import Mock
 
 import pytest
 import requests
+from freezegun import freeze_time
 from lxml.html import fromstring
 from scripts import generate_spider, validate_spider
 from tests.utils import file_response, read_test_file_content
@@ -29,9 +30,12 @@ def test_get_domains():
 
 def test_render_test():
     test_file_content = read_test_file_content('files/test_testspider.py.example')
+    freezer = freeze_time('2018-12-01')
+    freezer.start()
     rendered_content = generate_spider._render_content(
         'test.tmpl', name=SPIDER_NAME, domains=SPIDER_DOMAINS, start_urls=SPIDER_START_URLS
     )
+    freezer.stop()
     assert test_file_content == rendered_content
 
 
