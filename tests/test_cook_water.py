@@ -7,7 +7,7 @@ from city_scrapers.constants import BOARD
 from city_scrapers.spiders.cook_water import CookWaterSpider
 
 test_response = []
-with open('tests/files/cook_water_test.json') as f:
+with open('tests/files/cook_water.json') as f:
     test_response.extend(json.loads(f.read()))
 spider = CookWaterSpider()
 parsed_items = [item for item in spider._parse_events(test_response)]
