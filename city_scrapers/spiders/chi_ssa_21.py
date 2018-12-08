@@ -40,18 +40,6 @@ class ChiSsa21Spider(Spider):
 
             yield data
 
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
-
     def _parse_name(self, item):
         """
         Parse or generate event name.
