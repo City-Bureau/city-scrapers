@@ -1,19 +1,17 @@
-import pytest
-
-from tests.utils import file_response
-from city_scrapers.spiders.old_town import OldTownSpider
-from freezegun import freeze_time
 from datetime import date, time
+
+import pytest
+from freezegun import freeze_time
+from tests.utils import file_response
+
+from city_scrapers.spiders.old_town import OldTownSpider
 
 freezer = freeze_time('2018-12-08')
 freezer.start()
 
-
-#def test_tests():
+# def test_tests():
 #    print('Please write some tests for this spider or at least disable this one.')
 #    assert False
-
-
 """
 Uncomment below
 """
@@ -56,16 +54,15 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': '',
-        'note': ''
-    }]
+    assert parsed_items[0]['sources'] == [{'url': '', 'note': ''}]
 
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-      'url': 'https://oldtownchicago.org/wp-content/uploads/2018/08/2018-SSA-48-Commission-Minutes-1.10.2018.docx',
-      'note': 'minutes'
+        'url':
+            'https://oldtownchicago.org/wp-content/uploads' +
+            '/2018/08/2018-SSA-48-Commission-Minutes-1.10.2018.docx',
+        'note': 'minutes'
     }]
 
 
