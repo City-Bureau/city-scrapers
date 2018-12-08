@@ -88,10 +88,9 @@ class OldTownSpider(Spider):
         datetimeObject = datetime.strptime(dateStr, '%A %B %d %I:%M%p')
         datetimeObject = datetimeObject.replace(year=datetimeObject.today().year)
 
-        return
-        {
-             'date': datetimeObject.date,
-              'time': datetimeObject.time,
+        return{
+             'date': datetimeObject.date(),
+              'time': datetimeObject.time(),
                'note': '',
         }
 
@@ -111,10 +110,9 @@ class OldTownSpider(Spider):
         datetimeObject = datetime.strptime(dateStr, '%A %B %d %I:%M%p')
         datetimeObject = datetimeObject.replace(year=datetimeObject.today().year)
 
-        return
-        {
-             'date': datetimeObject.date,
-              'time': datetimeObject.time,
+        return{
+             'date': datetimeObject.date(),
+              'time': datetimeObject.time(),
                'note': '',
         }
 
