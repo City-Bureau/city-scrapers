@@ -33,7 +33,7 @@ class OldTownSpider(Spider):
                 'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'location': self._parse_location(item),
-                'documents': self._parse_documents(item),
+                'documents': self._parse_documents(item, response),
                 'sources': self._parse_sources(item),
             }
 
@@ -58,21 +58,13 @@ class OldTownSpider(Spider):
         """
         Parse or generate event name.
         """
-    #    return 'Regular Commission Meeting'
-    #    return item.xpath('text()').extract_first().strip()
-        return item.xpath('following-sibling::*').extract_first().strip()
-
-    #    return item.xpath('following-sibling::*[1]/text()').extract_first().strip()
-    #    print('\n*TEST* ')
-    #    print(item.xpath('following-sibling::*[1]/text()').extract())
-    #    print('**\n')
-    #    return item.xpath('following-sibling::*[1]/text()').extract()[1].strip()
+        return 'Regular Commission Meeting'
 
     def _parse_description(self, item):
         """
         Parse or generate event description.
         """
-        return item.xpath('text()').extract_first().strip()
+        return ''
 
     def _parse_classification(self, item):
         """
@@ -93,19 +85,9 @@ class OldTownSpider(Spider):
         amPm = timeChunk.index('m')
         dateStr += ' ' + timeChunk[startIndex+1:endIndex] + timeChunk[amPm-1:amPm+1]
 
-        print('\n*TEST* ') 
-        print(dateStr + '\n')
-
         datetimeObject = datetime.strptime(dateStr, '%A %B %d %I:%M%p')
         datetimeObject = datetimeObject.replace(year=datetimeObject.today().year)
 
-        print(datetimeObject)
-        print('**\n')
-
-    #   WEDNESDAY JANUARY 10
-    #   print('debug string' + item.extract())
-    #   print('debug string2' + item.xpath('text()').extract_first())
-    #   item.xpath('text()').extract_first()
         return
         {
              'date': datetimeObject.date,
@@ -126,21 +108,9 @@ class OldTownSpider(Spider):
         endIndex = amPm-1
         dateStr += ' ' + timeChunk[startIndex+1:endIndex] + timeChunk[amPm-1:amPm+1]
 
-        print('\n*TEST* ') 
-        print(dateStr + '\n')
-
         datetimeObject = datetime.strptime(dateStr, '%A %B %d %I:%M%p')
         datetimeObject = datetimeObject.replace(year=datetimeObject.today().year)
 
-        print(datetimeObject.date())
-        print('**\n')
-        print(datetimeObject.time())
-        print('**\n')
-
-    #   WEDNESDAY JANUARY 10
-    #   print('debug string' + item.extract())
-    #   print('debug string2' + item.xpath('text()').extract_first())
-    #   item.xpath('text()').extract_first()
         return
         {
              'date': datetimeObject.date,
@@ -165,10 +135,23 @@ class OldTownSpider(Spider):
             'neighborhood': '',
         }
 
-    def _parse_documents(self, item):
+    def _parse_documents(self, item, response):
         """
         Parse or generate documents.
         """
+        dateStr = item.xpath('text()').extract_first().strip()
+        datetimeObject = datetime.strptime(dateStr, '%A %B %d')
+        datetimeObject = datetimeObject.replace(year=datetimeObject.today().year)
+
+        for item in response.css('.meeting-minutes-block a.minutes-file'):
+            text = item.xpath('text()').extract_first()
+            url = item.xpath('@href').extract_first()
+            startIndex = text.index('inutes')
+            pdfDateStr = text[startIndex+7:len(text)]
+            pdfDatetime = datetime.strptime(pdfDateStr, '%m/%d/%y')
+            if(pdfDatetime.date()==datetimeObject.date()):
+                return [{'url': url, 'note': 'minutes'}]
+
         return [{'url': '', 'note': ''}]
 
     def _parse_sources(self, item):
