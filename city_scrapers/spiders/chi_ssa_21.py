@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import scrapy
 from city_scrapers.spider import Spider
 from city_scrapers.constants import COMMISSION
-from datetime import time, date
 import dateutil.parser
 
+
 class ChiSsa21Spider(Spider):
+
     name = 'chi_ssa_21'
     agency_name = 'Lincoln Square Neighborhood Improvement Program'
     timezone = 'America/Chicago'
@@ -87,7 +87,7 @@ class ChiSsa21Spider(Spider):
         Parse start date and time.
         """
         startTime = self._parse_date(item)
-        startTime = startTime.replace(hour=9,minute=0)
+        startTime = startTime.replace(hour=9, minute=0)
 
         ret = {
             'date': startTime.date(),
@@ -102,7 +102,7 @@ class ChiSsa21Spider(Spider):
         Parse end date and time.
         """
         endTime = self._parse_date(item)
-        endTime = endTime.replace(hour=11,minute=0)
+        endTime = endTime.replace(hour=11, minute=0)
 
         ret = {
             'date': endTime.date(),
