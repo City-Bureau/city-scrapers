@@ -59,20 +59,20 @@ class ChiSsa21Spider(Spider):
 
         if (name == 'ul'):
             topics = list(map(
-                lambda topic: ':'.join(filter(
+                lambda topic: ''.join(filter(
                     # Remove any strings that are empty
                     None,
                     [
                         # Title of topic
                         ''.join(topic.xpath('strong/text()').extract()).strip(),
                         # Detail of topic
-                        ''.join(topic.xpath('text()').extract()).strip()
+                        '[' + ''.join(topic.xpath('text()').extract()).strip() + ']'
                     ]
                 )),
                 detailElement.xpath('li')
             ))
 
-            description = '-'.join(topics)
+            description = ':'.join(topics)
 
         return description
 
