@@ -20,7 +20,7 @@ class ChiSsa21Spider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.cms-design-panel').css('p'):
+        for item in response.xpath('//div[@id="content-327081"]/p'):
 
             data = {
                 '_type': 'event',
