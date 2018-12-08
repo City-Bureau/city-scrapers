@@ -15,14 +15,14 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Commission Meetings'
+    assert parsed_items[0]['name'] == 'Lincoln Square Neighborhood Improvement Program'
 
 
 def test_description():
     assert parsed_items[0]['event_description'] == (
-        '2018 Meetings Calendar[Review and Approval]:' +
-        '2018 Budget Adjustments[(if applicable)]:' +
-        'Strategic Planning[with PLACE Consulting]'
+        '2018 Meetings Calendar:Review and Approval\n' +
+        '2018 Budget Adjustments:(if applicable)\n' +
+        'Strategic Planning:with PLACE Consulting'
     )
 
 
@@ -43,20 +43,20 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_ssa_21/201801290900/x/commission_meetings'
+    assert parsed_items[0]['id'] == 'chi_ssa_21/201801290900/x/lincoln_square_neighborhood_improvement_program'
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
         'neighborhood': '',
-        'name': '',
-        'address': 'Carbon Arc Bar & Board, 4620 N Lincoln Ave'
+        'name': 'Carbon Arc Bar & Board',
+        'address': '4620 N Lincoln Ave, Chicago, IL'
     }
 
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-        'note': 'Meeting notes',
+        'note': 'Minutes',
         'url': (
             'https://chambermaster.blob.core.windows.net/' +
             'userfiles/UserFiles/chambers/697/CMS/SSA_2018/' +
