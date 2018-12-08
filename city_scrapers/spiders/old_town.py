@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from city_scrapers.spider import Spider
+from datetime import datetime
 
+#scrapy crawl old_town -o - -t csv --loglevel=ERROR
+#cat file.csv | sed -e 's/,,/, ,/g' | column -s, -t | less -#5 -N -S
+#ls city_scrapers/local_outputs/* | tail -n 1 | xargs cat | sed -e 's/,,/, ,/g' | column -s, -t | less -#5 -N -S
 
 class OldTownSpider(Spider):
     name = 'old_town'
@@ -17,7 +21,9 @@ class OldTownSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
+        for item in response.css('.meeting-dates-block >h5'):
+            
+            
             data = {
                 '_type': 'event',
                 'name': self._parse_name(item),
@@ -52,31 +58,95 @@ class OldTownSpider(Spider):
         """
         Parse or generate event name.
         """
-        return ''
+    #    return 'Regular Commission Meeting'
+    #    return item.xpath('text()').extract_first().strip()
+        return item.xpath('following-sibling::*').extract_first().strip()
+
+    #    return item.xpath('following-sibling::*[1]/text()').extract_first().strip()
+    #    print('\n*TEST* ')
+    #    print(item.xpath('following-sibling::*[1]/text()').extract())
+    #    print('**\n')
+    #    return item.xpath('following-sibling::*[1]/text()').extract()[1].strip()
 
     def _parse_description(self, item):
         """
         Parse or generate event description.
         """
-        return ''
+        return item.xpath('text()').extract_first().strip()
 
     def _parse_classification(self, item):
         """
         Parse or generate classification (e.g. public health, education, etc).
         """
-        return ''
+        return 'Commission'
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
-        return ''
+        dateStr = item.xpath('text()').extract_first().strip()
+
+        timeChunk = item.xpath('following-sibling::*').extract_first().strip()
+        #<p>5:30-7:30pm<br>
+        startIndex = timeChunk.index('>')
+        endIndex = timeChunk.index('-')
+        amPm = timeChunk.index('m')
+        dateStr += ' ' + timeChunk[startIndex+1:endIndex] + timeChunk[amPm-1:amPm+1]
+
+        print('\n*TEST* ') 
+        print(dateStr + '\n')
+
+        datetimeObject = datetime.strptime(dateStr, '%A %B %d %I:%M%p')
+        datetimeObject = datetimeObject.replace(year=datetimeObject.today().year)
+
+        print(datetimeObject)
+        print('**\n')
+
+    #   WEDNESDAY JANUARY 10
+    #   print('debug string' + item.extract())
+    #   print('debug string2' + item.xpath('text()').extract_first())
+    #   item.xpath('text()').extract_first()
+        return
+        {
+             'date': datetimeObject.date,
+              'time': datetimeObject.time,
+               'note': '',
+        }
 
     def _parse_end(self, item):
         """
         Parse end date and time.
         """
-        return ''
+        dateStr = item.xpath('text()').extract_first().strip()
+
+        timeChunk = item.xpath('following-sibling::*').extract_first().strip()
+        #<p>5:30-7:30pm<br>
+        startIndex = timeChunk.index('-')
+        amPm = timeChunk.index('m')
+        endIndex = amPm-1
+        dateStr += ' ' + timeChunk[startIndex+1:endIndex] + timeChunk[amPm-1:amPm+1]
+
+        print('\n*TEST* ') 
+        print(dateStr + '\n')
+
+        datetimeObject = datetime.strptime(dateStr, '%A %B %d %I:%M%p')
+        datetimeObject = datetimeObject.replace(year=datetimeObject.today().year)
+
+        print(datetimeObject.date())
+        print('**\n')
+        print(datetimeObject.time())
+        print('**\n')
+
+    #   WEDNESDAY JANUARY 10
+    #   print('debug string' + item.extract())
+    #   print('debug string2' + item.xpath('text()').extract_first())
+    #   item.xpath('text()').extract_first()
+        return
+        {
+             'date': datetimeObject.date,
+              'time': datetimeObject.time,
+               'note': '',
+        }
 
     def _parse_all_day(self, item):
         """
@@ -90,8 +160,8 @@ class OldTownSpider(Spider):
         left blank and will be geocoded later.
         """
         return {
-            'address': '',
-            'name': '',
+            'address': item.xpath('following-sibling::*[1]/text()').extract()[2].strip(),
+            'name': item.xpath('following-sibling::*[1]/text()').extract()[1].strip(),
             'neighborhood': '',
         }
 
