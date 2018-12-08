@@ -1,6 +1,5 @@
 from datetime import date, time
 
-import betamax
 import pytest
 import requests
 from tests.utils import file_response
@@ -8,17 +7,14 @@ from tests.utils import file_response
 from city_scrapers.constants import BOARD, PASSED
 from city_scrapers.spiders.chi_library import ChiLibrarySpider
 
-# Use betamax to record requests
 session = requests.Session()
-recorder = betamax.Betamax(session)
-with recorder.use_cassette('test_chi_library_libinfo'):
-    test_response = file_response(
-        'files/chi_library.html',
-        url=('https://www.chipublib.org/'
-             'board-of-directors/board-meeting-schedule/'),
-    )
-    spider = ChiLibrarySpider(session=session)
-    parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+test_response = file_response(
+    'files/chi_library.html',
+    url=('https://www.chipublib.org/'
+         'board-of-directors/board-meeting-schedule/'),
+)
+spider = ChiLibrarySpider(session=session)
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
 
 def test_name():

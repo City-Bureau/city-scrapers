@@ -2,11 +2,14 @@
 from datetime import date, time
 
 import pytest
+from freezegun import freeze_time
 from tests.utils import file_response
 
 from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE
 from city_scrapers.spiders.il_regional_transit import IlRegionalTransitSpider
 
+freezer = freeze_time('2018-07-01')
+freezer.start()
 events_response = file_response(
     'files/il_regional_transit_calendar.html',
     url='http://www.rtachicago.org/about-us/board-meetings'
@@ -21,6 +24,7 @@ events_response.meta['event_description'] = (
 
 spider = IlRegionalTransitSpider()
 parsed_items = [item for item in spider.parse_iframe(events_response) if isinstance(item, dict)]
+freezer.stop()
 
 
 def test_name():
