@@ -44,7 +44,7 @@ class ChiSsa21Spider(Spider):
         """
         Parse or generate event description.
         """
-        description = 'N/A'
+        description = ''
 
         # The itinerary of the meeting is always stored in the <ul>
         # element immediately following
@@ -53,7 +53,7 @@ class ChiSsa21Spider(Spider):
 
         if (name == 'ul'):
             topics = list(map(
-                lambda topic: ':'.join(filter(
+                lambda topic: ': '.join(filter(
                     # Remove any strings that are empty
                     None,
                     [
