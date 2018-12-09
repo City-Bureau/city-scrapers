@@ -1,7 +1,8 @@
+from datetime import date, time
+
 import pytest
-from tests.utils import file_response
-from datetime import time, date
 from freezegun import freeze_time
+from tests.utils import file_response
 
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spiders.chi_ssa_21 import ChiSsa21Spider
@@ -27,11 +28,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'time': time(9, 0),
-        'date': date(2018, 1, 29),
-        'note': None
-    }
+    assert parsed_items[0]['start'] == {'time': time(9, 0), 'date': date(2018, 1, 29), 'note': None}
 
 
 def test_end():
@@ -43,7 +40,8 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_ssa_21/201801290900/x/lincoln_square_neighborhood_improvement_program'
+    assert parsed_items[0][
+        'id'] == 'chi_ssa_21/201801290900/x/lincoln_square_neighborhood_improvement_program'
 
 
 def test_location():
@@ -59,8 +57,7 @@ def test_documents():
         'note': 'Minutes',
         'url': (
             'https://chambermaster.blob.core.windows.net/' +
-            'userfiles/UserFiles/chambers/697/CMS/SSA_2018/' +
-            'SSA21_MeetingMinutes_1.29.18.pdf'
+            'userfiles/UserFiles/chambers/697/CMS/SSA_2018/' + 'SSA21_MeetingMinutes_1.29.18.pdf'
         )
     }]
 

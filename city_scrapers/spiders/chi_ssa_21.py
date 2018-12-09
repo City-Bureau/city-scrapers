@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from city_scrapers.spider import Spider
-from city_scrapers.constants import COMMISSION
 import dateutil.parser
+
+from city_scrapers.constants import COMMISSION
+from city_scrapers.spider import Spider
 
 
 class ChiSsa21Spider(Spider):
@@ -32,7 +33,10 @@ class ChiSsa21Spider(Spider):
                 'all_day': False,
                 'location': self._parse_location(item),
                 'documents': self._parse_documents(item),
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
             data['status'] = self._generate_status(data, text='')
@@ -52,19 +56,23 @@ class ChiSsa21Spider(Spider):
         name = detailElement.xpath('name()').extract_first()
 
         if (name == 'ul'):
-            topics = list(map(
-                lambda topic: ': '.join(filter(
-                    # Remove any strings that are empty
-                    None,
-                    [
-                        # Title of topic
-                        ''.join(topic.xpath('strong/text()').extract()).strip(),
-                        # Detail of topic
-                        ''.join(topic.xpath('text()').extract()).strip()
-                    ]
-                )),
-                detailElement.xpath('li')
-            ))
+            topics = list(
+                map(
+                    lambda topic: ': '.join(
+                        filter(
+                            # Remove any strings that are empty
+                            None,
+                            [
+                                # Title of topic
+                                ''.join(topic.xpath('strong/text()').extract()).strip(),
+                                # Detail of topic
+                                ''.join(topic.xpath('text()').extract()).strip()
+                            ]
+                        )
+                    ),
+                    detailElement.xpath('li')
+                )
+            )
 
             description = '\n'.join(topics)
 
@@ -77,11 +85,7 @@ class ChiSsa21Spider(Spider):
         startTime = self._parse_date(item)
         startTime = startTime.replace(hour=9, minute=0)
 
-        ret = {
-            'date': startTime.date(),
-            'time': startTime.time(),
-            'note': None
-        }
+        ret = {'date': startTime.date(), 'time': startTime.time(), 'note': None}
 
         return ret
 
@@ -113,9 +117,7 @@ class ChiSsa21Spider(Spider):
         defaultLocation = 'Bistro Campagne, 4518 N. Lincoln Avenue'
 
         # If location has changed, this is where it is noted
-        location = ''.join(
-            item.xpath('em//text()').extract()
-        ).strip()
+        location = ''.join(item.xpath('em//text()').extract()).strip()
 
         if not location:
             location = defaultLocation
