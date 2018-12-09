@@ -21,8 +21,7 @@ def test_name():
 
 def test_description():
     assert parsed_items[0]['event_description'] == (
-        '2018 Meetings Calendar: Review and Approval\n' +
-        '2018 Budget Adjustments: (if applicable)\n' +
+        '2018 Meetings Calendar: Review and Approval\n' + '2018 Budget Adjustments: (if applicable)\n' +
         'Strategic Planning: with PLACE Consulting'
     )
 
