@@ -96,12 +96,14 @@ class ChiBoardElectionsSpider(Spider):
                         'time': None,
                         'note': '',
                     }
-                    if "href" in meeting:  # Checks for link
+                    # Checks for link, will catch minutes or video links for one date
+                    if "href" in meeting:
                         data["documents"].append(self._parse_documents(response, meeting))
                     nextindex = meetings.index(meeting) + 1
+                    # In case there's both minutes and video for one date
                     if nextindex < len(meetings):
                             nextmeeting = meetings[nextindex]
-                            if meetingdate and "href" in nextmeeting:  # Checks if there's also a video
+                            if meetingdate and "href" in nextmeeting:
                                 data["documents"].append(self._parse_documents(response, meeting))
                     data['status'] = self._generate_status(data)
                     data['id'] = self._generate_id(data)
@@ -179,8 +181,6 @@ class ChiBoardElectionsSpider(Spider):
                         'url': videolink,
                         'note': "Regular Board Meeting Video"
                         }
-
-
         else:
             link = response.xpath("//a/@href").extract()[2]
             return [{
