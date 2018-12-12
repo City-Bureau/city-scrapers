@@ -39,7 +39,7 @@ class ChiBoardElectionsSpider(Spider):
             'classification': COMMISSION,
             'start': self._parse_start(meetingdate, next_meeting),
             'all_day': False,
-            'documents': [],
+            'documents': self._parse_documents(response, None),
             'sources': [{
                 'url': response.url,
                 'note': ''
@@ -55,9 +55,6 @@ class ChiBoardElectionsSpider(Spider):
             'time': None,
             'note': '',
         }
-
-        link = response.xpath("//a/@href").extract()[2]
-        data['documents'] = self._parse_documents(link)
         data['status'] = self._generate_status(data)
         data['id'] = self._generate_id(data)
 
@@ -99,9 +96,13 @@ class ChiBoardElectionsSpider(Spider):
                         'time': None,
                         'note': '',
                     }
-                    if "Minutes" in meeting:
-                        minuteslink = re.search(r'="(.+)"', meeting).group(1)
-                        data["documents"] = self._parse_documents(minuteslink)
+                    if "href" in meeting:  # Checks for link
+                        data["documents"].append(self._parse_documents(response, meeting))
+                    nextindex = meetings.index(meeting) + 1
+                    if nextindex < len(meetings):
+                            nextmeeting = meetings[nextindex]
+                            if meetingdate and "href" in nextmeeting:  # Checks if there's also a video
+                                data["documents"].append(self._parse_documents(response, meeting))
                     data['status'] = self._generate_status(data)
                     data['id'] = self._generate_id(data)
                     yield data
@@ -161,14 +162,31 @@ class ChiBoardElectionsSpider(Spider):
             'neighborhood': '',
         }
 
-    def _parse_documents(self, link):
+    def _parse_documents(self, response, meeting):
         """
         Parse or generate documents.
         """
-        return [{
-            'url': "https://app.chicagoelections.com{}".format(link),
-            'note': 'Regular Board Meeting Agenda'
-        }]
+        if "minutes" in response.url:
+            if "Minutes" in meeting:
+                minuteslink = re.search(r'="(.+)"', meeting).group(1)
+                return {
+                    'url': "https://app.chicagoelections.com{}".format(minuteslink),
+                    'note': 'Regular Board Meeting Agenda'
+                }
+            elif "Video" in meeting:
+                videolink = re.search(r'ht(.+")', meeting).group(0).strip('"')
+                return {
+                        'url': videolink,
+                        'note': "Regular Board Meeting Video"
+                        }
+
+
+        else:
+            link = response.xpath("//a/@href").extract()[2]
+            return [{
+                'url': "https://app.chicagoelections.com{}".format(link),
+                'note': 'Regular Board Meeting Agenda'
+            }]
 
     def _parse_exception(self, time):
         """
