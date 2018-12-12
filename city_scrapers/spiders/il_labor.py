@@ -32,10 +32,7 @@ class IlLaborSpider(Spider):
         needs.
         """
 
-        # There's not a lot of structure on this page, so this selector is pretty fragile
-        for item in response.xpath(
-            "//div[@class='row']/p/strong[contains(text(), 'MEETING')]/../.."
-        ):
+        for item in response.css('.soi-article-content .container > .row > p'):
             """
             Some monthly meetings are skipped. Instead of providing a date,
             there's text that says 'No /name/ meeting in month'.
@@ -64,7 +61,7 @@ class IlLaborSpider(Spider):
                 'timezone': self.event_timezone,
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response),
-                'documents': [],
+                'documents': self._parse_documents(item),
             }
             data['id'] = self._generate_id(data)
             data['status'] = self._generate_status(data)
@@ -77,22 +74,20 @@ class IlLaborSpider(Spider):
         next row contains the meeting time, but sometimes
         multiple meeting locations are listed within a single div.
         """
-        childs_siblings = item.xpath('child::*')
-        if len(childs_siblings) > 1:
-            addresses = item.xpath('child::div/div/p/text()').extract()
-            address = ' Or '.join([a.strip() for a in addresses])
-        else:
-            address = item.xpath('following-sibling::div[1]/div/p/text()').extract_first()
-            if address:
-                address = address.strip()
-
+        addr_in_row = item.xpath('following-sibling::*//p/text()')
+        addr_next_row = item.xpath('../following-sibling::div[1]//p/text()')
+        address_list = addr_in_row if len(addr_in_row) > 0 else addr_next_row
+        address = ' Or '.join([a.replace('\xa0', '').strip() for a in address_list.extract()])
         return {'url': '', 'address': address, 'name': ''}
 
     def _parse_name(self, item):
         """
         Get event name from the first `<strong>`.
         """
-        return item.css('strong::text').extract_first().capitalize()
+        name = item.css('a::text').extract_first()
+        if name:
+            return name.title()
+        return item.css('strong::text').extract_first().title()
 
     def _parse_description(self, response):
         """
@@ -106,9 +101,18 @@ class IlLaborSpider(Spider):
         Parse start date and time from the second `<strong>`
         """
         try:
-            return parse(item.css('strong:nth-of-type(2)::text').extract_first())
+            dt_str = item.css('strong:nth-of-type(2)::text').extract_first()
+            if not dt_str:
+                dt_str = item.css('strong:nth-of-type(3)::text').extract_first()
+            return parse(dt_str or '')
         except ValueError:
             return None
+
+    def _parse_documents(self, item):
+        href = item.css('a::attr(href)').extract_first()
+        if href:
+            return [{'url': 'https://{}{}'.format(self.allowed_domains[0], href), 'note': 'Agenda'}]
+        return []
 
     def _parse_sources(self, response):
         """
