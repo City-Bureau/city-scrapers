@@ -160,6 +160,8 @@ class CookLandbankSpider(Spider):
             address = '{}, {}'.format(location_detail, street_address)
         else:
             address = street_address
+        if 'Chicago' not in address:
+            address += ' Chicago, IL'
         return {
             'url': 'http://www.cookcountylandbank.org/',
             'name': None,
