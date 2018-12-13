@@ -63,7 +63,7 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'url': 'http://www.cookcountylandbank.org/',
         'name': None,
-        'address': '69 W. Washington St., Lower Level Conference Room A',
+        'address': '69 W. Washington St., Lower Level Conference Room A Chicago, IL',
         'coordinates': {
             'latitude': None,
             'longitude': None
