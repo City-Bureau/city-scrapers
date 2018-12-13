@@ -104,7 +104,7 @@ class ChiBoardElectionsSpider(Spider):
                     if nextindex < len(meetings):
                         nextmeeting = meetings[nextindex]
                         if meetingdate and "href" in nextmeeting:
-                            data["documents"].append(self._parse_documents(response, meeting))
+                            data["documents"].append(self._parse_documents(response, nextmeeting))
                     data['status'] = self._generate_status(data)
                     data['id'] = self._generate_id(data)
                     yield data

@@ -134,7 +134,9 @@ def test_documents_prev():
     assert parsed_items_prev[4]['documents'] == \
            [{'url':
             'https://app.chicagoelections.com/documents/general/BoardMeetingMinutes-2018-10-30.pdf',
-             'note': 'Regular Board Meeting Agenda'}]
+             'note': 'Regular Board Meeting Agenda'},
+            {'note': 'Regular Board Meeting Video', 'url': 'https://youtu.be/AKFNigWEkc0'}
+            ]
 
 
 @pytest.mark.parametrize('item', parsed_items_prev)
