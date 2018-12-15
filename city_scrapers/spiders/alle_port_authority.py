@@ -16,20 +16,24 @@ class AllePortAuthoritySpider(Spider):
     allowed_domains = ['www.portauthority.org']
     start_urls = ['https://www.portauthority.org/paac/CompanyInfoProjects/'
                   'BoardofDirectors/MeetingAgendasResolutions.aspx']
-    event_year = str(datetime.now().year)
+    event_year = datetime.now().year
+
+    def _get_address(self, response):
+        address = (response
+                   .xpath('//table[1]//span/text()')
+                   .extract()[0])
+        return address
 
     def _build_datatable(self, response):
         alist_tbody = (response
                        .xpath('//table[1]/tbody//td')
-                       .extract()
-                       )
+                       .extract())
 
         atable = []
         arow = []
 
         for item in alist_tbody:
             tree = html.fragment_fromstring(item)
-            # pdb.set_trace()
             text = tree.text_content()
 
             url = tree.xpath('//a/@href')
@@ -37,8 +41,8 @@ class AllePortAuthoritySpider(Spider):
             if len(find_att_b) >= 1:
                 continue
             if url:
-                arow.append('{text}: {url}'
-                            .format(text=text, url=url[0]))
+                arow.append('{name}: {url}'
+                            .format(name=text, url=url[0]))
             else:
                 arow.append('{text}'.format(text=unicodedata.normalize("NFKD", text)))
             if len(arow) == 6:
@@ -54,18 +58,19 @@ class AllePortAuthoritySpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+
+        address = self._get_address(response)
         atable = self._build_datatable(response)
         for row in atable:
             data = {
-                'timezone': self.timezone,
                 '_type': 'event',
                 'name': self._parse_name(row),
-                'event_description': self._parse_description(row),
+                'event_description': '',
                 'classification': self._parse_classification(row),
                 'start': self._parse_start(row),
                 'end': self._parse_end(row),
                 'all_day': self._parse_all_day(row),
-                'location': self._parse_location(row),
+                'location': self._parse_location(address),
                 'documents': self._parse_documents(row),
                 'sources': self._parse_sources(row),
             }
@@ -80,12 +85,6 @@ class AllePortAuthoritySpider(Spider):
         Parse or generate event name.
         """
         return item[0]
-
-    def _parse_description(self, item):
-        """
-        Parse or generate event description.
-        """
-        return ''
 
     def _parse_classification(self, item):
         """
@@ -148,25 +147,32 @@ class AllePortAuthoritySpider(Spider):
         """
         return False
 
-    def _parse_location(self, item):
+    def _parse_location(self, address):
         """
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
         """
-        return {
-            'address': ('Neal H. Holmes Board Room, '
-                        '345 Sixth Avenue, Fifth Floor, '
-                        'Pittsburgh, PA 15222-2527'),
-            'name': '',
-            'neighborhood': '',
-        }
+        room = 'Neal H. Holmes Board Room'
+        street = '345 Sixth Avenue, Fifth Floor'
+        city = 'Pittsburgh, PA 15222-2527'
+
+        if room in address and street in address:
+            return {
+                'address': ('{room}, {street}, {city}'
+                            .format(room=room, street=street,
+                                    city=city)),
+                'name': '',
+                'neighborhood': '',
+            }
+
+        else:
+            raise(ValueError('Look like the address is changed!! Please fix it!!!'))
 
     def _parse_documents(self, item):
         """
         Parse or generate documents.
         """
         documents = []
-
         details = item[5]
         if details.startswith('Minutes: http'):
             documents.append({
