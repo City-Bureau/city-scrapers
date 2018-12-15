@@ -48,6 +48,7 @@ class AllePortAuthoritySpider(Spider):
             if len(arow) == 6:
                 atable.append(arow)
                 arow = []
+
         return atable
 
     def parse(self, response):
@@ -61,6 +62,7 @@ class AllePortAuthoritySpider(Spider):
 
         address = self._get_address(response)
         atable = self._build_datatable(response)
+
         for row in atable:
             data = {
                 '_type': 'event',
@@ -185,6 +187,13 @@ class AllePortAuthoritySpider(Spider):
             documents.append({
                 'note': 'Agenda',
                 'url': agenda.split(' ')[-1]
+            })
+
+        resolution = item[4]
+        if resolution.startswith('Resolutions: http'):
+            documents.append({
+                'note': 'Resolution',
+                'url': resolution.split(' ')[-1]
             })
 
         return documents
