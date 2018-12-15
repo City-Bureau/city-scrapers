@@ -78,6 +78,8 @@ class AllePortAuthoritySpider(Spider):
             data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
+            if not (data['start'] and data['end']):
+                continue
             yield data
 
     def _parse_name(self, item):

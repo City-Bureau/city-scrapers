@@ -101,3 +101,8 @@ def test_classification(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test__type(item):
     assert item['_type'] == 'event'
+
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_no_missing_datetime(item):
+    assert item['start'] != '' and item['end'] != ''
