@@ -71,7 +71,7 @@ class AllePortAuthoritySpider(Spider):
                 'classification': self._parse_classification(row),
                 'start': self._parse_start(row),
                 'end': self._parse_end(row),
-                'all_day': self._parse_all_day(row),
+                'all_day': '',
                 'location': self._parse_location(address),
                 'documents': self._parse_documents(row),
                 'sources': self._parse_sources(row),
@@ -142,12 +142,6 @@ class AllePortAuthoritySpider(Spider):
                      .time()),
             'note': 'Estimated 3 hours after start time'
         }
-
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to False.
-        """
-        return False
 
     def _parse_location(self, address):
         """
