@@ -53,7 +53,7 @@ class DetRegionalTransitAuthoritySpider(Spider):
                         'note': ''
                     }]
                 }
-                alert = row.xpath('td[3]/text()').extract_first('')
+                alert = ' '.join(row.xpath('td[3]//text()').extract())
                 data['status'] = self._generate_status(data, text=alert)
                 data['id'] = self._generate_id(data)
                 yield data

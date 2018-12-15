@@ -7,7 +7,7 @@ from city_scrapers.constants import BOARD
 from city_scrapers.spiders.cook_water import CookWaterSpider
 
 test_response = []
-with open('tests/files/cook_water_test.json') as f:
+with open('tests/files/cook_water.json') as f:
     test_response.extend(json.loads(f.read()))
 spider = CookWaterSpider()
 parsed_items = [item for item in spider._parse_events(test_response)]
@@ -50,21 +50,17 @@ def test_sources():
 
 
 def test_documents():
-    assert parsed_items[0]['documents'] == [{
-        'url':
-            'https://mwrd.legistar.com/MeetingDetail.aspx?ID=570944&GUID=DF1E81E4-2660-42AF-A398-8296420B9341&Options=info&Search=',  # noqa
-        'note': 'Meeting details'
-    }]
+    assert parsed_items[0]['documents'] == []
     assert parsed_items[-2]['documents'] == [
-        {
-            'url':
-                'https://mwrd.legistar.com/MeetingDetail.aspx?ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5&Options=info&Search=',  # noqa
-            'note': 'Meeting details'
-        },
         {
             'url':
                 'https://mwrd.legistar.com/View.ashx?M=A&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
             'note': 'Agenda'
+        },
+        {
+            'url':
+                'https://mwrd.legistar.com/View.ashx?M=M&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
+            'note': 'Minutes'
         },
     ]
 

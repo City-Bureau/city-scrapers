@@ -6,6 +6,7 @@ class CityScrapersItemPipeline(object):
     Pipeline for doing any custom processing on individual
     items
     """
+
     @report_error
     def process_item(self, item, spider):
         item['agency_name'] = spider.agency_name

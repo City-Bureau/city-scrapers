@@ -4,6 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
+import json
 from datetime import datetime, timedelta
 
 import urllib3
@@ -31,11 +32,17 @@ class AlleCountySpider(Spider):
         to fit your scraping needs.
         """
         events = self._make_legistar_call()
+        es = [[e, 0] for e, _ in events]
+        print(es)
+        with open('test.json', 'w') as f:
+            json.dump(es, f)
+            # for e, _ in events:
+            #     f.write(f'{json.dumps(e)}\n')
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        les = LegistarEventsScraper(requests_per_minute=0)
+        les = LegistarEventsScraper()
         les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
         les.BASE_URL = self.START_URL
         if not since:
@@ -58,8 +65,7 @@ class AlleCountySpider(Spider):
                 'sources': self._parse_sources(item),
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data,
-                                                   item['Meeting Location'])
+            data['status'] = self._generate_status(data, item['Meeting Location'])
             yield data
 
     def _parse_location(self, item):
@@ -71,9 +77,11 @@ class AlleCountySpider(Spider):
             Room = Room + ','
 
         return {
-            'address': "{Room} {Location}"
-            .format(Room=Room, Location=('436 Grant Street, '
-                                         'Pittsburgh, PA 15219')),
+            'address':
+                "{Room} {Location}".format(
+                    Room=Room, Location=('436 Grant Street, '
+                                         'Pittsburgh, PA 15219')
+                ),
             'name': '',
             'neighborhood': ''
         }
@@ -108,16 +116,10 @@ class AlleCountySpider(Spider):
         documents = []
         details = item['Minutes']
         if isinstance(details, dict):
-            documents.append({
-                'note': 'Minutes',
-                'url': details['url']
-            })
+            documents.append({'note': 'Minutes', 'url': details['url']})
         agenda = item['Agenda']
         if isinstance(agenda, dict):
-            documents.append({
-                'note': 'Agenda',
-                'url': agenda['url']
-            })
+            documents.append({'note': 'Agenda', 'url': agenda['url']})
         return documents
 
     def _parse_start_datetime(self, item):
@@ -127,19 +129,14 @@ class AlleCountySpider(Spider):
         time = item.get('Meeting Time', None)
         date = item.get('Meeting Date', None)
         time_string = '{0} {1}'.format(date, time)
-        return (datetime.strptime(time_string,
-                                  '%m/%d/%Y %I:%M %p'))
+        return (datetime.strptime(time_string, '%m/%d/%Y %I:%M %p'))
 
     def _parse_start(self, item):
         """
         Parse start date and time.
         """
         datetime_obj = self._parse_start_datetime(item)
-        return {
-            'date': datetime_obj.date(),
-            'time': datetime_obj.time(),
-            'note': ''
-        }
+        return {'date': datetime_obj.date(), 'time': datetime_obj.time(), 'note': ''}
 
     def _parse_end(self, item):
         """
@@ -147,9 +144,8 @@ class AlleCountySpider(Spider):
         """
         datetime_obj = self._parse_start_datetime(item)
         return {
-            'date':  datetime_obj.date(),
-            'time': ((datetime_obj + timedelta(hours=3))
-                     .time()),
+            'date': datetime_obj.date(),
+            'time': ((datetime_obj + timedelta(hours=3)).time()),
             'note': 'Estimated 3 hours after start time'
         }
 

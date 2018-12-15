@@ -1,20 +1,24 @@
 import datetime
+import json
+import os
 
 import pytest
-from tests.utils import file_response
+from freezegun import freeze_time
 
 from city_scrapers.spiders.alle_county import AlleCountySpider
 
+freezer = freeze_time('2018-11-27')
+freezer.start()
 spider = AlleCountySpider()
-test_response = file_response('files/alle_county_Calendar.html')
-parsed_items = ([item for item in spider.parse(test_response)
-                if isinstance(item, dict)])
+with open(os.path.join(os.path.dirname(__file__), 'files', 'alle_county.json'), 'r') as f:
+    test_response = json.load(f)
+parsed_items = [item for item in spider._parse_events(test_response)]
+freezer.stop()
 
 
-@pytest.mark.parametrize('item',
-                         [parsed_items[0]['name']])
+@pytest.mark.parametrize('item', [parsed_items[0]['name']])
 def test_name(item):
-    assert item == 'County Council'
+    assert item == 'Committee on Economic Development & Housing'
 
 
 def test_description():
@@ -22,22 +26,30 @@ def test_description():
 
 
 def test_start():
-    assert (parsed_items[0]['start'] ==
-            {'date': datetime.date(2018, 11, 20),
-             'time': datetime.time(17, 0),
-             'note': ''})
+    assert (
+        parsed_items[0]['start'] == {
+            'date': datetime.date(2018, 11, 29),
+            'time': datetime.time(16, 0),
+            'note': ''
+        }
+    )
 
 
 def test_end():
-    assert (parsed_items[0]['end'] ==
-            {'date': datetime.date(2018, 11, 20),
-             'time': datetime.time(20, 0),
-             'note': 'Estimated 3 hours after start time'})
+    assert (
+        parsed_items[0]['end'] == {
+            'date': datetime.date(2018, 11, 29),
+            'time': datetime.time(19, 0),
+            'note': 'Estimated 3 hours after start time'
+        }
+    )
 
 
 def test_id():
-    assert (parsed_items[0]['id'] ==
-            'alle_county/201811201700/x/county_council')
+    assert (
+        parsed_items[0]['id'] ==
+        'alle_county/201811291600/x/committee_on_economic_development_housing'
+    )
 
 
 def test_status():
@@ -45,32 +57,37 @@ def test_status():
 
 
 def test_location():
-    assert (parsed_items[0]['location'] ==
-            {'address': ('Regular Meeting, '
-                         'Fourth Floor, Gold Room, '
-                         '436 Grant Street, Pittsburgh, PA 15219'),
-             'name': '',
-             'neighborhood': ''})
+    assert (
+        parsed_items[0]['location'] == {
+            'address': 'Conference Room 1, 436 Grant Street, Pittsburgh, PA 15219',
+            'name': '',
+            'neighborhood': ''
+        }
+    )
 
 
 def test_sources():
-    assert (parsed_items[0]['sources'] ==
-            [{'url': ('https://alleghenycounty.'
-                      'legistar.com/DepartmentDetail.aspx?'
-                      'ID=26127&GUID=0B26890F-A762-408F-A03C'
-                      '-110A9BD4CAD9'),
-              'note': ''}])
+    assert (
+        parsed_items[0]['sources'] == [{
+            'url': (
+                'https://alleghenycounty.legistar.com/DepartmentDetail.aspx?'
+                'ID=26123&GUID=8FFCC73B-C367-4473-973C-A3ECEAB40204'
+            ),
+            'note': ''
+        }]
+    )
 
 
 def test_documents():
-    assert (parsed_items[0]['documents'][0]['url'] ==
-            ('https://alleghenycounty.legistar.com/'
-             'View.ashx?M=A&ID=651919&GUID=771C0CE1'
-             '-F9A0-4AEF-959D-EBE83EC92059'))
+    assert (
+        parsed_items[0]['documents'][0]['url'] == (
+            'https://alleghenycounty.legistar.com/'
+            'View.ashx?M=A&ID=653341&GUID=8115385F-D042-4E6C-A884-E58F5AEFF23F'
+        )
+    )
 
 
-@pytest.mark.parametrize('item',
-                         [parsed_items[0]['all_day']])
+@pytest.mark.parametrize('item', [parsed_items[0]['all_day']])
 def test_all_day(item):
     assert item is False
 
