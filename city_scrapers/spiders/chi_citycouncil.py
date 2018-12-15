@@ -28,7 +28,7 @@ class ChiCityCouncilSpider(Spider):
         "jurisdiction": "ocd-jurisdiction/country:us/state:il/place:chicago/government",
     }
     # the response doesn't include the address for city hall
-    address = '121 N LaSalle Dr, Chicago, IL'
+    address = '121 N LaSalle St Chicago, IL 60602'
 
     def start_requests(self):
         yield scrapy.FormRequest(

@@ -64,7 +64,7 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'neighborhood': '',
         'name': 'City Hall',
-        'address': '121 N. LaSalle St., in City Council chambers'
+        'address': '121 N LaSalle St Chicago, IL 60602'
     }
 
 
