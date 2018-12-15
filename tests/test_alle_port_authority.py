@@ -90,7 +90,7 @@ def test_documents():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
-    assert item['all_day'] == ''
+    assert item['all_day'] is False
 
 
 @pytest.mark.parametrize('item', parsed_items)

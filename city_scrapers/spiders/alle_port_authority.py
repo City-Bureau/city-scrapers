@@ -10,6 +10,7 @@ from city_scrapers.spider import Spider
 
 
 class AllePortAuthoritySpider(Spider):
+    custom_settings = {'ROBOTSTXT_OBEY': False}
     name = 'alle_port_authority'
     agency_name = 'Port Authority of Allegheny County'
     timezone = 'America/New_York'
@@ -68,7 +69,7 @@ class AllePortAuthoritySpider(Spider):
                 'classification': self._parse_classification(row),
                 'start': self._parse_start(row),
                 'end': self._parse_end(row),
-                'all_day': '',
+                'all_day': False,
                 'location': self._parse_location(address),
                 'documents': self._parse_documents(row),
                 'sources': self._parse_sources(row),

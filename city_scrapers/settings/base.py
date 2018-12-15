@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'city_scrapers.spiders'
 USER_AGENT = 'City Scrapers [development mode]. Learn more and say hello at https://www.citybureau.org/city-scrapers/'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False
+ROBOTSTXT_OBEY = True
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
