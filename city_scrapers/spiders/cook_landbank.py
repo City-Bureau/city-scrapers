@@ -103,7 +103,8 @@ class CookLandbankSpider(Spider):
 
         if not item.css('div.eventon_list_event p.no_events'):
             start_dict = self._parse_start(item)
-            if start_dict is None:
+            location = self._parse_location(item)
+            if start_dict is None or location['address'] is None:
                 yield
             data = {
                 '_type': 'event',
@@ -114,7 +115,7 @@ class CookLandbankSpider(Spider):
                 'end': self._parse_end(item),
                 'all_day': self._parse_all_day(item),
                 'timezone': 'America/Chicago',
-                'location': self._parse_location(item),
+                'location': location,
                 'sources': self._parse_sources(item),
                 'documents': self._parse_documents(item),
             }
@@ -160,7 +161,7 @@ class CookLandbankSpider(Spider):
             address = '{}, {}'.format(location_detail, street_address)
         else:
             address = street_address
-        if 'Chicago' not in address:
+        if address and 'Chicago' not in address:
             address += ' Chicago, IL'
         return {
             'url': 'http://www.cookcountylandbank.org/',

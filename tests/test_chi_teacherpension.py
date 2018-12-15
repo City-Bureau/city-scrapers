@@ -72,7 +72,7 @@ def test__type(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
     assert item['location'] == {
-        'address': '203 North LaSalle Street, Suite 2600, Board Room',
+        'address': '203 N LaSalle St, Suite 2600 Board Room, Chicago, IL 60601',
         'name': 'CTPF office',
         'neighborhood': 'Loop',
     }

@@ -102,7 +102,7 @@ def test_description(parsed_item):
 
 def test_location(parsed_item):
     expected_location = {
-        'address': '121 N LaSalle Dr, Chicago, IL',
+        'address': '121 N LaSalle St Chicago, IL 60602',
         'name': 'Council Chambers ,  City Hall'
     }
     assert parsed_item['location'] == expected_location

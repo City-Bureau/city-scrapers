@@ -44,7 +44,7 @@ class ChiCommunityDevelopmentSpider(Spider):
                     'location': {
                         'neighborhood': '',
                         'name': 'City Hall',
-                        'address': '121 N. LaSalle St., Room 201A'
+                        'address': '121 N LaSalle St, Room 201A, Chicago, IL 60602'
                     },
                     'sources': [{
                         'url': response.url,

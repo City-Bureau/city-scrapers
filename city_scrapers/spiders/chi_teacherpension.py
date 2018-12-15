@@ -22,7 +22,7 @@ class ChiTeacherPensionSpider(Spider):
         needs.
         """
         LOCATION = {
-            'address': '203 North LaSalle Street, Suite 2600, Board Room',
+            'address': '203 N LaSalle St, Suite 2600 Board Room, Chicago, IL 60601',
             'name': 'CTPF office',
             'neighborhood': 'Loop'
         }

@@ -40,7 +40,7 @@ class ChiZoningBoardSpider(Spider):
                     'location': {
                         'neighborhood': '',
                         'name': 'City Hall',
-                        'address': '121 N. LaSalle St., in City Council chambers'
+                        'address': '121 N LaSalle St Chicago, IL 60602'
                     },
                     'sources': [{
                         'url': response.url,
