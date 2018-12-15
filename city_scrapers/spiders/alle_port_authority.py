@@ -14,20 +14,18 @@ class AllePortAuthoritySpider(Spider):
     agency_name = 'Port Authority of Allegheny County'
     timezone = 'America/New_York'
     allowed_domains = ['www.portauthority.org']
-    start_urls = ['https://www.portauthority.org/paac/CompanyInfoProjects/'
-                  'BoardofDirectors/MeetingAgendasResolutions.aspx']
+    start_urls = [
+        'https://www.portauthority.org/paac/CompanyInfoProjects/'
+        'BoardofDirectors/MeetingAgendasResolutions.aspx'
+    ]
     event_year = datetime.now().year
 
     def _get_address(self, response):
-        address = (response
-                   .xpath('//table[1]//span/text()')
-                   .extract()[0])
+        address = (response.xpath('//table[1]//span/text()').extract()[0])
         return address
 
     def _build_datatable(self, response):
-        alist_tbody = (response
-                       .xpath('//table[1]/tbody//td')
-                       .extract())
+        alist_tbody = (response.xpath('//table[1]/tbody//td').extract())
 
         atable = []
         arow = []
@@ -41,8 +39,7 @@ class AllePortAuthoritySpider(Spider):
             if len(find_att_b) >= 1:
                 continue
             if url:
-                arow.append('{name}: {url}'
-                            .format(name=text, url=url[0]))
+                arow.append('{name}: {url}'.format(name=text, url=url[0]))
             else:
                 arow.append('{text}'.format(text=unicodedata.normalize("NFKD", text)))
             if len(arow) == 6:
@@ -113,8 +110,7 @@ class AllePortAuthoritySpider(Spider):
                 time = '9:30 a.m.'
         else:
             time = item[1]
-        date = ('{year} {date}'
-                .format(year=self.event_year, date=item[2]))
+        date = ('{year} {date}'.format(year=self.event_year, date=item[2]))
 
         time_string = '{0} {1}'.format(date, time)
         return (parse(time_string))
@@ -123,11 +119,7 @@ class AllePortAuthoritySpider(Spider):
         datetime_obj = self._parse_start_datetime(item)
         if not datetime_obj:
             return ''
-        return {
-            'date': datetime_obj.date(),
-            'time': datetime_obj.time(),
-            'note': ''
-        }
+        return {'date': datetime_obj.date(), 'time': datetime_obj.time(), 'note': ''}
 
     def _parse_end(self, item):
         """
@@ -137,9 +129,8 @@ class AllePortAuthoritySpider(Spider):
         if not datetime_obj:
             return ''
         return {
-            'date':  datetime_obj.date(),
-            'time': ((datetime_obj + timedelta(hours=3))
-                     .time()),
+            'date': datetime_obj.date(),
+            'time': ((datetime_obj + timedelta(hours=3)).time()),
             'note': 'Estimated 3 hours after start time'
         }
 
@@ -154,15 +145,13 @@ class AllePortAuthoritySpider(Spider):
 
         if room in address and street in address:
             return {
-                'address': ('{room}, {street}, {city}'
-                            .format(room=room, street=street,
-                                    city=city)),
+                'address': ('{room}, {street}, {city}'.format(room=room, street=street, city=city)),
                 'name': '',
                 'neighborhood': '',
             }
 
         else:
-            raise(ValueError('Look like the address is changed!! Please fix it!!!'))
+            raise (ValueError('Look like the address is changed!! Please fix it!!!'))
 
     def _parse_documents(self, item):
         """
@@ -171,24 +160,15 @@ class AllePortAuthoritySpider(Spider):
         documents = []
         details = item[5]
         if details.startswith('Minutes: http'):
-            documents.append({
-                'note': 'Minutes',
-                'url': details.split(' ')[-1]
-            })
+            documents.append({'note': 'Minutes', 'url': details.split(' ')[-1]})
 
         agenda = item[3]
         if agenda.startswith('Agenda: http'):
-            documents.append({
-                'note': 'Agenda',
-                'url': agenda.split(' ')[-1]
-            })
+            documents.append({'note': 'Agenda', 'url': agenda.split(' ')[-1]})
 
         resolution = item[4]
         if resolution.startswith('Resolutions: http'):
-            documents.append({
-                'note': 'Resolution',
-                'url': resolution.split(' ')[-1]
-            })
+            documents.append({'note': 'Resolution', 'url': resolution.split(' ')[-1]})
 
         return documents
 
