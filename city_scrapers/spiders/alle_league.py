@@ -3,7 +3,7 @@ from datetime import datetime
 
 from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
-
+from scrapy.http import FormRequest
 
 class AlleLeagueSpider(Spider):
     name = 'alle_league'
@@ -20,9 +20,16 @@ class AlleLeagueSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+        import pdb;pdb.set_trace()
+        url = 'http://alleghenyleague.org/wp-admin/admin-ajax.php'
+        payload = {'action': 'simcal_default_calendar_draw_grid',
+                   'month': 12,
+                   'year': 2018,
+                   'id': 417}
+        req = FormRequest(url, formdata=payload)
         # meeting_titles = response.css('span.simcal-event-title::text').extract()
         # meeting_titles = response.xpath('//span[@class="simcal-event-title"]/text()').extract()
-
+        import pdb;pdb.set_trace()
         meeting_titles = response.xpath('//div//span[@itemprop="name"]//text()').extract()
         startDate = response.xpath('//div//span[@itemprop="startDate"]//text()').extract()
         endDate = response.xpath('//div//span[@itemprop="endDate"]//text()').extract()
