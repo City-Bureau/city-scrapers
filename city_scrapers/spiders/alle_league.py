@@ -1,16 +1,28 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-
+from lxml import html
 from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 from scrapy.http import FormRequest
+from scrapy import Request
+import json
 
 class AlleLeagueSpider(Spider):
+    custom_settings = {'ROBOTSTXT_OBEY': False}
     name = 'alle_league'
     agency_name = 'Allegheny League of Municipalities'
     timezone = 'America/New_York'
     allowed_domains = ['alleghenyleague.org']
     start_urls = ['http://alleghenyleague.org/calendar-of-events']
+
+    def start_requests(self):
+        import pdb;pdb.set_trace()
+        url = 'http://alleghenyleague.org/wp-admin/admin-ajax.php'
+        payload = {'action': 'simcal_default_calendar_draw_grid',
+                   'month': '12',
+                   'year': '2018',
+                   'id': '417'}
+        yield FormRequest(url, formdata=payload)
 
     def parse(self, response):
         """
@@ -20,26 +32,21 @@ class AlleLeagueSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        import pdb;pdb.set_trace()
-        url = 'http://alleghenyleague.org/wp-admin/admin-ajax.php'
-        payload = {'action': 'simcal_default_calendar_draw_grid',
-                   'month': 12,
-                   'year': 2018,
-                   'id': 417}
-        req = FormRequest(url, formdata=payload)
+
         # meeting_titles = response.css('span.simcal-event-title::text').extract()
         # meeting_titles = response.xpath('//span[@class="simcal-event-title"]/text()').extract()
         import pdb;pdb.set_trace()
-        meeting_titles = response.xpath('//div//span[@itemprop="name"]//text()').extract()
-        startDate = response.xpath('//div//span[@itemprop="startDate"]//text()').extract()
-        endDate = response.xpath('//div//span[@itemprop="endDate"]//text()').extract()
+        data = json.loads(response.body)
+        tree=html.fragment_fromstring(adict['data'])
+        meeting_titles = tree.xpath('//div//span[@itemprop="name"]//text()')
+        startDate = tree.xpath('//div//span[@itemprop="startDate"]//text()')
+        endDate = tree.xpath('//div//span[@itemprop="endDate"]//text()')
         # calendar_data = response.xpath('string(//div[@class='
         #                                '"simcal-calendar simcal-default-calendar '
         #                                'simcal-default-calendar-list simcal-default'
         #                                '-calendar-light"]/*)').extract()[0]
 
-        calendar_href = response.xpath('//div[@class="simcal-event-details '
-                                       'simcal-tooltip-content"]//a/@href').extract()
+        calendar_href = tree.xpath('//div[@class="simcal-event-details simcal-tooltip-content"]//a/@href')
         start_date, end_date = self._prep_date_time(startDate, endDate)
         for index, item in enumerate(meeting_titles):
 
