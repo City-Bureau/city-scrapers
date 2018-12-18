@@ -73,8 +73,8 @@ class CookWaterSpider(Spider):
         Parse meeting minutes and agenda if available.
         """
         documents = []
-        for doc in ['Agenda', 'Minutes']:
-            if isinstance(item[doc], dict) and item[doc].get('url'):
+        for doc in ['Agenda', 'Minutes', 'Video']:
+            if isinstance(item.get(doc), dict) and item[doc].get('url'):
                 documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 

@@ -114,12 +114,9 @@ class AlleCountySpider(Spider):
         Parse or generate documents.
         """
         documents = []
-        details = item['Minutes']
-        if isinstance(details, dict):
-            documents.append({'note': 'Minutes', 'url': details['url']})
-        agenda = item['Agenda']
-        if isinstance(agenda, dict):
-            documents.append({'note': 'Agenda', 'url': agenda['url']})
+        for doc in ['Agenda', 'Minutes', 'Video']:
+            if isinstance(item.get(doc), dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     def _parse_start_datetime(self, item):

@@ -62,6 +62,10 @@ def test_documents():
                 'https://mwrd.legistar.com/View.ashx?M=M&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
             'note': 'Minutes'
         },
+        {
+            'note': 'Video',
+            'url': 'https://mwrd.legistar.com/Video.aspx?Mode=Granicus&ID1=356&Mode2=Video'
+        },
     ]
 
 
