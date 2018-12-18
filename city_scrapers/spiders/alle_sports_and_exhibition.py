@@ -22,7 +22,7 @@ class AlleSportsAndExhibitionSpider(Spider):
     agency_name = 'Allegheny Sports and Exhibition Authority'
     timezone = 'America/New_York'
     allowed_domains = ['www.pgh-sea.com']
-    start_urls = ['http://www.pgh-sea.com/schedule_sea.aspx?yr=2017']
+    start_urls = ['http://www.pgh-sea.com/schedule_sea.aspx?yr=2018']
 
     def _address_time(self, response):
         atext = " ".join(response.xpath('//p//span[@class="ScheduleText"]//text()').extract())
@@ -80,12 +80,12 @@ class AlleSportsAndExhibitionSpider(Spider):
         for row in atable:
             data = {
                 '_type': 'event',
-                'name': self._parse_name(row),
-                'event_description': 'SEA Board Meetings',
+                'name': 'SEA Board Meetings',
+                'event_description': '',
                 'classification': self._parse_classification(),
                 'start': self._parse_start(row),
                 'end': self._parse_end(row),
-                'all_day': self._parse_all_day(),
+                'all_day': False,
                 'location': self._parse_location(),
                 'documents': self._parse_documents(row),
                 'sources': self._parse_sources(),
@@ -97,18 +97,6 @@ class AlleSportsAndExhibitionSpider(Spider):
             if not data['start']:
                 continue
             yield data
-
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
-        return ''
-
-    def _parse_description(self, item):
-        """
-        Parse or generate event description.
-        """
-        return ''
 
     def _parse_classification(self):
         """
@@ -150,12 +138,6 @@ class AlleSportsAndExhibitionSpider(Spider):
             'time': ((datetime_obj + timedelta(hours=3)).time()),
             'note': 'Estimated 3 hours after start time'
         }
-
-    def _parse_all_day(self):
-        """
-        Parse or generate all-day status. Defaults to False.
-        """
-        return False
 
     def _parse_location(self):
         """
