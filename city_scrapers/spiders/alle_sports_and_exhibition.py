@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-import unicodedata
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from dateutil.parser import parse
 from lxml import html
@@ -13,28 +12,29 @@ from city_scrapers.spider import Spider
 class AlleSportsAndExhibitionSpider(Spider):
     def __init__(self):
         self.startTime = '10:30am'
-        self.add = ('David L. Lawrence Convention Center , 3rd Floor, '
-                    '1000 Fort Duquesne Blvd, '
-                    'Pittsburgh, PA 15222')
+        self.add = (
+            'David L. Lawrence Convention Center , 3rd Floor, '
+            '1000 Fort Duquesne Blvd, '
+            'Pittsburgh, PA 15222'
+        )
+
     name = 'alle_sports_and_exhibition'
     agency_name = 'Allegheny Sports and Exhibition Authority'
     timezone = 'America/New_York'
     allowed_domains = ['www.pgh-sea.com']
-    start_urls = ['http://www.pgh-sea.com/schedule_sea.aspx?yr=2018']
+    start_urls = ['http://www.pgh-sea.com/schedule_sea.aspx?yr=2017']
 
-    def _address_time(self,response):
-        atext = " ".join(response
-                         .xpath('//p//span[@class="ScheduleText"]//text()')
-                         .extract())
+    def _address_time(self, response):
+        atext = " ".join(response.xpath('//p//span[@class="ScheduleText"]//text()').extract())
         err_message = 'Look like {name} is changed!!! Please check before procceed!'
         if 'lawrence convention center' not in atext.lower():
-            raise(ValueError(err_message.format(name="the address")))
+            raise (ValueError(err_message.format(name="the address")))
 
-        pattern =r'(\s\d{1,2}\:\d{2}(?:AM|PM|am|pm))'
+        pattern = r'(\s\d{1,2}\:\d{2}(?:AM|PM|am|pm))'
         atime = re.findall(pattern, atext)
-        import pdb;pdb.set_trace()
-        if len(atime) != 1 :
-            raise(ValueError(err_message.format(name="the meeting time (10:30am)")))
+
+        if len(atime) != 1:
+            raise (ValueError(err_message.format(name="the meeting time (10:30am)")))
         else:
             self.startTime = atime[0]
 
@@ -44,11 +44,10 @@ class AlleSportsAndExhibitionSpider(Spider):
 
         atable = []
 
-
         # Remove header and line
         alist_tbody = alist_tbody[4:]
-        for i in range(0,len(alist_tbody),3):
-            trees = [ html.fragment_fromstring(item) for item in alist_tbody[i:i+3]]
+        for i in range(0, len(alist_tbody), 3):
+            trees = [html.fragment_fromstring(item) for item in alist_tbody[i:i + 3]]
 
             texts = [tree.text_content() for tree in trees]
             if 'cancel' in texts[0].lower():
@@ -57,10 +56,9 @@ class AlleSportsAndExhibitionSpider(Spider):
             urls = [tree.xpath('//a/@href')[0] if tree.xpath('//a/@href') else '' for tree in trees]
 
             arow = []
-            for name,url in zip(texts,urls):
+            for name, url in zip(texts, urls):
                 if url:
-                    arow.append({name : url})
-                    #arow.append('{name}: {url}'.format(name=name, url=url))
+                    arow.append({name: url})
                 else:
                     arow.append(name)
             atable.append(arow)
@@ -99,18 +97,6 @@ class AlleSportsAndExhibitionSpider(Spider):
             if not data['start']:
                 continue
             yield data
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
 
     def _parse_name(self, item):
         """
@@ -152,8 +138,6 @@ class AlleSportsAndExhibitionSpider(Spider):
             return ''
         return {'date': datetime_obj.date(), 'time': datetime_obj.time(), 'note': ''}
 
-
-
     def _parse_end(self, item):
         """
         No end date listed. Estimate 3 hours after start time.
@@ -191,14 +175,13 @@ class AlleSportsAndExhibitionSpider(Spider):
         documents = []
         if len(item) > 1:
             for adict in item[1:]:
-                if isinstance(adict,dict):
+                if isinstance(adict, dict):
                     if 'Meeting Agenda' in adict:
                         documents.append({'note': 'Agenda', 'url': adict['Meeting Agenda']})
                     if 'Minutes of Meeting' in adict:
-                        documents.append({'note': 'Minutes', 'url':adict['Minutes of Meeting']})
+                        documents.append({'note': 'Minutes', 'url': adict['Minutes of Meeting']})
 
         return documents
-
 
     def _parse_sources(self):
         """"
