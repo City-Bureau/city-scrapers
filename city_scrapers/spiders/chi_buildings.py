@@ -74,7 +74,7 @@ class ChiBuildingsSpider(Spider):
         if not time_match:
             return name, None
         time_str = time_match.group()
-        name = name.replace(time_str, '').strip()
+        name = name.replace(time_str, '').replace('@', '').strip()
         time_str = time_str.strip().replace('.', '')
         # Default to PM if not AM/PM not provided
         if 'm' not in time_str:
