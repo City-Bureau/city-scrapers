@@ -5,7 +5,7 @@ specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import scrapy
 
@@ -19,7 +19,13 @@ class ChiBuildingsSpider(Spider):
     allowed_domains = ['www.pbcchicago.com']
     base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     timezone = 'America/Chicago'
-    start_urls = ['{}&start={}'.format(base_url, datetime.now().strftime('%Y-%m-%d'))]
+    start_urls = [
+        '{}&start={}&end={}'.format(
+            base_url,
+            (datetime.now() - timedelta(days=60)).strftime('%Y-%m-%d'),
+            (datetime.now() + timedelta(days=60)).strftime('%Y-%m-%d'),
+        )
+    ]
 
     def parse(self, response):
         """
@@ -43,30 +49,25 @@ class ChiBuildingsSpider(Spider):
                 item_data = {
                     '_type': 'event',
                     'name': name,
-                    'description': item['description'],
+                    'description': '',
                     'classification': self._parse_classification(item.get('category')[0]),
                     'start': start,
                     'end': end,
                     'all_day': False,
-                    'timezone': self.timezone,
                     'sources': self._parse_sources(item)
                 }
                 item_data['status'] = self._generate_status(item_data)
                 item_data['id'] = self._generate_id(item_data)
 
-                # If it's a board meeting, return description
-                if item['category'][0] in ['board-meeting', 'admin-opp-committee-meeting']:
-                    yield self._board_meeting(item_data)
-                else:
-                    # Request each relevant event page,
-                    # including current data in meta attr
-                    req = scrapy.Request(
-                        item['url'],
-                        callback=self._parse_event,
-                        dont_filter=True,
-                    )
-                    req.meta['item'] = item_data
-                    yield req
+                # Request each relevant event page, including current data in meta attr
+                req = scrapy.Request(
+                    item['url'],
+                    callback=self._parse_event,
+                    dont_filter=True,
+                )
+                req.meta['item'] = item_data
+                req.meta['category'] = item['category']
+                yield req
 
     def _parse_name_time(self, name):
         """Return name with time string removed and time if included"""
@@ -85,10 +86,15 @@ class ChiBuildingsSpider(Spider):
         """
         Parse event detail page if additional information
         """
-        item = {'location': self._parse_location(response)}
+        item_data = response.meta.get('item', {})
+        category = response.meta.get('category', ['board-meeting'])
+        board_meeting = category[0] in ['board-meeting', 'admin-opp-committee-meeting']
+        item = {
+            'location': self._parse_location(response, board_meeting=board_meeting),
+            'documents': self._parse_documents(response),
+        }
         # Merge event details with item data from request meta
-        item.update(response.meta.get('item', {}))
-        return item
+        return {**item, **item_data}
 
     def _parse_classification(self, meeting_type):
         """
@@ -100,12 +106,13 @@ class ChiBuildingsSpider(Spider):
             return BOARD
         return NOT_CLASSIFIED
 
-    def _board_meeting(self, item):
+    def _parse_location(self, item, board_meeting=False):
         """
-        Return a standard location for board meetings
+        Parse or generate location. Url, latitutde and longitude are all
+        optional and may be more trouble than they're worth to collect.
         """
-        item_data = {
-            'location': {
+        if board_meeting:
+            return {
                 'url': 'https://thedaleycenter.com',
                 'name': 'Second Floor Board Room, Richard J. Daley Center',
                 'address': '50 W. Washington Street Chicago, IL 60602',
@@ -114,15 +121,6 @@ class ChiBuildingsSpider(Spider):
                     'longitude': '-87.630191',
                 }
             }
-        }
-        item.update(item_data)
-        return item
-
-    def _parse_location(self, item):
-        """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
-        """
         if len(item.css('.eo-event-venue-map')) == 0:
             return {
                 'url': None,
@@ -164,6 +162,16 @@ class ChiBuildingsSpider(Spider):
 
     def _parse_datetime(self, time_str):
         return datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S')
+
+    def _parse_documents(self, response):
+        """Parse documents if available on previous board meeting pages"""
+        documents = []
+        for doc_link in response.css('a.vc_btn3-shape-rounded'):
+            documents.append({
+                'url': doc_link.attrib['href'],
+                'note': doc_link.xpath('./text()').extract_first()
+            })
+        return documents
 
     def _parse_sources(self, item):
         """

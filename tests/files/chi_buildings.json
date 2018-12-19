@@ -1,1186 +1,641 @@
 [
-    {
-        "title": "Pre-Submission Conference \u2013 RFP for Construction Signage Services",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/pre-submission-conference-rfp-construction-signage-services\/",
-        "allDay": false,
-        "start": "2018-11-06T11:00:00",
-        "end": "2018-11-06T12:00:00",
-        "description": "November 6, 2018  11:00 am - 12:00 pm<\/br><\/br>",
-        "organiser": 13,
-        "className": [
-            "eo-event-future",
-            "eo-event",
-            "eo-future-event"
-        ],
-        "category": [],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#A34F16"
-    },
-    {
-        "title": "Administrative Operations Committee 10:00 a.m.",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/ao-committee\/",
-        "allDay": true,
-        "start": "2018-11-07T00:00:00",
-        "end": "2018-11-08T00:00:00",
-        "description": "November 7, 2018 <\/br><\/br>Notice Agenda\u00a0",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "Veteran\u2019s Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/veterans-day-13\/",
-        "allDay": true,
-        "start": "2018-11-12T00:00:00",
-        "end": "2018-11-13T00:00:00",
-        "description": "November 12, 2018 <\/br><\/br>",
-        "organiser": 9,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "Board Meeting \u2013 November 13, 2018",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/board-meeting-november-13-2018\/",
-        "allDay": false,
-        "start": "2018-11-13T14:30:00",
-        "end": "2018-11-13T15:30:00",
-        "description": "November 13, 2018  2:30 pm - 3:30 pm<\/br><\/br>[vc_row][vc_column][vc_empty_space height=\"16px\"][vc_column_text] Second Floor Board Room Richard J. Daley Center 50 West Washington Street [\/vc_column_text][\/vc_column][\/vc_row][vc_row disable_element=\"yes\"][vc_column][vc_text_separator title=\"Board Material\"][\/vc_column][\/vc_row][vc_row disable_element=\"yes\"][vc_column width=\"1\/4\"][vc_btn title=\"Agenda\" style=\"outline\" align=\"center\" link=\"||target:%20_blank|\" button_block=\"true\"][\/vc_column][vc_column width=\"1\/4\"][vc_btn title=\"Presentation\" style=\"outline\" align=\"center\" link=\"||target:%20_blank|\" button_block=\"true\"][\/vc_column][vc_column width=\"1\/4\"][vc_btn title=\"Summary\" style=\"outline\" align=\"center\" link=\"||target:%20_blank|\" button_block=\"true\"][\/vc_column][vc_column width=\"1\/4\"][vc_btn title=\"Minutes\" style=\"outline\" align=\"center\" link=\"||target:%20_blank|\" button_block=\"true\"][\/vc_column][\/vc_row][vc_row disable_element=\"yes\"][vc_column width=\"1\/4\"][vc_btn title=\"Agenda\" style=\"outline-custom\" outline_custom_color=\"#d51f35\" outline_custom_hover_background=\"#d51f35\" outline_custom_hover_text=\"#ffffff\" align=\"center\" link=\"url:http%3A%2F%2Fwww.pbcchicago.com%2Fwp-content%2Fuploads%2F2017%2F12%2FMA_PBC_MPW_bdgeneral20180109.pdf|title:Agenda|target:%20_blank|\" button_block=\"true\"][\/vc_column][vc_column width=\"1\/4\"][vc_btn title=\"Presentation\"...",
-        "organiser": 9,
-        "className": [
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-event",
-            "eo-future-event",
-            "category-board-meeting"
-        ],
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "Pre-Submission Conference \u2013 RFP for Constructability Review Services",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/pre-submission-conference-rfp-for-constructability-review-services\/",
-        "allDay": false,
-        "start": "2018-11-19T09:30:00",
-        "end": "2018-11-19T10:30:00",
-        "description": "November 19, 2018  9:30 am - 10:30 am<\/br><\/br>",
-        "organiser": 12,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-future",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#A34F16"
-    },
-    {
-        "title": "Thanksgiving Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/thanksgiving-day-9\/",
-        "allDay": true,
-        "start": "2018-11-22T00:00:00",
-        "end": "2018-11-23T00:00:00",
-        "description": "November 22, 2018 <\/br><\/br>",
-        "organiser": 9,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "Submission Deadline \u2013 RFP for Construction Management at Risk Services for Various Chicago Public Schools (Package 1)",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/submission-deadline-rfp-for-construction-management-at-risk-services-for-various-chicago-public-schools-package-1\/",
-        "allDay": false,
-        "start": "2018-11-28T11:00:00",
-        "end": "2018-11-28T11:00:00",
-        "description": "November 28, 2018  11:00 am<\/br><\/br>",
-        "organiser": 13,
-        "className": [
-            "eo-event-future",
-            "eo-event",
-            "eo-future-event"
-        ],
-        "category": [],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#A34F16"
-    },
-    {
-        "title": "Administrative Operations Committee Meeting \u2013 November 29, 2018",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/administrative-operations-committee-meeting-november-29-2018\/",
-        "allDay": false,
-        "start": "2018-11-29T13:00:00",
-        "end": "2018-11-29T14:00:00",
-        "description": "November 29, 2018  1:00 pm - 2:00 pm<\/br><\/br>",
-        "organiser": 9,
-        "className": [
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-event",
-            "eo-future-event",
-            "category-admin-opp-committee-meeting"
-        ],
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "Submission Deadline \u2013 Constructability Review Services",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/submission-deadline-constructability-review-services\/",
-        "allDay": false,
-        "start": "2018-12-06T13:00:00",
-        "end": "2018-12-06T13:00:00",
-        "description": "December 6, 2018  1:00 pm<\/br><\/br>",
-        "organiser": 12,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-future",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#A34F16"
-    },
-    {
-        "title": "Board Meeting \u2013 December 11, 2018",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/board-meeting-december-11-2018\/",
-        "allDay": false,
-        "start": "2018-12-11T14:30:00",
-        "end": "2018-12-11T15:30:00",
-        "description": "December 11, 2018  2:30 pm - 3:30 pm<\/br><\/br>Second Floor Board Room, Richard J. Daley Center, 50 W. Washington Street",
-        "organiser": 9,
-        "className": [
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-event",
-            "eo-future-event",
-            "category-board-meeting"
-        ],
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "Christmas Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/christmas-day-8\/",
-        "allDay": true,
-        "start": "2018-12-25T00:00:00",
-        "end": "2018-12-26T00:00:00",
-        "description": "December 25, 2018 <\/br><\/br>",
-        "organiser": 9,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "New Year\u2019s Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/new-years-day-2\/",
-        "allDay": true,
-        "start": "2019-01-01T00:00:00",
-        "end": "2019-01-02T00:00:00",
-        "description": "January 1, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/administrative-operations-committee\/",
-        "allDay": true,
-        "start": "2019-01-08T00:00:00",
-        "end": "2019-01-09T00:00:00",
-        "description": "January 8, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "Submission Deadline \u2013 RFP for Construction Signage Services",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/submission-deadline-rfp-construction-signage-services\/",
-        "allDay": false,
-        "start": "2019-01-08T16:00:00",
-        "end": "2019-01-08T16:00:00",
-        "description": "January 8, 2019  4:00 pm<\/br><\/br>",
-        "organiser": 13,
-        "className": [
-            "eo-event-future",
-            "eo-event",
-            "eo-future-event"
-        ],
-        "category": [],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#A34F16"
-    },
-    {
-        "title": "2:30 pm PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-pm-pbc-board-meeting\/",
-        "allDay": true,
-        "start": "2019-01-15T00:00:00",
-        "end": "2019-01-16T00:00:00",
-        "description": "January 15, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "Dr. Martin Luther King, Jr.\u2019s Birthday",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/dr-martin-luther-king-jr-s-birthday-8\/",
-        "allDay": true,
-        "start": "2019-01-21T00:00:00",
-        "end": "2019-01-22T00:00:00",
-        "description": "January 21, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee\/",
-        "allDay": true,
-        "start": "2019-01-31T00:00:00",
-        "end": "2019-02-01T00:00:00",
-        "description": "January 31, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "Lincoln\u2019s Birthday",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/lincolns-birthday-11\/",
-        "allDay": true,
-        "start": "2019-02-12T00:00:00",
-        "end": "2019-02-13T00:00:00",
-        "description": "February 12, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting\/",
-        "allDay": true,
-        "start": "2019-02-13T00:00:00",
-        "end": "2019-02-14T00:00:00",
-        "description": "February 13, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "Washington\u2019s Birthday",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/washingtons-birthday-2\/",
-        "allDay": true,
-        "start": "2019-02-18T00:00:00",
-        "end": "2019-02-19T00:00:00",
-        "description": "February 18, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-2\/",
-        "allDay": true,
-        "start": "2019-02-28T00:00:00",
-        "end": "2019-03-01T00:00:00",
-        "description": "February 28, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "Pulaski Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/pulaski-day-12\/",
-        "allDay": true,
-        "start": "2019-03-04T00:00:00",
-        "end": "2019-03-05T00:00:00",
-        "description": "March 4, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-2\/",
-        "allDay": true,
-        "start": "2019-03-12T00:00:00",
-        "end": "2019-03-13T00:00:00",
-        "description": "March 12, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-3\/",
-        "allDay": true,
-        "start": "2019-03-28T00:00:00",
-        "end": "2019-03-29T00:00:00",
-        "description": "March 28, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-3\/",
-        "allDay": true,
-        "start": "2019-04-09T00:00:00",
-        "end": "2019-04-10T00:00:00",
-        "description": "April 9, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-4\/",
-        "allDay": true,
-        "start": "2019-04-25T00:00:00",
-        "end": "2019-04-26T00:00:00",
-        "description": "April 25, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-4\/",
-        "allDay": true,
-        "start": "2019-05-07T00:00:00",
-        "end": "2019-05-08T00:00:00",
-        "description": "May 7, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "Memorial Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/memorial-day-2\/",
-        "allDay": true,
-        "start": "2019-05-27T00:00:00",
-        "end": "2019-05-28T00:00:00",
-        "description": "May 27, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-5\/",
-        "allDay": true,
-        "start": "2019-05-30T00:00:00",
-        "end": "2019-05-31T00:00:00",
-        "description": "May 30, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-5\/",
-        "allDay": true,
-        "start": "2019-06-11T00:00:00",
-        "end": "2019-06-12T00:00:00",
-        "description": "June 11, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-6\/",
-        "allDay": true,
-        "start": "2019-06-27T00:00:00",
-        "end": "2019-06-28T00:00:00",
-        "description": "June 27, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "Independence Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/independence-day-2\/",
-        "allDay": true,
-        "start": "2019-07-04T00:00:00",
-        "end": "2019-07-05T00:00:00",
-        "description": "July 4, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-6\/",
-        "allDay": true,
-        "start": "2019-07-09T00:00:00",
-        "end": "2019-07-10T00:00:00",
-        "description": "July 9, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-7\/",
-        "allDay": true,
-        "start": "2019-08-01T00:00:00",
-        "end": "2019-08-02T00:00:00",
-        "description": "August 1, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-7\/",
-        "allDay": true,
-        "start": "2019-08-13T00:00:00",
-        "end": "2019-08-14T00:00:00",
-        "description": "August 13, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-8\/",
-        "allDay": true,
-        "start": "2019-08-29T00:00:00",
-        "end": "2019-08-30T00:00:00",
-        "description": "August 29, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "Labor Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/labor-day-2\/",
-        "allDay": true,
-        "start": "2019-09-02T00:00:00",
-        "end": "2019-09-03T00:00:00",
-        "description": "September 2, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-8\/",
-        "allDay": true,
-        "start": "2019-09-10T00:00:00",
-        "end": "2019-09-11T00:00:00",
-        "description": "September 10, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-9\/",
-        "allDay": true,
-        "start": "2019-09-24T00:00:00",
-        "end": "2019-09-25T00:00:00",
-        "description": "September 24, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "2:30 Annual PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-annual-pbc-board-meeting\/",
-        "allDay": true,
-        "start": "2019-10-01T00:00:00",
-        "end": "2019-10-02T00:00:00",
-        "description": "October 1, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "Columbus Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/columbus-day-2\/",
-        "allDay": true,
-        "start": "2019-10-14T00:00:00",
-        "end": "2019-10-15T00:00:00",
-        "description": "October 14, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-10\/",
-        "allDay": true,
-        "start": "2019-10-31T00:00:00",
-        "end": "2019-11-01T00:00:00",
-        "description": "October 31, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "Veterans\u2019 Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/veterans-day-2\/",
-        "allDay": true,
-        "start": "2019-11-11T00:00:00",
-        "end": "2019-11-12T00:00:00",
-        "description": "November 11, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-9\/",
-        "allDay": true,
-        "start": "2019-11-12T00:00:00",
-        "end": "2019-11-13T00:00:00",
-        "description": "November 12, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "Thanksgiving Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/thanksgiving-day-2\/",
-        "allDay": true,
-        "start": "2019-11-28T00:00:00",
-        "end": "2019-11-29T00:00:00",
-        "description": "November 28, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    },
-    {
-        "title": "1:00 p.m. Administrative Operations Committee",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/100-p-m-administrative-operations-committee-11\/",
-        "allDay": true,
-        "start": "2019-12-05T00:00:00",
-        "end": "2019-12-06T00:00:00",
-        "description": "December 5, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-admin-opp-committee-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-admin-opp-committee-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "admin-opp-committee-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#0fa92a"
-    },
-    {
-        "title": "2:30 p.m. PBC Board Meeting",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/230-p-m-pbc-board-meeting-10\/",
-        "allDay": true,
-        "start": "2019-12-10T00:00:00",
-        "end": "2019-12-11T00:00:00",
-        "description": "December 10, 2019 <\/br><\/br>Notice",
-        "organiser": 7,
-        "className": [
-            "eo-event-venue-richard-j-daley-center",
-            "eo-event-cat-board-meeting",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "venue-richard-j-daley-center",
-            "category-board-meeting"
-        ],
-        "venue": 153,
-        "venue_slug": "richard-j-daley-center",
-        "category": [
-            "board-meeting"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#d51f35"
-    },
-    {
-        "title": "Christmas Day",
-        "url": "http:\/\/www.pbcchicago.com\/events\/event\/christmas-day-2\/",
-        "allDay": true,
-        "start": "2019-12-25T00:00:00",
-        "end": "2019-12-26T00:00:00",
-        "description": "December 25, 2019 <\/br><\/br>",
-        "organiser": 7,
-        "className": [
-            "eo-event-cat-holiday",
-            "eo-event-future",
-            "eo-all-day",
-            "eo-event",
-            "eo-future-event",
-            "category-holiday"
-        ],
-        "category": [
-            "holiday"
-        ],
-        "tags": [],
-        "textColor": "#ffffff",
-        "color": "#4d4f53"
-    }
+  {
+    "title": "Pre-Submission Conference \u2013 RFP for Constructability Review Services",
+    "url": "http://www.pbcchicago.com/events/event/pre-submission-conference-rfp-for-constructability-review-services/",
+    "allDay": false,
+    "start": "2018-11-19T09:30:00",
+    "end": "2018-11-19T10:30:00",
+    "description": "November 19, 2018  9:30 am - 10:30 am</br></br>",
+    "organiser": 12,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-past",
+      "eo-event",
+      "eo-past-event",
+      "venue-richard-j-daley-center"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Thanksgiving Day",
+    "url": "http://www.pbcchicago.com/events/event/thanksgiving-day-9/",
+    "allDay": true,
+    "start": "2018-11-22T00:00:00",
+    "end": "2018-11-23T00:00:00",
+    "description": "November 22, 2018 </br></br>",
+    "organiser": 9,
+    "className": [
+      "eo-event-cat-holiday",
+      "eo-event-past",
+      "eo-all-day",
+      "eo-event",
+      "eo-past-event",
+      "category-holiday"
+    ],
+    "category": ["holiday"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#4d4f53"
+  },
+  {
+    "title": "Pre-Submission Conference \u2013 Construction Management at Risk Services for Various Chicago Public Schools (Package 1)",
+    "url": "http://www.pbcchicago.com/events/event/pre-submission-conference-cm-at-risk-services-for-various-chicago-public-schools-package-1/",
+    "allDay": false,
+    "start": "2018-11-26T10:00:00",
+    "end": "2018-11-26T13:00:00",
+    "description": "November 26, 2018  10:00 am - 1:00 pm</br></br>",
+    "organiser": 13,
+    "className": [
+      "eo-event-venue-charles-a-hayes-family-investment-center",
+      "eo-event-past",
+      "eo-event",
+      "eo-past-event",
+      "venue-charles-a-hayes-family-investment-center"
+    ],
+    "venue": 126,
+    "venue_slug": "charles-a-hayes-family-investment-center",
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Administrative Operations Committee 10:00 a.m.",
+    "url": "http://www.pbcchicago.com/events/event/pbc-administrative-operations-committee/",
+    "allDay": true,
+    "start": "2018-12-05T00:00:00",
+    "end": "2018-12-06T00:00:00",
+    "description": "December 5, 2018 </br></br>Notice\u00a0 Agenda",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-admin-opp-committee-meeting",
+      "eo-event-past",
+      "eo-all-day",
+      "eo-event",
+      "eo-past-event",
+      "venue-richard-j-daley-center",
+      "category-admin-opp-committee-meeting"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["admin-opp-committee-meeting"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#0fa92a"
+  },
+  {
+    "title": "Submission Deadline \u2013 RFP for Construction Management at Risk Services for Various Chicago Public Schools (Package 1)",
+    "url": "http://www.pbcchicago.com/events/event/submission-deadline-rfp-for-construction-management-at-risk-services-for-various-chicago-public-schools-package-1/",
+    "allDay": false,
+    "start": "2018-12-05T09:30:00",
+    "end": "2018-12-05T09:30:00",
+    "description": "December 5, 2018  9:30 am</br></br>",
+    "organiser": 13,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-past",
+      "eo-event",
+      "eo-past-event",
+      "venue-richard-j-daley-center"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Submission Deadline \u2013 Constructability Review Services",
+    "url": "http://www.pbcchicago.com/events/event/submission-deadline-constructability-review-services/",
+    "allDay": false,
+    "start": "2018-12-06T13:00:00",
+    "end": "2018-12-06T13:00:00",
+    "description": "December 6, 2018  1:00 pm</br></br>",
+    "organiser": 12,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-past",
+      "eo-event",
+      "eo-past-event",
+      "venue-richard-j-daley-center"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Noon Cary Grove Holiday Concert",
+    "url": "http://www.pbcchicago.com/events/event/noon-cary-grove-holiday-concert/",
+    "allDay": true,
+    "start": "2018-12-11T00:00:00",
+    "end": "2018-12-12T00:00:00",
+    "description": "December 11, 2018 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-daley-plaza",
+      "eo-event-past",
+      "eo-all-day",
+      "eo-event",
+      "eo-past-event",
+      "venue-richard-j-daley-center",
+      "category-daley-plaza"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["daley-plaza"],
+    "tags": [],
+    "textColor": "#000000",
+    "color": "#bababf"
+  },
+  {
+    "title": "Board Meeting \u2013 December 11, 2018",
+    "url": "http://www.pbcchicago.com/events/event/board-meeting-december-11-2018/",
+    "allDay": false,
+    "start": "2018-12-11T14:30:00",
+    "end": "2018-12-11T15:30:00",
+    "description": "December 11, 2018  2:30 pm - 3:30 pm</br></br>[vc_row][vc_column][vc_empty_space height=\"16px\"][vc_column_text] Second Floor Board Room Richard J. Daley Center 50 West Washington Street [/vc_column_text][/vc_column][/vc_row][vc_row disable_element=\"yes\"][vc_column][vc_text_separator title=\"Board Material\"][/vc_column][/vc_row][vc_row][vc_column width=\"1/4\"][vc_btn title=\"Agenda\" style=\"outline-custom\" outline_custom_color=\"#d51f35\" outline_custom_hover_background=\"#d51f35\" outline_custom_hover_text=\"#ffffff\" align=\"center\" link=\"url:http%3A%2F%2Fwww.pbcchicago.com%2Fwp-content%2Fuploads%2F2018%2F12%2FMA_PBC_MPW_general20181211.pdf|title:Agenda|target:%20_blank|\" button_block=\"true\"][/vc_column][vc_column width=\"1/4\"][vc_btn title=\"Presentation\" style=\"outline-custom\" outline_custom_color=\"#d51f35\" outline_custom_hover_background=\"#d51f35\" outline_custom_hover_text=\"#ffffff\" align=\"center\" link=\"url:http%3A%2F%2Fwww.pbcchicago.com%2Fwp-content%2Fuploads%2F2018%2F12%2FBoardPresentation_20181211.pdf|title:Presentation|target:%20_blank|\" button_block=\"true\"][/vc_column][vc_column width=\"1/4\"][vc_btn title=\"Summary\" style=\"outline-custom\" outline_custom_color=\"#d51f35\" outline_custom_hover_background=\"#d51f35\" outline_custom_hover_text=\"#ffffff\" align=\"center\" link=\"url:http%3A%2F%2Fwww.pbcchicago.com%2Fwp-content%2Fuploads%2F2018%2F12%2FBoard-Summary.pdf|title:Summary|target:%20_blank|\" button_block=\"true\"][/vc_column][vc_column width=\"1/4\"][vc_btn title=\"Minutes\" style=\"outline\" align=\"center\" link=\"||target:%20_blank|\" button_block=\"true\"][/vc_column][/vc_row][vc_row disable_element=\"yes\"][vc_column width=\"1/4\"][/vc_column][vc_column width=\"1/4\"][/vc_column][vc_column width=\"1/4\"][/vc_column][vc_column...",
+    "organiser": 9,
+    "className": [
+      "eo-event-cat-board-meeting",
+      "eo-event-past",
+      "eo-event",
+      "eo-past-event",
+      "category-board-meeting"
+    ],
+    "category": ["board-meeting"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#d51f35"
+  },
+  {
+    "title": "Noon \u2013 Holiday Orchestra",
+    "url": "http://www.pbcchicago.com/events/event/noon-holiday-orchestra/",
+    "allDay": true,
+    "start": "2018-12-13T00:00:00",
+    "end": "2018-12-14T00:00:00",
+    "description": "December 13, 2018 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-daley-plaza",
+      "eo-event-past",
+      "eo-all-day",
+      "eo-event",
+      "eo-past-event",
+      "venue-richard-j-daley-center",
+      "category-daley-plaza"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["daley-plaza"],
+    "tags": [],
+    "textColor": "#000000",
+    "color": "#bababf"
+  },
+  {
+    "title": "Noon \u2013 Christmas Caroling",
+    "url": "http://www.pbcchicago.com/events/event/noon-christmas-caroling/",
+    "allDay": true,
+    "start": "2018-12-14T00:00:00",
+    "end": "2018-12-15T00:00:00",
+    "description": "December 14, 2018 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-daley-plaza",
+      "eo-event-past",
+      "eo-all-day",
+      "eo-event",
+      "eo-past-event",
+      "venue-richard-j-daley-center",
+      "category-daley-plaza"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["daley-plaza"],
+    "tags": [],
+    "textColor": "#000000",
+    "color": "#bababf"
+  },
+  {
+    "title": "Noon \u2013 Voices for Hope and Home",
+    "url": "http://www.pbcchicago.com/events/event/noon-voices-for-hope-and-home/",
+    "allDay": true,
+    "start": "2018-12-18T00:00:00",
+    "end": "2018-12-19T00:00:00",
+    "description": "December 18, 2018 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-cat-daley-plaza",
+      "eo-event-past",
+      "eo-all-day",
+      "eo-event",
+      "eo-past-event",
+      "category-daley-plaza"
+    ],
+    "category": ["daley-plaza"],
+    "tags": [],
+    "textColor": "#000000",
+    "color": "#bababf"
+  },
+  {
+    "title": "Noon Holiday Concert",
+    "url": "http://www.pbcchicago.com/events/event/noon-holiday-concert/",
+    "allDay": true,
+    "start": "2018-12-19T00:00:00",
+    "end": "2018-12-20T00:00:00",
+    "description": "December 19, 2018 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-daley-plaza",
+      "eo-event-running",
+      "eo-all-day",
+      "eo-event",
+      "eo-past-event",
+      "venue-richard-j-daley-center",
+      "category-daley-plaza"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["daley-plaza"],
+    "tags": [],
+    "textColor": "#000000",
+    "color": "#bababf"
+  },
+  {
+    "title": "Noon \u2013 A Holiday Hanukkah Choral Concert",
+    "url": "http://www.pbcchicago.com/events/event/noon-a-holiday-hanukkah-choral-concert/",
+    "allDay": true,
+    "start": "2018-12-20T00:00:00",
+    "end": "2018-12-21T00:00:00",
+    "description": "December 20, 2018 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-daley-plaza",
+      "eo-event-cat-daley-plaza",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "venue-daley-plaza",
+      "category-daley-plaza"
+    ],
+    "venue": 111,
+    "venue_slug": "daley-plaza",
+    "category": ["daley-plaza"],
+    "tags": [],
+    "textColor": "#000000",
+    "color": "#bababf"
+  },
+  {
+    "title": "Noon \u2013 The Twelve Bells of Christmas",
+    "url": "http://www.pbcchicago.com/events/event/noon-the-twelve-bells-of-christmas/",
+    "allDay": true,
+    "start": "2018-12-21T00:00:00",
+    "end": "2018-12-22T00:00:00",
+    "description": "December 21, 2018 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-daley-plaza",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "venue-richard-j-daley-center",
+      "category-daley-plaza"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["daley-plaza"],
+    "tags": [],
+    "textColor": "#000000",
+    "color": "#bababf"
+  },
+  {
+    "title": "Christmas Day",
+    "url": "http://www.pbcchicago.com/events/event/christmas-day-8/",
+    "allDay": true,
+    "start": "2018-12-25T00:00:00",
+    "end": "2018-12-26T00:00:00",
+    "description": "December 25, 2018 </br></br>",
+    "organiser": 9,
+    "className": [
+      "eo-event-cat-holiday",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "category-holiday"
+    ],
+    "category": ["holiday"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#4d4f53"
+  },
+  {
+    "title": "New Year\u2019s Day",
+    "url": "http://www.pbcchicago.com/events/event/new-years-day-2/",
+    "allDay": true,
+    "start": "2019-01-01T00:00:00",
+    "end": "2019-01-02T00:00:00",
+    "description": "January 1, 2019 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-cat-holiday",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "category-holiday"
+    ],
+    "category": ["holiday"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#4d4f53"
+  },
+  {
+    "title": "Administrative Operations Committee @ 1:00 pm",
+    "url": "http://www.pbcchicago.com/events/event/administrative-operations-committee/",
+    "allDay": true,
+    "start": "2019-01-08T00:00:00",
+    "end": "2019-01-09T00:00:00",
+    "description": "January 8, 2019 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-admin-opp-committee-meeting",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "venue-richard-j-daley-center",
+      "category-admin-opp-committee-meeting"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["admin-opp-committee-meeting"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#0fa92a"
+  },
+  {
+    "title": "Submission Deadline \u2013 RFP for Construction Signage Services",
+    "url": "http://www.pbcchicago.com/events/event/submission-deadline-rfp-construction-signage-services/",
+    "allDay": false,
+    "start": "2019-01-08T16:00:00",
+    "end": "2019-01-08T16:00:00",
+    "description": "January 8, 2019  4:00 pm</br></br>",
+    "organiser": 13,
+    "className": ["eo-event-future", "eo-event", "eo-future-event"],
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Pre-Submission Conference \u2013 RFP for Design-Build Services for Hancock Replacement School",
+    "url": "http://www.pbcchicago.com/events/event/pre-submission-conference-rfp-for-design-build-services-for-hancock-replacement-school/",
+    "allDay": false,
+    "start": "2019-01-09T10:00:00",
+    "end": "2019-01-09T13:00:00",
+    "description": "January 9, 2019  10:00 am - 1:00 pm</br></br>",
+    "organiser": 13,
+    "className": [
+      "eo-event-venue-charles-a-hayes-family-investment-center",
+      "eo-event-future",
+      "eo-event",
+      "eo-future-event",
+      "venue-charles-a-hayes-family-investment-center"
+    ],
+    "venue": 126,
+    "venue_slug": "charles-a-hayes-family-investment-center",
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Pre-Submission Conference \u2013 RFP for Design-Build Services for Engine Company 115",
+    "url": "http://www.pbcchicago.com/events/event/pre-submission-conference-rfp-for-design-build-services-for-engine-company-115/",
+    "allDay": false,
+    "start": "2019-01-10T10:00:00",
+    "end": "2019-01-10T12:00:00",
+    "description": "January 10, 2019  10:00 am - 12:00 pm</br></br>",
+    "organiser": 13,
+    "className": [
+      "eo-event-venue-kroc-corps-community-center",
+      "eo-event-future",
+      "eo-event",
+      "eo-future-event",
+      "venue-kroc-corps-community-center"
+    ],
+    "venue": 157,
+    "venue_slug": "kroc-corps-community-center",
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Pre-Submission Conference \u2013 RFP for Construction Management at Risk Services for Various Chicago Public Schools (Package 2)",
+    "url": "http://www.pbcchicago.com/events/event/pre-submission-conference-rfp-for-construction-management-at-risk-services-for-various-chicago-public-schools-package-2/",
+    "allDay": false,
+    "start": "2019-01-14T10:00:00",
+    "end": "2019-01-14T12:00:00",
+    "description": "January 14, 2019  10:00 am - 12:00 pm</br></br>",
+    "organiser": 13,
+    "className": [
+      "eo-event-venue-george-w-dunne-cook-county-office-building",
+      "eo-event-future",
+      "eo-event",
+      "eo-future-event",
+      "venue-george-w-dunne-cook-county-office-building"
+    ],
+    "venue": 159,
+    "venue_slug": "george-w-dunne-cook-county-office-building",
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "PBC Board Meeting @ 2:30 pm",
+    "url": "http://www.pbcchicago.com/events/event/230-pm-pbc-board-meeting/",
+    "allDay": true,
+    "start": "2019-01-15T00:00:00",
+    "end": "2019-01-16T00:00:00",
+    "description": "January 15, 2019 </br></br>Notice",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-board-meeting",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "venue-richard-j-daley-center",
+      "category-board-meeting"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["board-meeting"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#d51f35"
+  },
+  {
+    "title": "Submission Due Date \u2013 RFP for Design-Build Services for Engine Company 115",
+    "url": "http://www.pbcchicago.com/events/event/submission-due-date-rfp-for-design-build-services-for-engine-company-115/",
+    "allDay": false,
+    "start": "2019-01-16T11:00:00",
+    "end": "2019-01-16T11:00:00",
+    "description": "January 16, 2019  11:00 am</br></br>",
+    "organiser": 13,
+    "className": [
+      "eo-event-venue-pbc-reception",
+      "eo-event-future",
+      "eo-event",
+      "eo-future-event",
+      "venue-pbc-reception"
+    ],
+    "venue": 158,
+    "venue_slug": "pbc-reception",
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Submission Due Date \u2013 RFP for Design-Build Services for Hancock Replacement School",
+    "url": "http://www.pbcchicago.com/events/event/submission-due-date-rfp-for-design-build-services-for-hancock-replacement-school/",
+    "allDay": false,
+    "start": "2019-01-17T11:00:00",
+    "end": "2019-01-17T11:00:00",
+    "description": "January 17, 2019  11:00 am</br></br>",
+    "organiser": 13,
+    "className": ["eo-event-future", "eo-event", "eo-future-event"],
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Dr. Martin Luther King, Jr.\u2019s Birthday",
+    "url": "http://www.pbcchicago.com/events/event/dr-martin-luther-king-jr-s-birthday-8/",
+    "allDay": true,
+    "start": "2019-01-21T00:00:00",
+    "end": "2019-01-22T00:00:00",
+    "description": "January 21, 2019 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-cat-holiday",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "category-holiday"
+    ],
+    "category": ["holiday"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#4d4f53"
+  },
+  {
+    "title": "Submission Due Date \u2013 RFP for Construction Management at Risk Services for Various Chicago Public Schools (Package 2)",
+    "url": "http://www.pbcchicago.com/events/event/submission-due-date-rfp-for-design-build-services-for-hancock-replacement-school-2/",
+    "allDay": false,
+    "start": "2019-01-25T11:00:00",
+    "end": "2019-01-25T11:00:00",
+    "description": "January 25, 2019  11:00 am</br></br>",
+    "organiser": 13,
+    "className": ["eo-event-future", "eo-event", "eo-future-event"],
+    "category": [],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#A34F16"
+  },
+  {
+    "title": "Administrative Operations Committee @ 1:00 pm",
+    "url": "http://www.pbcchicago.com/events/event/100-p-m-administrative-operations-committee/",
+    "allDay": true,
+    "start": "2019-01-31T00:00:00",
+    "end": "2019-02-01T00:00:00",
+    "description": "January 31, 2019 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-admin-opp-committee-meeting",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "venue-richard-j-daley-center",
+      "category-admin-opp-committee-meeting"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["admin-opp-committee-meeting"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#0fa92a"
+  },
+  {
+    "title": "Lincoln\u2019s Birthday",
+    "url": "http://www.pbcchicago.com/events/event/lincolns-birthday-11/",
+    "allDay": true,
+    "start": "2019-02-12T00:00:00",
+    "end": "2019-02-13T00:00:00",
+    "description": "February 12, 2019 </br></br>",
+    "organiser": 7,
+    "className": [
+      "eo-event-cat-holiday",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "category-holiday"
+    ],
+    "category": ["holiday"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#4d4f53"
+  },
+  {
+    "title": "PBC Board Meeting @ 2:30 pm",
+    "url": "http://www.pbcchicago.com/events/event/230-p-m-pbc-board-meeting/",
+    "allDay": true,
+    "start": "2019-02-13T00:00:00",
+    "end": "2019-02-14T00:00:00",
+    "description": "February 13, 2019 </br></br>Notice",
+    "organiser": 7,
+    "className": [
+      "eo-event-venue-richard-j-daley-center",
+      "eo-event-cat-board-meeting",
+      "eo-event-future",
+      "eo-all-day",
+      "eo-event",
+      "eo-future-event",
+      "venue-richard-j-daley-center",
+      "category-board-meeting"
+    ],
+    "venue": 153,
+    "venue_slug": "richard-j-daley-center",
+    "category": ["board-meeting"],
+    "tags": [],
+    "textColor": "#ffffff",
+    "color": "#d51f35"
+  }
 ]

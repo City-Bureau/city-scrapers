@@ -1,13 +1,17 @@
 from datetime import date, time
+from unittest.mock import MagicMock
 
 import pytest
-import requests
 from tests.utils import file_response
 
 from city_scrapers.constants import BOARD, PASSED
 from city_scrapers.spiders.chi_library import ChiLibrarySpider
 
-session = requests.Session()
+session = MagicMock()
+res_mock = MagicMock()
+res_mock.status_code = 200
+res_mock.text = file_response('files/chi_library.json').text
+session.get.return_value = res_mock
 test_response = file_response(
     'files/chi_library.html',
     url=('https://www.chipublib.org/'
@@ -56,6 +60,21 @@ def test_location():
                  'Multi-Purpose Room, Lower Level'),
         'url': None
     }
+
+
+def test_documents():
+    assert parsed_items[0]['documents'] == [
+        {
+            'note': 'Agenda',
+            'url':
+                'https://www.chipublib.org/news/board-of-directors-meeting-agenda-january-17-2017/'
+        },
+        {
+            'note': 'Minutes',
+            'url':
+                'https://www.chipublib.org/news/board-of-directors-meeting-minutes-january-17-2017/'
+        }
+    ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
