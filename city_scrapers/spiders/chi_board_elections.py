@@ -32,8 +32,11 @@ class ChiBoardElectionsSpider(Spider):
     def _next_meeting(self, response):
         text = response.xpath('//text()').extract()
         # Will return full dates, like "9:30 a.m. on Dec. 11, 2018"
-        dates = [re.search(r'\d{1,2}:.*20\d{2}', x).group(0)
-                 for x in text if re.search(r'\d{1,2}:.*20\d{2}', x)]
+        dates = [
+            re.search(r'\d{1,2}:.*20\d{2}', x).group(0)
+            for x in text
+            if re.search(r'\d{1,2}:.*20\d{2}', x)
+        ]
         # Has meeting location
         next_meeting = response.xpath('//div[@class="copy"]/text()').extract()
         for date in dates:
