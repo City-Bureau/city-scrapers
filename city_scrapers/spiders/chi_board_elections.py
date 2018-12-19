@@ -30,35 +30,41 @@ class ChiBoardElectionsSpider(Spider):
             yield from self._next_meeting(response)
 
     def _next_meeting(self, response):
-        next_meeting = response.xpath('//div[@class="copy"]/text()').extract()[2]
-        meetingdate = re.search(r'\d{1,2}:.*\d{4}', next_meeting).group(0)
-        data = {
-            '_type': 'event',
-            'name': "Electoral Board",
-            'event_description': "",
-            'classification': COMMISSION,
-            'start': self._parse_start(meetingdate, next_meeting),
-            'all_day': False,
-            'documents': self._parse_documents(response, None),
-            'sources': [{
-                'url': response.url,
-                'note': ''
-            }],
-        }
-        if "69" in next_meeting:
-            data['location'] = self._parse_location(response)
-        else:
-            raise ValueError("The address has changed.")
+        text = response.xpath('//text()').extract()
+        # Will return full dates, like "9:30 a.m. on Dec. 11, 2018"
+        dates = [re.search(r'\d{1,2}:.*20\d{2}', x).group(0)
+                 for x in text if re.search(r'\d{1,2}:.*20\d{2}', x)]
+        # Has meeting location
+        next_meeting = response.xpath('//div[@class="copy"]/text()').extract()
+        for date in dates:
+            date.replace('\xa0', ' ')
+            data = {
+                '_type': 'event',
+                'name': "Electoral Board",
+                'event_description': "",
+                'classification': COMMISSION,
+                'start': self._parse_start(date, ""),
+                'all_day': False,
+                'documents': self._parse_documents(response, None),
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
+            }
+            if any("69" in x for x in next_meeting):
+                data['location'] = self._parse_location(response)
+            else:
+                raise ValueError("The address has changed.")
 
-        data['end'] = {
-            'date': data['start']['date'],
-            'time': None,
-            'note': '',
-        }
-        data['status'] = self._generate_status(data)
-        data['id'] = self._generate_id(data)
+            data['end'] = {
+                'date': data['start']['date'],
+                'time': None,
+                'note': '',
+            }
+            data['status'] = self._generate_status(data)
+            data['id'] = self._generate_id(data)
 
-        yield data
+            yield data
 
     def _prev_meetings(self, response):
         """
@@ -67,7 +73,7 @@ class ChiBoardElectionsSpider(Spider):
         and returns everything in between.
         """
 
-        meetings = response.xpath("//a").extract()
+        meetings = response.xpath("//a|//span/text()").extract()
         prevdate = None
         for meeting in meetings:
             meeting.replace('\xa0', ' ')  # Gets rid of non-breaking space character
@@ -110,9 +116,6 @@ class ChiBoardElectionsSpider(Spider):
                     yield data
                 if not self._different_time(meeting):  # To handle the odd 7 AM/7PM meetings
                     prevdate = meetingdate
-                if "Nov. 13" in meetingdate:  # To handle the one date that falls outside of scraper
-                    yield self._parse_exception("a.m.")
-                    yield self._parse_exception("p.m.")
             except AttributeError:  # Sometimes meetings will return None
                 continue
 
@@ -139,7 +142,7 @@ class ChiBoardElectionsSpider(Spider):
             time = time.replace("7 ", "7:00 ")
             meetingtime = "{} on ".format(time)
 
-        if "9:30" not in meeting:
+        if "9:30" not in meetingdate or meeting:
             meetingdate = meetingtime + meetingdate
         formatitem = meetingdate.replace("a.m.", "AM")
         formatitem = formatitem.replace("am", "AM")
@@ -170,13 +173,13 @@ class ChiBoardElectionsSpider(Spider):
         """
         if "minutes" in response.url:
             if "Minutes" in meeting:
-                minuteslink = re.search(r'="(.+)"', meeting).group(1)
+                minuteslink = re.search(r'"\/.+"', meeting).group(0).strip('"')
                 return {
                     'url': "https://app.chicagoelections.com{}".format(minuteslink),
                     'note': 'Regular Board Meeting Agenda'
                 }
-            elif "Video" in meeting:
-                videolink = re.search(r'ht(.+")', meeting).group(0).strip('"')
+            elif "youtu" in meeting:
+                videolink = re.search(r'"h.+"', meeting).group(0).strip('"')
                 return {'url': videolink, 'note': "Regular Board Meeting Video"}
         else:
             link = response.xpath("//a/@href").extract()[2]
@@ -185,39 +188,10 @@ class ChiBoardElectionsSpider(Spider):
                 'note': 'Regular Board Meeting Agenda'
             }]
 
-    def _parse_exception(self, time):
-        """
-        The one date that's not bounded by <a> tags (and also has no Minutes or videos) is Nov. 6
-        """
-        meeting = "7 {} ".format(time)
-        meetingdate = "Nov. 6, 2018"
-        data = {
-            '_type': 'event',
-            'name': "Electoral Board",
-            'event_description': "",
-            'classification': COMMISSION,
-            'start': self._parse_start(meetingdate, meeting),
-            'all_day': False,
-            'location': self._parse_location(""),
-            'documents': [],
-            'sources': [{
-                'url': '',
-                'note': ''
-            }],
-        }
-        data['end'] = {
-            'date': data['start']['date'],
-            'time': None,
-            'note': '',
-        }
-        data['status'] = self._generate_status(data)
-        data['id'] = self._generate_id(data)
-        return data
-
     def _different_time(self, meeting):
         """
         Checks if the meeting is an AM meeting, in which case there would
         be a 7 a.m. and 7 p.m. meeting on the same day, so we flag the bot to run again.
         """
-        time = re.search(r'7.+[m,.]', meeting)
+        time = re.search(r'7 [ap]', meeting)
         return True if time else False
