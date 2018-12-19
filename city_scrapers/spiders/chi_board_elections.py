@@ -77,15 +77,17 @@ class ChiBoardElectionsSpider(Spider):
         """
 
         meetings = response.xpath("//a|//span/text()").extract()
-        prevdate = None
+        prevtime = None
         for meeting in meetings:
             meeting.replace('\xa0', ' ')  # Gets rid of non-breaking space character
+            meeting.replace(' ', ' ')
             try:
                 meetingdate = re.search(r'(–|- |-)(.+[0-9]{4})', meeting).group(2)
                 while len(meetingdate) > 30:
                     meetingdate = re.search(r'(–|- |-)(.+[0-9]{4})', meetingdate).group(2)
                 meetingdate.lstrip()
-                if prevdate != meetingdate:  # To acount for duplicates
+                starttime = self._parse_start(meetingdate, meeting)
+                if prevtime != starttime:  # To acount for duplicates
                     data = {
                         '_type': 'event',
                         'name': "Electoral Board",
@@ -111,14 +113,19 @@ class ChiBoardElectionsSpider(Spider):
                     nextindex = meetings.index(meeting) + 1
                     # In case there's both minutes and video for one date
                     if nextindex < len(meetings):
-                        nextmeeting = meetings[nextindex]
-                        if meetingdate and "href" in nextmeeting:
+                        nextmeeting = meetings[nextindex].replace('\xa0', ' ')
+                        nextdate = re.search(r'(–|- |-)(.+[0-9]{4})', nextmeeting).group(2)
+                        while len(nextdate) > 30:
+                            nextdate = re.search(r'(–|- |-)(.+[0-9]{4})', nextdate).group(2)
+                        nextdate.lstrip()
+                        new_start = self._parse_start(nextdate, nextmeeting)
+                        if new_start == data['start'] and "href" in nextmeeting:
                             data["documents"].append(self._parse_documents(response, nextmeeting))
                     data['status'] = self._generate_status(data)
                     data['id'] = self._generate_id(data)
                     yield data
-                if not self._different_time(meeting):  # To handle the odd 7 AM/7PM meetings
-                    prevdate = meetingdate
+                # if not self._different_time(meeting):  # To handle the odd 7 AM/7PM meetings
+                prevtime = starttime
             except AttributeError:  # Sometimes meetings will return None
                 continue
 
