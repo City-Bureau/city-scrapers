@@ -81,6 +81,7 @@ class ChiLibrarySpider(Spider):
                 },
                 'all_day': False,
                 'location': self._parse_location(item, lib_info),
+                'documents': self._parse_documents(start_time),
                 'sources': self._parse_sources(response)
             }
             data['id'] = self._generate_id(data)
@@ -148,6 +149,31 @@ class ChiLibrarySpider(Spider):
         date = date.replace('.', '')
         date = date + ' ' + year
         return datetime.datetime.strptime(date, '%A %B %d %I %p %Y')
+
+    def _parse_documents(self, start_time):
+        """Check if agenda and minutes are valid URLs, add to documents if so"""
+        agenda_url = (
+            'https://www.chipublib.org/news/board-of-directors-'
+            'meeting-agenda-{}-{date.day}-{date.year}/'
+        ).format(
+            start_time.strftime('%B').lower(),
+            date=start_time,
+        )
+        minutes_url = agenda_url.replace('agenda', 'minutes')
+        agenda_res = self.session.get(agenda_url)
+        minutes_res = self.session.get(minutes_url)
+        documents = []
+        if agenda_res.status_code == 200:
+            documents.append({
+                'url': agenda_url,
+                'note': 'Agenda',
+            })
+        if minutes_res.status_code == 200:
+            documents.append({
+                'url': minutes_url,
+                'note': 'Minutes',
+            })
+        return documents
 
     def _parse_sources(self, response):
         """
