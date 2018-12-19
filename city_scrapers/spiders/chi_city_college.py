@@ -53,6 +53,7 @@ class ChiCityCollegeSpider(Spider):
             },
             'all_day': False,
             'location': self._parse_location(response),
+            'documents': self._parse_documents(response),
             'sources': self._parse_sources(response)
         }
         data['id'] = self._generate_id(data)
@@ -98,12 +99,13 @@ class ChiCityCollegeSpider(Spider):
         """
         Static description as given in Issue #275
         """
-        return (
+        description = (
             ' '.join([
                 el.extract().strip()
                 for el in response.css('.page-content > div:not([style="display:none"]) *::text')
             ])
         ).strip()
+        return re.sub(r'\s+', ' ', description.replace('\u200b', '')).strip()
 
     def _time_from_parts(self, hour_string, minute_string, suffix):
         hour = int(hour_string)
@@ -137,6 +139,20 @@ class ChiCityCollegeSpider(Spider):
             self._time_from_parts(*start_time_parts),
             self._time_from_parts(*end_time_parts),
         )
+
+    def _parse_documents(self, response):
+        """Returns an array of documents if available"""
+        documents = []
+        document_links = response.xpath(
+            "//div[contains(@class, 'right-col-block')]/h2[text() = 'Learn More']"
+            "/following-sibling::*//a"
+        )
+        for doc_link in document_links:
+            documents.append({
+                'url': response.urljoin(doc_link.attrib['href']),
+                'note': doc_link.xpath('./text()').extract_first(),
+            })
+        return documents
 
     def _parse_sources(self, response):
         """
