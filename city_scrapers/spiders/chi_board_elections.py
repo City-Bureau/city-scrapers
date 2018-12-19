@@ -93,7 +93,7 @@ class ChiBoardElectionsSpider(Spider):
                         'name': "Electoral Board",
                         'event_description': "",
                         'classification': COMMISSION,
-                        'start': self._parse_start(meetingdate, meeting),
+                        'start': starttime,
                         'all_day': False,
                         'location': self._parse_location(response),
                         'documents': [],
@@ -124,7 +124,6 @@ class ChiBoardElectionsSpider(Spider):
                     data['status'] = self._generate_status(data)
                     data['id'] = self._generate_id(data)
                     yield data
-                # if not self._different_time(meeting):  # To handle the odd 7 AM/7PM meetings
                 prevtime = starttime
             except AttributeError:  # Sometimes meetings will return None
                 continue
@@ -145,16 +144,17 @@ class ChiBoardElectionsSpider(Spider):
         """
         Parse start date and time.
         """
+        date = meetingdate
         meetingtime = "9:30 AM on "
         if "7 " in meeting:
             time = re.search(r'7.+\S[m,.]', meeting).group(0)
             str(time)
             time = time.replace("7 ", "7:00 ")
             meetingtime = "{} on ".format(time)
-
+            date = meetingtime + meetingdate
         if ":" not in meetingdate or meeting:
-            meetingdate = meetingtime + meetingdate
-        formatitem = meetingdate.replace("a.m.", "AM")
+            date = meetingtime + meetingdate
+        formatitem = date.replace("a.m.", "AM")
         formatitem = formatitem.replace("am", "AM")
         formatitem = formatitem.replace("p.m.", "PM")
         formatitem = formatitem.replace("Sept", "Sep")
@@ -197,11 +197,3 @@ class ChiBoardElectionsSpider(Spider):
                 'url': "https://app.chicagoelections.com{}".format(link),
                 'note': 'Regular Board Meeting Agenda'
             }]
-
-    def _different_time(self, meeting):
-        """
-        Checks if the meeting is an AM meeting, in which case there would
-        be a 7 a.m. and 7 p.m. meeting on the same day, so we flag the bot to run again.
-        """
-        time = re.search(r'7 [ap]', meeting)
-        return True if time else False
