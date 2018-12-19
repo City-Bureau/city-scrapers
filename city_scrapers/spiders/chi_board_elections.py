@@ -145,7 +145,7 @@ class ChiBoardElectionsSpider(Spider):
             time = time.replace("7 ", "7:00 ")
             meetingtime = "{} on ".format(time)
 
-        if "9:30" not in meetingdate or meeting:
+        if ":" not in meetingdate or meeting:
             meetingdate = meetingtime + meetingdate
         formatitem = meetingdate.replace("a.m.", "AM")
         formatitem = formatitem.replace("am", "AM")
