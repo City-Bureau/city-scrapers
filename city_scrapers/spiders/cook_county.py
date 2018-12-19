@@ -4,7 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import scrapy
 
@@ -17,21 +17,19 @@ class CookCountySpider(Spider):
     agency_name = 'Cook County Government'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cookcountyil.gov']
-    url = 'https://www.cookcountyil.gov/calendar'
-    # filter out non-governing events with query
-    query = {
-        "field_categories_tid_entityreference_filter[]": [
-            "19",  # 19 = Board Meetings
-            "205",  # 205 = Committee Meeting
-            "20",  # 20 = Public Forum
-            "206",  # 206 = Subcommittee Meeting
-        ]
-    }
 
     def start_requests(self):
-        yield scrapy.FormRequest(
-            url=self.url, method='GET', formdata=self.query, callback=self.parse
-        )
+        # Only filter for Public Forums (20) in the current and upcoming month
+        today = datetime.now()
+        next_month = today.replace(day=28) + timedelta(days=5)
+        print(next_month)
+        for dt in [today, next_month]:
+            mo_str = dt.strftime('%Y-%m')
+            url = (
+                'https://www.cookcountyil.gov/calendar-node-field-date/month/{}?'
+                'field_categories_tid_entityreference_filter[]=20'
+            ).format(mo_str)
+            yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
     def parse(self, response):
         """
@@ -41,14 +39,8 @@ class CookCountySpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-
         for url in self._get_event_urls(response):
-            next_url = 'https://{0}{1}'.format(self.allowed_domains[0], url)
-            yield scrapy.Request(next_url, callback=self._parse_event, dont_filter=True)
-
-        next_page = response.css('li.pager-next a::attr(href)').extract_first()
-        if next_page is not None:
-            yield response.follow(next_page, callback=self.parse)
+            yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
     def _parse_event(self, response):
         """
@@ -74,8 +66,10 @@ class CookCountySpider(Spider):
         """
         Get urls for all events on the page.
         """
-        event_urls = response.xpath('//div[@class="view-content"]//a/@href').extract()
-        return list(set([x for x in event_urls if '/event/' in x and 'cancelled' not in x]))
+        return [
+            response.urljoin(href)
+            for href in response.css('.view-item-event_calendar a::attr(href)').extract()
+        ]
 
     @staticmethod
     def _parse_classification(name):
