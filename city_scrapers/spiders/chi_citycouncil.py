@@ -3,13 +3,9 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import datetime
-import json
-from urllib.parse import parse_qs, urljoin
+from datetime import datetime, timedelta
 
-import dateutil.parser
-import pytz
-import scrapy
+from legistar.events import LegistarEventsScraper
 
 from city_scrapers.constants import CITY_COUNCIL
 from city_scrapers.spider import Spider
@@ -19,106 +15,110 @@ class ChiCityCouncilSpider(Spider):
     name = 'chi_citycouncil'
     agency_name = 'Chicago City Council'
     timezone = 'America/Chicago'
-    allowed_domains = ['ocd.datamade.us']
-
-    endpoint = "https://ocd.datamade.us/events/"
-    query = {
-        "start_date__gt": str(datetime.date.today()),
-        "sort": "start_date",
-        "jurisdiction": "ocd-jurisdiction/country:us/state:il/place:chicago/government",
-    }
-    # the response doesn't include the address for city hall
-    address = '121 N LaSalle St Chicago, IL 60602'
-
-    def start_requests(self):
-        yield scrapy.FormRequest(
-            url=self.endpoint, method='GET', formdata=self.query, callback=self.parse
-        )
+    allowed_domains = ['chicago.legistar.com']
+    start_urls = ['https://chicago.legistar.com/Calendar.aspx']
 
     def parse(self, response):
         """
-        This is not a traditional spider, rather, this is a wrapper
-        around the Open Civic Data API to which the Chicago City Clerk
-        Legistar site info has already been scraped.
-        We will attempt to return all events that have been uploaded in the
-        future, i.e. past today's date.
+        `parse` should always `yield` a dict that follows the `Open Civic Data
+        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`.
+
+        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        needs.
         """
-        data = json.loads(response.text)
-        for url in self._gen_requests(data):
-            yield scrapy.Request(url, callback=self._parse_item)
+        events = self._make_legistar_call()
+        return self._parse_events(events)
 
-        if self._addtl_pages(data):
-            params = parse_qs(response.url)
-            params['page'] = self._next_page(data)
-            yield scrapy.FormRequest(
-                url=self.endpoint, method='GET', formdata=params, callback=self.parse
-            )
+    def _make_legistar_call(self, since=None):
+        les = LegistarEventsScraper()
+        les.EVENTSPAGE = 'https://chicago.legistar.com/Calendar.aspx'
+        les.BASE_URL = 'https://chicago.legistar.com'
+        if not since:
+            since = self.year
+        return les.events(since=self.year)
 
-    def _gen_requests(self, data):
-        for result in data['results']:
-            event_url = urljoin(self.endpoint, '../' + result['id'] + '/')
-            yield event_url
+    def _parse_events(self, events):
+        for item, _ in events:
+            data = {
+                '_type': 'event',
+                'name': item['Name']['label'],
+                'event_description': '',
+                'classification': CITY_COUNCIL,
+                'start': self._parse_start(item),
+                'end': self._parse_end(item),
+                'all_day': False,
+                'location': self._parse_location(item),
+                'sources': self._parse_sources(item),
+                'documents': self._parse_documents(item)
+            }
+            data['status'] = self._generate_status(data, item['Meeting Location'])
+            data['id'] = self._generate_id(data)
+            yield data
 
-    @staticmethod
-    def _addtl_pages(data):
-        max_page = data['meta']['max_page']
-        page = data['meta']['page']
-        return max_page > page
+    def _parse_documents(self, item):
+        """
+        Returns meeting minutes and agenda if available.
+        """
+        documents = []
+        for doc in ['Agenda', 'Minutes', 'Summary', 'Video', 'Captions']:
+            if isinstance(item.get(doc), dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
+        return documents
 
-    @staticmethod
-    def _next_page(data):
-        current_page = data['meta']['page']
-        return current_page + 1
-
-    def _parse_item(self, response):
-        data = json.loads(response.text)
-        start = self._parse_time(data.get('start_date', ''))
-        end = self._parse_time(data.get('end_date', ''))
-        documents = self._parse_documents(data['documents'])
-        location = self._parse_location(data)
-        item = {
-            '_type': 'event',
-            'name': data['name'],
-            'location': location,
-            'id': data['id'],
-            'event_description': data['description'],
-            'classification': CITY_COUNCIL,
-            'start': start,
-            'end': end,
-            'all_day': data['all_day'],
-            'documents': documents,
-            'sources': data['sources'],
-            'status': data['status']
-        }
-        end_date = item['end']['date']
-        state_date = item['start']['date']
-        item['end']['date'] = state_date if end_date is None else end_date
-        item['id'] = self._generate_id(item)
-        return item
-
-    def _parse_location(self, data):
+    def _parse_location(self, item):
+        """
+        Parse or generate location.
+        """
+        split_location = item['Meeting Location'].split(' -- ')
+        loc_name = 'City Hall'
+        if len(split_location) > 0:
+            loc_name = '{}, City Hall'.format(split_location[0])
         return {
-            'address': self.address,
-            'name': data['location']['name'].strip(),
+            'address': '121 N LaSalle St Chicago, IL 60602',
+            'name': loc_name,
+            'neighborhood': '',
         }
 
-    def _parse_time(self, timestamp):
-        if len(timestamp) <= 0:
-            return {'date': None, 'time': None, 'note': ''}
+    def _parse_start_datetime(self, item):
+        """
+        Return the start date and time as a datetime object.
+        """
+        time = item.get('Meeting Time', None)
+        date = item.get('Meeting Date', None)
+        if date and time:
+            time_string = '{0} {1}'.format(date, time)
+            return datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
+        return None
 
-        tz = pytz.timezone(self.timezone)
-        dt = dateutil.parser.parse(timestamp).astimezone(tz)
-        return {
-            'date': dt.date(),
-            'time': dt.time(),
-            'note': '',
-        }
+    def _parse_start(self, item):
+        """
+        Parse the start date and time.
+        """
+        start_datetime = self._parse_start_datetime(item)
+        if start_datetime:
+            return {'date': start_datetime.date(), 'time': start_datetime.time(), 'note': ''}
+        return {'date': None, 'time': None, 'note': ''}
 
-    @staticmethod
-    def _parse_documents(documents):
-        parsed_documents = []
-        for document in documents:
-            for link in document['links']:
-                parsed_document = {"url": link['url'], 'note': document['note']}
-                parsed_documents.append(parsed_document)
-        return parsed_documents
+    def _parse_end(self, item):
+        """
+        No end times are listed, so estimate the end time to
+        be 3 hours after the start time.
+        """
+        start_datetime = self._parse_start_datetime(item)
+        if start_datetime:
+            return {
+                'date': start_datetime.date(),
+                'time': (start_datetime + timedelta(hours=3)).time(),
+                'note': 'Estimated 3 hours after start time'
+            }
+        return {'date': None, 'time': None, 'note': ''}
+
+    def _parse_sources(self, item):
+        """
+        Parse sources.
+        """
+        try:
+            url = item['Name']['url']
+        except Exception:
+            url = 'https://chicago.legistar.com/Calendar.aspx'
+        return [{'url': url, 'note': ''}]
