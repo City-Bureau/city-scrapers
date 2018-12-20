@@ -152,11 +152,3 @@ def test_classification_prev(item):
 @pytest.mark.parametrize('item', parsed_items_prev)
 def test__type_prev(item):
     assert parsed_items_prev[0]['_type'] == 'event'
-
-
-# def test_start_full():
-#     listy = []
-#     for x in parsed_items_prev:
-#         listy.append(x['start'])
-#         # listy.append(x['documents'])
-#     assert listy == ["Just for demonstration purposes"]

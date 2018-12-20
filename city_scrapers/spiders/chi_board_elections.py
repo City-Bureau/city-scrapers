@@ -128,18 +128,6 @@ class ChiBoardElectionsSpider(Spider):
             except AttributeError:  # Sometimes meetings will return None
                 continue
 
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
-        return ''
-
-    def _parse_classification(self, item):
-        """
-        Parse or generate classification (e.g. public health, education, etc).
-        """
-        return ''
-
     def _parse_start(self, meetingdate, meeting):
         """
         Parse start date and time.
