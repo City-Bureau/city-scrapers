@@ -3,10 +3,10 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import datetime as dt
 import json
 import re
 import unicodedata
+from datetime import datetime, timedelta
 
 import scrapy
 
@@ -15,13 +15,6 @@ from city_scrapers.spider import Spider
 
 
 class CookLandbankSpider(Spider):
-    """
-    Rather than scraping a site, I'm making iterated AJAX requests.
-    This means setting up a list of dates to poll for events,
-    setting up a dict of data to POST and running parse()
-    as a callback on the Response.
-    Yields dict for dates with events.
-    """
     name = 'cook_landbank'
     agency_name = 'Cook County Land Bank Authority'
     timezone = 'America/Chicago'
@@ -30,24 +23,12 @@ class CookLandbankSpider(Spider):
     start_urls = ['http://www.cookcountylandbank.org/wp-admin/admin-ajax.php']
     """
     Set 90 day time horizon
-    ie, will poll all dates 90 days from today for events.
+    ie, will poll all dates 45 days before and after today for events.
     """
-    time_horizon = 90
-    """
-    A little concerned about getting banned :( so being very conservative;
-    downloading one at a time; One second per request. The rest - I believe
-    - is copied from project settings.
-    """
+    time_horizon = 45
     custom_settings = {
         'DOWNLOAD_DELAY': 1,
         'CONCURRENT_REQUESTS_PER_UP': 1,
-        'LOG_ENABLED': True,
-        'BOT_NAME': 'city_scrapers',
-        'COOKIES_ENABLED': False,
-        'NEWSPIDER_MODULE': 'city_scrapers.spiders',
-        'ROBOTSTXT_OBEY': True,
-        'SPIDER_MODULES': ['city_scrapers.spiders'],
-        'USER_AGENT': ('Documenters Aggregator (learn more and say hello at https://TKTK)')
     }
     """
     For each date, yields get_events_info which requests info for that
@@ -113,8 +94,7 @@ class CookLandbankSpider(Spider):
                 'event_description': self._parse_description(item),
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
-                'all_day': self._parse_all_day(item),
-                'timezone': 'America/Chicago',
+                'all_day': False,
                 'location': location,
                 'sources': self._parse_sources(item),
                 'documents': self._parse_documents(item),
@@ -129,11 +109,11 @@ class CookLandbankSpider(Spider):
     def daterange(self, start_date, end_date):
         """Getting dates and setting up AJAX Request"""
         for n in range(int((end_date - start_date).days)):
-            yield start_date + dt.timedelta(n)
+            yield start_date + timedelta(n)
 
     def stack_dates(self, time_horizon):
-        min_date = dt.date.today()
-        max_date = min_date + dt.timedelta(days=time_horizon)
+        min_date = datetime.now() - timedelta(days=time_horizon)
+        max_date = min_date + timedelta(days=time_horizon)
         dates = [date for date in self.daterange(min_date, max_date)]
         return dates
 
@@ -173,12 +153,6 @@ class CookLandbankSpider(Spider):
             },
         }
 
-    def _parse_all_day(self, item):
-        """
-        No reliable indicator here. Leaving None
-        """
-        return False
-
     def _parse_name(self, item):
         return item.css('span[class=\'evcal_desc2 evcal_event_title\']::text').extract_first()
 
@@ -200,7 +174,7 @@ class CookLandbankSpider(Spider):
     def _parse_datetime(datetime_str):
         if datetime_str is None:
             return None
-        date_time = dt.datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M')
+        date_time = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M')
         return {'date': date_time.date(), 'time': date_time.time(), 'note': ''}
 
     def _parse_start(self, item):
@@ -224,12 +198,15 @@ class CookLandbankSpider(Spider):
 
     def _parse_documents(self, item):
         documents = []
-        agenda_pdf_link = item.xpath(
-            '//div[@itemprop="description"]//a[contains(@href, "pdf")]/@href'
-        ).extract_first()
-        if agenda_pdf_link:
-            documents.append({'url': agenda_pdf_link, 'note': 'Agenda'})
-
+        item.css('div[itemprop="description"] a')
+        for doc_link in item.css('div[itemprop="description"] a'):
+            doc_note = doc_link.css('::text').extract_first()
+            if 'agenda' in doc_link.attrib['href'].lower():
+                doc_note = 'Agenda'
+            documents.append({
+                'url': doc_link.attrib['href'],
+                'note': doc_note,
+            })
         return documents
 
     def _generate_classification(self, name):

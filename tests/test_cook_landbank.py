@@ -1,6 +1,5 @@
 from datetime import date, time
 
-import pytest
 from freezegun import freeze_time
 from tests.utils import file_response
 
@@ -40,11 +39,6 @@ def test_start():
 def test_end():
     EXPECTED_END = {'date': date(2018, 9, 14), 'time': None, 'note': ''}
     assert parsed_items[0]['end'] == EXPECTED_END
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
 
 
 def test_all_day():
