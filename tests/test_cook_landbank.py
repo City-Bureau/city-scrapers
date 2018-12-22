@@ -42,11 +42,6 @@ def test_end():
     assert parsed_items[0]['end'] == EXPECTED_END
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
-
-
 def test_all_day():
     assert parsed_items[0]['all_day'] is False
 
