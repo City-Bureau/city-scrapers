@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+import re
+from datetime import datetime, time
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
@@ -10,37 +11,54 @@ class ChiSchoolsSpider(Spider):
     agency_name = 'Chicago Public Schools'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cpsboe.org']
-    start_urls = ['http://www.cpsboe.org/meetings/planning-calendar']
-    domain_url = 'http://www.cpsboe.org'
+    start_urls = [
+        'http://www.cpsboe.org/meetings/planning-calendar',
+        'https://www.cpsboe.org/meetings/past-meetings',
+    ]
 
     def parse(self, response):
         event_description = self._parse_description(response)
-        documents = self._parse_documents(response)
-        for item in response.css('#content-primary tr')[1:]:
-            start = self._parse_start_time(item)
-            if start is not None:
+        for idx, item in enumerate(response.css('#content-primary tr')):
+            if idx == 0 and 'calendar' in response.url:
+                continue
+            if 'calendar' in response.url:
                 start = self._parse_start_time(item)
+            else:
+                start = self._parse_past_start(item)
+            if start is not None:
                 data = {
                     '_type': 'event',
-                    'name': 'Board of Education',
+                    'name': self._parse_name(item, response),
                     'event_description': event_description,
-                    'all_day': self._parse_all_day(item),
+                    'all_day': False,
                     'classification': BOARD,
                     'start': start,
-                    'documents': documents,
+                    'end': {
+                        'date': start['date'],
+                        'time': None,
+                        'note': '',
+                    },
+                    'documents': self._parse_documents(item, start, response),
                     'location': self._parse_location(item),
-                    'sources': self._parse_sources(response),
+                    'sources': self._parse_sources(item, response),
                 }
                 data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data)
-                data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
+                data['status'] = self._generate_status(data, text=event_description)
                 yield data
+
+    def _parse_name(self, item, response):
+        name = 'Board of Education'
+        alt_name = item.css('.mute::text').extract_first()
+        if 'past' in response.url and alt_name is not None:
+            name = re.sub(r'[\(\)]', '', alt_name)
+        return name
 
     def _parse_description(self, response):
         desc_xpath = '//table/following-sibling::ul//text()|//table/following-sibling::p//text()'
         desc_text = response.xpath(desc_xpath).extract()
-        event_description = ' '.join(desc_text)
-        return event_description
+        if len(desc_text) == 0:
+            return ''
+        return ' '.join(desc_text)
 
     def _remove_line_breaks(self, collection):
         return [x.strip() for x in collection if x.strip() != '']
@@ -63,23 +81,16 @@ class ChiSchoolsSpider(Spider):
         except Exception:
             return None
 
-    def _parse_all_day(self, item):
-        """
-        Looking around at youtube videos of past meetings it looks like the
-        typical duration is 2-3 hours.
-        """
-        return False
-
-    def _parse_status(self, item):
-        """
-        @TODO determine correct status
-        """
-        return 'tentative'
+    def _parse_past_start(self, item):
+        date_str = item.css('th a::text').extract_first()
+        date_obj = datetime.strptime(date_str.strip(), '%B %d, %Y').date()
+        return {
+            'date': date_obj,
+            'time': time(8, 30),
+            'note': '',
+        }
 
     def _parse_location(self, item):
-        """
-        @TODO better location
-        """
         raw_text_list = item.css('::text').extract()
         text_list = self._remove_line_breaks(raw_text_list)[1:]
         text_list = [x for x in text_list if '(' not in x and ')' not in x]
@@ -90,14 +101,29 @@ class ChiSchoolsSpider(Spider):
             'neighborhood': None,
         }
 
-    def _parse_documents(self, response):
-        # only extracting participation guidelines now
-        relative_url = response.xpath('//a[contains(text(),"participation")]/@href').extract_first()
-        url = response.urljoin(relative_url)
-        return [{'url': url, 'note': 'participation guidelines'}]
+    def _parse_documents(self, item, start, response):
+        documents = []
+        for doc_link in item.css('td a'):
+            doc_url = response.urljoin(doc_link.attrib['href'])
+            doc_note = doc_link.css('::text').extract_first()
+            if doc_note.lower() == 'proceedings':
+                mo_str = start['date'].strftime('%b').lower()
+                doc_url = response.urljoin(
+                    '/content/documents/{}{dt.day}_{dt.year}proceedings.pdf'.format(
+                        mo_str, dt=start['date']
+                    )
+                )
+            documents.append({
+                'url': doc_url,
+                'note': doc_note,
+            })
+        return documents
 
-    def _parse_sources(self, response):
+    def _parse_sources(self, item, response):
         """
         Parse sources.
         """
+        if 'past' in response.url:
+            detail_url = item.css('th a')[0].attrib['href']
+            return [{'url': response.urljoin(detail_url), 'note': ''}]
         return [{'url': response.url, 'note': ''}]

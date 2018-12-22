@@ -1,6 +1,5 @@
 from datetime import date, time
 
-import pytest
 from freezegun import freeze_time
 from tests.utils import file_response
 

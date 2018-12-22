@@ -3,10 +3,10 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-from datetime import datetime, timedelta
 import json
 import re
 import unicodedata
+from datetime import datetime, timedelta
 
 import scrapy
 
