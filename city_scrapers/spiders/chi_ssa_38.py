@@ -18,34 +18,40 @@ class ChiSsa38Spider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
-            text = response.xpath("//strong").extract()
-            meetings = [x for x in text if "href" in x and "Minutes" in x]
-            for meeting in meetings:
-                data = {
-                    '_type': 'event',
-                    'name': self._parse_name(item),
-                    'event_description': self._parse_description(item),
-                    'classification': self._parse_classification(item),
-                    'start': self._parse_start(item),
-                    'all_day': False,
-                    'location': self._parse_location(item),
-                    'documents': self._parse_documents(item),
-                    'sources': [{
-                            'url': response.url,
-                            'note': ''
-                        }]
-                }
+        # Get first meeting, watch out for noon
 
-                data['end'] = {
-                    'date': data['start']['date'],
-                    'time': None,
-                    'note': '',
-                }
-                data['status'] = self._generate_status(data)
-                data['id'] = self._generate_id(data)
+        text = response.xapth("//text()").extract()
+        next_data = self._parse_first(text)
+        if next_data is not None:  # In case next meeting is not specified
+            yield next_data
 
-                yield data
+        strongtext = response.xpath("//strong").extract()
+        meetings = [x for x in strongtext if "href" in x and "Minutes" in x]
+        for meeting in meetings:
+            data = {
+                '_type': 'event',
+                'name': self._parse_name(meeting),
+                'event_description': self._parse_description(meeting),
+                'classification': self._parse_classification(meeting),
+                'start': self._parse_start(meeting),
+                'all_day': False,
+                'location': self._parse_location(meeting),
+                'documents': self._parse_documents(meeting),
+                'sources': [{
+                        'url': response.url,
+                        'note': ''
+                    }]
+            }
+
+            data['end'] = {
+                'date': data['start']['date'],
+                'time': None,
+                'note': '',
+            }
+            data['status'] = self._generate_status(data)
+            data['id'] = self._generate_id(data)
+
+            yield data
 
     def _parse_name(self, item):
         """
@@ -69,7 +75,7 @@ class ChiSsa38Spider(Spider):
         """
         Parse start date and time.
         """
-        # Returns date in format "9-8-2018"
+        # Finds date in format "9-14-2018"
         str_date = re.search(r'\d{1,2}-\d{1,2}-\d{2,4}', item).group(0)
         list_date = str_date.split("-")
         # Zero padding to get into proper format for strptime
@@ -83,12 +89,6 @@ class ChiSsa38Spider(Spider):
         formatteddate = "-".join(list_date)
         datetime_item = datetime.strptime(formatteddate, '%m-%d-%Y')
         return {'date': datetime_item.date(), 'time': '', 'note': ''}
-
-    def _parse_end(self, item):
-        """
-        Parse end date and time.
-        """
-        return ''
 
     def _parse_location(self, item):
         """
@@ -107,3 +107,43 @@ class ChiSsa38Spider(Spider):
         """
         url = re.search(r'htt.+?">', item).group(0)[:-2]
         return [{'url': url, 'note': 'SSA Commission Meeting Minutes'}]
+
+    def _parse_first(self, item):
+        next_meeting = None
+        pattern = \
+            '(January|February|March|April|May|June|July|August|September|October|November|December).+?(th|nd|st|rd)'
+        for x in item:
+            if re.search(pattern, x):
+                # From looking at archived version of the page,
+                # I'm only expecting one instance of a month string, and that's for upcoming meetings.
+                next_str = re.search(pattern, x).group(0)[:-2]
+                # Zero padding if necessary
+                if not next_str[-2].isdigit():
+                    next_str = next_str[:-1] + '0' + next_str[-1:]
+                next_meeting = datetime.strptime(next_str, '%B %d')
+
+        data = {
+            '_type': 'event',
+            'name': self._parse_name(meeting),
+            'event_description': self._parse_description(meeting),
+            'classification': self._parse_classification(meeting),
+            'start': self._parse_start(meeting),
+            'all_day': False,
+            'location': self._parse_location(meeting),
+            'documents': self._parse_documents(meeting),
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }]
+        }
+
+        data['end'] = {
+            'date': data['start']['date'],
+            'time': None,
+            'note': '',
+        }
+        data['status'] = self._generate_status(data)
+        data['id'] = self._generate_id(data)
+
+        yield data
+        return next_meeting
