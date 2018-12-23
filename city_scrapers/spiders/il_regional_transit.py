@@ -70,8 +70,10 @@ class IlRegionalTransitSpider(Spider):
         """
         Get event name
         """
-        title = item.css('.committee::text').extract_first()
-        return title.split(' on ')[0].split(' (')[0]
+        name_text = item.css('.committee::text').extract_first()
+        name_text = name_text.split(' on ')[0].split(' (')[0]
+        name_text = re.sub(r'\d{1,2}:\d{2}\s+[APM]{2}', '', name_text)
+        return name_text.strip()
 
     @staticmethod
     def _parse_start(item):
