@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from city_scrapers.spider import Spider
 import re
+from datetime import datetime
 
 class ChiSsa38Spider(Spider):
     name = 'chi_ssa_38'
@@ -27,29 +28,24 @@ class ChiSsa38Spider(Spider):
                     'event_description': self._parse_description(item),
                     'classification': self._parse_classification(item),
                     'start': self._parse_start(item),
-                    'end': self._parse_end(item),
-                    'all_day': self._parse_all_day(item),
+                    'all_day': False,
                     'location': self._parse_location(item),
                     'documents': self._parse_documents(item),
-                    'sources': self._parse_sources(item),
+                    'sources': [{
+                            'url': response.url,
+                            'note': ''
+                        }]
                 }
 
+                data['end'] = {
+                    'date': data['start']['date'],
+                    'time': None,
+                    'note': '',
+                }
                 data['status'] = self._generate_status(data)
                 data['id'] = self._generate_id(data)
 
                 yield data
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
 
     def _parse_name(self, item):
         """
@@ -73,19 +69,26 @@ class ChiSsa38Spider(Spider):
         """
         Parse start date and time.
         """
-        return re.search(r'\d{1,2}-\d{1,2}-\d{2,4}', item).group(0)  # Make into datetime
+        # Returns date in format "9-8-2018"
+        str_date = re.search(r'\d{1,2}-\d{1,2}-\d{2,4}', item).group(0)
+        list_date = str_date.split("-")
+        # Zero padding to get into proper format for strptime
+        if len(list_date[0]) == 1:
+            list_date[0] = "0" + list_date[0]
+        if len(list_date[1]) == 1:
+            list_date[1] = "0" + list_date[1]
+        # Two dates in 2014 have an abbreviated year rather than the full one
+        if len(list_date[2]) == 2:
+            list_date[2] = "20" + list_date[2]
+        formatteddate = "-".join(list_date)
+        datetime_item = datetime.strptime(formatteddate, '%m-%d-%Y')
+        return {'date': datetime_item.date(), 'time': '', 'note': ''}
 
     def _parse_end(self, item):
         """
         Parse end date and time.
         """
         return ''
-
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to False.
-        """
-        return False
 
     def _parse_location(self, item):
         """
@@ -104,9 +107,3 @@ class ChiSsa38Spider(Spider):
         """
         url = re.search(r'htt.+?">', item).group(0)[:-2]
         return [{'url': url, 'note': 'SSA Commission Meeting Minutes'}]
-
-    def _parse_sources(self, item):
-        """
-        Parse or generate sources.
-        """
-        return [{'url': '', 'note': ''}]
