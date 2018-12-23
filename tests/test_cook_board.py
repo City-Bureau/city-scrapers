@@ -64,11 +64,17 @@ def test_sources():
 
 
 def test_documents():
-    assert parsed_items[25]['documents'] == [{
-        'url':
-            'https://cook-county.legistar.com/View.ashx?M=A&ID=521583&GUID=EA23CB0D-2E10-47EA-B4E2-EC7BA3CB8D76',  # noqa
-        'note': 'Agenda'
-    }]
+    assert parsed_items[25]['documents'] == [
+        {
+            'url':
+                'https://cook-county.legistar.com/View.ashx?M=A&ID=521583&GUID=EA23CB0D-2E10-47EA-B4E2-EC7BA3CB8D76',  # noqa
+            'note': 'Agenda'
+        },
+        {
+            'note': 'Video',
+            'url': 'https://cook-county.legistar.comVideo.aspx?Mode=Granicus&ID1=1858&Mode2=Video'
+        }
+    ]
 
 
 @pytest.mark.parametrize('item', parsed_items)

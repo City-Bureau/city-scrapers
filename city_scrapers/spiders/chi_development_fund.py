@@ -42,7 +42,7 @@ class ChiDevelopmentFundSpider(Spider):
                     'location': {
                         'neighborhood': '',
                         'name': 'City Hall',
-                        'address': '121 N. LaSalle St., Room 1000'
+                        'address': '121 N LaSalle St, Room 1000, Chicago, IL 60602'
                     },
                     'sources': [{
                         'url': response.url,

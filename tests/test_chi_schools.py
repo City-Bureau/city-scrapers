@@ -26,9 +26,12 @@ def test_id():
     assert parsed_items[0]['id'] == 'chi_schools/201707261030/x/board_of_education'
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_name(item):
-    assert item['name'] == 'Board of Education'
+def test_documents():
+    assert parsed_items[0]['documents'] == []
+
+
+def test_name():
+    assert parsed_items[0]['name'] == 'Board of Education'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -94,11 +97,3 @@ def test_location(item):
             'address':
                 'CPS Loop Office 42 W. Madison Street, Garden Level Chicago, IL 60602 Board Room',  # noqa
         }
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_documents(item):
-    assert item['documents'] == [{
-        'url': 'http://www.cpsboe.org/meetings/participation-guidelines',
-        'note': 'participation guidelines'
-    }]

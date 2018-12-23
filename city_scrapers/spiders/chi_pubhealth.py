@@ -143,7 +143,7 @@ class ChiPubHealthSpider(Spider):
             })
 
         minutes_relative_url = item.xpath('following-sibling::ul/li/a/@href').extract_first()
-        if agenda_relative_url:
+        if minutes_relative_url:
             documents.append({
                 'url': 'https://www.cityofchicago.org{}'.format(minutes_relative_url),
                 'note': 'minutes'

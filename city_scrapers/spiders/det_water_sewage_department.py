@@ -63,10 +63,9 @@ class DetWaterSewageDepartmentSpider(Spider):
         Parse meeting minutes and agenda if available.
         """
         documents = []
-        for key in ['Agenda', 'Minutes']:
-            document = self._get_doc(item, key)
-            if document:
-                documents.append(document)
+        for doc in ['Agenda', 'Minutes', 'Video']:
+            if isinstance(item.get(doc), dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     @staticmethod

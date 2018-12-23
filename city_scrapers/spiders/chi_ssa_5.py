@@ -121,8 +121,8 @@ class ChiSsa5Spider(Spider):
         Parse or generate event name.
         """
         if 'special' in text.lower():
-            return 'Special Commission Meeting'
-        return 'Regular Commission Meeting'
+            return 'Special Commission'
+        return 'Regular Commission'
 
     def _parse_start(self, text, minutes=False):
         """

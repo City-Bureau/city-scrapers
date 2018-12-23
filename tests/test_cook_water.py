@@ -7,7 +7,7 @@ from city_scrapers.constants import BOARD
 from city_scrapers.spiders.cook_water import CookWaterSpider
 
 test_response = []
-with open('tests/files/cook_water_test.json') as f:
+with open('tests/files/cook_water.json') as f:
     test_response.extend(json.loads(f.read()))
 spider = CookWaterSpider()
 parsed_items = [item for item in spider._parse_events(test_response)]
@@ -61,6 +61,10 @@ def test_documents():
             'url':
                 'https://mwrd.legistar.com/View.ashx?M=M&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
             'note': 'Minutes'
+        },
+        {
+            'note': 'Video',
+            'url': 'https://mwrd.legistar.com/Video.aspx?Mode=Granicus&ID1=356&Mode2=Video'
         },
     ]
 

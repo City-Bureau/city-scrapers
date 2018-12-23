@@ -1,6 +1,5 @@
 from datetime import date, time
 
-import pytest
 from freezegun import freeze_time
 from tests.utils import file_response
 
@@ -42,11 +41,6 @@ def test_end():
     assert parsed_items[0]['end'] == EXPECTED_END
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
-
-
 def test_all_day():
     assert parsed_items[0]['all_day'] is False
 
@@ -63,7 +57,7 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'url': 'http://www.cookcountylandbank.org/',
         'name': None,
-        'address': '69 W. Washington St., Lower Level Conference Room A',
+        'address': '69 W. Washington St., Lower Level Conference Room A Chicago, IL',
         'coordinates': {
             'latitude': None,
             'longitude': None

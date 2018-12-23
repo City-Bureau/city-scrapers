@@ -22,7 +22,7 @@ class ChiTeacherPensionSpider(Spider):
         needs.
         """
         LOCATION = {
-            'address': '203 North LaSalle Street, Suite 2600, Board Room',
+            'address': '203 N LaSalle St, Suite 2600 Board Room, Chicago, IL 60601',
             'name': 'CTPF office',
             'neighborhood': 'Loop'
         }
@@ -72,7 +72,7 @@ class ChiTeacherPensionSpider(Spider):
 
     @staticmethod
     def _parse_datetime(datetime_str):
-        date_clean_re = r'[^:,\s\w\d]'
+        date_clean_re = r'[^:\s\w\d]'
         datetime_split = datetime_str.split(',')
         date_str = ','.join(datetime_str.split(',')[:3])
         time_str = None
@@ -82,7 +82,7 @@ class ChiTeacherPensionSpider(Spider):
             date_str, time_str = date_str.split(' at ')
         date_obj = datetime.strptime(
             re.sub(date_clean_re, '', date_str).strip(),
-            '%A, %B %d, %Y',
+            '%A %B %d %Y',
         ).date()
 
         if time_str:

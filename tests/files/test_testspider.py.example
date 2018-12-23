@@ -1,7 +1,18 @@
 import pytest
-
+from freezegun import freeze_time
 from tests.utils import file_response
+
 from city_scrapers.spiders.testspider import TestspiderSpider
+
+test_response = file_response('files/testspider.html')
+spider = TestspiderSpider()
+
+freezer = freeze_time('2018-12-01')
+freezer.start()
+
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+
+freezer.stop()
 
 
 def test_tests():
@@ -12,11 +23,6 @@ def test_tests():
 """
 Uncomment below
 """
-
-# test_response = file_response('files/testspider.html')
-# spider = TestspiderSpider()
-# parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
-
 
 # def test_name():
     # assert parsed_items[0]['name'] == 'EXPECTED NAME'

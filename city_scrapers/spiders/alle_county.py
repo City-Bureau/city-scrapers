@@ -4,6 +4,7 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
+import json
 from datetime import datetime, timedelta
 
 import urllib3
@@ -31,6 +32,12 @@ class AlleCountySpider(Spider):
         to fit your scraping needs.
         """
         events = self._make_legistar_call()
+        es = [[e, 0] for e, _ in events]
+        print(es)
+        with open('test.json', 'w') as f:
+            json.dump(es, f)
+            # for e, _ in events:
+            #     f.write(f'{json.dumps(e)}\n')
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
@@ -107,12 +114,9 @@ class AlleCountySpider(Spider):
         Parse or generate documents.
         """
         documents = []
-        details = item['Minutes']
-        if isinstance(details, dict):
-            documents.append({'note': 'Minutes', 'url': details['url']})
-        agenda = item['Agenda']
-        if isinstance(agenda, dict):
-            documents.append({'note': 'Agenda', 'url': agenda['url']})
+        for doc in ['Agenda', 'Minutes', 'Video']:
+            if isinstance(item.get(doc), dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     def _parse_start_datetime(self, item):

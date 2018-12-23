@@ -109,13 +109,11 @@ class ChiPoliceBoardSpider(Spider):
         """
         Parse start date
         """
-        weekday_and_date = ''.join([x.strip() for x in item.xpath("text()").extract()])
-        date = ''.join([x.strip() for x in weekday_and_date.split(',')[1:]])
-        clean_date_match = re.match(r'.*([A-Z][a-z]+ \d+).*', date)
+        date_str = item.css('::text').extract_first()
+        clean_date_match = re.search(r'[A-Za-z]+\s+\d{1,2}', date_str)
         if not clean_date_match:
             return None
-        date_as_string = clean_date_match.group(1)
-        date_with_year = '{0}, {1}'.format(date_as_string, year)
+        date_with_year = '{0}, {1}'.format(clean_date_match.group(), year)
         return datetime.strptime(date_with_year, '%B %d, %Y').date()
 
     def _parse_year(self, response):

@@ -1,26 +1,32 @@
 # -*- coding: utf-8 -*-
 import re
-from datetime import datetime
-
-import scrapy
+from datetime import datetime, time
 
 from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
-# The RTA's Board and other meetings are are displayed on their
-# website via an iframe from a different domain.
 class IlRegionalTransitSpider(Spider):
     name = 'il_regional_transit'
     agency_name = 'Regional Transportation Authority'
     timezone = 'America/Chicago'
+    allowed_domains = ['rtachicago.granicus.com']
+    start_urls = [
+        'http://rtachicago.granicus.com/ViewPublisher.php?view_id=5',
+        'http://rtachicago.granicus.com/ViewPublisher.php?view_id=4',
+    ]
+    custom_settings = {'ROBOTSTXT_OBEY': False}
+    location = {
+        'name': 'RTA Administrative Offices',
+        'address': '175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604',
+    }
 
-    allowed_domains = ['www.rtachicago.org', 'rtachicago.granicus.com']
-    start_urls = ['http://www.rtachicago.org/about-us/board-meetings']
-    domain_root = 'http://www.rtachicago.org'
-
-    def parse_iframe(self, response):
-        for item in response.css('.committee'):
+    def parse(self, response):
+        """
+        `parse` should always `yield` a dict that follows the `Open Civic Data
+        event standard http://docs.opencivicdata.org/en/latest/data/event.html
+        """
+        for item in response.css('.row:not(#search):not(.keywords)'):
             start = self._parse_start(item)
             if start is None:
                 continue
@@ -28,16 +34,16 @@ class IlRegionalTransitSpider(Spider):
             data = {
                 '_type': 'event',
                 'name': name,
-                'event_description': response.meta['event_description'],
+                'classification': self._parse_classification(name),
+                'event_description': '',
                 'start': start,
                 'end': {
-                    'date': None,
+                    'date': start['date'],
                     'time': None,
                     'note': ''
                 },
                 'all_day': False,
-                'timezone': 'America/Chicago',
-                'location': self._parse_location(),
+                'location': self.location,
                 'documents': self._parse_documents(item),
                 'sources': [{
                     'url': response.url,
@@ -46,25 +52,7 @@ class IlRegionalTransitSpider(Spider):
             }
             data['id'] = self._generate_id(data)
             data['status'] = self._generate_status(data)
-            data['classification'] = self._parse_classification(data.get('name', NOT_CLASSIFIED))
             yield data
-
-    def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard http://docs.opencivicdata.org/en/latest/data/event.html
-        """
-        url = response.css('iframe::attr(src)').extract_first()
-        desc_xpath = '//*[text()[contains(.,"The RTA Board")]]/text()'
-        description = response.xpath(desc_xpath).extract_first()
-        meta = {
-            'event_description': description,
-            # Disable built-in RobotsTxt middleware for this request.
-            'dont_obey_robotstxt': True,
-        }
-        if url.startswith('//'):
-            url = 'http:{}'.format(url)
-        yield scrapy.Request(url, callback=self.parse_iframe, meta=meta)
 
     @staticmethod
     def _parse_classification(name):
@@ -78,40 +66,53 @@ class IlRegionalTransitSpider(Spider):
         return NOT_CLASSIFIED
 
     @staticmethod
-    def _parse_location():
-        """
-        The location is hard coded based on the value shown on the meetings
-        page. It is not expected to change often, so this is probably OK.
-        """
-        return {
-            'name': 'RTA Administrative Offices',
-            'address': '175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604',
-        }
-
-    @staticmethod
     def _parse_name(item):
         """
         Get event name
         """
         title = item.css('.committee::text').extract_first()
-        return title.split(' on ')[0]
+        return title.split(' on ')[0].split(' (')[0]
 
     @staticmethod
     def _parse_start(item):
         """
         Retrieve the event date, always using 8:30am as the time.
         """
-        title = item.css('.committee::text').extract_first()
-        m = re.search(r'(\d{4})-(\d{1,2})-(\d{1,2})', title)
-        if m is None:
-            return None
-        naive_dt = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), 8, 30)
-        return {'date': naive_dt.date(), 'time': naive_dt.time(), 'note': ''}
+        date_str = ' '.join(item.css('div:first-child::text').extract()).strip()
+        date_obj = datetime.strptime(date_str, '%b %d, %Y').date()
+        return {
+            'date': date_obj,
+            'time': time(8, 30),
+            'note': 'Initial meetings begin at 8:30am, with other daily meetings following',
+        }
 
     @staticmethod
     def _parse_documents(item):
-        document_xpath = 'ancestor::div[contains(@class, "row")]//a/@href'
-        document = item.xpath(document_xpath).extract_first()
-        if document:
-            return [{'url': document, 'note': 'agenda'}]
-        return []
+        documents = []
+        for doc_link in item.css('a'):
+            if 'onclick' in doc_link.attrib:
+                doc_url = re.search(
+                    r'(?<=window\.open\(\')http.+(?=\',)', doc_link.attrib['onclick']
+                ).group()
+            else:
+                doc_url = doc_link.attrib['href']
+            doc_note = doc_link.css('img::attr(alt)').extract_first()
+            # Default to link title if alt text for doc icon isn't available
+            if doc_note is None:
+                if 'title' in doc_link.attrib:
+                    doc_note = doc_link.attrib['title']
+                else:
+                    continue
+            if 'listen' in doc_note.lower():
+                doc_note = 'Audio'
+            elif 'agenda' in doc_note.lower():
+                doc_note = 'Agenda'
+            elif 'minutes' in doc_note.lower():
+                doc_note = 'Minutes'
+            elif 'video' in doc_note.lower():
+                doc_note = 'Video'
+            documents.append({
+                'url': doc_url,
+                'note': doc_note,
+            })
+        return documents
