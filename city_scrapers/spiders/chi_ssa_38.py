@@ -20,8 +20,9 @@ class ChiSsa38Spider(Spider):
         """
         # Get first meeting, watch out for noon
 
-        text = response.xapth("//text()").extract()
-        next_data = self._parse_first(text)
+        text = response.xpath("//text()").extract()
+        links = response.xpath("//a[@href]").extract()
+        next_data = self._parse_first(text, links)
         if next_data is not None:  # In case next meeting is not specified
             yield next_data
 
@@ -105,10 +106,11 @@ class ChiSsa38Spider(Spider):
         """
         Parse or generate documents.
         """
-        url = re.search(r'htt.+?">', item).group(0)[:-2]
-        return [{'url': url, 'note': 'SSA Commission Meeting Minutes'}]
+        if item is not None:
+            url = re.search(r'htt.+?">', item).group(0)[:-2]
+            return [{'url': url, 'note': 'SSA Commission Meeting Minutes'}]
 
-    def _parse_first(self, item):
+    def _parse_first(self, item, links):
         next_meeting = None
         pattern = \
             '(January|February|March|April|May|June|July|August|September|October|November|December).+?(th|nd|st|rd)'
@@ -122,28 +124,36 @@ class ChiSsa38Spider(Spider):
                     next_str = next_str[:-1] + '0' + next_str[-1:]
                 next_meeting = datetime.strptime(next_str, '%B %d')
 
-        data = {
-            '_type': 'event',
-            'name': self._parse_name(meeting),
-            'event_description': self._parse_description(meeting),
-            'classification': self._parse_classification(meeting),
-            'start': self._parse_start(meeting),
-            'all_day': False,
-            'location': self._parse_location(meeting),
-            'documents': self._parse_documents(meeting),
-            'sources': [{
-                'url': response.url,
-                'note': ''
-            }]
-        }
+        agenda = ''
 
-        data['end'] = {
-            'date': data['start']['date'],
-            'time': None,
-            'note': '',
-        }
-        data['status'] = self._generate_status(data)
-        data['id'] = self._generate_id(data)
+        for link in links:
+            if "Agenda" in link or "agenda" in link:
+                agenda = link
 
-        yield data
-        return next_meeting
+        data = None
+
+        if next_meeting is not None:
+            data = {
+                '_type': 'event',
+                'name': self._parse_name(item),
+                'event_description': self._parse_description(item),
+                'classification': self._parse_classification(item),
+                'start': {'date': next_meeting, 'time': None},
+                'all_day': False,
+                'location': self._parse_location(item),
+                'documents': [{'url': agenda, 'note': 'SSA Commission Meeting Agenda'}],
+                'sources': [{
+                    'url': 'http://www.northcenterchamber.com/pages/MeetingsTransparency1',
+                    'note': ''
+                }]
+            }
+
+            data['end'] = {
+                'date': data['start']['date'],
+                'time': None,
+                'note': '',
+            }
+            data['status'] = self._generate_status(data)
+            data['id'] = self._generate_id(data)
+
+        return data
