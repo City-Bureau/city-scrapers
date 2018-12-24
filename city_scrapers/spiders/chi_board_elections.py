@@ -160,7 +160,7 @@ class ChiBoardElectionsSpider(Spider):
         """
 
         return {
-            'address': '8th Floor Office, 69 W. Washington St.',
+            'address': '8th Floor Office, 69 W. Washington St. Chicago, IL 60602',
             'name': 'Cook County Administration Building',
             'neighborhood': '',
         }

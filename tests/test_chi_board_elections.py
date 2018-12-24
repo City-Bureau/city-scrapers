@@ -44,7 +44,7 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'address': '8th Floor Office, 69 W. Washington St.',
+        'address': '8th Floor Office, 69 W. Washington St. Chicago, IL 60602',
         'name': 'Cook County Administration Building',
         'neighborhood': '',
     }
@@ -117,7 +117,7 @@ def test_status_prev():
 
 def test_location_prev():
     assert parsed_items_prev[0]['location'] == {
-        'address': '8th Floor Office, 69 W. Washington St.',
+        'address': '8th Floor Office, 69 W. Washington St. Chicago, IL 60602',
         'name': 'Cook County Administration Building',
         'neighborhood': '',
     }
