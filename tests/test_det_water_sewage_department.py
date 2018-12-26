@@ -51,7 +51,7 @@ def test_location():
 
 def test_sources():
     assert parsed_items[3]['sources'] == [{
-        'url': 'https://mwrd.legistar.com/Calendar.aspx',
+        'url': 'https://dwsd.legistar.com/Calendar.aspx',
         'note': ''
     }]
 

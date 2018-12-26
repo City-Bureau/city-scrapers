@@ -105,5 +105,5 @@ class DetWaterSewageDepartmentSpider(Spider):
         try:
             url = item['Name']['url']
         except Exception:
-            url = 'https://mwrd.legistar.com/Calendar.aspx'
+            url = 'https://dwsd.legistar.com/Calendar.aspx'
         return [{'url': url, 'note': ''}]
