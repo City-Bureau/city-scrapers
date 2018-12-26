@@ -17,10 +17,6 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 freezer.stop()
 
 
-"""
-Uncomment below
-"""
-
 # def test_name():
     # assert parsed_items[0]['name'] == 'EXPECTED NAME'
 
