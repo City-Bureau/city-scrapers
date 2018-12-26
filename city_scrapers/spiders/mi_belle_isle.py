@@ -13,7 +13,7 @@ class MiBelleIsleSpider(Spider):
     agency_name = 'Michigan Belle Isle Advisory Committee'
     timezone = 'America/Detroit'
     allowed_domains = ['www.michigan.gov']
-    start_urls = [('https://www.michigan.gov/dnr/0,4570,7-350-79137' '_79763_79901---,00.html')]
+    start_urls = ['https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html']
 
     def parse(self, response):
         """
@@ -23,7 +23,7 @@ class MiBelleIsleSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.xpath('//tbody/tr[child::td/text()]'):
+        for item in response.xpath('//tbody/tr'):
             # Adapted the combined start and end from chi_city_college
             date, start_time, end_time = self._parse_date_and_times(item)
             data = {
@@ -59,8 +59,11 @@ class MiBelleIsleSpider(Spider):
         """
         Parse start and end date and times.
         """
-        date_str = item.xpath('.//td[1]/text()').re(r'[^\*]+')[0]
-        time_str = item.xpath('.//td[2]/text()').extract_first().replace('.', '')
+        date_str = re.sub(r'[^a-zA-Z,\d\s]', '', item.css('td:first-child *::text').extract_first())
+        time_str = re.sub(
+            r'[^a-zA-Z,\d\s:-]', '',
+            item.css('td:nth-child(2) *::text').extract_first()
+        )
         meridian_str = re.findall(r'am|pm', time_str.lower())[0]
 
         time_start_str = re.findall(r'(\d+?:*?\d*?)(?=\s*-)', time_str)[0]
