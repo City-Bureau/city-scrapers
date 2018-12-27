@@ -51,8 +51,8 @@ class WayneCommissionMixin:
                 }]
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._parse_status(item, data)
-
+            status_str = ' '.join(item.xpath('.//td//text()').extract())
+            data['status'] = self._generate_status(data, text=status_str)
             yield data
 
     def _parse_entries(self, response):
@@ -60,13 +60,15 @@ class WayneCommissionMixin:
 
     @staticmethod
     def _parse_documents(item, base_url):
-        url = item.xpath('td/a/@href').extract_first()
-        url = urljoin(base_url, url) if url is not None else ''
-        if url != '':
-            note = item.xpath('td/a/text()').extract_first()
-            note = note.lower() if note is not None else ''
-            return [{'url': url, 'note': note}]
-        return []
+        documents = []
+        for doc_link in item.xpath('td/a'):
+            url = doc_link.xpath('@href').extract_first()
+            url = urljoin(base_url, url) if url is not None else ''
+            if url != '':
+                note = doc_link.xpath('text()').extract_first()
+                note = note if note is not None else ''
+                documents.append({'url': url, 'note': note})
+        return documents
 
     def _parse_start(self, item):
         """

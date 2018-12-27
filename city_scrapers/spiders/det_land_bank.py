@@ -29,7 +29,6 @@ class DetLandBankSpider(Spider):
         entries = json.loads(data.strip()[:-1])
 
         for item in entries:
-
             data = {
                 '_type': 'event',
                 'name': item['title_tmp'],
@@ -50,7 +49,7 @@ class DetLandBankSpider(Spider):
                 }]
             }
 
-            data['status'] = self._generate_status(data)
+            data['status'] = self._generate_status(data, text=item['status'])
             data['id'] = self._generate_id(data)
 
             yield data
@@ -77,7 +76,9 @@ class DetLandBankSpider(Spider):
         """
         return {
             'address':
-                item['address'] + " " + item['city'] + ", " + item['state'] + " " + item['zipcode'],
+                '{} {}, {} {}'.format(
+                    item['address'], item['city'], item['state'], item['zipcode']
+                ),
             'name': '',
             'neighborhood': '',
         }

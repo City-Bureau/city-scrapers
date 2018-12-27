@@ -74,7 +74,7 @@ def test_sources(item):
 # NON-PARAMETRIZED TESTS
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-        'note': 'agenda',
+        'note': 'Agenda',
         'url': 'https://www.waynecounty.com/documents/commission/adtmtg_2018-0117.pdf',
     }]
 
