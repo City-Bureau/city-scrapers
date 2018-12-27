@@ -2,6 +2,7 @@ import json
 from datetime import date, time
 
 import pytest
+from freezegun import freeze_time
 
 from city_scrapers.constants import TENTATIVE
 from city_scrapers.spiders.det_great_lakes_water_authority import DetGreatLakesWaterAuthoritySpider
@@ -9,8 +10,13 @@ from city_scrapers.spiders.det_great_lakes_water_authority import DetGreatLakesW
 with open('tests/files/det_great_lakes_water_authority.json', 'r') as f:
     test_response = json.load(f)
 
+freezer = freeze_time('2018-12-27')
+freezer.start()
+
 spider = DetGreatLakesWaterAuthoritySpider()
 parsed_items = [item for item in spider._parse_events([(item, None) for item in test_response])]
+
+freezer.stop()
 
 
 def test_name():
