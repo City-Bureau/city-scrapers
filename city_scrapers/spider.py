@@ -62,7 +62,7 @@ class Spider(scrapy.Spider):
             data.get('event_description', ''),
             text,
         ]).lower()
-        if any(word in meeting_text for word in ['cancel', 'rescheduled']):
+        if any(word in meeting_text for word in ['cancel', 'rescheduled', 'postpone']):
             return CANCELED
 
         try:

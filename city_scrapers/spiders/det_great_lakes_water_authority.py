@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import re
+from datetime import datetime
 
-import scrapy
-from ics import Calendar
+from legistar.events import LegistarEventsScraper
 
 from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
@@ -12,67 +11,105 @@ class DetGreatLakesWaterAuthoritySpider(Spider):
     name = 'det_great_lakes_water_authority'
     agency_name = 'Detroit Great Lakes Water Authority'
     timezone = 'America/Detroit'
-    allowed_domains = ['www.glwater.org']
-    start_urls = ['http://www.glwater.org/events/']
+    allowed_domains = ['glwater.legistar.com']
+    start_urls = ['https://glwater.legistar.com/']
+
+    def _make_legistar_call(self, since=None):
+        les = LegistarEventsScraper()
+        les.EVENTSPAGE = 'https://glwater.legistar.com/Calendar.aspx'
+        les.BASE_URL = 'https://glwater.legistar.com'
+        if not since:
+            since = datetime.today().year
+        return les.events(since=since)
 
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
-
+        <https://city-bureau.gitbooks.io/documenters-event-aggregator/event-schema.html>.
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        next_page = response.css('.tribe-events-nav-next')[0].xpath('a/@href').extract_first()
-        if next_page:
-            yield scrapy.Request(next_page, callback=self.parse)
-        yield scrapy.Request(
-            response.url + '?ical=1&tribe_display=month', callback=self._parse_ical
-        )
+        events = self._make_legistar_call()
+        return self._parse_events(events)
 
-    def _parse_ical(self, ical_event):
-        cal = Calendar(ical_event.text)
-        for event in cal.events:
-            # Meetings parens to indicate status (e.g. (Canceled))
-            desc = re.search(r'(?P<name>[^()]+)(?P<status>\(([^()]+)\))?', event.name)
+    def _parse_events(self, events):
+        for item, _ in events:
+            start = self._parse_start(item)
             data = {
                 '_type': 'event',
-                'name': desc.group('name').strip(),
-                'event_description': event.description,
-                'classification': self._parse_classification(desc.group('name')),
-                'start': {
-                    'date': event.begin.date(),
-                    'time': event.begin.time(),
-                    'note': ''
-                },
+                'name': item['Name'],
+                'event_description': '',
+                'classification': self._parse_classification(item['Name']),
+                'start': start,
                 'end': {
-                    'date': event.end.date(),
-                    'time': event.end.time(),
+                    'date': start['date'],
+                    'time': None,
                     'note': ''
                 },
-                'all_day': event.all_day,
-                'location': {
-                    'name': '',
-                    'address': event.location,
-                    'neighborhood': ''
-                },
-                'documents': [],
-                'sources': [{
-                    'url': event.url,
-                    'note': ''
-                }]
+                'all_day': False,
+                'location': self._parse_location(item),
+                'sources': self._parse_sources(item),
+                'documents': self._parse_documents(item)
             }
+
+            data['status'] = self._generate_status(data, item['Meeting Time'])
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, desc.group(0))
             yield data
 
-    @staticmethod
-    def _parse_classification(name):
+    def _parse_documents(self, item):
         """
-        Parse or generate classification (e.g. public health, education, etc).
+        Parse meeting minutes and agenda if available.
         """
-        if 'BOARD' in name.upper():
+        documents = []
+        for doc in ['Agenda', 'Minutes', 'Video', 'ePacket']:
+            if isinstance(item.get(doc), dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': item[doc].get('label', doc)})
+        return documents
+
+    def _parse_classification(self, name):
+        if 'board' in name.lower():
             return BOARD
-        if 'COMMITTEE' in name.upper():
+        elif 'committee' in name.lower():
             return COMMITTEE
         return NOT_CLASSIFIED
+
+    def _parse_location(self, item):
+        """
+        Parse location
+        """
+        addr_str = item.get('Meeting Location', '')
+        if 'water board building' in addr_str.lower():
+            return {
+                'name': 'Water Board Building',
+                'address': '735 Randolph St Detroit, MI 48226',
+                'neighborhood': '',
+            }
+        return {
+            'name': '',
+            'address': addr_str,
+            'neighborhood': '',
+        }
+
+    def _parse_start(self, item):
+        """
+        Parse start date and time.
+        """
+        time_str = item.get('Meeting Time', None)
+        date_str = item.get('Meeting Date', None)
+        if time_str == 'Canceled' or not time_str:
+            dt = datetime.strptime(date_str, '%m/%d/%Y')
+            return {'date': dt.date(), 'time': None, 'note': ''}
+        else:
+            dt_str = '{} {}'.format(date_str, time_str)
+            dt = datetime.strptime(dt_str, '%m/%d/%Y %I:%M %p')
+            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+
+    def _parse_sources(self, item):
+        """
+        Parse sources.
+        """
+        try:
+            url = item['Name']['url']
+        except Exception:
+            url = 'https://glwater.legistar.com/Calendar.aspx'
+        return [{'url': url, 'note': ''}]
