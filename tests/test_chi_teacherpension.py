@@ -4,13 +4,13 @@ import pytest
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import BOARD, CONFIRMED, TENTATIVE
+from city_scrapers.constants import BOARD, TENTATIVE
 from city_scrapers.spiders.chi_teacherpension import ChiTeacherPensionSpider
 
-freezer = freeze_time('2018-10-30 12:00:00')
+freezer = freeze_time('2018-12-30')
 freezer.start()
 
-test_response = file_response('files/chi_teacherpension.htm')
+test_response = file_response('files/chi_teacherpension.html')
 spider = ChiTeacherPensionSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 
@@ -22,15 +22,15 @@ def test_name():
 
 
 def test_start_time():
-    assert parsed_items[0]['start'] == {'date': date(2018, 11, 13), 'time': time(9, 30), 'note': ''}
+    assert parsed_items[0]['start'] == {'date': date(2019, 1, 17), 'time': time(9, 30), 'note': ''}
 
 
 def test_end_time():
-    assert parsed_items[0]['end'] == {'date': date(2018, 11, 13), 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] == {'date': date(2019, 1, 17), 'time': None, 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == ('chi_teacherpension/201811130930/' 'x/regular_board_meeting')
+    assert parsed_items[0]['id'] == 'chi_teacherpension/201901170930/x/regular_board_meeting'
 
 
 def test_classification():
@@ -39,18 +39,13 @@ def test_classification():
 
 def test_status():
     assert parsed_items[0]['status'] == TENTATIVE
-    assert parsed_items[4]['status'] == CONFIRMED
-    assert parsed_items[5]['status'] == TENTATIVE
 
 
 def test_documents():
     assert parsed_items[0]['documents'] == []
-    assert parsed_items[2]['documents'] == [{
-        'note': 'Meeting Agenda - November 1',
-        'url': (
-            'https://www.ctpf.org/sites/main/files/'
-            'file-attachments/communications_committee_meeting.pdf'
-        )
+    assert parsed_items[18]['documents'] == [{
+        'note': 'Meeting Agenda',
+        'url': 'https://www.ctpf.org/sites/main/files/file-attachments/010419_rtw_agenda.pdf'
     }]
 
 
