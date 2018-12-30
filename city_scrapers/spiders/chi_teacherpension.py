@@ -31,19 +31,27 @@ class ChiTeacherPensionSpider(Spider):
             group_name = self._parse_name(meeting_group)
             if 'minutes' in group_name.lower():
                 continue
-            # Go through each sibling to get the next paragraph tag
+            # Go through each sibling to get the next ul tag
             next_sib = meeting_group.xpath('following-sibling::*[1]')
-            while len(next_sib) and next_sib[0].root.tag == 'ul':
+            while len(next_sib) and next_sib[0].root.tag in ['p', 'ul']:
                 for item in next_sib.xpath('li'):
                     item_text = item.xpath('text()').extract_first()
-                    date_obj, time_obj = self._parse_datetime(item_text)
+                    date_obj, start_time_obj, end_time_obj = self._parse_datetime(item_text)
                     data = {
                         '_type': 'event',
                         'name': group_name,
                         'description': '',
                         'classification': self._parse_classification(group_name),
-                        'start': self._parse_start(date_obj, time_obj),
-                        'end': self._parse_end(date_obj),
+                        'start': {
+                            'date': date_obj,
+                            'time': start_time_obj or time(9, 30),
+                            'note': '',
+                        },
+                        'end': {
+                            'date': date_obj,
+                            'time': end_time_obj,
+                            'note': '',
+                        },
                         'all_day': False,
                         'location': LOCATION,
                         'sources': self._parse_sources(response),
@@ -51,8 +59,8 @@ class ChiTeacherPensionSpider(Spider):
                     }
                     data['id'] = self._generate_id(data)
                     data['status'] = self._generate_status(data)
-                    next_sib = next_sib.xpath('following-sibling::*[1]')
                     yield data
+                next_sib = next_sib.xpath('following-sibling::*[1]')
 
     def _parse_name(self, meeting_group):
         """
@@ -87,30 +95,21 @@ class ChiTeacherPensionSpider(Spider):
 
         if time_str:
             time_str = re.sub(date_clean_re, '', time_str)
-            time_obj = datetime.strptime(time_str.strip(), '%I:%M %p').time()
+            meridian = re.search(r'[a-zA-Z]+', time_str).group()
+            time_str_matches = re.findall(r'[\d:]+', time_str)
+
+            start_time_obj = datetime.strptime(
+                '{} {}'.format(time_str_matches[0], meridian), '%I:%M %p'
+            ).time()
+            end_time_obj = None
+            if len(time_str_matches) > 1:
+                end_time_obj = datetime.strptime(
+                    '{} {}'.format(time_str_matches[1], meridian), '%I:%M %p'
+                ).time()
         else:
-            time_obj = None
-        return date_obj, time_obj
-
-    def _parse_start(self, date_obj, time_obj):
-        """
-        Parse start date and time.
-        """
-        return {
-            'date': date_obj,
-            'time': time_obj or time(9, 30),
-            'note': '',
-        }
-
-    def _parse_end(self, date_obj):
-        """
-        Parse end date and time.
-        """
-        return {
-            'date': date_obj,
-            'time': None,
-            'note': '',
-        }
+            start_time_obj = None
+            end_time_obj = None
+        return date_obj, start_time_obj, end_time_obj
 
     def _parse_documents(self, item):
         if not item or len(item.xpath('./a')) == 0:
