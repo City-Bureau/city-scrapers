@@ -36,6 +36,8 @@ class DetBrownfieldRedevelopmentAuthoritySpider(Spider):
         for i, meeting in enumerate(('Board of Directors', 'Community Advisory Committee')):
             data = self._set_meeting_defaults(response, meeting)
             data['start'] = self._parse_start(next_meeting_text, i)
+            if data['start'] is None:
+                continue
             data['documents'] = []
             data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
@@ -50,11 +52,13 @@ class DetBrownfieldRedevelopmentAuthoritySpider(Spider):
     def _parse_start(self, date_time_text, meeting_number):
         time_match = self._parse_time(date_time_text)
         date_match = self._parse_date(date_time_text)
+        if date_match is None:
+            return None
         try:
             dt = parse(date_match.group(1) + ' ' + time_match[meeting_number][0], fuzzy=True)
             return {'date': dt.date(), 'time': dt.time(), 'note': ''}
         except ValueError:
-            return {'date': None, 'time': None, 'note': ''}
+            return None
 
     def _parse_prev_meetings(self, response):
         # there are only documents for prev meetings,
