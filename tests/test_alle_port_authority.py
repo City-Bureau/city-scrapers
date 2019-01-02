@@ -1,10 +1,11 @@
 import datetime
 
 import pytest
+from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.spiders.alle_port_authority import AllePortAuthoritySpider
-
+freezer = freeze_time('2018-12-01')
+freezer.start()
 test_response = file_response(
     'files/alle_port_authority_MeetingAgendasResolutions.html',
     url=(
@@ -13,8 +14,11 @@ test_response = file_response(
     )
 )
 
+from city_scrapers.spiders.alle_port_authority import AllePortAuthoritySpider  # noqa isort:skip
+
 spider = AllePortAuthoritySpider()
 parsed_items = [item for item in spider.parse(test_response)]
+freezer.stop()
 
 
 def test_name():
