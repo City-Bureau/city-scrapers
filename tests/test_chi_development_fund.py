@@ -14,11 +14,11 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_meeting_count():
-    assert len(parsed_items) == 57
+    assert len(parsed_items) == 42
 
 
 def test_unique_id_count():
-    assert len(set([item['id'] for item in parsed_items])) == 57
+    assert len(set([item['id'] for item in parsed_items])) == 42
 
 
 def test__type():
@@ -30,20 +30,14 @@ def test_name():
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == (
-        'The Chicago City Council established the Chicago Development Fund (CDF) in July 2005. CDF '
-        'is an Illinois not-for-profit corporation that allocates New Markets Tax Credits to help '
-        'stimulate private sector investment in economically distressed communities. The tax '
-        'credits are converted into investment capital for community and economic development '
-        'projects in qualified low-income census tracts.'
-    )
+    assert parsed_items[0]['event_description'] == ''
 
 
 def test_start():
     assert parsed_items[0]['start'] == {
         'date': date(2018, 4, 18),
         'time': None,
-        'note': 'see agenda document for time'
+        'note': 'See agenda for time'
     }
 
 
@@ -82,11 +76,7 @@ def test_documents():
             'https://www.cityofchicago.org/content/dam/city/depts/dcd/agendas/CDF_Advisor_Board_Agenda_April_2018.pdf',  # noqa
         'note': 'Agenda'
     }]
-    assert parsed_items[-1]['documents'] == [{
-        'url':
-            'https://www.cityofchicago.org/content/dam/city/depts/dcd/supp_info/agendas/CDF_GB_Agenda_April2009.pdf',  # noqa
-        'note': 'Agenda'
-    }]
+    assert parsed_items[-1]['documents'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)
