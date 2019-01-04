@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 import dateutil.parser
 
 from city_scrapers.constants import COMMISSION
@@ -22,7 +24,6 @@ class ChiDevelopmentFundSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        description = self.parse_description(response)
         columns = self.parse_meetings(response)
         for column in columns:
             meeting_date_xpath = """text()[normalize-space()]|
@@ -31,13 +32,20 @@ class ChiDevelopmentFundSpider(Spider):
             meetings = column.xpath(meeting_date_xpath).extract()
             meetings = self.format_meetings(meetings)
             for meeting in meetings:
-                name, start = self._parse_start(meeting)
+                start = self._parse_start(meeting)
+                if start is None:
+                    continue
                 data = {
                     '_type': 'event',
-                    'name': "Chicago Development Fund: {}".format(name),
-                    'event_description': description,
+                    'name': "Chicago Development Fund: {}".format(self._parse_name(meeting)),
+                    'event_description': '',
                     'classification': COMMISSION,
                     'start': start,
+                    'end': {
+                        'date': start['date'],
+                        'time': None,
+                        'note': ''
+                    },
                     'all_day': False,
                     'location': {
                         'neighborhood': '',
@@ -50,7 +58,6 @@ class ChiDevelopmentFundSpider(Spider):
                     }],
                     'documents': self._parse_documents(column, meeting, response),
                 }
-                data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
                 data['id'] = self._generate_id(data)
                 data['status'] = self._generate_status(data)
                 yield data
@@ -63,12 +70,6 @@ class ChiDevelopmentFundSpider(Spider):
         return meetings
 
     @staticmethod
-    def parse_description(response):
-        desc_xpath = '//p[contains(text(), "The Chicago City Council established")]//text()'
-        description = ' '.join(t.strip() for t in response.xpath(desc_xpath).extract())
-        return description
-
-    @staticmethod
     def parse_meetings(response):
         meeting_xpath = """
                 //td[preceding::strong[1]/text()[
@@ -77,40 +78,33 @@ class ChiDevelopmentFundSpider(Spider):
         return response.xpath(meeting_xpath)
 
     @staticmethod
+    def _parse_name(meeting):
+        if 'advisory' in meeting.lower():
+            return 'Advisory Board'
+        return 'Board of Directors'
+
+    @staticmethod
     def _parse_start(meeting):
         # Not all dates on site a valid dates (e.g. Jan. 2011), so try to parse
         # and return none if not possible
-        try:
-            dt, other_text = dateutil.parser.parse(meeting, fuzzy_with_tokens=True)
-            # based on Agenda time seems to vary but time not stated desc
-            name = [s.strip() for s in other_text if s.strip()]
-            return (
-                ' '.join(name),
-                {
-                    'date': dt.date(),
-                    'time': None,
-                    'note': 'see agenda document for time'
-                },
-            )
-        except TypeError:
-            name = ' '.join(meeting.split(' ')[:-3])
-            return (
-                name,
-                {
-                    'date': None,
-                    'time': None,
-                    'note': 'see agenda document for time'
-                },
-            )
+        clean_str = re.sub(r'[\.,]', '', meeting)
+        date_str = re.search(r'[a-zA-z]{1,10} \d{1,2} \d{4}', clean_str)
+        if not date_str:
+            return
+        dt = dateutil.parser.parse(date_str.group())
+        return {
+            'date': dt.date(),
+            'time': None,
+            'note': 'See agenda for time',
+        }
 
     def _parse_documents(self, item, meeting, response):
         # Find <a> tags where 1st, non-blank, preceding text = meeting (e.g. 'Jan 16')
         # site is pretty irregular and text is sometimes nested, so check siblings children
         # for meeting name if not found for sibling
         anchor_xpath = """
-            //a[preceding-sibling::text()[normalize-space()][1][contains(., "{}")]]|
-            //a[preceding-sibling::*//text()[normalize-space()][1][contains(., "{}")]]
-        """.format(meeting, meeting)
+            //a[preceding-sibling::text()[normalize-space()][1][contains(., "{}")]]
+        """.format(meeting)
         documents = item.xpath(anchor_xpath)
         if len(documents) >= 0:
             return [{
