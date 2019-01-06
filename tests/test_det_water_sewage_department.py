@@ -44,8 +44,8 @@ def test_status():
 def test_location():
     assert parsed_items[3]['location'] == {
         'neighborhood': '',
-        'name': '',
-        'address': '5th Floor Board Room, Water Board Building\n--em--Regular Meeting--em--'
+        'name': 'Water Board Building',
+        'address': '5th Floor Board Room 735 Randolph St Detroit, MI 48226'
     }
 
 

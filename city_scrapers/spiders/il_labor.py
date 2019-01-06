@@ -77,8 +77,12 @@ class IlLaborSpider(Spider):
         addr_in_row = item.xpath('following-sibling::*//p/text()')
         addr_next_row = item.xpath('../following-sibling::div[1]//p/text()')
         address_list = addr_in_row if len(addr_in_row) > 0 else addr_next_row
-        address = ' Or '.join([a.replace('\xa0', '').strip() for a in address_list.extract()])
-        return {'url': '', 'address': address, 'name': ''}
+        chi_address_list = [
+            addr.replace('\xa0', '').strip()
+            for addr in address_list.extract()
+            if 'chicago' in addr.lower()
+        ]
+        return {'url': '', 'address': chi_address_list[0], 'name': ''}
 
     def _parse_name(self, item):
         """

@@ -76,7 +76,13 @@ class CookForestPreservesSpider(Spider):
         """
         Parse or generate location.
         """
-        address = re.sub(r'\s+', ' ', item['Meeting Location']).strip()
+        address = item.get('Meeting Location', None)
+        if address:
+            address = re.sub(
+                r'\s+',
+                ' ',
+                re.sub(r'(\n)|(--em--)|(--em)|(em--)', ' ', address),
+            ).strip()
         return {'address': address, 'name': '', 'neighborhood': ''}
 
     def _parse_start_datetime(self, item):

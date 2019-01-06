@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 from datetime import datetime
 
 import dateutil
@@ -79,9 +80,29 @@ class DetWaterSewageDepartmentSpider(Spider):
         """
         Parse location
         """
+        address = item.get('Meeting Location', None)
+        if address:
+            address = re.sub(
+                r'\s+',
+                ' ',
+                re.sub(r'(\n)|(--em--)|(--em)|(em--)', ' ', address),
+            ).strip()
+
+        if 'water board' in address.lower():
+            addr_split = address.split(', ')
+            water_board_address = '735 Randolph St Detroit, MI 48226'
+            if 'room' in addr_split[0].lower():
+                address = '{} {}'.format(addr_split[0], water_board_address)
+            else:
+                address = water_board_address
+            return {
+                'name': 'Water Board Building',
+                'address': address,
+                'neighborhood': '',
+            }
         return {
             'name': '',
-            'address': item.get('Meeting Location', None),
+            'address': address,
             'neighborhood': '',
         }
 
