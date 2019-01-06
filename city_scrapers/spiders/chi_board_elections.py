@@ -174,14 +174,11 @@ class ChiBoardElectionsSpider(Spider):
                 minuteslink = re.search(r'"\/.+"', meeting).group(0).strip('"')
                 return {
                     'url': "https://app.chicagoelections.com{}".format(minuteslink),
-                    'note': 'Regular Board Meeting Agenda'
+                    'note': 'Minutes'
                 }
             elif "youtu" in meeting:
                 videolink = re.search(r'"h.+"', meeting).group(0).strip('"')
-                return {'url': videolink, 'note': "Regular Board Meeting Video"}
+                return {'url': videolink, 'note': "Video"}
         else:
             link = response.xpath("//a/@href").extract()[2]
-            return [{
-                'url': "https://app.chicagoelections.com{}".format(link),
-                'note': 'Regular Board Meeting Agenda'
-            }]
+            return [{'url': "https://app.chicagoelections.com{}".format(link), 'note': 'Agenda'}]

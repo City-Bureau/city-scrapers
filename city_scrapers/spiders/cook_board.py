@@ -3,7 +3,7 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-
+import re
 from datetime import datetime, timedelta
 
 from legistar.events import LegistarEventsScraper
@@ -81,7 +81,13 @@ class CookBoardSpider(Spider):
         """
         Parse or generate location.
         """
-        address = item['Meeting Location'].split('/n')[0]
+        address = item.get('Meeting Location', None)
+        if address:
+            address = re.sub(
+                r'\s+',
+                ' ',
+                re.sub(r'(\n)|(--em--)|(--em)|(em--)', ' ', address),
+            ).strip()
         return {'address': address, 'name': '', 'neighborhood': ''}
 
     def _parse_all_day(self, item):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 from datetime import datetime
 
 from legistar.events import LegistarEventsScraper
@@ -77,8 +78,14 @@ class DetGreatLakesWaterAuthoritySpider(Spider):
         """
         Parse location
         """
-        addr_str = item.get('Meeting Location', '')
-        if 'water board building' in addr_str.lower():
+        address = item.get('Meeting Location', '')
+        if address:
+            address = re.sub(
+                r'\s+',
+                ' ',
+                re.sub(r'(\n)|(--em--)|(--em)|(em--)', ' ', address),
+            ).strip()
+        if 'water board building' in address.lower():
             return {
                 'name': 'Water Board Building',
                 'address': '735 Randolph St Detroit, MI 48226',
@@ -86,7 +93,7 @@ class DetGreatLakesWaterAuthoritySpider(Spider):
             }
         return {
             'name': '',
-            'address': addr_str,
+            'address': address,
             'neighborhood': '',
         }
 

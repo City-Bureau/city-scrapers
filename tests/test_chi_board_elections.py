@@ -59,10 +59,9 @@ def test_sources():
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-        'note': 'Regular Board Meeting Agenda',
+        'note': 'Agenda',
         'url':
-            'https://app.chicagoelections.com/documents/'
-            'general/Standard-Board-Meeting-Agenda.pdf'
+            'https://app.chicagoelections.com/documents/general/Standard-Board-Meeting-Agenda.pdf'
     }]
 
 
@@ -131,12 +130,17 @@ def test_sources_prev():
 
 
 def test_documents_prev():
-    assert parsed_items_prev[4]['documents'] == \
-           [{'url':
-            'https://app.chicagoelections.com/documents/general/BoardMeetingMinutes-2018-10-30.pdf',
-             'note': 'Regular Board Meeting Agenda'},
-            {'note': 'Regular Board Meeting Video', 'url': 'https://youtu.be/AKFNigWEkc0'}
-            ]
+    assert parsed_items_prev[4]['documents'] == [
+        {
+            'url':
+                'https://app.chicagoelections.com/documents/general/BoardMeetingMinutes-2018-10-30.pdf',  # noqa
+            'note': 'Minutes'
+        },
+        {
+            'note': 'Video',
+            'url': 'https://youtu.be/AKFNigWEkc0'
+        },
+    ]
 
 
 @pytest.mark.parametrize('item', parsed_items_prev)
