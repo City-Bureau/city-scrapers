@@ -85,7 +85,7 @@ class CookLandbankSpider(Spider):
         if not item.css('div.eventon_list_event p.no_events'):
             start_dict = self._parse_start(item)
             location = self._parse_location(item)
-            if start_dict is None or location['address'] is None:
+            if start_dict is None:
                 yield
             data = {
                 '_type': 'event',
@@ -112,8 +112,9 @@ class CookLandbankSpider(Spider):
             yield start_date + timedelta(n)
 
     def stack_dates(self, time_horizon):
-        min_date = datetime.now() - timedelta(days=time_horizon)
-        max_date = min_date + timedelta(days=time_horizon)
+        today = datetime.now()
+        min_date = today - timedelta(days=time_horizon)
+        max_date = today + timedelta(days=time_horizon)
         dates = [date for date in self.daterange(min_date, max_date)]
         return dates
 
@@ -133,6 +134,7 @@ class CookLandbankSpider(Spider):
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
+        default_address = '69 W Washington St Chicago, IL 60602'
         street_address = self._parse_street_address(item)
         location_detail = item.css(
             'span[class=\'evcal_desc evo_info \']::attr(data-location_name)'
@@ -146,7 +148,7 @@ class CookLandbankSpider(Spider):
         return {
             'url': 'http://www.cookcountylandbank.org/',
             'name': None,
-            'address': address,
+            'address': address or default_address,
             'coordinates': {
                 'latitude': None,
                 'longitude': None,
