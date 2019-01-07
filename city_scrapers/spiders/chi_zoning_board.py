@@ -29,6 +29,8 @@ class ChiZoningBoardSpider(Spider):
             year = column.xpath('preceding::strong[1]/text()').re_first(r'(\d{4})(.*)')
             meetings = column.xpath('text()[normalize-space()]').extract()
             for meeting in meetings:
+                if not meeting.strip():
+                    continue
                 data = {
                     '_type': 'event',
                     'name': 'Zoning Board of Appeals',
