@@ -1,22 +1,21 @@
 from datetime import date, time
 
 import pytest
-# Adapted from test_chi_parks.py
 from freezegun import freeze_time
-
 from tests.utils import file_response
+
 from city_scrapers.constants import CANCELED, COMMITTEE
 from city_scrapers.spiders.wayne_building_authority import WayneBuildingAuthoritySpider
-
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
-    'files/wayne_building_authority_meetings.html', url='https://www.waynecounty.com/boards/buildingauthority/meetings.aspx')
+    'files/wayne_building_authority_meetings.html',
+    url='https://www.waynecounty.com/boards/buildingauthority/meetings.aspx'
+)
 spider = WayneBuildingAuthoritySpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
-
 
 # PARAMETRIZED TESTS
 
@@ -37,7 +36,7 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_name(item):
-    assert item['name'] == 'Wayne County Building Authority'
+    assert item['name'] == 'Building Authority'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -86,7 +85,7 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[-1]['id'] == 'wayne_building_authority/201801171000/x/wayne_county_building_authority'
+    assert parsed_items[-1]['id'] == 'wayne_building_authority/201801171000/x/building_authority'
 
 
 def test_status():

@@ -4,12 +4,12 @@
 # MIXINS ARE STORED IN /city-scrapers/city-scrapers/mixins
 # YOU CAN OVERRIDE THE MIXIN HERE BY CREATING YOUR OWN DEFINITION.
 
-from city_scrapers.spider import Spider
 from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
+from city_scrapers.spider import Spider
 
 
 class WayneWaysMeansSpider(WayneCommissionMixin, Spider):
     name = 'wayne_ways_means'
-    agency_name = 'Wayne County Government Ways and Means Committee'
+    agency_name = 'Wayne County Government'
     start_urls = ['https://www.waynecounty.com/elected/commission/ways-means.aspx']
     meeting_name = 'Ways and Means Committee'

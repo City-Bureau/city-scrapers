@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-from datetime import datetime, timedelta, time
+from datetime import datetime, time, timedelta
 
 from city_scrapers.constants import COMMITTEE
 from city_scrapers.spider import Spider
@@ -8,7 +8,7 @@ from city_scrapers.spider import Spider
 
 class ChiSchoolCommunityActionCouncilSpider(Spider):
     name = 'chi_school_community_action_council'
-    agency_name = 'Chicago Public Schools Community Action Councils'
+    agency_name = 'Chicago Public Schools'
     timezone = 'America/Chicago'
     allowed_domains = ['cps.edu']
     start_urls = ['http://cps.edu/FACE/Pages/CAC.aspx']
@@ -32,11 +32,9 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
                 for item in response_list.css('li'):
                     name_link = item.css('strong').css('a::attr(href)')
                     try:
-                        if name_link.extract()[0] == (
-                            'http://www.humboldtparkportal.org/'
-                        ):
+                        if name_link.extract()[0] == ('http://www.humboldtparkportal.org/'):
                             continue
-                    except:
+                    except Exception:
                         pass
                     data = {
                         '_type': 'event',
@@ -51,7 +49,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
                     }
 
                     data['id'] = self._generate_id(data)
-                    data['status'] = self._generate_status(data, text='')
+                    data['status'] = self._generate_status(data)
                     data['end'] = self._parse_end(data['start'])
                     yield data
             month_counter += 1
@@ -63,8 +61,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         if len(item.css('li').css('strong::text').extract()) == 1:
             community_name = item.css('li').css('strong::text').extract()
         else:
-            community_name = item.css('li').css(
-                'strong').css('a::text').extract()
+            community_name = item.css('li').css('strong').css('a::text').extract()
         if len(community_name) > 0:
             return community_name[0]
 
@@ -75,7 +72,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         CAC_NAME = 'Community Action Council'
         community_area = self._parse_community_area(item)
         if community_area:
-            return f'{community_area} {CAC_NAME}'
+            return '{} {}'.format(community_area, CAC_NAME)
         return CAC_NAME
 
     @staticmethod
@@ -128,7 +125,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
                     week_counter += 1
                     if week_counter == int(week_count):
                         return current_date
-            except ValueError as e:
+            except ValueError:
                 break
 
     def _parse_start(self, item, month_counter):
@@ -143,16 +140,8 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         week_count = source[0].strip()[0]
         if week_count.isdigit():
             meeting_date = self.count_days(day, week_count, month_counter)
-            return {
-                'date': meeting_date.date(),
-                'time': self.parse_time(source),
-                'note': ''
-            }
-        return {
-            'date': None,
-            'time': None,
-            'note': ''
-        }
+            return {'date': meeting_date.date(), 'time': self.parse_time(source), 'note': ''}
+        return {'date': None, 'time': None, 'note': ''}
 
     def _parse_end(self, start):
         """
@@ -160,13 +149,9 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         """
         try:
             start_datetime = datetime.combine(start['date'], start['time'])
-        except TypeError: 
+        except TypeError:
             # start date or time is None
-            return {
-                'date': start['date'],
-                'time': None,
-                'note': 'No start or end time available'
-            }
+            return {'date': start['date'], 'time': None, 'note': 'No start or end time available'}
         else:
             end_datetime = start_datetime + timedelta(hours=3)
             return {
@@ -181,11 +166,10 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         left blank and will be geocoded later.
         """
         source = item.css('li::text').extract()[1]
+        address = source[source.find("(") + 1:source.find(")")]
         return {
-            'name': source[
-                source.find('at') + 2:source.find('(')
-            ].replace('the', '').strip(),
-            'address': source[source.find("(")+1:source.find(")")],
+            'name': source[source.find('at') + 2:source.find('(')].replace('the', '').strip(),
+            'address': '{} Chicago, IL'.format(address),
             'neighborhood': self._parse_community_area(item)
         }
 
@@ -199,11 +183,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
             'url': response.url,
             'note': 'CAC Meetings Website',
         }]
-        neighborhood_url = item.css('li').css('strong').css(
-            'a::attr(href)').extract_first()
+        neighborhood_url = item.css('li').css('strong').css('a::attr(href)').extract_first()
         if neighborhood_url:
-            sources.append({
-                'url': neighborhood_url,
-                'note': "Neighborhood's Website"
-            })
+            sources.append({'url': neighborhood_url, 'note': "Neighborhood's Website"})
         return sources

@@ -4,18 +4,19 @@
 # MIXINS ARE STORED IN /city-scrapers/city-scrapers/mixins
 # YOU CAN OVERRIDE THE MIXIN HERE BY CREATING YOUR OWN DEFINITION.
 
-import re
 from datetime import datetime
+
 from dateutil.parser import parse as dateparse
-from city_scrapers.spider import Spider
+
 from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
+from city_scrapers.spider import Spider
 
 
 class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
     name = 'wayne_building_authority'
-    agency_name = 'Wayne County Government Building Authority'
+    agency_name = 'Wayne County Government'
     start_urls = ['https://www.waynecounty.com/boards/buildingauthority/meetings.aspx']
-    meeting_name = 'Wayne County Building Authority'
+    meeting_name = 'Building Authority'
 
     # Override the mixin for any unique attributes.
     location = {
@@ -26,7 +27,9 @@ class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
 
     def _parse_entries(self, response):
         current_year = datetime.now().year
-        current_year_non_empty_rows = response.xpath('//section[contains(.,"%s")]//tbody/tr[child::td/text()]' %current_year)
+        current_year_non_empty_rows = response.xpath(
+            '//section[contains(.,"%s")]//tbody/tr[child::td/text()]' % current_year
+        )
 
         return current_year_non_empty_rows
 

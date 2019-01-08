@@ -1,8 +1,9 @@
-from datetime import datetime, time, date
+from datetime import date, datetime, time
+
 import pytest
 from freezegun import freeze_time
-
 from tests.utils import file_response
+
 from city_scrapers.constants import COMMITTEE
 from city_scrapers.spiders.chi_school_community_action_council import (
     ChiSchoolCommunityActionCouncilSpider
@@ -11,20 +12,16 @@ from city_scrapers.spiders.chi_school_community_action_council import (
 freezer = freeze_time('2018-06-01 12:00:01')
 freezer.start()
 test_response = file_response(
-    'files/chi_school_community_action_council_CAC.html',
-    url='http://cps.edu/FACE/Pages/CAC.aspx'
+    'files/chi_school_community_action_council_CAC.html', url='http://cps.edu/FACE/Pages/CAC.aspx'
 )
 spider = ChiSchoolCommunityActionCouncilSpider()
-parsed_items = [
-    item for item in spider.parse(test_response)
-    if isinstance(item, dict)
-]
+parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 current_month_number = datetime.today().month
 freezer.stop()
 
 
 def test_num_items():
-    assert len(parsed_items) == (13 - current_month_number)*8
+    assert len(parsed_items) == (13 - current_month_number) * 8
 
 
 def test_name():
@@ -32,11 +29,7 @@ def test_name():
 
 
 def test_start_time():
-    EXPECTED_START = {
-        'date': date(2018, 6, 12),
-        'time': time(17, 30),
-        'note': ''
-    }
+    EXPECTED_START = {'date': date(2018, 6, 12), 'time': time(17, 30), 'note': ''}
     assert parsed_items[0]['start'] == EXPECTED_START
 
 
@@ -58,10 +51,10 @@ def test_id():
 
 def test_location():
     assert parsed_items[0]['location'] == {
-            'name': 'Michele Clark HS',
-            'address': '5101 W Harrison St.',
-            'neighborhood': 'Austin'
-        }
+        'name': 'Michele Clark HS',
+        'address': '5101 W Harrison St. Chicago, IL',
+        'neighborhood': 'Austin'
+    }
 
 
 def test_sources():

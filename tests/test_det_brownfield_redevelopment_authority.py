@@ -1,21 +1,28 @@
 from datetime import date, time
 
 import pytest
-
 # Shared properties between two different page / meeting types
 import scrapy
 from freezegun import freeze_time
-
-from city_scrapers.spiders.det_brownfield_redevelopment_authority import DetBrownfieldRedevelopmentAuthoritySpider
 from tests.utils import file_response
 
-LOCATION = {'neighborhood': '', 'name': 'DEGC, Guardian Building', 'address': '500 Griswold, Suite 2200, Detroit'}
+from city_scrapers.spiders.det_brownfield_redevelopment_authority import (
+    DetBrownfieldRedevelopmentAuthoritySpider
+)
+
+LOCATION = {
+    'neighborhood': '',
+    'name': 'DEGC, Guardian Building',
+    'address': '500 Griswold, Suite 2200, Detroit'
+}
 
 DBRA = 'Board of Directors'
 DBRA_CAC = 'Community Advisory Committee'
 
-test_response = file_response('files/det_brownfield_redevelopment_authority.html',
-                              'http://www.degc.org/public-authorities/dbra/')
+test_response = file_response(
+    'files/det_brownfield_redevelopment_authority.html',
+    'http://www.degc.org/public-authorities/dbra/'
+)
 freezer = freeze_time('2018-07-28 12:00:01')
 spider = DetBrownfieldRedevelopmentAuthoritySpider()
 freezer.start()
@@ -47,29 +54,20 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 7, 25),
-        'time': time(16, 00),
-        'note': ''
-    }
-    assert parsed_items[1]['start'] == {
-        'date': date(2018, 7, 25),
-        'time': time(17, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 7, 25), 'time': time(16, 00), 'note': ''}
+    assert parsed_items[1]['start'] == {'date': date(2018, 7, 25), 'time': time(17, 00), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': None,
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_brownfield_redevelopment_authority/201807251600/x/board_of_directors'
-    assert parsed_items[1]['id'] == 'det_brownfield_redevelopment_authority/201807251700/x/community_advisory_committee'
+    assert parsed_items[0][
+        'id'] == 'det_brownfield_redevelopment_authority/201807251600/x/board_of_directors'
+    assert parsed_items[
+        1]['id'
+           ] == 'det_brownfield_redevelopment_authority/201807251700/x/community_advisory_committee'
 
 
 def test_status():
@@ -81,9 +79,10 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [
-        {'url': 'http://www.degc.org/public-authorities/dbra/', 'note': ''}
-    ]
+    assert parsed_items[0]['sources'] == [{
+        'url': 'http://www.degc.org/public-authorities/dbra/',
+        'note': ''
+    }]
 
 
 def test_documents():
@@ -106,10 +105,14 @@ def test__type(item):
 
 
 # # previous meetings e.g. http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/
-test_prev_response = file_response('files/det_brownfield_redevelopment_authority_prev.html',
-                                   'http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/')
-parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)]
-parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
+test_prev_response = file_response(
+    'files/det_brownfield_redevelopment_authority_prev.html',
+    'http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/'
+)
+parsed_prev_items = [
+    item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)
+]
+parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['id'], reverse=True)
 
 
 def test_request_count():
@@ -131,7 +134,7 @@ def test_prev_meeting_count():
 
 
 def test_prev_name():
-    assert parsed_prev_items[0]['name'] == DBRA
+    assert parsed_prev_items[0]['name'] == DBRA_CAC
 
 
 def test_prev_description():
@@ -139,20 +142,17 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == {
-        'date': date(2018, 6, 27), 'time': None, 'note': ''
-    }
+    assert parsed_prev_items[0]['start'] == {'date': date(2018, 6, 27), 'time': None, 'note': ''}
 
 
 def test_prev_end():
-    assert parsed_prev_items[0]['end'] == {
-        'date': None, 'time': None, 'note': ''
-    }
+    assert parsed_prev_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_prev_id():
-    assert parsed_prev_items[0]['id'] \
-           == 'det_brownfield_redevelopment_authority/201806270000/x/board_of_directors'
+    assert parsed_prev_items[0][
+        'id'
+    ] == 'det_brownfield_redevelopment_authority/201806270000/x/community_advisory_committee'  # noqa
 
 
 def test_prev_status():
@@ -164,23 +164,23 @@ def test_prev_location():
 
 
 def test_prev_sources():
-    assert parsed_prev_items[0]['sources'] == [
-        {'url': 'http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/', 'note': ''}
-    ]
+    assert parsed_prev_items[0]['sources'] == [{
+        'url': 'http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/',
+        'note': ''
+    }]
 
 
 def test_prev_documents():
-    assert parsed_prev_items[0]['documents'] == [
-        {
-            'url': 'http://www.degc.org/wp-content/uploads/DBRA-062718-Regular-Meeting-Agenda-Only.pdf',
-            'note': 'agenda',
-        }
-    ]
+    assert parsed_prev_items[0]['documents'] == [{
+        'url':
+            'http://www.degc.org/wp-content/uploads/DBRACAC-062718-Regular-Meeting-Cancellation.pdf',  # noqa
+        'note': 'regular meeting cancellation notice',
+    }]
 
 
 def test_prev_classification():
-    assert parsed_prev_items[0]['classification'] == 'Board'
-    assert parsed_prev_items[1]['classification'] == 'Advisory Committee'
+    assert parsed_prev_items[0]['classification'] == 'Advisory Committee'
+    assert parsed_prev_items[1]['classification'] == 'Board'
 
 
 @pytest.mark.parametrize('item', parsed_prev_items)

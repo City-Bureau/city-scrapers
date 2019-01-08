@@ -7,7 +7,9 @@ class Command(ExistingCrawlCommand):
         if len(args) < 1:
             raise UsageError()
         elif len(args) > 1:
-            raise UsageError("running 'scrapy crawl' with more than one spider is no longer supported")
+            raise UsageError(
+                "running 'scrapy crawl' with more than one spider is no longer supported"
+            )
         spname = args[0]
 
         self.crawler_process.crawl(spname, **opts.spargs)

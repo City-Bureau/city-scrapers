@@ -5,13 +5,15 @@ from urllib.parse import parse_qsl
 import pytest
 import scrapy
 from freezegun import freeze_time
+from tests.utils import file_response
 
 from city_scrapers.constants import BOARD, NOT_CLASSIFIED
 from city_scrapers.spiders.det_general_retirement_system import DetGeneralRetirementSystemSpider
-from tests.utils import file_response
 
-test_response = file_response('files/det_general_retirement_system_meetings.html',
-                              'http://www.rscd.org/grsd/Resources/Meetings')
+test_response = file_response(
+    'files/det_general_retirement_system_meetings.html',
+    'http://www.rscd.org/grsd/Resources/Meetings'
+)
 
 spider = DetGeneralRetirementSystemSpider()
 
@@ -20,12 +22,16 @@ def test_request_count():
     requests = list(spider.parse(test_response))
     assert len(requests) == 5
 
-    calendar_events_urls = {urllib.parse.unquote(request.url) for request in requests if 'Details' in request.url}
+    calendar_events_urls = {
+        urllib.parse.unquote(request.url)
+        for request in requests
+        if 'Details' in request.url
+    }
     assert calendar_events_urls == {
-        "http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/218?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle",
-        "http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/1552?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle",
-        "http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/1285?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle",
-        "http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/223?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle",
+        "http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/218?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle",  # noqa
+        "http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/1552?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle",  # noqa
+        "http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/1285?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle",  # noqa
+        "http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/223?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle",  # noqa
     }
 
     form_requests = [request for request in requests if isinstance(request, scrapy.FormRequest)]
@@ -44,7 +50,7 @@ def test_request_count():
 
 test_detail = file_response(
     'files/det_general_retirement_system_meetings_detail.html',
-    'http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/1552?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle'
+    'http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/1552?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle'  # noqa
 )
 freezer = freeze_time('2018-07-31 12:00:01')
 freezer.start()
@@ -53,7 +59,7 @@ freezer.stop()
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Board Meeting'
+    assert parsed_items[0]['name'] == 'Board of Trustees: Board Meeting'
 
 
 def test_description():
@@ -62,19 +68,16 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 8, 1), 'time': time(10, 00), 'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 8, 1), 'time': time(10, 00), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': None, 'time': None, 'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_general_retirement_system/201808011000/x/board_meeting'
+    assert parsed_items[0][
+        'id'] == 'det_general_retirement_system/201808011000/x/board_of_trustees_board_meeting'
 
 
 def test_status():
@@ -95,7 +98,8 @@ def test_location():
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
-        'url': 'http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/1552?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle',
+        'url':
+            'http://www.rscd.org/grsd/Resources/Meetings/ctl/Details/Mid/531/ItemID/1552?ContainerSrc=[G]Containers/RSCD/Plain-NoTitle',  # noqa
         'note': ''
     }]
 

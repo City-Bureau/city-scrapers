@@ -1,22 +1,23 @@
 from datetime import date, time
 
 import pytest
-# Adapted from test_chi_parks.py
 from freezegun import freeze_time
+from tests.utils import file_response
 
 from city_scrapers.spiders.wayne_cow import WayneCommitteeWholeSpider
-from tests.utils import file_response
 
 freezer = freeze_time('2018-04-26 12:00:01')
 freezer.start()
 test_response = file_response(
-    'files/wayne_cow.html', url='https://www.waynecounty.com/elected/commission/committee-of-the-whole.aspx')
+    'files/wayne_cow.html',
+    url='https://www.waynecounty.com/elected/commission/committee-of-the-whole.aspx'
+)
 spider = WayneCommitteeWholeSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
-
 # PARAMETRIZED TESTS
+
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
@@ -73,7 +74,7 @@ def test_sources(item):
 # NON-PARAMETRIZED TESTS
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-        'note': 'agenda',
+        'note': 'Agenda',
         'url': 'https://www.waynecounty.com/documents/commission/cowmtg01-10-17.pdf',
     }]
 
@@ -91,4 +92,4 @@ def test_status():
 
 
 def test_id():
-   assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/committee_of_the_whole'
+    assert parsed_items[0]['id'] == 'wayne_cow/201801101000/x/committee_of_the_whole'

@@ -3,8 +3,9 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-
+import re
 from datetime import datetime, timedelta
+
 from legistar.events import LegistarEventsScraper
 
 from city_scrapers.constants import BOARD, COMMITTEE
@@ -13,7 +14,7 @@ from city_scrapers.spider import Spider
 
 class CookBoardSpider(Spider):
     name = 'cook_board'
-    agency_name = 'Cook County Government Board of Commissioners'
+    agency_name = 'Cook County Government'
     timezone = 'America/Chicago'
     allowed_domains = ['cook-county.legistar.com']
     start_urls = ['https://www.cook-county.legistar.com']
@@ -30,7 +31,7 @@ class CookBoardSpider(Spider):
         return self._parse_events(events)
 
     def _make_legistar_call(self, since=None):
-        les = LegistarEventsScraper(requests_per_minute=0)
+        les = LegistarEventsScraper()
         les.EVENTSPAGE = 'https://cook-county.legistar.com/Calendar.aspx'
         les.BASE_URL = 'https://cook-county.legistar.com'
         if not since:
@@ -58,21 +59,12 @@ class CookBoardSpider(Spider):
 
     def _parse_documents(self, item):
         """
-        Returns meeting details and agenda if available.
+        Returns meeting minutes and agenda if available.
         """
         documents = []
-        details = item['Meeting Details']
-        if type(details) == dict:
-            documents.append({
-                'note': 'Meeting Details',
-                'url': details['url']
-            })
-        agenda = item['Agenda']
-        if type(agenda) == dict:
-            documents.append({
-                'note': 'Agenda',
-                'url': agenda['url']
-            })
+        for doc in ['Agenda', 'Minutes', 'Video']:
+            if isinstance(item.get(doc), dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     def _parse_classification(self, name):
@@ -89,12 +81,14 @@ class CookBoardSpider(Spider):
         """
         Parse or generate location.
         """
-        address = item['Meeting Location'].split('/n')[0]
-        return {
-            'address': address,
-            'name': '',
-            'neighborhood': ''
-        }
+        address = item.get('Meeting Location', None)
+        if address:
+            address = re.sub(
+                r'\s+',
+                ' ',
+                re.sub(r'(\n)|(--em--)|(--em)|(em--)', ' ', address),
+            ).strip()
+        return {'address': address, 'name': '', 'neighborhood': ''}
 
     def _parse_all_day(self, item):
         """
@@ -106,7 +100,10 @@ class CookBoardSpider(Spider):
         """
         Parse or generate event name.
         """
-        return item['Name']['label']
+        BOARD_NAME = 'Board of Commissioners'
+        if item['Name']['label'] != BOARD_NAME:
+            return '{}: {}'.format(BOARD_NAME, item['Name']['label'])
+        return BOARD_NAME
 
     def _parse_description(self, item):
         """
@@ -131,16 +128,8 @@ class CookBoardSpider(Spider):
         """
         start_datetime = self._parse_start_datetime(item)
         if start_datetime:
-            return {
-                'date': start_datetime.date(),
-                'time': start_datetime.time(),
-                'note': ''
-            }
-        return {
-            'date': None,
-            'time': None,
-            'note': ''
-        }
+            return {'date': start_datetime.date(), 'time': start_datetime.time(), 'note': ''}
+        return {'date': None, 'time': None, 'note': ''}
 
     def _parse_end(self, item):
         """
@@ -154,11 +143,7 @@ class CookBoardSpider(Spider):
                 'time': (start_datetime + timedelta(hours=3)).time(),
                 'note': 'Estimated 3 hours after start time'
             }
-        return {
-            'date': None,
-            'time': None,
-            'note': ''
-        }
+        return {'date': None, 'time': None, 'note': ''}
 
     def _parse_sources(self, item):
         """
@@ -166,6 +151,6 @@ class CookBoardSpider(Spider):
         """
         try:
             url = item['Name']['url']
-        except:
+        except Exception:
             url = 'https://cook-county.legistar.com/Calendar.aspx'
         return [{'url': url, 'note': ''}]

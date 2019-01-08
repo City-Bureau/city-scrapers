@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import re
-from datetime import datetime, time
-from dateutil.parser import parse
+from datetime import time
 
-import scrapy
+from dateutil.parser import parse
 
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
@@ -34,25 +33,34 @@ class DetEntertainmentCommissionSpider(Spider):
 
             data = {
                 '_type': 'event',
-                'name': 'Detroit Entertainment Commission',
+                'name': 'Entertainment Commission',
                 'event_description': '',
                 'classification': COMMISSION,
                 'start': self._parse_start(item, response),
-                'end': {'date': None, 'time': None, 'note': ''},
+                'end': {
+                    'date': None,
+                    'time': None,
+                    'note': ''
+                },
                 'all_day': False,
                 'location': location,
                 'documents': [],
-                'sources': [{'url': response.url, 'note': ''}],
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }],
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
 
     def _parse_entries(self, response):
         entries_list = []
-        month_day_xpath = response.xpath('//p[span[contains(string(), "Next Meeting Date")]]/following-sibling::p[span]//text()').extract()
+        month_day_xpath = response.xpath(
+            '//p[span[contains(string(), "Next Meeting Date")]]/following-sibling::p[span]//text()'
+        ).extract()
         for item in month_day_xpath:
             valid_entry = re.match(r"\w+ \d{1,2}$", item)
             if valid_entry:
@@ -63,7 +71,8 @@ class DetEntertainmentCommissionSpider(Spider):
         """
         Parse start date and time.
         """
-        year_text = response.xpath('//p//span[contains(string(), "Meeting Dates")]/text()').extract_first()
+        year_text = response.xpath('//p//span[contains(string(), "Meeting Dates")]/text()'
+                                   ).extract_first()
         year_regex = re.search(r"(\d+){4}", year_text).group(0)
         try:
             start_date = parse(item + ', ' + year_regex)

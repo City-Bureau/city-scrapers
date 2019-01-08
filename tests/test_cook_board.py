@@ -1,9 +1,9 @@
-import pytest
 import json
 from datetime import date, time
 
-from city_scrapers.spiders.cook_board import CookBoardSpider
+import pytest
 
+from city_scrapers.spiders.cook_board import CookBoardSpider
 
 test_response = []
 with open('tests/files/cook_board.txt') as f:
@@ -22,11 +22,7 @@ def test_description():
 
 
 def test_start():
-    EXPECTED_START = {
-        'date': date(2017, 9, 13),
-        'time': time(11, 00),
-        'note': ''
-    }
+    EXPECTED_START = {'date': date(2017, 9, 13), 'time': time(11, 00), 'note': ''}
     assert parsed_items[25]['start'] == EXPECTED_START
 
 
@@ -60,23 +56,23 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[25]['sources'] == [
-        {
-            'url': 'https://cook-county.legistar.com/DepartmentDetail.aspx?ID=20924&GUID=B78A790A-5913-4FBF-8FBF-ECEE445B7796',
-            'note': ''
-        }
-    ]
+    assert parsed_items[25]['sources'] == [{
+        'url':
+            'https://cook-county.legistar.com/DepartmentDetail.aspx?ID=20924&GUID=B78A790A-5913-4FBF-8FBF-ECEE445B7796',  # noqa
+        'note': ''
+    }]
 
 
 def test_documents():
     assert parsed_items[25]['documents'] == [
         {
-            'note': 'Meeting Details', 
-            'url': 'https://cook-county.legistar.com/MeetingDetail.aspx?ID=521583&GUID=EA23CB0D-2E10-47EA-B4E2-EC7BA3CB8D76&Options=info&Search='
+            'url':
+                'https://cook-county.legistar.com/View.ashx?M=A&ID=521583&GUID=EA23CB0D-2E10-47EA-B4E2-EC7BA3CB8D76',  # noqa
+            'note': 'Agenda'
         },
         {
-            'url': 'https://cook-county.legistar.com/View.ashx?M=A&ID=521583&GUID=EA23CB0D-2E10-47EA-B4E2-EC7BA3CB8D76',
-            'note': 'Agenda'
+            'note': 'Video',
+            'url': 'https://cook-county.legistar.comVideo.aspx?Mode=Granicus&ID1=1858&Mode2=Video'
         }
     ]
 

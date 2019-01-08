@@ -4,7 +4,8 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
-from datetime import datetime, timedelta
+from datetime import timedelta
+
 from dateutil.parser import parse
 
 from city_scrapers.constants import BOARD
@@ -17,7 +18,6 @@ class IlLaborSpider(Spider):
     allowed_domains = ['www2.illinois.gov']
     start_urls = ['https://www2.illinois.gov/ilrb/meetings/Pages/default.aspx']
     event_timezone = 'America/Chicago'
-
     """
     This page only lists the next upcoming meeting for each of the three boards.
     All other meetingd dates are `proposed` and only available via PDF.
@@ -32,8 +32,7 @@ class IlLaborSpider(Spider):
         needs.
         """
 
-        # There's not a lot of structure on this page, so this selector is pretty fragile
-        for item in response.xpath("//div[@class='row']/p/strong[contains(text(), 'MEETING')]/../.."):
+        for item in response.css('.soi-article-content .container > .row > p'):
             """
             Some monthly meetings are skipped. Instead of providing a date,
             there's text that says 'No /name/ meeting in month'.
@@ -50,31 +49,23 @@ class IlLaborSpider(Spider):
                 'name': name,
                 'event_description': self._parse_description(response),
                 'classification': BOARD,
-                'start': { 'date': start_datetime.date(), 'time': start_datetime.time() },
-                'end': { 'date': start_datetime.date(), 'time': (start_datetime + timedelta(hours=3)).time() },
-                'all_day': self._parse_all_day(item),
+                'start': {
+                    'date': start_datetime.date(),
+                    'time': start_datetime.time()
+                },
+                'end': {
+                    'date': start_datetime.date(),
+                    'time': (start_datetime + timedelta(hours=3)).time()
+                },
+                'all_day': False,
                 'timezone': self.event_timezone,
-                'status': self._parse_status(item),
                 'location': self._parse_location(item),
                 'sources': self._parse_sources(response),
-                'documents': None
+                'documents': self._parse_documents(item),
             }
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data)
             yield data
-
-    def _parse_status(self, item):
-        """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        These meetings seem confirmed, but to follow default of other scrapers,
-        set to `tentative`
-        """
-        return 'tentative'
 
     def _parse_location(self, item):
         """
@@ -83,47 +74,49 @@ class IlLaborSpider(Spider):
         next row contains the meeting time, but sometimes
         multiple meeting locations are listed within a single div.
         """
-        childs_siblings = item.xpath('child::*')
-        if len(childs_siblings) > 1:
-            addresses = item.xpath('child::div/div/p/text()').extract()
-            address = ' Or '.join([a.strip() for a in addresses])
-        else:
-            address = item.xpath('following-sibling::div[1]/div/p/text()').extract_first()
-            if address:
-                address = address.strip()
-
-        return {
-            'url': '',
-            'address': address,
-            'name': ''
-        }
-
-    def _parse_all_day(self, item):
-        """
-        It appears `all_day` is always false for these meetings.
-        """
-        return False
+        addr_in_row = item.xpath('following-sibling::*//p/text()')
+        addr_next_row = item.xpath('../following-sibling::div[1]//p/text()')
+        address_list = addr_in_row if len(addr_in_row) > 0 else addr_next_row
+        chi_address_list = [
+            addr.replace('\xa0', '').strip()
+            for addr in address_list.extract()
+            if 'chicago' in addr.lower()
+        ]
+        return {'url': '', 'address': chi_address_list[0], 'name': ''}
 
     def _parse_name(self, item):
         """
         Get event name from the first `<strong>`.
         """
-        return item.css('strong::text').extract_first().capitalize()
+        name = item.css('a::text').extract_first()
+        if name:
+            return name.title()
+        return item.css('strong::text').extract_first().title()
 
     def _parse_description(self, response):
         """
         No meeting-specific description, so use a generic description from page.
         """
-        return response.css('#ctl00_PlaceHolderMain_ctl01__ControlWrapper_RichHtmlField p::text').extract_first().strip()
+        return response.css('#ctl00_PlaceHolderMain_ctl01__ControlWrapper_RichHtmlField p::text'
+                            ).extract_first().strip()
 
     def _parse_start(self, item):
         """
         Parse start date and time from the second `<strong>`
         """
         try:
-            return parse(item.css('strong:nth-of-type(2)::text').extract_first())
+            dt_str = item.css('strong:nth-of-type(2)::text').extract_first()
+            if not dt_str:
+                dt_str = item.css('strong:nth-of-type(3)::text').extract_first()
+            return parse(dt_str or '')
         except ValueError:
             return None
+
+    def _parse_documents(self, item):
+        href = item.css('a::attr(href)').extract_first()
+        if href:
+            return [{'url': 'https://{}{}'.format(self.allowed_domains[0], href), 'note': 'Agenda'}]
+        return []
 
     def _parse_sources(self, response):
         """

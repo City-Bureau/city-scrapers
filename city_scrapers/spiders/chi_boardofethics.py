@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import re
 import datetime
+import re
 from datetime import timedelta
 
 import dateutil.parser
@@ -11,7 +11,7 @@ from city_scrapers.spider import Spider
 
 class ChiBoardOfEthicsSpider(Spider):
     name = 'chi_boardofethics'
-    agency_name = 'Chicago Board of Ethics Board of Directors'
+    agency_name = 'Chicago Board of Ethics'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['https://www.cityofchicago.org/city/en/depts/ethics/supp_info/minutes.html']
 
@@ -38,19 +38,22 @@ class ChiBoardOfEthicsSpider(Spider):
         for meeting_date in meeting_dates:
             data = {
                 '_type': 'event',
-                'name': 'Board of Ethics',
+                'name': 'Board of Directors',
                 'event_description': description,
                 'classification': BOARD,
                 'start': self._parse_start(meeting_date, start_time),
                 'end': {},
-                'status': 'tentative',
                 'all_day': False,
                 'location': location,
                 'documents': [],
-                'sources': [{'url': self.start_urls[0], 'note': ''}],
+                'sources': [{
+                    'url': self.start_urls[0],
+                    'note': ''
+                }],
             }
             data['end'] = self._parse_end(data)
             data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data, text=meeting_date)
             yield data
 
     @staticmethod
@@ -58,11 +61,8 @@ class ChiBoardOfEthicsSpider(Spider):
         """
         Parse state date and time.
         """
-        dt = dateutil.parser.parse('{date} {time}'.format(date=date, time=time))
-        return {'date': dt.date(),
-                'time': dt.time(),
-                'note': ''
-                }
+        dt = dateutil.parser.parse('{} {}'.format(date, time))
+        return {'date': dt.date(), 'time': dt.time(), 'note': ''}
 
     @staticmethod
     def _parse_end(item):

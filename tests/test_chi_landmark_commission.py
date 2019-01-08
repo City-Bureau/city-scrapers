@@ -1,8 +1,8 @@
 from datetime import date, time
 
 import pytest
-
 from tests.utils import file_response
+
 from city_scrapers.spiders.chi_landmark_commission import ChiLandmarkCommissionSpider
 
 test_response = file_response(
@@ -45,23 +45,16 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 1, 11),
-        'time': time(12, 45),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 1, 11), 'time': time(12, 45), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2018, 1, 11),
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': date(2018, 1, 11), 'time': None, 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_landmark_commission/201801111245/x/commission_on_chicago_landmarks'
+    assert parsed_items[0][
+        'id'] == 'chi_landmark_commission/201801111245/x/commission_on_chicago_landmarks'
 
 
 def test_status():
@@ -72,24 +65,23 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'neighborhood': '',
         'name': 'City Hall',
-        'address': '121 N. LaSalle St., Room 201-A'
+        'address': '121 N LaSalle St, Room 201A, Chicago, IL 60602'
     }
 
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
-        'url': 'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html',
+        'url': 'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/landmarks_commission.html',  # noqa
         'note': ''
     }]
 
 
 def test_documents():
-    assert parsed_items[0]['documents'] == [
-        {
-            'url': 'https://www.cityofchicago.org/content/dam/city/depts/zlup/Historic_Preservation/Minutes/CCLJan2018Minutes.pdf',
-            'note': 'Minutes'
-        }
-    ]
+    assert parsed_items[0]['documents'] == [{
+        'url':
+            'https://www.cityofchicago.org/content/dam/city/depts/zlup/Historic_Preservation/Minutes/CCLJan2018Minutes.pdf',  # noqa
+        'note': 'Minutes'
+    }]
 
 
 @pytest.mark.parametrize('item', parsed_items)

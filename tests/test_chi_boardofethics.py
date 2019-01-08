@@ -1,16 +1,18 @@
 from datetime import date, time
 
 import pytest
+from tests.utils import file_response
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spiders.chi_boardofethics import ChiBoardOfEthicsSpider
-from tests.utils import file_response
 
 test_response = file_response('files/chi_boardofethics.html')
 spider = ChiBoardOfEthicsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
-parsed_meeting_text = 'All meetings will be held at 12:00 PM and typically last about 2 hours\xa0 Meetings are held ' \
-                      'at the City of Chicago Board of Ethics, 740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488.'
+parsed_meeting_text = (
+    'All meetings will be held at 12:00 PM and typically last about 2 hours\xa0 Meetings are held '
+    'at the City of Chicago Board of Ethics, 740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488.'
+)
 
 
 def test_items():
@@ -18,7 +20,7 @@ def test_items():
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Board of Ethics'
+    assert parsed_items[0]['name'] == 'Board of Directors'
 
 
 def test_description():
@@ -38,7 +40,7 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_boardofethics/201806151200/x/board_of_ethics'
+    assert parsed_items[0]['id'] == 'chi_boardofethics/201806151200/x/board_of_directors'
 
 
 def test_location():

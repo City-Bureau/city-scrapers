@@ -2,7 +2,6 @@
 import re
 import unicodedata
 
-import scrapy
 from dateutil.parser import parse
 
 from city_scrapers.constants import BOARD
@@ -11,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetCharterSchoolBoardsSpider(Spider):
     name = 'det_charter_school_boards'
-    agency_name = 'Detroit Public Schools Charter Schools Boards'
+    agency_name = 'Detroit Public Schools Community District'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitk12.org']
     start_urls = ['http://detroitk12.org/admin/charter_schools/boards/']
@@ -41,10 +40,13 @@ class DetCharterSchoolBoardsSpider(Spider):
                 'all_day': False,
                 'location': self._parse_location_non_calendar(item),
                 'documents': [],
-                'sources': [{'url': response.url, 'note': ''}]
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }]
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
@@ -57,7 +59,10 @@ class DetCharterSchoolBoardsSpider(Spider):
             location = self._parse_location_calendar(item)
             data = {
                 '_type': 'event',
-                'name': item.xpath('text()').extract_first('').strip(),
+                'name':
+                    'Charter Schools Boards: {}'.format(
+                        item.xpath('text()').extract_first('').strip()
+                    ),
                 'event_description': '',
                 'classification': BOARD,
                 'start': start,
@@ -65,17 +70,20 @@ class DetCharterSchoolBoardsSpider(Spider):
                 'all_day': False,
                 'location': location,
                 'documents': [],
-                'sources': [{'url': response.url, 'note': ''}]
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }]
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
 
     @staticmethod
     def _parse_name_non_calendar(item):
-        return item.xpath('.//text()[1]').extract_first()
+        return 'Charter Schools Boards: {}'.format(item.xpath('.//text()[1]').extract_first())
 
     def _parse_description_non_calendar(self, item, item_number):
         desc_xpath = self._text_between_dividers(item_number + 1)
@@ -101,14 +109,16 @@ class DetCharterSchoolBoardsSpider(Spider):
     def _text_between_dividers(self, divider_number):
         # Meetings can only be delineated by xpath expression,
         # so use all p tags between nodes of xpath dividers as description.
-        # Based on https://stackoverflow.com/questions/10859703/xpath-select-all-elements-between-two-specific-elements
+        # Based on https://stackoverflow.com/questions/10859703/xpath-select-all-elements-between-two-specific-elements # noqa
         divider = self._startswith_day_of_week()
         return """{divider}[{k}]
             /following-sibling::p[
                 count(.|{divider}[{k_1}]/preceding-sibling::p)
                 =
                 count({divider}[{k_1}]/preceding-sibling::p)
-            ]/text()""".format(divider=divider, k=divider_number, k_1=divider_number + 1)
+            ]/text()""".format(
+            divider=divider, k=divider_number, k_1=divider_number + 1
+        )
 
     @staticmethod
     def _get_date_time(start_text):
@@ -140,11 +150,7 @@ class DetCharterSchoolBoardsSpider(Spider):
     def _parse_location_calendar(item):
         address_xpath = './following-sibling::small[1]/span/text()'
         address = item.xpath(address_xpath).extract_first('').strip()
-        location = {
-            'address': address,
-            'name': '',
-            'neighborhood': ''
-        }
+        location = {'address': address, 'name': '', 'neighborhood': ''}
         return location
 
     @staticmethod

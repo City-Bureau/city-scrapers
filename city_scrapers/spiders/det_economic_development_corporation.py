@@ -10,7 +10,7 @@ from city_scrapers.spider import Spider
 
 class DetEconomicDevelopmentCorporationSpider(Spider):
     name = 'det_economic_development_corporation'
-    agency_name = 'Detroit Economic Development Corporation Board of Directors'
+    agency_name = 'Detroit Economic Development Corporation'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/edc/']
@@ -27,17 +27,13 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
         yield from self._next_meeting(response)
 
     def _next_meeting(self, response):
-        next_meeting_xpath = (
-            '//p[contains(., "The next Regular Board meeting is")]//text()'
-        )
-        next_meeting_text = ' '.join(
-            response.xpath(next_meeting_xpath).extract()
-        )
+        next_meeting_xpath = ('//p[contains(., "The next Regular Board meeting is")]//text()')
+        next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
         data = self._set_meeting_defaults(response)
         data['start'] = self._parse_start(next_meeting_text)
         if data['start']['date']:
             data['documents'] = []
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 
@@ -54,7 +50,7 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
         try:
             if date_match and time_match:
                 dt = parse(
-                    f'{date_match.group(1)} {time_match.group(1)}',
+                    '{} {}'.format(date_match.group(1), time_match.group(1)),
                     fuzzy=True,
                 )
                 return {'date': dt.date(), 'time': dt.time(), 'note': ''}
@@ -74,11 +70,9 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
         prev_meeting_docs = self._parse_prev_docs(response)
         for meeting_date in prev_meeting_docs:
             data = self._set_meeting_defaults(response)
-            data['start'] = {
-                'date': meeting_date.date(), 'time': None, 'note': ''
-            }
+            data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
             data['documents'] = prev_meeting_docs[meeting_date]
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
             yield data
 
@@ -117,7 +111,11 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
             'name': 'Board of Directors',
             'event_description': '',
             'classification': BOARD,
-            'end': {'date': None, 'time': None, 'note': ''},
+            'end': {
+                'date': None,
+                'time': None,
+                'note': ''
+            },
             'all_day': False,
             'location': {
                 'neighborhood': '',
@@ -125,6 +123,9 @@ class DetEconomicDevelopmentCorporationSpider(Spider):
                 'address': '500 Griswold, Suite 2200, Detroit'
             },
             'documents': [],
-            'sources': [{'url': response.url, 'note': ''}]
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }]
         }
         return data

@@ -4,9 +4,9 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-import urllib3
+from datetime import datetime, timedelta
 
-from datetime import datetime, date, time, timedelta
+import urllib3
 from legistar.events import LegistarEventsScraper
 
 from city_scrapers.constants import BOARD, FORUM
@@ -15,7 +15,7 @@ from city_scrapers.spider import Spider
 
 class ChiParksSpider(Spider):
     name = 'chi_parks'
-    agency_name = 'Chicago Park District Board of Commissioners'
+    agency_name = 'Chicago Park District'
     START_URL = 'https://chicagoparkdistrict.legistar.com'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = [START_URL]
@@ -33,7 +33,7 @@ class ChiParksSpider(Spider):
 
     def _make_legistar_call(self, since=None):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        les = LegistarEventsScraper(requests_per_minute=0)
+        les = LegistarEventsScraper()
         les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
         les.BASE_URL = self.START_URL
         if not since:
@@ -46,7 +46,7 @@ class ChiParksSpider(Spider):
                 '_type': 'event',
                 'name': self._parse_name(item),
                 'event_description': '',
-                'all_day': self._parse_all_day(item),
+                'all_day': False,
                 'classification': self._parse_classification(item),
                 'start': self._parse_start(item),
                 'end': self._parse_end(item),
@@ -55,7 +55,7 @@ class ChiParksSpider(Spider):
                 'sources': self._parse_sources(item),
             }
             data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, '')
+            data['status'] = self._generate_status(data, text=item['Meeting Location'])
             yield data
 
     def _parse_location(self, item):
@@ -68,17 +68,14 @@ class ChiParksSpider(Spider):
             'neighborhood': ''
         }
 
-    def _parse_all_day(self, item):
-        """
-        Parse or generate all-day status. Defaults to false.
-        """
-        return False
-
     def _parse_name(self, item):
         """
         Parse or generate event name.
         """
-        return item['Name']
+        board_str = 'Board of Commissioners'
+        if item['Name'].strip() == board_str:
+            return board_str
+        return '{}: {}'.format(board_str, item['Name'])
 
     def _parse_classification(self, item):
         """
@@ -93,24 +90,9 @@ class ChiParksSpider(Spider):
         Parse or generate documents.
         """
         documents = []
-
-        # Add meetings details if available
-        info = item['Meeting Details']
-        try:
-            url = info['url']
-        except (TypeError, KeyError):
-            pass
-        else:
-            documents.append({'url': url, 'note': 'Meeting Details'})
-
-        # Add agenda if available
-        info = item['Agenda']
-        try:
-            url = info['url']
-        except (TypeError, KeyError):
-            pass
-        else:
-            documents.append({'url': url, 'note': 'Agenda'})
+        for doc in ['Agenda', 'Minutes', 'Video']:
+            if isinstance(item.get(doc), dict) and item[doc].get('url'):
+                documents.append({'url': item[doc]['url'], 'note': doc})
         return documents
 
     def _parse_start_datetime(self, item):
@@ -127,11 +109,7 @@ class ChiParksSpider(Spider):
         Parse start date and time.
         """
         datetime_obj = self._parse_start_datetime(item)
-        return {
-            'date': datetime_obj.date(),
-            'time': datetime_obj.time(),
-            'note': ''
-        }
+        return {'date': datetime_obj.date(), 'time': datetime_obj.time(), 'note': ''}
 
     def _parse_end(self, item):
         """
@@ -150,7 +128,7 @@ class ChiParksSpider(Spider):
         """
         try:
             url = item['Name']['url']
-        except:
+        except Exception:
             url = self.START_URL + '/Calendar.aspx'
         return [{'url': url, 'note': ''}]
 

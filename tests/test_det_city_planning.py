@@ -1,20 +1,28 @@
-import pytest
 from datetime import date, time
 
-
+import pytest
+from freezegun import freeze_time
 from tests.utils import file_response
-from city_scrapers.constants import COMMISSION
+
+from city_scrapers.constants import COMMISSION, TENTATIVE
 from city_scrapers.spiders.det_city_planning import DetCityPlanningSpider
 
+freezer = freeze_time('2018-12-27')
+freezer.start()
 
-test_response = file_response('files/det_city_planning.html', url='https://www.detroitmi.gov/Government/Boards/City-Planning-Commission-Meetings')
+test_response = file_response(
+    'files/det_city_planning.html',
+    url='https://www.detroitmi.gov/Government/Boards/City-Planning-Commission-Meetings'
+)
 spider = DetCityPlanningSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 parsed_items = sorted(parsed_items, key=lambda x: x['start']['date'])
 
+freezer.stop()
+
 
 def test_name():
-    assert parsed_items[0]['name'] == 'City Planning Commission Regular Meeting'
+    assert parsed_items[0]['name'] == 'City Planning Commission'
 
 
 def test_description():
@@ -22,19 +30,23 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2017, 6, 1), 'time': time(17, 0), 'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'}
+    assert parsed_items[0]['start'] == {
+        'date': date(2019, 1, 10),
+        'time': time(16, 45),
+        'note': 'Meeting runs from 4:45 pm to approximately 8:00 pm'
+    }
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': date(2017, 6, 1), 'time': time(20, 0), 'note': ''}
+    assert parsed_items[0]['end'] == {'date': date(2019, 1, 10), 'time': time(20, 0), 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_city_planning/201706011700/x/city_planning_commission_regular_meeting'
+    assert parsed_items[0]['id'] == 'det_city_planning/201901101645/x/city_planning_commission'
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == TENTATIVE
 
 
 def test_location():
@@ -53,10 +65,7 @@ def test_sources():
 
 
 def test_documents():
-    assert parsed_items[0]['documents'] == [{
-      'url': 'https://www.detroitmi.gov/LinkClick.aspx?fileticket=Cuo4pTDuxak%3d&portalid=0',
-      'note': 'Agenda'
-    }]
+    assert parsed_items[0]['documents'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)

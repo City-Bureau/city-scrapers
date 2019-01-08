@@ -15,16 +15,14 @@ from city_scrapers.spider import Spider
 
 class CookHousingAuthoritySpider(Spider):
     name = 'cook_housingauthority'
-    agency_name = 'Housing Authority of Cook County Board of Commissioners'
+    agency_name = 'Housing Authority of Cook County'
     allowed_domains = ['http://thehacc.org/']
     start_urls = ['http://thehacc.org/events/feed/']
     events_endpoint = 'http://thehacc.org/wp-json/tribe/events/v1/events/{id}'
 
     def parse(self, response):
         for url in self._gen_requests(response):
-            yield scrapy.Request(
-                url, callback=self._parse_event, dont_filter=True
-            )
+            yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
     def _gen_requests(self, response):
         for link in response.css('guid::text').extract():
@@ -69,7 +67,7 @@ class CookHousingAuthoritySpider(Spider):
                 'timezone': tz,
             }
             parsed_event['id'] = self._generate_id(parsed_event)
-            parsed_event['status'] = self._generate_status(parsed_event, '')
+            parsed_event['status'] = self._generate_status(parsed_event)
             yield parsed_event
 
     def _parse_location(self, event):

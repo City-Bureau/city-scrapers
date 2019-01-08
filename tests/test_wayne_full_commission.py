@@ -1,23 +1,23 @@
 from datetime import date, time
 
 import pytest
-# Adapted from test_chi_parks.py
 from freezegun import freeze_time
-
 from tests.utils import file_response
-from city_scrapers.spiders.wayne_full_commission import WayneFullCommissionSpider
 
+from city_scrapers.spiders.wayne_full_commission import WayneFullCommissionSpider
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
-    'files/wayne_full_commission.html', url='https://www.waynecounty.com/elected/commission/full-commission.aspx')
+    'files/wayne_full_commission.html',
+    url='https://www.waynecounty.com/elected/commission/full-commission.aspx'
+)
 spider = WayneFullCommissionSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
-
 # PARAMETRIZED TESTS
+
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
@@ -73,10 +73,16 @@ def test_sources(item):
 
 # NON-PARAMETRIZED TESTS
 def test_documents():
-    assert parsed_items[0]['documents'] == [{
-        'note': 'agenda',
-        'url': 'https://www.waynecounty.com/documents/commission/fullboard011118.pdf',
-    }]
+    assert parsed_items[0]['documents'] == [
+        {
+            'note': 'Agenda',
+            'url': 'https://www.waynecounty.com/documents/commission/fullboard011118.pdf',
+        },
+        {
+            'note': 'Journal',
+            'url': 'https://www.waynecounty.com/documents/commission/journal2018-111.pdf'
+        },
+    ]
 
 
 def test_start():

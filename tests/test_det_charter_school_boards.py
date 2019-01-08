@@ -2,12 +2,13 @@ from datetime import date, time
 
 import pytest
 from freezegun import freeze_time
-
 from tests.utils import file_response
+
 from city_scrapers.spiders.det_charter_school_boards import DetCharterSchoolBoardsSpider
 
-test_response = file_response('files/det_charter_school_boards.html',
-                              'http://detroitk12.org/admin/charter_schools/boards/')
+test_response = file_response(
+    'files/det_charter_school_boards.html', 'http://detroitk12.org/admin/charter_schools/boards/'
+)
 
 freezer = freeze_time('2018-08-15 12:00:01')
 freezer.start()
@@ -36,14 +37,16 @@ def test_starts_with_day_of_week():
 
 
 def test_name():
-    assert parsed_items[2]['name'] == 'Annual Boards of Directors Conference'
+    assert parsed_items[2]['name'
+                           ] == 'Charter Schools Boards: Annual Boards of Directors Conference'
 
 
 def test_description():
-    assert parsed_items[2]['event_description'] == \
-           'All board members are invited to participate in a day of learning and exchange of ideas. Multiple ' \
-           'breakout sessions will provide training to both new and experienced board members. Continental breakfast ' \
-           'and lunch will be provided.'
+    assert parsed_items[2]['event_description'] == (
+        'All board members are invited to participate in a day of learning and exchange of ideas. '
+        'Multiple breakout sessions will provide training to both new and experienced board '
+        'members. Continental breakfast and lunch will be provided.'
+    )
 
 
 def test_start():
@@ -63,7 +66,9 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[2]['id'] == 'det_charter_school_boards/201804210830/x/annual_boards_of_directors_conference'
+    assert parsed_items[2][
+        'id'
+    ] == 'det_charter_school_boards/201804210830/x/charter_schools_boards_annual_boards_of_directors_conference'  # noqa
 
 
 def test_status():
@@ -90,7 +95,8 @@ def test_documents():
 
 
 def test_name_calendar():
-    assert parsed_items[8]['name'] == 'MacDowell Preparatory Academy Board Meeting'
+    assert parsed_items[8][
+        'name'] == 'Charter Schools Boards: MacDowell Preparatory Academy Board Meeting'
 
 
 def test_description_calendar():
@@ -114,8 +120,9 @@ def test_end_calendar():
 
 
 def test_id_calendar():
-    assert parsed_items[8]['id'] == \
-           'det_charter_school_boards/201808151800/x/mac_dowell_preparatory_academy_board_meeting'
+    assert parsed_items[8][
+        'id'
+    ] == 'det_charter_school_boards/201808151800/x/charter_schools_boards_mac_dowell_preparatory_academy_board_meeting'  # noqa
 
 
 def test_status_calendar():

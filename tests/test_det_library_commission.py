@@ -1,13 +1,14 @@
-import pytest
-
 from datetime import date, time
-from freezegun import freeze_time
 
+import pytest
+from freezegun import freeze_time
 from tests.utils import file_response
+
 from city_scrapers.spiders.det_library_commission import DetLibraryCommissionSpider
 
-
-test_response = file_response('files/det_library_commission.html', 'https://detroitpubliclibrary.org/about/commission')
+test_response = file_response(
+    'files/det_library_commission.html', 'https://detroitpubliclibrary.org/about/commission'
+)
 
 spider = DetLibraryCommissionSpider()
 
@@ -18,10 +19,8 @@ def test_request_count():
 
 
 test_detail = file_response(
-    'files/det_library_commission_detail.html',
-    'https://detroitpubliclibrary.org/meeting/1973'
+    'files/det_library_commission_detail.html', 'https://detroitpubliclibrary.org/meeting/1973'
 )
-
 
 freezer = freeze_time('2018-08-04 12:00:01')
 freezer.start()
@@ -32,7 +31,7 @@ freezer.stop()
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Regular Commission Meeting'
+    assert parsed_items[0]['name'] == 'Library Commissioners: Regular Commission Meeting'
 
 
 def test_description():
@@ -48,7 +47,9 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_library_commission/201809181330/x/regular_commission_meeting'
+    assert parsed_items[0][
+        'id'
+    ] == 'det_library_commission/201809181330/x/library_commissioners_regular_commission_meeting'
 
 
 def test_status():

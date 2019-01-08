@@ -4,15 +4,11 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-from urllib import parse
+from datetime import datetime, timedelta
 
 import scrapy
 
-from datetime import datetime
-
-from city_scrapers.constants import (
-    ADVISORY_COMMITTEE, BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
-)
+from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
 
 
@@ -21,19 +17,19 @@ class CookCountySpider(Spider):
     agency_name = 'Cook County Government'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cookcountyil.gov']
-    url = 'https://www.cookcountyil.gov/calendar'
-    # filter out non-governing events with query
-    query = {
-        "field_categories_tid_entityreference_filter[]": [
-            "19",  # 19 = Board Meetings
-            "205",  # 205 = Committee Meeting
-            "20",  # 20 = Public Forum
-            "206",  # 206 = Subcommittee Meeting
-        ]
-    }
 
     def start_requests(self):
-        yield scrapy.FormRequest(url=self.url, method='GET', formdata=self.query, callback=self.parse)
+        # Only filter for Public Forums (20) in the current and upcoming month
+        today = datetime.now()
+        next_month = today.replace(day=28) + timedelta(days=5)
+        print(next_month)
+        for dt in [today, next_month]:
+            mo_str = dt.strftime('%Y-%m')
+            url = (
+                'https://www.cookcountyil.gov/calendar-node-field-date/month/{}?'
+                'field_categories_tid_entityreference_filter[]=20'
+            ).format(mo_str)
+            yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
     def parse(self, response):
         """
@@ -43,14 +39,8 @@ class CookCountySpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-
         for url in self._get_event_urls(response):
-            next_url = 'https://{0}{1}'.format(self.allowed_domains[0], url)
-            yield scrapy.Request(next_url, callback=self._parse_event, dont_filter=True)
-
-        next_page = response.css('li.pager-next a::attr(href)').extract_first()
-        if next_page is not None:
-            yield response.follow(next_page, callback=self.parse)
+            yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
     def _parse_event(self, response):
         """
@@ -68,7 +58,7 @@ class CookCountySpider(Spider):
             'sources': self._parse_sources(response)
         }
         data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(data, data['event_description'])
+        data['status'] = self._generate_status(data)
         data['classification'] = self._parse_classification(data['name'])
         return data
 
@@ -76,8 +66,10 @@ class CookCountySpider(Spider):
         """
         Get urls for all events on the page.
         """
-        event_urls = response.xpath('//div[@class="view-content"]//a/@href').extract()
-        return list(set([x for x in event_urls if '/event/' in x and 'cancelled' not in x]))
+        return [
+            response.urljoin(href)
+            for href in response.css('.view-item-event_calendar a::attr(href)').extract()
+        ]
 
     @staticmethod
     def _parse_classification(name):
@@ -97,7 +89,8 @@ class CookCountySpider(Spider):
         Parse or generate location. Url, latitude and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
-        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()').extract()
+        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()'
+                                 ).extract()
         address = ' '.join([x.strip() for x in address])
         address = address.replace('Location:', '').strip()
         return {
@@ -110,7 +103,8 @@ class CookCountySpider(Spider):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()').extract()
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
         date = ''.join(date).upper()
         return 'ALL DAY' in date
 
@@ -124,7 +118,9 @@ class CookCountySpider(Spider):
         """
         Parse or generate event description.
         """
-        category_field = response.xpath("//div[contains(., 'Category:') and contains(@class, 'field-label')]")
+        category_field = response.xpath(
+            "//div[contains(., 'Category:') and contains(@class, 'field-label')]"
+        )
         field_items = category_field.xpath("./following::div[contains(@class, 'field-items')]")
         return ' '.join(
             field_items.xpath('.//p/text()').extract() +
@@ -135,7 +131,8 @@ class CookCountySpider(Spider):
         """
         Parse start date and time.
         """
-        start = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()').extract()
+        start = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                               ).extract()
         start = ''.join(start).upper()
         start = start.split(' TO ')[0].strip()
         start = start.replace('(ALL DAY)', '12:00AM')
@@ -147,7 +144,8 @@ class CookCountySpider(Spider):
         """
         Parse end date and time.
         """
-        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()').extract()
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
         date = ''.join(date).upper()
         date.replace('(ALL DAY)', 'TO 11:59PM')
         start_end = date.split(' TO ')
@@ -169,5 +167,7 @@ class CookCountySpider(Spider):
 
     def _parse_documents(self, response):
         files = response.css('span.file a')
-        return [{'url': f.xpath('./@href').extract_first(),
-                 'note': f.xpath('./text()').extract_first()} for f in files]
+        return [{
+            'url': f.xpath('./@href').extract_first(),
+            'note': f.xpath('./text()').extract_first()
+        } for f in files]

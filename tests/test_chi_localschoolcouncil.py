@@ -1,13 +1,9 @@
-## Framework copied from test_ward_night to update
-
-import pytest
-from datetime import date, time, datetime
-from pytz import timezone
+from datetime import date, datetime, time
 
 from tests.utils import file_response
+
 from city_scrapers.constants import COMMITTEE
 from city_scrapers.spiders.chi_localschoolcouncil import ChiLocalSchoolCouncilSpider
-from textwrap import dedent
 
 test_response = file_response('files/tests_chilocal_events.json')
 spider = ChiLocalSchoolCouncilSpider(start_date=datetime(2018, 1, 1))
@@ -15,7 +11,8 @@ parsed_items = [item for item in spider.parse(test_response) if isinstance(item,
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_localschoolcouncil/201801081600/x/local_school_council_fort_dearborn_es'
+    assert parsed_items[0][
+        'id'] == 'chi_localschoolcouncil/201801081600/x/local_school_council_fort_dearborn_es'
 
 
 def test_name():
@@ -23,11 +20,7 @@ def test_name():
 
 
 def test_start():
-    EXPECTED_START = {
-        'date': date(2018, 1, 8),
-        'time': time(16, 0),
-        'note': ''
-    }
+    EXPECTED_START = {'date': date(2018, 1, 8), 'time': time(16, 0), 'note': ''}
     assert parsed_items[0]['start'] == EXPECTED_START
 
 
@@ -66,7 +59,7 @@ def test_documents():
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
-        'url': 'https://docs.google.com/spreadsheets/d/1uzgWLWl19OUK6RhkAuqy6O6p4coTOqA22_nmKfzbakE',
+        'url': 'https://docs.google.com/spreadsheets/d/1uzgWLWl19OUK6RhkAuqy6O6p4coTOqA22_nmKfzbakE',  # noqa
         'note': 'Google Sheet that Darryl filled out manually'
     }]
 
@@ -77,4 +70,3 @@ def test_classification():
 
 def test__type():
     assert parsed_items[0]['_type'] == 'event'
-

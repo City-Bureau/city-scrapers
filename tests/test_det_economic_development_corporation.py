@@ -3,8 +3,8 @@ from datetime import date, time
 import pytest
 import scrapy
 from freezegun import freeze_time
-
 from tests.utils import file_response
+
 from city_scrapers.constants import BOARD, PASSED, TENTATIVE
 from city_scrapers.spiders.det_economic_development_corporation import (
     DetEconomicDevelopmentCorporationSpider
@@ -27,10 +27,7 @@ test_response = file_response(
 freezer = freeze_time('2018-07-27 12:00:01')
 spider = DetEconomicDevelopmentCorporationSpider()
 freezer.start()
-parsed_items = [
-    item for item in spider._next_meeting(test_response)
-    if isinstance(item, dict)
-]
+parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
 freezer.stop()
 
 
@@ -57,19 +54,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 8, 14),
-        'time': time(8, 30),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 8, 14), 'time': time(8, 30), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': None,
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_id():
@@ -88,9 +77,10 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [
-        {'url': 'http://www.degc.org/public-authorities/edc/', 'note': ''}
-    ]
+    assert parsed_items[0]['sources'] == [{
+        'url': 'http://www.degc.org/public-authorities/edc/',
+        'note': ''
+    }]
 
 
 def test_documents():
@@ -119,12 +109,9 @@ test_prev_response = file_response(
     'http://www.degc.org/public-authorities/edc/fy-2017-2018-meetings/',
 )
 parsed_prev_items = [
-    item for item in spider._parse_prev_meetings(test_prev_response)
-    if isinstance(item, dict)
+    item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)
 ]
-parsed_prev_items = sorted(
-    parsed_prev_items, key=lambda x: x['start']['date'], reverse=True
-)
+parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
 
 
 def test_request_count():
@@ -152,15 +139,11 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == {
-        'date': date(2018, 6, 26), 'time': None, 'note': ''
-    }
+    assert parsed_prev_items[0]['start'] == {'date': date(2018, 6, 26), 'time': None, 'note': ''}
 
 
 def test_prev_end():
-    assert parsed_prev_items[0]['end'] == {
-        'date': None, 'time': None, 'note': ''
-    }
+    assert parsed_prev_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
 
 
 def test_prev_id():
@@ -179,15 +162,11 @@ def test_prev_location():
 
 
 def test_prev_sources():
-    assert parsed_prev_items[0]['sources'] == [
-        {
-            'url': (
-                'http://www.degc.org/public-authorities/'
-                'edc/fy-2017-2018-meetings/'
-            ),
-            'note': ''
-        }
-    ]
+    assert parsed_prev_items[0]['sources'] == [{
+        'url': ('http://www.degc.org/public-authorities/'
+                'edc/fy-2017-2018-meetings/'),
+        'note': ''
+    }]
 
 
 def test_prev_documents():

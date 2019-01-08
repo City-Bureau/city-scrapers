@@ -1,40 +1,26 @@
+import json
 from datetime import date, time
 
 import pytest
+from freezegun import freeze_time
 
-from city_scrapers.constants import CANCELED
+from city_scrapers.constants import TENTATIVE
 from city_scrapers.spiders.det_great_lakes_water_authority import DetGreatLakesWaterAuthoritySpider
-from tests.utils import file_response
-import scrapy
 
-test_response = file_response('files/det_great_lakes_water_authority.html', 'http://www.glwater.org/events/')
+with open('tests/files/det_great_lakes_water_authority.json', 'r') as f:
+    test_response = json.load(f)
+
+freezer = freeze_time('2018-12-27')
+freezer.start()
+
 spider = DetGreatLakesWaterAuthoritySpider()
-requests = [request for request in spider.parse(test_response)]
-test_ics_response = file_response(
-    'files/det_great_lakes_water_authority.ics',
-    'http://www.glwater.org/events/?ical=1&tribe_display=month'
-)
-parsed_items = [item for item in spider._parse_ical(test_ics_response)]
-parsed_items = sorted(parsed_items, key=lambda x: (x['start']['date'], x['start']['time']))
+parsed_items = [item for item in spider._parse_events([(item, None) for item in test_response])]
 
-
-def test_requests():
-    requests = [request for request in spider.parse(test_response)]
-    urls = {r.url for r in requests}
-    # spider should yield ical for month + request for next month calendar
-    assert len(requests) == 2
-    assert urls == {
-        'http://www.glwater.org/events/?ical=1&tribe_display=month',
-        'http://www.glwater.org/events/2018-08/',
-    }
-
-
-def test_event_count():
-    assert len(parsed_items) == 7
+freezer.stop()
 
 
 def test_name():
-    assert parsed_items[0]['name'] == 'Legal Committee Meeting'
+    assert parsed_items[0]['name'] == 'Audit Committee'
 
 
 def test_description():
@@ -42,40 +28,32 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 6, 27),
-        'time': time(13, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2019, 12, 20), 'time': time(8, 0), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2018, 6, 27),
-        'time': time(14, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': date(2019, 12, 20), 'time': None, 'note': ''}
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_great_lakes_water_authority/201806271300/x/legal_committee_meeting'
+    assert parsed_items[0]['id'] == 'det_great_lakes_water_authority/201912200800/x/audit_committee'
 
 
 def test_status():
-    assert parsed_items[0]['status'] == CANCELED
+    assert parsed_items[0]['status'] == TENTATIVE
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
         'neighborhood': '',
-        'name': '',
-        'address': '735 Randolph, 5th Floor Board Room, Detroit,, MI, 48226'
+        'name': 'Water Board Building',
+        'address': '735 Randolph St Detroit, MI 48226'
     }
 
 
 def test_sources():
     assert parsed_items[0]['sources'] == [{
-        'url': 'http://www.glwater.org/event/legal-committee-meeting-7/',
+        'url': 'https://glwater.legistar.com/Calendar.aspx',
         'note': ''
     }]
 

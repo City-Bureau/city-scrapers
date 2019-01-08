@@ -1,14 +1,21 @@
-import pytest
 from datetime import date, time
+
+from freezegun import freeze_time
 from tests.utils import file_response
+
 from city_scrapers.constants import COMMITTEE, CONFIRMED
 from city_scrapers.spiders.cook_landbank import CookLandbankSpider
+
+freezer = freeze_time('2018-09-13 12:00:00')
+freezer.start()
 
 file = file_response('files/cook_landbank.json')
 spider = CookLandbankSpider()
 
 test_response = file
 parsed_items = list(spider.parse(test_response))
+
+freezer.stop()
 
 
 def test_name():
@@ -25,26 +32,13 @@ def test_event_description():
 
 
 def test_start():
-    EXPECTED_START = {
-        'date': date(2018, 9, 14),
-        'time': time(10, 00),
-        'note': ''
-    }
+    EXPECTED_START = {'date': date(2018, 9, 14), 'time': time(10, 00), 'note': ''}
     assert parsed_items[0]['start'] == EXPECTED_START
 
 
 def test_end():
-    EXPECTED_END = {
-        'date': date(2018, 9, 14),
-        'time': None,
-        'note': ''
-    }
+    EXPECTED_END = {'date': date(2018, 9, 14), 'time': None, 'note': ''}
     assert parsed_items[0]['end'] == EXPECTED_END
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_timezone(item):
-    assert item['timezone'] == 'America/Chicago'
 
 
 def test_all_day():
@@ -63,9 +57,10 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'url': 'http://www.cookcountylandbank.org/',
         'name': None,
-        'address': '69 W. Washington St., Lower Level Conference Room A',
+        'address': '69 W. Washington St., Lower Level Conference Room A Chicago, IL',
         'coordinates': {
-            'latitude': None, 'longitude': None
+            'latitude': None,
+            'longitude': None
         }
     }
 
@@ -85,7 +80,8 @@ def test_documents():
         'url': (
             'http://www.cookcountylandbank.org/wp-content/'
             'uploads/2018/09/CCLBA-Land-Transaction-9-14-18-Agenda.pdf'
-        ), 'note': 'Agenda'
+        ),
+        'note': 'Agenda'
     }]
 
 

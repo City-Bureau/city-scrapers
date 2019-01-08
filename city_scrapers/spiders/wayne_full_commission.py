@@ -5,13 +5,13 @@
 # YOU CAN OVERRIDE THE MIXIN HERE BY CREATING YOUR OWN DEFINITION.
 
 from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
 from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
+from city_scrapers.spider import Spider
 
 
 class WayneFullCommissionSpider(WayneCommissionMixin, Spider):
     name = 'wayne_full_commission'
-    agency_name = 'Wayne County Full Commission'
+    agency_name = 'Wayne County Government'
     start_urls = ['https://www.waynecounty.com/elected/commission/full-commission.aspx']
     meeting_name = 'Full Commission'
 

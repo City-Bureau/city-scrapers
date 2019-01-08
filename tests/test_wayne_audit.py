@@ -1,24 +1,23 @@
 from datetime import date, time
 
 import pytest
-# Adapted from test_chi_parks.py
 from freezegun import freeze_time
-
 from tests.utils import file_response
+
 from city_scrapers.constants import COMMITTEE
 from city_scrapers.spiders.wayne_audit import WayneAuditSpider
-
 
 freezer = freeze_time('2018-03-27 12:00:01')
 freezer.start()
 test_response = file_response(
-    'files/wayne_audit.html', url='https://www.waynecounty.com/elected/commission/audit.aspx')
+    'files/wayne_audit.html', url='https://www.waynecounty.com/elected/commission/audit.aspx'
+)
 spider = WayneAuditSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 freezer.stop()
 
-
 # PARAMETRIZED TESTS
+
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
@@ -75,7 +74,7 @@ def test_sources(item):
 # NON-PARAMETRIZED TESTS
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-        'note': 'agenda',
+        'note': 'Agenda',
         'url': 'https://www.waynecounty.com/documents/commission/adtmtg_2018-0117.pdf',
     }]
 

@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 import re
-from collections import defaultdict
-from datetime import datetime, time
-from dateutil.parser import parse
-from urllib.parse import urljoin
+from datetime import time
 
-import scrapy
+from dateutil.parser import parse
 
 from city_scrapers.constants import COMMISSION
 from city_scrapers.spider import Spider
@@ -32,67 +29,48 @@ class DetCityPlanningSpider(Spider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        meetings = self._parse_meetings(response)
-        for meeting_date_time, document_url in meetings.items():
+        dt_regex = re.compile(r'\w+\s\d+,\s\d+')
+        for item in response.xpath('//tr/td/text()').extract():
+            # Check if cell is actual text
+            if not item[0].isalpha():
+                continue
+            dt_str = dt_regex.search(item).group()
+            dt = parse(dt_str)
             data = {
                 '_type': 'event',
-                'name': 'City Planning Commission Regular Meeting',
+                'name': 'City Planning Commission',
                 'event_description': '',
                 'classification': COMMISSION,
-                'start': {'date': meeting_date_time.date(),
-                          'time': time(17, 00),
-                          'note': 'Meeting runs from 5:00 pm to approximately 8:00 pm'},
-                'end': {'date': meeting_date_time.date(), 'time': time(20, 00), 'note': ''},
+                'start': {
+                    'date': dt.date(),
+                    'time': time(16, 45),
+                    'note': 'Meeting runs from 4:45 pm to approximately 8:00 pm'
+                },
+                'end': {
+                    'date': dt.date(),
+                    'time': time(20, 0),
+                    'note': ''
+                },
                 'all_day': False,
                 'location': self.location,
-                'documents': self._create_documents(response.url, document_url),
-                'sources': [{'url': response.url, 'note': ''}]
+                'documents': self._parse_documents(dt, response),
+                'sources': [{
+                    'url': response.url,
+                    'note': ''
+                }]
             }
 
-            data['status'] = self._generate_status(data, text='')
+            data['status'] = self._generate_status(data)
             data['id'] = self._generate_id(data)
 
             yield data
 
-    def _parse_meetings(self, response):
-        meetings = self._parse_has_agenda_meetings(response)
-        no_agenda_meetings = self._parse_no_agenda_meetings(response)
-        for meeting_date in no_agenda_meetings:
-            if meeting_date not in meetings:
-                meetings[meeting_date] = no_agenda_meetings[meeting_date]
-        return meetings
-
-    @staticmethod
-    def _parse_no_agenda_meetings(response):
-        year_str = datetime.now().year
-        meetings = defaultdict(str)
-        meetings_text = response.xpath('//tr/td/text()').extract()
-        month_day_regex = re.compile("\w+\s\d+")
-        for meeting in meetings_text:
-            # Check if cell is actual text
-            if meeting[0].isalpha():
-                month_day = month_day_regex.search(meeting).group(0)
-                meeting_date = parse(month_day + ' ' + str(year_str))
-                meetings[meeting_date] = ''
-        return meetings
-
-    @staticmethod
-    def _parse_has_agenda_meetings(response):
-        meetings = defaultdict(str)
-        date_regex = re.compile("\w+\s\d+,\s\d{4}")
-        meeting_agendas = response.xpath('//div[@id="dnn_ctr9526_HtmlModule_lblContent"]//li')
-        for agenda in meeting_agendas:
-            agenda_link = agenda.xpath('./a/@href').extract_first()
-            meeting_date_text = agenda.xpath('./a/text()').extract_first()
-            date_text = date_regex.search(meeting_date_text).group(0)
-            meeting_date = parse(date_text)
-            meetings[meeting_date] = agenda_link
-        return meetings
-
-    def _create_documents(self, base_url, url):
+    def _parse_documents(self, dt, response):
         """
         Parse or generate documents.
         """
-        if url:
-            return [{'url': urljoin(base_url, url), 'note': 'Agenda'}]
+        dt_str = '{}-{dt.day}-{dt.year}'.format(dt.strftime('%B').lower(), dt=dt)
+        agenda_url = response.css('a[href*="{}"]::attr(href)'.format(dt_str)).extract_first()
+        if agenda_url:
+            return [{'url': response.urljoin(agenda_url), 'note': 'Agenda'}]
         return []

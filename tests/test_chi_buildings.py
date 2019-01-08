@@ -1,17 +1,14 @@
 import pytest
 import scrapy
-
-from datetime import datetime
+from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import BOARD, COMMITTEE
+from city_scrapers.constants import BOARD, COMMITTEE, PASSED
 from city_scrapers.spiders.chi_buildings import ChiBuildingsSpider
 
 test_json_response = file_response('files/chi_buildings.json')
 test_event_response = file_response('files/chi_buildings.html')
 spider = ChiBuildingsSpider()
-# Setting spider date to time test files were generated
-spider.calendar_date = datetime(2018, 2, 18)
 
 
 class MockRequest(object):
@@ -29,8 +26,11 @@ def mock_request(*args, **kwargs):
 
 @pytest.fixture()
 def parsed_items(monkeypatch):
+    freezer = freeze_time('2018-12-19')
+    freezer.start()
     monkeypatch.setattr(scrapy, 'Request', mock_request)
     parsed_items = [item for item in spider.parse(test_json_response)]
+    freezer.stop()
     return parsed_items
 
 
@@ -40,65 +40,78 @@ def parsed_event():
 
 
 def test_name(parsed_items):
-    assert parsed_items[0]['name'] == 'Administrative Operations Committee Meeting – January 4, 2018'
+    assert parsed_items[0]['name'] == 'Administrative Operations Committee'
 
 
 def test_classification(parsed_items):
     assert parsed_items[0]['classification'] == COMMITTEE
     assert parsed_items[1]['classification'] == BOARD
     assert parsed_items[2]['classification'] == COMMITTEE
-    assert parsed_items[3]['classification'] == COMMITTEE
+    assert parsed_items[3]['classification'] == BOARD
 
 
 def test_start(parsed_items):
-    assert parsed_items[0]['start']['date'].isoformat() == '2018-01-04'
+    assert parsed_items[0]['start']['date'].isoformat() == '2018-12-05'
 
 
 def test_end_time(parsed_items):
-    assert parsed_items[0]['end']['date'].isoformat() == '2018-01-04'
+    assert parsed_items[0]['end']['date'].isoformat() == '2018-12-05'
 
 
 def test_id(parsed_items):
-    assert parsed_items[0][
-               'id'] == 'chi_buildings/000000000000/x/administrative_operations_committee_meeting_january_4_2018'
+    assert parsed_items[0]['id'] == (
+        'chi_buildings/201812051000/x/administrative_operations_committee'
+    )
+
 
 def test_event_description(parsed_items):
-    assert parsed_items[0]['description'] == ('January 4, 2018  1:00 pm - 2:00 pm</br></br>Agenda\xa0')
+    assert parsed_items[0]['description'] == ''
 
 
 def test_status(parsed_items):
-    assert parsed_items[0]['status'] == 'passed'
-    assert parsed_items[10]['status'] == 'tentative'
-
-
-def test_board_meeting_location(parsed_items):
-    assert parsed_items[0]['location'] == {
-        'url': 'https://thedaleycenter.com',
-        'name': 'Second Floor Board Room, Richard J. Daley Center',
-        'address': '50 W. Washington Street Chicago, IL 60602',
-        'coordinates': {
-            'latitude': '41.884089',
-            'longitude': '-87.630191',
-        },
-    }
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_source(parsed_items):
     assert parsed_items[0]['sources'][0]['url'] == (
-        'http://www.pbcchicago.com/events/event/administrative-operations-committee-meeting-january-4-2018/'
+        'http://www.pbcchicago.com/events/event/pbc-administrative-operations-committee/'
     )
 
 
 def test_event_location(parsed_event):
     assert parsed_event['location'] == {
-        'url': None,
-        'name': 'McKinley Park Auditorium',
-        'address': '2210 West Pershing Road, Chicago, IL, 60609, USA',
+        'url': 'https://thedaleycenter.com',
+        'name': 'Second Floor Board Room, Richard J. Daley Center',
+        'address': '50 W. Washington Street Chicago, IL 60602',
         'coordinates': {
-            'latitude': '41.823738',
-            'longitude': '-87.682445',
+            'latitude': '41.884089',
+            'longitude': '-87.630191'
         },
     }
+
+
+def test_documents(parsed_event):
+    assert parsed_event['documents'] == [
+        {
+            'note': 'Agenda',
+            'url':
+                'http://www.pbcchicago.com/wp-content/uploads/2018/11/MA_PBC_MPW_bdgeneral20181113.pdf'  # noqa
+        },
+        {
+            'note': 'Presentation',
+            'url':
+                'http://www.pbcchicago.com/wp-content/uploads/2018/11/BoardPresentation_20181113.pdf'  # noqa
+        },
+        {
+            'note': 'Summary',
+            'url': 'http://www.pbcchicago.com/wp-content/uploads/2018/11/Board-Summary.pdf'
+        },
+        {
+            'note': 'Minutes',
+            'url':
+                'http://www.pbcchicago.com/wp-content/uploads/2018/12/A3.-MMR_NOVEMBERBOARDMINUTES_201812052.pdf'  # noqa
+        }
+    ]
 
 
 def test__type(parsed_items):

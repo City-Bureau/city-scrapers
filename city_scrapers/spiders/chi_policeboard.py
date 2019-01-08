@@ -4,8 +4,8 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 
-from datetime import datetime
 import re
+from datetime import datetime
 
 from city_scrapers.constants import BOARD
 from city_scrapers.spider import Spider
@@ -14,7 +14,7 @@ from city_scrapers.spider import Spider
 class ChiPoliceBoardSpider(Spider):
     name = 'chi_policeboard'
     timezone = 'America/Chicago',
-    agency_name = 'Chicago Police Board Board of Directors'
+    agency_name = 'Chicago Police Board'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['http://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
 
@@ -28,13 +28,20 @@ class ChiPoliceBoardSpider(Spider):
         """
         data = {
             '_type': 'event',
-            'name': self._parse_name(response),
+            'name': 'Board of Directors',
             'event_description': self._parse_description(response),
             'classification': BOARD,
-            'end': {'date': None, 'time': None, 'note': ''},
+            'end': {
+                'date': None,
+                'time': None,
+                'note': ''
+            },
             'all_day': False,
             'location': self._parse_location(response),
-            'sources': [{'url': response.url, 'note': ''}],
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }],
         }
         year = self._parse_year(response)
         start_time = self._parse_start_time(response)
@@ -51,13 +58,15 @@ class ChiPoliceBoardSpider(Spider):
             }
             new_item.update(data)
             new_item['id'] = self._generate_id(new_item)
-            new_item['status'] = self._generate_status(new_item, '')
+            new_item['status'] = self._generate_status(new_item)
             yield new_item
 
     def _parse_documents(self, item, response):
         anchors = item.xpath('a')
-        return [{'url': response.urljoin(link.xpath('@href').extract_first('')),
-                 'note': link.xpath('text()').extract_first('')} for link in anchors]
+        return [{
+            'url': response.urljoin(link.xpath('@href').extract_first('')),
+            'note': link.xpath('text()').extract_first('')
+        } for link in anchors]
 
     def _parse_location(self, response):
         """
@@ -83,18 +92,13 @@ class ChiPoliceBoardSpider(Spider):
             return datetime.strptime(cleaned_time, '%I:%M%p').time()
         return None
 
-    def _parse_name(self, response):
-        """
-        Parse or generate event name.
-        """
-        return response.css("h1[class='page-heading']::text").extract_first()
-
     def _parse_description(self, response):
         """
         Parse or generate event name.
         """
         all_text = response.xpath(
-            "normalize-space(//div[@class='container-fluid page-full-description'])").extract_first()
+            "normalize-space(//div[@class='container-fluid page-full-description'])"
+        ).extract_first()
 
         intro, meetings = all_text.split('Regular Meetings')
 
@@ -105,13 +109,11 @@ class ChiPoliceBoardSpider(Spider):
         """
         Parse start date
         """
-        weekday_and_date = ''.join([x.strip() for x in item.xpath("text()").extract()])
-        date = ''.join([x.strip() for x in weekday_and_date.split(',')[1:]])
-        clean_date_match = re.match(r'.*([A-Z][a-z]+ \d+).*', date)
+        date_str = item.css('::text').extract_first()
+        clean_date_match = re.search(r'[A-Za-z]+\s+\d{1,2}', date_str)
         if not clean_date_match:
             return None
-        date_as_string = clean_date_match.group(1)
-        date_with_year = '{0}, {1}'.format(date_as_string, year)
+        date_with_year = '{0}, {1}'.format(clean_date_match.group(), year)
         return datetime.strptime(date_with_year, '%B %d, %Y').date()
 
     def _parse_year(self, response):

@@ -1,15 +1,23 @@
-import pytest
 from datetime import date, time
 
-
+import pytest
+from freezegun import freeze_time
 from tests.utils import file_response
+
 from city_scrapers.spiders.det_zoning_appeals import DetZoningAppealsSpider
 
+freezer = freeze_time('2018-12-27')
+freezer.start()
 
-test_response = file_response('files/det_zoning_appeals.html', 'https://www.detroitmi.gov/Government/Boards/Board-of-Zoning-Appeals-Meeting')
+test_response = file_response(
+    'files/det_zoning_appeals.html',
+    'https://www.detroitmi.gov/Government/Boards/Board-of-Zoning-Appeals-Meeting'
+)
 spider = DetZoningAppealsSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
 parsed_items = sorted(parsed_items, key=lambda x: (x['start']['date'], x['start']['time']))
+
+freezer.stop()
 
 
 def test_name():
@@ -21,19 +29,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 1, 23),
-        'time': time(9, 0),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == {'date': date(2018, 1, 23), 'time': time(9, 0), 'note': ''}
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': None,
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] == {'date': date(2018, 1, 23), 'time': None, 'note': ''}
 
 
 def test_id():
@@ -61,8 +61,8 @@ def test_sources():
 
 def test_documents():
     assert parsed_items[0]['documents'] == [{
-      'url': 'https://www.detroitmi.gov/LinkClick.aspx?fileticket=YIbtN55o6j8%3d&portalid=0',
-      'note': 'Minutes'
+        'url': 'https://www.detroitmi.gov/document/january-23-2018',
+        'note': 'Minutes'
     }]
 
 

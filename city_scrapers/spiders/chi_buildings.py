@@ -3,10 +3,9 @@
 All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
-import re
-import pytz
 import json
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 
 import scrapy
 
@@ -19,16 +18,19 @@ class ChiBuildingsSpider(Spider):
     agency_name = 'Public Building Commission of Chicago'
     allowed_domains = ['www.pbcchicago.com']
     base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
-    calendar_date = datetime.now()
     timezone = 'America/Chicago'
-    start_urls = ['{}&start={}'.format(
-        base_url, calendar_date.strftime('%Y-%m-%d')
-    )]
+    start_urls = [
+        '{}&start={}&end={}'.format(
+            base_url,
+            (datetime.now() - timedelta(days=60)).strftime('%Y-%m-%d'),
+            (datetime.now() + timedelta(days=60)).strftime('%Y-%m-%d'),
+        )
+    ]
 
     def parse(self, response):
         """
         `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
+        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`
 
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
@@ -37,48 +39,66 @@ class ChiBuildingsSpider(Spider):
 
         data = json.loads(response.text)
         for item in data:
-            if item.get('category') != [] and item.get('category')[0] in meeting_types:
-                    start_date = self._naive_datetime_to_tz(self._parse_datetime(item['start']))
-                    end_date = self._naive_datetime_to_tz(self._parse_datetime(item['end']))
-                    item_data = {
-                        '_type': 'event',
-                        'id': self._generate_id({'name': item['title']}),
-                        'name': item['title'],
-                        'description': self._parse_description(item),
-                        'classification': self._parse_classification(item.get('category')[0]),
-                        'start': self._parse_time_dict(start_date),
-                        'end': self._parse_time_dict(end_date),
-                        'all_day': item['allDay'],
-                        'timezone': self.timezone,
-                        'status': self._parse_status(item, start_date),
-                        'sources': self._parse_sources(item)
-                    }
-                    # If it's a board meeting, return description
-                    if item['category'][0] in ['board-meeting', 'admin-opp-committee-meeting']:
-                        yield self._board_meeting(item_data)
-                    else:
-                        # Request each relevant event page, including current data in meta attr
-                        req = scrapy.Request(item['url'], callback=self._parse_event, dont_filter=True)
-                        req.meta['item'] = item_data
-                        yield req
+            if (item.get('category') != [] and item.get('category')[0] in meeting_types):
+                name, dt_time = self._parse_name_time(item['title'])
+                start = self._parse_time_dict(self._parse_datetime(item['start']), dt_time)
+                end = self._parse_time_dict(self._parse_datetime(item['end']), dt_time)
+                end['date'] = start['date']
+                if start['time'] == end['time']:
+                    end['time'] = None
+                item_data = {
+                    '_type': 'event',
+                    'name': name,
+                    'description': '',
+                    'classification': self._parse_classification(item.get('category')[0]),
+                    'start': start,
+                    'end': end,
+                    'all_day': False,
+                    'sources': self._parse_sources(item)
+                }
+                item_data['status'] = self._generate_status(item_data)
+                item_data['id'] = self._generate_id(item_data)
+
+                # Request each relevant event page, including current data in meta attr
+                req = scrapy.Request(
+                    item['url'],
+                    callback=self._parse_event,
+                    dont_filter=True,
+                )
+                req.meta['item'] = item_data
+                req.meta['category'] = item['category']
+                yield req
+
+    def _parse_name_time(self, name):
+        """Return name with time string removed and time if included"""
+        time_match = re.search(r'\d{1,2}:\d{2}([ apm.]{3,5})?', name)
+        if not time_match:
+            return name, None
+        time_str = time_match.group()
+        name = name.replace(time_str, '').replace('@', '').strip()
+        time_str = time_str.strip().replace('.', '')
+        # Default to PM if not AM/PM not provided
+        if 'm' not in time_str:
+            time_str = '{} pm'.format(time_str)
+        return name, datetime.strptime(time_str, '%I:%M %p').time()
 
     def _parse_event(self, response):
         """
         Parse event detail page if additional information
         """
+        item_data = response.meta.get('item', {})
+        category = response.meta.get('category', ['board-meeting'])
+        board_meeting = category[0] in ['board-meeting', 'admin-opp-committee-meeting']
         item = {
-            #'description': self._parse_description(response),
-            'location': self._parse_location(response)
+            'location': self._parse_location(response, board_meeting=board_meeting),
+            'documents': self._parse_documents(response),
         }
         # Merge event details with item data from request meta
-        item.update(response.meta.get('item', {}))
-        return item
+        return {**item, **item_data}
 
     def _parse_classification(self, meeting_type):
         """
         Parse or generate classification (e.g. town hall).
-
-        PBCC has relatively helpful classifications in its WordPress categories.
         """
         if 'committee' in meeting_type:
             return COMMITTEE
@@ -86,31 +106,13 @@ class ChiBuildingsSpider(Spider):
             return BOARD
         return NOT_CLASSIFIED
 
-    def _parse_status(self, item, start_time):
+    def _parse_location(self, item, board_meeting=False):
         """
-        Parse or generate status of meeting. Can be one of:
-
-        * cancelled
-        * tentative
-        * confirmed
-        * passed
-
-        By default, return "tentative"
+        Parse or generate location. Url, latitutde and longitude are all
+        optional and may be more trouble than they're worth to collect.
         """
-        tz = pytz.timezone(self.timezone)
-        local_cal_date = tz.localize(self.calendar_date)
-        if start_time < local_cal_date:
-            return 'passed'
-        else:
-            return 'tentative'
-
-    def _board_meeting(self, item):
-        """
-        Return a standard location for board meetings
-        """
-        item_data = {
-            #'description': None,
-            'location': {
+        if board_meeting:
+            return {
                 'url': 'https://thedaleycenter.com',
                 'name': 'Second Floor Board Room, Richard J. Daley Center',
                 'address': '50 W. Washington Street Chicago, IL 60602',
@@ -119,17 +121,6 @@ class ChiBuildingsSpider(Spider):
                     'longitude': '-87.630191',
                 }
             }
-        }
-        item.update(item_data)
-        return item
-
-    def _parse_location(self, item):
-        """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
-
-        Pulling location from WordPress plugin supplied coordinates if available
-        """
         if len(item.css('.eo-event-venue-map')) == 0:
             return {
                 'url': None,
@@ -160,20 +151,27 @@ class ChiBuildingsSpider(Spider):
             },
         }
 
-    def _parse_description(self, item):
-        """
-        Parse or generate event description.
-        """
-        return item['description']
-
-    def _parse_time_dict(self, date):
-        return  {'date': date.date(),
-        'time': date.time(),
-        'note': ''
+    def _parse_time_dict(self, dt, dt_time):
+        if dt_time is None:
+            dt_time = dt.time()
+        return {
+            'date': dt.date(),
+            'time': dt_time,
+            'note': '',
         }
 
     def _parse_datetime(self, time_str):
         return datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S')
+
+    def _parse_documents(self, response):
+        """Parse documents if available on previous board meeting pages"""
+        documents = []
+        for doc_link in response.css('a.vc_btn3-shape-rounded'):
+            documents.append({
+                'url': doc_link.attrib['href'],
+                'note': doc_link.xpath('./text()').extract_first()
+            })
+        return documents
 
     def _parse_sources(self, item):
         """

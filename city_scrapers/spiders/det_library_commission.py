@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import urllib.parse
+
 from dateutil.parser import parse
-import scrapy
 
 from city_scrapers.constants import COMMISSION, NOT_CLASSIFIED
 from city_scrapers.spider import Spider
@@ -9,7 +9,7 @@ from city_scrapers.spider import Spider
 
 class DetLibraryCommissionSpider(Spider):
     name = 'det_library_commission'
-    agency_name = 'Detroit Public Library Library Commissioners'
+    agency_name = 'Detroit Public Library'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitpubliclibrary.org']
     start_urls = ['https://detroitpubliclibrary.org/about/commission']
@@ -54,17 +54,20 @@ class DetLibraryCommissionSpider(Spider):
             'all_day': False,
             'location': location,
             'documents': [],
-            'sources': [{'url': response.url, 'note': ''}],
+            'sources': [{
+                'url': response.url,
+                'note': ''
+            }],
         }
         data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(data, text='')
+        data['status'] = self._generate_status(data)
         yield data
 
     @staticmethod
     def _parse_name(response):
         name_xpath = '//header/h1/text()'
         name = response.xpath(name_xpath).extract_first()
-        return name
+        return 'Library Commissioners: {}'.format(name)
 
     @staticmethod
     def _parse_classification(meeting_name):
@@ -76,7 +79,10 @@ class DetLibraryCommissionSpider(Spider):
     def _get_location(response):
         room_name = response.xpath('//td/small//text()').extract_first()
         branch_name = response.xpath('//td/strong//text()').extract_first()
-        address_raw = response.xpath('substring-before(substring-after(//script[contains(.,"destination=")]/text(), "destination="), "U.S.")').extract_first()
+        address_raw = response.xpath(
+            'substring-before(substring-after(//script[contains(.,"destination=")]/text()'
+            ', "destination="), "U.S.")'
+        ).extract_first()
         address_formatted = urllib.parse.unquote(address_raw).replace("\n", " ").strip()
 
         location = {
