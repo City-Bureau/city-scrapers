@@ -46,7 +46,7 @@ class ArchiveParserMixin:
             for doc in element.iterchildren('a'):
                 documents.append({
                     'url': doc.attrib['href'],
-                    'note': doc.text.lower(),
+                    'note': doc.text.lower().strip(),
                 })
 
             yield date, documents
@@ -56,24 +56,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
     agency_name = "Mayor's Bicycle Advisory Council"
     timezone = 'America/Chicago'
     allowed_domains = ['chicagocompletestreets.org']
-    start_urls = ['http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/']
-    archive_url = 'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/'
-
-    def start_requests(self):
-        yield scrapy.Request(self.archive_url, callback=self._assemble_archive)
-
-    def _assemble_archive(self, response):
-        """
-        Parse or generate documents.
-        """
-        document_archive = {}
-
-        for date, documents in self._parse_archive_documents(response):
-            document_archive[date] = documents
-
-        self.document_archive = document_archive
-
-        yield from super().start_requests()
+    start_urls = ['http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/']
 
     def parse(self, response):
         """
@@ -83,27 +66,20 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        header, = response.xpath('//p[strong/span[contains(text(), "MBAC meeting dates")]]')
-        self.year = self._parse_year(header)
-        dates = header.xpath('following-sibling::p/text()')
+        for date, documents in self._parse_archive_documents(response):
 
-        for date in dates.extract():
-            date = date.replace('\xa0', ' ').replace('\n', '')
-
-            if date.strip():
-                date_with_year = '{date}, {year}'.format(date=date, year=self.year)
-                dict_key = ','.join(date_with_year.split(',')[1:]).strip()
+            if date:
 
                 data = {
                     '_type': 'event',
                     'name': self._parse_name(),
                     'event_description': self._parse_description(),
                     'classification': self._parse_classification(),
-                    'start': self._parse_start(date_with_year),
-                    'end': self._parse_end(date_with_year),
+                    'start': self._parse_start(date),
+                    'end': self._parse_end(date),
                     'all_day': self._parse_all_day(),
                     'location': self._parse_location(),
-                    'documents': self.document_archive.get(dict_key, []),
+                    'documents': documents,
                     'sources': self._parse_sources(),
                 }
 
@@ -111,13 +87,6 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
                 data['id'] = self._generate_id(data)
 
                 yield data
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        pass
 
     def _parse_name(self):
         """
@@ -153,7 +122,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
         """
         Parse start date and time like "Wednesday, March 7, 2017."
         """
-        date = datetime.datetime.strptime(item, '%A, %B %d, %Y').date()
+        date = datetime.datetime.strptime(item, '%B %d, %Y').date()
 
         return {
             'date': date,
@@ -165,7 +134,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
         """
         Parse end date and time.
         """
-        date = datetime.datetime.strptime(item, '%A, %B %d, %Y').date()
+        date = datetime.datetime.strptime(item, '%B %d, %Y').date()
 
         return {
             'date': date,

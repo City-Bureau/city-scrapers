@@ -52,14 +52,21 @@ def test_location(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
     assert item['sources'] == [{
-        'url': 'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/',
+        'url': 'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/',
         'note': ''
     }]
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_documents(item):
-    assert item['documents'] == []
+    doc_types = ['agenda', 'meeting minutes', 'presentations']
+
+    if item['start']['date'] == datetime.date(2015, 6, 11):
+        doc_types.append('d. taylor comments')
+    elif item['start']['date'] == datetime.date(2015, 3, 12):
+        doc_types.remove('presentations')
+
+    assert [d['note'] for d in item['documents']] == doc_types
 
 
 @pytest.mark.parametrize('item', parsed_items)
