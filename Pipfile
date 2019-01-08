@@ -8,7 +8,7 @@ airtable-python-wrapper = "*"
 boto3 = "*"
 inflector = "*"
 jinja2 = "*"
-legistar = {git = "https://github.com/City-Bureau/python-legistar-scraper", ref = "fix-data-table-parsing"} 
+legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper"} 
 python-dateutil = "*"
 pytz = "*"
 requests = "*"
