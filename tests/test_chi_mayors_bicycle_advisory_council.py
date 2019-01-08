@@ -1,9 +1,11 @@
 import datetime
 
 import pytest
-
 from tests.utils import file_response
-from city_scrapers.spiders.chi_mayors_bicycle_advisory_council import ChiMayorsBicycleAdvisoryCouncilSpider
+
+from city_scrapers.spiders.chi_mayors_bicycle_advisory_council import (
+    ChiMayorsBicycleAdvisoryCouncilSpider
+)
 
 
 test_response = file_response('files/chi_mayors_bicycle_advisory_council.html')

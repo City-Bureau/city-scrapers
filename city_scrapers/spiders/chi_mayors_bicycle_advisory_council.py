@@ -2,8 +2,8 @@
 import datetime
 import re
 
-from lxml import etree
 import scrapy
+from lxml import etree
 
 from city_scrapers.constants import ADVISORY_COMMITTEE
 from city_scrapers.spider import Spider
