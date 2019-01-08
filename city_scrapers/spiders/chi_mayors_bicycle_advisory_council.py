@@ -68,25 +68,23 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
         """
         for date, documents in self._parse_archive_documents(response):
 
-            if date:
+            data = {
+                '_type': 'event',
+                'name': self._parse_name(),
+                'event_description': self._parse_description(),
+                'classification': self._parse_classification(),
+                'start': self._parse_start(date),
+                'end': self._parse_end(date),
+                'all_day': self._parse_all_day(),
+                'location': self._parse_location(),
+                'documents': documents,
+                'sources': self._parse_sources(),
+            }
 
-                data = {
-                    '_type': 'event',
-                    'name': self._parse_name(),
-                    'event_description': self._parse_description(),
-                    'classification': self._parse_classification(),
-                    'start': self._parse_start(date),
-                    'end': self._parse_end(date),
-                    'all_day': self._parse_all_day(),
-                    'location': self._parse_location(),
-                    'documents': documents,
-                    'sources': self._parse_sources(),
-                }
+            data['status'] = self._generate_status(data, text='')
+            data['id'] = self._generate_id(data)
 
-                data['status'] = self._generate_status(data, text='')
-                data['id'] = self._generate_id(data)
-
-                yield data
+            yield data
 
     def _parse_name(self):
         """
