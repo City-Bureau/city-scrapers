@@ -58,14 +58,8 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
-    listing_page = {
-        'url': spider.BASE_URL,
-        'note': ''
-    }
-    archive_page = {
-        'url': spider.BASE_URL + 'mbac-meeting-archives/',
-        'note': 'documents'
-    }
+    listing_page = {'url': spider.BASE_URL, 'note': ''}
+    archive_page = {'url': spider.BASE_URL + 'mbac-meeting-archives/', 'note': 'documents'}
     assert item['sources'] == [listing_page, archive_page]
 
 
