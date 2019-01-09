@@ -2,7 +2,6 @@
 import datetime
 import re
 
-import scrapy
 from lxml import etree
 
 from city_scrapers.constants import ADVISORY_COMMITTEE
@@ -58,7 +57,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
     timezone = 'America/Chicago'
     allowed_domains = ['chicagocompletestreets.org']
     start_urls = [
-        'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/'
+        'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/'  # noqa
     ]
 
     def parse(self, response):

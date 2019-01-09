@@ -19,10 +19,10 @@ def test_name(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['event_description'] == 'MBAC focuses on a wide range of bicycle issues: safety, ' + \
-        'education, enforcement, and infrastructure investment. The Council ' + \
-        'will help identify issues, discuss ideas and set priorities for ' + \
-        'bicycle planning in Chicago.'
+    assert item['event_description'] == 'MBAC focuses on a wide range of ' + \
+        'bicycle issues: safety, education, enforcement, and ' + \
+        'infrastructure investment. The Council will help identify issues, ' + \
+        'discuss ideas and set priorities for bicycle planning in Chicago.'
 
 
 def test_start():
@@ -60,7 +60,7 @@ def test_location(item):
 def test_sources(item):
     assert item['sources'] == [{
         'url':
-            'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/',
+            'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/',  # noqa
         'note': ''
     }]
 
