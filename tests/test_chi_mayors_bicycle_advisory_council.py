@@ -7,7 +7,6 @@ from city_scrapers.spiders.chi_mayors_bicycle_advisory_council import (
     ChiMayorsBicycleAdvisoryCouncilSpider
 )
 
-
 test_response = file_response('files/chi_mayors_bicycle_advisory_council.html')
 spider = ChiMayorsBicycleAdvisoryCouncilSpider()
 parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
