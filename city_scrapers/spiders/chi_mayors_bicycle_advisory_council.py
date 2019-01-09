@@ -38,7 +38,7 @@ class ArchiveParserMixin:
         for line in blob[1:]:  # Omit header
             element = self._tree_from_fragment(line)
 
-            date = element.text.strip()
+            date = ' '.join(element.text.split(' ')[:3])
 
             documents = []
 

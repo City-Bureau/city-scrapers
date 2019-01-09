@@ -71,6 +71,8 @@ def test_documents(item):
         doc_types.append('d. taylor comments')
     elif item['start']['date'] == datetime.date(2015, 3, 12):
         doc_types.remove('presentations')
+    elif item['start']['date'] == datetime.date(2018, 12, 12):
+        doc_types = []
 
     assert [d['note'] for d in item['documents']] == doc_types
 
