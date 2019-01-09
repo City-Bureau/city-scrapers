@@ -56,9 +56,11 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
     agency_name = "Mayor's Bicycle Advisory Council"
     timezone = 'America/Chicago'
     allowed_domains = ['chicagocompletestreets.org']
-    start_urls = [
-        'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/'  # noqa
-    ]
+
+    BASE_URL = 'http://chicagocompletestreets.org/getinvolved/' + \
+        'mayors-advisory-councils/'
+
+    start_urls = [BASE_URL + 'mbac-meeting-archives/']
 
     def parse(self, response):
         """
@@ -159,4 +161,6 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
         """
         Parse or generate sources.
         """
-        return [{'url': self.start_urls[0], 'note': ''}]
+        listing_url = {'url': self.BASE_URL, 'note': ''}
+        archive_url = {'url': self.start_urls[0], 'note': 'documents'}
+        return [listing_url, archive_url]
