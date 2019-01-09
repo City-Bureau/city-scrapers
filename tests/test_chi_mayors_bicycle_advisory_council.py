@@ -26,7 +26,11 @@ def test_description(item):
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': datetime.date(2018, 3, 7), 'time': datetime.time(15, 0), 'note': 'Start at 3 p.m. unless otherwise noted'}
+    assert parsed_items[0]['start'] == {
+        'date': datetime.date(2018, 3, 7),
+        'time': datetime.time(15, 0),
+        'note': 'Start at 3 p.m. unless otherwise noted'
+    }
 
 
 def test_end():
@@ -34,7 +38,9 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_mayors_bicycle_advisory_council/201803071500/x/mayor_s_bicycle_advisory_council'
+    assert parsed_items[0][
+        'id'
+    ] == 'chi_mayors_bicycle_advisory_council/201803071500/x/mayor_s_bicycle_advisory_council'
 
 
 def test_status():
@@ -53,7 +59,8 @@ def test_location(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
     assert item['sources'] == [{
-        'url': 'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/',
+        'url':
+            'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/',
         'note': ''
     }]
 

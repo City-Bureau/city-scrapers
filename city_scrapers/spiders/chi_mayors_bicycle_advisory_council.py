@@ -51,12 +51,15 @@ class ArchiveParserMixin:
 
             yield date, documents
 
+
 class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
     name = 'chi_mayors_bicycle_advisory_council'
     agency_name = "Mayor's Bicycle Advisory Council"
     timezone = 'America/Chicago'
     allowed_domains = ['chicagocompletestreets.org']
-    start_urls = ['http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/']
+    start_urls = [
+        'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/'
+    ]
 
     def parse(self, response):
         """
@@ -134,11 +137,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(Spider, ArchiveParserMixin):
         """
         date = datetime.datetime.strptime(item, '%B %d, %Y').date()
 
-        return {
-            'date': date,
-            'time': None,
-            'note': ''
-        }
+        return {'date': date, 'time': None, 'note': ''}
 
     def _parse_all_day(self):
         """
