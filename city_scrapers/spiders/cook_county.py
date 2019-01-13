@@ -22,7 +22,6 @@ class CookCountySpider(Spider):
         # Only filter for Public Forums (20) in the current and upcoming month
         today = datetime.now()
         next_month = today.replace(day=28) + timedelta(days=5)
-        print(next_month)
         for dt in [today, next_month]:
             mo_str = dt.strftime('%Y-%m')
             url = (

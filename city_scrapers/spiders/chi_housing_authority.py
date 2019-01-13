@@ -48,7 +48,7 @@ class ChiHousingAuthoritySpider(Spider):
 
     def _parse_upcoming(self, response):
         """Returns a list of dicts including the start date and status for upcoming meetings"""
-        year_title = response.css('.text-area-full h2.text-align-center::text').extract_first()
+        year_title = response.css('.text-area-full h2.text-align-center *::text').extract_first()
         upcoming_year = re.search(r'^\d{4}', year_title).group(0)
         date_list = []
         # Get list of month names to check in regular expression

@@ -61,6 +61,10 @@ class ChiPubHealthSpider(Spider):
                 description = item.xpath('text()').extract_first()
                 continue
 
+            # Skip empty rows
+            if not item.css('*::text').extract_first().strip():
+                continue
+
             data = {
                 '_type': 'event',
                 'name': name,
@@ -88,6 +92,10 @@ class ChiPubHealthSpider(Spider):
             # Past meetings are links to the agenda
             date_text = item.xpath('a/text()').extract_first()
 
+        # Handle typos like "December18"
+        if re.match(r'[a-zA-Z]+\d+', date_text):
+            date_match = re.search(r'(?P<month>[a-zA-Z]+)(?P<day>\d+)', date_text)
+            date_text = '{} {}'.format(date_match.group('month'), date_match.group('day'))
         # Extract date formatted like "January 12"
         return datetime.strptime(date_text, '%B %d')
 
