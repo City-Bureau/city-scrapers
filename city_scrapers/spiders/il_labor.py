@@ -74,8 +74,8 @@ class IlLaborSpider(Spider):
         next row contains the meeting time, but sometimes
         multiple meeting locations are listed within a single div.
         """
-        addr_in_row = item.xpath('following-sibling::*//p/text()')
-        addr_next_row = item.xpath('../following-sibling::div[1]//p/text()')
+        addr_in_row = item.xpath('following-sibling::*//p//text()')
+        addr_next_row = item.xpath('../following-sibling::div[1]//p//text()')
         address_list = addr_in_row if len(addr_in_row) > 0 else addr_next_row
         chi_address_list = [
             addr.replace('\xa0', '').strip()

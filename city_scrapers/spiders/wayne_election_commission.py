@@ -31,14 +31,17 @@ class WayneElectionCommissionSpider(Spider):
 
         non_empty_rows_xpath = '//tbody/tr[child::td]'
         for item in response.xpath(non_empty_rows_xpath):
+            start = self._parse_start(item)
+            if start['date'] is None:
+                continue
             data = {
                 '_type': 'event',
                 'name': 'Election Commission',
                 'event_description': '',
                 'classification': COMMISSION,
-                'start': self._parse_start(item),
+                'start': start,
                 'end': {
-                    'date': None,
+                    'date': start['date'],
                     'time': None,
                     'note': ''
                 },
@@ -69,7 +72,7 @@ class WayneElectionCommissionSpider(Spider):
         try:
             meeting_date = parse(month_day_str + ", " + year_str)
             return {'date': meeting_date.date(), 'time': None, 'note': note}
-        except ValueError:
+        except Exception:
             return {'date': None, 'time': None, 'note': note}
 
     def _parse_documents(self, item, url):

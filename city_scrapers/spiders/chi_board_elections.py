@@ -146,10 +146,15 @@ class ChiBoardElectionsSpider(Spider):
         formatitem = formatitem.replace("am", "AM")
         formatitem = formatitem.replace("p.m.", "PM")
         formatitem = formatitem.replace("Sept", "Sep")
+        formatitem = formatitem.replace('.', '')
+        time_str, date_str = formatitem.split(' on ')
+        if len(date_str.split(', ')) > 2:
+            date_str = ', '.join(date_str.split(', ')[1:])
+        dt_str = '{} on {}'.format(time_str, date_str)
         try:
-            datetime_item = datetime.strptime(formatitem, '%I:%M %p on %b. %d, %Y')
+            datetime_item = datetime.strptime(dt_str, '%I:%M %p on %b %d, %Y')
         except ValueError:  # Some months are abbreviated, some are not
-            datetime_item = datetime.strptime(formatitem, '%I:%M %p on %B %d, %Y')
+            datetime_item = datetime.strptime(dt_str, '%I:%M %p on %B %d, %Y')
         dicti = {'date': datetime_item.date(), 'time': datetime_item.time(), 'note': ''}
         return dicti
 

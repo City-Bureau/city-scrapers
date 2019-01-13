@@ -4,11 +4,11 @@ All spiders should yield data shaped according to the Open Civic Data
 specification (http://docs.opencivicdata.org/en/latest/data/event.html).
 """
 import re
-from datetime import date, time
+from datetime import datetime, timedelta
 
 import scrapy
 
-from city_scrapers.constants import BOARD
+from city_scrapers.constants import BOARD, COMMITTEE
 from city_scrapers.spider import Spider
 
 
@@ -35,30 +35,34 @@ class ChiCityCollegeSpider(Spider):
             yield scrapy.Request(next_url, callback=self.parse_event_page, dont_filter=True)
 
     def parse_event_page(self, response):
-        date, start_time, end_time = self._parse_date_and_times(response)
-        data = {
-            '_type': 'event',
-            'name': self._parse_name(response),
-            'event_description': self._parse_description(response),
-            'classification': BOARD,
-            'start': {
-                'date': date,
-                'time': start_time,
-                'note': None,
-            },
-            'end': {
-                'date': date,
-                'time': end_time,
-                'note': None,
-            },
-            'all_day': False,
-            'location': self._parse_location(response),
-            'documents': self._parse_documents(response),
-            'sources': self._parse_sources(response)
-        }
-        data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(data)
-        return data
+        date_str = response.css('#formatDateA::text').extract_first()
+        description = self._parse_description(response)
+        for item in response.css('.page-content table tr'):
+            start = self._parse_start(item, date_str)
+            name = self._parse_name(item)
+            data = {
+                '_type': 'event',
+                'name': name,
+                'event_description': description,
+                'classification': self._parse_classification(name),
+                'start': {
+                    'date': start.date(),
+                    'time': start.time(),
+                    'note': None,
+                },
+                'end': {
+                    'date': start.date(),
+                    'time': (start + timedelta(hours=2)).time(),
+                    'note': 'Estimated 2 hours after start time',
+                },
+                'all_day': False,
+                'location': self._parse_location(response),
+                'documents': self._parse_documents(response),
+                'sources': self._parse_sources(response)
+            }
+            data['id'] = self._generate_id(data)
+            data['status'] = self._generate_status(data)
+            yield data
 
     def _parse_location(self, response):
         """
@@ -88,57 +92,32 @@ class ChiCityCollegeSpider(Spider):
         else:
             return default_location
 
-    def _parse_name(self, response):
+    def _parse_name(self, item):
         """
         Parse or generate event name.
         """
-        title = response.css('h1::text').extract_first()
-        return 'Board of Trustees: {}'.format(title)
+        name = item.css('th:nth-child(2) ::text, td:nth-child(2) ::text').extract_first()
+        if 'regular board meeting' in name.lower():
+            return 'Board of Trustees'
+        return name.replace('\u200b', '').strip()
 
     def _parse_description(self, response):
-        """
-        Static description as given in Issue #275
-        """
-        description = (
-            ' '.join([
-                el.extract().strip()
-                for el in response.css('.page-content > div:not([style="display:none"]) *::text')
-            ])
-        ).strip()
+        content = response.css('.page-content > div:not([style="display:none"]) *::text')
+        description = (' '.join([el.extract().strip() for el in [content[0], content[-1]]])).strip()
         return re.sub(r'\s+', ' ', description.replace('\u200b', '')).strip()
 
-    def _time_from_parts(self, hour_string, minute_string, suffix):
-        hour = int(hour_string)
-        minute = int(minute_string)
-        if suffix == "PM":
-            hour += 12
-        return time(hour, minute)
+    def _parse_start(self, item, date_str):
+        """Parse start date and time from item and page date string"""
+        # Remove day of week if present
+        date_str = re.search(r'[\d/]{8,10}', date_str).group()
+        time_str = item.css('th::text, td::text').extract_first().replace('.', '')
+        time_str = time_str.replace('noon', 'pm').replace('\u200b', '').strip()
+        return datetime.strptime('{} {}'.format(date_str, time_str), '%m/%d/%Y %I:%M %p')
 
-    def _parse_date_and_times(self, response):
-        """
-        Parse start date and time.
-        """
-
-        date_text = response.css('#formatDateA::text').extract_first()
-        date_match = re.search(r"(\d+)\/(\d+)\/(\d+)", date_text)
-        if date_match:
-            date_value = date(
-                month=int(date_match.group(1)),
-                day=int(date_match.group(2)),
-                year=int(date_match.group(3)),
-            )
-        else:
-            date_value = None
-
-        time_text = response.css('.hours::text').extract_first()
-
-        start_time_parts, end_time_parts = re.findall(r"(\d+):(\d{2})\s(AM|PM|noon)", time_text)
-
-        return (
-            date_value,
-            self._time_from_parts(*start_time_parts),
-            self._time_from_parts(*end_time_parts),
-        )
+    def _parse_classification(self, name):
+        if 'committee' in name.lower():
+            return COMMITTEE
+        return BOARD
 
     def _parse_documents(self, response):
         """Returns an array of documents if available"""

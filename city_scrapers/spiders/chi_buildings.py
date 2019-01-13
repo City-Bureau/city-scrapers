@@ -26,6 +26,7 @@ class ChiBuildingsSpider(Spider):
             (datetime.now() + timedelta(days=60)).strftime('%Y-%m-%d'),
         )
     ]
+    custom_settings = {'ROBOTSTXT_OBEY': False}
 
     def parse(self, response):
         """
