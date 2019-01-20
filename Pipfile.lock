@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c52a896d398fc9138f7a6be3a862c69ec7e0c6087fc1ec1019a3d1f295fd23b9"
+            "sha256": "55d25fb4dfa80037f6c6113223165647765109e4bebfe2d1046fe54eb5be9e3f"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -51,10 +51,10 @@
         },
         "azure-common": {
             "hashes": [
-                "sha256:2606ae77ff81c0036965b92ec2efe03eaec02a66714140ca0f7aa401b8b9bbb0",
-                "sha256:c908621a71eb4ee9fab0962e35d3c27a18f09a854d8359c2f32c15b3f4fc576e"
+                "sha256:5dd7ed46da968814020ecd961e7496f0a4f5e59f6d452df02100218145f6d1ba",
+                "sha256:e7cd5a8ee2ec0639454c1bd0f1ea5f609d83977376abfd304527ec7343fef1be"
             ],
-            "version": "==1.1.16"
+            "version": "==1.1.17"
         },
         "azure-storage-blob": {
             "hashes": [
@@ -73,18 +73,18 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:8cb94f08158f5fb5f28fa4e94be9ab5cd03e63a4056b220c65edc39a13e6c5ad",
-                "sha256:e3f01b76a6ed8abf7e1cce631933268bb1cef82b4e1677dbb1c8d97aae759150"
+                "sha256:542c27cdf5756155805665bc0307b1452a4f6c7a433c1f7d7891ade1b6c7bc91",
+                "sha256:65fb08c87bc7fe144f9b74dd4e02ada8b7c2286cd8eb687fa0a249f628fefce2"
             ],
             "index": "pypi",
-            "version": "==1.9.75"
+            "version": "==1.9.82"
         },
         "botocore": {
             "hashes": [
-                "sha256:9b1093791e564df14c6af014e186e2d0975ab96415f1d14f624e03a098c2de68",
-                "sha256:c84b302f016fc4b16227ac975b99eaae73a52bff69b175a46fe43907957e2265"
+                "sha256:8728950603204fa5be825c253b31f596b27677ab38ae6aca0772946ece7bd00a",
+                "sha256:d8487bc063482a4f9f394e05bfb790a95566ed31653a89677a889e1237d571f5"
             ],
-            "version": "==1.12.75"
+            "version": "==1.12.82"
         },
         "certifi": {
             "hashes": [
@@ -136,6 +136,10 @@
                 "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"
             ],
             "version": "==3.0.4"
+        },
+        "city-scrapers-core": {
+            "editable": true,
+            "path": "./../city-scrapers-core"
         },
         "constantly": {
             "hashes": [
@@ -240,9 +244,17 @@
             ],
             "version": "==0.9.3"
         },
+        "jsonschema": {
+            "hashes": [
+                "sha256:a32131e60980cbf9077aa37ead88e952f903690c141eb722154c7d4c50d08487",
+                "sha256:c2480b09c6431a44d6c5948bd2a882b1c299e125af858725ae0edbe9588b858f"
+            ],
+            "index": "pypi",
+            "version": "==3.0.0a5"
+        },
         "legistar": {
             "git": "https://github.com/opencivicdata/python-legistar-scraper",
-            "ref": "8c3166ea3687376d6c1ecdaef9aa5534bf1c984d"
+            "ref": "bf25cc94980f1608b4cc6766529f1155a273e049"
         },
         "lxml": {
             "hashes": [
@@ -362,6 +374,12 @@
                 "sha256:6488f1423b00f73b7ad5167885312bb0ce410d3312eb212393795b53c8caa580"
             ],
             "version": "==18.0.0"
+        },
+        "pyrsistent": {
+            "hashes": [
+                "sha256:5a3827d57ad3e46820e5ee4ed5b9e0ee7bc4686df6634a7368bc1863a5c48a77"
+            ],
+            "version": "==0.14.9"
         },
         "python-crfsuite": {
             "hashes": [
@@ -495,10 +513,10 @@
         },
         "w3lib": {
             "hashes": [
-                "sha256:55994787e93b411c2d659068b51b9998d9d0c05e0df188e6daf8f45836e1ea38",
-                "sha256:aaf7362464532b1036ab0092e2eee78e8fd7b56787baa9ed4967457b083d011b"
+                "sha256:67eacd24f4f233a80bc472835ad6aad99616e49aa1d795f3dbb7b8b028fec6cf",
+                "sha256:e54db912ae1c79d3e246b16d3645bdf701f70ac4f8a2fc46eeb284cc02a31cd7"
             ],
-            "version": "==1.19.0"
+            "version": "==1.20.0"
         },
         "zope.interface": {
             "hashes": [
@@ -592,10 +610,10 @@
         },
         "pluggy": {
             "hashes": [
-                "sha256:447ba94990e8014ee25ec853339faf7b0fc8050cdc3289d4d71f7f410fb90095",
-                "sha256:bde19360a8ec4dfd8a20dcb811780a30998101f078fc7ded6162f0076f50508f"
+                "sha256:8ddc32f03971bfdf900a81961a48ccf2fb677cf7715108f85295c67405798616",
+                "sha256:980710797ff6a041e9a73a5787804f848996ecaa6f8a1b1e08224a5894f2074a"
             ],
-            "version": "==0.8.0"
+            "version": "==0.8.1"
         },
         "py": {
             "hashes": [
@@ -620,11 +638,11 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:3e65a22eb0d4f1bdbc1eacccf4a3198bf8d4049dea5112d70a0c61b00e748d02",
-                "sha256:5924060b374f62608a078494b909d341720a050b5224ff87e17e12377486a71d"
+                "sha256:41568ea7ecb4a68d7f63837cf65b92ce8d0105e43196ff2b26622995bb3dc4b2",
+                "sha256:c3c573a29d7c9547fb90217ece8a8843aa0c1328a797e200290dc3d0b4b823be"
             ],
             "index": "pypi",
-            "version": "==4.1.0"
+            "version": "==4.1.1"
         },
         "python-dateutil": {
             "hashes": [

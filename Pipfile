@@ -18,6 +18,8 @@ azure-storage-blob = "*"
 twisted = ">=18.9.0"
 scrapy = "*"
 scrapy-sentry = "*"
+city-scrapers-core = {editable = true,path = "./../city-scrapers-core"}
+jsonschema = "==3.0.0a5"
 
 [dev-packages]
 freezegun = "*"

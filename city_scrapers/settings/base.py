@@ -26,8 +26,9 @@ COOKIES_ENABLED = False
 
 # Configure item pipelines
 ITEM_PIPELINES = {
-    'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
-    # 'city_scrapers.pipelines.CsvPipeline': 400,
+    "city_scrapers.pipelines.MigrationPipeline": 200,
+    "city_scrapers_core.pipelines.MeetingPipeline": 300,
+    # "city_scrapers_core.pipelines.ValidationPipeline": 400,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -62,7 +63,7 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware': 543,
 }
 
-COMMANDS_MODULE = 'city_scrapers.commands'
+COMMANDS_MODULE = 'city_scrapers_core.commands'
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
