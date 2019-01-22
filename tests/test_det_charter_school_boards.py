@@ -122,7 +122,7 @@ def test_end_calendar():
 def test_id_calendar():
     assert parsed_items[8][
         'id'
-    ] == 'det_charter_school_boards/201808151800/x/charter_schools_boards_mac_dowell_preparatory_academy_board_meeting'  # noqa
+    ] == 'det_charter_school_boards/201808151800/x/charter_schools_boards_macdowell_preparatory_academy_board_meeting'  # noqa
 
 
 def test_status_calendar():
