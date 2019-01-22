@@ -1,27 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import re
-from datetime import date, datetime
+from datetime import date
 
-import scrapy
-from inflector import English, Inflector
-from pytz import timezone
+from city_scrapers_core.spiders import CityScrapersSpider
 
 from city_scrapers.constants import CANCELED, CONFIRMED, PASSED, TENTATIVE
 
 
-class Spider(scrapy.Spider):
-    inflector = Inflector(English)
-
+class Spider(CityScrapersSpider):
     def __init__(self, *args, **kwargs):
-        # Add parameters for feed storage in Chicago time
-        tz = timezone('America/Chicago')
-        now = tz.localize(datetime.now())
-        self.year = now.year
-        self.month = now.strftime('%m')
-        self.day = now.strftime('%d')
-        self.hour_min = now.strftime('%H%M')
         super().__init__(*args, **kwargs)
+        if hasattr(self, 'agency_name'):
+            self.agency = self.agency_name
 
     def _clean_name(self, name):
         """Remove canceled strings from name"""
@@ -30,14 +21,11 @@ class Spider(scrapy.Spider):
         )
 
     def _generate_id(self, data):
-        """
-        Calulate ID. ID must be unique within the data source being scraped.
-        """
-        name = self.inflector.underscore(data['name']).strip('_')
-        id = data.get('id', 'x').replace('/', '-')
-
-        # Try to get the start date and time in YYYYmmddHHMM
-        # Replace missing start date or times with 0's
+        underscore_title = re.sub(
+            r"\s+", "_",
+            re.sub(r"[^A-Z^a-z^0-9^]+", " ", data["name"]).strip()
+        ).lower()
+        item_id = data.get("id", "x").replace("/", "-")
         try:
             start_date_str = data['start']['date'].strftime('%Y%m%d')
         except (KeyError, TypeError):
@@ -46,10 +34,8 @@ class Spider(scrapy.Spider):
             start_time_str = data['start']['time'].strftime('%H%M')
         except (KeyError, TypeError, AttributeError):
             start_time_str = '0000'
-        start_str = '{0}{1}'.format(start_date_str, start_time_str)
-
-        parts = [self.name, start_str, id, name]
-        return '/'.join(parts)
+        start_str = '{}{}'.format(start_date_str, start_time_str)
+        return '/'.join([self.name, start_str, item_id, underscore_title])
 
     def _generate_status(self, data, text=''):
         """

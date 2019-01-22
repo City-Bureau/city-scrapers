@@ -26,8 +26,9 @@ COOKIES_ENABLED = False
 
 # Configure item pipelines
 ITEM_PIPELINES = {
-    'city_scrapers.pipelines.CityScrapersItemPipeline': 200,
-    # 'city_scrapers.pipelines.CsvPipeline': 400,
+    "city_scrapers.pipelines.MigrationPipeline": 200,
+    "city_scrapers_core.pipelines.MeetingPipeline": 300,
+    # "city_scrapers_core.pipelines.ValidationPipeline": 400,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -62,7 +63,7 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware': 543,
 }
 
-COMMANDS_MODULE = 'city_scrapers.commands'
+COMMANDS_MODULE = 'city_scrapers_core.commands'
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -96,7 +97,3 @@ CLOSESPIDER_ERRORCOUNT = 5
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-
-AZURE_ACCOUNT_NAME = os.getenv('AZURE_ACCOUNT_NAME')
-AZURE_ACCOUNT_KEY = os.getenv('AZURE_ACCOUNT_KEY')
-AZURE_CONTAINER = os.getenv('AZURE_CONTAINER')

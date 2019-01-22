@@ -26,6 +26,10 @@ Web tools like [Bountysource](https://www.bountysource.com/){:target="\_blank"} 
 
 ## Volunteer Coding Community
 
+### Forking the template repo
+
+If you plan on maintaining a City Scrapers project in your area, fork our [`city-scrapers-template`](https://github.com/City-Bureau/city-scrapers-template) project on GitHub and follow the instructions there to get started.
+
 ### Convening a community
 
 Plan ahead so your volunteers feel secure within your project scope. How many staffers can you commit to the project? How many coders can you handle at any given time? How long are the meetings, on which day and at what time? Will you be providing food for each meeting? (The answer is yes). What mode of communication will you use across the life of the project—email might work for the first week but may quickly become inefficient as your community grows.
