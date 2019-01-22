@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "485a03e561eea89031536c698e06ce1f3f27f5484ea6da2411096db2b2303013"
+            "sha256": "1f9a4d0775b81f6f0bc60ddc894a68fce9d9f6f9d6833f843da11e4cd08b7eda"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -34,6 +34,27 @@
                 "sha256:fdccab66b68498af9ecfa1fa43693abe546014dd25cf28543cbe9d1334916a58"
             ],
             "version": "==0.7.0"
+        },
+        "azure-common": {
+            "hashes": [
+                "sha256:5dd7ed46da968814020ecd961e7496f0a4f5e59f6d452df02100218145f6d1ba",
+                "sha256:e7cd5a8ee2ec0639454c1bd0f1ea5f609d83977376abfd304527ec7343fef1be"
+            ],
+            "version": "==1.1.17"
+        },
+        "azure-storage-blob": {
+            "hashes": [
+                "sha256:65ebe2e54460566c2077c6b3773a2a0623eabc7b95602010cb51b84077087fda",
+                "sha256:baa828607e21e5c7b6ceb2ede9894d465adf586373c2f7c988fe55eca8e9048c"
+            ],
+            "version": "==1.4.0"
+        },
+        "azure-storage-common": {
+            "hashes": [
+                "sha256:69bba6aad1e8a717eeee0f95c2feeeed72ef802001e66d6d15bf8446c4f53e6a",
+                "sha256:7ab607f9b8fd27b817482194b1e7d43484c65dcf2605aae21ad8706c6891934d"
+            ],
+            "version": "==1.4.0"
         },
         "certifi": {
             "hashes": [
@@ -91,11 +112,11 @@
                 "azure"
             ],
             "hashes": [
-                "sha256:6758ad4ce599903882990e86e864c3d6ae8f0e30f109f068a3ec1d790726316c",
-                "sha256:a9ecb510084a71b3024b535fdfd597bf10a8dfce667e0261e1a94c396c38c890"
+                "sha256:1e81289599c6f6675c851119c4656c23d8a984d3fe1a7c3a16f986c58c3a56fc",
+                "sha256:fa2dd21150b6512b464a9d7ead8c9fe644ae4da2065816986b9510bf38ecd6cd"
             ],
             "index": "pypi",
-            "version": "==0.1.7"
+            "version": "==0.1.8"
         },
         "constantly": {
             "hashes": [
