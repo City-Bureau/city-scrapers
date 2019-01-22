@@ -3,8 +3,9 @@
 import re
 from datetime import date
 
-from city_scrapers.constants import CANCELED, CONFIRMED, PASSED, TENTATIVE
 from city_scrapers_core.spiders import CityScrapersSpider
+
+from city_scrapers.constants import CANCELED, CONFIRMED, PASSED, TENTATIVE
 
 
 class Spider(CityScrapersSpider):

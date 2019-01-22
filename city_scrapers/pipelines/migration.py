@@ -22,7 +22,10 @@ class MigrationPipeline:
             all_day=item["all_day"],
             time_notes=self._get_time_notes(item),
             location=item["location"],
-            links=[{"href": doc["url"], "title": doc["note"]} for doc in item["documents"]],
+            links=[{
+                "href": doc["url"],
+                "title": doc["note"]
+            } for doc in item["documents"]],
             source=item["sources"][0]["url"],
         )
         # Bypass __setitem__ to add uid to Meeting object if present
@@ -45,6 +48,5 @@ class MigrationPipeline:
         return datetime.combine(dt_dict["date"], time_obj)
 
     def _get_time_notes(self, item):
-        return " ".join(
-            [dt_dict.get("note", "") for dt_dict in [item["start"], item["end"]]]
-        ).strip()
+        return " ".join([dt_dict.get("note", "")
+                         for dt_dict in [item["start"], item["end"]]]).strip()

@@ -11,5 +11,5 @@ __all__ = (
     'TravisValidationPipeline',
     'CsvPipeline',
     'CityScrapersItemPipeline',
-    MigrationPipeline
+    MigrationPipeline,
 )
