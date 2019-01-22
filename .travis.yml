@@ -11,16 +11,11 @@ install:
   - pipenv install --dev --three --system
 script:
   - isort --check-only --diff || exit 1
-  - yapf --diff --recursive ./city_scrapers/ ./deploy/ ./scripts/ ./tests/ || exit 1
+  - yapf --diff --recursive ./city_scrapers/ ./tests/ || exit 1
   - flake8
   - pytest
   - scrapy validate
 deploy:
-  - skip_cleanup: true
-    provider: script
-    script: ./deploy/deploy_acr.sh
-    on:
-      branch: master
   - skip_cleanup: true
     provider: script
     script:
