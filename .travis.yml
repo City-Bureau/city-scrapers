@@ -14,10 +14,20 @@ script:
   - yapf --diff --recursive ./city_scrapers/ ./deploy/ ./scripts/ ./tests/ || exit 1
   - flake8
   - pytest
-  - ./travis/validate_spiders.sh
+  - scrapy validate
 deploy:
   - skip_cleanup: true
     provider: script
     script: ./deploy/deploy_acr.sh
     on:
       branch: master
+  - skip_cleanup: true
+    provider: script
+    script:
+      - export PYTHONPATH=$(pwd):$PYTHONPATH
+      - export SCRAPY_SETTINGS_MODULE=city_scrapers.settings.prod
+      - scrapy runall
+      - scrapy combinefeeds
+    on:
+      branch: master
+      condition: $TRAVIS_EVENT_TYPE = cron

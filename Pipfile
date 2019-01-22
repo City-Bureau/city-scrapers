@@ -4,22 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-airtable-python-wrapper = "*"
-boto3 = "*"
 inflector = "*"
 jinja2 = "*"
-legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper"} 
 python-dateutil = "*"
 pytz = "*"
 requests = "*"
-usaddress = "*"
-ics = "*"
-azure-storage-blob = "*"
 twisted = ">=18.9.0"
 scrapy = "*"
 scrapy-sentry = "*"
-city-scrapers-core = {editable = true,path = "./../city-scrapers-core"}
-jsonschema = "==3.0.0a5"
+legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper"} 
+city-scrapers-core = {extras = ["azure"], version=">=0.1.6"}
 
 [dev-packages]
 freezegun = "*"
@@ -27,3 +21,6 @@ pytest = "*"
 "flake8" = "*"
 isort = "*"
 yapf = "*"
+
+[pipenv]
+allow_prereleases = true

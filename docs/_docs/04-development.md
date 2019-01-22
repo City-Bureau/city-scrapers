@@ -143,15 +143,15 @@ $ git checkout -b XXXX-spider-NAMEOFAGENCY
 Create a spider from our tempalte with a spider slug, agency name, and a URL to start scraping. Inside your virtual environment following the previous examples (or prefixed by `pipenv run`) run:
 
 ```bash
-(city-scrapers)$ python scripts/generate_spider.py chi_housing "Chicago Housing Authority" http://www.thecha.org
+(city-scrapers)$ scrapy genspider chi_housing "Chicago Housing Authority" http://www.thecha.org
 ```
 
 You should see some output like:
 
 ```bash
-Created /Users/eads/Code/city-scrapers/city_scrapers/spiders/chi_housing.py
-Created /Users/eads/Code/city-scrapers/tests/test_chi_housing.py
-Created /Users/eads/Code/city-scrapers/tests/files/chi_housing_thecha.html
+Created file: /Users/eads/Code/city-scrapers/city_scrapers/spiders/chi_housing.py
+Created file: /Users/eads/Code/city-scrapers/tests/test_chi_housing.py
+Created file: /Users/eads/Code/city-scrapers/tests/files/chi_housing.html
 ```
 
 #### 4. Test crawling
@@ -159,12 +159,10 @@ Created /Users/eads/Code/city-scrapers/tests/files/chi_housing_thecha.html
 You now have a spider named `chi_housing`. To run it (admittedly, not much will happen until you start editing the scraper), run:
 
 ```bash
-(city-scrapers)$ scrapy crawl chi_parks
+(city-scrapers)$ scrapy crawl chi_housing
 ```
 
 If there are no error messages, congratulations! You have a barebones spider.
-
-Additionally, if you uncomment `city_scrapers.pipelines.CsvPipeline` in `city_scrapers/settings/base.py`, each time you run your scraper you'll can see the results as CSV output in the `/city_scrapers/local_outputs/` folder. Each `scrapy crawl` command produces a unique file with the agency name and timestamp. These files are ignored by git, but you may want to clean the folder up locally after some testing.
 
 #### 5. Run the automated tests
 
@@ -241,12 +239,67 @@ The spider should look something like this:
 
 ```python
 # -*- coding: utf-8 -*-
-from datetime import datetime
+from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.spider import Spider
 
+class ChiHousingSpider(CityScrapersSpider):
+    name = 'chi_housing'
+    agency = 'Chicago Housing Authority'
+    timezone = 'America/Chicago'
+    allowed_domains = ['thecha.org']
+    start_urls = ['http://thecha.org']
 
-class ChiHousingSpider(Spider):
+    def parse(self, response):
+        """
+        `parse` should always `yield` a Meeting item.
+
+        Change the `_parse_id`, `_parse_title`, etc methods to fit your scraping
+        needs.
+        """
+        for item in response.css(".meetings"):
+            meeting = Meeting(
+                title=self._parse_title(item),
+                description=self._parse_description(item),
+                classification=self._parse_classification(item),
+                start=self._parse_start(item),
+                end=self._parse_end(item),
+                all_day=self._parse_all_day(item),
+                time_notes=self._parse_time_notes(item),
+                location=self._parse_location(item),
+                links=self._parse_links(item),
+                source=self._parse_source(response),
+            )
+
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
+
+            yield meeting
+
+    def _parse_title(self, item):
+        """Parse or generate meeting title."""
+        return ""
+
+    def _parse_description(self, item):
+        """Parse or generate meeting description."""
+        return ""
+
+    def _parse_classification(self, item):
+        """Parse or generate classification from allowed options."""
+        return NOT_CLASSIFIED
+
+    # ...
+```
+
+The `ChiHousingSpider.parse(...)` method is a standard part of Scrapy and handles returning data in the correct format and any subsequent requests to be made.
+
+Every spider inherits from our custom `CityScrapersSpider` class, defined in the `city_scrapers_core` package which adds some provides some of the helper functions like `_get_id` and `_get_status`.
+
+There are pre-defined helper methods for every major field in the data. It's your job to fill them in.
+
+```python
+class ChiHousingSpider(CityScrapersSpider):
     name = 'chi_housing'
     agency_name = 'Chicago Housing Authority'
     timezone = 'America/Chicago'
@@ -255,82 +308,90 @@ class ChiHousingSpider(Spider):
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows a modified
-        OCD event schema (docs/_docs/05-development.md#event-schema)
+        `parse` should always `yield` a Meeting item.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_id`, `_parse_title`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css('.eventspage'):
-            data = {
-                '_type': 'event',
-                'name': self._parse_name(item),
-                'event_description': self._parse_description(item),
-                'classification': self._parse_classification(item),
-                'start': self._parse_start(item),
-                'end': self._parse_end(item),
-                'all_day': self._parse_all_day(item),
-                'location': self._parse_location(item),
-                'documents': self._parse_documents(item),
-                'sources': self._parse_sources(item),
-            }
+        for item in response.css(".meetings"):
+            meeting = Meeting(
+                # string: Title of the meeting
+                title=self._parse_title(item),
+                # string: Description of this specific meeting (not of the public agency generally)
+                description=self._parse_description(item),
+                # string: One of the classifications in city_scrapers_core.constants
+                # ADVISORY_COMMITTEE, BOARD, CITY_COUNCIL, COMMISSION, COMMITTEE, FORUM, POLICE_BEAT, NOT_CLASSIFIED
+                classification=self._parse_classification(item),
+                # naive datetime: Datetime when the meeting starts (in local time)
+                start=self._parse_start(item),
+                # naive datetime: Datetime when the meeting ends, can be left empty if unknown and it will default to 2 hours from the start
+                end=self._parse_end(item),
+                # boolean: Whether the meeting is an all-day event
+                all_day=self._parse_all_day(item),
+                # string: Any notes on the time (i.e. whether it's an estimate and will start after a prior meeting)
+                time_notes=self._parse_time_notes(item),
+                # dict: A dictionary containing at least one of "name" and "address"
+                location=self._parse_location({
+                    "name": "City Hall",
+                    "address": "123 Fake St, Chicago, IL 60601",
+                }),
+                # list: A list of dictionaries for any relevant links to PDF documents like agendas or minutes. "href"
+                links=self._parse_links([
+                    {
+                        # string: Required, the URL of the link
+                        "href": "https://example.com/agenda.pdf",
+                        # string: Optional, any relevant title for the link
+                        "title": "Agenda",
+                    }
+                ]),
+                # string: A link to the original meeting source page (generally the URL of the response)
+                source=self._parse_source(response),
+            )
 
-            data['status'] = self._generate_status(data)
-            data['id'] = self._generate_id(data)
+            # string: Status of the meeting
+            meeting["status"] = self._get_status(meeting)
+            # string: Unique identifier (always created with this method)
+            meeting["id"] = self._get_id(meeting)
 
-            yield data
-
-        # self._parse_next(response) yields more responses to parse if necessary.
-        # uncomment to find a "next" url
-        # yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = None  # What is next URL?
-        return scrapy.Request(next_url, callback=self.parse)
-
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
-        return ''
-
-    def _parse_description(self, item):
-        """
-        Parse or generate event description.
-        """
-        return ''
+            yield meeting
 
     # ...
 ```
 
-The `ChiHousingSpider.parse(...)` method is a standard part of Scrapy and handles returning data in the correct format and any subsequent requests to be made.
-
-Every spider inherits from our custom `Spider` class, defined in `city_scrapers/spider.py` which adds some provides some of the helper functions like `_generate_id` and `_generate_status`.
-
-There are pre-defined helper methods for every major field in the data. It's your job to fill them in. **See the Event Schema** to see what is required in each field.
-
-For example, `_parse_name` could be:
+For example, `_parse_title` could be:
 
 ```python
 class ChiHousingSpider(Spider):
 
     # ...
 
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
-        name = item.css('.name::text').extract_first()
-        return name
+    def _parse_title(self, item):
+        """Parse or generate meeting title."""
+        title = item.css(".title::text").extract_first()
+        return title
 
     # ...
 ```
 
 Often a value for meetings returned by a spider will be the same regardless of meeting content (an example is that most meetings will always have `False` for the `all_day` value). In this case, feel free to remove the `_parse_*` method for that field, and simply include the value in each dictionary (so `'all_day': False` in this example rather than `'all_day': self._parse_all_day(item)`).
+
+##### Meeting Items
+
+The `Meeting` items you need to return are derived from Scrapy's [`Item` classes](https://docs.scrapy.org/en/latest/topics/items.html). The original source can be found in the [`city_scrapers_core` package]().
+
+```python
+class ChiHousingSpider(Spider):
+
+    # ...
+
+    def parse(self, item):
+        """Parse or generate meeting title."""
+        title = item.css(".title::text").extract_first()
+        return title
+
+    # ...
+
+```
 
 #### B. Write tests
 
@@ -339,36 +400,37 @@ Our general approach to writing tests is to save a copy of a site's HTML in `tes
 Here is the test setup and an example test:
 
 ```python
-from datetime import date, time
+from datetime import datetime
 
 import pytest
 from freezegun import freeze_time
 from tests.utils import file_response
+
 from city_scrapers.spiders.chi_housing import ChiHousingSpider
 
-test_response = file_response('files/chi_housing.html')
+test_response = file_response("files/chi_housing.html")
 spider = ChiHousingSpider()
 
-freezer = freeze_time('2018-10-12 12:00:00')
+freezer = freeze_time("2018-10-12")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 1, 16), 'time': time(14, 0), 'note': ''}
+    assert parsed_items[0]["start"] == datetime(2018, 1, 16, 14, 0)
 ```
 
-You'll notice that the `freeze_time` function is called from the `freezegun` library before items are parsed from the spider. This is because some of our functions, `_generate_status` in particular, are time-sensitive and their outputs will change depending when they're executed. Calling `freeze_time` with the date the test HTML was initially scraped ensures that we will get the same output in our tests no matter when we run them.
+You'll notice that the `freeze_time` function is called from the `freezegun` library before items are parsed from the spider. This is because some of our functions, `_get_status` in particular, are time-sensitive and their outputs will change depending when they're executed. Calling `freeze_time` with the date the test HTML was initially scraped ensures that we will get the same output in our tests no matter when we run them.
 
 It is also possible to execute a function over every element in the `parsed_items` list. In the following example, the `test_all_day` function will be invoked once for each element in `parsed_items` list.
 
 ```python
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_all_day(item):
-    assert item['all_day'] is False
+    assert item["all_day"] is False
 ```
 
 Parameterized test functions are best used to assert something about every event such as the existence of a field or a value all events will share.
@@ -387,72 +449,7 @@ If your ready to submit your code to the project, you should create a pull reque
 
 Additionally, please use the pull request description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
 
-## Event Schema
-
-Our data model for events is based on the [Event object](http://docs.opencivicdata.org/en/latest/data/event.html){:target="\_blank"} from the [Open Civic Data](http://docs.opencivicdata.org){:target="\_blank"} project.
-
-"Required" means that the value cannot be `None`, an empty string, empty dictionary nor empty list. "Optional" means that `None` or empty values are ok.
-
-```python
-{
-  '_type': 'event',                              # required value
-
-  'id': 'unique identifier'                      # required string in format:
-                                                # <spider-name>/<start-time-in-YYYYMMddhhmm>/<unique-id>/<underscored-event-name>
-                                                # if start-time is missing, replace hhmm with 0000
-
-  'name': 'Committee on Pedestrian Safety',      # required string, name of the event
-
-  'event_description': 'A longer description',   # optional string, event description
-
-  'all_day': False,                              # required boolean, whether or not the event lasts all day
-
-  'status': 'tentative',                        # required string, one of the options in constants.py
-                                                # 'canceled': event is listed as canceled or rescheduled
-                                                # 'tentative': event both does not have an agenda and the event is > 7 days away
-                                                # 'confirmed': either an agenda is posted or the event will happen in <= 7 days
-                                                # 'passed': event happened in the past
-
-  'classification': 'Board',                    # optional string. This field is used by some spiders
-                                                # to differentiate between board and various committee
-                                                # Options are defined in constants.py
-
-  'start': {                                     # required dictionary
-    'date': date(2018, 12, 31),                  # required datetime.date object in local timezone
-    'time': None,                                # optional datetime.time object in local timezone
-    'note': 'in the afternoon'                   # optional string, supplementary information if there's no start time
-  },
-
-  'end': {                                       # required dictionary
-    'date': date(2018, 12, 31),                  # optional datetime.date object in local timezone
-    'time': time(13, 30),                        # optional datetime.time object in local timezone
-    'note': 'estimated 2 hours after start time' # optional string, supplementary information if there's no end time
-  },
-
-  'location': {                                  # required dict of event locations
-                                                # for multiple locations: make a different event with unique id for each location
-    'address': '121 N LaSalle Dr, Chicago, IL',  # required string, address of the location
-    'name': 'City Hall, Room 201A',              # optional string, name of the location
-    'neighborhood': 'Loop'                       # optional string, use community area in Chicago
-  },
-
-  'documents': [                                 # optional list of documents
-    {
-      'url': 'http://www.example.com/agenda.pdf',# required string, URL to the document
-      'note': 'agenda'                           # required string, name of the document
-    }
-  ],
-
-  'sources': [                                   # required list of sources
-    {
-      'url': '',                                 # required string, URL where data was scraped from
-      'note': ''                                 # optional string, info about how the data was scraped
-    }
-  ]
-}
-```
-
-### Event Schema Guidelines
+### Meeting Item Guidelines
 
 Since we're aggregating a wide variety of different types of meetings and information into a single schema, there are bound to be cases where the categories are unclear or don't seem to fit. Don't hesitate to reach out in a GitHub issue or on Slack if you aren't sure where certain information should go, but here are some additional notes on some of the schema attributes.
 
@@ -460,36 +457,36 @@ Since we're aggregating a wide variety of different types of meetings and inform
 
 When setting values for `classification` or `status` (although `status` should generally be set with the `_generate_status` method), you should import values from `city_scrapers/constants.py`. These constants are defined to avoid accidental mistakes like inconsistent capitalization or spelling for values that have a predefined list of options.
 
-#### `name`
+#### `title`
 
-If the agency source supplies different names for each of its meetings, an example being the [Chicago Transit Authority](https://www.transitchicago.com/board/notices-agendas-minutes/) for the `chi_transit` spider, those names should be used here.
+If the agency source supplies different titles for each of its meetings, an example being the [Chicago Transit Authority](https://www.transitchicago.com/board/notices-agendas-minutes/) for the [`chi_transit`](https://github.com/City-Bureau/city-scrapers/blob/master/city_scrapers/spiders/chi_transit.py) spider, those titles should be used here.
 
-However, many agencies have a single standing meeting that we're scraping like [Detroit Eight Mile Woodward Corridor Improvement Authority](http://www.degc.org/public-authorities/emwcia/) for the `det_eight_mile_woodward_corridor_improvement_authority` spider. In this case, the Improvement Authority is the actual agency, but we're tracking meetings for the Board of Directors, so "Board of Directors" can be returned as the name.
+However, many agencies have a single standing meeting that we're scraping like [Detroit Eight Mile Woodward Corridor Improvement Authority](http://www.degc.org/public-authorities/emwcia/) for the [`det_eight_mile_woodward_corridor_improvement_authority`](https://github.com/City-Bureau/city-scrapers/blob/master/city_scrapers/spiders/det_eight_mile_woodward_corridor_improvement_authority.py) spider. In this case, the Improvement Authority is the actual agency, but we're tracking meetings for the Board of Directors, so "Board of Directors" can be returned as the title.
 
-There will be other cases where the information isn't entirely clear, and in general the approach should be to avoid repeating as much of the agency name in the meeting name as possible, and instead provide a more specific description where provided. So if the agency is the `Chicago Board of Directors for ...`, something like `Board of Directors` could still work as an abbreviated version.
+There will be other cases where the information isn't entirely clear, and in general the approach should be to avoid repeating as much of the agency name in the meeting title as possible, and instead provide a more specific description where provided. So if the agency is the `Chicago Board of Directors for ...`, something like `Board of Directors` could still work as an abbreviated version.
 
 #### `status`
 
-Generally `status` should be set by passing the dictionary for a meeting to the `_generate_status` function. This checks when the meeting is in relation to the present time as well as if "canceled" or "rescheduled" appear in the meeting name or description. You can also provide values to the optional keyword argument `text` if there is additional text that may include one of those values and indicate a canceled meeting.
+Generally `status` should be set by passing the dictionary for a meeting to the `_get_status` function. This checks when the meeting is in relation to the present time as well as if "canceled" or "rescheduled" appear in the meeting name or description. You can also provide values to the optional keyword argument `text` if there is additional text that may include one of those values and indicate a canceled meeting.
 
-#### `event_description`
+#### `description`
 
-The event description should be filled by any additional information supplied by an agency website about a specific meeting. A generic description relating to the agency on a page should only be used if it looks like it can be changed on the meeting level (i.e. a description is duplicated on meeting detail pages). The idea behind this is that even if the description is usually the same, meeting-specific updates or cancellations would be captured by pulling those details.
+The description should be filled by any additional information supplied by an agency website about a specific meeting. A generic description relating to the agency on a page should only be used if it looks like it can be changed on the meeting level (i.e. a description is duplicated on meeting detail pages). The idea behind this is that even if the description is usually the same, meeting-specific updates or cancellations would be captured by pulling those details.
 
-For anything else, the `event_description` field should be left as an empty string `''`.
+For anything else, the `description` field should be left as an empty string `''`.
 
 ### Spider attributes
 
 In addition, each spider records the following data as attributes:
 
 ```python
-class ChiAnimalSpider(Spider):
-    name = 'chi_animal'                                # name of spider in lowercase
-    agency_name = 'Animal Care and Control Commission' # name of agency
-    timezone = 'America/Chicago'                       # timezone of the events in tzinfo format
+class ChiAnimalSpider(CityScrapersSpider):
+    name = "chi_animal"                                # name of spider in lowercase
+    agency = "Animal Care and Control Commission"      # name of agency
+    timezone = "America/Chicago"                       # timezone of the events in tzinfo format
 ```
 
-#### `agency_name`
+#### `agency`
 
 The agency name initially supplied on creating the spider should be the overall governmental body that spider relates to, even if the body is already represented in another scraper. An example of this is in the `chi_schools`, `chi_school_actions`, and `chi_school_community_action_council` spiders. All of these spiders relate to different subdivisions of Chicago Public Schools, but they're split into separate spiders because they scrape different websites. In situations like this, the meeting name should clarify the subdivision holding the actual meeting, specifying the respective school actions and community action councils in this case.
 
