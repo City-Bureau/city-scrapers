@@ -21,10 +21,10 @@ before_deploy:
 deploy:
   - skip_cleanup: true
     provider: script
-    script: scrapy runall
+    script: scrapy runall -s LOG_ENABLED=False
     on:
       python: 3.6
       branch: master
       condition: $TRAVIS_EVENT_TYPE = cron
 after_deploy:
-  - scrapy combinefeeds
+  - scrapy combinefeeds -s LOG_ENABLED=False
