@@ -48,5 +48,7 @@ class MigrationPipeline:
         return datetime.combine(dt_dict["date"], time_obj)
 
     def _get_time_notes(self, item):
-        return " ".join([dt_dict.get("note", "")
-                         for dt_dict in [item.get("start", {}), item.get("end", {})]]).strip()
+        return " ".join([
+            dt_dict.get("note", "")
+            for dt_dict in [item.get("start", {}), item.get("end", {})]
+        ]).strip()
