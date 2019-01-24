@@ -51,12 +51,6 @@ ITEM_PIPELINES = {
 #   'Accept-Language': 'en',
 #}
 
-# Enable or disable spider middlewares
-# See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'city_scrapers.middlewares.CityScrapersSpiderMiddleware': 543,
-#}
-
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {

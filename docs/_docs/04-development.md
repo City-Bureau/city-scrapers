@@ -20,17 +20,11 @@ Follow the following directions for cloning the repository and installing requir
 
 If in doubt, please also refer to the [Setup Help](/docs/setup-help/), which should be useful for common first-time setup issues.
 
-### Windows Issues
-
-Setting up a Python environment on Windows can be challenging at times, and while the installation instructions below should generally work, in the event of issues you can look at our guide on [setting up an environment on Codeanywhere](/docs/windows-setup/).
-
-If you don't mind some installation and want to develop locally, you can also consider creating a Linux environment by installing a virtual machine or partitioning your computer.
-
 ### Clone the Repository
 
 These steps are the same, regardless of which option below you choose.
 
-1. Fork the repository
+1. Fork the repository (either from the repo for the local City Scrapers project you're working on or [City-Bureau/city-scrapers](https://github.com/City-Bureau/city-scrapers))
 
 2. Clone the fork to your local machine:
 
@@ -44,7 +38,7 @@ $ git clone https://github.com/YOUR-USERNAME/city-scrapers.git
 $ cd city-scrapers
 ```
 
-**If you do not plan on doing any development, you can skip creating a fork and just clone the main City Bureau repo**
+**If you do not plan on doing any development, you can skip creating a fork and just clone the repo**
 
 ## Local Python3 and Virtualenv
 
@@ -455,7 +449,25 @@ Since we're aggregating a wide variety of different types of meetings and inform
 
 ### Constants
 
-When setting values for `classification` or `status` (although `status` should generally be set with the `_generate_status` method), you should import values from `city_scrapers/constants.py`. These constants are defined to avoid accidental mistakes like inconsistent capitalization or spelling for values that have a predefined list of options.
+When setting values for `classification` or `status` (although `status` should generally be set with the `_get_status` method), you should import values from `city_scrapers_core.constants`. These constants are defined to avoid accidental mistakes like inconsistent capitalization or spelling for values that have a predefined list of options.
+
+**Classification Constants**
+
+- `ADVISORY_COMMITTEE`
+- `BOARD`
+- `CITY_COUNCIL`
+- `COMMISSION`
+- `COMMITTEE`
+- `FORUM`
+- `POLICE_BEAT`
+- `NOT_CLASSIFIED`
+
+**Status Constants**
+
+- `CANCELLED`
+- `TENTATIVE`
+- `CONFIRMED`
+- `PASSED`
 
 #### `title`
 

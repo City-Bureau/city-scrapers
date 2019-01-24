@@ -112,11 +112,11 @@
                 "azure"
             ],
             "hashes": [
-                "sha256:0a2cd07f788d6fb9c3a210e44e07e79fc95abcdfbb327e32a230e62d9dc2b512",
-                "sha256:e62c99a712ae48adc6215a17d34f2ea5a069f8851d5254de8af4c54dfa219b3e"
+                "sha256:1b4dfce4a76b26edfd81b3cca740ff6f80f5484189c5fba65bf9bc0dff58e7ac",
+                "sha256:2b9317267517ee405e8393fac467d0e3aae8e62237d3fe1a9399dd7739dd3ff5"
             ],
             "index": "pypi",
-            "version": "==0.1.9"
+            "version": "==0.1.10"
         },
         "constantly": {
             "hashes": [
