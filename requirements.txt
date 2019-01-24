@@ -6,7 +6,7 @@ automat==0.7.0
 certifi==2018.11.29
 cffi==1.11.5
 chardet==3.0.4
-city-scrapers-core[azure]==0.1.6
+city-scrapers-core[azure]==0.1.10
 constantly==15.1.0
 cryptography==2.4.2
 cssselect==1.0.3
