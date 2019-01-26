@@ -70,6 +70,8 @@ $ pipenv run scrapy crawl chi_library
 
 ### `virtualenv-wrapper` installation
 
+**SKIP THIS section if `pipenv install` was successful**
+
 The following assumes you have `virtualenv` and `virtualenv-wrapper` installed.
 If you are using a different virtual environment manager, please refer to its
 documentation (steps 1-3 should be the same).
@@ -99,6 +101,12 @@ Should you need to deactivate the virtual environment, it is as simple as:
 ```bash
 (city-scrapers)$ deactivate
 ```
+
+### Windows Dependencies
+
+If you're setting up the project in a Windows environment, you'll also need to install `pypiwin32`.
+
+You can do this by running `pipenv install pypiwin32` for `pipenv` or installing normally with `pip install pypiwin32` in a virtual environment.
 
 ## Contribute
 
