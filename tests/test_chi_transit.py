@@ -1,10 +1,10 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import COMMITTEE, TENTATIVE
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import COMMITTEE
 from city_scrapers.spiders.chi_transit import ChiTransitSpider
 
 freezer = freeze_time('2018-01-01 12:00:00')
@@ -14,7 +14,7 @@ test_response = file_response(
     'files/chi_transit.html', url='https://www.transitchicago.com/board/notices-agendas-minutes/'
 )
 spider = ChiTransitSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
 
@@ -27,26 +27,24 @@ def test_unique_id_count():
     assert len(set([item['id'] for item in parsed_items])) == 23
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Employee Retirement Review Committee Meeting'
+def test_title():
+    assert parsed_items[0]['title'] == 'Employee Retirement Review Committee Meeting'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    EXPECTED_START = {'date': date(2018, 6, 15), 'time': time(14, 0), 'note': ''}
-    assert parsed_items[0]['start'] == EXPECTED_START
+    assert parsed_items[0]['start'] == datetime(2018, 6, 15, 14, 0)
 
 
 def test_end():
-    EXPECTED_END = {
-        'date': date(2018, 6, 15),
-        'time': time(17, 0),
-        'note': 'estimated 3 hours after start time'
-    }
-    assert parsed_items[0]['end'] == EXPECTED_END
+    assert parsed_items[0]['end'] == datetime(2018, 6, 15, 17, 0)
+
+
+def test_time_notes():
+    assert parsed_items[0]['time_notes'] == 'End estimated 3 hours after start time'
 
 
 def test_classification():
@@ -59,33 +57,30 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'confirmed'
+    assert parsed_items[0]['status'] == TENTATIVE
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'neighborhood': 'west loop',
         'name': 'Chicago Transit Authority 2nd Floor Boardroom',
-        'address': '567 West Lake Street Chicago, IL'
+        'address': '567 West Lake Street Chicago, IL 60661',
     }
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'https://www.transitchicago.com/board/notices-agendas-minutes/',
-        'note': ''
-    }]
+    assert parsed_items[0]['source'
+                           ] == 'https://www.transitchicago.com/board/notices-agendas-minutes/'
 
 
 def test_documents():
-    assert parsed_items[0]['documents'] == [
+    assert parsed_items[0]['links'] == [
         {
-            'note': 'Meeting Notice',
-            'url': 'http://www.transitchicago.com/assets/1/21/061818_ERR_Notice.pdf?20564'
+            'title': 'Meeting Notice',
+            'href': 'http://www.transitchicago.com/assets/1/21/061818_ERR_Notice.pdf?20564'
         },
         {
-            'note': 'Agenda',
-            'url': 'http://www.transitchicago.com/assets/1/21/061818_ERR_Agenda.pdf?20565'
+            'title': 'Agenda',
+            'href': 'http://www.transitchicago.com/assets/1/21/061818_ERR_Agenda.pdf?20565'
         },
     ]
 
@@ -93,8 +88,3 @@ def test_documents():
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
     assert item['all_day'] is False
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
