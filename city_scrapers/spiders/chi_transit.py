@@ -1,18 +1,14 @@
-# -*- coding: utf-8 -*-
-"""
-All spiders should yield data shaped according to the Open Civic Data
-specification (http://docs.opencivicdata.org/en/latest/data/event.html).
-"""
 import re
 from datetime import datetime, timedelta
 
-from city_scrapers.constants import BOARD, COMMITTEE
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import BOARD, COMMITTEE
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class ChiTransitSpider(Spider):
+class ChiTransitSpider(CityScrapersSpider):
     name = 'chi_transit'
-    agency_name = 'Chicago Transit Authority'
+    agency = 'Chicago Transit Authority'
     timezone = 'America/Chicago'
     allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
@@ -20,44 +16,35 @@ class ChiTransitSpider(Spider):
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard http://docs.opencivicdata.org/en/latest/data/event.html
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         response_items = response.css('.agendaminuteDataTbl tr:not(:first-child)')
         for idx, item in enumerate(response_items):
             # Including previous item for meetings where it's needed
             prev_item = response_items[idx - 1] if idx > 0 else None
-            start_datetime = self._parse_start_datetime(item, prev_item)
+            start_datetime = self._parse_start(item, prev_item)
             if start_datetime:
-                item_data = {
-                    '_type': 'event',
-                    'name': self._parse_name(item),
-                    'event_description': self._parse_description(item),
-                    'classification': self._parse_classification(item),
-                    'start': self._parse_start(item, prev_item),
-                    'end': self._parse_end(item, prev_item),
-                    'all_day': self._parse_all_day(item),
-                    'location': self._parse_location(item),
-                    'sources': self._parse_sources(response),
-                    'documents': self._parse_documents(item)
-                }
-                item_data['id'] = self._generate_id(item_data)
-                item_data['status'] = self._generate_status(item_data)
-                yield item_data
-
-    def _parse_description(self, item):
-        return ''
-
-    def _parse_all_day(self, item):
-        return False
+                meeting = Meeting(
+                    title=self._parse_title(item),
+                    description='',
+                    classification=self._parse_classification(item),
+                    start=start_datetime,
+                    end=self._parse_end(start_datetime),
+                    time_notes="End estimated 3 hours after start time",
+                    all_day=False,
+                    location=self._parse_location(item),
+                    links=self._parse_links(item),
+                    source=self._parse_source(response),
+                )
+                meeting['status'] = self._get_status(meeting)
+                meeting['id'] = self._get_id(meeting)
+                yield meeting
 
     def _parse_classification(self, item):
-        """
-        Classify meeting as board or committee meetings.
-        """
+        """Classify meeting as board or committee meetings."""
         name = item.css('td:nth-child(3)::text').extract_first().lower()
         if 'board' in name:
             return BOARD
@@ -65,11 +52,8 @@ class ChiTransitSpider(Spider):
             return COMMITTEE
 
     def _parse_location(self, item):
-        """
-        Parse or generate location. Url, latitude and longitude are all
-        optional and may be more trouble than they're worth to collect.
-        """
-        location_str = item.css('td:nth-child(4)::text').extract_first()
+        """Parse or generate location."""
+        location_str = ' '.join(item.css('td:nth-child(4)::text').extract())
         # Always 537 W Lake, so handle that if provided (but allow for change)
         if (
             location_str and (
@@ -81,52 +65,33 @@ class ChiTransitSpider(Spider):
             )
         ):
             return {
-                'neighborhood': 'west loop',
                 'name': 'Chicago Transit Authority 2nd Floor Boardroom',
-                'address': '567 West Lake Street Chicago, IL',
+                'address': '567 West Lake Street Chicago, IL 60661',
             }
-        else:
+        elif location_str:
+            loc = location_str.replace('CTA Headquarters', '').replace(' ,', '').strip().rstrip(',')
             return {
-                'neighborhood': '',
                 'name': '',
-                'address': location_str,
+                'address': re.sub(r'[\s\n]+', ' ', loc).strip(),
             }
 
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
+    def _parse_title(self, item):
+        """Parse or generate meeting title."""
         return item.css('td:nth-child(3)::text').extract_first()
 
-    def _parse_documents(self, item):
-        """
-        Add meeting notice and agenda to documents
-        """
-        documents = []
+    def _parse_links(self, item):
+        """Add meeting notice and agenda to links"""
+        links = []
         link_items = item.css('td:last-child a')
         for link in link_items:
-            documents.append({
-                'url': self.base_url + link.xpath('./@href').extract_first(),
-                'note': link.xpath('./text()').extract_first()
+            links.append({
+                'href': self.base_url + link.xpath('./@href').extract_first(),
+                'title': link.xpath('./text()').extract_first()
             })
-        return documents
+        return links
 
-    def _parse_start(self, item, prev_item):
-        start_datetime = self._parse_start_datetime(item, prev_item)
-        return {'date': start_datetime.date(), 'time': start_datetime.time(), 'note': ''}
-
-    def _parse_end(self, item, prev_item):
-        start_datetime = self._parse_start_datetime(item, prev_item)
-        return {
-            'date': start_datetime.date(),
-            'time': (start_datetime + timedelta(hours=3)).time(),
-            'note': 'estimated 3 hours after start time'
-        }
-
-    def _parse_start_datetime(self, item, prev_item=None):
-        """
-        Parse start date and time.
-        """
+    def _parse_start(self, item, prev_item=None):
+        """Parse start datetime as a naive datetime object."""
         date_el_text = item.css('td:first-child').extract_first()
         date_text = date_el_text[4:-5]
         date_str, time_str = [x.strip() for x in date_text.split('<br>')]
@@ -137,10 +102,12 @@ class ChiTransitSpider(Spider):
         # "Immediately after" specific meeting used frequently, return the
         # start time of the previous meeting
         elif prev_item is not None:
-            return self._parse_start_datetime(prev_item)
+            return self._parse_start(prev_item)
 
-    def _parse_sources(self, response):
-        """
-        Parse sources.
-        """
-        return [{'url': response.url, 'note': ''}]
+    def _parse_end(self, start_datetime):
+        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
+        return start_datetime + timedelta(hours=3)
+
+    def _parse_source(self, response):
+        """Parse or generate source."""
+        return response.url
