@@ -10,7 +10,7 @@ toc: true
 
 Follow the following directions for cloning the repository and installing requirements.
 
-### Prequisites
+### Prerequisites
 
 - Git installed
 - GitHub account
@@ -21,6 +21,8 @@ Follow the following directions for cloning the repository and installing requir
 If in doubt, please also refer to the [Setup Help](/docs/setup-help/), which should be useful for common first-time setup issues.
 
 ### Clone the Repository
+
+**Note:** If you're interested in setting up and managing a group of scrapers for your area, follow these instructions for our [City-Bureau/city-scrapers-template](https://github.com/city-bureau/city-scrapers-template) repo instead.
 
 These steps are the same, regardless of which option below you choose.
 

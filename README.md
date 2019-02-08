@@ -28,6 +28,10 @@ From building a scraper, you'll gain experience with:
 - a basic data file format (json), working with a schema and data validation
 - problem solving, finding patterns, designing robust code
 
+## How can I set up City Scrapers for my area?
+
+This repo is focused on Chicago and Detroit, but you can set up City Scrapers for your area by forking the [City-Bureau/city-scrapers-template](https://github.com/city-bureau/city-scrapers-template) repo and following the instructions there.
+
 ## Community Mission
 
 The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
