@@ -6,6 +6,12 @@ last_modified_at: 2018-10-04T20:15:56-04:00
 toc: true
 ---
 
+## City Scrapers and Documenters
+
+There are important differences between the City Scrapers code and City Bureau’s Documenters program. The code was developed by City Bureau and a team of volunteer coders to solve a problem we see in cities and towns across the country: public meetings for local, county and state government agencies are often spread across dozens of locations, making it difficult for members of the public to access locations, dates and times for these important democratic spaces.
+
+The City Scrapers code is designed to address this issue, as such, it is a precursor to a Documenters program, which requires sustainable funding mechanisms, staff capacity and a mission-oriented approach to civic engagement. If you are interested in partnering with City Bureau on a Documenters program in your area, please begin by establishing operable City Scrapers code. Contact us to learn more.
+
 ## Publication
 
 - Simple: A Google sheets document with with your scraped meeting information can easily be made public.

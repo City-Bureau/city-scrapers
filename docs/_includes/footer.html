@@ -58,9 +58,23 @@
         >
       </li>
       {% endif %} {% endfor %} {% endif %}
+      <li>
+        <a href="mailto:documenters@citybureau.org">
+          <i class="fas fa-envelope" aria-hidden="true"></i>
+          Email
+        </a>
+      </li>
     </ul>
   </div>
-
+  <div class="page__footer-invite">
+    <a
+      href="https://airtable.com/shrsdRcYVzp019U22"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Request an invitation to the City Scrapers Slack
+    </a>
+  </div>
   <div class="page__footer-copyright">
     &copy; {{ site.time | date: "%Y" }} {{ site.name | default: site.title }}.
     {{ site.data.ui - text[site.locale].powered_by | default: "Powered by" }}
