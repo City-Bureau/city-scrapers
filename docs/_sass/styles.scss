@@ -75,6 +75,12 @@ form.newsletter {
   }
 }
 
+.page__footer-invite {
+  font-size: 14px;
+  margin-bottom: 8px;
+  text-decoration: underline;
+}
+
 @media screen and (max-width: 700px) {
   footer {
     flex-direction: column;

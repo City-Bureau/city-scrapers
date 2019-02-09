@@ -22,6 +22,8 @@ As interest in the Documenters program grew, City Bureau quickly ran up against 
 
 In building an aggregator for public meetings, we had two key goals: identifying assignments for our Documenters, as well as making all local public meeting information truly accessible for everybody. After City Scrapers was finished, we launched Documenters.org, a web application that manages assignments and allows anyone to see and search for public meetings according to location, topic, date, etc.
 
+To review the differences between the City Scrapers code and the Documenters program, see our [Next Steps](/docs/next-steps/) section in this toolkit.
+
 ## Define your goals
 
 The reasons you've ended up here may more or less resemble our own. Either way, before you get too in the weeds, it's a good idea to consider the following big-picture questions:
