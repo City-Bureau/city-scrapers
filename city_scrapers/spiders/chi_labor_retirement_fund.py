@@ -18,7 +18,8 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".meetings"):
+        # for item in response.css(".meetings"):
+        for item in response.css(".days"):
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -37,39 +38,38 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
 
             yield meeting
 
+    ###### NEEDS DONE
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        title = xp("//ul/li[3]").get()
         return title
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        desc = xp("(//p)[1]")
-        return desc
+        return None
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
+        return BOARD
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        pulledDate = xp("//ul/li[1]").get()
-        time = xp("//ul/li[1]").get()
+        pulledDate = item.css('.calendar-day::text').extract_first()
         year = int(pulledDate[7:])
         month = int(pulledDate[0:3])
-        day = int(pulledDate[4:6])
+        day = int(pulledDated[4:6])
+        startTime = item.css('li:nth-child(2)::text').extract_first()
         i = 0
         hrs = ''
         while time[i] != ':':
             hrs += time[i]
-            i++
-        i++
+            i += 1
+        i += 1
         hrs = int(hrs)
         minutes = ''
         while time[i] != ' ':
             minutes += time[i]
         minutes = int(minutes)
-        i++
+        i += 1
         if time[i] == 'p':
             hours += 12
         start = datetime.datetime(year, month, day, hours, minutes, 00, 00)
