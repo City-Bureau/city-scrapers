@@ -18,7 +18,6 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        # for item in response.css(".meetings"):
         for item in response.css(".days"):
             meeting = Meeting(
                 title=self._parse_title(item),
@@ -41,6 +40,8 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
     ###### NEEDS DONE
     def _parse_title(self, item):
         """Parse or generate meeting title."""
+        title = item.css('li:nth-child(3)::text').extract_first()
+        # Returns \r\n instead of title
         return title
 
     def _parse_description(self, item):
@@ -51,6 +52,7 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
         """Parse or generate classification from allowed options."""
         return BOARD
 
+    # Needs tested, but the pulledDate and startTime pull correct parts of site
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
         pulledDate = item.css('.calendar-day::text').extract_first()
