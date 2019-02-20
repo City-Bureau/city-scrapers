@@ -24,6 +24,10 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
         """
         items = self._parse_calendar(response)
         for item in items:
+            # Drop empty links
+            if 'http' not in item['source']:
+                continue
+
             req = scrapy.Request(
                 item['source'],
                 callback=self._parse_detail,
@@ -57,6 +61,7 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
                     classification=self._parse_classification(title),
                     all_day=False,
                     links=[],
+                    time_notes='',
                     source=self._parse_source(item, response.url),
                 )
             )
