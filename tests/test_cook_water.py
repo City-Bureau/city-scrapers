@@ -85,7 +85,7 @@ def test_description(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_type(item):
-    assert item['_type'] is 'event'
+    assert item['_type'] == 'event'
 
 
 @pytest.mark.parametrize('item', parsed_items)
