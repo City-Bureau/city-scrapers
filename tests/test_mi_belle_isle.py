@@ -1,9 +1,9 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, PASSED
 from tests.utils import file_response
 
-from city_scrapers.constants import ADVISORY_COMMITTEE, PASSED
 from city_scrapers.spiders.mi_belle_isle import MiBelleIsleSpider
 
 test_response = file_response(
@@ -11,28 +11,28 @@ test_response = file_response(
     'https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html',
 )
 spider = MiBelleIsleSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
-parsed_items = sorted(parsed_items, key=lambda x: (x['start']['date'], x['start']['time']))
+parsed_items = [item for item in spider.parse(test_response)]
+parsed_items = sorted(parsed_items, key=lambda x: x['start'])
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Belle Isle Advisory Committee'
+def test_title():
+    assert parsed_items[0]['title'] == 'Belle Isle Advisory Committee'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 1, 18), 'time': time(9, 0), 'note': ''}
+    assert parsed_items[0]['start'] == datetime(2018, 1, 18, 9)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': date(2018, 1, 18), 'time': time(11, 0), 'note': ''}
+    assert parsed_items[0]['end'] == datetime(2018, 1, 18, 11)
 
 
 def test_id():
-    assert parsed_items[0]['id'] == ('mi_belle_isle/201801180900/x/belle_isle_advisory_committee')
+    assert parsed_items[0]['id'] == 'mi_belle_isle/201801180900/x/belle_isle_advisory_committee'
 
 
 def test_status():
@@ -41,7 +41,6 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'neighborhood': '',
         'name': 'Flynn Pavilion',
         'address': ('Intersection of Picnic Way and Loiter Way, '
                     'Belle Isle, Detroit, MI 48207'),
@@ -49,18 +48,15 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': ('https://www.michigan.gov/dnr/'
-                '0,4570,7-350-79137_79763_79901---,00.html'),
-        'note': ''
-    }]
+    assert parsed_items[0][
+        'source'] == 'https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html'
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == [{
-        'note': 'Minutes',
-        'url': ('https://www.michigan.gov/documents/'
-                'dnr/BIPAC011818minutes_612208_7.pdf'),
+def test_links():
+    assert parsed_items[0]['links'] == [{
+        'title': 'Minutes',
+        'href': ('https://www.michigan.gov/documents/'
+                 'dnr/BIPAC011818minutes_612208_7.pdf'),
     }]
 
 
@@ -72,8 +68,3 @@ def test_all_day(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
     assert item['classification'] == ADVISORY_COMMITTEE
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'

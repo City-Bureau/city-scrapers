@@ -181,7 +181,7 @@ def test_prev_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_prev_items)
 def test_prev_classification(item):
-    assert item['classification'] is 'Board'
+    assert item['classification'] == 'Board'
 
 
 @pytest.mark.parametrize('item', parsed_prev_items)
