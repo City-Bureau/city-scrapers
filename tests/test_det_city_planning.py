@@ -1,83 +1,88 @@
-from datetime import date, time
+from datetime import datetime
 
-import pytest
+import pytest  # noqa
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import COMMISSION, TENTATIVE
+from city_scrapers.constants import COMMISSION, PASSED
 from city_scrapers.spiders.det_city_planning import DetCityPlanningSpider
 
-freezer = freeze_time('2018-12-27')
+freezer = freeze_time('2019-02-22')
 freezer.start()
 
 test_response = file_response(
     'files/det_city_planning.html',
-    url='https://www.detroitmi.gov/Government/Boards/City-Planning-Commission-Meetings'
+    url='https://detroitmi.gov/events/city-planning-commission-meeting-0'
 )
 spider = DetCityPlanningSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
-parsed_items = sorted(parsed_items, key=lambda x: x['start']['date'])
+item = spider.parse_event_page(test_response)
 
 freezer.stop()
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'City Planning Commission'
+def test_title():
+    assert item['title'] == 'City Planning Commission'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert item['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2019, 1, 10),
-        'time': time(16, 45),
-        'note': 'Meeting runs from 4:45 pm to approximately 8:00 pm'
-    }
+    assert item['start'] == datetime(2019, 1, 17, 16, 45)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': date(2019, 1, 10), 'time': time(20, 0), 'note': ''}
+    assert item['end'] == datetime(2019, 1, 17, 19, 45)
+
+
+def test_time_notes():
+    assert item['time_notes'] == 'Estimated 3 hour duration'
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_city_planning/201901101645/x/city_planning_commission'
+    assert item['id'] == 'det_city_planning/201901171645/x/city_planning_commission'
 
 
 def test_status():
-    assert parsed_items[0]['status'] == TENTATIVE
+    assert item['status'] == PASSED
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
-        'neighborhood': '',
-        'name': 'Committee of the Whole Room, 13th floor, Coleman A. Young Municipal Center',
-        'address': '2 Woodward Avenue, Detroit, MI 48226'
+    assert item['location'] == {
+        'name': 'Committee of the Whole Room',
+        'address': '2 Woodward Avenue, Suite 1300 Detroit, MI 48226'
     }
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'https://www.detroitmi.gov/Government/Boards/City-Planning-Commission-Meetings',
-        'note': ''
-    }]
+def test_source():
+    assert item['source'
+                ] == 'https://detroitmi.gov/events/city-planning-commission-meeting-0'  # noqa
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
+def test_links():
+    assert item['links'] == [
+        {
+            'href':
+                'https://detroitmi.gov/sites/detroitmi.localhost/files/events/2019-01/January%2017%2C%202019%20agenda.pdf',  # noqa
+            'title': 'January 17, 2019 agenda.pdf'
+        },
+        {
+            'href':
+                'https://detroitmi.gov/sites/detroitmi.localhost/files/events/2019-01/PH%202019-01-17%20515PM.pdf',  # noqa
+            'title': 'PH 2019-01-17 515PM.pdf'
+        },
+        {
+            'href':
+                'https://detroitmi.gov/sites/detroitmi.localhost/files/events/2019-01/PH%202019-01-17%20600%20PM.pdf',  # noqa
+            'title': 'PH 2019-01-17 600 PM.pdf'
+        },
+    ]
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_all_day(item):
+def test_all_day():
     assert item['all_day'] is False
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_classification(item):
-    assert item['classification'] is COMMISSION
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
+def test_classification():
+    assert item['classification'] == COMMISSION

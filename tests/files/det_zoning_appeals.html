@@ -1,523 +1,49 @@
 <!DOCTYPE html>
 <html  lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# ">
   <head>
-    <meta charset="utf-8" /><script type="text/javascript">window.NREUM||(NREUM={}),__nr_require=function(e,n,t){function r(t){if(!n[t]){var o=n[t]={exports:{}};e[t][0].call(o.exports,function(n){var o=e[t][1][n];return r(o||n)},o,o.exports)}return n[t].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<t.length;o++)r(t[o]);return r}({1:[function(e,n,t){function r(){}function o(e,n,t){return function(){return i(e,[c.now()].concat(u(arguments)),n?null:this,t),n?void 0:this}}var i=e("handle"),a=e(3),u=e(4),f=e("ee").get("tracer"),c=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var p=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],d="api-",l=d+"ixn-";a(p,function(e,n){s[n]=o(d+n,!0,"api")}),s.addPageAction=o(d+"addPageAction",!0),s.setCurrentRouteName=o(d+"routeName",!0),n.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,n){var t={},r=this,o="function"==typeof n;return i(l+"tracer",[c.now(),e,t],r),function(){if(f.emit((o?"":"no-")+"fn-start",[c.now(),r,o],t),o)try{return n.apply(this,arguments)}catch(e){throw f.emit("fn-err",[arguments,this,e],t),e}finally{f.emit("fn-end",[c.now()],t)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,n){m[n]=o(l+n)}),newrelic.noticeError=function(e){"string"==typeof e&&(e=new Error(e)),i("err",[e,c.now()])}},{}],2:[function(e,n,t){function r(e,n){if(!o)return!1;if(e!==o)return!1;if(!n)return!0;if(!i)return!1;for(var t=i.split("."),r=n.split("."),a=0;a<r.length;a++)if(r[a]!==t[a])return!1;return!0}var o=null,i=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var u=navigator.userAgent,f=u.match(a);f&&u.indexOf("Chrome")===-1&&u.indexOf("Chromium")===-1&&(o="Safari",i=f[1])}n.exports={agent:o,version:i,match:r}},{}],3:[function(e,n,t){function r(e,n){var t=[],r="",i=0;for(r in e)o.call(e,r)&&(t[i]=n(r,e[r]),i+=1);return t}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],4:[function(e,n,t){function r(e,n,t){n||(n=0),"undefined"==typeof t&&(t=e?e.length:0);for(var r=-1,o=t-n||0,i=Array(o<0?0:o);++r<o;)i[r]=e[n+r];return i}n.exports=r},{}],5:[function(e,n,t){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,n,t){function r(){}function o(e){function n(e){return e&&e instanceof r?e:e?f(e,u,i):i()}function t(t,r,o,i){if(!d.aborted||i){e&&e(t,r,o);for(var a=n(o),u=v(t),f=u.length,c=0;c<f;c++)u[c].apply(a,r);var p=s[y[t]];return p&&p.push([b,t,r,a]),a}}function l(e,n){h[e]=v(e).concat(n)}function m(e,n){var t=h[e];if(t)for(var r=0;r<t.length;r++)t[r]===n&&t.splice(r,1)}function v(e){return h[e]||[]}function g(e){return p[e]=p[e]||o(t)}function w(e,n){c(e,function(e,t){n=n||"feature",y[t]=n,n in s||(s[n]=[])})}var h={},y={},b={on:l,addEventListener:l,removeEventListener:m,emit:t,get:g,listeners:v,context:n,buffer:w,abort:a,aborted:!1};return b}function i(){return new r}function a(){(s.api||s.feature)&&(d.aborted=!0,s=d.backlog={})}var u="nr@context",f=e("gos"),c=e(3),s={},p={},d=n.exports=o();d.backlog=s},{}],gos:[function(e,n,t){function r(e,n,t){if(o.call(e,n))return e[n];var r=t();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return e[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(e,n,t){function r(e,n,t,r){o.buffer([e],r),o.emit(e,n,t)}var o=e("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(e,n,t){function r(e){var n=typeof e;return!e||"object"!==n&&"function"!==n?-1:e===window?0:a(e,i,function(){return o++})}var o=1,i="nr@id",a=e("gos");n.exports=r},{}],loader:[function(e,n,t){function r(){if(!E++){var e=x.info=NREUM.info,n=l.getElementsByTagName("script")[0];if(setTimeout(s.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&n))return s.abort();c(y,function(n,t){e[n]||(e[n]=t)}),f("mark",["onload",a()+x.offset],null,"api");var t=l.createElement("script");t.src="https://"+e.agent,n.parentNode.insertBefore(t,n)}}function o(){"complete"===l.readyState&&i()}function i(){f("mark",["domContent",a()+x.offset],null,"api")}function a(){return O.exists&&performance.now?Math.round(performance.now()):(u=Math.max((new Date).getTime(),u))-x.offset}var u=(new Date).getTime(),f=e("handle"),c=e(3),s=e("ee"),p=e(2),d=window,l=d.document,m="addEventListener",v="attachEvent",g=d.XMLHttpRequest,w=g&&g.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:g,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var h=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1099.min.js"},b=g&&w&&w[m]&&!/CriOS/.test(navigator.userAgent),x=n.exports={offset:u,now:a,origin:h,features:{},xhrWrappable:b,userAgent:p};e(1),l[m]?(l[m]("DOMContentLoaded",i,!1),d[m]("load",r,!1)):(l[v]("onreadystatechange",o),d[v]("onload",r)),f("mark",["firstbyte",u],null,"api");var E=0,O=e(5)},{}]},{},["loader"]);</script>
-<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","/sites/detroitmi.localhost/files/google_analytics/analytics.js?pkf5a2","ga");ga("create", "UA-3887736-1", {"cookieDomain":"auto"});ga("require", "linkid", "linkid.js");ga("require", "displayfeatures");ga("send", "pageview");</script>
-<meta name="title" content="Board of Zoning Appeals Meetings | City of Detroit" />
-<link rel="shortlink" href="https://www.detroitmi.gov/taxonomy/term/3506" />
+    <meta charset="utf-8" /><script type="text/javascript">window.NREUM||(NREUM={}),__nr_require=function(e,n,t){function r(t){if(!n[t]){var o=n[t]={exports:{}};e[t][0].call(o.exports,function(n){var o=e[t][1][n];return r(o||n)},o,o.exports)}return n[t].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<t.length;o++)r(t[o]);return r}({1:[function(e,n,t){function r(){}function o(e,n,t){return function(){return i(e,[c.now()].concat(u(arguments)),n?null:this,t),n?void 0:this}}var i=e("handle"),a=e(3),u=e(4),f=e("ee").get("tracer"),c=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var p=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],d="api-",l=d+"ixn-";a(p,function(e,n){s[n]=o(d+n,!0,"api")}),s.addPageAction=o(d+"addPageAction",!0),s.setCurrentRouteName=o(d+"routeName",!0),n.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,n){var t={},r=this,o="function"==typeof n;return i(l+"tracer",[c.now(),e,t],r),function(){if(f.emit((o?"":"no-")+"fn-start",[c.now(),r,o],t),o)try{return n.apply(this,arguments)}catch(e){throw f.emit("fn-err",[arguments,this,e],t),e}finally{f.emit("fn-end",[c.now()],t)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,n){m[n]=o(l+n)}),newrelic.noticeError=function(e,n){"string"==typeof e&&(e=new Error(e)),i("err",[e,c.now(),!1,n])}},{}],2:[function(e,n,t){function r(e,n){if(!o)return!1;if(e!==o)return!1;if(!n)return!0;if(!i)return!1;for(var t=i.split("."),r=n.split("."),a=0;a<r.length;a++)if(r[a]!==t[a])return!1;return!0}var o=null,i=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var u=navigator.userAgent,f=u.match(a);f&&u.indexOf("Chrome")===-1&&u.indexOf("Chromium")===-1&&(o="Safari",i=f[1])}n.exports={agent:o,version:i,match:r}},{}],3:[function(e,n,t){function r(e,n){var t=[],r="",i=0;for(r in e)o.call(e,r)&&(t[i]=n(r,e[r]),i+=1);return t}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],4:[function(e,n,t){function r(e,n,t){n||(n=0),"undefined"==typeof t&&(t=e?e.length:0);for(var r=-1,o=t-n||0,i=Array(o<0?0:o);++r<o;)i[r]=e[n+r];return i}n.exports=r},{}],5:[function(e,n,t){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,n,t){function r(){}function o(e){function n(e){return e&&e instanceof r?e:e?f(e,u,i):i()}function t(t,r,o,i){if(!d.aborted||i){e&&e(t,r,o);for(var a=n(o),u=v(t),f=u.length,c=0;c<f;c++)u[c].apply(a,r);var p=s[y[t]];return p&&p.push([b,t,r,a]),a}}function l(e,n){h[e]=v(e).concat(n)}function m(e,n){var t=h[e];if(t)for(var r=0;r<t.length;r++)t[r]===n&&t.splice(r,1)}function v(e){return h[e]||[]}function g(e){return p[e]=p[e]||o(t)}function w(e,n){c(e,function(e,t){n=n||"feature",y[t]=n,n in s||(s[n]=[])})}var h={},y={},b={on:l,addEventListener:l,removeEventListener:m,emit:t,get:g,listeners:v,context:n,buffer:w,abort:a,aborted:!1};return b}function i(){return new r}function a(){(s.api||s.feature)&&(d.aborted=!0,s=d.backlog={})}var u="nr@context",f=e("gos"),c=e(3),s={},p={},d=n.exports=o();d.backlog=s},{}],gos:[function(e,n,t){function r(e,n,t){if(o.call(e,n))return e[n];var r=t();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return e[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(e,n,t){function r(e,n,t,r){o.buffer([e],r),o.emit(e,n,t)}var o=e("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(e,n,t){function r(e){var n=typeof e;return!e||"object"!==n&&"function"!==n?-1:e===window?0:a(e,i,function(){return o++})}var o=1,i="nr@id",a=e("gos");n.exports=r},{}],loader:[function(e,n,t){function r(){if(!E++){var e=x.info=NREUM.info,n=l.getElementsByTagName("script")[0];if(setTimeout(s.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&n))return s.abort();c(y,function(n,t){e[n]||(e[n]=t)}),f("mark",["onload",a()+x.offset],null,"api");var t=l.createElement("script");t.src="https://"+e.agent,n.parentNode.insertBefore(t,n)}}function o(){"complete"===l.readyState&&i()}function i(){f("mark",["domContent",a()+x.offset],null,"api")}function a(){return O.exists&&performance.now?Math.round(performance.now()):(u=Math.max((new Date).getTime(),u))-x.offset}var u=(new Date).getTime(),f=e("handle"),c=e(3),s=e("ee"),p=e(2),d=window,l=d.document,m="addEventListener",v="attachEvent",g=d.XMLHttpRequest,w=g&&g.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:g,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var h=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1118.min.js"},b=g&&w&&w[m]&&!/CriOS/.test(navigator.userAgent),x=n.exports={offset:u,now:a,origin:h,features:{},xhrWrappable:b,userAgent:p};e(1),l[m]?(l[m]("DOMContentLoaded",i,!1),d[m]("load",r,!1)):(l[v]("onreadystatechange",o),d[v]("onload",r)),f("mark",["firstbyte",u],null,"api");var E=0,O=e(5)},{}]},{},["loader"]);</script>
+<script>(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,"script","/sites/detroitmi.localhost/files/google_analytics/analytics.js?pnctg2","ga");ga("create", "UA-3887736-1", {"cookieDomain":"auto"});ga("require", "linkid", "linkid.js");ga("require", "displayfeatures");ga("send", "pageview");</script>
+<meta name="title" content="Board of Zoning Appeals-Docket | City of Detroit" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="shortlink" href="https://detroitmi.gov/node/16766" />
 <meta property="og:site_name" content="City of Detroit" />
-<link rel="canonical" href="https://www.detroitmi.gov/government/boards/board-zoning-appeals/board-zoning-appeals-meetings" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="Board of Zoning Appeals Meetings | City of Detroit" />
-<meta name="description" content="2018 Meeting Dates
+<link rel="canonical" href="https://detroitmi.gov/node/16766" />
+<meta name="twitter:description" content="Meeting will be held in the Erma L. Henderson Auditorium
 
-                         2018 BOARD OF ZONING APPEALS HEARING SCHEDULE    
+13th Floor of the Coleman A. Young Municipal Center
 
-January 23, 2018
-			 
-			 
-			 
-			June 19, 2018
-		 
-			 
-			 
-			 
-			 
-		January 30, 2018
-			 
-			 
-			 
-			July 10, 2018
-		 
-			 
-			 
-			 
-			 
-		February 13, 2018
-			 
-			 
-			 
-			July 24, 2018
-		 
-			 
-			 
-			 
-			 
-		February 20, 2018
-			 
-			 
-			 
-			August 14, 2018
-		 
-			 
-			 
-			 
-			 
-		February 27, 2018
-			 
-			 
-			 
-			August 21, 2018
-		 
-			 
-			 
-			 
-			 
-		March 13, 2018
-			 
-			 
-			 
-			August 28, 2018
-		 
-			 
-			 
-			 
-			 
-		March 20, 2018
-			 
-			 
-			 
-			September 18, 2018
-		 
-			 
-			 
-			 
-			 
-		March 27, 2018
-			 
-			 
-			 
-			September 25, 2018
-		 
-			 
-			 
-			 
-			 
-		April 10, 2018
-			 
-			 
-			 
-			October 9, 2018
-		 
-			 
-			 
-			 
-			 
-		April 17, 2018
-			 
-			 
-			 
-			October 16, 2018
-		 
-			 
-			 
-			 
-			 
-		April 24, 2018
-			 
-			 
-			 
-			October 30, 2018
-		 
-			 
-			 
-			 
-			 
-		May 15, 2018
-			 
-			 
-			 
-			November 13, 2018
-		 
-			 
-			 
-			 
-			 
-		May 22, 2018
-			 
-			 
-			 
-			November 27, 2018
-		 
-			 
-			 
-			 
-			 
-		May 29, 2018
-			 
-			 
-			 
-			December 11, 2018
-		 
-			 
-			 
-			 
-			 
-		June 5, 2018
-			 
-			 
-			 
-			December 18, 2018
-		 
-			 
-			 
-			 
-			 
-		June 12, 2018
-			 
-			 
-			 
-			 
-		 
+Docket: February 26, 2019
 
- 
+Address: 8229 John R, 4000-4060 W. Vernor, 7901 &amp; 7931 Michigan &amp;  1100 St. Aubin" />
+<meta name="description" content="Meeting will be held in the Erma L. Henderson Auditorium
 
-The Board of Zoning Appeals will meet on Tuesday&#039;s at 9:00 am on the 13th Floor in the Auditorium, Coleman A. Young Municipal Center, 2 Woodward Avenue, Detroit MI 48226.  We are also adding meetings to our schedule for Thursday&#039;s, please check our docket or call the office for the location.
+13th Floor of the Coleman A. Young Municipal Center
 
- 
+Docket: February 26, 2019
 
-2018 Meeting Minutes
+Address: 8229 John R, 4000-4060 W. Vernor, 7901 &amp; 7931 Michigan &amp;  1100 St. Aubin" />
+<meta property="og:type" content="article" />
+<meta name="twitter:title" content="Board of Zoning Appeals-Docket | City of Detroit" />
+<meta name="abstract" content="Meeting will be held in the Erma L. Henderson Auditorium
 
- 
+13th Floor of the Coleman A. Young Municipal Center
 
-9122 Greenfield, 655 W. Willis St., 575 Bellevue St. - 
+Docket: February 26, 2019
 
-January 23, 2018
-      
-  
- 
-
-2520 Michigan Ave. - 
-
-January 30, 2018
-      
-  
- 
-
-9122 Greenfield, 655 W. Willis St. and 575 Bellevue St. - 
-
-February 13, 2018
-      
-  
- 
-
-1620 Michigan Ave., 8915 Michigan Ave. and 8721 Ellsworth St - 
-
-February 20, 2018
-      
-  
-14000 Schoolcraft, 8076 E. McNichols Rd. and 4104 Avery St. - 
-
-February 27, 2018
-      
-  
- 
-
-1620 Michigan Ave., - 
-
-March 1, 2018
-      
-  
- 
-
-1565 E. Lafayette St., 12845 Fenkell Ave., 10435 Plymouth Rd. and 1620 Michigan Ave. - 
-
-March 13, 2018
-      
-  
- 
-
-8208 E. Seven Mile Rd., 9000 Livernois Ave. and 1454 Townsend St. - 
-
-March 20, 2018
-      
-  
- 
-
-8640 Grinnell Ave. and 7554 Miller St (aka 8333 Townsend St) - 
-
-March 27, 2018
-      
-  
- 
-
-3664, 3690, 3700 &amp; 3708 Trumbull Ave., 3664 Trumbull Ave.(Lots 12-18), 3664 Trumbull Ave.(Lot 19), 3713 Lincoln Ave., 3689,  3679, 3701 &amp; 3707 Lincoln &amp; 3900 Cass Ave. - 
-
-April 10, 2018
-      
-  
- 
-
-10350 Woodward aka 10358 Woodward Ave., 9101 Fort St &amp; 19770-19790 James Couzens Fwy - 
-
-April 17, 2018
-      
-  
- 
-
-603 E. Edsel Ford Dr., 5935 Cass Ave., 3013 Cochrane st. and 1577 Ash St - 
-
-April 24, 2018" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.detroitmi.gov/government/boards/board-zoning-appeals/board-zoning-appeals-meetings" />
-<meta name="abstract" content="2018 Meeting Dates
-
-                         2018 BOARD OF ZONING APPEALS HEARING SCHEDULE    
-
-January 23, 2018
-			 
-			 
-			 
-			June 19, 2018
-		 
-			 
-			 
-			 
-			 
-		January 30, 2018
-			 
-			 
-			 
-			July 10, 2018
-		 
-			 
-			 
-			 
-			 
-		February 13, 2018
-			 
-			 
-			 
-			July 24, 2018
-		 
-			 
-			 
-			 
-			 
-		February 20, 2018
-			 
-			 
-			 
-			August 14, 2018
-		 
-			 
-			 
-			 
-			 
-		February 27, 2018
-			 
-			 
-			 
-			August 21, 2018
-		 
-			 
-			 
-			 
-			 
-		March 13, 2018
-			 
-			 
-			 
-			August 28, 2018
-		 
-			 
-			 
-			 
-			 
-		March 20, 2018
-			 
-			 
-			 
-			September 18, 2018
-		 
-			 
-			 
-			 
-			 
-		March 27, 2018
-			 
-			 
-			 
-			September 25, 2018
-		 
-			 
-			 
-			 
-			 
-		April 10, 2018
-			 
-			 
-			 
-			October 9, 2018
-		 
-			 
-			 
-			 
-			 
-		April 17, 2018
-			 
-			 
-			 
-			October 16, 2018
-		 
-			 
-			 
-			 
-			 
-		April 24, 2018
-			 
-			 
-			 
-			October 30, 2018
-		 
-			 
-			 
-			 
-			 
-		May 15, 2018
-			 
-			 
-			 
-			November 13, 2018
-		 
-			 
-			 
-			 
-			 
-		May 22, 2018
-			 
-			 
-			 
-			November 27, 2018
-		 
-			 
-			 
-			 
-			 
-		May 29, 2018
-			 
-			 
-			 
-			December 11, 2018
-		 
-			 
-			 
-			 
-			 
-		June 5, 2018
-			 
-			 
-			 
-			December 18, 2018
-		 
-			 
-			 
-			 
-			 
-		June 12, 2018
-			 
-			 
-			 
-			 
-		 
-
- 
-
-The Board of Zoning Appeals will meet on Tuesday&#039;s at 9:00 am on the 13th Floor in the Auditorium, Coleman A. Young Municipal Center, 2 Woodward Avenue, Detroit MI 48226.  We are also adding meetings to our schedule for Thursday&#039;s, please check our docket or call the office for the location.
-
- 
-
-2018 Meeting Minutes
-
- 
-
-9122 Greenfield, 655 W. Willis St., 575 Bellevue St. - 
-
-January 23, 2018
-      
-  
- 
-
-2520 Michigan Ave. - 
-
-January 30, 2018
-      
-  
- 
-
-9122 Greenfield, 655 W. Willis St. and 575 Bellevue St. - 
-
-February 13, 2018
-      
-  
- 
-
-1620 Michigan Ave., 8915 Michigan Ave. and 8721 Ellsworth St - 
-
-February 20, 2018
-      
-  
-14000 Schoolcraft, 8076 E. McNichols Rd. and 4104 Avery St. - 
-
-February 27, 2018
-      
-  
- 
-
-1620 Michigan Ave., - 
-
-March 1, 2018
-      
-  
- 
-
-1565 E. Lafayette St., 12845 Fenkell Ave., 10435 Plymouth Rd. and 1620 Michigan Ave. - 
-
-March 13, 2018
-      
-  
- 
-
-8208 E. Seven Mile Rd., 9000 Livernois Ave. and 1454 Townsend St. - 
-
-March 20, 2018
-      
-  
- 
-
-8640 Grinnell Ave. and 7554 Miller St (aka 8333 Townsend St) - 
-
-March 27, 2018
-      
-  
- 
-
-3664, 3690, 3700 &amp; 3708 Trumbull Ave., 3664 Trumbull Ave.(Lots 12-18), 3664 Trumbull Ave.(Lot 19), 3713 Lincoln Ave., 3689,  3679, 3701 &amp; 3707 Lincoln &amp; 3900 Cass Ave. - 
-
-April 10, 2018
-      
-  
- 
-
-10350 Woodward aka 10358 Woodward Ave., 9101 Fort St &amp; 19770-19790 James Couzens Fwy - 
-
-April 17, 2018
-      
-  
- 
-
-603 E. Edsel Ford Dr., 5935 Cass Ave., 3013 Cochrane st. and 1577 Ash St - 
-
-April 24, 2018" />
-<meta itemprop="itemprop:image" content="https://www.detroitmi.gov/themes/custom/detroitmi/share-image.png" />
-<meta property="og:title" content="Board of Zoning Appeals Meetings | City of Detroit" />
+Address: 8229 John R, 4000-4060 W. Vernor, 7901 &amp; 7931 Michigan &amp;  1100 St. Aubin" />
+<meta property="og:url" content="https://detroitmi.gov/node/16766" />
 <meta name="generator" content="Varbase" />
+<meta property="og:title" content="Board of Zoning Appeals-Docket | City of Detroit" />
 <meta name="referrer" content="origin" />
-<meta name="rights" content="©2018 City of Detroit. All rights reserved." />
-<meta name="twitter:url" content="https://www.detroitmi.gov/government/boards/board-zoning-appeals/board-zoning-appeals-meetings" />
-<meta name="twitter:image" content="https://www.detroitmi.gov/themes/custom/detroitmi/share-image.png" />
-<meta property="og:image" content="https://www.detroitmi.gov/themes/custom/detroitmi/share-image.png" />
-<meta property="og:image:url" content="https://www.detroitmi.gov/themes/custom/detroitmi/share-image.png" />
+<meta name="rights" content="©2019 City of Detroit. All rights reserved." />
+<meta name="twitter:url" content="https://detroitmi.gov/node/16766" />
+<meta property="og:description" content="Meeting will be held in the Erma L. Henderson Auditorium
+
+13th Floor of the Coleman A. Young Municipal Center
+
+Docket: February 26, 2019
+
+Address: 8229 John R, 4000-4060 W. Vernor, 7901 &amp; 7931 Michigan &amp;  1100 St. Aubin" />
 <meta name="MobileOptimized" content="width" />
 <meta name="HandheldFriendly" content="true" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -531,103 +57,97 @@ April 24, 2018" />
         {
             "@type": "WebSite",
             "name": "City of Detroit",
-            "url": "https://www.detroitmi.gov/",
+            "url": "https://detroitmi.gov/",
             "publisher": {
                 "@type": "Organization",
                 "name": "City of Detroit",
-                "url": "https://www.detroitmi.gov/",
+                "url": "https://detroitmi.gov/",
                 "logo": {
                     "@type": "ImageObject",
-                    "url": "https://www.detroitmi.gov//logo.png"
+                    "url": "https://detroitmi.gov//logo.png"
                 }
             }
         }
     ]
 }</script>
 <link rel="shortcut icon" href="/themes/custom/detroitmi/favicon.ico" type="image/png" />
-<link rel="alternate" hreflang="en" href="https://www.detroitmi.gov/government/boards/board-zoning-appeals/board-zoning-appeals-meetings" />
-<link rel="alternate" hreflang="es" href="https://www.detroitmi.gov/es/government/tableros/apelaciones-la-junta-de-zonificacion/junta-de-reuniones-de-apelaciones-de-zonificacion" />
-<link rel="alternate" hreflang="bn" href="https://www.detroitmi.gov/bn/government/baorada/jaonaim-apaila-baorada/jaonaim-apaila-maitaim-baorada" />
-<link rel="alternate" hreflang="ar" href="https://www.detroitmi.gov/ar/government/almjals/mjls-altwn-altqsym/mjls-ajtmaat-alastynaf" />
-<link rel="delete-form" href="/taxonomy/term/3506/delete" />
-<link rel="edit-form" href="/taxonomy/term/3506/edit" />
-<link rel="create" href="/taxonomy/term?taxonomy_term=3506" />
-<link rel="clone-form" href="/entity_clone/taxonomy_term/3506" />
-<link rel="edit-form.content_editor" href="/taxonomy/term/3506/edit/content_editor" />
-<link rel="edit-form.translator" href="/taxonomy/term/3506/edit/translator" />
-<link rel="display" href="/taxonomy/term/3506/manage-display" />
-<link rel="drupal:content-translation-overview" href="/taxonomy/term/3506/translations" />
-<link rel="drupal:content-translation-add" href="/taxonomy/term/3506/translations/add" />
-<link rel="drupal:content-translation-edit" href="/taxonomy/term/3506/translations/edit" />
-<link rel="drupal:content-translation-delete" href="/taxonomy/term/3506/translations/delete" />
+<link rel="alternate" hreflang="en" href="https://detroitmi.gov/node/16766" />
+<link rel="revision" href="/node/16766" />
 
-    <title>Board of Zoning Appeals Meetings | City of Detroit</title>
+    <title>Board of Zoning Appeals-Docket | City of Detroit</title>
     <style media="all">
-@import url("/core/modules/system/css/components/align.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/fieldgroup.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/container-inline.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/clearfix.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/details.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/hidden.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/item-list.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/js.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/nowrap.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/position-container.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/progress.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/reset-appearance.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/resize.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/sticky-header.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/system-status-counter.css?pkf5a2");
-@import url("/core/modules/system/css/components/system-status-report-counters.css?pkf5a2");
-@import url("/core/modules/system/css/components/system-status-report-general-info.css?pkf5a2");
-@import url("/core/modules/system/css/components/tablesort.module.css?pkf5a2");
-@import url("/core/modules/system/css/components/tree-child.module.css?pkf5a2");
-@import url("/core/modules/views/css/views.module.css?pkf5a2");
-@import url("/modules/contrib/anchor_link/css/anchor_link.css?pkf5a2");
+@import url("/core/modules/system/css/components/align.module.css?pnctg2");
+@import url("/core/modules/system/css/components/fieldgroup.module.css?pnctg2");
+@import url("/core/modules/system/css/components/container-inline.module.css?pnctg2");
+@import url("/core/modules/system/css/components/clearfix.module.css?pnctg2");
+@import url("/core/modules/system/css/components/details.module.css?pnctg2");
+@import url("/core/modules/system/css/components/hidden.module.css?pnctg2");
+@import url("/core/modules/system/css/components/item-list.module.css?pnctg2");
+@import url("/core/modules/system/css/components/js.module.css?pnctg2");
+@import url("/core/modules/system/css/components/nowrap.module.css?pnctg2");
+@import url("/core/modules/system/css/components/position-container.module.css?pnctg2");
+@import url("/core/modules/system/css/components/progress.module.css?pnctg2");
+@import url("/core/modules/system/css/components/reset-appearance.module.css?pnctg2");
+@import url("/core/modules/system/css/components/resize.module.css?pnctg2");
+@import url("/core/modules/system/css/components/sticky-header.module.css?pnctg2");
+@import url("/core/modules/system/css/components/system-status-counter.css?pnctg2");
+@import url("/core/modules/system/css/components/system-status-report-counters.css?pnctg2");
+@import url("/core/modules/system/css/components/system-status-report-general-info.css?pnctg2");
+@import url("/core/modules/system/css/components/tablesort.module.css?pnctg2");
+@import url("/core/modules/system/css/components/tree-child.module.css?pnctg2");
+@import url("/core/modules/views/css/views.module.css?pnctg2");
+@import url("/core/assets/vendor/jquery.ui/themes/base/core.css?pnctg2");
+@import url("/core/assets/vendor/jquery.ui/themes/base/menu.css?pnctg2");
+@import url("/core/assets/vendor/jquery.ui/themes/base/autocomplete.css?pnctg2");
+@import url("/modules/contrib/anchor_link/css/anchor_link.css?pnctg2");
 </style>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" media="all" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" media="all" />
 <style media="all">
-@import url("/modules/contrib/varbase_media/css/varbase_media.common.css?pkf5a2");
-@import url("/modules/contrib/extlink/extlink.css?pkf5a2");
-@import url("/modules/contrib/webform/modules/webform_bootstrap/css/webform_bootstrap.css?pkf5a2");
-</style>
-<style media="all">
-@import url("/themes/custom/detroitmi/css/base/bootstrap.base.css?pkf5a2");
-@import url("/themes/custom/detroitmi/css/base/vartheme.base.css?pkf5a2");
-@import url("/themes/custom/detroitmi/css/base/detroitmi.base.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/layout/edge2edge.layout.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/layout/equal-height.layout.css?pkf5a2");
-@import url("/themes/contrib/vartheme/bootstrap-no-spacing/css/bootstrap-no-spacing.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/ajax.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/alert.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/field.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/file.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/filter.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/form.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/icon.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/navbar.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/node.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/panel.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/progress-bar.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/table-drag.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/tabs.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/toolbar.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/autocomplete.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/navbar.admin.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/bs-callouts.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/vb-tags.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/card.component.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/component/outside-in.component.css?pkf5a2");
-@import url("/themes/custom/detroitmi/apps/site-menu/css/site-menu.css?pkf5a2");
-@import url("/themes/contrib/vartheme/bootstrap-print/css/bootstrap-print.css?pkf5a2");
-@import url("/themes/contrib/vartheme/bootstrap-print/css/bootstrap-print-sm.css?pkf5a2");
-@import url("/themes/contrib/vartheme/css/theme/betterlogin.theme.css?pkf5a2");
-@import url("/themes/custom/detroitmi/css/theme/header.theme.css?pkf5a2");
+@import url("/modules/contrib/varbase_media/css/varbase_media.common.css?pnctg2");
+@import url("/modules/contrib/extlink/extlink.css?pnctg2");
+@import url("/modules/contrib/webform/modules/webform_bootstrap/css/webform_bootstrap.css?pnctg2");
+@import url("/core/assets/vendor/jquery.ui/themes/base/theme.css?pnctg2");
+@import url("/modules/contrib/search_api_autocomplete/css/search_api_autocomplete.css?pnctg2");
 </style>
 <style media="all">
-@import url("/themes/custom/detroitmi/css/theme/content.theme.css?pkf5a2");
-@import url("/themes/custom/detroitmi/css/theme/footer.theme.css?pkf5a2");
-@import url("/themes/custom/detroitmi/css/theme/vbp-colors.theme.css?pkf5a2");
+@import url("/themes/custom/detroitmi/css/base/bootstrap.base.css?pnctg2");
+@import url("/themes/custom/detroitmi/css/base/vartheme.base.css?pnctg2");
+@import url("/themes/custom/detroitmi/css/base/detroitmi.base.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/layout/edge2edge.layout.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/layout/equal-height.layout.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/layout/spacing.layout.css?pnctg2");
+@import url("/themes/contrib/vartheme/bootstrap-no-spacing/css/bootstrap-no-spacing.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/ajax.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/alert.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/field.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/file.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/filter.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/form.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/icon.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/navbar.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/node.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/panel.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/progress-bar.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/table-drag.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/tabs.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/toolbar.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/autocomplete.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/navbar.admin.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/bs-callouts.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/vb-tags.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/card.component.css?pnctg2");
+@import url("/themes/contrib/vartheme/css/component/outside-in.component.css?pnctg2");
+@import url("/themes/custom/detroitmi/css/component/video-playlist.component.css?pnctg2");
+@import url("/themes/custom/detroitmi/apps/site-menu/css/site-menu.css?pnctg2");
+@import url("/themes/contrib/vartheme/bootstrap-print/css/bootstrap-print.css?pnctg2");
+@import url("/themes/contrib/vartheme/bootstrap-print/css/bootstrap-print-sm.css?pnctg2");
+</style>
+<style media="all">
+@import url("/themes/contrib/vartheme/css/theme/betterlogin.theme.css?pnctg2");
+@import url("/themes/custom/detroitmi/css/theme/header.theme.css?pnctg2");
+@import url("/themes/custom/detroitmi/css/theme/content.theme.css?pnctg2");
+@import url("/themes/custom/detroitmi/css/theme/footer.theme.css?pnctg2");
+@import url("/themes/custom/detroitmi/css/theme/vbp-colors.theme.css?pnctg2");
 </style>
 
         
@@ -636,7 +156,7 @@ April 24, 2018" />
 <![endif]-->
 
   </head>
-  <body class="term-id-3506 path-taxonomy has-glyphicons">
+  <body class="path-node page-node-type-event has-glyphicons">
     <a href="#main-content" class="visually-hidden focusable skip-link">
       Skip to main content
     </a>
@@ -696,7 +216,7 @@ April 24, 2018" />
     <section class="language-switcher-language-url settings-tray-editable block block-language block-language-blocklanguage-interface clearfix" id="block-languageswitcher" role="navigation" data-drupal-settingstray="editable">
   
     
-      <ul class="links"><li hreflang="en" data-drupal-link-system-path="taxonomy/term/3506" class="en is-active"><a href="/government/boards/board-zoning-appeals/board-zoning-appeals-meetings" class="language-link is-active" hreflang="en" data-drupal-link-system-path="taxonomy/term/3506">English</a></li><li hreflang="es" data-drupal-link-system-path="taxonomy/term/3506" class="es"><a href="/es/government/tableros/apelaciones-la-junta-de-zonificacion/junta-de-reuniones-de-apelaciones-de-zonificacion" class="language-link" hreflang="es" data-drupal-link-system-path="taxonomy/term/3506">Español</a></li><li hreflang="bn" data-drupal-link-system-path="taxonomy/term/3506" class="bn"><a href="/bn/government/baorada/jaonaim-apaila-baorada/jaonaim-apaila-maitaim-baorada" class="language-link" hreflang="bn" data-drupal-link-system-path="taxonomy/term/3506">Bengali</a></li><li hreflang="ar" data-drupal-link-system-path="taxonomy/term/3506" class="ar"><a href="/ar/government/almjals/mjls-altwn-altqsym/mjls-ajtmaat-alastynaf" class="language-link" hreflang="ar" data-drupal-link-system-path="taxonomy/term/3506">العربية</a></li></ul>
+      <ul class="links"><li hreflang="en" data-drupal-link-system-path="node/16766" class="en is-active"><a href="/node/16766" class="language-link is-active" hreflang="en" data-drupal-link-system-path="node/16766">English</a></li><li hreflang="es" data-drupal-link-system-path="node/16766" class="es"><a href="/es/node/16766" class="language-link" hreflang="es" data-drupal-link-system-path="node/16766">Español</a></li><li hreflang="bn" data-drupal-link-system-path="node/16766" class="bn"><a href="/bn/node/16766" class="language-link" hreflang="bn" data-drupal-link-system-path="node/16766">Bengali</a></li><li hreflang="ar" data-drupal-link-system-path="node/16766" class="ar"><a href="/ar/node/16766" class="language-link" hreflang="ar" data-drupal-link-system-path="node/16766">العربية</a></li></ul>
   </section>
 
   </div>
@@ -711,10 +231,10 @@ April 24, 2018" />
     
       <form action="/search" method="get" id="views-exposed-form-acquia-search-page" accept-charset="UTF-8">
   <div class="form--inline form-inline clearfix">
-  <div class="form-item js-form-item form-type-textfield js-form-type-textfield form-item-search js-form-item-search form-no-label form-group">
+  <div class="form-item js-form-item form-type-search-api-autocomplete js-form-type-search-api-autocomplete form-item-search js-form-item-search form-no-label form-group form-autocomplete">
   
   
-  <input data-drupal-selector="edit-search" class="form-text form-control" type="text" id="edit-search" name="search" value="" size="30" maxlength="128" />
+  <div class="input-group"><input data-drupal-selector="edit-search" data-search-api-autocomplete-search="acquia_search" class="form-autocomplete form-text form-control" data-autocomplete-path="/search_api_autocomplete/acquia_search?display=page&amp;&amp;filter=search" type="text" id="edit-search" name="search" value="" size="30" maxlength="128" /><span class="input-group-addon"><span class="icon glyphicon glyphicon-refresh ajax-progress ajax-progress-throbber" aria-hidden="true"></span></span></div>
 
   
   
@@ -775,7 +295,7 @@ Search</button></div>
 <section class="views-element-container settings-tray-editable block block-views block-views-blockalerts-block-1 clearfix" id="block-views-block-alerts-block-1" data-drupal-settingstray="editable">
   
     
-      <div class="form-group"><div class="view view-alerts view-id-alerts view-display-id-block_1 js-view-dom-id-b373f6fa75b20d0285e5c310d6173049e812c15863138c95ff1842246caac21d">
+      <div class="form-group"><div class="view view-alerts view-id-alerts view-display-id-block_1 js-view-dom-id-fab6ee2b76a42fff3c1c7441a6eee7bf8cde610970cacb436ba075f170174efc">
   
     
       
@@ -802,14 +322,8 @@ Search</button></div>
           <li >
                   <a href="/">Home</a>
               </li>
-          <li >
-                  <a href="/government/boards">Boards</a>
-              </li>
-          <li >
-                  <a href="/government/boards/board-zoning-appeals">Board of Zoning Appeals</a>
-              </li>
           <li  class="active">
-                  Board of Zoning Appeals Meetings
+                  Board of Zoning Appeals-Docket
               </li>
       </ol>
 
@@ -818,405 +332,115 @@ Search</button></div>
 
           </div>
                           
-                  <section class="col-lg-9">
+                  <section class="col-sm-12">
 
                 
                           <a id="main-content"></a>
             <div class="region region-content">
-        <h1 class="page-header">Board of Zoning Appeals Meetings</h1>
+        <h1 class="page-header"><span>Board of Zoning Appeals-Docket</span>
+</h1>
 
-  <div class="views-element-container form-group"><div class="views-element-container form-group"><div class="views-element-container form-group"><div class="view view-taxonomy-term view-id-taxonomy_term view-display-id-page_2 js-view-dom-id-5aa9f600ae981e6b9f3e59be68a825548f19702e437bea3cb236026c2a1daaee">
+  <div class="event-node">
+<section class="event-preview-top">
+  <article class="date">
+    <time datetime="2019-02-26T12:00:00Z">Feb 26</time>
+
+  </article>
+  <article class="tag-time">
+    <article class="tags">
+      <a href="/government/boards/board-zoning-appeals" hreflang="en">Board of Zoning Appeals</a>
+            <span class="event-type meeting" >MEETING</span>
+          </article>
+    <article class="time">
+      <span class="fa fa-clock-o" aria-hidden="true"></span>9:00 am - 2:00 pm
+    </article>
+  </article>
+</section>
+<section class="event-banner">
   
-    
-      <div class="view-header">
-      <div about="/government/boards/board-zoning-appeals/board-zoning-appeals-meetings">
-  
-    
-  
-            <div class="field field--name-description field--type-text-long field--label-hidden field--item"><p>2018 Meeting Dates</p>
+</section>
+<section class="desc-contacts">
+  <article class="description">
+    <p>Meeting will be held in the Erma L. Henderson Auditorium</p>
 
-<p><strong>                         2018 BOARD OF ZONING APPEALS HEARING SCHEDULE </strong>   </p>
+<p>13th Floor of the Coleman A. Young Municipal Center</p>
 
-<table border="0" cellpadding="0" cellspacing="0" width="599"><colgroup><col width="178" /><col width="64" /><col width="122" /><col width="14" /><col width="221" /></colgroup><tbody><tr height="24"><td>January 23, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>June 19, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>January 30, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>July 10, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>February 13, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>July 24, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>February 20, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>August 14, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>February 27, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>August 21, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>March 13, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>August 28, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>March 20, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>September 18, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>March 27, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>September 25, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>April 10, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>October 9, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>April 17, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>October 16, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>April 24, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>October 30, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>May 15, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>November 13, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>May 22, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>November 27, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>May 29, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>December 11, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>June 5, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td>December 18, 2018</td>
-		</tr><tr height="17"><td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr><tr height="24"><td>June 12, 2018</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr></tbody></table><p> </p>
+<p>Docket: February 26, 2019</p>
 
-<p> </p>
+<p>Address: 8229 John R, 4000-4060 W. Vernor, 7901 &amp; 7931 Michigan &amp;  1100 St. Aubin</p>
 
-<p><strong>The Board of Zoning Appeals will meet on Tuesday's at 9:00 am on the 13th Floor in the Auditorium, Coleman A. Young Municipal Center, 2 Woodward Avenue, Detroit MI 48226.  We are also adding meetings to our schedule for Thursday's, please check our docket or call the office for the location.</strong></p>
-
-<p> </p>
-
-<p><u><strong>2018 Meeting Minutes</strong></u></p>
-
-<p> </p>
-
-<p>9122 Greenfield, 655 W. Willis St., 575 Bellevue St. - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/january-23-2018" hreflang="en">January 23, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>2520 Michigan Ave. - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/january-30-2018" hreflang="en">January 30, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>9122 Greenfield, 655 W. Willis St. and 575 Bellevue St. - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/february-13-2018" hreflang="en">February 13, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>1620 Michigan Ave., 8915 Michigan Ave. and 8721 Ellsworth St - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/february-20-2018" hreflang="en">February 20, 2018</a></div>
-      
-  </article></div>
-<p>14000 Schoolcraft, 8076 E. McNichols Rd. and 4104 Avery St. - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/february-27-2018" hreflang="en">February 27, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>1620 Michigan Ave., - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/march-1-2018" hreflang="en">March 1, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>1565 E. Lafayette St., 12845 Fenkell Ave., 10435 Plymouth Rd. and 1620 Michigan Ave. - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/march-13-2018" hreflang="en">March 13, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>8208 E. Seven Mile Rd., 9000 Livernois Ave. and 1454 Townsend St. - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/march-20-2018" hreflang="en">March 20, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>8640 Grinnell Ave. and 7554 Miller St (aka 8333 Townsend St) - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/march-27-2018" hreflang="en">March 27, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>3664, 3690, 3700 &amp; 3708 Trumbull Ave., 3664 Trumbull Ave.(Lots 12-18), 3664 Trumbull Ave.(Lot 19), 3713 Lincoln Ave., 3689,  3679, 3701 &amp; 3707 Lincoln &amp; 3900 Cass Ave. - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/april-10-2018" hreflang="en">April 10, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>10350 Woodward aka 10358 Woodward Ave., 9101 Fort St &amp; 19770-19790 James Couzens Fwy - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/april-17-2018" hreflang="en">April 17, 2018</a></div>
-      
-  </article></div>
-<p> </p>
-
-<p>603 E. Edsel Ford Dr., 5935 Cass Ave., 3013 Cochrane st. and 1577 Ash St - </p>
-
-<div class="embedded-entity"><article class="media media--type-document media--view-mode-"><div class="field field--name-name field--type-string field--label-hidden field--item"><a href="/document/april-24-2018" hreflang="en">April 24, 2018</a></div>
-      
-  </article></div>
-</div>
-      
-  <div class="field field--name-field-city-council-president field--type-boolean field--label-above">
-    <div class="field--label">City Council President</div>
-              <div class="field--item">Off</div>
-          </div>
-
-  <div class="field field--name-field-city-council-pro-tem field--type-boolean field--label-above">
-    <div class="field--label">City Council Pro Tem</div>
-              <div class="field--item">Off</div>
-          </div>
-
-</div>
-
-    </div>
-      
-  
-      
-          </div>
-</div>
-</div>
-</div>
-
-<section class="views-element-container settings-tray-editable block block-views block-views-blockaction-button-content-block-1 clearfix" id="block-views-block-action-button-content-block-1" data-drupal-settingstray="editable">
-  
-    
-      <div class="form-group"><div class="view view-action-button-content view-id-action_button_content view-display-id-block_1 js-view-dom-id-c5f8d501718df5fc5fe1b614c1c3a32887cb04b155935ec4194ccb9911c3a2f0">
-  
-    
-      
-  
-          </div>
-</div>
-
-  </section>
-
-  </div>
-
-              </section>
-
-                              <aside class="col-lg-3" role="complementary">
-              <div class="region region-sidebar-second">
-    <section class="views-element-container settings-tray-editable block block-views block-views-blockcontacts-block-1 clearfix" id="block-views-block-contacts-block-1" data-drupal-settingstray="editable">
-  
-        <h4 class="block-title">CONTACTS</h4>
-      
-      <div class="form-group"><div class="view view-contacts view-id-contacts view-display-id-block_1 js-view-dom-id-9eac35eb7e93bb458722e9c252822bb62ab55f7c44e123e514a5443a0345f6c6">
-  
-    
-      
-  
-          </div>
-</div>
-
-  </section>
-<section class="views-element-container settings-tray-editable block block-views block-views-blockcontacts-block-2 clearfix" id="block-views-block-contacts-block-2" data-drupal-settingstray="editable">
-  
-    
-      <div class="form-group"><div class="view view-contacts view-id-contacts view-display-id-block_2 js-view-dom-id-e3b9e0019bb2434a3190246d7a84eae0d12a3ce63fe422187b7245cad5167fee">
-  
-    
-      
-  
-          </div>
-</div>
-
-  </section>
-<section class="views-element-container settings-tray-editable block block-views block-views-blocklocations-block-2 clearfix" id="block-views-block-locations-block-2" data-drupal-settingstray="editable">
-  
-    
-      <div class="form-group"><div class="view view-locations view-id-locations view-display-id-block_2 js-view-dom-id-be9b2579ca9483ce1a28cc10dfefe76c1a4f1730412ba18cfc49ad834f7767f4">
-  
-    
-      
-      <div class="view-content">
-          <div class="views-row"><article class="location-item">
+  </article>
+  <article class="extra-info">
+    <article class="item location">
+      <article class="location-item">
   <article class="box">
     <article class="icon">
       <span class="fas fa-map-marker-alt"></span>
     </article>
     <article class="location-info">
-      Board of Zoning Appeals
-      Coleman A. Young Municipal Center  2 Woodward Avenue - Suite 212  Detroit, MI 48226
-      <a href="tel:313-224-3595">313-224-3595</a>
-      <ul><li>Monday - Friday 8:00 am - 4:00 pm</li></ul>
+      <p>
+        <strong><span>Erma L. Henderson Auditorium</span>
+</strong>
+      </p>
+      
+            <div class="field field--name-field-address field--type-string field--label-hidden field--item">2 Woodward Avenue, Suite 1300 Detroit, MI 48226</div>
+      
     </article>
   </article>
 </article>
-</div>
 
-    </div>
-  
-          </div>
-</div>
+    </article>
+    <article class="item">
+      
+    </article>
+  </article>
+</section>
+<section class="agenda-min-pres">
+      <article class="item">
+      
+  <div class="field field--name-field-agenda field--type-file field--label-above">
+    <div class="field--label">Agendas</div>
+          <div class="field__items">
+              <div class="field--item"><span class="file file--mime-application-pdf file--application-pdf icon-before"><span class="file-icon"><span class="icon glyphicon glyphicon-file text-primary" aria-hidden="true"></span></span><span class="file-link"><a href="https://detroitmi.gov/sites/detroitmi.localhost/files/events/2019-02/Feb%2026%2C%202019.pdf" type="application/pdf; length=291114" title="Open file in new window" target="_blank" data-toggle="tooltip" data-placement="bottom">Feb 26, 2019.pdf</a></span><span class="file-size">284.29 KB</span></span></div>
+              </div>
+      </div>
 
-  </section>
-
-<section id="main-social-media">
-      <div class="form-group"><div class="view view-social-media view-id-social_media view-display-id-block_1 js-view-dom-id-184a65db365fbc99cb91451f6ecec8dbeccd43f0e7e1e55052b6af4aa4b76a2c">
+    </article>
+        </section>
+<section>
+    <section id="playlist-container">
+    <article id="active-video">
+      <div id="video-player" class="video-embed-field-responsive-video form-group">
+      </div>
+    </article>
+    <article class="video-playlist">
+      <dd><div class="views-element-container form-group"><div class="view view-video-playlist view-id-video_playlist view-display-id-block_2 js-view-dom-id-287e1bbe49811aa193eb1cc9b48a1d31a53144993bf3614b4f5bb8fa19d989a9">
   
     
       
   
           </div>
 </div>
-
+</dd>
+    </article>
   </section>
+  
+</section>
+<section>
+     
+</section>
+
 
   </div>
 
-              <div class="region region-sidebar-fourth">
-                                                                <h4  class="block-title">GOVERNMENT MENU</h4>
-                                        
-    <div class="views-row">
-    <div class="views-field views-field-field-anchor-link">
-        <div class="field-content">
-                            <a href="#documents-block">Documents</a>
-                    </div>
-    </div>
-</div>
+              </section>
 
-  </div>
-
-          </aside>
-                </div>
+              </div>
 </div>
 
 <div class="section-bg">
 <div class="container news-events-wrap">
-                              <div class="col-sm-12 news-events" role="complementary">
-            
-          </div>
-              </div>
+            </div>
 <div class="container-fluid featured-latest-wrap">
   <div class="container">
       </div>
@@ -1225,106 +449,13 @@ Search</button></div>
             </div>
 
 <div class="container-fluid highlights">
-                                  <div class="region region-highlights">
-    <section class="views-element-container settings-tray-editable block block-views block-views-blockhighlights-block-1 clearfix" id="block-views-block-highlights-block-1" data-drupal-settingstray="editable">
-  
-    
-      <div class="form-group"><div class="view view-highlights view-id-highlights view-display-id-block_1 js-view-dom-id-dd6e21c0c7966d6e77faa85ccef74e5733a61b095b7efe68ae136e05df9e6347">
-  
-    
-      
-  
-          </div>
-</div>
-
-  </section>
-
-  </div>
-
-              </div>
+            </div>
 
 <div class="container media-wrap">
-              <div class="media" role="widget">
-          <div class="region region-media">
-    
-<section id="documents-block"  class="views-element-container settings-tray-editable block block-views block-views-blockdocuments-block-1 clearfix" id="block-views-block-documents-block-1" data-drupal-settingstray="editable">
-  
-        <h2 class="block-title">Documents</h2>
-      
-      <div class="form-group"><div class="view view-documents view-id-documents view-display-id-block_1 js-view-dom-id-60aa631860d07c31f7d5210a07385a7a6b55c08b38e25d03c591eca8d8adcb95">
-  
-    
-      
-      <div class="view-content">
-      <div id="views-bootstrap-documents-block-1--3"  class="grid views-view-grid horizontal">
-            <div class="row">
-                  <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 ">
-            <div class="views-field views-field-name"><h5 class="field-content"><a href="/document/january-23-2018" hreflang="en">January 23, 2018</a></h5></div><div class="views-field views-field-field-description"><div class="field-content"><p>January 23, 2018 pdf document</p>
-
-<p><a href="/events/board-zoning-appeals-meeting-6">/events/board-zoning-appeals-meeting-6</a></p>
-</div></div>
-          </div>
-                  <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 ">
-            <div class="views-field views-field-name"><h5 class="field-content"><a href="/document/january-30-2018" hreflang="en">January 30, 2018</a></h5></div><div class="views-field views-field-field-description"><div class="field-content"><p>January 30, 2018 pdf document</p>
-</div></div>
-          </div>
-                  <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 ">
-            <div class="views-field views-field-name"><h5 class="field-content"><a href="/document/february-13-2018" hreflang="en">February 13, 2018</a></h5></div><div class="views-field views-field-field-description"><div class="field-content"><p>February 13, 2018 pdf document</p>
-</div></div>
-          </div>
-              </div>
-          <div class="row">
-                  <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 ">
-            <div class="views-field views-field-name"><h5 class="field-content"><a href="/document/february-20-2018" hreflang="en">February 20, 2018</a></h5></div><div class="views-field views-field-field-description"><div class="field-content"><p><a href="/Portals/0/docs/BZA/Meeting%20Minutes/2018%20Minutes/Feb.%2020.pdf?ver=2018-02-27-135852-353" target="_blank" title="Docket">February 20, 2018</a> pdf document</p>
-</div></div>
-          </div>
-                  <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 ">
-            <div class="views-field views-field-name"><h5 class="field-content"><a href="/document/february-27-2018" hreflang="en">February 27, 2018</a></h5></div><div class="views-field views-field-field-description"><div class="field-content"><p>February 27, 2018 pdf document</p>
-</div></div>
-          </div>
-                  <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4 ">
-            <div class="views-field views-field-name"><h5 class="field-content"><a href="/document/march-1-2018" hreflang="en">March 1, 2018</a></h5></div><div class="views-field views-field-field-description"><div class="field-content"><p>March 1, 2018 pdf document</p>
-</div></div>
-          </div>
-              </div>
-      </div>
-
     </div>
-  
-          <div class="more-link form-group"><a href="/">read more</a></div>
-
-      </div>
-</div>
-
-  </section>
 
 
-<section class="views-element-container settings-tray-editable block block-views block-views-blockfaq-block-1 clearfix" id="block-views-block-faq-block-1" data-drupal-settingstray="editable">
-  
-    
-      <div class="form-group"><div class="view view-faq view-id-faq view-display-id-block_1 js-view-dom-id-183ec0031a48a2aa2bc3c606cf0deb4ba96cba215809fbeebda0b665cdff4cb0">
-  
-    
-      
-  
-          </div>
-</div>
 
-  </section>
-
-  </div>
-
-      </div>
-      </div>
-
-        
-      <div class="full-width" role="complementary">
-        <div class="region region-full-width-content">
-    
-  </div>
-
-    </div>
-  
       <div class="footer-wrapper">
       <footer class="footer container" role="contentinfo">
           <div class="region region-footer">
@@ -1349,7 +480,7 @@ Search</button></div>
 		</div>
 		<div class="copyright-info">
 			<p>
-				Copyright 2001-2018 by City of Detroit<br />
+				Copyright 2001-2019 by City of Detroit<br />
 				For information about the City of Detroit's Web site, email the Web editor. All material is the property of the City of Detroit and may only be used with permission.
 			</p>
 			<a href="/privacy">Privacy Policy / Disclaimer</a>
@@ -1392,40 +523,67 @@ Search</button></div>
   </div>
 
       
-        <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"taxonomy\/term\/3506","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","google_analytics":{"trackOutbound":true,"trackMailto":true,"trackDownload":true,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip"},"data":{"extlink":{"extTarget":true,"extNofollow":null,"extClass":"0","extLabel":"","extImgClass":false,"extSubdomains":true,"extExclude":"","extInclude":"","extCssExclude":"","extCssExplicit":"","extAlert":false,"extAlertText":"","mailtoClass":"0","mailtoLabel":""}},"bootstrap":{"forms_has_error_value_toggle":1,"popover_enabled":1,"popover_animation":1,"popover_auto_close":1,"popover_container":"body","popover_content":"","popover_delay":"0","popover_html":0,"popover_placement":"right","popover_selector":"","popover_title":"","popover_trigger":"click","popover_trigger_autoclose":1,"tooltip_enabled":1,"tooltip_animation":1,"tooltip_container":"body","tooltip_delay":"0","tooltip_html":0,"tooltip_placement":"auto left","tooltip_selector":"","tooltip_trigger":"hover"},"ajaxTrustedUrl":{"\/search":true},"detroitmi":{"docsJS":{"ancestors":{"3506":"Board of Zoning Appeals Meetings","1536":"Board of Zoning Appeals","941":"Boards"},"termID":"3506","termName":"Board of Zoning Appeals Meetings"}},"user":{"uid":0,"permissionsHash":"2cc26ee3552c055e67b051bbef7f564a2965229434755c27debf4e8a76a7689a"}}</script>
+        <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","scriptPath":null,"pathPrefix":"","currentPath":"node\/16766","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","ajaxPageState":{"libraries":"anchor_link\/drupal.anchor_link,bootstrap\/popover,bootstrap\/tooltip,core\/html5shiv,detroitmi\/bootstrap-scripts,detroitmi\/bootstrap-styles,detroitmi\/crazy-menu-scripts,detroitmi\/crazy-menu-styles,detroitmi\/global-scripts,detroitmi\/global-styles,detroitmi\/vartheme-styles,detroitmi\/vbp-colors,detroitmi\/video-playlist,extlink\/drupal.extlink,fontawesome\/fontawesome.webfonts,google_analytics\/google_analytics,search_api_autocomplete\/search_api_autocomplete,varbase_media\/common,vartheme\/ajax,vartheme\/alert,vartheme\/autocomplete,vartheme\/betterlogin,vartheme\/bootstrap-no-spacing,vartheme\/bootstrap-print,vartheme\/bootstrap-scripts,vartheme\/bootstrap-styles,vartheme\/bs-callouts,vartheme\/card,vartheme\/edge2edge,vartheme\/equal-height,vartheme\/field,vartheme\/file,vartheme\/filter,vartheme\/form,vartheme\/global-scripts,vartheme\/global-styles,vartheme\/icon,vartheme\/navbar,vartheme\/navbar-admin,vartheme\/node,vartheme\/outside-in,vartheme\/panel,vartheme\/progress-bar,vartheme\/spacing,vartheme\/table-drag,vartheme\/tabs,vartheme\/toolbar,vartheme\/vb-tags,vartheme\/vbp-colors,views\/views.module,webform_bootstrap\/webform_bootstrap","theme":"detroitmi","theme_token":null},"ajaxTrustedUrl":{"\/search":true},"google_analytics":{"trackOutbound":true,"trackMailto":true,"trackDownload":true,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip"},"data":{"extlink":{"extTarget":true,"extTargetNoOverride":null,"extNofollow":null,"extFollowNoOverride":null,"extClass":"0","extLabel":"(link is external)","extImgClass":false,"extSubdomains":true,"extExclude":"","extInclude":"","extCssExclude":"","extCssExplicit":"","extAlert":false,"extAlertText":"","mailtoClass":"0","mailtoLabel":"(link sends email)"}},"bootstrap":{"forms_has_error_value_toggle":1,"popover_enabled":1,"popover_animation":1,"popover_auto_close":1,"popover_container":"body","popover_content":"","popover_delay":"0","popover_html":0,"popover_placement":"right","popover_selector":"","popover_title":"","popover_trigger":"click","popover_trigger_autoclose":1,"tooltip_enabled":1,"tooltip_animation":1,"tooltip_container":"body","tooltip_delay":"0","tooltip_html":0,"tooltip_placement":"auto left","tooltip_selector":"","tooltip_trigger":"hover"},"detroitmi":{"docsJS":{"language":"en"}},"search_api_autocomplete":{"acquia_search":{"auto_submit":true}},"user":{"uid":0,"permissionsHash":"5b65aa3cf388b0e242f1c4a5c6a62340bc29fba16811b035c015d8577e668ae1"}}</script>
 <script src="/core/assets/vendor/domready/ready.min.js?v=1.0.8"></script>
 <script src="/core/assets/vendor/jquery/jquery.min.js?v=3.2.1"></script>
 <script src="/core/assets/vendor/underscore/underscore-min.js?v=1.8.3"></script>
 <script src="/core/assets/vendor/jquery-once/jquery.once.min.js?v=2.2.0"></script>
-<script src="/core/misc/drupalSettingsLoader.js?v=8.6.4"></script>
-<script src="/core/misc/drupal.js?v=8.6.4"></script>
-<script src="/core/misc/drupal.init.js?v=8.6.4"></script>
-<script src="/modules/contrib/google_analytics/js/google_analytics.js?v=8.6.4"></script>
-<script src="/themes/contrib/bootstrap/js/drupal.bootstrap.js?pkf5a2"></script>
-<script src="/themes/contrib/bootstrap/js/attributes.js?pkf5a2"></script>
-<script src="/themes/contrib/bootstrap/js/theme.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/affix.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/alert.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/button.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/carousel.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/collapse.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/dropdown.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/modal.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/tooltip.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/popover.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/scrollspy.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/tab.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/bootstrap/js/transition.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/js/script.js?pkf5a2"></script>
-<script src="/modules/contrib/extlink/extlink.min.js?v=8.6.4"></script>
-<script src="/core/misc/states.js?v=8.6.4"></script>
-<script src="/themes/contrib/bootstrap/js/misc/states.js?pkf5a2"></script>
-<script src="/modules/contrib/webform/js/webform.states.js?v=8.6.4"></script>
-<script src="/modules/contrib/webform/modules/webform_bootstrap/js/webform_bootstrap.states.js?v=8.6.4"></script>
-<script src="/themes/contrib/bootstrap/js/popover.js?pkf5a2"></script>
-<script src="/themes/contrib/bootstrap/js/tooltip.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/apps/site-menu/js/site-menu.js?pkf5a2"></script>
-<script src="/themes/custom/detroitmi/js/documents-more-btn.js?pkf5a2"></script>
+<script src="/core/misc/drupalSettingsLoader.js?v=8.6.10"></script>
+<script src="/core/misc/drupal.js?v=8.6.10"></script>
+<script src="/core/misc/drupal.init.js?v=8.6.10"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/data-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/disable-selection-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/form-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/labels-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/jquery-1-7-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/scroll-parent-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/tabbable-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/unique-id-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/version-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/focusable-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/ie-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/keycode-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/plugin-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/safe-active-element-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/safe-blur-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widget-min.js?v=1.12.1"></script>
+<script src="/core/misc/autocomplete.js?v=8.6.10"></script>
+<script src="/modules/contrib/google_analytics/js/google_analytics.js?v=8.6.10"></script>
+<script src="/themes/contrib/bootstrap/js/drupal.bootstrap.js?pnctg2"></script>
+<script src="/themes/contrib/bootstrap/js/attributes.js?pnctg2"></script>
+<script src="/themes/contrib/bootstrap/js/theme.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/affix.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/alert.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/button.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/carousel.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/collapse.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/dropdown.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/modal.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/tooltip.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/popover.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/scrollspy.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/tab.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/bootstrap/js/transition.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/js/script.js?pnctg2"></script>
+<script src="/modules/contrib/extlink/extlink.js?v=8.6.10"></script>
+<script src="/core/misc/states.js?v=8.6.10"></script>
+<script src="/themes/contrib/bootstrap/js/misc/states.js?pnctg2"></script>
+<script src="/modules/contrib/webform/js/webform.states.js?v=8.6.10"></script>
+<script src="/modules/contrib/webform/modules/webform_bootstrap/js/webform_bootstrap.states.js?v=8.6.10"></script>
+<script src="/themes/contrib/bootstrap/js/popover.js?pnctg2"></script>
+<script src="/themes/contrib/bootstrap/js/tooltip.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/js/video-library.js?pnctg2"></script>
+<script src="/themes/custom/detroitmi/apps/site-menu/js/site-menu.js?pnctg2"></script>
+<script src="/core/misc/progress.js?v=8.6.10"></script>
+<script src="/themes/contrib/bootstrap/js/misc/progress.js?pnctg2"></script>
+<script src="/core/modules/responsive_image/js/responsive_image.ajax.js?v=8.6.10"></script>
+<script src="/core/misc/ajax.js?v=8.6.10"></script>
+<script src="/themes/contrib/bootstrap/js/misc/ajax.js?pnctg2"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/position-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widgets/menu-min.js?v=1.12.1"></script>
+<script src="/core/assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js?v=1.12.1"></script>
+<script src="/themes/contrib/bootstrap/js/misc/autocomplete.js?pnctg2"></script>
+<script src="/modules/contrib/search_api_autocomplete/js/search_api_autocomplete.js?pnctg2"></script>
 
-  <script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"bbe77e8940","applicationID":"56773324","transactionName":"b10BNxZTXUZQURJZWlYXIgAQW1xbHnYURUVZVD8GCkZaQUhDE1VAXWQgDApGQVpdXgNCaX1WFwoQS2JAVEcDZXx7Vw0XFl1fWVRASw5UW1sGEBc=","queueTime":0,"applicationTime":2613,"atts":"QxoCQV5JTkg=","errorBeacon":"bam.nr-data.net","agent":""}</script></body>
+  <script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"bbe77e8940","applicationID":"56773324","transactionName":"b10BNxZTXUZQURJZWlYXIgAQW1xbHnYURUVZVD8UAVBVWkNfOV5aXF0\/IgdRVkZCbjFVV15XEQ4qXVdQcFEFVUZLFV0ADFdQXmZXBFZaSlUxBhdHX0FCcwVTUEtL","queueTime":0,"applicationTime":784,"atts":"QxoCQV5JTkg=","errorBeacon":"bam.nr-data.net","agent":""}</script></body>
 </html>
