@@ -1,104 +1,99 @@
-# -*- coding: utf-8 -*-
-import urllib.parse
+import re
+from datetime import datetime, timedelta
+from urllib.parse import unquote
 
-from dateutil.parser import parse
+from city_scrapers_core.constants import COMMISSION, COMMITTEE
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
+from dateutil.relativedelta import relativedelta
 
-from city_scrapers.constants import COMMISSION, NOT_CLASSIFIED
-from city_scrapers.spider import Spider
 
-
-class DetLibraryCommissionSpider(Spider):
+class DetLibraryCommissionSpider(CityScrapersSpider):
     name = 'det_library_commission'
-    agency_name = 'Detroit Public Library'
+    agency = 'Detroit Public Library'
     timezone = 'America/Detroit'
     allowed_domains = ['detroitpubliclibrary.org']
-    start_urls = ['https://detroitpubliclibrary.org/about/commission']
+
+    @property
+    def start_urls(self):
+        """Pull events from the calendar pages for 2 months past through 2 months ahead"""
+        now = datetime.now()
+        urls = []
+        for months_delta in range(-2, 3):
+            month_str = (now + relativedelta(months=months_delta)).strftime("%m/%Y")
+            urls.append("https://detroitpubliclibrary.org/events/commission/{}".format(month_str))
+        return urls
 
     def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
-
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
-
-        yield from self._generate_requests(response)
-
-    def _generate_requests(self, response):
-        anchor_xpath = '//div[contains(@class, "card-details")]/a'
-        anchors = response.xpath(anchor_xpath)
-        for a in anchors:
-            yield response.follow(a, self._parse_item)
+        """Yields requests for each meeting found in the calendar"""
+        for link in response.css('#month_calendar .event a::attr(href)'):
+            yield response.follow(link.extract(), self._parse_item)
 
     def _parse_item(self, response):
-        name = self._parse_name(response)
-        location = self._get_location(response)
-        classification = self._parse_classification(name)
-        date, start_time, end_time = self._parse_date_and_times(response)
-        data = {
-            '_type': 'event',
-            'name': name,
-            'event_description': '',
-            'classification': classification,
-            'start': {
-                'date': date,
-                'time': start_time,
-                'note': '',
-            },
-            'end': {
-                'date': date,
-                'time': end_time,
-                'note': '',
-            },
-            'all_day': False,
-            'location': location,
-            'documents': [],
-            'sources': [{
-                'url': response.url,
-                'note': ''
-            }],
+        """`_parse_item` should always `yield` Meeting items"""
+        start = self._parse_start(response)
+        end, has_end = self._parse_end(response, start)
+        title = self._parse_title(response)
+        meeting = Meeting(
+            title=title,
+            description='',
+            classification=self._parse_classification(title),
+            start=start,
+            end=end,
+            time_notes='' if has_end else 'End estimated 3 hours after start time',
+            all_day=False,
+            location=self._parse_location(response),
+            links=self._parse_links(response),
+            source=response.url,
+        )
+        meeting['id'] = self._get_id(meeting)
+        meeting['status'] = self._get_status(meeting)
+        return meeting
+
+    def _parse_start(self, response):
+        """Parse start datetime from time element"""
+        start_dt_str = response.css('time::attr(datetime)').extract_first()[:16]
+        return datetime.strptime(start_dt_str, '%Y-%m-%dT%H:%M')
+
+    def _parse_end(self, response, start):
+        """Parse end datetime from duration string"""
+        duration_str = response.css('tr:nth-child(2) th[scope="row"] + td::text').extract_first()
+        if not duration_str or ' - ' not in duration_str:
+            return start + timedelta(hours=3), False
+        end_str = duration_str.split(' - ')[-1]
+        end_time = datetime.strptime(end_str, '%I:%M%p').time()
+        return datetime.combine(start.date(), end_time), True
+
+    @staticmethod
+    def _parse_title(response):
+        return response.css('main header h1::text').extract_first().strip()
+
+    @staticmethod
+    def _parse_classification(title):
+        if 'committee' in title.lower():
+            return COMMITTEE
+        return COMMISSION
+
+    @staticmethod
+    def _parse_location(response):
+        """Parse location from JS variable in page"""
+        script_contents = response.css('script[type="text/javascript"]::text').extract_first()
+        addr_str = unquote(
+            re.search(r'(?<=destination=).*(?=\';)', script_contents).group(),
+        ).replace('\n', ' ')
+        loc_name_str = response.css('tr:nth-child(3) th[scope="row"] + td a::text').extract_first()
+        return {
+            'name': loc_name_str,
+            'address': addr_str,
         }
-        data['id'] = self._generate_id(data)
-        data['status'] = self._generate_status(data)
-        yield data
 
-    @staticmethod
-    def _parse_name(response):
-        name_xpath = '//header/h1/text()'
-        name = response.xpath(name_xpath).extract_first()
-        return 'Library Commissioners: {}'.format(name)
-
-    @staticmethod
-    def _parse_classification(meeting_name):
-        if 'Commission' in meeting_name:
-            return COMMISSION
-        return NOT_CLASSIFIED
-
-    @staticmethod
-    def _get_location(response):
-        room_name = response.xpath('//td/small//text()').extract_first()
-        branch_name = response.xpath('//td/strong//text()').extract_first()
-        address_raw = response.xpath(
-            'substring-before(substring-after(//script[contains(.,"destination=")]/text()'
-            ', "destination="), "U.S.")'
-        ).extract_first()
-        address_formatted = urllib.parse.unquote(address_raw).replace("\n", " ").strip()
-
-        location = {
-            'name': room_name + ', ' + branch_name + ' Branch' + ', Detroit Public Library',
-            'address': address_formatted,
-            'neighborhood': '',
-        }
-        return location
-
-    @staticmethod
-    def _parse_date_and_times(response):
-        date_text = response.xpath('//tr[1]/td/text()').extract_first()
-        time_text = response.xpath('//tr[2]/td/text()').extract_first()
-        start_time, end_time = time_text.split(" - ")
-        date_value = parse(date_text)
-        start_value = parse(start_time)
-        end_value = parse(end_time)
-
-        return date_value.date(), start_value.time(), end_value.time()
+    def _parse_links(self, response):
+        """Parse meeting links from page"""
+        links = []
+        for link_block in response.css('section[data-block-type="document-list"] li'):
+            title = link_block.css('article h3 > span:last-child::text').extract_first()
+            links.append({
+                'title': title.strip(),
+                'href': link_block.css('a::attr(href)').extract_first(),
+            })
+        return links
