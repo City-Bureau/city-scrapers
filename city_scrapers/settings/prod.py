@@ -10,6 +10,10 @@ ITEM_PIPELINES = {
     "city_scrapers_core.pipelines.JSCalendarPipeline": 500,
 }
 
+SPIDER_MIDDLEWARES = {
+    "city_scrapers.middleware.CityScrapersWaybackMiddleware": 500,
+}
+
 EXTENSIONS = {
     "scrapy_sentry.extensions.Errors": 10,
     "city_scrapers_core.extensions.AzureBlobStatusExtension": 100,

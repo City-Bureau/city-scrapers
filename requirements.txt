@@ -44,6 +44,7 @@ raven==6.10.0
 requests==2.21.0
 scrapy-sentry==0.9.0
 scrapy==1.5.1
+scrapy-wayback-middleware==0.0.2
 service-identity==18.1.0
 six==1.12.0
 twisted==18.9.0
