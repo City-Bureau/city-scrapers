@@ -14,6 +14,7 @@ scrapy = "*"
 scrapy-sentry = "*"
 legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper"} 
 city-scrapers-core = {extras = ["azure"],version = "*"}
+scrapy-wayback-middleware = "*"
 
 [dev-packages]
 freezegun = "*"
