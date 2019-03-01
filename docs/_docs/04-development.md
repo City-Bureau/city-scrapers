@@ -144,7 +144,7 @@ $ git checkout -b XXXX-spider-NAMEOFAGENCY
 
 #### 3. Create a spider
 
-Create a spider from our tempalte with a spider slug, agency name, and a URL to start scraping. Inside your virtual environment following the previous examples (or prefixed by `pipenv run`) run:
+Create a spider from our template with a spider slug, agency name, and a URL to start scraping. Inside your virtual environment following the previous examples (or prefixed by `pipenv run`) run:
 
 ```bash
 (city-scrapers)$ scrapy genspider chi_housing "Chicago Housing Authority" http://www.thecha.org
