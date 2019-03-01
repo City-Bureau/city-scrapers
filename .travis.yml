@@ -21,7 +21,7 @@ before_deploy:
 deploy:
   - skip_cleanup: true
     provider: script
-    script: scrapy runall -s LOG_ENABLED=False
+    script: ./.deploy.sh
     on:
       python: 3.6
       branch: master
