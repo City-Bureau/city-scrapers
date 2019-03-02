@@ -1,7 +1,7 @@
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-
+from datetime import datetime
 
 class IlMedicaidSpider(CityScrapersSpider):
     name = "il_medicaid"
@@ -18,14 +18,22 @@ class IlMedicaidSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".ctl00_PlaceHolderMain_ctl01_ctl01__ControlWrapper_"
-                                 "RichHtmlField ul li"):
+
+        date_x_path = '//div[@id="ctl00_PlaceHolderMain_ctl01_ctl01__ControlWrapper_RichHtmlField"]/ul/li/p/text()'
+        for raw_date in response.xpath(date_x_path).getall():
+            # Clean up the raw dates
+            raw_date.replace('\xa0',' ').strip()
+            if raw_date.count(',') == 2:
+                index = raw_date.find(",")
+                raw_date = raw_date[index+1:].strip()
+            date = datetime.strptime(raw_date, "%B %d, %Y")
+
             meeting = Meeting(
                 title='Medicare Advisory Committee',
                 description='',
                 classification=ADVISORY_COMMITTEE,
-                start=self._parse_start(item),
-                end=self._parse_end(item),
+                start=date.replace(hour=10),
+                end=date.replace(hour=12),
                 all_day=False,
                 time_notes="",
                 location={
@@ -54,13 +62,13 @@ class IlMedicaidSpider(CityScrapersSpider):
     #     """Parse or generate classification from allowed options."""
     #     return NOT_CLASSIFIED
 
-    def _parse_start(self, item):
-        """Parse start datetime as a naive datetime object."""
-        return None
+    # def _parse_start(self, item):
+    #     """Parse start datetime as a naive datetime object."""
+    #     return None
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+    # def _parse_end(self, item):
+    #     """Parse end datetime as a naive datetime object. Added by pipeline if None"""
+    #     return None
 
     # def _parse_time_notes(self, item):
     #     """Parse any additional notes on the timing of the meeting"""
