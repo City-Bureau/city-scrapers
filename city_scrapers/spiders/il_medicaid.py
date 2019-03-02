@@ -8,9 +8,9 @@ class IlMedicaidSpider(CityScrapersSpider):
     agency = "Illinois Medical Adivsory Committee"
     timezone = "America/Chicago"
     allowed_domains = ["www.illinois.gov"]
-    start_urls = ["file:///Users/ksong/myCodes/open-source/city-scrapers/tests/files/il_medicaid.html"]
-    # start_urls = ["https://www.illinois.gov/hfs/About/BoardsandCommisions/MAC/Pages/"
-    #               "MeetingSchedule.aspx"]
+    # start_urls = ["file:///Users/ksong/myCodes/open-source/city-scrapers/tests/files/il_medicaid.html"]
+    start_urls = ["https://www.illinois.gov/hfs/About/BoardsandCommisions/MAC/Pages/"
+                  "MeetingSchedule.aspx"]
 
     def parse(self, response):
         """
