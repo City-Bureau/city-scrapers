@@ -8,8 +8,9 @@ class IlMedicaidSpider(CityScrapersSpider):
     agency = "Illinois Medical Adivsory Committee"
     timezone = "America/Chicago"
     allowed_domains = ["www.illinois.gov"]
-    start_urls = ["https://www.illinois.gov/hfs/About/BoardsandCommisions/MAC/Pages/"
-                  "MeetingSchedule.aspx"]
+    start_urls = ["file:///Users/ksong/myCodes/open-source/city-scrapers/tests/files/il_medicaid.html"]
+    # start_urls = ["https://www.illinois.gov/hfs/About/BoardsandCommisions/MAC/Pages/"
+    #               "MeetingSchedule.aspx"]
 
     def parse(self, response):
         """
@@ -22,7 +23,7 @@ class IlMedicaidSpider(CityScrapersSpider):
         date_x_path = '//div[@id="ctl00_PlaceHolderMain_ctl01_ctl01__ControlWrapper_RichHtmlField"]/ul/li/p/text()'
         for raw_date in response.xpath(date_x_path).getall():
             # Clean up the raw dates
-            raw_date.replace('\xa0',' ').strip()
+            raw_date = raw_date.replace('\xa0',' ').strip()
             if raw_date.count(',') == 2:
                 index = raw_date.find(",")
                 raw_date = raw_date[index+1:].strip()
