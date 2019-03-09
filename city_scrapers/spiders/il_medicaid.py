@@ -1,3 +1,4 @@
+import scrapy
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -8,6 +9,9 @@ class IlMedicaidSpider(CityScrapersSpider):
     agency = "Illinois Medical Adivsory Committee"
     timezone = "America/Chicago"
     allowed_domains = ["www.illinois.gov"]
+
+    # Using the MAC main page makes it more convenient to grab the meeting
+    # title
     start_urls = ["https://www.illinois.gov/hfs/About/BoardsandCommisions/MAC/Pages/"
                   "default.aspx"]
 
@@ -18,30 +22,59 @@ class IlMedicaidSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        # The title of the main of the committee/subcommittee page is the name
+        # of the said committee/subcommittee.
+        title = self._parse_title(response.xpath("//title/text()").get())
 
-        date_x_path = '//div[@id="ctl00_PlaceHolderMain_ctl01_ctl01__ControlWrapper_RichHtmlField"]/ul/li/p/text()'
-        for raw_date in response.xpath(date_x_path).getall():
-            # Clean up the raw dates
-            raw_date = raw_date.replace('\xa0',' ').strip()
-            if raw_date.count(',') == 2:
-                index = raw_date.find(",")
-                raw_date = raw_date[index+1:].strip()
-            date = datetime.strptime(raw_date, "%B %d, %Y")
+        # The meeting times are listed in the "Schedules" page for each
+        # committee/subcommittee.
+        
+        schedule_xpath = "//a[descendant::*[contains(text(),'chedule')]]/@href"
+        schedule_page_url = response.xpath(schedule_xpath).get()
+        if schedule_page_url is not None:
+            schedule_page_url = response.urljoin(schedule_page_url)
+            request = scrapy.Request(url = schedule_page_url,
+                                     callback = self._get_meetings)
+            request.meta['title'] = title
+            yield request
+
+        # Request subcommittee pages.
+
+        subcom_xpath = "//a[contains(@title, 'ubcommitt')]/following-sibling::ul/li/a/@href"
+        subcom_pages = response.xpath(subcom_xpath).getall()
+        if subcom_pages is not None:
+            for subcom in subcom_pages:
+                subcom = response.urljoin(subcom)
+                yield scrapy.Request(url=subcom, callback=self.parse)
+
+        # TBD: Request minutes and notices
+
+    # TBD 
+    def _parse_title(self, item):
+        """Parse or generate meeting title."""
+        return item
+
+    def _get_meetings(self, response):
+        """
+        Callback method for scraping the 'schedule' pages.
+        """
+        date_xpath = "//h2[contains(text(),'Meeting Dates')]/following::ul/li/p/text()"
+        for date_str in response.xpath(date_xpath).getall():
+            date = self._parse_date(date_str)
 
             meeting = Meeting(
-                title='Medicare Advisory Committee',
-                description='',
-                classification=ADVISORY_COMMITTEE,
-                start=date.replace(hour=10),
-                end=date.replace(hour=12),
-                all_day=False,
-                time_notes="",
-                location={
+                title= response.meta['title'],
+                description='', # TBD
+                classification=ADVISORY_COMMITTEE, # TBD
+                start= date.replace(hour=10),# TBD
+                end= date.replace(hour=12),# TBD
+                all_day=False,# TBD
+                time_notes="",# TBD
+                location={# TBD
                     'name': 'James R. Thompson Center',
                     'address': '100 W Randolph St, 2nd flr. Rm. 2025, Chicago, IL 60601',
-                },  # Vid conf with Illinois Department of Healthcare and
-                    # Family Service in Springfield.
-                links=[],
+                },
+                links=[],# TBD
                 source=self._parse_source(response),
             )
 
@@ -50,9 +83,20 @@ class IlMedicaidSpider(CityScrapersSpider):
 
             yield meeting
 
-    # def _parse_title(self, item):
-    #     """Parse or generate meeting title."""
-    #     return ""
+    def _parse_date(self, date):
+        """
+        Prases meeting date.
+        """
+        date = date.replace('\xa0',' ').strip()
+        if date.count(',') == 2:
+            index = date.find(",")
+            date = date[index+1:].strip()
+
+        # TBD: Some subcommittee meeting dates are causing problems
+        try:
+            return datetime.strptime(date, "%B %d, %Y")
+        except ValueError:
+            return datetime(1900,1,1)
 
     # def _parse_description(self, item):
     #     """Parse or generate meeting description."""
