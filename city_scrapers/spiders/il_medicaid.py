@@ -59,7 +59,7 @@ class IlMedicaidSpider(CityScrapersSpider):
         Callback method for scraping the 'schedule' pages.
         """
         date_xpath = "//h2[contains(text(),'Meeting Dates')]/following::ul/li/p/text()"
-        for date_str in response.xpath(date_xpath).getall():
+        for date_str in response.xpath(date_xpath).re(r'[\w]+[\s]+[\d]+,\s[\d]+'):
             date = self._parse_date(date_str)
 
             meeting = Meeting(
@@ -85,14 +85,10 @@ class IlMedicaidSpider(CityScrapersSpider):
 
     def _parse_date(self, date):
         """
-        Prases meeting date.
+        Parses meeting date.
         """
-        date = date.replace('\xa0',' ').strip()
-        if date.count(',') == 2:
-            index = date.find(",")
-            date = date[index+1:].strip()
+        date = date.replace('\xa0',' ')
 
-        # TBD: Some subcommittee meeting dates are causing problems
         try:
             return datetime.strptime(date, "%B %d, %Y")
         except ValueError:
