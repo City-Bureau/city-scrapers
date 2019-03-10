@@ -49,10 +49,10 @@ class IlMedicaidSpider(CityScrapersSpider):
 
         # TBD: Request minutes and notices
 
-    # TBD 
+    # Just stripping the white spaces seems enough 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return item
+        return item.strip()
 
     def _get_meetings(self, response):
         """
