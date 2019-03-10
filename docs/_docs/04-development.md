@@ -317,7 +317,9 @@ class ChiHousingSpider(Spider):
     # ...
 ```
 
-Often a value for meetings returned by a spider will be the same regardless of meeting content (an example is that most meetings will always have `False` for the `all_day` value). In this case, feel free to remove the `_parse_*` method for that field, and simply include the value in each dictionary (so `'all_day': False` in this example rather than `'all_day': self._parse_all_day(item)`).
+Often a value for meetings returned by a spider will be the same regardless of meeting content (an example is that most meetings will have `False` for the `all_day_value`). For fields like `classification`, `all_day`, and `title` (sometimes), feel free to remove the `_parse_*` method for that field, and simply include the value in each dictionary (so `'all_day': False` in this example rather than `'all_day': self._parse_all_day(item)`).
+
+However, scheduling details like time and location should be pulled from the page, even if the value is always the same.
 
 #### B. Write tests
 
