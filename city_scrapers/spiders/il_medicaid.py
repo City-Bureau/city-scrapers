@@ -28,7 +28,7 @@ class IlMedicaidSpider(CityScrapersSpider):
 
         # The meeting times are listed in the "Schedules" page for each
         # committee/subcommittee.
-        
+
         schedule_xpath = "//a[descendant::*[contains(text(),'chedule')]]/@href"
         schedule_page_url = response.xpath(schedule_xpath).get()
         if schedule_page_url is not None:
