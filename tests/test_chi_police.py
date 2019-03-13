@@ -1,31 +1,29 @@
-from datetime import date, time
+from datetime import datetime
 
+from city_scrapers_core.constants import PASSED, POLICE_BEAT
 from tests.utils import file_response
 
-from city_scrapers.constants import POLICE_BEAT
 from city_scrapers.spiders.chi_police import ChiPoliceSpider
 
 test_response = file_response('files/chi_police.json')
 spider = ChiPoliceSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'CAPS District 25, Beat 14'
+def test_title():
+    assert parsed_items[0]['title'] == 'CAPS District 25, Beat 14'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    EXPECTED_START = {'date': date(2017, 12, 28), 'time': time(18, 30), 'note': ''}
-    assert parsed_items[0]['start'] == EXPECTED_START
+    assert parsed_items[0]['start'] == datetime(2017, 12, 28, 18, 30)
 
 
 def test_end_time():
-    EXPECTED_END = {'date': date(2017, 12, 28), 'time': time(19, 30), 'note': ''}
-    assert parsed_items[0]['end'] == EXPECTED_END
+    assert parsed_items[0]['end'] == datetime(2017, 12, 28, 19, 30)
 
 
 def test_id():
@@ -37,33 +35,26 @@ def test_all_day():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_classification():
     assert parsed_items[0]['classification'] == POLICE_BEAT
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
+def test_links():
+    assert parsed_items[0]['links'] == []
 
 
 def test_location():
     EXPECTED_LOCATION = {
         'address': "St. Ferdinand's3115 N. Mason Chicago, IL",
         'name': '',
-        'neighborhood': ''
     }
     assert parsed_items[0]['location'] == EXPECTED_LOCATION
 
 
-def test__type():
-    assert parsed_items[0]['_type'] == 'event'
-
-
-def test_sources():
-    EXPECTED_SOURCES = [{
-        'url': 'https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars',  # noqa
-        'note': ''
-    }]
-    assert parsed_items[0]['sources'] == EXPECTED_SOURCES
+def test_source():
+    assert parsed_items[0][
+        'source'
+    ] == 'https://home.chicagopolice.org/office-of-community-policing/community-event-calendars/'  # noqa
