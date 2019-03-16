@@ -62,11 +62,12 @@ def test_time_notes():
     assert november_item["time_notes"] is None
 
 
-# def test_id():
-#     assert november_item["id"] == "EXPECTED ID"
-#
-# def test_status():
-#     assert november_item["status"] == "EXPECTED STATUS"
+def test_id():
+    assert isinstance(november_item["id"], str) and november_item["id"] != ""
+
+
+def test_status():
+    assert isinstance(november_item["status"], str) and november_item["id"] != ""
 
 
 def test_location():
