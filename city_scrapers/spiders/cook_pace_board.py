@@ -54,7 +54,9 @@ class CookPaceBoardSpider(CityScrapersSpider):
             meeting['classification'] = self._parse_classification(title=meeting['title'])
 
             # Figure out meeting documents from title and date
-            meeting['links'] = self._parse_links(title=meeting['title'], date=meeting['start'])
+            meeting['links'] = self._parse_links(
+                title=meeting['title'], date=meeting['start']
+            )
 
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
@@ -123,7 +125,7 @@ class CookPaceBoardSpider(CityScrapersSpider):
             # Check whether there is a file there and append if so
             r_agenda = requests.get(agenda_url)
             if r_agenda.status_code == 200:
-                out.append({"title": "Agenda", "link": agenda_url})
+                out.append({"title": "Agenda", "href": agenda_url})
 
             ## Minutes ##
             # Looks like:
@@ -137,6 +139,6 @@ class CookPaceBoardSpider(CityScrapersSpider):
             # Check whether there is a file there and append if so
             r_minutes = requests.get(minutes_url)
             if r_minutes.status_code == 200:
-                out.append({"title": "Minutes", "link": minutes_url})
+                out.append({"title": "Minutes", "href": minutes_url})
 
         return out

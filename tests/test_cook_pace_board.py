@@ -67,11 +67,25 @@ def test_location():
 def test_source():
     assert november_item["source"] == "http://www.pacebus.com/sub/news_events/calendar_of_events.asp"
 
-# def test_links():
-#     assert november_item["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
-
 def test_classification():
     assert november_item["classification"] == BOARD
+
+## Test links
+# January 2019 should have valid ones
+january_item = parsed_items[0]
+
+def test_start_january():
+    assert january_item["start"] == datetime(2019, 1, 16, 16, 30)
+
+
+def test_links_january():
+    assert january_item["links"] == [
+        {
+            "href": "https://www.pacebus.com/pdf/Board_Minutes/Pace_Board_Meeting_Agenda_January_16_2019.pdf",
+            "title": "Agenda"
+        },
+        {
+            "href": "https://www.pacebus.com/pdf/Board_Minutes/Pace_Board_Meeting_Minutes_Jan_2019.pdf",
+            "title": "Minutes"
+        },
+    ]
