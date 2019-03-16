@@ -61,6 +61,7 @@ def test_end():
 def test_time_notes():
     assert november_item["time_notes"] is None
 
+
 # def test_id():
 #     assert november_item["id"] == "EXPECTED ID"
 #
@@ -97,13 +98,17 @@ def test_start_january():
 def test_links_january():
     assert january_item["links"] == [
         {
-            "href": ("https://www.pacebus.com/pdf/Board_Minutes/"
-                     "Pace_Board_Meeting_Agenda_January_16_2019.pdf"),
+            "href": (
+                "https://www.pacebus.com/pdf/Board_Minutes/"
+                "Pace_Board_Meeting_Agenda_January_16_2019.pdf"
+            ),
             "title": "Agenda"
         },
         {
-            "href": ("https://www.pacebus.com/pdf/Board_Minutes/"
-                     "Pace_Board_Meeting_Minutes_Jan_2019.pdf"),
+            "href": (
+                "https://www.pacebus.com/pdf/Board_Minutes/"
+                "Pace_Board_Meeting_Minutes_Jan_2019.pdf"
+            ),
             "title": "Minutes"
         },
     ]

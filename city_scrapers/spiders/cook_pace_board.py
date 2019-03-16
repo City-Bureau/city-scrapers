@@ -26,8 +26,8 @@ class CookPaceBoardSpider(CityScrapersSpider):
 
         # Current year of meetings listed
         year = (
-            response.xpath("//th[@class='rowheader']/em/strong/text()")
-            .re(r'(\d\d\d\d) Meetings')[0].strip()
+            response.xpath("//th[@class='rowheader']/em/strong/text()").re(r'(\d\d\d\d) Meetings')
+            [0].strip()
         )
 
         # Get rows of meeting table
@@ -54,9 +54,7 @@ class CookPaceBoardSpider(CityScrapersSpider):
             meeting['classification'] = self._parse_classification(title=meeting['title'])
 
             # Figure out meeting documents from title and date
-            meeting['links'] = self._parse_links(
-                title=meeting['title'], date=meeting['start']
-            )
+            meeting['links'] = self._parse_links(title=meeting['title'], date=meeting['start'])
 
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
@@ -80,9 +78,7 @@ class CookPaceBoardSpider(CityScrapersSpider):
         date = item.xpath("./td[2]/text()").get().strip()
         time = item.xpath("./td[3]/text()").get().strip()
         # "January 16 2019 4:30pm"
-        dt_string = "{date} {year} {time}".format(
-            date=date, year=year, time=time
-        )
+        dt_string = "{date} {year} {time}".format(date=date, year=year, time=time)
         dt_format = "%B %d %Y %I:%M%p"
         start_datetime = datetime.strptime(dt_string, dt_format)
         return start_datetime
