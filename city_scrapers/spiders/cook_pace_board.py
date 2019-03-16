@@ -113,7 +113,7 @@ class CookPaceBoardSpider(CityScrapersSpider):
         # We know how to guess the URL for board agenda and minutes
         if "board" in title.lower():
 
-            ## Agena ##
+            # Agenda #
             # Looks like:
             # https://www.pacebus.com/pdf/Board_Minutes/
             # Pace_Board_Meeting_Agenda_February_13_2019.pdf
@@ -127,7 +127,7 @@ class CookPaceBoardSpider(CityScrapersSpider):
             if r_agenda.status_code == 200:
                 out.append({"title": "Agenda", "href": agenda_url})
 
-            ## Minutes ##
+            # Minutes #
             # Looks like:
             # https://www.pacebus.com/pdf/Board_Minutes/
             # Pace_Board_Meeting_Minutes_Jan_2019.pdf
