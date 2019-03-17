@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import pytest # noqa
+import pytest  # noqa
 from freezegun import freeze_time
 from tests.utils import file_response
 
@@ -41,7 +41,9 @@ def test_time_notes():
 
 
 def test_id():
-    assert item['id'] == 'det_historic_district/201902131730/x/historic_district_commission_regular_meeting' # noqa
+    assert item[
+        'id'
+    ] == 'det_historic_district/201902131730/x/historic_district_commission_regular_meeting'  # noqa
 
 
 def test_status():
@@ -52,18 +54,21 @@ def test_location():
     assert item['location'] == {
         "name": 'Erma L. Henderson Auditorium',
         'address': '2 Woodward Avenue, Suite 1300 Detroit, MI 48226'
-        }
+    }
 
 
 def test_source():
-    assert item['source'] == 'https://detroitmi.gov/events/regular-historic-district-commission-hdc-meeting-2' # noqa
+    assert item[
+        'source'
+    ] == 'https://detroitmi.gov/events/regular-historic-district-commission-hdc-meeting-2'  # noqa
 
 
 def test_links():
     assert item['links'] == [{
-        'href': 'https://detroitmi.gov/sites/detroitmi.localhost/files/events/2019-02/2019_02%2013_HDC%20FINAL%20Agenda_0.pdf', # noqa
+        'href':
+            'https://detroitmi.gov/sites/detroitmi.localhost/files/events/2019-02/2019_02%2013_HDC%20FINAL%20Agenda_0.pdf',  # noqa
         'title': '2019_02 13_HDC FINAL Agenda.pdf'
-        }]
+    }]
 
 
 def test_classification():
