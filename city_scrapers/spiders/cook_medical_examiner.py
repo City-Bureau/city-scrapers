@@ -33,11 +33,7 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
                 street = meetings[i + 1] + "; " + meetings[i + 2]
                 address = {
                     "name": venue,
-                    "address": street.replace(u'\xa0', u' '),
-                    "coordinates": {
-                        'latitude': None,
-                        'longitude': None
-                    }
+                    "address": street.replace(u'\xa0', u' ')
                 }
             if re.match(
                 "((Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day), "
@@ -93,7 +89,7 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        return [{"href": "", "title": ""}]
+        return []
 
     def _parse_source(self, response):
         """Parse or generate source."""
