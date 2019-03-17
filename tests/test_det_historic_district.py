@@ -7,7 +7,6 @@ from tests.utils import file_response
 from city_scrapers.constants import COMMISSION, PASSED
 from city_scrapers.spiders.det_historic_district import DetHistoricDistrictSpider
 
-
 freezer = freeze_time('2019-03-17')
 freezer.start()
 
