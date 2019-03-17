@@ -26,6 +26,10 @@ def test_title():
     assert parsed_items[0]["title"] == "Medical Examiner's Advisory Committee"
 
 
+def test_number():
+    assert len(parsed_items) == 5
+
+
 def test_description():
     agenda = [
         'Roll Call',
