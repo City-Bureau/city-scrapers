@@ -31,10 +31,7 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
             if "Location" in item:
                 venue = item.split(": ")[1]
                 street = meetings[i + 1] + "; " + meetings[i + 2]
-                address = {
-                    "name": venue,
-                    "address": street.replace(u'\xa0', u' ')
-                }
+                address = {"name": venue, "address": street.replace(u'\xa0', u' ')}
             if re.match(
                 "((Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day), "
                 "((Jan|Febr)uary|March|April|May|June|July|August|"

@@ -63,7 +63,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Cook County Medical Examiner’s Office",
-        "address": "2121 W Harrison; Chicago, IL 60612"
+        "address": "2121 W Harrison; Chicago, IL 60612",
     }
 
 
