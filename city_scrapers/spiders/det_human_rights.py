@@ -11,9 +11,6 @@ class DetHumanRightsSpider(DetCityMixin, CityScrapersSpider):
     agency_doc_id = []  # No docs at time of creation
 
     def _parse_title(self, response):
-        title = super()._parse_title(response)
-        if 'meeting' in title.lower():
-            return 'Human Rights Commission - Meeting'
         return 'Human Rights Commission'
 
     def _parse_description(self, response):
