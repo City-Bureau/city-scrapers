@@ -48,6 +48,7 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
                 classification=ADVISORY_COMMITTEE,
                 start=self._parse_start(d, start_time),
                 end=self._parse_end(d, end_time),
+                time_notes='',
                 all_day=False,
                 location=address,
                 links=self._parse_links(d),
