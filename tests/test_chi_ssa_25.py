@@ -1,108 +1,72 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import COMMISSION, CONFIRMED, PASSED
 from city_scrapers.spiders.chi_ssa_25 import ChiSsa25Spider
 
 test_response = file_response(
-    'files/chi_ssa_25.html', 'http://littlevillagechamber.org/2018-meetings-minutes/'
+    'files/chi_ssa_25.html', 'http://littlevillagechamber.org/2019-meetings-minutes/'
 )
 spider = ChiSsa25Spider()
 
-freezer = freeze_time('2018-12-13')
+freezer = freeze_time('2019-03-17')
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Commission: Monthly'
+def test_title():
+    assert parsed_items[0]['title'] == 'Commission: Monthly'
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 1, 16),
-        'time': time(9, 0),
-        'note': '',
-    }
-    assert parsed_items[-1]['start'] == {
-        'date': date(2018, 12, 18),
-        'time': time(9, 0),
-        'note': '',
-    }
+    assert parsed_items[0]['start'] == datetime(2019, 1, 15, 9)
+    assert parsed_items[-1]['start'] == datetime(2019, 12, 17, 9)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2018, 1, 16),
-        'time': time(10, 0),
-        'note': '',
-    }
-    assert parsed_items[-1]['end'] == {
-        'date': date(2018, 12, 18),
-        'time': time(10, 0),
-        'note': '',
-    }
+    assert parsed_items[0]['end'] == datetime(2019, 1, 15, 10)
+    assert parsed_items[-1]['end'] == datetime(2019, 12, 17, 10)
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_ssa_25/201801160900/x/commission_monthly'
+    assert parsed_items[0]['id'] == 'chi_ssa_25/201901150900/x/commission_monthly'
 
 
 def test_status():
     assert parsed_items[0]['status'] == PASSED
-    assert parsed_items[-1]['status'] == CONFIRMED
+    assert parsed_items[-1]['status'] == TENTATIVE
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'name': 'LV-Chamber',
-        'address': '3610 W. 26th St., 2nd Floor Chicago, IL',
-        'neighborhood': '',
+        'name': 'LV Chamber',
+        'address': '3610 W. 26th St. 2nd Floor Chicago, IL',
     }
     assert parsed_items[-1]['location'] == {
-        'name': 'La Catedral Café',
-        'address': '2500 S. Christiana Chicago, IL',
-        'neighborhood': '',
+        'name': 'Nuevo Leo Restaurant',
+        'address': '3657 W 26th St. 2nd Floor Chicago, IL',
     }
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'http://littlevillagechamber.org/2018-meetings-minutes/',
-        'note': '',
+def test_source():
+    assert parsed_items[0]['source'] == 'http://littlevillagechamber.org/2019-meetings-minutes/'
+
+
+def test_links():
+    assert parsed_items[0]['links'] == [{
+        'href':
+            'http://littlevillagechamber.org/wp-content/uploads/2019/03/SSA-Jan.-15.-2019-Meeting-Minutes.pdf',  # noqa
+        'title': 'Minutes'
     }]
-
-
-def test_documents():
-    assert parsed_items[0]['documents'] == [{
-        'url':
-            'http://littlevillagechamber.org/wp-content/uploads/2018/03/Jan.-2018-Meeting-minutes-to-approve.pdf',  # noqa
-        'note': 'Minutes'
-    }]
-    assert parsed_items[-1]['documents'] == []
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_event_description(item):
-    assert item['event_description'] == ''
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_all_day(item):
-    assert item['all_day'] is False
+    assert parsed_items[-1]['links'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
     assert item['classification'] == COMMISSION
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'

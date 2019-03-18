@@ -1,28 +1,27 @@
-# -*- coding: utf-8 -*-
+import re
 from datetime import datetime
 
-from city_scrapers.constants import COMMISSION
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import CANCELLED, COMMISSION
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class ChiSsa17Spider(Spider):
+class ChiSsa17Spider(CityScrapersSpider):
     name = 'chi_ssa_17'
-    agency_name = 'Chicago Special Service Area #17 Lakeview East'
+    agency = 'Chicago Special Service Area #17 Lakeview East'
     timezone = 'America/Chicago'
     allowed_domains = ['lakevieweast.com']
     start_urls = ['https://lakevieweast.com/ssa-17/']
     location = {
         'name': 'Lakeview East Chamber of Commerce',
         'address': '3208 N Sheffield Ave Chicago, IL 60657',
-        'neighborhood': '',
     }
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         meetings_header = [
@@ -33,43 +32,32 @@ class ChiSsa17Spider(Spider):
 
         for item in meeting_list:
             start = self._parse_start(item)
-            data = {
-                '_type': 'event',
-                'name': 'SSA #17 Commission',
-                'event_description': '',
-                'classification': COMMISSION,
-                'start': start,
-                'end': {
-                    'date': start['date'],
-                    'time': None,
-                    'note': '',
-                },
-                'all_day': False,
-                'location': self.location,
-                'documents': minutes.get(start['date'], []),
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }]
-            }
-            data['status'] = self._generate_status(data)
-            data['id'] = self._generate_id(data)
-            yield data
+            meeting = Meeting(
+                title='SSA #17 Commission',
+                description='',
+                classification=COMMISSION,
+                start=start,
+                end=None,
+                time_notes='Estimated 2 hour duration',
+                all_day=False,
+                location=self.location,
+                links=minutes.get(start.date(), []),
+                source=response.url,
+            )
+            meeting['status'] = self._get_status(meeting)
+            if len(item.css('ul')):
+                meeting['status'] = CANCELLED
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _parse_start(self, item):
-        """
-        Parse start date and time.
-        """
-        date_str = item.xpath('./text()').extract_first()
-        dt = datetime.strptime(
-            ', '.join(date_str.split(', ')[-2:]).replace('.', '').strip(),
-            '%B %d, %Y at %I:%M %p',
+        """Parse start datetime"""
+        date_str = re.sub(r'[\.\*]', '', item.xpath('./text()').extract_first()).strip()
+        date_str = re.sub(r'\s(?=[apm]{2}$)', '', date_str)
+        return datetime.strptime(
+            ', '.join(date_str.split(', ')[-2:]).strip(),
+            '%B %d, %Y at %I:%M%p',
         )
-        return {
-            'date': dt.date(),
-            'time': dt.time(),
-            'note': '',
-        }
 
     def _parse_minutes(self, response):
         """Parse minutes from separate list"""
@@ -86,6 +74,6 @@ class ChiSsa17Spider(Spider):
                 ', '.join(minutes_text.split(', ')[-2:]),
                 '%B %d, %Y',
             ).date()
-            minutes_dict[minutes_date] = [{'url': minutes.attrib['href'], 'note': 'Minutes'}]
+            minutes_dict[minutes_date] = [{'href': minutes.attrib['href'], 'title': 'Minutes'}]
 
         return minutes_dict
