@@ -21,7 +21,7 @@ freezer.stop()
 
 
 def test_title():
-    assert item['title'] == 'Human Rights Commission - Meeting'
+    assert item['title'] == 'Human Rights Commission'
 
 
 def test_description():
@@ -41,7 +41,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert item['id'] == 'det_human_rights/201903211600/x/human_rights_commission_meeting'  # noqa
+    assert item['id'] == 'det_human_rights/201903211600/x/human_rights_commission'  # noqa
 
 
 def test_status():
