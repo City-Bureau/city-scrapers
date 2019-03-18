@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
 import re
 from datetime import datetime
 
-from city_scrapers.constants import COMMISSION
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class ChiSsa25Spider(Spider):
+class ChiSsa25Spider(CityScrapersSpider):
     name = 'chi_ssa_25'
-    agency_name = 'Chicago Special Service Area #25 Little Village'
+    agency = 'Chicago Special Service Area #25 Little Village'
     timezone = 'America/Chicago'
     allowed_domains = ['littlevillagechamber.org']
     start_urls = [
@@ -17,102 +17,65 @@ class ChiSsa25Spider(Spider):
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows a modified
-        OCD event schema (docs/_docs/05-development.md#event-schema)
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        in_meeting_rows = False
-        for item in response.css('table tr'):
-            is_meeting_row = len(item.css('td:not([bgcolor])')) > 0
-            if not in_meeting_rows and is_meeting_row:
-                in_meeting_rows = True
-            if in_meeting_rows and not is_meeting_row:
-                break
-            elif not is_meeting_row:
-                continue
-            date_str, time_str = self._parse_date_time_str(item)
-            data = {
-                '_type': 'event',
-                'name': self._parse_name(item),
-                'event_description': '',
-                'classification': COMMISSION,
-                'start': self._parse_start(date_str, time_str),
-                'end': self._parse_end(date_str, time_str),
-                'all_day': False,
-                'location': self._parse_location(item),
-                'documents': self._parse_documents(item),
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }],
-            }
+        for item in response.css('table:first-of-type tr:not(:first-child)'):
+            start, end = self._parse_start_end(item)
+            meeting = Meeting(
+                title=self._parse_title(item),
+                description='',
+                classification=COMMISSION,
+                start=start,
+                end=end,
+                time_notes="",
+                all_day=False,
+                location=self._parse_location(item),
+                links=self._parse_links(response, item),
+                source=response.url,
+            )
 
-            data['status'] = self._generate_status(data)
-            data['id'] = self._generate_id(data)
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
 
-            yield data
+            yield meeting
 
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
-        meeting_type = item.css('td::text').extract()[4]
+    def _parse_title(self, item):
+        meeting_type = item.css('td:nth-of-type(4)::text').extract_first()
         return 'Commission: {}'.format(meeting_type)
 
-    def _parse_date_time_str(self, item):
-        """Pull out date and time strings"""
-        date_str = item.css('td::text').extract()[1]
-        time_str = item.css('td::text').extract()[2]
-        return date_str, time_str
-
-    def _parse_start(self, date_str, time_str):
-        """
-        Parse start date and time.
-        """
-        duration_str, am_pm = time_str.split(' ')
-        start_time_str = duration_str.split('-')[0]
-        return {
-            'date': datetime.strptime(date_str, '%m/%d/%Y').date(),
-            'time': datetime.strptime('{} {}'.format(start_time_str, am_pm), '%I:%M %p').time(),
-            'note': '',
-        }
-
-    def _parse_end(self, date_str, time_str):
-        """
-        Parse end date and time.
-        """
-        duration_str, am_pm = time_str.split(' ')
-        end_time_str = duration_str.split('-')[-1]
-        return {
-            'date': datetime.strptime(date_str, '%m/%d/%Y').date(),
-            'time': datetime.strptime('{} {}'.format(end_time_str, am_pm), '%I:%M %p').time(),
-            'note': '',
-        }
+    def _parse_start_end(self, item):
+        """Parse start and end datetimes"""
+        year = datetime.now().year
+        date_text = ''.join(item.css('td:first-of-type *::text').extract())
+        date_str = '{} {}'.format(re.search(r'.* \d{1,2}', date_text).group(), year)
+        time_str = ''.join(item.css('td:nth-of-type(2) *::text').extract())
+        duration_str = re.sub(r'[APM]{2}', '', time_str)
+        am_pm = re.search(r'[APM]{2}', time_str).group()
+        start_str, end_str = [s.strip() for s in duration_str.split('–')]
+        start = datetime.strptime('{} {}{}'.format(date_str, start_str, am_pm), '%B %d %Y %I:%M%p')
+        end = datetime.strptime('{} {}{}'.format(date_str, end_str, am_pm), '%B %d %Y %I:%M%p')
+        return start, end
 
     def _parse_location(self, item):
-        """
-        Parse or generate location. Latitude and longitude can be
-        left blank and will be geocoded later.
-        """
-        loc_text = item.css('td::text').extract()[3]
-        loc_name = re.search(r'^[^\d]*(?=\d{2,4})', loc_text).group()
-        loc_addr = loc_text[len(loc_name):]
-        loc_name = loc_name.rstrip('-–, ')
-        if 'Chicago' not in loc_addr:
-            loc_addr += ' Chicago, IL'
-        return {
-            'address': loc_addr,
-            'name': loc_name,
-            'neighborhood': '',
-        }
+        """Parse location from table row"""
+        loc_items = item.css('td:nth-of-type(3) *::text').extract()
+        loc_name, addr_list = loc_items[0], loc_items[1:]
+        # Get ordinal suffix like 'th' or 'nd' to remove excess space later
+        loc_ord = [t for t in addr_list if re.match(r'[a-z]{2}', t)]
+        addr = ' '.join(addr_list)
+        for o in loc_ord:
+            addr = addr.replace(' ' + o, o)
+        if 'Chicago' not in addr:
+            addr += ' Chicago, IL'
+        addr = re.sub(r'\s+', ' ', addr).strip()
+        return {'name': loc_name, 'address': addr}
 
-    def _parse_documents(self, item):
-        """
-        Parse or generate documents.
-        """
-        minutes_link = item.css('td a::attr(href)').extract_first()
+    def _parse_links(self, response, item):
+        """Parse or generate links"""
+        minutes_link = item.css('td:last-of-type a::attr(href)').extract_first()
         if minutes_link:
-            return [{'url': minutes_link, 'note': 'Minutes'}]
+            return [{'href': response.urljoin(minutes_link), 'title': 'Minutes'}]
         return []
