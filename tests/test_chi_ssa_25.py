@@ -1,10 +1,10 @@
 from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers.spiders.chi_ssa_25 import ChiSsa25Spider
 
 test_response = file_response(
