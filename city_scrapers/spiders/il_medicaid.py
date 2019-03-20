@@ -63,11 +63,8 @@ class IlMedicaidSpider(CityScrapersSpider):
         # container without any tags. The descendant-or-self is used in case
         # this is changed in the future. 
         
-        # Currently, this does not work for subcommittee pages that do have the
-        # time range in p tags, because of the white space nodes
         time_xpath =
-        "//h2[starts-with(text(),'Time')]/following::node()[1]/descendant-or-self::text()"
-        
+        "//h2[starts-with(text(),'Time')]/following::node()[normalize-space()][1]/descendant-or-self::text()"
 
         date_xpath = "//h2[contains(text(),'Meeting Dates')]/following::ul/li/p/text()"
         for date_str in response.xpath(date_xpath).re(r'[\w]+[\s]+[\d]+,\s[\d]+'):
