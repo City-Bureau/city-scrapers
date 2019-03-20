@@ -68,6 +68,8 @@ class IlMedicaidSpider(CityScrapersSpider):
         raw_time_range = response.xpath(time_xpath).get()
         dashes = r'[-{}]'.format(chr(8211)) # some pages use -, chr(8211)
         raw_time_start, raw_time_end  = re.split(dashes, raw_time_range)
+        time_start = self._parse_time(raw_time_start)
+        time_end = self._parse_time(raw_time_end)
 
         date_xpath = "//h2[contains(text(),'Meeting Dates')]/following::ul/li/p/text()"
         for date_str in response.xpath(date_xpath).re(r'[\w]+[\s]+[\d]+,\s[\d]+'):
@@ -77,8 +79,8 @@ class IlMedicaidSpider(CityScrapersSpider):
                 title= response.meta['title'],
                 description='', # TBD
                 classification=ADVISORY_COMMITTEE, # TBD
-                start= date.replace(hour=10),# TBD
-                end= date.replace(hour=12),# TBD
+                start=datetime.combine(date,time_start)
+                end=datetime.combine(date,time_end)
                 all_day=False,# TBD
                 time_notes="",# TBD
                 location={# TBD
@@ -106,8 +108,17 @@ class IlMedicaidSpider(CityScrapersSpider):
             return datetime(1900,1,1)
 
     def _parse_time(self, item):
-        """Take a string and return a time"""
-
+        time = time.strip().upper()
+        if time == "NOON":
+            return datetime.datetime.strptime('1200','%H%M').time()
+        colon_index = time.find(":")
+        time = "".join(time.strip().upper().split("."))
+        if colon_index > -1:
+            if len(time[:colon_index]) == 1:
+                time = "0" + time
+            return datetime.datetime.strptime(time,'%H:%M %p').time()
+        else:
+            return datetime.datetime.strptime(time,'%H %p').time()
 
     # def _parse_description(self, item):
     #     """Parse or generate meeting description."""
