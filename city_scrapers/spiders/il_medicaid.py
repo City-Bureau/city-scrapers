@@ -2,7 +2,8 @@ import scrapy
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from datetime import datetime
+import datetime as dt
+import re
 
 class IlMedicaidSpider(CityScrapersSpider):
     name = "il_medicaid"
@@ -78,8 +79,8 @@ class IlMedicaidSpider(CityScrapersSpider):
                 title= response.meta['title'],
                 description='', # TBD
                 classification=ADVISORY_COMMITTEE, # TBD
-                start=datetime.combine(date,time_start)
-                end=datetime.combine(date,time_end)
+                start=dt.datetime.combine(date,time_start),
+                end=dt.datetime.combine(date,time_end),
                 all_day=False,# TBD
                 time_notes="",# TBD
                 location={# TBD
@@ -102,22 +103,23 @@ class IlMedicaidSpider(CityScrapersSpider):
         date = date.replace('\xa0',' ')
 
         try:
-            return datetime.strptime(date, "%B %d, %Y")
+            return dt.datetime.strptime(date, "%B %d, %Y")
         except ValueError:
-            return datetime(1900,1,1)
+            return dt.datetime(1900,1,1)
 
-    def _parse_time(self, item):
+    # replaces _parse_start and _parse_end
+    def _parse_time(self, time):
         time = time.strip().upper()
         if time == "NOON":
-            return datetime.datetime.strptime('1200','%H%M').time()
+            return dt.datetime.strptime('1200','%H%M').time()
         colon_index = time.find(":")
         time = "".join(time.strip().upper().split("."))
         if colon_index > -1:
             if len(time[:colon_index]) == 1:
                 time = "0" + time
-            return datetime.datetime.strptime(time,'%H:%M %p').time()
+            return dt.datetime.strptime(time,'%H:%M %p').time()
         else:
-            return datetime.datetime.strptime(time,'%H %p').time()
+            return dt.datetime.strptime(time,'%H %p').time()
 
     # def _parse_description(self, item):
     #     """Parse or generate meeting description."""
