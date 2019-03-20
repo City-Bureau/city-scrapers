@@ -63,8 +63,7 @@ class IlMedicaidSpider(CityScrapersSpider):
         # container without any tags. The descendant-or-self is used in case
         # this is changed in the future. 
         
-        time_xpath =
-        "//h2[starts-with(text(),'Time')]/following::node()[normalize-space()][1]/descendant-or-self::text()"
+        time_xpath = "//h2[starts-with(text(),'Time')]/following::node()[normalize-space()][1]/descendant-or-self::text()"
         raw_time_range = response.xpath(time_xpath).get()
         dashes = r'[-{}]'.format(chr(8211)) # some pages use -, chr(8211)
         raw_time_start, raw_time_end  = re.split(dashes, raw_time_range)
