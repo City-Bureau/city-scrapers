@@ -108,6 +108,8 @@ class IlMedicaidSpider(CityScrapersSpider):
             return dt.datetime(1900,1,1)
 
     # replaces _parse_start and _parse_end
+    # TBD: Look through other scheudle pages and see which time formats I am
+    # missing.
     def _parse_time(self, time):
         time = time.strip().upper()
         if time == "NOON":
@@ -128,14 +130,6 @@ class IlMedicaidSpider(CityScrapersSpider):
     # def _parse_classification(self, item):
     #     """Parse or generate classification from allowed options."""
     #     return NOT_CLASSIFIED
-
-    # def _parse_start(self, item):
-    #     """Parse start datetime as a naive datetime object."""
-    #     return None
-
-    # def _parse_end(self, item):
-    #     """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-    #     return None
 
     # def _parse_time_notes(self, item):
     #     """Parse any additional notes on the timing of the meeting"""
