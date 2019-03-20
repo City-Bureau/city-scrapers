@@ -65,6 +65,9 @@ class IlMedicaidSpider(CityScrapersSpider):
         
         time_xpath =
         "//h2[starts-with(text(),'Time')]/following::node()[normalize-space()][1]/descendant-or-self::text()"
+        raw_time_range = response.xpath(time_xpath).get()
+        dashes = r'[-{}]'.format(chr(8211)) # some pages use -, chr(8211)
+        raw_time_start, raw_time_end  = re.split(dashes, raw_time_range)
 
         date_xpath = "//h2[contains(text(),'Meeting Dates')]/following::ul/li/p/text()"
         for date_str in response.xpath(date_xpath).re(r'[\w]+[\s]+[\d]+,\s[\d]+'):
@@ -101,6 +104,10 @@ class IlMedicaidSpider(CityScrapersSpider):
             return datetime.strptime(date, "%B %d, %Y")
         except ValueError:
             return datetime(1900,1,1)
+
+    def _parse_time(self, item):
+        """Take a string and return a time"""
+
 
     # def _parse_description(self, item):
     #     """Parse or generate meeting description."""
