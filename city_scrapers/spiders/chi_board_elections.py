@@ -1,30 +1,33 @@
-# -*- coding: utf-8 -*-
 import re
 from datetime import datetime
 
-from city_scrapers.constants import COMMISSION
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class ChiBoardElectionsSpider(Spider):
+class ChiBoardElectionsSpider(CityScrapersSpider):
     name = 'chi_board_elections'
-    agency_name = 'Chicago Board of Elections'
+    agency = 'Chicago Board of Elections'
     timezone = 'America/Chicago'
     allowed_domains = ['chicagoelections.com']
     start_urls = [
         'https://app.chicagoelections.com/pages/en/board-meetings.aspx',
         'https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx'
     ]
+    location = {
+        'address': '8th Floor Office, 69 W. Washington St. Chicago, IL 60602',
+        'name': 'Cook County Administration Building',
+    }
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows a modified
-        OCD event schema (docs/_docs/05-development.md#event-schema)
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        if "minutes" in response.url:  # Current meetings and past meetings on differerent pages
+        if 'minutes' in response.url:  # Current meetings and past meetings on differerent pages
             yield from self._prev_meetings(response)
         else:
             yield from self._next_meeting(response)
@@ -32,42 +35,36 @@ class ChiBoardElectionsSpider(Spider):
     def _next_meeting(self, response):
         text = response.xpath('//text()').extract()
         # Will return full dates, like "9:30 a.m. on Dec. 11, 2018"
-        dates = [
+        date_strs = [
             re.search(r'\d{1,2}:.*20\d{2}', x).group(0)
             for x in text
             if re.search(r'\d{1,2}:.*20\d{2}', x)
         ]
         # Has meeting location
-        next_meeting = response.xpath('//div[@class="copy"]/text()').extract()
-        for date in dates:
-            date.replace('\xa0', ' ')
-            data = {
-                '_type': 'event',
-                'name': "Electoral Board",
-                'event_description': "",
-                'classification': COMMISSION,
-                'start': self._parse_start(date, ""),
-                'all_day': False,
-                'documents': self._parse_documents(response, None),
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }],
-            }
-            if any("69" in x for x in next_meeting):
-                data['location'] = self._parse_location(response)
-            else:
-                raise ValueError("The address has changed.")
+        body_text = response.xpath('//div[@class="copy"]/text()').extract()
+        # Check for 69 (in 69 W Washington) in any of the strings, raise error if not present and
+        # location may have changed
+        if not any('69' in text for text in body_text):
+            raise ValueError('The meeting address may have changed')
 
-            data['end'] = {
-                'date': data['start']['date'],
-                'time': None,
-                'note': '',
-            }
-            data['status'] = self._generate_status(data)
-            data['id'] = self._generate_id(data)
+        for date_str in date_strs:
+            meeting = Meeting(
+                title='Electoral Board',
+                description='',
+                classification=COMMISSION,
+                start=self._parse_start(date_str, ''),
+                end=None,
+                time_notes='Meeting end time is estimated',
+                all_day=False,
+                location=self.location,
+                links=self._parse_links(response, None),
+                source=response.url,
+            )
 
-            yield data
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+
+            yield meeting
 
     def _prev_meetings(self, response):
         """
@@ -76,114 +73,84 @@ class ChiBoardElectionsSpider(Spider):
         and returns everything in between.
         """
 
-        meetings = response.xpath("//a|//span/text()").extract()
-        prevtime = None
-        for meeting in meetings:
-            meeting.replace('\xa0', ' ')  # Gets rid of non-breaking space character
-            meeting.replace(' ', ' ')
+        items = response.xpath('//a|//span/text()').extract()
+        prev_start = None
+        for item in items:
+            next_idx = items.index(item) + 1
+            item = item.replace('\xa0', ' ')  # Gets rid of non-breaking space character
             try:
-                meetingdate = re.search(r'(–|- |-)(.+[0-9]{4})', meeting).group(2)
-                while len(meetingdate) > 30:
-                    meetingdate = re.search(r'(–|- |-)(.+[0-9]{4})', meetingdate).group(2)
-                meetingdate.lstrip()
-                starttime = self._parse_start(meetingdate, meeting)
-                if prevtime != starttime:  # To acount for duplicates
-                    data = {
-                        '_type': 'event',
-                        'name': "Electoral Board",
-                        'event_description': "",
-                        'classification': COMMISSION,
-                        'start': starttime,
-                        'all_day': False,
-                        'location': self._parse_location(response),
-                        'documents': [],
-                        'sources': [{
-                            'url': response.url,
-                            'note': ''
-                        }],
-                    }
-                    data['end'] = {
-                        'date': data['start']['date'],
-                        'time': None,
-                        'note': '',
-                    }
-                    # Checks for link, will catch minutes or video links for one date
-                    if "href" in meeting:
-                        data["documents"].append(self._parse_documents(response, meeting))
-                    nextindex = meetings.index(meeting) + 1
+                item_date = re.search(r'(–|- |-)(.+[0-9]{4})', item).group(2)
+                while len(item_date) > 30:
+                    item_date = re.search(r'(–|- |-)(.+[0-9]{4})', item_date).group(2)
+                item_date.lstrip()
+                start = self._parse_start(item_date, item)
+                if prev_start != start:  # To acount for duplicates
+                    meeting = Meeting(
+                        title='Electoral Board',
+                        description='',
+                        classification=COMMISSION,
+                        start=start,
+                        end=None,
+                        time_notes='Meeting end time is estimated',
+                        all_day=False,
+                        location=self.location,
+                        links=self._parse_links(response, meeting=item),
+                        source=response.url,
+                    )
                     # In case there's both minutes and video for one date
-                    if nextindex < len(meetings):
-                        nextmeeting = meetings[nextindex].replace('\xa0', ' ')
-                        nextdate = re.search(r'(–|- |-)(.+[0-9]{4})', nextmeeting).group(2)
-                        while len(nextdate) > 30:
-                            nextdate = re.search(r'(–|- |-)(.+[0-9]{4})', nextdate).group(2)
-                        nextdate.lstrip()
-                        new_start = self._parse_start(nextdate, nextmeeting)
-                        if new_start == data['start'] and "href" in nextmeeting:
-                            data["documents"].append(self._parse_documents(response, nextmeeting))
-                    data['status'] = self._generate_status(data)
-                    data['id'] = self._generate_id(data)
-                    yield data
-                prevtime = starttime
+                    if next_idx < len(items):
+                        next_item = items[next_idx].replace('\xa0', ' ')
+                        next_date = re.search(r'(–|- |-)(.+[0-9]{4})', next_item).group(2)
+                        while len(next_date) > 30:
+                            next_date = re.search(r'(–|- |-)(.+[0-9]{4})', next_date).group(2)
+                        next_date.lstrip()
+                        next_start = self._parse_start(next_date, next_item)
+                        if next_start == meeting['start'] and 'href' in next_item:
+                            meeting['links'].extend(self._parse_links(response, next_item))
+                    meeting['status'] = self._get_status(meeting)
+                    meeting['id'] = self._get_id(meeting)
+                    yield meeting
+                prev_start = start
             except AttributeError:  # Sometimes meetings will return None
                 continue
 
-    def _parse_start(self, meetingdate, meeting):
-        """
-        Parse start date and time.
-        """
-        date = meetingdate
-        meetingtime = "9:30 AM on "
-        if "7 " in meeting:
-            time = re.search(r'7.+\S[m,.]', meeting).group(0)
-            str(time)
-            time = time.replace("7 ", "7:00 ")
-            meetingtime = "{} on ".format(time)
-            date = meetingtime + meetingdate
-        if ":" not in meetingdate or meeting:
-            date = meetingtime + meetingdate
-        formatitem = date.replace("a.m.", "AM")
-        formatitem = formatitem.replace("am", "AM")
-        formatitem = formatitem.replace("p.m.", "PM")
-        formatitem = formatitem.replace("Sept", "Sep")
-        formatitem = formatitem.replace('.', '')
-        time_str, date_str = formatitem.split(' on ')
+    def _parse_start(self, date_str, meeting_text):
+        """Parse start datetime"""
+        date_str = date_str.replace('\xa0', ' ')
         if len(date_str.split(', ')) > 2:
             date_str = ', '.join(date_str.split(', ')[1:])
-        dt_str = '{} on {}'.format(time_str, date_str)
-        try:
-            datetime_item = datetime.strptime(dt_str, '%I:%M %p on %b %d, %Y')
-        except ValueError:  # Some months are abbreviated, some are not
-            datetime_item = datetime.strptime(dt_str, '%I:%M %p on %B %d, %Y')
-        dicti = {'date': datetime_item.date(), 'time': datetime_item.time(), 'note': ''}
-        return dicti
-
-    def _parse_location(self, item):
-        """
-        Parse or generate location. Latitude and longitude can be
-        left blank and will be geocoded later.
-        """
-
-        return {
-            'address': '8th Floor Office, 69 W. Washington St. Chicago, IL 60602',
-            'name': 'Cook County Administration Building',
-            'neighborhood': '',
-        }
-
-    def _parse_documents(self, response, meeting):
-        """
-        Parse or generate documents.
-        """
-        if "minutes" in response.url:
-            if "Minutes" in meeting:
-                minuteslink = re.search(r'"\/.+"', meeting).group(0).strip('"')
-                return {
-                    'url': "https://app.chicagoelections.com{}".format(minuteslink),
-                    'note': 'Minutes'
-                }
-            elif "youtu" in meeting:
-                videolink = re.search(r'"h.+"', meeting).group(0).strip('"')
-                return {'url': videolink, 'note': "Video"}
+        time_str = '9:30 AM'
+        if '7 ' in meeting_text:
+            time_str = re.search(r'7.+\S[m,.]', meeting_text).group(0)
+            time_str = time_str.replace('7 ', '7:00 ')
+        if ':' not in date_str or meeting_text:
+            dt_str = '{} on {}'.format(time_str, date_str)
         else:
-            link = response.xpath("//a/@href").extract()[2]
-            return [{'url': "https://app.chicagoelections.com{}".format(link), 'note': 'Agenda'}]
+            dt_str = date_str
+        dt_str = (
+            dt_str.replace('.', '').replace('am', 'AM').replace('pm', 'PM').replace('Sept', 'Sep')
+        )
+        try:
+            dt = datetime.strptime(dt_str, '%I:%M %p on %b %d, %Y')
+        except ValueError:  # Some months are abbreviated, some are not
+            dt = datetime.strptime(dt_str, '%I:%M %p on %B %d, %Y')
+        return dt
+
+    def _parse_links(self, response, meeting=None):
+        """Parse agendas and minutes"""
+        if meeting is None:
+            link = response.xpath('//a/@href').extract()[2]
+            return [{'href': 'https://app.chicagoelections.com{}'.format(link), 'title': 'Agenda'}]
+        elif 'href' not in meeting:
+            return []
+        if 'minutes' in response.url:
+            if 'Minutes' in meeting:
+                minutes_link = re.search(r'"\/.+"', meeting).group(0).strip('"')
+                return [{
+                    'href': 'https://app.chicagoelections.com{}'.format(minutes_link),
+                    'title': 'Minutes'
+                }]
+            elif 'youtu' in meeting:
+                videolink = re.search(r'"h.+"', meeting).group(0).strip('"')
+                return [{'href': videolink, 'title': 'Video'}]
+        return []
