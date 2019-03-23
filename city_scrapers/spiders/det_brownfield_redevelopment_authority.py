@@ -84,9 +84,9 @@ class DetBrownfieldRedevelopmentAuthoritySpider(CityScrapersSpider):
         link_title = ' '.join(link_text.split(date_str))
         url = link.xpath("@href").extract_first('')
         if 'AGENDA' in link_title.upper():
-            return {'url': url, 'title': 'Agenda'}
+            return {'href': url, 'title': 'Agenda'}
         if 'MINUTES' in link_title.upper():
-            return {'url': url, 'title': 'Minutes'}
+            return {'href': url, 'title': 'Minutes'}
         return {'href': url, 'title': re.sub(r'\s+', ' ', link_title).strip()}
 
     @staticmethod
