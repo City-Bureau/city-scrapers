@@ -113,20 +113,21 @@ class IlMedicaidSpider(CityScrapersSpider):
         for time in raw_times:
             if time == "NOON":
                 time_interval.append(dt.datetime.strptime('1200','%H%M').time())
-            colon_index = time.find(":")
-            time = "".join(time.strip().upper().split("."))
-            if colon_index > -1:
-                if len(time[:colon_index]) == 1:
-                    time = "0" + time
-                try:
-                    time_interval.append(dt.datetime.strptime(time,'%I:%M %p').time())
-                except ValueError:
-                    time_interval.append(dt.datetime.strptime(time + " pm",'%I:%M %p').time())
             else:
-                try:
-                    time_interval.append(dt.datetime.strptime(time,'%I %p').time())
-                except ValueError:
-                    time_interval.append(dt.datetime.strptime(time + " pm",'%I %p').time())
+                colon_index = time.find(":")
+                time = "".join(time.strip().upper().split("."))
+                if colon_index > -1:
+                    if len(time[:colon_index]) == 1:
+                        time = "0" + time
+                    try:
+                        time_interval.append(dt.datetime.strptime(time,'%I:%M %p').time())
+                    except ValueError:
+                        time_interval.append(dt.datetime.strptime(time + " pm",'%I:%M %p').time())
+                else:
+                    try:
+                        time_interval.append(dt.datetime.strptime(time,'%I %p').time())
+                    except ValueError:
+                        time_interval.append(dt.datetime.strptime(time + " pm",'%I %p').time())
         if time_interval[0] > time_interval[1]:
             time_interval[0] += dt.timedelta(hours=-12)
         return time_interval
