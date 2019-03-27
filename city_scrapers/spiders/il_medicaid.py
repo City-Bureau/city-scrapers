@@ -65,12 +65,8 @@ class IlMedicaidSpider(CityScrapersSpider):
         # this is changed in the future. 
         
         time_xpath = "//h2[starts-with(text(),'Time')]/following::node()[normalize-space()][1]/descendant-or-self::text()"
-        raw_time_range = response.xpath(time_xpath).get()
-        dashes = r'[-{}]'.format(chr(8211)) # some pages use -, chr(8211)
-        raw_time_start, raw_time_end  = re.split(dashes, raw_time_range)
-        time_start = self._parse_time(raw_time_start)
-        time_end = self._parse_time(raw_time_end)
-
+        raw_time_interval = response.xpath(time_xpath).get()
+        time_start, time_end = self._parse_time_interval(raw_time_interval)
         date_xpath = "//h2[contains(text(),'Meeting Dates')]/following::ul/li/p/text()"
         for date_str in response.xpath(date_xpath).re(r'[\w]+[\s]+[\d]+,\s[\d]+'):
             date = self._parse_date(date_str)
@@ -110,18 +106,31 @@ class IlMedicaidSpider(CityScrapersSpider):
     # replaces _parse_start and _parse_end
     # TBD: Look through other scheudle pages and see which time formats I am
     # missing.
-    def _parse_time(self, time):
-        time = time.strip().upper()
-        if time == "NOON":
-            return dt.datetime.strptime('1200','%H%M').time()
-        colon_index = time.find(":")
-        time = "".join(time.strip().upper().split("."))
-        if colon_index > -1:
-            if len(time[:colon_index]) == 1:
-                time = "0" + time
-            return dt.datetime.strptime(time,'%H:%M %p').time()
-        else:
-            return dt.datetime.strptime(time,'%H %p').time()
+    def _parse_time_interval(self, raw_time_interval):
+        dashes = r'[-{}]'.format(chr(8211)) # some pages use -, chr(8211)
+        raw_times = [x.strip().upper() for x in re.split(dashes, raw_time_interval)]
+        time_interval = []
+        for time in raw_times:
+            if time == "NOON":
+                time_interval.append(dt.datetime.strptime('1200','%H%M').time())
+            colon_index = time.find(":")
+            time = "".join(time.strip().upper().split("."))
+            if colon_index > -1:
+                if len(time[:colon_index]) == 1:
+                    time = "0" + time
+                try:
+                    time_interval.append(dt.datetime.strptime(time,'%I:%M %p').time())
+                except ValueError:
+                    time_interval.append(dt.datetime.strptime(time + " pm",'%I:%M %p').time())
+            else:
+                try:
+                    time_interval.append(dt.datetime.strptime(time,'%I %p').time())
+                except ValueError:
+                    time_interval.append(dt.datetime.strptime(time + " pm",'%I %p').time())
+        if time_interval[0] > time_interval[1]:
+            time_interval[0] += dt.timedelta(hours=-12)
+        return time_interval
+
 
     # def _parse_description(self, item):
     #     """Parse or generate meeting description."""
