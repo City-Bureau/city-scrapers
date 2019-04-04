@@ -49,6 +49,6 @@ class MigrationPipeline:
 
     def _get_time_notes(self, item):
         return " ".join([
-            dt_dict.get("note", "")
+            dt_dict.get("note", "") or ""
             for dt_dict in [item.get("start", {}), item.get("end", {})]
         ]).strip()
