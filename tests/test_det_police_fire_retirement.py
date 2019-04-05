@@ -1,121 +1,90 @@
-import urllib
-from datetime import date, time
-from urllib.parse import parse_qsl
+from datetime import datetime
 
 import pytest
-import scrapy
+from city_scrapers_core.constants import BOARD, PASSED, TENTATIVE
 from freezegun import freeze_time
 from tests.utils import file_response
 
 from city_scrapers.spiders.det_police_fire_retirement import DetPoliceFireRetirementSpider
 
 test_response = file_response(
-    'files/det_police_fire_retirement.html', 'http://www.pfrsdetroit.org/Resources/Meetings'
+    'files/det_police_fire_retirement.html',
+    'http://www.rscd.org/member_resources/board_of_trustees/upcoming_meetings.php',
 )
+test_past_response = file_response(
+    'files/det_police_fire_retirement_past.html',
+    'http://www.rscd.org/member_resources_/board_of_trustees/past_meeting_agendas___minutes.php'
+)
+
 spider = DetPoliceFireRetirementSpider()
-
-
-def test_request_count():
-    requests = list(spider.parse(test_response))
-    assert len(requests) == 5
-
-    calendar_events_urls = {
-        urllib.parse.unquote(request.url)
-        for request in requests
-        if 'Details' in request.url
-    }
-    assert calendar_events_urls == {
-        "http://www.pfrsdetroit.org/Resources/Meetings/ctl/Details/Mid/1010/ItemID/1523",
-        "http://www.pfrsdetroit.org/Resources/Meetings/ctl/Details/Mid/1010/ItemID/1525",
-        "http://www.pfrsdetroit.org/Resources/Meetings/ctl/Details/Mid/1010/ItemID/1537",
-        "http://www.pfrsdetroit.org/Resources/Meetings/ctl/Details/Mid/1010/ItemID/1524",
-    }
-
-    form_requests = [request for request in requests if isinstance(request, scrapy.FormRequest)]
-    assert len(form_requests) == 1
-
-    form_request = form_requests[0]
-    prev_call_count = form_request.meta.get('prev_call_count')
-    params = parse_qsl(form_request.body.decode(form_request.encoding))
-
-    assert prev_call_count == 1
-    # ASP.NET page paging has to be done via form request
-    # so make sure updated form params are in request
-    assert ('__EVENTTARGET', 'dnn$ctr1010$Events$EventMonth$EventCalendar') in params
-    assert ('__EVENTARGUMENT', 'V6818') in params
-
-
-test_detail = file_response(
-    'files/det_police_fire_retirement_detail.html',
-    'http://www.pfrsdetroit.org/Resources/Meetings/ctl/Details/Mid/1010/ItemID/1523'
-)
-freezer = freeze_time('2018-07-31 12:00:01')
+freezer = freeze_time('2019-04-05')
 freezer.start()
-parsed_items = [item for item in spider._parse_item(test_detail) if isinstance(item, dict)]
+spider._parse_past_documents(test_past_response)
+parsed_items = [item for item in spider._parse_meetings(test_response)]
 freezer.stop()
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Board Meeting'
+def test_total():
+    assert len(parsed_items) == 147
+
+
+def test_title():
+    assert parsed_items[0]['title'] == 'Board of Trustees'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 8, 2), 'time': time(9, 0), 'note': ''}
+    assert parsed_items[0]['start'] == datetime(2019, 1, 10, 9, 0)
+    assert parsed_items[-1]['start'].year < 2019
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': date(2018, 8, 2), 'time': time(14, 0), 'note': ''}
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'det_police_fire_retirement/201808020900/x/board_meeting'
+    assert parsed_items[0]['id'] == 'det_police_fire_retirement/201901100900/x/board_of_trustees'
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'confirmed'
+    assert parsed_items[0]['status'] == PASSED
+    assert parsed_items[8]['status'] == TENTATIVE
 
 
 def test_location():
-    """
-    500 Woodward Avenue, Suite 3000
-    Detroit, MI 48226
-    """
     assert parsed_items[0]['location'] == {
-        'neighborhood': '',
-        'name': '',
-        'address': '500 Woodward Avenue, Suite 3000 Detroit, MI 48226'
+        'name': 'Retirement Systems Conference Room',
+        'address': '500 Woodward Ave. Suite 300 Detroit, MI 48226'
+    }
+    assert parsed_items[-1]['location'] == {
+        'name': 'Retirement Systems',
+        'address': '500 Woodward Ave. Suite 300 Detroit, MI 48226'
     }
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'http://www.pfrsdetroit.org/Resources/Meetings/ctl/Details/Mid/1010/ItemID/1523',
-        'note': ''
+def test_source():
+    assert parsed_items[0][
+        'source'] == 'http://www.rscd.org/member_resources/board_of_trustees/upcoming_meetings.php'
+
+
+def test_links():
+    assert parsed_items[0]['links'] == [{
+        'href': 'http://www.rscd.org/PFRS_3229A_01102019.pdf',
+        'title': 'Agenda'
+    }, {
+        'href': 'http://www.rscd.org/PFM_3229_011019.pdf',
+        'title': 'Minutes'
     }]
-
-
-def test_documents():
-    assert parsed_items[0]['documents'] == []
+    assert parsed_items[8]['links'] == []
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Board'
-
-
-def test_parse_classification():
-    assert spider._parse_classification('PFRS Investment Committee') == 'Committee'
-    assert spider._parse_classification('Board Meeting') == 'Board'
+    assert parsed_items[0]['classification'] == BOARD
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
     assert item['all_day'] is False
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'

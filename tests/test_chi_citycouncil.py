@@ -1,5 +1,5 @@
 import json
-from datetime import date, time
+from datetime import datetime
 
 import pytest
 from freezegun import freeze_time
@@ -12,24 +12,20 @@ freezer.start()
 with open('tests/files/chi_citycouncil.json', 'r') as f:
     test_response = json.load(f)
 spider = ChiCityCouncilSpider()
-parsed_items = [item for item in spider._parse_events(test_response)]
+parsed_items = [item for item in spider.parse_legistar(test_response)]
 freezer.stop()
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'City Council'
+def test_title():
+    assert parsed_items[0]['title'] == 'City Council'
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2019, 1, 23), 'time': time(10, 00), 'note': ''}
+    assert parsed_items[0]['start'] == datetime(2019, 1, 23, 10, 00)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2019, 1, 23),
-        'time': time(13, 00),
-        'note': 'Estimated 3 hours after start time'
-    }
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -49,28 +45,25 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'name': 'Council Chambers, City Hall',
         'address': '121 N LaSalle St Chicago, IL 60602',
-        'neighborhood': ''
     }
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url':
-            'https://chicago.legistar.com/DepartmentDetail.aspx?ID=12357&GUID=4B24D5A9-FED0-4015-9154-6BFFFB2A8CB4',  # noqa
-        'note': ''
-    }]
+def test_source():
+    assert parsed_items[0][
+        'source'
+    ] == 'https://chicago.legistar.com/DepartmentDetail.aspx?ID=12357&GUID=4B24D5A9-FED0-4015-9154-6BFFFB2A8CB4'  # noqa
 
 
-def test_documents():
-    assert parsed_items[20]['documents'] == [
+def test_links():
+    assert parsed_items[20]['links'] == [
         {
-            'note': 'Agenda',
-            'url':
+            'title': 'Agenda',
+            'href':
                 'http://media.legistar.com/chic/meetings/937FDFCE-F0EA-452A-B8DF-A0CF51DBD681/Agenda%20Human%20Relations%20N_20181120162153.pdf'  # noqa
         },
         {
-            'note': 'Summary',
-            'url':
+            'title': 'Summary',
+            'href':
                 'http://media.legistar.com/chic/meetings/937FDFCE-F0EA-452A-B8DF-A0CF51DBD681/Corrected%20Summary%20Human%20_20181210125616.pdf'  # noqa
         },
     ]
@@ -78,14 +71,9 @@ def test_documents():
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['event_description'] == ''
+    assert item['description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
     assert item['all_day'] is False
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'

@@ -1,6 +1,7 @@
 import datetime
 
 import pytest
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.chi_mayors_bicycle_advisory_council import (
@@ -9,32 +10,25 @@ from city_scrapers.spiders.chi_mayors_bicycle_advisory_council import (
 
 test_response = file_response('files/chi_mayors_bicycle_advisory_council.html')
 spider = ChiMayorsBicycleAdvisoryCouncilSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_name(item):
-    assert item['name'] == "Mayor's Bicycle Advisory Council"
+def test_title(item):
+    assert item['title'] == "Mayor's Bicycle Advisory Council"
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['event_description'] == 'MBAC focuses on a wide range of ' + \
-        'bicycle issues: safety, education, enforcement, and ' + \
-        'infrastructure investment. The Council will help identify issues, ' + \
-        'discuss ideas and set priorities for bicycle planning in Chicago.'
+    assert item['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': datetime.date(2018, 3, 7),
-        'time': datetime.time(15, 0),
-        'note': 'Start at 3 p.m. unless otherwise noted'
-    }
+    assert parsed_items[0]['start'] == datetime.datetime(2018, 3, 7, 15, 0)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': datetime.date(2018, 3, 7), 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -44,37 +38,34 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
     assert item['location'] == {
-        'address': '121 N LaSalle Dr, Chicago, IL',
+        'address': '121 N LaSalle Dr, Chicago, IL 60602',
         'name': 'City Hall, Room 1103',
-        'neighborhood': 'Loop',
     }
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_sources(item):
-    listing_page = {'url': spider.BASE_URL, 'note': ''}
-    archive_page = {'url': spider.BASE_URL + 'mbac-meeting-archives/', 'note': 'documents'}
-    assert item['sources'] == [listing_page, archive_page]
+def test_source(item):
+    assert item['source'] == spider.BASE_URL
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_documents(item):
-    doc_types = ['agenda', 'meeting minutes', 'presentations']
+def test_links(item):
+    doc_types = ['Agenda', 'Meeting Minutes', 'Presentations']
 
-    if item['start']['date'] == datetime.date(2015, 6, 11):
-        doc_types.append('d. taylor comments')
-    elif item['start']['date'] == datetime.date(2015, 3, 12):
-        doc_types.remove('presentations')
-    elif item['start']['date'] == datetime.date(2018, 12, 12):
+    if item['start'] == datetime.datetime(2015, 6, 11, 15):
+        doc_types.append('D. Taylor Comments')
+    elif item['start'] == datetime.datetime(2015, 3, 12, 15):
+        doc_types.remove('Presentations')
+    elif item['start'] == datetime.datetime(2018, 12, 12, 15):
         doc_types = []
 
-    assert [d['note'] for d in item['documents']] == doc_types
+    assert [d['title'] for d in item['links']] == doc_types
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -84,9 +75,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Advisory Committee'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
+    assert item['classification'] == ADVISORY_COMMITTEE
