@@ -1,52 +1,78 @@
-from datetime import date, time
+from datetime import datetime
+from os.path import dirname, join
 
 import pytest
+from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
+from scrapy.http import Request, XmlResponse
 
-from city_scrapers.constants import BOARD, TENTATIVE
 from city_scrapers.spiders.chi_teacherpension import ChiTeacherPensionSpider
 
-freezer = freeze_time('2018-12-30')
+freezer = freeze_time('2019-04-08')
 freezer.start()
 
-test_response = file_response('files/chi_teacherpension.html')
+test_response = file_response(
+    join(dirname(__file__), "files", "chi_teacherpension.html"),
+    url="https://www.ctpf.org/board-trustees-meeting-minutes",
+)
+
+with open(join(dirname(__file__), "files", "chi_teacherpension.xml"), "r") as f:
+    file_content = f.read()
+
+feed_url = "https://www.boarddocs.com/il/ctpf/board.nsf/XML-ActiveMeetings"
+test_feed_response = XmlResponse(
+    url=feed_url, request=Request(url=feed_url), body=str.encode(file_content)
+)
 spider = ChiTeacherPensionSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+spider._parse_minutes(test_response)
+parsed_items = [item for item in spider._parse_boarddocs(test_feed_response)]
 
 freezer.stop()
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Regular Board Meeting'
+def test_title():
+    assert parsed_items[0]['title'] == 'Investment Committee'
+    assert parsed_items[1]['title'] == 'Board of Trustees'
 
 
-def test_start_time():
-    assert parsed_items[0]['start'] == {'date': date(2019, 1, 17), 'time': time(9, 30), 'note': ''}
+def test_start():
+    assert parsed_items[0]['start'] == datetime(2018, 10, 25)
+    assert parsed_items[1]['start'] == datetime(2018, 10, 18, 9, 30)
 
 
-def test_end_time():
-    assert parsed_items[0]['end'] == {'date': date(2019, 1, 17), 'time': None, 'note': ''}
+def test_end():
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_teacherpension/201901170930/x/regular_board_meeting'
+    assert parsed_items[0]['id'] == 'chi_teacherpension/201810250000/x/investment_committee'
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == BOARD
+    assert parsed_items[0]['classification'] == COMMITTEE
+    assert parsed_items[1]['classification'] == BOARD
 
 
 def test_status():
-    assert parsed_items[0]['status'] == TENTATIVE
+    assert parsed_items[0]['status'] == PASSED
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
-    assert parsed_items[18]['documents'] == [{
-        'note': 'Meeting Agenda',
-        'url': 'https://www.ctpf.org/sites/main/files/file-attachments/010419_rtw_agenda.pdf'
+def test_links():
+    assert parsed_items[0]['links'] == [{
+        'title': 'Agenda',
+        'href': 'http://www.boarddocs.com/il/ctpf/Board.nsf/goto?open&id=B55S995DF24B'
     }]
+    assert parsed_items[20]['links'] == [
+        {
+            'title': 'Agenda',
+            'href': 'http://www.boarddocs.com/il/ctpf/Board.nsf/goto?open&id=B9ATEK5665BC'
+        },
+        {
+            'href': 'https://www.ctpf.org/sites/main/files/file-attachments/2019_february_2.pdf',
+            'title': 'Minutes'
+        }
+    ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -60,19 +86,10 @@ def test_all_day(item):
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
-
-
-@pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
-    assert item['location'] == {
-        'address': '203 N LaSalle St, Suite 2600 Board Room, Chicago, IL 60601',
-        'name': 'CTPF office',
-        'neighborhood': 'Loop',
-    }
+    assert item['location'] == spider.location
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_sources(item):
-    assert item['sources'] == [{'url': 'http://www.example.com', 'note': ''}]
+def test_source():
+    assert parsed_items[0][
+        'source'] == 'http://www.boarddocs.com/il/ctpf/Board.nsf/goto?open&id=B55S995DF24B'

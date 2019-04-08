@@ -21,7 +21,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VQMFV1NVGwAAUFVTBwA="};window.NREUM||(NREUM={}),__nr_require=function(t,n,e){function r(e){if(!n[e]){var o=n[e]={exports:{}};t[e][0].call(o.exports,function(n){var o=t[e][1][n];return r(o||n)},o,o.exports)}return n[e].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<e.length;o++)r(e[o]);return r}({1:[function(t,n,e){function r(t){try{s.console&&console.log(t)}catch(n){}}var o,i=t("ee"),a=t(16),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,n,e){r(e.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,n){return t}).join(", ")))},{}],2:[function(t,n,e){function r(t,n,e,r,s){try{p?p-=1:o(s||new UncaughtException(t,n,e),!0)}catch(f){try{i("ierr",[f,c.now(),!0])}catch(d){}}return"function"==typeof u&&u.apply(this,a(arguments))}function UncaughtException(t,n,e){this.message=t||"Uncaught error with no additional information",this.sourceURL=n,this.line=e}function o(t,n){var e=n?null:c.now();i("err",[t,e])}var i=t("handle"),a=t(17),s=t("ee"),c=t("loader"),f=t("gos"),u=window.onerror,d=!1,l="nr@seenError",p=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(h){"stack"in h&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),d=!0)}s.on("fn-start",function(t,n,e){d&&(p+=1)}),s.on("fn-err",function(t,n,e){d&&!e[l]&&(f(e,l,function(){return!0}),this.thrown=!0,o(e))}),s.on("fn-end",function(){d&&!this.thrown&&p>0&&(p-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,n,e){t("loader").features.ins=!0},{}],4:[function(t,n,e){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,v="fn"+h,w="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(6);var b=NREUM.o.EV;o.on(m,function(t,n){var e=t[0];e instanceof b&&(this.bstStart=g.now())}),o.on(v,function(t,n){var e=t[0];e instanceof b&&i("bst",[e,n,this.bstStart,g.now()])}),a.on(m,function(t,n,e){this.bstStart=g.now(),this.bstType=e}),a.on(v,function(t,n){i(w,[n,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(v,function(t,n){i(w,[n,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,n,e){function r(t){for(var n=t;n&&!n.hasOwnProperty(u);)n=Object.getPrototypeOf(n);n&&o(n)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,n){return t[1]}var a=t("ee").get("events"),s=t(19)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";n.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,n){var e=t[1],r=c(e,"nr@wrapped",function(){function t(){if("function"==typeof e.handleEvent)return e.handleEvent.apply(e,arguments)}var n={object:t,"function":e}[typeof e];return n?s(n,"fn-",null,n.name||"anonymous"):e});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,n,e){var r=t("ee").get("history"),o=t(19)(r);n.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,n,e){var r=t("ee").get("raf"),o=t(19)(r),i="equestAnimationFrame";n.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,n,e){function r(t,n,e){t[0]=a(t[0],"fn-",null,e)}function o(t,n,e){this.method=e,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,e)}var i=t("ee").get("timer"),a=t(19)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";n.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],9:[function(t,n,e){function r(t,n){d.inPlace(n,["onreadystatechange"],"fn-",s)}function o(){var t=this,n=u.context(t);t.readyState>3&&!n.resolved&&(n.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,y,"fn-",s)}function i(t){g.push(t),h&&(x?x.then(a):v?v(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function s(t,n){return n}function c(t,n){for(var e in t)n[e]=t[e];return n}t(5);var f=t("ee"),u=f.get("xhr"),d=t(19)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,v=l.SI,w="readystatechange",y=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];n.exports=u;var b=window.XMLHttpRequest=function(t){var n=new p(t);try{u.emit("new-xhr",[n],n),n.addEventListener(w,o,!1)}catch(e){try{u.emit("internal-error",[e])}catch(r){}}return n};if(c(p,b),b.prototype=p.prototype,d.inPlace(b.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,n){r(t,n),i(n)}),u.on("open-xhr-start",r),h){var x=m&&m.resolve();if(!v&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===w||a()})},{}],10:[function(t,n,e){function r(t){var n=this.params,e=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!n.aborted){if(e.duration=a.now()-this.startTime,4===t.readyState){n.status=t.status;var i=o(t,this.lastSize);if(i&&(e.rxSize=i),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;e.cbTime=this.cbTime,f.emit("xhr-done",[t],t),s("xhr",[n,e,this.startTime])}}}function o(t,n){var e=t.responseType;if("json"===e&&null!==n)return n;var r="arraybuffer"===e||"blob"===e||"json"===e?t.response:t.responseText;return h(r)}function i(t,n){var e=c(n),r=t.params;r.host=e.hostname+":"+e.port,r.pathname=e.pathname,t.sameOrigin=e.sameOrigin}var a=t("loader");if(a.xhrWrappable){var s=t("handle"),c=t(11),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(14),h=t(13),m=window.XMLHttpRequest;a.features.xhr=!0,t(9),f.on("new-xhr",function(t){var n=this;n.totalCbs=0,n.called=0,n.cbTime=0,n.end=r,n.ended=!1,n.xhrGuids={},n.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){n.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,n){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&n.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,n){var e=this.metrics,r=t[0],o=this;if(e&&r){var i=h(r);i&&(e.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof n.onload))&&o.end(n)}catch(e){try{f.emit("internal-error",[e])}catch(r){}}};for(var s=0;s<d;s++)n.addEventListener(u[s],this.listener,!1)}),f.on("xhr-cb-time",function(t,n,e){this.cbTime+=t,n?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof e.onload||this.end(e)}),f.on("xhr-load-added",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&!this.xhrGuids[e]&&(this.xhrGuids[e]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&this.xhrGuids[e]&&(delete this.xhrGuids[e],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],n)}),f.on("removeEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],n)}),f.on("fn-start",function(t,n,e){n instanceof m&&("onload"===e&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,n){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,n],n)})}},{}],11:[function(t,n,e){n.exports=function(t){var n=document.createElement("a"),e=window.location,r={};n.href=t,r.port=n.port;var o=n.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=n.hostname||e.hostname,r.pathname=n.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!n.protocol||":"===n.protocol||n.protocol===e.protocol,a=n.hostname===document.domain&&n.port===e.port;return r.sameOrigin=i&&(!n.hostname||a),r}},{}],12:[function(t,n,e){function r(){}function o(t,n,e){return function(){return i(t,[f.now()].concat(s(arguments)),n?null:this,e),n?void 0:this}}var i=t("handle"),a=t(16),s=t(17),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,n){u[n]=o(l+n,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),n.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,n){var e={},r=this,o="function"==typeof n;return i(p+"tracer",[f.now(),t,e],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],e),o)try{return n.apply(this,arguments)}catch(t){throw c.emit("fn-err",[arguments,this,t],e),t}finally{c.emit("fn-end",[f.now()],e)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,n){h[n]=o(p+n)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],13:[function(t,n,e){n.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(n){return}}}},{}],14:[function(t,n,e){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),n.exports=r},{}],15:[function(t,n,e){function r(t,n){if(!o)return!1;if(t!==o)return!1;if(!n)return!0;if(!i)return!1;for(var e=i.split("."),r=n.split("."),a=0;a<r.length;a++)if(r[a]!==e[a])return!1;return!0}var o=null,i=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var s=navigator.userAgent,c=s.match(a);c&&s.indexOf("Chrome")===-1&&s.indexOf("Chromium")===-1&&(o="Safari",i=c[1])}n.exports={agent:o,version:i,match:r}},{}],16:[function(t,n,e){function r(t,n){var e=[],r="",i=0;for(r in t)o.call(t,r)&&(e[i]=n(r,t[r]),i+=1);return e}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],17:[function(t,n,e){function r(t,n,e){n||(n=0),"undefined"==typeof e&&(e=t?t.length:0);for(var r=-1,o=e-n||0,i=Array(o<0?0:o);++r<o;)i[r]=t[n+r];return i}n.exports=r},{}],18:[function(t,n,e){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],19:[function(t,n,e){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(17),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;n.exports=function(t,n){function e(t,n,e,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof e?e(r,a):e||{}}catch(f){l([f,"",[r,a,o],s])}u(n+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(n+"err",[r,a,d],s),d}finally{u(n+"end",[r,a,c],s)}}return r(t)?t:(n||(n=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function u(e,r,o){if(!c||n){var i=c;c=!0;try{t.emit(e,r,o,n)}catch(a){l([a,e,r,o])}c=i}}function d(t,n){if(Object.defineProperty&&Object.keys)try{var e=Object.keys(t);return e.forEach(function(e){Object.defineProperty(n,e,{get:function(){return t[e]},set:function(n){return t[e]=n,n}})}),n}catch(r){l([r])}for(var o in t)s.call(t,o)&&(n[o]=t[o]);return n}function l(n){try{t.emit("internal-error",n)}catch(e){}}return t||(t=o),e.inPlace=f,e.flag=a,e}},{}],ee:[function(t,n,e){function r(){}function o(t){function n(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function e(e,r,o,i){if(!l.aborted||i){t&&t(e,r,o);for(var a=n(o),s=m(e),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[g[e]];return d&&d.push([b,e,r,a]),a}}function p(t,n){y[t]=m(t).concat(n)}function h(t,n){var e=y[t];if(e)for(var r=0;r<e.length;r++)e[r]===n&&e.splice(r,1)}function m(t){return y[t]||[]}function v(t){return d[t]=d[t]||o(e)}function w(t,n){f(t,function(t,e){n=n||"feature",g[e]=n,n in u||(u[n]=[])})}var y={},g={},b={on:p,addEventListener:p,removeEventListener:h,emit:e,get:v,listeners:m,context:n,buffer:w,abort:a,aborted:!1};return b}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var s="nr@context",c=t("gos"),f=t(16),u={},d={},l=n.exports=o();l.backlog=u},{}],gos:[function(t,n,e){function r(t,n,e){if(o.call(t,n))return t[n];var r=e();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(t,n,e){function r(t,n,e,r){o.buffer([t],r),o.emit(t,n,e)}var o=t("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(t,n,e){function r(t){var n=typeof t;return!t||"object"!==n&&"function"!==n?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");n.exports=r},{}],loader:[function(t,n,e){function r(){if(!E++){var t=x.info=NREUM.info,n=p.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&n))return u.abort();f(g,function(n,e){t[n]||(t[n]=e)}),c("mark",["onload",a()+x.offset],null,"api");var e=p.createElement("script");e.src="https://"+t.agent,n.parentNode.insertBefore(e,n)}}function o(){"complete"===p.readyState&&i()}function i(){c("mark",["domContent",a()+x.offset],null,"api")}function a(){return O.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-x.offset}var s=(new Date).getTime(),c=t("handle"),f=t(16),u=t("ee"),d=t(15),l=window,p=l.document,h="addEventListener",m="attachEvent",v=l.XMLHttpRequest,w=v&&v.prototype;NREUM.o={ST:setTimeout,SI:l.setImmediate,CT:clearTimeout,XHR:v,REQ:l.Request,EV:l.Event,PR:l.Promise,MO:l.MutationObserver};var y=""+location,g={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1099.min.js"},b=v&&w&&w[h]&&!/CriOS/.test(navigator.userAgent),x=n.exports={offset:s,now:a,origin:y,features:{},xhrWrappable:b,userAgent:d};t(12),p[h]?(p[h]("DOMContentLoaded",i,!1),l[h]("load",r,!1)):(p[m]("onreadystatechange",o),l[m]("onload",r)),c("mark",["firstbyte",s],null,"api");var E=0,O=t(18)},{}]},{},["loader",2,10,4,3]);</script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VQMFV1NVGwAAUFVTBwA="};window.NREUM||(NREUM={}),__nr_require=function(t,n,e){function r(e){if(!n[e]){var o=n[e]={exports:{}};t[e][0].call(o.exports,function(n){var o=t[e][1][n];return r(o||n)},o,o.exports)}return n[e].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<e.length;o++)r(e[o]);return r}({1:[function(t,n,e){function r(t){try{s.console&&console.log(t)}catch(n){}}var o,i=t("ee"),a=t(16),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,n,e){r(e.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,n){return t}).join(", ")))},{}],2:[function(t,n,e){function r(t,n,e,r,s){try{p?p-=1:o(s||new UncaughtException(t,n,e),!0)}catch(f){try{i("ierr",[f,c.now(),!0])}catch(d){}}return"function"==typeof u&&u.apply(this,a(arguments))}function UncaughtException(t,n,e){this.message=t||"Uncaught error with no additional information",this.sourceURL=n,this.line=e}function o(t,n){var e=n?null:c.now();i("err",[t,e])}var i=t("handle"),a=t(17),s=t("ee"),c=t("loader"),f=t("gos"),u=window.onerror,d=!1,l="nr@seenError",p=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(h){"stack"in h&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),d=!0)}s.on("fn-start",function(t,n,e){d&&(p+=1)}),s.on("fn-err",function(t,n,e){d&&!e[l]&&(f(e,l,function(){return!0}),this.thrown=!0,o(e))}),s.on("fn-end",function(){d&&!this.thrown&&p>0&&(p-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,n,e){t("loader").features.ins=!0},{}],4:[function(t,n,e){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,v="fn"+h,w="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(6);var b=NREUM.o.EV;o.on(m,function(t,n){var e=t[0];e instanceof b&&(this.bstStart=g.now())}),o.on(v,function(t,n){var e=t[0];e instanceof b&&i("bst",[e,n,this.bstStart,g.now()])}),a.on(m,function(t,n,e){this.bstStart=g.now(),this.bstType=e}),a.on(v,function(t,n){i(w,[n,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(v,function(t,n){i(w,[n,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,n,e){function r(t){for(var n=t;n&&!n.hasOwnProperty(u);)n=Object.getPrototypeOf(n);n&&o(n)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,n){return t[1]}var a=t("ee").get("events"),s=t(19)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";n.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,n){var e=t[1],r=c(e,"nr@wrapped",function(){function t(){if("function"==typeof e.handleEvent)return e.handleEvent.apply(e,arguments)}var n={object:t,"function":e}[typeof e];return n?s(n,"fn-",null,n.name||"anonymous"):e});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,n,e){var r=t("ee").get("history"),o=t(19)(r);n.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,n,e){var r=t("ee").get("raf"),o=t(19)(r),i="equestAnimationFrame";n.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,n,e){function r(t,n,e){t[0]=a(t[0],"fn-",null,e)}function o(t,n,e){this.method=e,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,e)}var i=t("ee").get("timer"),a=t(19)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";n.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],9:[function(t,n,e){function r(t,n){d.inPlace(n,["onreadystatechange"],"fn-",s)}function o(){var t=this,n=u.context(t);t.readyState>3&&!n.resolved&&(n.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,y,"fn-",s)}function i(t){g.push(t),h&&(x?x.then(a):v?v(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function s(t,n){return n}function c(t,n){for(var e in t)n[e]=t[e];return n}t(5);var f=t("ee"),u=f.get("xhr"),d=t(19)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,v=l.SI,w="readystatechange",y=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];n.exports=u;var b=window.XMLHttpRequest=function(t){var n=new p(t);try{u.emit("new-xhr",[n],n),n.addEventListener(w,o,!1)}catch(e){try{u.emit("internal-error",[e])}catch(r){}}return n};if(c(p,b),b.prototype=p.prototype,d.inPlace(b.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,n){r(t,n),i(n)}),u.on("open-xhr-start",r),h){var x=m&&m.resolve();if(!v&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===w||a()})},{}],10:[function(t,n,e){function r(t){var n=this.params,e=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!n.aborted){if(e.duration=a.now()-this.startTime,4===t.readyState){n.status=t.status;var i=o(t,this.lastSize);if(i&&(e.rxSize=i),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;e.cbTime=this.cbTime,f.emit("xhr-done",[t],t),s("xhr",[n,e,this.startTime])}}}function o(t,n){var e=t.responseType;if("json"===e&&null!==n)return n;var r="arraybuffer"===e||"blob"===e||"json"===e?t.response:t.responseText;return h(r)}function i(t,n){var e=c(n),r=t.params;r.host=e.hostname+":"+e.port,r.pathname=e.pathname,t.sameOrigin=e.sameOrigin}var a=t("loader");if(a.xhrWrappable){var s=t("handle"),c=t(11),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(14),h=t(13),m=window.XMLHttpRequest;a.features.xhr=!0,t(9),f.on("new-xhr",function(t){var n=this;n.totalCbs=0,n.called=0,n.cbTime=0,n.end=r,n.ended=!1,n.xhrGuids={},n.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){n.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,n){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&n.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,n){var e=this.metrics,r=t[0],o=this;if(e&&r){var i=h(r);i&&(e.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof n.onload))&&o.end(n)}catch(e){try{f.emit("internal-error",[e])}catch(r){}}};for(var s=0;s<d;s++)n.addEventListener(u[s],this.listener,!1)}),f.on("xhr-cb-time",function(t,n,e){this.cbTime+=t,n?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof e.onload||this.end(e)}),f.on("xhr-load-added",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&!this.xhrGuids[e]&&(this.xhrGuids[e]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&this.xhrGuids[e]&&(delete this.xhrGuids[e],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],n)}),f.on("removeEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],n)}),f.on("fn-start",function(t,n,e){n instanceof m&&("onload"===e&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,n){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,n],n)})}},{}],11:[function(t,n,e){n.exports=function(t){var n=document.createElement("a"),e=window.location,r={};n.href=t,r.port=n.port;var o=n.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=n.hostname||e.hostname,r.pathname=n.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!n.protocol||":"===n.protocol||n.protocol===e.protocol,a=n.hostname===document.domain&&n.port===e.port;return r.sameOrigin=i&&(!n.hostname||a),r}},{}],12:[function(t,n,e){function r(){}function o(t,n,e){return function(){return i(t,[f.now()].concat(s(arguments)),n?null:this,e),n?void 0:this}}var i=t("handle"),a=t(16),s=t(17),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,n){u[n]=o(l+n,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),n.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,n){var e={},r=this,o="function"==typeof n;return i(p+"tracer",[f.now(),t,e],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],e),o)try{return n.apply(this,arguments)}catch(t){throw c.emit("fn-err",[arguments,this,t],e),t}finally{c.emit("fn-end",[f.now()],e)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,n){h[n]=o(p+n)}),newrelic.noticeError=function(t,n){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now(),!1,n])}},{}],13:[function(t,n,e){n.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(n){return}}}},{}],14:[function(t,n,e){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),n.exports=r},{}],15:[function(t,n,e){function r(t,n){if(!o)return!1;if(t!==o)return!1;if(!n)return!0;if(!i)return!1;for(var e=i.split("."),r=n.split("."),a=0;a<r.length;a++)if(r[a]!==e[a])return!1;return!0}var o=null,i=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var s=navigator.userAgent,c=s.match(a);c&&s.indexOf("Chrome")===-1&&s.indexOf("Chromium")===-1&&(o="Safari",i=c[1])}n.exports={agent:o,version:i,match:r}},{}],16:[function(t,n,e){function r(t,n){var e=[],r="",i=0;for(r in t)o.call(t,r)&&(e[i]=n(r,t[r]),i+=1);return e}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],17:[function(t,n,e){function r(t,n,e){n||(n=0),"undefined"==typeof e&&(e=t?t.length:0);for(var r=-1,o=e-n||0,i=Array(o<0?0:o);++r<o;)i[r]=t[n+r];return i}n.exports=r},{}],18:[function(t,n,e){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],19:[function(t,n,e){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(17),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;n.exports=function(t,n){function e(t,n,e,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof e?e(r,a):e||{}}catch(f){l([f,"",[r,a,o],s])}u(n+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(n+"err",[r,a,d],s),d}finally{u(n+"end",[r,a,c],s)}}return r(t)?t:(n||(n=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function u(e,r,o){if(!c||n){var i=c;c=!0;try{t.emit(e,r,o,n)}catch(a){l([a,e,r,o])}c=i}}function d(t,n){if(Object.defineProperty&&Object.keys)try{var e=Object.keys(t);return e.forEach(function(e){Object.defineProperty(n,e,{get:function(){return t[e]},set:function(n){return t[e]=n,n}})}),n}catch(r){l([r])}for(var o in t)s.call(t,o)&&(n[o]=t[o]);return n}function l(n){try{t.emit("internal-error",n)}catch(e){}}return t||(t=o),e.inPlace=f,e.flag=a,e}},{}],ee:[function(t,n,e){function r(){}function o(t){function n(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function e(e,r,o,i){if(!l.aborted||i){t&&t(e,r,o);for(var a=n(o),s=m(e),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[g[e]];return d&&d.push([b,e,r,a]),a}}function p(t,n){y[t]=m(t).concat(n)}function h(t,n){var e=y[t];if(e)for(var r=0;r<e.length;r++)e[r]===n&&e.splice(r,1)}function m(t){return y[t]||[]}function v(t){return d[t]=d[t]||o(e)}function w(t,n){f(t,function(t,e){n=n||"feature",g[e]=n,n in u||(u[n]=[])})}var y={},g={},b={on:p,addEventListener:p,removeEventListener:h,emit:e,get:v,listeners:m,context:n,buffer:w,abort:a,aborted:!1};return b}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var s="nr@context",c=t("gos"),f=t(16),u={},d={},l=n.exports=o();l.backlog=u},{}],gos:[function(t,n,e){function r(t,n,e){if(o.call(t,n))return t[n];var r=e();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(t,n,e){function r(t,n,e,r){o.buffer([t],r),o.emit(t,n,e)}var o=t("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(t,n,e){function r(t){var n=typeof t;return!t||"object"!==n&&"function"!==n?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");n.exports=r},{}],loader:[function(t,n,e){function r(){if(!E++){var t=x.info=NREUM.info,n=p.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&n))return u.abort();f(g,function(n,e){t[n]||(t[n]=e)}),c("mark",["onload",a()+x.offset],null,"api");var e=p.createElement("script");e.src="https://"+t.agent,n.parentNode.insertBefore(e,n)}}function o(){"complete"===p.readyState&&i()}function i(){c("mark",["domContent",a()+x.offset],null,"api")}function a(){return O.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-x.offset}var s=(new Date).getTime(),c=t("handle"),f=t(16),u=t("ee"),d=t(15),l=window,p=l.document,h="addEventListener",m="attachEvent",v=l.XMLHttpRequest,w=v&&v.prototype;NREUM.o={ST:setTimeout,SI:l.setImmediate,CT:clearTimeout,XHR:v,REQ:l.Request,EV:l.Event,PR:l.Promise,MO:l.MutationObserver};var y=""+location,g={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1118.min.js"},b=v&&w&&w[h]&&!/CriOS/.test(navigator.userAgent),x=n.exports={offset:s,now:a,origin:y,features:{},xhrWrappable:b,userAgent:d};t(12),p[h]?(p[h]("DOMContentLoaded",i,!1),l[h]("load",r,!1)):(p[m]("onreadystatechange",o),l[m]("onload",r)),c("mark",["firstbyte",s],null,"api");var E=0,O=t(18)},{}]},{},["loader",2,10,4,3]);</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/sites/default/themes/dtheme/icons/apple-touch-icon.png">
@@ -37,27 +37,27 @@
   
   <link rel="shortcut icon" href="/sites/default/themes/dtheme/icons/favicon.ico" type="image/x-icon" />
 <meta name="twitter:site" content="@ctpf_tweets" />
-<meta name="twitter:title" content="Board Meetings - Chicago Teachers&#039; Pension Fund" />
-<meta name="twitter:description" content="The Chicago Teachers&#039; Pension Fund (CTPF) Board of Trustees meets monthly to discuss and make decisions on various issues, ..." />
+<meta name="twitter:title" content="Board of Trustees Meeting Minutes - Chicago Teachers&#039; Pension Fund" />
+<meta name="twitter:description" content="The CTPF Board of Trustees meets on a monthly basis. You may download minutes from past meetings below." />
 <meta name="twitter:image" content="https://www.ctpf.org/sites/default/themes/dtheme/img/logo-share.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="og:site_name" content="Chicago Teachers&#039; Pension Fund" />
-<meta property="og:title" content="Board Meetings - Chicago Teachers&#039; Pension Fund" />
-<meta property="og:description" content="The Chicago Teachers&#039; Pension Fund (CTPF) Board of Trustees meets monthly to discuss and make decisions on various issues, ..." />
+<meta property="og:title" content="Board of Trustees Meeting Minutes - Chicago Teachers&#039; Pension Fund" />
+<meta property="og:description" content="The CTPF Board of Trustees meets on a monthly basis. You may download minutes from past meetings below." />
 <meta property="og:type" content="article" />
 <meta property="og:image" content="https://www.ctpf.org/sites/default/themes/dtheme/img/logo-share.png" />
-<meta property="og:url" content="https://www.ctpf.org/post/board-meetings" />
-<link rel="canonical" href="http://www.ctpf.org/post/board-meetings" />
-  <title>Board Meetings - Chicago Teachers' Pension Fund</title>
+<meta property="og:url" content="https://www.ctpf.org/board-trustees-meeting-minutes" />
+<link rel="canonical" href="http://www.ctpf.org/board-trustees-meeting-minutes" />
+  <title>Board of Trustees Meeting Minutes - Chicago Teachers' Pension Fund</title>
   <link type="text/css" rel="stylesheet" media="all" href="/sites/main/files/advagg_css/css_747b85762f1bc3f6e5ac15f5931ee8ec_0.css" />
 <link type="text/css" rel="stylesheet" media="all" href="/sites/main/files/advagg_css/css_8220b6984bbb2e313d247b0870586acc_0.css" />
-<link type="text/css" rel="stylesheet" media="all" href="/sites/main/files/advagg_css/css_6690f0caef0f3b92a1b2335ce89d2327_0.css" />
+<link type="text/css" rel="stylesheet" media="all" href="/sites/main/files/advagg_css/css_7efda21ef41b5a319a93597d4020a60d_0.css" />
 <link type="text/css" rel="stylesheet" media="print" href="/sites/main/files/advagg_css/css_16c1370eea7e31865abd97d369c7d137_0.css" />
 <!--[if IE]>
-<link type="text/css" rel="stylesheet" media="all" href="/sites/all/themes/dmodel/ie.css?Z" />
+<link type="text/css" rel="stylesheet" media="all" href="/sites/all/themes/dmodel/ie.css?R" />
 <![endif]-->
-  <link type="text/css" rel="stylesheet" media="all" href="/sites/default/themes/dtheme/dist/theme.min.css?Z">
-  <link type="text/css" rel="stylesheet" media="all" href="/sites/default/themes/dtheme/dtheme-direct.css?Z">
+  <link type="text/css" rel="stylesheet" media="all" href="/sites/default/themes/dtheme/dist/theme.min.css?R">
+  <link type="text/css" rel="stylesheet" media="all" href="/sites/default/themes/dtheme/dtheme-direct.css?R">
   <meta name="google-site-verification" content="z2OJoIOu-WV1dzTNmc6uTcwpm3HkNLEP-kEaS75ZHPs" />
 <meta name="google-site-verification" content="l8Myv4PySkXXh0yCQ_SQ22-8swEyT6-c4mDd8vKQXSI" />
 
@@ -78,7 +78,7 @@ window.addeventasync = function(){
 };
 </script>
   </head>
-<body class="node-809 pt-show-social-block no-event-date t2 wt2 wt0 t173 wt173 wt147 wt0 access-normal has-file pt2 has-1-nt not-front not-logged-in node-type-post one-sidebar sidebar-right page-post-board-meetings section-post dd-cache user-not-admin live launched pn809 n section-node role-anonymous-user role-not-admin">
+<body class="not-front not-logged-in one-sidebar sidebar-left page-board-trustees-meeting-minutes section-board-trustees-meeting-minutes dd-cache user-not-admin live launched tt191 t191 wt191 wt150 wt0 has-content-top ttv1 ttv-standard t role-anonymous-user role-not-admin">
     <div class="accessibility offscreen">
     <a href="#content">Skip to main content</a>
     <a href="#navigation">Skip to site navigation</a>  </div>
@@ -91,9 +91,9 @@ window.addeventasync = function(){
           <div class="site-logo">
             <a href="/" title="Back to home" rel="home"><img src="/sites/default/themes/dtheme/img/logo-theme.svg" alt="Chicago Teachers' Pension Fund"/></a>
           </div>
-                      <h1 class="site-name">
+                      <div class="site-name">
               <a href="/" title="Back to home" rel="home">Chicago Teachers' Pension Fund</a>
-            </h1>
+            </div>
                                 <div class="site-slogan">CTPF</div>
                             </div>
                   <div id="block-digitaldcore-search" class="block block-digitaldcore region-odd odd region-count-1 count-1  search-keywords  "><div class="block-inner">
@@ -103,7 +103,7 @@ window.addeventasync = function(){
   
   
   <div class="block-content content">
-    <div id="dd-search" class="dd-search"><form action="/post/board-meetings"  accept-charset="UTF-8" method="post" id="faceted-search-ui-form-1" class=" dd-search-clear">
+    <div id="dd-search" class="dd-search"><form action="/board-trustees-meeting-minutes"  accept-charset="UTF-8" method="post" id="faceted-search-ui-form-1" class=" dd-search-clear">
 <div><div class="dd-search-keywords"><div id="edit-keywords-wrapper" class="form-item type-textfield">
  <input type="text" maxlength="255" name="keywords" id="edit-keywords" size="20" value="" title="Search keywords" class="form-text apachesolr-autocomplete unprocessed" />
 </div>
@@ -112,7 +112,7 @@ window.addeventasync = function(){
 <input type="hidden" name="facet-id" id="edit-facet-id" value=""  />
 <input type="hidden" name="facet-sort" id="edit-facet-sort" value=""  />
 <div class="dd-search-submit"><button class="dd-search-submit-button" type="submit"></button><div class="legacy-button"><input type="submit" name="op" id="edit-submit" value=""  class="form-submit" />
-</div></div><div class="dd-search-more"><a href="/find/" class="faceted-search-more">More options</a></div><input type="hidden" name="form_build_id" id="form-k2tG3jLFUCFEKCMU7guFDEKOQxG3lNHzS37l_O4Gy0w" value="form-k2tG3jLFUCFEKCMU7guFDEKOQxG3lNHzS37l_O4Gy0w"  />
+</div></div><div class="dd-search-more"><a href="/find/" class="faceted-search-more">More options</a></div><input type="hidden" name="form_build_id" id="form-3NNGqKS61OIZHhjGxFbYsD5mZjmhqvL5m15Ilyz7ZcA" value="form-3NNGqKS61OIZHhjGxFbYsD5mZjmhqvL5m15Ilyz7ZcA"  />
 <input type="hidden" name="form_id" id="edit-faceted-search-ui-form-1" value="faceted_search_ui_form_1"  />
 <input type="hidden" name="box_text" id="edit-box-text" value="Search"  />
 
@@ -150,10 +150,10 @@ window.addeventasync = function(){
   
   
   <div class="block-content content">
-    <ul class="nice-menu nice-menu-down" id="nice-menu-3"><li class="menu-13154 menuparent mt-147  first  odd  depth-1"><a href="/about-ctpf" title="About CTPF" class=" menu-link depth-1 tid-147"><span class="menu-title">About CTPF</span></a><ul class="depth-2"><li class="menu-13219 mt-197  first  odd  depth-2"><a href="/election-central" title="Election Central" class=" menu-link depth-2 tid-197"><span class="menu-title">Election Central</span></a></li>
-<li class="menu-13194 mt-172  even  depth-2"><a href="/mission-history" title="Mission &amp; History" class=" menu-link depth-2 tid-172"><span class="menu-title">Mission &amp; History</span></a></li>
-<li class="menu-13195 mt-173  odd  depth-2"><a href="/board-trustees" title="Board of Trustees" class=" menu-link depth-2 tid-173"><span class="menu-title">Board of Trustees</span></a></li>
-<li class="menu-13196 mt-174  even  depth-2"><a href="/leadership-staff" title="Leadership &amp; Staff" class=" menu-link depth-2 tid-174"><span class="menu-title">Leadership &amp; Staff</span></a></li>
+    <ul class="nice-menu nice-menu-down" id="nice-menu-3"><li class="menu-13154 menuparent mt-147  first  odd  depth-1"><a href="/about-ctpf" title="About CTPF" class=" menu-link depth-1 tid-147"><span class="menu-title">About CTPF</span></a><ul class="depth-2"><li class="menu-13194 mt-172  first  odd  depth-2"><a href="/mission-history" title="Mission &amp; History" class=" menu-link depth-2 tid-172"><span class="menu-title">Mission &amp; History</span></a></li>
+<li class="menu-13195 mt-173  even  depth-2"><a href="/board-trustees" title="Board of Trustees" class=" menu-link depth-2 tid-173"><span class="menu-title">Board of Trustees</span></a></li>
+<li class="menu-13219 mt-197  odd  depth-2"><a href="/2019-election-central" title="2019 Election Central" class=" menu-link depth-2 tid-197"><span class="menu-title">2019 Election Central</span></a></li>
+<li class="menu-13196 mt-174  even  depth-2"><a href="/leadership" title="Leadership" class=" menu-link depth-2 tid-174"><span class="menu-title">Leadership</span></a></li>
 <li class="menu-13178 mt-169  odd  depth-2"><a href="/employers" title="Employers" class=" menu-link depth-2 tid-169"><span class="menu-title">Employers</span></a></li>
 <li class="menu-13199 mt-177  even  depth-2"><a href="/governance" title="Governance" class=" menu-link depth-2 tid-177"><span class="menu-title">Governance</span></a></li>
 <li class="menu-13256 mt-234  odd  depth-2"><a href="/annual-financial-reports" title="Annual Financial Reports" class=" menu-link depth-2 tid-234"><span class="menu-title">Annual Financial Reports</span></a></li>
@@ -182,13 +182,13 @@ window.addeventasync = function(){
 <li class="menu-13207 mt-185  even  last  depth-2"><a href="/proxy-voting-policy" title="Proxy Voting Policy" class=" menu-link depth-2 tid-185"><span class="menu-title">Proxy Voting Policy</span></a></li>
 </ul>
 </li>
-<li class="menu-13157 menuparent mt-150  even  depth-1"><a href="/forms-publications" title="Forms &amp; Publications" class=" menu-link depth-1 tid-150"><span class="menu-title">Forms &amp; Publications</span></a><ul class="depth-2"><li class="menu-13210 mt-188  first  odd  depth-2"><a href="/member-forms-information" title="Member Forms &amp; Information" class=" menu-link depth-2 tid-188"><span class="menu-title">Member Forms &amp; Information</span></a></li>
+<li class="menu-13157 active-trail menuparent mt-150  even  depth-1"><a href="/forms-publications" title="Forms &amp; Publications" class=" menu-link depth-1 tid-150"><span class="menu-title">Forms &amp; Publications</span></a><ul class="depth-2"><li class="menu-13210 mt-188  first  odd  depth-2"><a href="/member-forms-information" title="Member Forms &amp; Information" class=" menu-link depth-2 tid-188"><span class="menu-title">Member Forms &amp; Information</span></a></li>
 <li class="menu-13261 mt-242  even  depth-2"><a href="/health-insurance-forms-publications" title="Health Insurance Forms &amp; Publications" class=" menu-link depth-2 tid-242"><span class="menu-title">Health Insurance Forms &amp; Publications</span></a></li>
 <li class="menu-13211 mt-189  odd  depth-2"><a href="/financial-investment-reports" title="Financial &amp; Investment Reports" class=" menu-link depth-2 tid-189"><span class="menu-title">Financial &amp; Investment Reports</span></a></li>
-<li class="menu-13213 mt-191  even  last  depth-2"><a href="/board-trustees-meeting-minutes" title="Board of Trustees Meeting Minutes" class=" menu-link depth-2 tid-191"><span class="menu-title">Board of Trustees Meeting Minutes</span></a></li>
+<li class="menu-13213 active-trail mt-191  even  last  depth-2"><a href="/board-trustees-meeting-minutes" title="Board of Trustees Meeting Minutes" class="active  menu-link depth-2 tid-191"><span class="menu-title">Board of Trustees Meeting Minutes</span></a></li>
 </ul>
 </li>
-<li class="menu-13158 menuparent mt-151  odd  depth-1"><a href="/news-updates" title="News &amp; Updates" class=" menu-link depth-1 tid-151"><span class="menu-title">News &amp; Updates</span></a><ul class="depth-2"><li class="menu-13250 mt-228  first  odd  depth-2"></li>
+<li class="menu-13158 menuparent mt-151  odd  depth-1"><a href="/news-calendar" title="News &amp; Calendar" class=" menu-link depth-1 tid-151"><span class="menu-title">News &amp; Calendar</span></a><ul class="depth-2"><li class="menu-13250 mt-228  first  odd  depth-2"></li>
 <li class="menu-13214 mt-192  even  depth-2"><a href="/newsfeed" title="Newsfeed" class=" menu-link depth-2 tid-192"><span class="menu-title">Newsfeed</span></a></li>
 <li class="menu-13215 mt-193  odd  depth-2"><a href="/calendar" title="Calendar" class=" menu-link depth-2 tid-193"><span class="menu-title">Calendar</span></a></li>
 <li class="menu-13212 mt-190  even  depth-2"><a href="/newsletters" title="Newsletters" class=" menu-link depth-2 tid-190"><span class="menu-title">Newsletters</span></a></li>
@@ -223,21 +223,22 @@ window.addeventasync = function(){
   
       <div class="view-content">
         <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
-    <article id="node-1166-teaser" class="node node-mine node-teaser node-type-post node-1166 pt-show-social-block no-event-date t118 wt118 wt0 t51 wt51 wt0 access-normal no-more pt118 has-1-nt is-current">
+    <article id="node-1278-teaser" class="node node-mine node-teaser node-type-post node-1278 pt-show-social-block no-event-date t118 wt118 wt0 access-normal no-more pt118 has--nt is-current">
     <div class="node-inner">
         <div class="node-upper-meta meta node-item">
       <div class='meta-inner'>
-        <span class='meta-item post-type' data-plural='Notifications'>Notification</span> <span class='last meta-item post-date'><time datetime="2018-11-08T13:23:00">November 8, 2018</time></span>           </div>
+        <span class='meta-item post-type' data-plural='Notifications'>Notification</span> <span class='last meta-item post-date'><time datetime="2019-02-21T10:11:00">February 21, 2019</time></span>           </div>
     </div>
             <h2 class="node-header node-item">
-      <a href="/calendar" title="Please see the calendar for holiday office hours">
-        <span class="title">Please see the calendar for holiday office hours</span>
+      <a href="/retirement-resources" title="Planning to retire in June? Register for an April 16 Retirement Seminar.">
+        <span class="title">Planning to retire in June? Register for an April 16 Retirement Seminar.</span>
               </a>
     </h2>
         <div class="node-content content node-item">
           </div>
                     <div class='node-links node-item'>
-      <ul class="links inline"><li class="link link-read-more first last"><span><a href="/calendar"><span class="read-more-text">Read more</span></a></span></li>
+      <ul class="links inline"><li class="link link-read-more first"><span><a href="/retirement-resources"><span class="read-more-text">Read more</span></a></span></li>
+<li class="link link-related link-related-register-for-the-town-hall-webinar link-0 last"><span><a href="http://r20.rs6.net/tn.jsp?t=nw7lnr5ab.0.0.huy9z7eab.0&amp;id=preview&amp;r=3&amp;p=https%3A%2F%2Fregister.gotowebinar.com%2Fregister%2F1003515863707508483"><span class="link-text">Register for the Town Hall Webinar</span></a></span></li>
 </ul>    </div>
       </div>
 </article>
@@ -256,177 +257,190 @@ window.addeventasync = function(){
       </div>
       
       <div id="page-center" class="page-center">
-        
-        <main class="page-content" id="content" role="main">
-                              
-          
-                    <div class="content">
-            <article id="node-full" class="  no-2col-lists fif-lt fiw-40 toc-center  dd node node-type-post node-full node-809 pt-show-social-block no-event-date t2 wt2 wt0 t173 wt173 wt147 wt0 access-normal has-file pn pt2 has-1-nt">
-    <div class="node-inner">
-        <h1 class="node-header node-item">
-      <span class="title">Board Meetings</span>
-          </h1>
-        <div class="node-meta meta node-item">
-      <div class='meta-inner'>
-        <span class='meta-item post-type' data-plural='Posts'>Post</span> <span class='last meta-item post-date'><time datetime="2018-03-15T14:20:00">March 15, 2018</time></span>           </div>
-    </div>
-            <div class="node-content content node-item">
-      <p>The Chicago Teachers’ Pension Fund (CTPF) Board of Trustees meets monthly to discuss and make decisions on various issues, proceedings, and financial matters that affect the Fund. All meetings are held at 9:30 a.m. in the CTPF office unless otherwise noted. Meetings are open to the public, except when the Board goes into executive session.</p>
-
-<h3>Regular Board Meeting Schedule</h3>
-
-<ul>
-	<li>Thursday, January 17, 2019</li>
-	<li>Thursday, February 21, 2019</li>
-	<li>Thursday, March 21, 2019</li>
-	<li>Thursday, April 25, 2019</li>
-	<li>&nbsp;Thursday, May 16, 2019</li>
-	<li>Thursday, June 20, 2019</li>
-	<li>Thursday, July 18, 2019</li>
-	<li>Thursday, August 15, 2019</li>
-	<li>Thursday. September 19, 2019</li>
-	<li>Thursday, October 17, 2019</li>
-	<li>Thursday, November 21, 2019</li>
-	<li>Thursday, December 19, 2019</li>
-</ul>
-
-<h3>Investment&nbsp;Committee Meeting Schedule</h3>
-
-<p>All meetings are held at 9:30 a.m. in the CTPF office unless otherwise noted.</p>
-
-<ul>
-	<li>Thursday, January 24, 2019</li>
-	<li>Thursday, March 28, 2019</li>
-	<li>Thursday, June 27, 2019</li>
-	<li>Thursday, July 25, 2019</li>
-	<li>Thursday, August 22, 2019</li>
-	<li>Thursday, October 24, 2019</li>
-</ul>
-
-<p><strong><span style="font-family: &quot;Century Gothic W01&quot;, Arial, sans-serif; font-size: 1.7rem;">Other Committee Meetings</span></strong></p>
-
-<h4>Claims and Service Credit Committee</h4>
-
-<h4>Communications Committee</h4>
-
-<h4>Finance &amp; Audit Committee</h4>
-
-<h4>Health Insurance Committee</h4>
-
-<h4>Pension Laws and Administrative Rules Committee</h4>
-
-<h4>Personnel Committee</h4>
-
-<h4>Return to Work Committee</h4>
-
-<ul>
-	<li>Friday, January 4, 2019,&nbsp;9:30 a.m. |&nbsp;<span class="file fid-1167 file-010419-rtw-agenda-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/010419_rtw_agenda.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">Meeting Agenda</span></a></span></li>
-</ul>
-
-<h4>Technology Committee</h4>
-
-<ul>
-	<li>Thursday, January 24, 2019,&nbsp;2:00 – 4:00 p.m.&nbsp;</li>
-	<li>Thursday, March 28, 2019, 2:00 – 4:00 p.m.</li>
-	<li>Thursday, May 9, 2019, 5:00 – 7:00 p.m.</li>
-	<li>Thursday, June 27, 2019, 2:00 – 4:00 p.m.</li>
-	<li>Thursday, August 22, 2019, 2:00 – 4:00 p.m.</li>
-	<li>Thursday, October 24, 2019, 2:00 – 4:00 p.m.</li>
-</ul>
-
-<p>All meetings are subject to change in compliance with the Open Meetings Act.</p>
-
-<h3>Approved Board of Trustees Meeting Minutes</h3>
-
-<p><a href="/board-trustees-meeting-minutes">Access Meeting Minutes from&nbsp;2007-2018.</a></p>
-
-<p>&nbsp;</p>    </div>
-          </div>
-</article>
-          </div>
-          
-          
-                  </main>
-
-                <aside class="page-right" role="complementary">
+                <aside class="page-left" role="complementary">
           <div class="page-sidebar inner">
-            <div id="block-dd_social-share_page" class="block block-dd_social region-odd even region-count-1 count-4"><div class="block-inner">
+            <div id="block-menu_block-2" class=" left-nav term-nav  dd block block-menu_block region-odd even region-count-1 count-4"><div class="block-inner">
 
     
    
   
-      <h2 class="block-title"><span class="block-title-text">Share this page</span></h2>
+      <h2 class="block-title"><span class="block-title-text"><a href="/forms-publications" title="Forms &amp; Publications" class="active-trail menu-link depth-1 tid-150"><span class="menu-title">Forms &amp; Publications</span></a></span></h2>
   
   <div class="block-content content">
-    <div class="item-list"><ul><li class="social-facebook first"><a class="social social-facebook" href="https://www.facebook.com/sharer.php?u=https%3A%2F%2Fwww.ctpf.org%2Fpost%2Fboard-meetings" title="Share on Facebook">Share on Facebook</a>
-</li>
-<li class="social-twitter"><a class="social social-twitter" href="https://twitter.com/share?url=https%3A%2F%2Fwww.ctpf.org%2Fpost%2Fboard-meetings&amp;text=Board%20Meetings" title="Share on Twitter">Share on Twitter</a>
-</li>
-<li class="social-google"><a class="social social-google" href="https://plus.google.com/share?url=https%3A%2F%2Fwww.ctpf.org%2Fpost%2Fboard-meetings" title="+1 on Google">+1 on Google</a>
-</li>
-<li class="social-linkedin last"><a class="social social-linkedin" href="http://www.linkedin.com/shareArticle?url=https%3A%2F%2Fwww.ctpf.org%2Fpost%2Fboard-meetings" title="Share on LinkedIn">Share on LinkedIn</a>
-</li>
-</ul></div>  </div>
-
-</div></div> <!-- /block-inner, /block -->
-<div id="block-digitaldcore-node_nav_terms" class="block block-digitaldcore region-even odd region-count-2 count-5  left-nav appearing-nav  "><div class="block-inner">
-
-    
-   
-  
-      <h2 class="block-title"><span class="block-title-text">This item appears in</span></h2>
-  
-  <div class="block-content content">
-    <div class="field-nav-terms-appears-in"><div id="nav-back"><a href="javascript:history.back();">Back</a></div><div class="small">This item appears in:</div><ul class="links"><li class="term-id-173 first last"><a href="/board-trustees" rel="tag" title="">Board of Trustees</a></li>
-</ul></div>  </div>
+    <div class="menu-block-2 menu-name-primary-links parent-mlid-0 menu-level-2">
+  <ul class="menu"><li class="leaf first menu-mlid-13210"><a href="/member-forms-information" title="Member Forms &amp; Information" class=" menu-link depth-2 tid-188"><span class="menu-title">Member Forms &amp; Information</span></a></li>
+<li class="leaf menu-mlid-13261"><a href="/health-insurance-forms-publications" title="Health Insurance Forms &amp; Publications" class=" menu-link depth-2 tid-242"><span class="menu-title">Health Insurance Forms &amp; Publications</span></a></li>
+<li class="leaf menu-mlid-13211"><a href="/financial-investment-reports" title="Financial &amp; Investment Reports" class=" menu-link depth-2 tid-189"><span class="menu-title">Financial &amp; Investment Reports</span></a></li>
+<li class="leaf last menu-mlid-13213 active active-trail"><a href="/board-trustees-meeting-minutes" title="Board of Trustees Meeting Minutes" class="active-trail menu-link depth-2 tid-191 active"><span class="menu-title">Board of Trustees Meeting Minutes</span></a></li>
+</ul></div>
+  </div>
 
 </div></div> <!-- /block-inner, /block -->
           </div>
         </aside>
-              </div>
-
-            <div class="page-bottom">
-        <div class="inner layout">
-          <div id="block-digitaldcore-node_bundled" class=" ip-above fif-rt fiw-25  dd block block-digitaldcore region-odd even region-count-1 count-6  channel bundled-posts tagged-posts posts  "><div class="block-inner">
+        
+        <main class="page-content" id="content" role="main">
+          <h1 class="title">Board of Trustees Meeting Minutes</h1>                    
+                    <div class="content-before">
+            <div class="content-before-inner">
+              <div id="block-views_blocks-term-block_1-3" class=" fif-rt fiw-50 no-2col-lists  dd block block-views_blocks region-odd odd region-count-1 count-5 overview views-block channel context-template "><div class="block-inner">
 
     
    
   
-      <h2 class="block-title"><span class="block-title-text">Related Content</span></h2>
   
   <div class="block-content content">
-    <div class="view-content"><div class="views-row views-row-odd views-row-1"><article id="node-808-teaser" class="node node-teaser node-type-post node-808 pt-show-social-block no-event-date t2 wt2 wt0 t173 wt173 wt147 wt0 access-normal has-more pt2 has-1-nt is-current">
+    <div class="view view-term view-id-term view-display-id-block_1 view-dom-id-term-block-1-1">
+    
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
+    <article id="node-894-teaser" class="  h3accordion accordion-collapsed accordion-1  dd node node-teaser node-type-post node-894 pt-show-contact-info pt-show-social-block no-event-date t1 wt1 wt0 t191 wt191 wt150 wt0 access-normal has-file has-files no-more pt1 has-1-nt is-current">
     <div class="node-inner">
         <div class="node-upper-meta meta node-item">
       <div class='meta-inner'>
-        <span class='meta-item post-type' data-plural='Posts'>Post</span> <span class='last meta-item post-date'><time datetime="2018-03-15T14:09:00">March 15, 2018</time></span>           </div>
+        <span class='meta-item post-type' data-plural='Overviews'>Overview</span> <span class='last meta-item post-date'><time datetime="2018-03-22T16:29:00">March 22, 2018</time></span>           </div>
     </div>
             <h2 class="node-header node-item">
-      <a href="/post/board-trustees-committees" title="Board of Trustees Committees">
-        <span class="title">Board of Trustees Committees</span>
+      <a href="/board-trustees-meeting-minutes" title="Board of Trustees Meeting Minutes">
+        <span class="title">Board of Trustees Meeting Minutes</span>
               </a>
     </h2>
         <div class="node-content content node-item">
-      <p>The Chicago Teachers’ Pension Fund (CTPF) Board of Trustees has established several committees to review and research various topics. These committees meet periodically as needed, and generally make recommendations for approval during regular Board meetings.</p>    </div>
+      <p>The CTPF Board of Trustees meets on a monthly basis. You may download minutes from past meetings below.<!--break--></p>
+
+<h3>2019 Meeting Minutes</h3>
+
+<p><span class="file fid-1265 file-2019-january-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2019_january_minutes_0.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">January 2019</span></a></span><br />
+	<span class="file fid-1310 file-2019-february-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2019_february_2.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">February 2019</span></a></span></p>
+
+<h3>2018 Meeting Minutes</h3>
+
+<p><span class="file fid-308 file-2018-january-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_january_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">January 2018</span></a></span><br />
+	<span class="file fid-456 file-2018-february-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/2018_february_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">February 2018</span></a></span><br />
+	<span class="file fid-585 file-2018-march-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_march_minutes_0.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">March 2018</span></a></span><br />
+	<span class="file fid-586 file-2018-march-minutes-for-release-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_march_minutes_for_release.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">Executive Session Minutes Released March 2018</span></a></span><br />
+	<span class="file fid-672 file-2018-april-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_april_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">April 2018</span></a></span><br />
+	<span class="file fid-673 file-2018-april-executive-session-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_april_executive_session_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">Executive Session Minutes Released April 2018</span></a></span><br />
+	<span class="file fid-856 file-2018-may-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_may_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">May 2018</span></a></span><br />
+	<span class="file fid-857 file-2018-may-executive-session-minutes-release-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_may_executive_session_minutes_release.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">Executive Session Minutes Released May 2018</span></a></span><br />
+	<span class="file fid-860 file-2018-june-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_june_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">June 2018</span></a></span><br />
+	<span class="file fid-861 file-2018-june-executive-session-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_june_executive_session_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">Executive Session Minutes Released June 2018</span></a></span><br />
+	<span class="file fid-920 file-2018-july-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_july_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">July 2018</span></a></span><br />
+	<span class="file fid-921 file-minutes-for-release-july-2018-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/minutes_for_release_july_2018.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">Executive Session Minutes Released July 2018</span></a></span><br />
+	<span class="file fid-998 file-2018-august-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_august_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">August 2018</span></a></span><br />
+	<span class="file fid-1086 file-2018-september-minutes-3-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_september_minutes_3.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">September 2018</span></a></span><br />
+	<span class="file fid-1129 file-2018-october-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_october_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">October 2018</span></a></span><br />
+	<span class="file fid-1130 file-minutes-for-release-october-2018-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/minutes_for_release_october_2018.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">Executive Session Minutes Released October 2018</span></a></span><br />
+	<span class="file fid-1166 file-2018-november-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_november_minutes_0.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">November 2018</span></a></span><br />
+	<br />
+	<span class="file fid-1224 file-2018-december-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2018_december_minutes_0.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">December 2018</span></a></span></p>
+
+<h3>2017 Meeting Minutes</h3>
+
+<p><span class="file fid-349 file-01192017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/01192017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">January 2017</span></a></span><br />
+	<span class="file fid-355 file-02162017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/02162017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">February 2017</span></a></span><br />
+	<span class="file fid-350 file-03162017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/03162017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">March 2017</span></a></span><br />
+	<span class="file fid-346 file-04212017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/04212017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">April 2017</span></a></span><br />
+	<span class="file fid-348 file-05182017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/05182017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">May 2017</span></a></span><br />
+	<span class="file fid-356 file-06152017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/06152017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">June 2017</span></a></span><br />
+	<span class="file fid-353 file-07202017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/07202017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">July 2017</span></a></span><br />
+	<span class="file fid-354 file-08172017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/08172017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">August 2017</span></a></span><br />
+	<span class="file fid-351 file-09212017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/09212017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">September 2017</span></a></span><br />
+	<span class="file fid-352 file-10192017-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/10192017.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">October 2017</span></a></span><br />
+	<span class="file fid-310 file-2017-november-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2017_november_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">November 2017</span></a></span><br />
+	<span class="file fid-309 file-2017-december-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2017_december.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">December 2017</span></a></span></p>
+
+<h3>2016 Meeting Minutes</h3>
+
+<p><span class="file fid-344 file-01212016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/01212016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">January 2016</span></a></span><br />
+	<span class="file fid-345 file-02182016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/02182016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">February 2016</span></a></span><br />
+	<span class="file fid-342 file-03172016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/03172016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">March 2016</span></a></span><br />
+	<span class="file fid-343 file-04282016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/04282016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">April 2016</span></a></span><br />
+	<span class="file fid-341 file-05262016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/05262016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">May 2016</span></a></span><br />
+	<span class="file fid-339 file-06232016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/06232016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">June 2016</span></a></span><br />
+	<span class="file fid-338 file-07142016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/07142016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">July 2016</span></a></span><br />
+	<span class="file fid-340 file-08182016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/08182016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">August 2016</span></a></span><br />
+	<span class="file fid-337 file-09152016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/09152016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">September 2016</span></a></span><br />
+	<span class="file fid-336 file-10202016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/10202016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">October 2016</span></a></span><br />
+	<span class="file fid-335 file-11172016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/11172016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">November 2016</span></a></span><br />
+	<span class="file fid-347 file-12082016-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/12082016.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">December 2016</span></a></span></p>
+
+<h3>2015 Meeting Minutes</h3>
+
+<p><span class="file fid-331 file-01292015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/01292015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">January 2015</span></a></span><br />
+	<span class="file fid-334 file-02192015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/02192015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">February 2015</span></a></span><br />
+	<span class="file fid-330 file-03192015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/03192015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">March 2015</span></a></span><br />
+	<span class="file fid-332 file-04232015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/04232015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">April 2015</span></a></span><br />
+	<span class="file fid-583 file-04232015exec-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/04232015exec.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">April 2015 (Executive Session Minutes Through February 2015)</span></a></span><br />
+	<span class="file fid-328 file-05212015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/05212015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">May 2015</span></a></span><br />
+	<span class="file fid-329 file-06112015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/06112015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">June 2015</span></a></span><br />
+	<span class="file fid-327 file-07162015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/07162015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">July 2015</span></a></span><br />
+	<span class="file fid-325 file-08202015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/08202015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">August 2015</span></a></span><br />
+	<span class="file fid-326 file-09172015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/09172015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">September 2015</span></a></span><br />
+	<span class="file fid-323 file-10222015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/10222015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">October 2015</span></a></span><br />
+	<span class="file fid-333 file-11202015-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/11202015.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">November 2015</span></a></span></p>
+
+<h3>2014 Meeting Minutes</h3>
+
+<p><span class="file fid-365 file-01162014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/01162014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">January  2014</span></a></span><br />
+	<span class="file fid-322 file-02202014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/02202014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">February 2014</span></a></span><br />
+	<span class="file fid-364 file-03202014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/03202014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">March 2014</span></a></span><br />
+	<span class="file fid-366 file-04242014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/04242014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">April 2014</span></a></span><br />
+	<span class="file fid-362 file-05152014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/05152014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">May 2014</span></a></span><br />
+	<span class="file fid-361 file-06192014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/06192014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">June 2014</span></a></span><br />
+	<span class="file fid-363 file-07242014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/07242014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">July 2014</span></a></span><br />
+	<span class="file fid-360 file-08212014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/08212014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">August 2014</span></a></span><br />
+	<span class="file fid-359 file-09182014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/09182014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">September 2014</span></a></span><br />
+	<span class="file fid-358 file-10232014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/10232014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">October 2014</span></a></span><br />
+	<span class="file fid-357 file-11202014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/11202014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">November 2014</span></a></span><br />
+	<span class="file fid-324 file-12112014-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/12112014.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">December 2014</span></a></span></p>
+
+<h3>2013 Meeting Minutes</h3>
+
+<p><span class="file fid-319 file-01172013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/01172013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">January 2013</span></a></span><br />
+	<span class="file fid-321 file-02212013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/02212013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">February 2013</span></a></span><br />
+	<span class="file fid-315 file-03212013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/03212013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">March 2013</span></a></span><br />
+	<span class="file fid-317 file-04252013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/04252013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">April 2013</span></a></span><br />
+	<span class="file fid-318 file-05162013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/05162013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">May 2013</span></a></span><br />
+	<span class="file fid-316 file-06202013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/06202013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">June 2013</span></a></span><br />
+	<span class="file fid-313 file-07252013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/07252013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">July 2013</span></a></span><br />
+	<span class="file fid-314 file-08152013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/08152013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">August 2013</span></a></span><br />
+	<span class="file fid-312 file-09192013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/09192013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">September 2013</span></a></span><br />
+	<span class="file fid-311 file-10242013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/10242013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">October 2013</span></a></span><br />
+	<span class="file fid-320 file-11212013-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/11212013.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">November 2013</span></a></span></p>
+
+<h3>2012 Meeting Minutes</h3>
+
+<p><span class="file fid-1054 file-2011-2012-minutes-with-index-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2011_2012_minutes_with_index.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">2012 Minutes with Index</span></a></span></p>
+
+<h3>2011 Meeting Minutes</h3>
+
+<p><span class="file fid-1056 file-2010-2011-minutes-with-index-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2010_2011_minutes_with_index.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">2011 Meeting Minutes with Index</span></a></span></p>
+
+<h3>2010 Meeting Minutes</h3>
+
+<p><span class="file fid-1057 file-indexed-2009-2010-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/indexed_2009_2010_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">2010 Meeting Minutes with Index</span></a></span></p>
+
+<h3>2009 Meeting Minutes</h3>
+
+<p><span class="file fid-1058 file-2008-2009-minutes-and-index-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2008_2009_minutes_and_index.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">2009 Meeting Minutes with Index</span></a></span></p>
+
+<h3>2008 Meeting Minutes</h3>
+
+<p><span class="file fid-1060 file-2007-2008-minutes-and-index-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2007_2008_minutes_and_index.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">2008 Meeting Minutes with Index</span></a></span></p>
+
+<h3>2007 Meeting Minutes</h3>
+
+<p><span class="file fid-1061 file-2006-2007-meeting-minutes-pdf file-application-pdf  c1  c-1"><a href="/sites/main/files/file-attachments/2006-2007_meeting_minutes.pdf" style=" background-image: url(&#039;https://www.ctpf.org/sites/all/modules/filefield/icons/application-pdf.png&#039;); "><span class="link-text">2007 Meeting MInutes</span></a></span></p>    </div>
                     <div class='node-links node-item'>
-      <ul class="links inline"><li class="link link-read-more first last"><span><a href="/post/board-trustees-committees"><span class="read-more-text">Read more</span></a></span></li>
+      <ul class="links inline"><li class="link link-read-more first last"><span><a href="/board-trustees-meeting-minutes"><span class="read-more-text">Read more</span></a></span></li>
 </ul>    </div>
       </div>
 </article>
-</div></div>  </div>
-
-</div></div> <!-- /block-inner, /block -->
-<div id="block-digitaldcore-node_referring" class=" ip-above fif-rt fiw-25  dd block block-digitaldcore region-even odd region-count-2 count-7  channel referring-posts tagged-posts posts  "><div class="block-inner">
-
-    
-   
-  
-  
-  <div class="block-content content">
-    <div class="view view-related view-id-related view-display-id-default view-dom-id-1">
-    
-  
-  
+  </div>
+    </div>
   
   
   
@@ -436,8 +450,17 @@ window.addeventasync = function(){
 </div>   </div>
 
 </div></div> <!-- /block-inner, /block -->
-        </div>
-      </div>
+            </div>
+          </div>
+          
+                    <div class="content">
+            <div class="no-main-channel"></div>          </div>
+          
+          
+                  </main>
+
+              </div>
+
           </section>
 
     <span class="footprint"></span>
@@ -453,7 +476,7 @@ window.addeventasync = function(){
               <span class="copyright-text">&copy; Public School Teachers’ Pension &amp; Retirement Fund of Chicago</span>
             </div> -->
           </div>
-          <div id="block-views_blocks-term-block_1-13" class="block block-views_blocks region-odd even region-count-1 count-8 footerlinks views-block channel context-global "><div class="block-inner">
+          <div id="block-views_blocks-term-block_1-13" class="block block-views_blocks region-odd even region-count-1 count-6 footerlinks views-block channel context-global "><div class="block-inner">
 
     
    
@@ -466,7 +489,7 @@ window.addeventasync = function(){
   
       <div class="view-content">
         <div class="views-row views-row-1 views-row-odd views-row-first">
-    <article id="node-793-teaser" class="node node-teaser node-type-post node-793 pt-show-social-block no-event-date t56 wt56 wt0 access-normal has-more pt56 has--nt">
+    <article id="node-793-teaser" class="node node-mine node-teaser node-type-post node-793 pt-show-social-block no-event-date t56 wt56 wt0 access-normal has-more pt56 has--nt is-current">
     <div class="node-inner">
         <div class="node-upper-meta meta node-item">
       <div class='meta-inner'>
@@ -481,7 +504,7 @@ window.addeventasync = function(){
           </div>
                     <div class='node-links node-item'>
       <ul class="links inline"><li class="link link-read-more first"><span><a href="/member-resources"><span class="read-more-text">Read more</span></a></span></li>
-<li class="link link-related link-related-election-central link-0"><span><a href="/election-central"><span class="link-text">Election Central</span></a></span></li>
+<li class="link link-related link-related-election-central link-0"><span><a href="/2019-election-central"><span class="link-text">Election Central</span></a></span></li>
 <li class="link link-related link-related-active-members link-1"><span><a href="/active-members"><span class="link-text">Active Members</span></a></span></li>
 <li class="link link-related link-related-retired-members link-2"><span><a href="/retired-members"><span class="link-text">Retired Members</span></a></span></li>
 <li class="link link-related link-related-survivor-death-benefits link-3"><span><a href="/survivor-death-benefits"><span class="link-text">Survivor &amp; Death Benefits</span></a></span></li>
@@ -491,7 +514,7 @@ window.addeventasync = function(){
 </article>
   </div>
   <div class="views-row views-row-2 views-row-even">
-    <article id="node-795-teaser" class="node node-teaser node-type-post node-795 pt-show-social-block no-event-date t56 wt56 wt0 access-normal has-more pt56 has--nt">
+    <article id="node-795-teaser" class="node node-mine node-teaser node-type-post node-795 pt-show-social-block no-event-date t56 wt56 wt0 access-normal has-more pt56 has--nt is-current">
     <div class="node-inner">
         <div class="node-upper-meta meta node-item">
       <div class='meta-inner'>
@@ -516,7 +539,7 @@ window.addeventasync = function(){
 </article>
   </div>
   <div class="views-row views-row-3 views-row-odd views-row-last">
-    <article id="node-796-teaser" class="node node-teaser node-type-post node-796 pt-show-social-block no-event-date t56 wt56 wt0 access-normal no-more pt56 has--nt">
+    <article id="node-796-teaser" class="node node-mine node-teaser node-type-post node-796 pt-show-social-block no-event-date t56 wt56 wt0 access-normal no-more pt56 has--nt is-current">
     <div class="node-inner">
         <div class="node-upper-meta meta node-item">
       <div class='meta-inner'>
@@ -557,7 +580,7 @@ window.addeventasync = function(){
 </div></div> <!-- /block-inner, /block -->
         </div>
         <div class="copyright">
-          <span class="copyright-text">&copy; 2018 Public School Teachers’ Pension &amp; Retirement Fund of Chicago</span>
+          <span class="copyright-text">&copy; 2019 Public School Teachers’ Pension &amp; Retirement Fund of Chicago</span>
         </div>
       </div>
     </footer>
@@ -565,7 +588,7 @@ window.addeventasync = function(){
 
   <div class="below-page">
         <div class="closure inner layout">
-      <div id="block-dd_login-login" class="block block-dd_login region-odd odd region-count-1 count-9"><div class="block-inner">
+      <div id="block-dd_login-login" class="block block-dd_login region-odd odd region-count-1 count-7"><div class="block-inner">
 
     
    
@@ -573,7 +596,7 @@ window.addeventasync = function(){
       <h2 class="block-title"><span class="block-title-text">Log in</span></h2>
   
   <div class="block-content content">
-    <form action="/post/board-meetings?destination=node%2F809"  accept-charset="UTF-8" method="post" id="user-login-form">
+    <form action="/board-trustees-meeting-minutes?destination=taxonomy%2Fterm%2F191"  accept-charset="UTF-8" method="post" id="user-login-form">
 <div><div id="edit-name-wrapper" class="form-item type-textfield">
  <label for="edit-name">E-mail or username: <span class="form-required" title="This field is required.">*</span></label>
  <input type="text" maxlength="60" name="name" id="edit-name" size="15" value="" tabindex="1" required="" class="form-text required" />
@@ -587,14 +610,14 @@ window.addeventasync = function(){
 </div>
 <input type="submit" name="op" id="edit-submit-1" value="Log in"  tabindex="4" class="form-submit" />
 <div class="item-list"><ul><li class="first last"><a href="/user/password" title="Request new password via e-mail.">Request new password</a></li>
-</ul></div><input type="hidden" name="form_build_id" id="form-9OZwZ3fsoQWIRKwT8rASxkEE85k22wtgUe9iN58GNfo" value="form-9OZwZ3fsoQWIRKwT8rASxkEE85k22wtgUe9iN58GNfo"  />
+</ul></div><input type="hidden" name="form_build_id" id="form-bx5pnUn0qeuOSqGIhpHJ2LIlvnx7-tcXBeIUVrW8zj0" value="form-bx5pnUn0qeuOSqGIhpHJ2LIlvnx7-tcXBeIUVrW8zj0"  />
 <input type="hidden" name="form_id" id="edit-user-login-block" value="user_login_block"  />
 
 </div></form>
   </div>
 
 </div></div> <!-- /block-inner, /block -->
-<div id="block-digitaldcore-command_menu" class="block block-digitaldcore region-even even region-count-2 count-10"><div class="block-inner">
+<div id="block-digitaldcore-command_menu" class="block block-digitaldcore region-even even region-count-2 count-8"><div class="block-inner">
 
     
    
@@ -611,22 +634,22 @@ window.addeventasync = function(){
 </div></div> <!-- /block-inner, /block -->
     </div>
         <div class="script">
-      <script type="text/javascript" src="/sites/main/files/advagg_js/js_bdc78f6b96e944c4fc3b5b1d2b8a7b5f_3.js"></script>
+      <script type="text/javascript" src="/sites/main/files/advagg_js/js_d0e155c01a9f7c5bfaef4df097ae01f9_3.js"></script>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
-jQuery.extend(Drupal.settings, {"basePath":"\/","apachesolr_autocomplete":{"path":"\/apachesolr_autocomplete"},"lightbox2":{"rtl":0,"file_path":"\/(\\w\\w\/)sites\/main\/files","default_image":"\/sites\/all\/modules\/lightbox2\/images\/brokenimage.jpg","border_size":10,"font_color":"000","box_color":"fff","top_position":"","overlay_opacity":"0.8","overlay_color":"000","disable_close_click":1,"resize_sequence":0,"resize_speed":400,"fade_in_speed":400,"slide_down_speed":600,"use_alt_layout":1,"disable_resize":0,"disable_zoom":0,"force_show_nav":0,"show_caption":1,"loop_items":1,"node_link_text":"View Image Details","node_link_target":0,"image_count":"Image !current of !total","video_count":"Video !current of !total","page_count":"Page !current of !total","lite_press_x_close":"press \u003Ca href=\u0022#\u0022 onclick=\u0022hideLightbox(); return FALSE;\u0022\u003E\u003Ckbd\u003Ex\u003C\/kbd\u003E\u003C\/a\u003E to close","download_link_text":"","enable_login":false,"enable_contact":false,"keys_close":"c x 27","keys_previous":"p 37","keys_next":"n 39","keys_zoom":"z","keys_play_pause":"32","display_image_size":"original","image_node_sizes":"()","trigger_lightbox_classes":"","trigger_lightbox_group_classes":"","trigger_slideshow_classes":"","trigger_lightframe_classes":"","trigger_lightframe_group_classes":"","custom_class_handler":0,"custom_trigger_classes":"","disable_for_gallery_lists":true,"disable_for_acidfree_gallery_lists":true,"enable_acidfree_videos":true,"slideshow_interval":5000,"slideshow_automatic_start":true,"slideshow_automatic_exit":true,"show_play_pause":true,"pause_on_next_click":false,"pause_on_previous_click":true,"loop_slides":false,"iframe_width":640,"iframe_height":385,"iframe_border":0,"enable_video":0},"ddCaptcha":1971,"ddPoll":{"resultsURI":"\/sites\/all\/modules\/_dd\/dd_poll\/dd_poll_results.php"},"ddTwitterFeed":{"getTweetsURI":"\/dd_twitter_feed\/get_tweets"},"extlink":{"extTarget":"_blank","extClass":"ext","extSubdomains":1,"extExclude":"","extInclude":"","extAlert":0,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","mailtoClass":"mailto"},"CToolsUrlIsAjaxTrusted":{"\/post\/board-meetings":true,"\/post\/board-meetings?destination=node%2F809":true,"\/search\/site":true},"cssInit":{"node.css":true,"defaults.css":true,"system.css":true,"system-menus.css":true,"user.css":true,"apachesolr_autocomplete.css":true,"jquery.autocomplete.css":true,"content-module.css":true,"ctools.css":true,"date.css":true,"datepicker.css":true,"jquery.timeentry.css":true,"filefield.css":true,"lightbox_alt.css":true,"logintoboggan.css":true,"nice_menus.css":true,"nice_menus_default.css":true,"dd_captcha.css":true,"dd_classes.experimental.css":true,"dd_classes.do_timeout.css":true,"dd_classes.gallery.css":true,"dd_create.css":true,"compiled-classes.css":true,"dd_login.css":true,"dd_poll.css":true,"dd_twitter_feed.css":true,"dd_user_roles.css":true,"farbtastic.css":true,"calendar.css":true,"extlink.css":true,"fieldgroup.css":true,"views.css":true,"printlinks.css":true,"dd_social.css":true,"dtheme-direct.css":true,"html-elements.css":true,"tabs.css":true,"messages.css":true,"block-editing.css":true,"wireframes.css":true,"zen.css":true,"vertical_tabs.css":true,"dmodel-layout.css":true,"dmodel.css":true},"jsInit":{"misc\/jquery.js":true,"misc\/drupal.js":true,"sites\/all\/modules\/apachesolr_autocomplete\/apachesolr_autocomplete.js":true,"sites\/all\/modules\/apachesolr_autocomplete\/jquery-autocomplete\/jquery.autocomplete.js":true,"sites\/all\/modules\/_dd\/dd_captcha\/dd_captcha.js":true,"sites\/all\/modules\/_dd\/dd_classes\/dd_classes.js":true,"sites\/all\/modules\/_dd\/dd_classes\/plugins\/do_timeout\/dd_classes.do_timeout.js":true,"sites\/all\/modules\/_dd\/dd_classes\/plugins\/gallery\/dd_classes.gallery.js":true,"sites\/all\/modules\/_dd\/dd_create\/dd_create.js":true,"sites\/all\/modules\/_dd\/dd_login\/dd_login.js":true,"sites\/all\/modules\/_dd\/dd_poll\/dd_poll.js":true,"sites\/all\/modules\/_dd\/dd_sitewide_message_notification\/dd_sitewide_message_reset.js":true,"sites\/all\/modules\/_dd\/dd_twitter_feed\/dd_twitter_feed.js":true,"sites\/all\/modules\/extlink\/extlink.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/digitaldcore.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/modernizr.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/browser-detect.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/dd-search.js":true,"sites\/all\/modules\/jquery_ui\/jquery.ui\/ui\/minified\/ui.core.min.js":true,"sites\/all\/modules\/jquery_ui\/jquery.ui\/ui\/minified\/ui.dialog.min.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/digitaldcore.monkey-patch.js":true,"sites\/all\/modules\/_dd\/dd_social\/dd_social.js":true,"sites\/all\/modules\/_dd\/dd_analytics\/dd_analytics_universal.js":true,"sites\/all\/themes\/dmodel\/dmodel.js":true}});
+jQuery.extend(Drupal.settings, {"basePath":"\/","apachesolr_autocomplete":{"path":"\/apachesolr_autocomplete"},"lightbox2":{"rtl":0,"file_path":"\/(\\w\\w\/)sites\/main\/files","default_image":"\/sites\/all\/modules\/lightbox2\/images\/brokenimage.jpg","border_size":10,"font_color":"000","box_color":"fff","top_position":"","overlay_opacity":"0.8","overlay_color":"000","disable_close_click":1,"resize_sequence":0,"resize_speed":400,"fade_in_speed":400,"slide_down_speed":600,"use_alt_layout":1,"disable_resize":0,"disable_zoom":0,"force_show_nav":0,"show_caption":1,"loop_items":1,"node_link_text":"View Image Details","node_link_target":0,"image_count":"Image !current of !total","video_count":"Video !current of !total","page_count":"Page !current of !total","lite_press_x_close":"press \u003Ca href=\u0022#\u0022 onclick=\u0022hideLightbox(); return FALSE;\u0022\u003E\u003Ckbd\u003Ex\u003C\/kbd\u003E\u003C\/a\u003E to close","download_link_text":"","enable_login":false,"enable_contact":false,"keys_close":"c x 27","keys_previous":"p 37","keys_next":"n 39","keys_zoom":"z","keys_play_pause":"32","display_image_size":"original","image_node_sizes":"()","trigger_lightbox_classes":"","trigger_lightbox_group_classes":"","trigger_slideshow_classes":"","trigger_lightframe_classes":"","trigger_lightframe_group_classes":"","custom_class_handler":0,"custom_trigger_classes":"","disable_for_gallery_lists":true,"disable_for_acidfree_gallery_lists":true,"enable_acidfree_videos":true,"slideshow_interval":5000,"slideshow_automatic_start":true,"slideshow_automatic_exit":true,"show_play_pause":true,"pause_on_next_click":false,"pause_on_previous_click":true,"loop_slides":false,"iframe_width":640,"iframe_height":385,"iframe_border":0,"enable_video":0},"ddCaptcha":1971,"ddPoll":{"resultsURI":"\/sites\/all\/modules\/_dd\/dd_poll\/dd_poll_results.php"},"ddTwitterFeed":{"getTweetsURI":"\/dd_twitter_feed\/get_tweets"},"extlink":{"extTarget":"_blank","extClass":"ext","extSubdomains":1,"extExclude":"","extInclude":"","extAlert":0,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","mailtoClass":"mailto"},"CToolsUrlIsAjaxTrusted":{"\/board-trustees-meeting-minutes":true,"\/board-trustees-meeting-minutes?destination=taxonomy%2Fterm%2F191":true,"\/search\/site":true},"cssInit":{"node.css":true,"defaults.css":true,"system.css":true,"system-menus.css":true,"user.css":true,"apachesolr_autocomplete.css":true,"jquery.autocomplete.css":true,"content-module.css":true,"ctools.css":true,"date.css":true,"datepicker.css":true,"jquery.timeentry.css":true,"filefield.css":true,"lightbox_alt.css":true,"logintoboggan.css":true,"nice_menus.css":true,"nice_menus_default.css":true,"dd_captcha.css":true,"dd_classes.experimental.css":true,"dd_classes.do_timeout.css":true,"dd_classes.gallery.css":true,"dd_create.css":true,"compiled-classes.css":true,"dd_login.css":true,"dd_poll.css":true,"dd_twitter_feed.css":true,"dd_user_roles.css":true,"farbtastic.css":true,"calendar.css":true,"extlink.css":true,"fieldgroup.css":true,"views.css":true,"dtheme-direct.css":true,"html-elements.css":true,"tabs.css":true,"messages.css":true,"block-editing.css":true,"wireframes.css":true,"zen.css":true,"vertical_tabs.css":true,"dmodel-layout.css":true,"dmodel.css":true,"dd_social.css":true},"jsInit":{"misc\/jquery.js":true,"misc\/drupal.js":true,"sites\/all\/modules\/apachesolr_autocomplete\/apachesolr_autocomplete.js":true,"sites\/all\/modules\/apachesolr_autocomplete\/jquery-autocomplete\/jquery.autocomplete.js":true,"sites\/all\/modules\/_dd\/dd_captcha\/dd_captcha.js":true,"sites\/all\/modules\/_dd\/dd_classes\/dd_classes.js":true,"sites\/all\/modules\/_dd\/dd_classes\/plugins\/do_timeout\/dd_classes.do_timeout.js":true,"sites\/all\/modules\/_dd\/dd_classes\/plugins\/gallery\/dd_classes.gallery.js":true,"sites\/all\/modules\/_dd\/dd_create\/dd_create.js":true,"sites\/all\/modules\/_dd\/dd_login\/dd_login.js":true,"sites\/all\/modules\/_dd\/dd_poll\/dd_poll.js":true,"sites\/all\/modules\/_dd\/dd_sitewide_message_notification\/dd_sitewide_message_reset.js":true,"sites\/all\/modules\/_dd\/dd_twitter_feed\/dd_twitter_feed.js":true,"sites\/all\/modules\/extlink\/extlink.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/digitaldcore.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/modernizr.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/browser-detect.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/dd-search.js":true,"sites\/all\/modules\/jquery_ui\/jquery.ui\/ui\/minified\/ui.core.min.js":true,"sites\/all\/modules\/jquery_ui\/jquery.ui\/ui\/minified\/ui.dialog.min.js":true,"sites\/all\/modules\/_dd\/digitaldcore\/digitaldcore.monkey-patch.js":true,"sites\/all\/modules\/_dd\/dd_analytics\/dd_analytics_universal.js":true,"sites\/all\/themes\/dmodel\/dmodel.js":true}});
 //--><!]]>
 </script>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
-(function(i,s,o,g,r,a,m){i.GoogleAnalyticsObject=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create',"UA-115397561-1","www.ctpf.org");ga('require','linkid','linkid.js');ga('set','contentGroup1',"Post");ga('set','contentGroup2',"About CTPF");ga('set','dimension1',"Anonymous user");ga('send','pageview')
+(function(i,s,o,g,r,a,m){i.GoogleAnalyticsObject=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create',"UA-115397561-1","www.ctpf.org");ga('require','linkid','linkid.js');ga('set','contentGroup2',"Forms \u0026 Publications");ga('set','dimension1',"Anonymous user");ga('send','pageview')
 //--><!]]>
 </script>
-            <script src="/sites/default/themes/dtheme/dist/theme.min.js?Z" async></script>
+            <script src="/sites/default/themes/dtheme/dist/theme.min.js?R" async></script>
     </div>
   </div>
 
   <script type="text/javascript" src="/sites/main/files/advagg_js/js_af84e2798ed59dedd5fab951fc3bad3b_0.js"></script>
   
-<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"51e9ee0927","applicationID":"3044101","transactionName":"bwBRZUoEC0NXUEEKXlZKclJMDApeGWxHBkdRFlpeVgwLV2lFXAZG","queueTime":0,"applicationTime":523,"atts":"Q0dGEwIeR0VFVkcwRVkRRkIaX0dRWFxbGlxXEEATFEcWUVhXVwxJcQERCxoGEUBQbAdTAA9HTh0aBEcKTU5I","errorBeacon":"bam.nr-data.net","agent":""}</script></body>
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"51e9ee0927","applicationID":"3044101","transactionName":"bwBRZUoEC0NXUEEKXlZKcERLEQpdGX1UFWVdF14eSAQCVQ==","queueTime":0,"applicationTime":575,"atts":"Q0dGEwIeR15XRWEGQ1UxVlxICQREUxEPQQAYBlxdTQgLEEFvGhNeXBYTQ1ECDUQUHxcWQl0XYEVZERBDFAkXAl9XC0pcVxAWEhoRRgJfXAdcSXEBRwoUUEETV2dXAwAPRxgcFFIXWUpFGA==","errorBeacon":"bam.nr-data.net","agent":""}</script></body>
 </html>
