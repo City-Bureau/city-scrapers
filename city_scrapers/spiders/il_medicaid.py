@@ -101,7 +101,9 @@ class IlMedicaidSpider(CityScrapersSpider):
         """
         Parses meeting date.
         """
-        date = date.replace('\xa0',' ')
+        
+        # Remove any special spacing characters or excess space from the date
+        date = re.sub(r'[\xa0\u00a0]',' ', date.strip())
 
         try:
             return dt.datetime.strptime(date, "%B %d, %Y")
@@ -171,8 +173,10 @@ class IlMedicaidSpider(CityScrapersSpider):
                         chicago_location += re.findall(r">([\w\s\d\.\,]+)<",y)
                     else:
                         break
+
+        # Remove special spacing characters and extra spaces at the end
         for i, line in enumerate(chicago_location):
-            chicago_location[i] = line.strip()
+            chicago_location[i] = re.sub(r'[\xa0\u00a0]',' ', line.strip())
 
         # Check to see if there is a comma in 'city, state zipcode", then add one if there isn't.
         last_line = chicago_location[-1]
