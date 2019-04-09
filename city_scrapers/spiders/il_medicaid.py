@@ -67,8 +67,10 @@ class IlMedicaidSpider(CityScrapersSpider):
         time_xpath = "//h2[starts-with(text(),'Time')]/following::node()[normalize-space()][1]/descendant-or-self::text()"
         raw_time_interval = response.xpath(time_xpath).get()
         time_start, time_end = self._parse_time_interval(raw_time_interval)
-
-        location_xpath = "//h2[starts-with(text(),'Location')]/following-sibling::node()/descendant-or-self::text()[normalize-space()]"
+        locations_xpath = "//h2[starts-with(text(),'Location')]/following-sibling::node()[normalize-space()]"
+        raw_locations = response.xpath(locations_xpath).getall()
+        chicago_location = self._parse_chicago_location(raw_locations)
+        # locations_xpath = "//h2[starts-with(text(),'Location')]/following-sibling::node()/descendant-or-self::text()[normalize-space()]"
 
         date_xpath = "//h2[contains(text(),'Meeting Dates')]/following::ul/li/p/text()"
         for date_str in response.xpath(date_xpath).re(r'[\w]+[\s]+[\d]+,\s[\d]+'):
@@ -107,8 +109,6 @@ class IlMedicaidSpider(CityScrapersSpider):
             return dt.datetime(1900,1,1)
 
     # replaces _parse_start and _parse_end
-    # TBD: Look through other scheudle pages and see which time formats I am
-    # missing.
     def _parse_time_interval(self, raw_time_interval):
         dashes = r'[-{}]'.format(chr(8211)) # some pages use -, chr(8211)
         raw_times = [x.strip().upper() for x in re.split(dashes, raw_time_interval)]
@@ -152,12 +152,22 @@ class IlMedicaidSpider(CityScrapersSpider):
     #     """Parse or generate all-day status. Defaults to False."""
     #     return False
 
-    # def _parse_location(self, item):
-    #     """Parse or generate location."""
-    #     return {
-    #         "address": "",
-    #         "name": "",
-    #     }
+    def _parse_chicago_location(self, raw_locations):
+        """Parse or generate location. Specifically, we want to get the chicago location for the
+        meeting."""
+        chicago_location = []
+        for _, x in enumerate(raw_loations):
+            if "h3" in x and "Chicago" in x:
+                for y in raw_loations[_+1:]:
+                    if "<p" in y:
+                        chicago_location.append(chicago_loc_line)
+                    else:
+                        break
+
+        return {
+            'address': '100 W Randolph St, 2nd flr. Rm. 2025, Chicago, IL 60601',
+            'name': 'James R. Thompson Center',
+        }
 
     # def _parse_links(self, item):
     #     """Parse or generate links."""
