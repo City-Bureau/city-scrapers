@@ -5,7 +5,7 @@ from city_scrapers_core.spiders import LegistarSpider
 
 class ChiCityCouncilSpider(LegistarSpider):
     name = 'chi_citycouncil'
-    agency_name = 'Chicago City Council'
+    agency = 'Chicago City Council'
     timezone = 'America/Chicago'
     allowed_domains = ['chicago.legistar.com']
     start_urls = ['https://chicago.legistar.com/Calendar.aspx']

@@ -14,7 +14,7 @@ from city_scrapers.spider import Spider
 
 class ChiCityCollegeSpider(Spider):
     name = 'chi_city_college'
-    agency_name = 'City Colleges of Chicago'
+    agency = 'City Colleges of Chicago'
     allowed_domains = ['www.ccc.edu']
 
     start_urls = [

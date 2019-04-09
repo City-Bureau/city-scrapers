@@ -52,7 +52,7 @@ class ArchiveParserMixin:
 
 class ChiMayorsBicycleAdvisoryCouncilSpider(CityScrapersSpider, ArchiveParserMixin):
     name = 'chi_mayors_bicycle_advisory_council'
-    agency_name = "Mayor's Bicycle Advisory Council"
+    agency = "Mayor's Bicycle Advisory Council"
     timezone = 'America/Chicago'
     allowed_domains = ['chicagocompletestreets.org']
 
