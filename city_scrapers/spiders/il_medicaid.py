@@ -84,9 +84,9 @@ class IlMedicaidSpider(CityScrapersSpider):
                 end=dt.datetime.combine(date,time_end),
                 all_day=False,# TBD
                 time_notes="",# TBD
-                location={# TBD
-                    'name': 'James R. Thompson Center',
-                    'address': '100 W Randolph St, 2nd flr. Rm. 2025, Chicago, IL 60601',
+                location={
+                    'name': chicago_location['name'],
+                    'address': chicago_location['address'],
                 },
                 links=[],# TBD
                 source=self._parse_source(response),
@@ -153,20 +153,45 @@ class IlMedicaidSpider(CityScrapersSpider):
     #     return False
 
     def _parse_chicago_location(self, raw_locations):
-        """Parse or generate location. Specifically, we want to get the chicago location for the
-        meeting."""
+        """Parse or generate the Chicago meeting location."""
+
+        # The meeting is a video conference, so two locations are provided on the website.
+        # For the time being, we are only going to show the Chicago location.
+
+        Chicago = "Chicago"
         chicago_location = []
-        for _, x in enumerate(raw_loations):
-            if "h3" in x and "Chicago" in x:
-                for y in raw_loations[_+1:]:
+
+        # City names are inside h3 tag.
+        # Each line of address is contained in one or more <p> tags.
+        # If multiple lines of address are contained in a <p> tag, then <br> tags are used.
+        for i, x in enumerate(raw_locations):
+            if "h3" in x and Chicago in x:
+                for y in raw_locations[i+1:]:
                     if "<p" in y:
-                        chicago_location.append(chicago_loc_line)
+                        chicago_location += re.findall(r">([\w\s\d\.\,]+)<",y)
                     else:
                         break
+        for i, line in enumerate(chicago_location):
+            chicago_location[i] = line.strip()
+
+        # Check to see if there is a comma in 'city, state zipcode", then add one if there isn't.
+        last_line = chicago_location[-1]
+        if not "," in last_line:
+            first_space_index = last_line.index(" ")
+            chicago_location[-1] = last_line[:first_space_index] + "," + last_line[first_space_index:]
+
+        # Split street address from name of the building 
+        split_name_address = re.split('\s([\d]+[\w\s]+)',chicago_location[0])
+        if len(split_name_address) > 1:
+            name, first_line = split_name_address[:2]
+            address = first_line + ", " + ", ".join(chicago_location[1:])
+        else:
+            name = split_name_address[0]
+            address = ", ".join(chicago_location[1:])
 
         return {
-            'address': '100 W Randolph St, 2nd flr. Rm. 2025, Chicago, IL 60601',
-            'name': 'James R. Thompson Center',
+            'address': address,
+            'name': name,
         }
 
     # def _parse_links(self, item):
