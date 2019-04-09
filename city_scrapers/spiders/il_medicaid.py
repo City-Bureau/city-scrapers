@@ -63,10 +63,13 @@ class IlMedicaidSpider(CityScrapersSpider):
         # The MAC website currently lists the time directly inside the div
         # container without any tags. The descendant-or-self is used in case
         # this is changed in the future. 
-        
+
         time_xpath = "//h2[starts-with(text(),'Time')]/following::node()[normalize-space()][1]/descendant-or-self::text()"
         raw_time_interval = response.xpath(time_xpath).get()
         time_start, time_end = self._parse_time_interval(raw_time_interval)
+
+        location_xpath = "//h2[starts-with(text(),'Location')]/following-sibling::node()/descendant-or-self::text()[normalize-space()]"
+
         date_xpath = "//h2[contains(text(),'Meeting Dates')]/following::ul/li/p/text()"
         for date_str in response.xpath(date_xpath).re(r'[\w]+[\s]+[\d]+,\s[\d]+'):
             date = self._parse_date(date_str)
