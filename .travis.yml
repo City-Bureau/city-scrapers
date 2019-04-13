@@ -3,9 +3,6 @@ python:
   - 3.5
   - 3.6
   - 3.7-dev
-sudo: required
-services:
-  - docker
 install:
   - pip install pipenv
   - pipenv install --dev --three --system
