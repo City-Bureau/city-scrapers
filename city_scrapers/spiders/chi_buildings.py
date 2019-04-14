@@ -1,21 +1,16 @@
-# -*- coding: utf-8 -*-
-"""
-All spiders should yield data shaped according to the Open Civic Data
-specification (http://docs.opencivicdata.org/en/latest/data/event.html).
-"""
 import json
 import re
 from datetime import datetime, timedelta
 
 import scrapy
+from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
-from city_scrapers.spider import Spider
 
-
-class ChiBuildingsSpider(Spider):
+class ChiBuildingsSpider(CityScrapersSpider):
     name = 'chi_buildings'
-    agency_name = 'Public Building Commission of Chicago'
+    agency = 'Public Building Commission of Chicago'
     allowed_domains = ['www.pbcchicago.com']
     base_url = 'http://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     timezone = 'America/Chicago'
@@ -30,10 +25,9 @@ class ChiBuildingsSpider(Spider):
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         meeting_types = ['admin-opp-committee-meeting', 'audit-committee', 'board-meeting']
@@ -41,24 +35,23 @@ class ChiBuildingsSpider(Spider):
         data = json.loads(response.text)
         for item in data:
             if (item.get('category') != [] and item.get('category')[0] in meeting_types):
-                name, dt_time = self._parse_name_time(item['title'])
-                start = self._parse_time_dict(self._parse_datetime(item['start']), dt_time)
-                end = self._parse_time_dict(self._parse_datetime(item['end']), dt_time)
-                end['date'] = start['date']
-                if start['time'] == end['time']:
-                    end['time'] = None
-                item_data = {
-                    '_type': 'event',
-                    'name': name,
-                    'description': '',
-                    'classification': self._parse_classification(item.get('category')[0]),
-                    'start': start,
-                    'end': end,
-                    'all_day': False,
-                    'sources': self._parse_sources(item)
-                }
-                item_data['status'] = self._generate_status(item_data)
-                item_data['id'] = self._generate_id(item_data)
+                title, dt_time = self._parse_title_time(item['title'])
+                start = self._parse_dt_time(self._parse_datetime(item['start']), dt_time)
+                end = self._parse_dt_time(self._parse_datetime(item['end']), dt_time)
+                if end <= start or end.day != start.day:
+                    end = None
+                meeting = Meeting(
+                    title=title,
+                    description='',
+                    classification=self._parse_classification(item.get('category')[0]),
+                    start=start,
+                    end=end,
+                    time_notes='',
+                    all_day=False,
+                    source=self._parse_source(item)
+                )
+                meeting['status'] = self._get_status(meeting)
+                meeting['id'] = self._get_id(meeting)
 
                 # Request each relevant event page, including current data in meta attr
                 req = scrapy.Request(
@@ -66,36 +59,33 @@ class ChiBuildingsSpider(Spider):
                     callback=self._parse_event,
                     dont_filter=True,
                 )
-                req.meta['item'] = item_data
+                req.meta['meeting'] = meeting
                 req.meta['category'] = item['category']
                 yield req
 
-    def _parse_name_time(self, name):
-        """Return name with time string removed and time if included"""
-        time_match = re.search(r'\d{1,2}:\d{2}([ apm.]{3,5})?', name)
+    def _parse_title_time(self, title):
+        """Return title with time string removed and time if included"""
+        time_match = re.search(r'\d{1,2}:\d{2}([ apm.]{3,5})?', title)
         if not time_match:
-            return name, None
+            return title, None
         time_str = time_match.group()
-        name = name.replace(time_str, '').replace('@', '').strip()
+        title = title.replace(time_str, '').replace('@', '').split(' at ')[0].strip()
         time_str = time_str.strip().replace('.', '')
         # Default to PM if not AM/PM not provided
         if 'm' not in time_str:
             time_str = '{} pm'.format(time_str)
-        return name, datetime.strptime(time_str, '%I:%M %p').time()
+        return title, datetime.strptime(time_str, '%I:%M %p').time()
 
     def _parse_event(self, response):
         """
         Parse event detail page if additional information
         """
-        item_data = response.meta.get('item', {})
+        meeting = response.meta.get('meeting', {})
         category = response.meta.get('category', ['board-meeting'])
         board_meeting = category[0] in ['board-meeting', 'admin-opp-committee-meeting']
-        item = {
-            'location': self._parse_location(response, board_meeting=board_meeting),
-            'documents': self._parse_documents(response),
-        }
-        # Merge event details with item data from request meta
-        return {**item, **item_data}
+        meeting['location'] = self._parse_location(response, board_meeting=board_meeting)
+        meeting['links'] = self._parse_links(response)
+        return meeting
 
     def _parse_classification(self, meeting_type):
         """
@@ -114,22 +104,13 @@ class ChiBuildingsSpider(Spider):
         """
         if board_meeting:
             return {
-                'url': 'https://thedaleycenter.com',
                 'name': 'Second Floor Board Room, Richard J. Daley Center',
                 'address': '50 W. Washington Street Chicago, IL 60602',
-                'coordinates': {
-                    'latitude': '41.884089',
-                    'longitude': '-87.630191',
-                }
             }
         if len(item.css('.eo-event-venue-map')) == 0:
             return {
-                'url': None,
-                'name': None,
-                'coordinates': {
-                    'latitude': None,
-                    'longitude': None,
-                },
+                'name': '',
+                'address': '',
             }
 
         event_script = item.css('script:not([src])')[-1].extract()
@@ -143,39 +124,30 @@ class ChiBuildingsSpider(Spider):
             location_name = split_tooltip[0]
 
         return {
-            'url': None,
             'name': location_name,
             'address': split_tooltip[1],
-            'coordinates': {
-                'latitude': location['lat'],
-                'longitude': location['lng'],
-            },
         }
 
-    def _parse_time_dict(self, dt, dt_time):
+    def _parse_dt_time(self, dt, dt_time):
         if dt_time is None:
             dt_time = dt.time()
-        return {
-            'date': dt.date(),
-            'time': dt_time,
-            'note': '',
-        }
+        return datetime.combine(dt.date(), dt_time)
 
     def _parse_datetime(self, time_str):
         return datetime.strptime(time_str, '%Y-%m-%dT%H:%M:%S')
 
-    def _parse_documents(self, response):
+    def _parse_links(self, response):
         """Parse documents if available on previous board meeting pages"""
-        documents = []
+        links = []
         for doc_link in response.css('a.vc_btn3-shape-rounded'):
-            documents.append({
-                'url': doc_link.attrib['href'],
-                'note': doc_link.xpath('./text()').extract_first()
+            links.append({
+                'href': doc_link.attrib['href'],
+                'title': doc_link.xpath('./text()').extract_first()
             })
-        return documents
+        return links
 
-    def _parse_sources(self, item):
+    def _parse_source(self, item):
         """
         Parse source from base URL and event link
         """
-        return [{'url': item['url']}]
+        return item['url']

@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
 import re
-from datetime import time
+from datetime import datetime, time
 
 import dateutil.parser
+from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.constants import COMMISSION
-from city_scrapers.spider import Spider
 
-
-class ChiCommunityDevelopmentSpider(Spider):
+class ChiCommunityDevelopmentSpider(CityScrapersSpider):
     name = 'chi_community_development'
-    agency_name = 'Chicago Department of Planning and Development'
+    agency = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = [
@@ -20,13 +19,11 @@ class ChiCommunityDevelopmentSpider(Spider):
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        description = self.parse_description(response)
         columns = self.parse_meetings(response)
         for column in columns:
             year = column.xpath('preceding::h3[1]/text()').re_first(r'(\d{4})(.*)')
@@ -34,28 +31,24 @@ class ChiCommunityDevelopmentSpider(Spider):
             meetings = column.xpath(meeting_date_xpath).extract()
             meetings = self.format_meetings(meetings)
             for meeting in meetings:
-                data = {
-                    '_type': 'event',
-                    'name': 'Community Development Commission',
-                    'event_description': description,
-                    'classification': COMMISSION,
-                    'start': self._parse_start(meeting, year),
-                    'all_day': False,
-                    'location': {
-                        'neighborhood': '',
+                meeting = Meeting(
+                    title='Community Development Commission',
+                    description='',
+                    classification=COMMISSION,
+                    start=self._parse_start(meeting, year),
+                    end=None,
+                    time_notes='',
+                    all_day=False,
+                    location={
                         'name': 'City Hall',
                         'address': '121 N LaSalle St, Room 201A, Chicago, IL 60602'
                     },
-                    'sources': [{
-                        'url': response.url,
-                        'note': ''
-                    }],
-                    'documents': self._parse_documents(column, meeting, response)
-                }
-                data['end'] = {'date': data['start']['date'], 'time': None, 'note': ''}
-                data['id'] = self._generate_id(data)
-                data['status'] = self._generate_status(data)
-                yield data
+                    source=response.url,
+                    links=self._parse_links(column, meeting, response),
+                )
+                meeting['id'] = self._get_id(meeting)
+                meeting['status'] = self._get_status(meeting)
+                yield meeting
 
     @staticmethod
     def format_meetings(meetings):
@@ -63,12 +56,6 @@ class ChiCommunityDevelopmentSpider(Spider):
         meetings = [meeting.replace('\xa0', ' ').strip() for meeting in meetings]
         meetings = list(filter(None, meetings))
         return meetings
-
-    @staticmethod
-    def parse_description(response):
-        desc_xpath = ('//p[contains(text(), ' '"The Community Development Commission")]//text()')
-        description = ' '.join(t.strip() for t in response.xpath(desc_xpath).extract())
-        return description
 
     @staticmethod
     def parse_meetings(response):
@@ -84,10 +71,9 @@ class ChiCommunityDevelopmentSpider(Spider):
         dt = dateutil.parser.parse(
             '{mo} {day} {year}'.format(mo=m.group('month'), day=m.group('day'), year=year)
         )
-        # time based on examining meeting minutes
-        return {'date': dt.date(), 'time': time(13, 0), 'note': ''}
+        return datetime.combine(dt.date(), time(13))
 
-    def _parse_documents(self, item, meeting, response):
+    def _parse_links(self, item, meeting, response):
         # Find <a> tags where 1st, non-blank, preceding text = meeting
         #  (e.g. 'Jan 16')
         anchor_xpath = ('a[preceding-sibling::text()[normalize-space()]'
@@ -95,7 +81,7 @@ class ChiCommunityDevelopmentSpider(Spider):
         documents = item.xpath(anchor_xpath)
         if len(documents) >= 0:
             return [{
-                'url': response.urljoin(document.xpath('@href').extract_first()),
-                'note': document.xpath('text()').extract_first(),
+                'href': response.urljoin(document.xpath('@href').extract_first()),
+                'title': document.xpath('text()').extract_first(),
             } for document in documents]
         return []

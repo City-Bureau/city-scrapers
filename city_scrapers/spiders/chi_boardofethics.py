@@ -1,26 +1,22 @@
-# -*- coding: utf-8 -*-
-import datetime
 import re
-from datetime import timedelta
 
 import dateutil.parser
+from city_scrapers_core.constants import BOARD
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
 
-
-class ChiBoardOfEthicsSpider(Spider):
+class ChiBoardOfEthicsSpider(CityScrapersSpider):
     name = 'chi_boardofethics'
-    agency_name = 'Chicago Board of Ethics'
-    allowed_domains = ['www.cityofchicago.org']
-    start_urls = ['https://www.cityofchicago.org/city/en/depts/ethics/supp_info/minutes.html']
+    agency = 'Chicago Board of Ethics'
+    allowed_domains = ['chicago.gov']
+    start_urls = ['https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html']
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         root = response.xpath('//h3[text() = "Meeting Schedule"]/..')
@@ -29,54 +25,34 @@ class ChiBoardOfEthicsSpider(Spider):
         meeting_dates = root.css('tbody tr td::text').extract()
         meeting_dates = [m for m in meeting_dates if m.strip() != '']
 
-        start_time = self._parse_time(description)
         location = self._parse_location(description)
 
         # Ethics board only displays are tables with all meeting dates
         # so the crawler only processes a single page that displays different
         # dates so most of the attributes are the same.
         for meeting_date in meeting_dates:
-            data = {
-                '_type': 'event',
-                'name': 'Board of Directors',
-                'event_description': description,
-                'classification': BOARD,
-                'start': self._parse_start(meeting_date, start_time),
-                'end': {},
-                'all_day': False,
-                'location': location,
-                'documents': [],
-                'sources': [{
-                    'url': self.start_urls[0],
-                    'note': ''
-                }],
-            }
-            data['end'] = self._parse_end(data)
-            data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, text=meeting_date)
-            yield data
+            start = self._parse_start(meeting_date, description)
+            meeting = Meeting(
+                title='Board of Directors',
+                description=description,
+                classification=BOARD,
+                start=start,
+                end=None,
+                time_notes='',
+                all_day=False,
+                location=location,
+                links=self._parse_links(start, response),
+                source=response.url,
+            )
+            meeting['id'] = self._get_id(meeting)
+            meeting['status'] = self._get_status(meeting, text=meeting_date)
+            yield meeting
 
     @staticmethod
-    def _parse_start(date, time):
-        """
-        Parse state date and time.
-        """
-        dt = dateutil.parser.parse('{} {}'.format(date, time))
-        return {'date': dt.date(), 'time': dt.time(), 'note': ''}
-
-    @staticmethod
-    def _parse_end(item):
-        """
-        Parse end date and time.
-        """
-
-        # meeting text says approx ~2hrs so just hard coding.
-        end = {}
-        end['date'] = item['start']['date']
-        end['note'] = item['start']['note']
-        dt = datetime.datetime.combine(datetime.date(1, 1, 1), item['start']['time'])
-        end['time'] = (dt + timedelta(hours=2)).time()
-        return end
+    def _parse_start(date_str, description):
+        """Parse state datetime."""
+        time_match = re.search(r'(1[0-2]|0?[1-9]):([0-5][0-9])( ?[AP]M)?', description)
+        return dateutil.parser.parse('{} {}'.format(date_str, time_match.group(0)))
 
     @staticmethod
     def _parse_location(text):
@@ -85,14 +61,16 @@ class ChiBoardOfEthicsSpider(Spider):
         location_name = matches.group('name').strip()
         address = matches.group('address').strip()
         return {
-            'url': '',
             'name': location_name,
             'address': address,
-            'neighborhood': '',
         }
 
-    @staticmethod
-    def _parse_time(text):
-        time = re.compile(r'(1[0-2]|0?[1-9]):([0-5][0-9])( ?[AP]M)?')
-        match = time.search(text)
-        return match.group(0)
+    def _parse_links(self, start, response):
+        links = []
+        for link_el in response.css('.page-full-description a[title$="{}"]'.format(start.year)):
+            if start.strftime('%B') in link_el.xpath('./text()').extract_first():
+                links.append({
+                    'title': 'Minutes',
+                    'href': response.urljoin(link_el.xpath('@href').extract_first())
+                })
+        return links

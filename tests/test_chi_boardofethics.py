@@ -1,14 +1,17 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD
 from tests.utils import file_response
 
-from city_scrapers.constants import BOARD
 from city_scrapers.spiders.chi_boardofethics import ChiBoardOfEthicsSpider
 
-test_response = file_response('files/chi_boardofethics.html')
+test_response = file_response(
+    'files/chi_boardofethics.html',
+    url='https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html'
+)
 spider = ChiBoardOfEthicsSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 parsed_meeting_text = (
     'All meetings will be held at 12:00 PM and typically last about 2 hours\xa0 Meetings are held '
     'at the City of Chicago Board of Ethics, 740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488.'
@@ -19,24 +22,20 @@ def test_items():
     assert len(parsed_items) == 7
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Board of Directors'
+def test_title():
+    assert parsed_items[0]['title'] == 'Board of Directors'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == parsed_meeting_text
+    assert parsed_items[0]['description'] == parsed_meeting_text
 
 
-def test_start_time():
-    assert parsed_items[0]['start']['date'] == date(2018, 6, 15)
-    assert parsed_items[0]['start']['time'] == time(12, 00)
-    assert parsed_items[0]['start']['note'] == ''
+def test_start():
+    assert parsed_items[0]['start'] == datetime(2018, 6, 15, 12)
 
 
-def test_end_time():
-    assert parsed_items[0]['end']['date'] == date(2018, 6, 15)
-    assert parsed_items[0]['end']['time'] == time(14, 00)
-    assert parsed_items[0]['end']['note'] == ''
+def test_end():
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -45,18 +44,14 @@ def test_id():
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'url': '',
         'name': 'City of Chicago Board of Ethics',
         'address': '740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488',
-        'neighborhood': '',
     }
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'https://www.cityofchicago.org/city/en/depts/ethics/supp_info/minutes.html',
-        'note': ''
-    }]
+    assert parsed_items[0][
+        'source'] == 'https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -67,8 +62,3 @@ def test_all_day(item):
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
     assert item['classification'] == BOARD
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'

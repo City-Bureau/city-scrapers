@@ -1,9 +1,11 @@
+from datetime import datetime
+
 import pytest
 import scrapy
+from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import BOARD, COMMITTEE, PASSED
 from city_scrapers.spiders.chi_buildings import ChiBuildingsSpider
 
 test_json_response = file_response('files/chi_buildings.json')
@@ -15,12 +17,12 @@ class MockRequest(object):
     meta = {}
 
     def __getitem__(self, key):
-        return self.meta['item'].get(key)
+        return self.meta['meeting'].get(key)
 
 
 def mock_request(*args, **kwargs):
     mock = MockRequest()
-    mock.meta = {'item': {}}
+    mock.meta = {'meeting': {}}
     return mock
 
 
@@ -39,8 +41,8 @@ def parsed_event():
     return spider._parse_event(test_event_response)
 
 
-def test_name(parsed_items):
-    assert parsed_items[0]['name'] == 'Administrative Operations Committee'
+def test_title(parsed_items):
+    assert parsed_items[0]['title'] == 'Administrative Operations Committee'
 
 
 def test_classification(parsed_items):
@@ -51,11 +53,11 @@ def test_classification(parsed_items):
 
 
 def test_start(parsed_items):
-    assert parsed_items[0]['start']['date'].isoformat() == '2018-12-05'
+    assert parsed_items[0]['start'] == datetime(2018, 12, 5, 10)
 
 
-def test_end_time(parsed_items):
-    assert parsed_items[0]['end']['date'].isoformat() == '2018-12-05'
+def test_end(parsed_items):
+    assert parsed_items[0]['end'] is None
 
 
 def test_id(parsed_items):
@@ -64,7 +66,7 @@ def test_id(parsed_items):
     )
 
 
-def test_event_description(parsed_items):
+def test_description(parsed_items):
     assert parsed_items[0]['description'] == ''
 
 
@@ -73,54 +75,37 @@ def test_status(parsed_items):
 
 
 def test_source(parsed_items):
-    assert parsed_items[0]['sources'][0]['url'] == (
+    assert parsed_items[0]['source'] == (
         'http://www.pbcchicago.com/events/event/pbc-administrative-operations-committee/'
     )
 
 
-def test_event_location(parsed_event):
+def test_location(parsed_event):
     assert parsed_event['location'] == {
-        'url': 'https://thedaleycenter.com',
         'name': 'Second Floor Board Room, Richard J. Daley Center',
         'address': '50 W. Washington Street Chicago, IL 60602',
-        'coordinates': {
-            'latitude': '41.884089',
-            'longitude': '-87.630191'
-        },
     }
 
 
-def test_documents(parsed_event):
-    assert parsed_event['documents'] == [
+def test_links(parsed_event):
+    assert parsed_event['links'] == [
         {
-            'note': 'Agenda',
-            'url':
+            'title': 'Agenda',
+            'href':
                 'http://www.pbcchicago.com/wp-content/uploads/2018/11/MA_PBC_MPW_bdgeneral20181113.pdf'  # noqa
         },
         {
-            'note': 'Presentation',
-            'url':
+            'title': 'Presentation',
+            'href':
                 'http://www.pbcchicago.com/wp-content/uploads/2018/11/BoardPresentation_20181113.pdf'  # noqa
         },
         {
-            'note': 'Summary',
-            'url': 'http://www.pbcchicago.com/wp-content/uploads/2018/11/Board-Summary.pdf'
+            'title': 'Summary',
+            'href': 'http://www.pbcchicago.com/wp-content/uploads/2018/11/Board-Summary.pdf'
         },
         {
-            'note': 'Minutes',
-            'url':
+            'title': 'Minutes',
+            'href':
                 'http://www.pbcchicago.com/wp-content/uploads/2018/12/A3.-MMR_NOVEMBERBOARDMINUTES_201812052.pdf'  # noqa
         }
     ]
-
-
-def test__type(parsed_items):
-    assert {item['_type'] for item in parsed_items} == {'event'}
-
-
-def test_no_holidays_included(parsed_items):
-    assert 'Holiday' not in {item['classification'] for item in parsed_items}
-
-
-def test_all_day(parsed_items):
-    assert {item['all_day'] for item in parsed_items} == {False}

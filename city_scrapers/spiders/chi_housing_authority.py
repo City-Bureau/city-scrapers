@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
 import re
 from datetime import datetime, time
 
 import scrapy
+from city_scrapers_core.constants import BOARD
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
 
-
-class ChiHousingAuthoritySpider(Spider):
+class ChiHousingAuthoritySpider(CityScrapersSpider):
     name = 'chi_housing_authority'
-    agency_name = 'Chicago Housing Authority'
+    agency = 'Chicago Housing Authority'
     timezone = 'America/Chicago'
     allowed_domains = ['www.thecha.org']
     start_urls = [
@@ -19,22 +18,20 @@ class ChiHousingAuthoritySpider(Spider):
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows a modified
-        OCD event schema (docs/_docs/05-development.md#event-schema)
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         if re.search(r'4859 S\.? Wabash', response.text) is None:
             raise ValueError('Meeting address has changed')
 
-        req = scrapy.Request(
+        self.upcoming_meetings = self._parse_upcoming(response)
+        yield scrapy.Request(
             'http://www.thecha.org/about/board-meetings-agendas-and-resolutions/board-meeting-notices',  # noqa
             callback=self._parse_next,
             dont_filter=True,
         )
-        req.meta['upcoming'] = self._parse_upcoming(response)
-        yield req
 
     def _parse_next(self, response):
         """Chains previous requests and yields a request to combine all results"""
@@ -43,7 +40,7 @@ class ChiHousingAuthoritySpider(Spider):
             callback=self._parse_combined_meetings,
             dont_filter=True,
         )
-        req.meta['upcoming'] = self._parse_notice(response)
+        self.upcoming_meetings = self._parse_notice(response)
         yield req
 
     def _parse_upcoming(self, response):
@@ -60,15 +57,10 @@ class ChiHousingAuthoritySpider(Spider):
             if date_match:
                 date_str = '{} {}'.format(date_match.group(), upcoming_year)
                 date_dict = {
-                    'start': {
-                        'date': datetime.strptime(date_str, '%B %d %Y').date()
-                    },
-                    'sources': [{
-                        'url': response.url,
-                        'note': ''
-                    }],
+                    'start': datetime.strptime(date_str, '%B %d %Y'),
+                    'source': response.url,
                 }
-                date_dict['status'] = self._generate_status(date_dict, text=item_text)
+                date_dict['status'] = self._get_status(date_dict, text=item_text)
                 date_list.append(date_dict)
         return date_list
 
@@ -76,19 +68,17 @@ class ChiHousingAuthoritySpider(Spider):
         """Returns a list of meetings with notice documents added to applicable dates"""
         notice_documents = self._parse_notice_documents(response)
         meetings_list = []
-        for meeting in response.meta.get('upcoming', []):
+        for meeting in self.upcoming_meetings:
             # Check if the meeting date is in any document title, if so, assign docs to that meeting
-            meeting_date_str = '{dt:%B} {dt.day}'.format(dt=meeting['start']['date'])
-            if any(meeting_date_str in doc['note'] for doc in notice_documents):
+            meeting_date_str = '{dt:%B} {dt.day}'.format(dt=meeting['start'])
+            if any(meeting_date_str in doc['title'] for doc in notice_documents):
                 meetings_list.append({
-                    **meeting, 'documents': notice_documents,
-                    'sources': [{
-                        'url': response.url,
-                        'note': ''
-                    }]
+                    **meeting,
+                    'links': notice_documents,
+                    'source': response.url,
                 })
             else:
-                meetings_list.append({**meeting, 'documents': []})
+                meetings_list.append({**meeting, 'links': []})
         return meetings_list
 
     def _parse_notice_documents(self, response):
@@ -99,51 +89,39 @@ class ChiHousingAuthoritySpider(Spider):
             if 'mailto' in doc.attrib['href'] or 'flyer' in doc_text.lower():
                 continue
             notice_documents.append({
-                'url': 'http://{}{}'.format(self.allowed_domains[0], doc.attrib['href']),
-                'note': doc_text,
+                'href': response.urljoin(doc.attrib['href']),
+                'title': doc_text,
             })
         return notice_documents
 
     def _parse_combined_meetings(self, response):
         """Combines upcoming and past meetings and yields results ignoring duplicates"""
         meetings = self._parse_past_meetings(response)
-        meeting_dates = [meeting['start']['date'] for meeting in meetings]
+        meeting_dates = set([meeting['start'] for meeting in meetings])
 
-        for meeting in response.meta.get('upcoming', []):
-            if meeting['start']['date'] not in meeting_dates:
+        for meeting in self.upcoming_meetings:
+            if meeting['start'] not in meeting_dates:
                 meetings.append(meeting)
 
-        for meeting in meetings:
-            item = {
-                '_type': 'event',
-                'name': 'Board of Commissioners',
-                'event_description': '',
-                'classification': BOARD,
-                'start': {
-                    'date': meeting['start']['date'],
-                    'time': time(8, 30),
-                    'note': 'Times may change based on notice',
-                },
-                'end': {
-                    'date': meeting['start']['date'],
-                    'time': time(13, 0),
-                    'note': 'Times may change based on notice',
-                },
-                'all_day': False,
-                'location': {
+        for item in meetings:
+            meeting = Meeting(
+                title='Board of Commissioners',
+                description='',
+                classification=BOARD,
+                start=datetime.combine(item['start'].date(), time(8, 30)),
+                end=datetime.combine(item['start'].date(), time(13)),
+                time_notes='Times may change based on notice',
+                all_day=False,
+                location={
                     'address': '4859 S Wabash Chicago, IL 60615',
                     'name': 'Charles A. Hayes FIC',
-                    'neighborhood': '',
                 },
-                'documents': meeting['documents'],
-                'sources': meeting.get('sources', [{
-                    'url': response.url,
-                    'note': ''
-                }]),
-            }
-            item['status'] = meeting.get('status', self._generate_status(item))
-            item['id'] = self._generate_id(item)
-            yield item
+                links=item['links'],
+                source=item.get('source', response.url),
+            )
+            meeting['status'] = item.get('status', self._get_status(meeting))
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _parse_past_meetings(self, response):
         """Returns a list of start date and documents from meeting minutes page"""
@@ -151,19 +129,17 @@ class ChiHousingAuthoritySpider(Spider):
         for item in response.css('table.table-striped tbody tr'):
             dt_str = item.css('time::text').extract_first()
             meetings.append({
-                'start': {
-                    'date': datetime.strptime(dt_str, '%b %d, %Y').date()
-                },
-                'documents': self._parse_past_documents(item),
+                'start': datetime.strptime(dt_str, '%b %d, %Y'),
+                'links': self._parse_past_documents(item, response),
             })
         return meetings
 
-    def _parse_past_documents(self, item):
+    def _parse_past_documents(self, item, response):
         """Returns all documents for a past meeting"""
         doc_list = []
         for doc in item.css('a'):
             doc_list.append({
-                'url': 'http://{}{}'.format(self.allowed_domains[0], doc.attrib['href']),
-                'note': doc.css('*::text').extract_first(),
+                'href': response.urljoin(doc.attrib['href']),
+                'title': doc.css('*::text').extract_first(),
             })
         return doc_list
