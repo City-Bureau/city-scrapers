@@ -1,7 +1,3 @@
-# THIS IS JUST A MIXIN. IT MAY USE THINGS THAT ARE NOT ACTUALLY USABLE YET,
-# BUT IT WILL BE INTEGRATED INTO A REGULAR AGENCY SPIDER.
-
-# -*- coding: utf-8 -*-
 from datetime import datetime
 from urllib.parse import urljoin
 
