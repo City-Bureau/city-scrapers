@@ -1,47 +1,45 @@
 import json
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 from freezegun import freeze_time
 
-from city_scrapers.constants import BOARD
 from city_scrapers.spiders.chi_parks import ChiParksSpider
 
-freezer = freeze_time('2018-01-01 12:00:01')
+freezer = freeze_time('2018-01-01')
 freezer.start()
 test_response = []
 with open('tests/files/chi_parks.txt') as f:
     for line in f:
         test_response.append(json.loads(line))
 spider = ChiParksSpider()
-parsed_items = [item for item in spider._parse_events(test_response)]
+parsed_items = [item for item in spider.parse_legistar(test_response)]
 freezer.stop()
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Board of Commissioners'
+def test_title():
+    assert parsed_items[0]['title'] == 'Board of Commissioners'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    EXPECTED_START = {'date': date(2017, 12, 13), 'time': time(15, 30), 'note': ''}
-    assert parsed_items[0]['start'] == EXPECTED_START
+    assert parsed_items[0]['start'] == datetime(2017, 12, 13, 15, 30)
 
 
 def test_end():
-    EXPECTED_END = {
-        'date': date(2017, 12, 13),
-        'time': time(18, 30),
-        'note': 'Estimated 3 hours after start time'
-    }
-    assert parsed_items[0]['end'] == EXPECTED_END
+    assert parsed_items[0]['end'] is None
+
+
+def test_time_notes():
+    assert parsed_items[0]['time_notes'] == 'Estimated 2 hour duration'
 
 
 def test_id():
-    assert parsed_items[0]['id'] == ('chi_parks/201712131530/x/board_of_commissioners')
+    assert parsed_items[0]['id'] == 'chi_parks/201712131530/x/board_of_commissioners'
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -54,44 +52,29 @@ def test_classification():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_location():
-    EXPECTED_LOCATION = {
+    assert parsed_items[1]['location'] == {
         'address': (
             'Board Room ADMINISTRATION BUILDING AT 541 '
             'NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 '
             '8TH FLOOR BOARD ROOM'
         ),
         'name': '',
-        'neighborhood': ''
     }
-    assert parsed_items[1]['location'] == EXPECTED_LOCATION
 
 
-def test_documents():
-    EXPECTED_DOCUMENTS = [
+def test_links():
+    assert parsed_items[2]['links'] == [
         {
-            'url': (
-                'https://chicagoparkdistrict.legistar.com/'
-                'View.ashx?M=A&ID=521450&GUID=4D888BE3-BD28-'
-                '4F58-AEE3-76627090F26D'
-            ),
-            'note': 'Agenda'
+            'href':
+                'https://chicagoparkdistrict.legistar.com/View.ashx?M=A&ID=521450&GUID=4D888BE3-BD28-4F58-AEE3-76627090F26D',  # noqa
+            'title': 'Agenda'
         },
     ]
-    assert parsed_items[2]['documents'] == EXPECTED_DOCUMENTS
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
-
-
-def test_sources():
-    EXPECTED_SOURCES = [{
-        'note': '',
-        'url': 'https://chicagoparkdistrict.legistar.com/Calendar.aspx'
-    }]
-    assert parsed_items[0]['sources'] == EXPECTED_SOURCES
+def test_source():
+    assert parsed_items[0]['source'] == 'https://chicagoparkdistrict.legistar.com/Calendar.aspx'

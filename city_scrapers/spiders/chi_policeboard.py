@@ -1,71 +1,52 @@
-# -*- coding: utf-8 -*-
-"""
-All spiders should yield data shaped according to the Open Civic Data
-specification (http://docs.opencivicdata.org/en/latest/data/event.html).
-"""
-
 import re
 from datetime import datetime
 
-from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import BOARD
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class ChiPoliceBoardSpider(Spider):
+class ChiPoliceBoardSpider(CityScrapersSpider):
     name = 'chi_policeboard'
     timezone = 'America/Chicago'
-    agency_name = 'Chicago Police Board'
+    agency = 'Chicago Police Board'
     allowed_domains = ['www.cityofchicago.org']
     start_urls = ['http://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html']
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        data = {
-            '_type': 'event',
-            'name': 'Board of Directors',
-            'event_description': self._parse_description(response),
-            'classification': BOARD,
-            'end': {
-                'date': None,
-                'time': None,
-                'note': ''
-            },
-            'all_day': False,
-            'location': self._parse_location(response),
-            'sources': [{
-                'url': response.url,
-                'note': ''
-            }],
-        }
         year = self._parse_year(response)
+        location = self._parse_location(response)
         start_time = self._parse_start_time(response)
 
         for item in response.xpath('//p[contains(@style,"padding-left")]'):
             start_date = self._parse_start_date(item, year)
-            new_item = {
-                'start': {
-                    'date': start_date,
-                    'time': start_time,
-                    'note': '',
-                },
-                'documents': self._parse_documents(item, response),
-            }
-            new_item.update(data)
-            new_item['id'] = self._generate_id(new_item)
-            new_item['status'] = self._generate_status(new_item)
-            yield new_item
+            meeting = Meeting(
+                title='Board of Directors',
+                description='',
+                classification=BOARD,
+                start=datetime.combine(start_date, start_time),
+                end=None,
+                time_notes='',
+                all_day=False,
+                location=location,
+                links=self._parse_links(item, response),
+                source=response.url,
+            )
+            meeting['id'] = self._get_id(meeting)
+            meeting['status'] = self._get_status(meeting)
+            yield meeting
 
-    def _parse_documents(self, item, response):
+    def _parse_links(self, item, response):
         anchors = item.xpath('a')
         return [{
-            'url': response.urljoin(link.xpath('@href').extract_first('')),
-            'note': link.xpath('text()').extract_first('')
+            'href': response.urljoin(link.xpath('@href').extract_first('')),
+            'title': link.xpath('text()').extract_first('')
         } for link in anchors]
 
     def _parse_location(self, response):
@@ -73,12 +54,12 @@ class ChiPoliceBoardSpider(Spider):
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
-        bold_text = ' '.join(response.xpath("//strong/text()").extract())
-        location_name = bold_text.split('take place at')[-1].split('.')[0].strip()
+        loc_text = ' '.join(response.xpath("//strong/text()").extract())
+        if '3510 South' not in loc_text:
+            raise ValueError('Meeting location has changed')
         return {
-            'address': location_name,
-            'name': None,
-            'neighborhood': '',
+            'address': '3510 S Michigan Ave, Chicago IL 60653',
+            'name': 'Chicago Public Safety Headquarters',
         }
 
     def _parse_start_time(self, response):
@@ -91,19 +72,6 @@ class ChiPoliceBoardSpider(Spider):
             cleaned_time = match.group(1).replace(' ', '').replace('.', '').upper()
             return datetime.strptime(cleaned_time, '%I:%M%p').time()
         return None
-
-    def _parse_description(self, response):
-        """
-        Parse or generate event name.
-        """
-        all_text = response.xpath(
-            "normalize-space(//div[@class='container-fluid page-full-description'])"
-        ).extract_first()
-
-        intro, meetings = all_text.split('Regular Meetings')
-
-        # Strip 5 characters ("2017 ") off end.
-        return intro[:-5].strip()
 
     def _parse_start_date(self, item, year):
         """

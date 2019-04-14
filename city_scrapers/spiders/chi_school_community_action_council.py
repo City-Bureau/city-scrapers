@@ -1,24 +1,23 @@
-# -*- coding: utf-8 -*-
 import re
-from datetime import datetime, time, timedelta
+from datetime import datetime, time
 
-from city_scrapers.constants import COMMITTEE
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import COMMITTEE
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class ChiSchoolCommunityActionCouncilSpider(Spider):
+class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
     name = 'chi_school_community_action_council'
-    agency_name = 'Chicago Public Schools'
+    agency = 'Chicago Public Schools'
     timezone = 'America/Chicago'
     allowed_domains = ['cps.edu']
     start_urls = ['http://cps.edu/FACE/Pages/CAC.aspx']
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         # Sets month counter to the current month, passed to parse_start
@@ -36,22 +35,25 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
                             continue
                     except Exception:
                         pass
-                    data = {
-                        '_type': 'event',
-                        'name': self._parse_name(item),
-                        'event_description': '',
-                        'classification': COMMITTEE,
-                        'start': self._parse_start(item, month_counter),
-                        'all_day': False,
-                        'location': self._parse_location(item),
-                        'sources': self._parse_sources(response, item),
-                        'documents': [],
-                    }
+                    start = self._parse_start(item, month_counter)
+                    if not start:
+                        continue
+                    meeting = Meeting(
+                        title=self._parse_title(item),
+                        description='',
+                        classification=COMMITTEE,
+                        start=start,
+                        end=None,
+                        time_notes='',
+                        all_day=False,
+                        location=self._parse_location(item),
+                        links=[],
+                        source=self._parse_source(response, item),
+                    )
 
-                    data['id'] = self._generate_id(data)
-                    data['status'] = self._generate_status(data)
-                    data['end'] = self._parse_end(data['start'])
-                    yield data
+                    meeting['id'] = self._get_id(meeting)
+                    meeting['status'] = self._get_status(meeting)
+                    yield meeting
             month_counter += 1
 
     def _parse_community_area(self, item):
@@ -65,10 +67,8 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         if len(community_name) > 0:
             return community_name[0]
 
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
+    def _parse_title(self, item):
+        """Parse or generate event title."""
         CAC_NAME = 'Community Action Council'
         community_area = self._parse_community_area(item)
         if community_area:
@@ -140,25 +140,7 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         week_count = source[0].strip()[0]
         if week_count.isdigit():
             meeting_date = self.count_days(day, week_count, month_counter)
-            return {'date': meeting_date.date(), 'time': self.parse_time(source), 'note': ''}
-        return {'date': None, 'time': None, 'note': ''}
-
-    def _parse_end(self, start):
-        """
-        Estimates the end time by adding 3 hours to the start time.
-        """
-        try:
-            start_datetime = datetime.combine(start['date'], start['time'])
-        except TypeError:
-            # start date or time is None
-            return {'date': start['date'], 'time': None, 'note': 'No start or end time available'}
-        else:
-            end_datetime = start_datetime + timedelta(hours=3)
-            return {
-                'date': end_datetime.date(),
-                'time': end_datetime.time(),
-                'note': 'Estimated 3 hours after the start time'
-            }
+            return datetime.combine(meeting_date.date(), self.parse_time(source))
 
     def _parse_location(self, item):
         """
@@ -170,20 +152,15 @@ class ChiSchoolCommunityActionCouncilSpider(Spider):
         return {
             'name': source[source.find('at') + 2:source.find('(')].replace('the', '').strip(),
             'address': '{} Chicago, IL'.format(address),
-            'neighborhood': self._parse_community_area(item)
         }
 
-    def _parse_sources(self, response, item):
+    def _parse_source(self, response, item):
         """
         Parse the sources:
         * CAC Meetings Website
         * Neighborhood Website (if available)
         """
-        sources = [{
-            'url': response.url,
-            'note': 'CAC Meetings Website',
-        }]
         neighborhood_url = item.css('li').css('strong').css('a::attr(href)').extract_first()
         if neighborhood_url:
-            sources.append({'url': neighborhood_url, 'note': "Neighborhood's Website"})
-        return sources
+            return neighborhood_url
+        return response.url

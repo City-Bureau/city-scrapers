@@ -1,48 +1,40 @@
-# -*- coding: utf-8 -*-
 import dateutil.parser
+from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.constants import COMMISSION
-from city_scrapers.spider import Spider
 
-
-class ChiSsa21Spider(Spider):
-
+class ChiSsa21Spider(CityScrapersSpider):
     name = 'chi_ssa_21'
-    agency_name = 'Chicago Special Service Area #21 Lincoln Square Ravenswood'
+    agency = 'Chicago Special Service Area #21 Lincoln Square Ravenswood'
     timezone = 'America/Chicago'
     allowed_domains = ['www.lincolnsquare.org']
     start_urls = ['http://www.lincolnsquare.org/SSA-no-21-Commission-meetings']
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         for item in response.xpath('//div[@id="content-327081"]/p'):
+            meeting = Meeting(
+                title='Lincoln Square Neighborhood Improvement Program',
+                description=self._parse_description(item),
+                classification=COMMISSION,
+                start=self._parse_start(item),
+                end=None,
+                time_notes='Estimated 2 hour duration',
+                all_day=False,
+                location=self._parse_location(item),
+                links=self._parse_links(item),
+                source=response.url,
+            )
 
-            data = {
-                '_type': 'event',
-                'name': 'Lincoln Square Neighborhood Improvement Program',
-                'event_description': self._parse_description(item),
-                'classification': COMMISSION,
-                'start': self._parse_start(item),
-                'end': self._parse_end(item),
-                'all_day': False,
-                'location': self._parse_location(item),
-                'documents': self._parse_documents(item),
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }],
-            }
-
-            data['status'] = self._generate_status(data, text='')
-            data['id'] = self._generate_id(data)
-
-            yield data
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _parse_description(self, item):
         """
@@ -52,8 +44,8 @@ class ChiSsa21Spider(Spider):
 
         # The itinerary of the meeting is always stored in the <ul>
         # element immediately following
-        detailElement = item.xpath('following-sibling::*[1]')
-        name = detailElement.xpath('name()').extract_first()
+        detail_el = item.xpath('following-sibling::*[1]')
+        name = detail_el.xpath('name()').extract_first()
 
         if (name == 'ul'):
             topics = list(
@@ -70,87 +62,63 @@ class ChiSsa21Spider(Spider):
                             ]
                         )
                     ),
-                    detailElement.xpath('li')
+                    detail_el.xpath('li')
                 )
             )
-
             description = '\n'.join(topics)
-
         return description
 
     def _parse_start(self, item):
-        """
-        Parse start date and time.
-        """
-        startTime = self._parse_date(item)
-        startTime = startTime.replace(hour=9, minute=0)
-
-        ret = {'date': startTime.date(), 'time': startTime.time(), 'note': None}
-
-        return ret
+        """Parse start datetime."""
+        start = self._parse_date(item)
+        return start.replace(hour=9, minute=0)
 
     def _parse_end(self, item):
-        """
-        Parse end date and time.
-        """
-        endTime = self._parse_date(item)
-        endTime = endTime.replace(hour=11, minute=0)
-
-        ret = {
-            'date': endTime.date(),
-            'time': endTime.time(),
-            'note': 'estimated 2 hours after start time'
-        }
-
-        return ret
+        """Parse end datetime."""
+        end = self._parse_date(item)
+        return end.replace(hour=11, minute=0)
 
     def _parse_date(self, item):
-        rawDate = item.xpath('strong/text()').extract_first()
-        return dateutil.parser.parse(rawDate)
+        raw_date = item.xpath('strong/text()').extract_first()
+        return dateutil.parser.parse(raw_date)
 
     def _parse_location(self, item):
         """
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
         """
-
-        defaultLocation = 'Bistro Campagne, 4518 N. Lincoln Avenue'
+        default_loc = 'Bistro Campagne, 4518 N. Lincoln Avenue'
 
         # If location has changed, this is where it is noted
         location = ''.join(item.xpath('em//text()').extract()).strip()
 
         if not location:
-            location = defaultLocation
+            location = default_loc
 
         # Extract name of location if possible
-
-        splitLocation = location.split(',')
-
+        split_loc = location.split(',')
         address = ''
-        if len(splitLocation) == 2:
-            address = splitLocation[1].strip()
-            name = splitLocation[0].strip()
+        if len(split_loc) == 2:
+            address = split_loc[1].strip()
+            name = split_loc[0].strip()
         else:
             address = location.strip()
             name = ''
 
         # Append 'Chicago, IL' if not already present
-
         if 'chicago' not in address.lower():
             address += ', Chicago, IL'
 
         return {
             'address': address,
             'name': name,
-            'neighborhood': '',
         }
 
-    def _parse_documents(self, item):
+    def _parse_links(self, item):
         """
         Parse or generate documents.
         """
         url = item.xpath('a/@href').extract_first()
-
         if url:
-            return [{'url': url, 'note': 'Minutes'}]
+            return [{'href': url, 'title': 'Minutes'}]
         return []

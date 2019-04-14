@@ -1,57 +1,54 @@
-# -*- coding: utf-8 -*-
 import itertools
 from datetime import datetime
 
-from city_scrapers.constants import FORUM
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import FORUM
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class ChiSchoolActionsSpider(Spider):
+class ChiSchoolActionsSpider(CityScrapersSpider):
     name = 'chi_school_actions'
-    agency_name = 'Chicago Public Schools'
+    agency = 'Chicago Public Schools'
     timezone = 'America/Chicago'
     allowed_domains = ['schoolinfo.cps.edu']
     start_urls = ['http://schoolinfo.cps.edu/SchoolActions/Documentation.aspx']
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         for school in response.css('#wrapper > table > tr'):
             school_name = school.css('td:first-child span::text').extract_first()
             school_action = school.css('td:nth-child(2) p > span::text').extract_first().strip()
-            school_docs = self._parse_documentation(school)
+            school_links = self._parse_links(school)
 
             for meeting_section in school.css('#main-body > table > tr > td > table > tr'):
                 meeting_type = self._parse_meeting_type(meeting_section, school_action)
-                for meeting in meeting_section.css('td > table'):
-                    start = self._parse_start(meeting)
-                    end = self._parse_end(meeting)
-                    item_name = self._parse_name(school_name, meeting_type)
-                    item = {
-                        '_type': 'event',
-                        'name': item_name,
-                        'all_day': False,
-                        'event_description': '',
-                        'classification': FORUM,
-                        'start': start,
-                        'end': end,
-                        'documents': school_docs,
-                        'location': self._parse_location(meeting),
-                        'sources': self._parse_sources(),
-                    }
-                    item['id'] = self._generate_id(item)
-                    item['status'] = self._generate_status(item)
-                    yield item
+                for item in meeting_section.css('td > table'):
+                    start = self._parse_start(item)
+                    end = self._parse_end(item)
+                    title = self._parse_title(school_name, meeting_type)
+                    meeting = Meeting(
+                        title=title,
+                        description='',
+                        classification=FORUM,
+                        start=start,
+                        end=end,
+                        time_notes='',
+                        all_day=False,
+                        location=self._parse_location(item),
+                        links=school_links,
+                        source=response.url,
+                    )
+                    meeting['id'] = self._get_id(meeting)
+                    meeting['status'] = self._get_status(meeting)
+                    yield meeting
 
-    def _parse_name(self, school_name, meeting_type):
-        """
-        Parse or generate event name.
-        """
+    def _parse_title(self, school_name, meeting_type):
+        """Parse or generate event title."""
         return 'School Actions: {} {}'.format(school_name, meeting_type)
 
     @staticmethod
@@ -91,8 +88,7 @@ class ChiSchoolActionsSpider(Spider):
         """
         date_str = self._parse_date_str(item)
         time = item.css('.time::text').extract_first()
-        dt = self._parse_datetime_str(date_str, time.split('-')[0])
-        return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+        return self._parse_datetime_str(date_str, time.split('-')[0])
 
     def _parse_end(self, item):
         """
@@ -102,10 +98,7 @@ class ChiSchoolActionsSpider(Spider):
         time = item.css('.time::text').extract_first()
         split_time = time.split('-')
         if len(split_time) > 1:
-            dt = self._parse_datetime_str(date_str, split_time[1])
-            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
-        else:
-            return self._parse_start(item)
+            return self._parse_datetime_str(date_str, split_time[1])
 
     @staticmethod
     def _parse_location(item):
@@ -117,17 +110,10 @@ class ChiSchoolActionsSpider(Spider):
         return {
             'name': item.css('.addr::text').extract_first(),
             'address': address + ' Chicago, IL',
-            'neighborhood': '',
         }
 
-    def _parse_sources(self):
-        """
-        Parse or generate sources.
-        """
-        return [{'url': self.start_urls[0], 'note': ''}]
-
     @staticmethod
-    def _parse_documentation(school):
+    def _parse_links(school):
         """
         Parsing the documentation and meeting note URLs
         """
@@ -137,8 +123,8 @@ class ChiSchoolActionsSpider(Spider):
 
         for item in itertools.chain(doc_link_items, note_link_items):
             doc_link_list.append({
-                'note': item.css('a::text').extract_first(),
-                'url':
+                'title': item.css('a::text').extract_first(),
+                'href':
                     'http://schoolinfo.cps.edu/SchoolActions/' +
                     item.css('a::attr(href)').extract_first(),
             })

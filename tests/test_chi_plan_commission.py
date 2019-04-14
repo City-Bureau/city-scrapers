@@ -1,6 +1,7 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import COMMISSION, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.chi_plan_commission import ChiPlanCommissionSpider
@@ -10,7 +11,7 @@ test_response = file_response(
     'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html'
 )
 spider = ChiPlanCommissionSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
 def test_meeting_count():
@@ -22,34 +23,20 @@ def test_unique_id():
     assert len(set([item['id'] for item in parsed_items])) == 121
 
 
-def test__type():
-    assert parsed_items[0]['_type'] == 'event'
-
-
-def test_name():
-    assert parsed_items[0]['name'] == 'Chicago Plan Commission'
+def test_title():
+    assert parsed_items[0]['title'] == 'Chicago Plan Commission'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == \
-           "The Chicago Plan Commission is responsible for the review of proposals that " \
-           "involve Planned Developments (PDs), the Lakefront Protection Ordinance, Planned " \
-           "Manufacturing Districts (PMDs), Industrial Corridors and Tax Increment Financing " \
-           "(TIF) Districts. It also reviews proposed sales and acquisitions of public land " \
-           "as well as certain long-range community plans. Established in 1909, the " \
-           "commission has 22 members, including mayoral appointees made with City " \
-           "Council consent. Staff services are provided by the Planning and Zoning Division " \
-           "of the Department of Planning and Development (DPD). Meetings are held on " \
-           "the third Thursday of every month, usually at City Hall, 121 N. LaSalle St., " \
-           "in City Council chambers."
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 1, 18), 'time': time(10, 0), 'note': ''}
+    assert parsed_items[0]['start'] == datetime(2018, 1, 18, 10)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': date(2018, 1, 18), 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -57,45 +44,42 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'neighborhood': '',
         'name': 'City Hall',
         'address': '121 N LaSalle St Chicago, IL 60602'
     }
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url':
-            'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html',  # noqa
-        'note': ''
-    }]
+def test_source():
+    assert parsed_items[0][
+        'source'
+    ] == 'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html'  # noqa
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == [
+def test_links():
+    assert parsed_items[0]['links'] == [
         {
-            'url':
+            'href':
                 'https://www.cityofchicago.org/content/dam/city/depts/zlup/Planning_and_Policy/Minutes/CPC_Jan_2018_Minutes.pdf',  # noqa
-            'note': 'Minutes'
+            'title': 'Minutes'
         },
         {
-            'url':
+            'href':
                 'https://www.cityofchicago.org/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Jan_2018_Map_rev.pdf',  # noqa
-            'note': 'Map'
+            'title': 'Map'
         }
     ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
-    assert item['all_day'] is True
+    assert item['all_day'] is False
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Commission'
+    assert item['classification'] == COMMISSION

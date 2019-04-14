@@ -1,74 +1,76 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import COMMISSION, CONFIRMED, PASSED
 from city_scrapers.spiders.chi_ssa_42 import ChiSsa42Spider
 
 freezer = freeze_time('2018-11-07')
 freezer.start()
 spider = ChiSsa42Spider()
-res = file_response('files/chi_ssa_42.html')
-minutes_res = file_response('files/chi_ssa_42_minutes.html')
-parsed_items = [item for item in spider._parse_items(res, upcoming=True)
-                ] + [item for item in spider._parse_items(minutes_res)]
+res = file_response('files/chi_ssa_42.html', url='https://ssa42.org/ssa-42-meeting-dates/')
+minutes_res = file_response(
+    'files/chi_ssa_42_minutes.html', url='https://ssa42.org/minutes-of-meetings/'
+)
+parsed_items = [item for item in spider._parse_meetings(res, upcoming=True)
+                ] + [item for item in spider._parse_meetings(minutes_res)]
 freezer.stop()
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 11, 8), 'time': time(18, 30), 'note': ''}
-    assert parsed_items[1]['start'] == {
-        'date': date(2018, 9, 20),
-        'time': time(18, 30),
-        'note': '',
-    }
+    assert parsed_items[0]['start'] == datetime(2018, 11, 8, 18, 30)
+    assert parsed_items[1]['start'] == datetime(2018, 9, 20, 18, 30)
 
 
 def test_id():
-    assert parsed_items[0]['id'] == ('chi_ssa_42/201811081830/x/ssa_42_commission')
+    assert parsed_items[0]['id'] == 'chi_ssa_42/201811081830/x/ssa_42_commission'
 
 
 def test_status():
-    assert parsed_items[0]['status'] == CONFIRMED
+    assert parsed_items[0]['status'] == TENTATIVE
     assert parsed_items[-1]['status'] == PASSED
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
-    assert parsed_items[1]['documents'] == [
+def test_links():
+    assert parsed_items[0]['links'] == []
+    assert parsed_items[1]['links'] == [
         {
-            'url': (
+            'href': (
                 'https://ssa42.org/wp-content/uploads/sites/6/2018/'
                 '09/SSAMeetingAgendaSeptember202018.pdf'
             ),
-            'note': 'Agenda'
+            'title': 'Agenda'
         },
         {
-            'url': (
+            'href': (
                 'https://ssa42.org/wp-content/uploads/sites/6/2018/'
                 '11/SSAMEETINGMINUTES_Sep202018.pdf'
             ),
-            'note': 'Minutes'
-        }
+            'title': 'Minutes'
+        },
     ]
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'SSA #42 Commission'
-    assert parsed_items[4]['name'] == 'SSA #42 Commission - Closed Meeting'
+def test_title():
+    assert parsed_items[0]['title'] == 'SSA #42 Commission'
+    assert parsed_items[4]['title'] == 'SSA #42 Commission - Closed Meeting'
+
+
+def test_source():
+    assert parsed_items[0]['source'] == 'https://ssa42.org/ssa-42-meeting-dates/'
+    assert parsed_items[-1]['source'] == 'https://ssa42.org/minutes-of-meetings/'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['event_description'] == ''
+    assert item['description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end(item):
-    assert item['end']['date'] == item['start']['date']
-    assert item['end']['time'] is None
+    assert item['end'] is None
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -78,20 +80,9 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
-    spider = ChiSsa42Spider()
     assert item['location'] == spider.location
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
     assert item['classification'] == COMMISSION
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_sources(item):
-    assert len(item['sources']) == 1
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
