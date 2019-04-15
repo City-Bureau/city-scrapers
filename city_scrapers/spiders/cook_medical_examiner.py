@@ -1,10 +1,9 @@
 import datetime
 import re
 
+from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-
-from city_scrapers.constants import ADVISORY_COMMITTEE
 
 
 class CookMedicalExaminerSpider(CityScrapersSpider):

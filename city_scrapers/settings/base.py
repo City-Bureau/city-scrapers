@@ -32,7 +32,6 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 4.0
 
 # Configure item pipelines
 ITEM_PIPELINES = {
-    "city_scrapers.pipelines.MigrationPipeline": 200,
     "city_scrapers_core.pipelines.MeetingPipeline": 300,
     # "city_scrapers_core.pipelines.ValidationPipeline": 400,
 }

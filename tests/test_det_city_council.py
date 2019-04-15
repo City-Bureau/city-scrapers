@@ -1,10 +1,10 @@
 from datetime import datetime
 
 import pytest  # noqa
+from city_scrapers_core.constants import COMMITTEE, TENTATIVE
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.constants import COMMITTEE, TENTATIVE
 from city_scrapers.spiders.det_city_council import DetCityCouncilSpider
 
 freezer = freeze_time('2019-02-22')
