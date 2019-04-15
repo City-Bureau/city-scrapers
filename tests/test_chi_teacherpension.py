@@ -63,16 +63,13 @@ def test_links():
         'title': 'Agenda',
         'href': 'http://www.boarddocs.com/il/ctpf/Board.nsf/goto?open&id=B55S995DF24B'
     }]
-    assert parsed_items[20]['links'] == [
-        {
-            'title': 'Agenda',
-            'href': 'http://www.boarddocs.com/il/ctpf/Board.nsf/goto?open&id=B9ATEK5665BC'
-        },
-        {
-            'href': 'https://www.ctpf.org/sites/main/files/file-attachments/2019_february_2.pdf',
-            'title': 'Minutes'
-        }
-    ]
+    assert parsed_items[20]['links'] == [{
+        'title': 'Agenda',
+        'href': 'http://www.boarddocs.com/il/ctpf/Board.nsf/goto?open&id=B9ATEK5665BC'
+    }, {
+        'href': 'https://www.ctpf.org/sites/main/files/file-attachments/2019_february_2.pdf',
+        'title': 'Minutes'
+    }]
 
 
 @pytest.mark.parametrize('item', parsed_items)

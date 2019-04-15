@@ -1,5 +1,4 @@
 import re
-from datetime import datetime
 
 from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
@@ -15,7 +14,7 @@ class DetGreatLakesWaterAuthoritySpider(LegistarSpider):
 
     def parse_legistar(self, events):
         for event, _ in events:
-            start = self._parse_start(event)
+            start = self.legistar_start(event)
             meeting = Meeting(
                 title=event['Name'],
                 description='',
@@ -26,23 +25,12 @@ class DetGreatLakesWaterAuthoritySpider(LegistarSpider):
                 all_day=False,
                 location=self._parse_location(event),
                 links=self.legistar_links(event),
-                source=self._parse_source(event),
+                source=self.legistar_source(event),
             )
 
             meeting['status'] = self._get_status(meeting, text=event['Meeting Time'])
             meeting['id'] = self._get_id(meeting)
             yield meeting
-
-    def _parse_start(self, event):
-        start_date = event.get("Meeting Date")
-        start_time = event.get("Meeting Time")
-        if start_date and start_time:
-            if 'cancel' in start_time.lower():
-                return datetime.strptime(start_date, '%m/%d/%Y')
-            else:
-                return datetime.strptime(
-                    '{} {}'.format(start_date, start_time), '%m/%d/%Y %I:%M %p'
-                )
 
     def _parse_classification(self, name):
         if 'board' in name.lower():
@@ -71,10 +59,3 @@ class DetGreatLakesWaterAuthoritySpider(LegistarSpider):
             'name': '',
             'address': address,
         }
-
-    def _parse_source(self, item):
-        """Parse source from meeting details if available"""
-        default_source = "{}/Calendar.aspx".format(self.base_url)
-        if isinstance(item.get("Meeting Details"), dict):
-            return item["Meeting Details"].get("url", default_source)
-        return default_source
