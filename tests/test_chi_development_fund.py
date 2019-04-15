@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import pytest
-from city_scrapers_core.constants import PASSED
+from city_scrapers_core.constants import COMMISSION, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.chi_development_fund import ChiDevelopmentFundSpider
@@ -66,9 +66,9 @@ def test_sources():
 
 def test_links():
     assert parsed_items[0]['links'] == [{
-        'url':
+        'href':
             'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDF_Advisor_Board_Agenda_April_2018.pdf',  # noqa
-        'note': 'Agenda'
+        'title': 'Agenda'
     }]
     assert parsed_items[-1]['links'] == []
 
@@ -80,4 +80,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Commission'
+    assert item['classification'] == COMMISSION

@@ -27,7 +27,7 @@ class ChiParksSpider(LegistarSpider):
                 time_notes='Estimated 2 hour duration',
                 location=self._parse_location(event),
                 links=self.legistar_links(event),
-                source=self._parse_source(event),
+                source=self.legistar_source(event),
             )
             meeting['status'] = self._get_status(meeting, text=event['Meeting Location'])
             meeting['id'] = self._get_id(meeting)
@@ -56,13 +56,6 @@ class ChiParksSpider(LegistarSpider):
         if 'hearing' in item['Name'].lower():
             return FORUM
         return BOARD
-
-    def _parse_source(self, item):
-        """Parse source from meeting details if available"""
-        default_source = "{}/Calendar.aspx".format(self.base_url)
-        if isinstance(item.get("Meeting Details"), dict):
-            return item["Meeting Details"].get("url", default_source)
-        return default_source
 
     @staticmethod
     def clean_html(html):

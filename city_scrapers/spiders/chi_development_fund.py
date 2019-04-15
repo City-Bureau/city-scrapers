@@ -93,7 +93,7 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
         documents = item.xpath(anchor_xpath)
         if len(documents) >= 0:
             return [{
-                'url': response.urljoin(document.xpath('@href').extract_first()),
-                'note': document.xpath('text()').extract_first()
+                'href': response.urljoin(document.xpath('@href').extract_first()),
+                'title': document.xpath('text()').extract_first()
             } for document in documents]
         return []
