@@ -1,62 +1,45 @@
-# -*- coding: utf-8 -*-
-
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.parser import parse
 
-from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
-from city_scrapers.spider import Spider
 
-
-class DetRegionalTransitAuthoritySpider(Spider):
+class DetRegionalTransitAuthoritySpider(CityScrapersSpider):
     name = 'det_regional_transit_authority'
-    agency_name = 'Regional Transit Authority of Southeast Michigan'
+    agency = 'Regional Transit Authority of Southeast Michigan'
     timezone = 'America/Detroit'
     allowed_domains = ['www.rtamichigan.org']
     start_urls = ['http://www.rtamichigan.org/board-and-committee-meetings/']
+    location = {
+        'name': 'RTA Office',
+        'address': '1001 Woodward Ave, Suite 1400, Detroit, MI 48226',
+    }
 
     def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
-
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
-        location = {
-            'neighborhood': '',
-            'name': 'RTA Office',
-            'address': '1001 Woodward Avenue, Suite 1400, Detroit, MI 48226'
-        }
         for item in self._parse_meetings(response):
-            name = item.xpath('text()').extract_first('')
+            title = item.xpath('text()').extract_first('')
             table_rows_excluding_header = item.xpath('following::table[1]//tr[position() > 1]')
             for row in table_rows_excluding_header:
                 start = self._parse_start(row)
                 # Skip meetings that are still TBD re: date
-                if start['date'] is None:
+                if start is None:
                     continue
-                data = {
-                    '_type': 'event',
-                    'name': name,
-                    'event_description': '',
-                    'classification': self._parse_classification(name),
-                    'start': start,
-                    'end': {
-                        'date': None,
-                        'time': None,
-                        'note': ''
-                    },
-                    'all_day': False,
-                    'location': location,
-                    'documents': self._parse_documents(row),
-                    'sources': [{
-                        'url': response.url,
-                        'note': ''
-                    }]
-                }
+                meeting = Meeting(
+                    title=title,
+                    description='',
+                    classification=self._parse_classification(title),
+                    start=start,
+                    end=None,
+                    time_notes='',
+                    all_day=False,
+                    location=self.location,
+                    links=self._parse_links(row),
+                    source=response.url,
+                )
                 alert = ' '.join(row.xpath('td[3]//text()').extract())
-                data['status'] = self._generate_status(data, text=alert)
-                data['id'] = self._generate_id(data)
-                yield data
+                meeting['status'] = self._get_status(meeting, text=alert)
+                meeting['id'] = self._get_id(meeting)
+                yield meeting
 
     @staticmethod
     def _parse_meetings(response):
@@ -94,22 +77,18 @@ class DetRegionalTransitAuthoritySpider(Spider):
         """
         Parse start date and time.
         """
-        date = row.xpath('td[1]/text()').extract_first('')
-        time = row.xpath('td[2]/text()').extract_first('')
-        date_str = "{} {}".format(date, time)
+        date_str = row.xpath('td[1]/text()').extract_first('')
+        time_str = row.xpath('td[2]/text()').extract_first('')
         try:
-            dt = parse(date_str)
-            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+            return parse("{} {}".format(date_str, time_str))
         except ValueError:
-            return {'date': None, 'time': None, 'note': date_str}
+            pass
 
     @staticmethod
-    def _parse_documents(item):
-        """
-        Parse or generate documents.
-        """
+    def _parse_links(item):
+        """Parse or generate links."""
         anchors = item.xpath('.//a')
         return [{
-            'url': anchor.xpath('@href').extract_first(''),
-            'note': anchor.xpath('.//text()').extract_first('')
+            'href': anchor.xpath('@href').extract_first(''),
+            'title': anchor.xpath('.//text()').extract_first('')
         } for anchor in anchors]

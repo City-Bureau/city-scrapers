@@ -1,20 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-All spiders should yield data shaped according to the Open Civic Data
-specification (http://docs.opencivicdata.org/en/latest/data/event.html).
-"""
-
-from datetime import timedelta
-
+from city_scrapers_core.constants import BOARD
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.parser import parse
 
-from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
 
-
-class IlLaborSpider(Spider):
+class IlLaborSpider(CityScrapersSpider):
     name = 'il_labor'
-    agency_name = 'Illinois Labor Relations Board'
+    agency = 'Illinois Labor Relations Board'
     allowed_domains = ['www2.illinois.gov']
     start_urls = ['https://www2.illinois.gov/ilrb/meetings/Pages/default.aspx']
     event_timezone = 'America/Chicago'
@@ -24,14 +16,6 @@ class IlLaborSpider(Spider):
     """
 
     def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
-
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
-
         for item in response.css('.soi-article-content .container > .row > p'):
             """
             Some monthly meetings are skipped. Instead of providing a date,
@@ -39,33 +23,25 @@ class IlLaborSpider(Spider):
             If the date/time info can't be parsed, assume that it is a `no meeting`
             notice.
             """
-            start_datetime = self._parse_start(item)
-            if start_datetime is None:
+            start = self._parse_start(item)
+            if start is None:
                 continue
-
-            name = self._parse_name(item)
-            data = {
-                '_type': 'event',
-                'name': name,
-                'event_description': self._parse_description(response),
-                'classification': BOARD,
-                'start': {
-                    'date': start_datetime.date(),
-                    'time': start_datetime.time()
-                },
-                'end': {
-                    'date': start_datetime.date(),
-                    'time': (start_datetime + timedelta(hours=3)).time()
-                },
-                'all_day': False,
-                'timezone': self.event_timezone,
-                'location': self._parse_location(item),
-                'sources': self._parse_sources(response),
-                'documents': self._parse_documents(item),
-            }
-            data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data)
-            yield data
+            title = self._parse_title(item)
+            meeting = Meeting(
+                title=title,
+                description=self._parse_description(response),
+                classification=BOARD,
+                start=start,
+                end=None,
+                time_notes='',
+                all_day=False,
+                location=self._parse_location(item),
+                links=self._parse_links(item, response),
+                source=response.url,
+            )
+            meeting['id'] = self._get_id(meeting)
+            meeting['status'] = self._get_status(meeting)
+            yield meeting
 
     def _parse_location(self, item):
         """
@@ -82,11 +58,11 @@ class IlLaborSpider(Spider):
             for addr in address_list.extract()
             if 'chicago' in addr.lower()
         ]
-        return {'url': '', 'address': chi_address_list[0], 'name': ''}
+        return {'address': chi_address_list[0], 'name': ''}
 
-    def _parse_name(self, item):
+    def _parse_title(self, item):
         """
-        Get event name from the first `<strong>`.
+        Get meeting title from the first `<strong>`.
         """
         name = item.css('a::text').extract_first()
         if name:
@@ -112,14 +88,8 @@ class IlLaborSpider(Spider):
         except ValueError:
             return None
 
-    def _parse_documents(self, item):
+    def _parse_links(self, item, response):
         href = item.css('a::attr(href)').extract_first()
         if href:
-            return [{'url': 'https://{}{}'.format(self.allowed_domains[0], href), 'note': 'Agenda'}]
+            return [{'href': response.urljoin(href), 'title': 'Agenda'}]
         return []
-
-    def _parse_sources(self, response):
-        """
-        Parse sources.
-        """
-        return [{'url': response.url, 'note': ''}]

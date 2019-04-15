@@ -1,7 +1,8 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
 import scrapy
+from city_scrapers_core.constants import BOARD, PASSED, TENTATIVE
 from freezegun import freeze_time
 from tests.utils import file_response
 
@@ -10,21 +11,20 @@ from city_scrapers.spiders.det_next_michigan_development_corporation import (
 )
 
 LOCATION = {
-    'neighborhood': '',
     'name': 'DEGC, Guardian Building',
-    'address': '500 Griswold, Suite 2200, Detroit'
+    'address': '500 Griswold St, Suite 2200, Detroit, MI 48226'
 }
 
-NAME = 'Board of Directors'
+TITLE = 'Board of Directors'
 
 test_response = file_response(
     'files/det_next_michigan_development_corporation.html',
-    'http://www.degc.org/public-authorities/d-nmdc/'
+    url='http://www.degc.org/public-authorities/d-nmdc/'
 )
 freezer = freeze_time('2018-07-26 12:00:01')
 spider = DetNextMichiganDevelopmentCorporationSpider()
 freezer.start()
-parsed_items = [item for item in spider._next_meeting(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider._next_meeting(test_response)]
 freezer.stop()
 
 
@@ -36,25 +36,25 @@ def test_initial_request_count():
         'http://www.degc.org/public-authorities/d-nmdc/fy-2017-2018-meetings/',
         'http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings/'
     }
-    items = [i for i in items if isinstance(i, dict)]
+    items = [i for i in items if not isinstance(i, scrapy.Request)]
     assert len(items) == 2
 
 
 # current meeting http://www.degc.org/public-authorities/ldfa/
-def test_name():
-    assert parsed_items[0]['name'] == NAME
+def test_title():
+    assert parsed_items[0]['title'] == TITLE
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 9, 11), 'time': time(9, 00), 'note': ''}
+    assert parsed_items[0]['start'] == datetime(2018, 9, 11, 9)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -63,7 +63,7 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'tentative'
+    assert parsed_items[0]['status'] == TENTATIVE
 
 
 def test_location():
@@ -71,14 +71,11 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'http://www.degc.org/public-authorities/d-nmdc/',
-        'note': ''
-    }]
+    assert parsed_items[0]['source'] == 'http://www.degc.org/public-authorities/d-nmdc/'
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
+def test_links():
+    assert parsed_items[0]['links'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -88,23 +85,16 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
+    assert item['classification'] == BOARD
 
 
 # # previous meetings e.g. http://www.degc.org/public-authorities/ldfa/fy-2017-2018-meetings/
 test_prev_response = file_response(
     'files/det_next_michigan_development_corporation_prev.html',
-    'http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings'
+    url='http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings'
 )
-parsed_prev_items = [
-    item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, dict)
-]
-parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start']['date'], reverse=True)
+parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response)]
+parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start'], reverse=True)
 
 
 def test_request_count():
@@ -122,48 +112,46 @@ def test_prev_meeting_count():
     assert len(parsed_prev_items) == 2
 
 
-def test_prev_name():
-    assert parsed_prev_items[0]['name'] == NAME
+def test_prev_title():
+    assert parsed_prev_items[0]['title'] == TITLE
 
 
 def test_prev_description():
-    assert parsed_prev_items[0]['event_description'] == ''
+    assert parsed_prev_items[0]['description'] == ''
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == {'date': date(2017, 8, 8), 'time': None, 'note': ''}
+    assert parsed_prev_items[0]['start'] == datetime(2017, 8, 8)
 
 
 def test_prev_end():
-    assert parsed_prev_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
+    assert parsed_prev_items[0]['end'] is None
 
 
 def test_prev_id():
-    assert parsed_prev_items[0]['id'] \
-           == 'det_next_michigan_development_corporation/201708080000/x/board_of_directors'
+    assert parsed_prev_items[0][
+        'id'] == 'det_next_michigan_development_corporation/201708080000/x/board_of_directors'
 
 
 def test_prev_status():
-    assert parsed_prev_items[0]['status'] == 'passed'
+    assert parsed_prev_items[0]['status'] == PASSED
 
 
 def test_prev_location():
     assert parsed_prev_items[0]['location'] == LOCATION
 
 
-def test_prev_sources():
-    assert parsed_prev_items[0]['sources'] == [{
-        'url': 'http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings',
-        'note': ''
-    }]
+def test_prev_source():
+    assert parsed_prev_items[0][
+        'source'] == 'http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings'
 
 
-def test_prev_documents():
-    assert parsed_prev_items[0]['documents'] == [
+def test_prev_links():
+    assert parsed_prev_items[0]['links'] == [
         {
-            'url':
+            'href':
                 'http://www.degc.org/wp-content/uploads/2016-08-09-DNMDC-Special-Board-Meeting-Agenda-4-1.pdf',  # noqa
-            'note': 'agenda',
+            'title': 'Agenda',
         },
     ]
 
@@ -175,9 +163,4 @@ def test_prev_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_prev_items)
 def test_prev_classification(item):
-    assert item['classification'] == 'Board'
-
-
-@pytest.mark.parametrize('item', parsed_prev_items)
-def test_prev__type(item):
-    assert item['_type'] == 'event'
+    assert item['classification'] == BOARD

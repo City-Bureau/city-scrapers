@@ -1,18 +1,20 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 from tests.utils import file_response
 
-from city_scrapers.constants import BOARD
 from city_scrapers.spiders.il_metra_board import IlMetraBoardSpider
 
-test_response = file_response('files/il_metra_board.html')
+test_response = file_response(
+    'files/il_metra_board.html', url='https://metrarr.granicus.com/ViewPublisher.php?view_id=5'
+)
 spider = IlMetraBoardSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Metra February 2018 Board Meeting'
+def test_title():
+    assert parsed_items[0]['title'] == 'Metra February 2018 Board Meeting'
 
 
 def test_classification():
@@ -20,20 +22,15 @@ def test_classification():
 
 
 def test_start():
-    EXPECTED_START = {'date': date(2018, 2, 21), 'time': time(10, 30), 'note': ''}
-    assert parsed_items[0]['start'] == EXPECTED_START
+    assert parsed_items[0]['start'] == datetime(2018, 2, 21, 10, 30)
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
-        'neighborhood': 'West Loop',
-        'name': '',
-        'address': '547 West Jackson Boulevard, Chicago, IL',
-    }
+    assert parsed_items[0]['location'] == spider.location
 
 
 def test_sources():
-    assert parsed_items[0]['sources'][0] == {'url': 'http://www.example.com', 'note': ''}
+    assert parsed_items[0]['source'] == 'https://metrarr.granicus.com/ViewPublisher.php?view_id=5'
 
 
 def test_id():
@@ -43,41 +40,36 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
-    assert parsed_items[12]['documents'] == [
+def test_links():
+    assert parsed_items[0]['links'] == []
+    assert parsed_items[12]['links'] == [
         {
-            'url': ('http://metrarr.granicus.com/AgendaViewer.php'
-                    '?view_id=5&clip_id=276'),
-            'note': 'Agenda',
+            'href': ('http://metrarr.granicus.com/AgendaViewer.php'
+                     '?view_id=5&clip_id=276'),
+            'title': 'Agenda',
         },
         {
-            'url': (
+            'href': (
                 'http://metrarr.granicus.com/MinutesViewer.php'
                 '?view_id=5&clip_id=276&doc_id='
                 '67620acc-fc9b-11e7-8dcb-00505691de41'
             ),
-            'note': 'Minutes',
+            'title': 'Minutes',
         },
         {
-            'url': ('http://metrarr.granicus.com/MediaPlayer.php'
-                    '?view_id=5&clip_id=276'),
-            'note': 'Video',
+            'href': ('http://metrarr.granicus.com/MediaPlayer.php'
+                     '?view_id=5&clip_id=276'),
+            'title': 'Video',
         },
     ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_type(item):
-    assert parsed_items[0]['_type'] == 'event'
-
-
-@pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['event_description'] == ''
+    assert item['description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -87,5 +79,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_end(item):
-    assert item['end']['date'] == item['start']['date']
-    assert item['end']['time'] is None
+    assert item['end'] is None

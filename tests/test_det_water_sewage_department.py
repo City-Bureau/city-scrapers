@@ -1,7 +1,8 @@
 import json
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 
 from city_scrapers.spiders.det_water_sewage_department import DetWaterSewageDepartmentSpider
 
@@ -9,27 +10,27 @@ test_response = []
 with open('tests/files/det_water_sewage_department.json', encoding='utf-8') as f:
     test_response.extend(json.loads(f.read()))
 spider = DetWaterSewageDepartmentSpider()
-parsed_items = [item for item in spider._parse_events(test_response)]
+parsed_items = [item for item in spider.parse_legistar(test_response)]
 
 
 def test_item_count():
     assert len(parsed_items) == 48
 
 
-def test_name():
-    assert parsed_items[3]['name'] == 'Board of Water Commissioners'
+def test_title():
+    assert parsed_items[3]['title'] == 'Board of Water Commissioners'
 
 
 def test_description():
-    assert parsed_items[3]['event_description'] == ''
+    assert parsed_items[3]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[3]['start'] == {'date': date(2018, 7, 18), 'time': time(14, 00), 'note': ''}
+    assert parsed_items[3]['start'] == datetime(2018, 7, 18, 14)
 
 
 def test_end():
-    assert parsed_items[3]['end'] == {'date': None, 'time': None, 'note': ''}
+    assert parsed_items[3]['end'] is None
 
 
 def test_id():
@@ -38,30 +39,28 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[3]['status'] == 'passed'
+    assert parsed_items[3]['status'] == PASSED
 
 
 def test_location():
     assert parsed_items[3]['location'] == {
-        'neighborhood': '',
         'name': 'Water Board Building',
         'address': '5th Floor Board Room 735 Randolph St Detroit, MI 48226'
     }
 
 
-def test_sources():
-    assert parsed_items[3]['sources'] == [{
-        'url': 'https://dwsd.legistar.com/Calendar.aspx',
-        'note': ''
-    }]
+def test_source():
+    assert parsed_items[3][
+        'source'
+    ] == 'https://dwsd.legistar.com/MeetingDetail.aspx?ID=612621&GUID=3F812456-D392-4F0F-B111-136AA94A96A3&Options=info&Search='  # noqa
 
 
-def test_documents():
-    assert parsed_items[3]['documents'] == [
+def test_links():
+    assert parsed_items[3]['links'] == [
         {
-            'url':
+            'href':
                 'https://dwsd.legistar.com/View.ashx?M=A&ID=612621&GUID=3F812456-D392-4F0F-B111-136AA94A96A3',  # noqa
-            'note': 'Agenda'
+            'title': 'Agenda'
         },
     ]
 
@@ -73,9 +72,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
+    assert item['classification'] == BOARD
