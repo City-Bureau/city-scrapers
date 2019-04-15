@@ -26,7 +26,8 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
         columns = self.parse_meetings(response)
         for column in columns:
             year = column.xpath('preceding::strong[1]/text()').re_first(r'(\d{4})(.*)')
-            meetings = column.xpath('text()[normalize-space()]').extract()
+            meetings = column.xpath('text()[normalize-space()]|p/text()[normalize-space()]'
+                                    ).extract()
             meetings = self.format_meetings(meetings)
             for meeting in meetings:
                 start = self._parse_start(meeting, year)
