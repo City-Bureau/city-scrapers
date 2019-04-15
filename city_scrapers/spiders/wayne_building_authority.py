@@ -1,20 +1,14 @@
-# -*- coding: utf-8 -*-
-
-# THIS SPIDER USES A MIXIN FOR SHARED FUNCTIONALITY.
-# MIXINS ARE STORED IN /city-scrapers/city-scrapers/mixins
-# YOU CAN OVERRIDE THE MIXIN HERE BY CREATING YOUR OWN DEFINITION.
-
 from datetime import datetime
 
+from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.parser import parse as dateparse
 
 from city_scrapers.mixins.wayne_commission import WayneCommissionMixin
-from city_scrapers.spider import Spider
 
 
-class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
+class WayneBuildingAuthoritySpider(WayneCommissionMixin, CityScrapersSpider):
     name = 'wayne_building_authority'
-    agency_name = 'Wayne County Government'
+    agency = 'Wayne County Government'
     start_urls = ['https://www.waynecounty.com/boards/buildingauthority/meetings.aspx']
     meeting_name = 'Building Authority'
 
@@ -22,7 +16,6 @@ class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
     location = {
         'name': '6th Floor, Guardian Building',
         'address': '500 Griswold St, Detroit, MI 48226',
-        'neighborhood': '',
     }
 
     def _parse_entries(self, response):
@@ -30,7 +23,6 @@ class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
         current_year_non_empty_rows = response.xpath(
             '//section[contains(.,"%s")]//tbody/tr[child::td/text()]' % current_year
         )
-
         return current_year_non_empty_rows
 
     def _parse_start(self, item):
@@ -45,6 +37,4 @@ class WayneBuildingAuthoritySpider(WayneCommissionMixin, Spider):
             date_str = item.xpath('.//td[2]/text()').extract_first()
 
         time_str = item.xpath('.//td[3]/text()').extract_first()
-        date_time_str = dateparse('{0} {1}'.format(date_str, time_str))
-
-        return {'date': date_time_str.date(), 'time': date_time_str.time(), 'note': ''}
+        return dateparse('{0} {1}'.format(date_str, time_str))

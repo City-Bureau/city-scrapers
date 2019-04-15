@@ -1,22 +1,17 @@
-# -*- coding: utf-8 -*-
-"""
-All spiders should yield data shaped according to the Open Civic Data
-specification (http://docs.opencivicdata.org/en/latest/data/event.html).
-"""
 import json
 import re
 import unicodedata
 from datetime import datetime, timedelta
 
 import scrapy
+from city_scrapers_core.constants import BOARD, COMMITTEE
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.constants import BOARD, COMMITTEE
-from city_scrapers.spider import Spider
 
-
-class CookLandbankSpider(Spider):
+class CookLandbankSpider(CityScrapersSpider):
     name = 'cook_landbank'
-    agency_name = 'Cook County Land Bank Authority'
+    agency = 'Cook County Land Bank Authority'
     timezone = 'America/Chicago'
 
     allowed_domains = ['www.cookcountylandbank.org']
@@ -41,10 +36,6 @@ class CookLandbankSpider(Spider):
             yield self.get_events_info(date)
 
     def get_events_info(self, date):
-        """
-        the dict to POST. I copied what was coming from the website.
-        Maybe most is unnecessary?
-        """
         request_body = {
             'action': 'the_ajax_hook',
             'current_month': str(date.month),
@@ -83,28 +74,26 @@ class CookLandbankSpider(Spider):
         item = scrapy.Selector(text=data['content'], type="html")
 
         if not item.css('div.eventon_list_event p.no_events'):
-            start_dict = self._parse_start(item)
+            start = self._parse_start(item)
             location = self._parse_location(item)
-            if start_dict is None:
+            if start is None:
                 yield
-            data = {
-                '_type': 'event',
-                'id': self._parse_id(item),
-                'name': self._parse_name(item),
-                'event_description': self._parse_description(item),
-                'start': self._parse_start(item),
-                'end': self._parse_end(item),
-                'all_day': False,
-                'location': location,
-                'sources': self._parse_sources(item),
-                'documents': self._parse_documents(item),
-            }
-            data['status'] = self._generate_status(data)
-            data['classification'] = self._generate_classification(data['name'])
-            data['id'] = self._generate_id(data)
-            yield data
-        else:
-            yield
+            title = self._parse_title(item)
+            meeting = Meeting(
+                title=title,
+                description=self._parse_description(item),
+                classification=self._parse_classification(title),
+                start=start,
+                end=None,
+                time_notes='',
+                all_day=False,
+                location=location,
+                links=self._parse_links(item),
+                source=self._parse_source(item),
+            )
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def daterange(self, start_date, end_date):
         """Getting dates and setting up AJAX Request"""
@@ -146,16 +135,11 @@ class CookLandbankSpider(Spider):
         if address and 'Chicago' not in address:
             address += ' Chicago, IL'
         return {
-            'url': 'http://www.cookcountylandbank.org/',
-            'name': None,
+            'name': '',
             'address': address or default_address,
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
         }
 
-    def _parse_name(self, item):
+    def _parse_title(self, item):
         return item.css('span[class=\'evcal_desc2 evcal_event_title\']::text').extract_first()
 
     def _parse_description(self, item):
@@ -176,42 +160,31 @@ class CookLandbankSpider(Spider):
     def _parse_datetime(datetime_str):
         if datetime_str is None:
             return None
-        date_time = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M')
-        return {'date': date_time.date(), 'time': date_time.time(), 'note': ''}
+        return datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M')
 
     def _parse_start(self, item):
         start_date_str = item.css('[itemprop=\'startDate\']::attr(content)').extract_first()
         return self._parse_datetime(start_date_str)
 
-    def _parse_end(self, item):
-        """
-        End date but no end time available. Leaving None.
-        Left commented the code to pull the end date if you want
-        to include later.
-        """
-        end_date_str = item.css('[itemprop=\'endDate\']::attr(content)').extract_first()
-        # Override time since often invalid (ex: 11:50pm)
-        return {**self._parse_datetime(end_date_str), 'time': None}
+    def _parse_source(self, item):
+        return item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)'
+                        ).extract_first()
 
-    def _parse_sources(self, item):
-        source_url = item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)'
-                              ).extract_first()
-        return [{'url': source_url, 'note': 'Event Page'}]
-
-    def _parse_documents(self, item):
+    def _parse_links(self, item):
         documents = []
         item.css('div[itemprop="description"] a')
         for doc_link in item.css('div[itemprop="description"] a'):
             doc_note = doc_link.css('::text').extract_first()
-            if 'agenda' in doc_link.attrib['href'].lower():
+            lower_title = doc_link.attrib['href'].lower()
+            if 'click here' in lower_title or 'agenda' in lower_title:
                 doc_note = 'Agenda'
             documents.append({
-                'url': doc_link.attrib['href'],
-                'note': doc_note,
+                'href': doc_link.attrib['href'],
+                'title': doc_note,
             })
         return documents
 
-    def _generate_classification(self, name):
+    def _parse_classification(self, name):
         if re.search("Board of Directors", name, re.IGNORECASE):
             return BOARD
         else:

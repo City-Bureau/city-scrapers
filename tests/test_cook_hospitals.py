@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.cook_hospitals import CookHospitalsSpider
@@ -11,41 +11,43 @@ test_response = file_response(
     url='http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/'
 )
 spider = CookHospitalsSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Meetings of the Board of Directors'
+def test_title():
+    assert parsed_items[0]['title'] == 'Meetings of the Board of Directors'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
-def test_times():
-    assert parsed_items[0]['start'] == {'date': date(2017, 1, 27), 'time': time(9, 00), 'note': ''}
-
-    assert parsed_items[0]['end'] == {
-        'date': date(2017, 1, 27),
-        'time': time(12, 00),
-        'note': 'End time is estimated to be 3 hours after the start time'
-    }
+def test_start():
+    assert parsed_items[0]['start'] == datetime(2017, 1, 27, 9)
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == [
+def test_end():
+    assert parsed_items[0]['end'] is None
+
+
+def test_time_notes():
+    assert parsed_items[0]['time_notes'] == ''
+
+
+def test_links():
+    assert parsed_items[0]['links'] == [
         {
-            'url':
+            'href':
                 'http://www.cookcountyhhs.org/wp-content/uploads/2016/01/01-27-17-Board-Agenda.pdf',
-            'note': 'agenda and materials'
+            'title': 'Agenda and materials'
         },
         {
-            'url':
+            'href':
                 'http://www.cookcountyhhs.org/wp-content/uploads/2017/02/01-27-17-Board-scan-Minutes.pdf',  # noqa
-            'note': 'minutes'
+            'title': 'Minutes'
         },
     ]
-    assert parsed_items[-1]['documents'] == []
+    assert parsed_items[-1]['links'] == []
 
 
 def test_id():
@@ -54,20 +56,19 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
         'name': '',
         'address': '1900 W. Polk, Second Floor Conference Room, Chicago, Illinois',
-        'neighborhood': '',
     }
 
 
 def test_classification():
-    assert parsed_items[0]['classification'] == 'Board'
-    assert parsed_items[-1]['classification'] == 'Committee'
+    assert parsed_items[0]['classification'] == BOARD
+    assert parsed_items[-1]['classification'] == COMMITTEE
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -76,13 +77,6 @@ def test_all_day(item):
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_sources(item):
-    assert item['sources'] == [{
-        'url': 'http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/',
-        'note': ''
-    }]
+def test_source(item):
+    assert item['source'
+                ] == 'http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/'

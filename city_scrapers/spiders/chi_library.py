@@ -1,20 +1,15 @@
-# -*- coding: utf-8 -*-
-"""
-All spiders should yield data shaped according to the Open Civic Data
-specification (http://docs.opencivicdata.org/en/latest/data/event.html).
-"""
 import datetime
 import re
 
 import requests
+from city_scrapers_core.constants import BOARD
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
 
-
-class ChiLibrarySpider(Spider):
+class ChiLibrarySpider(CityScrapersSpider):
     name = 'chi_library'
-    agency_name = 'Chicago Public Library'
+    agency = 'Chicago Public Library'
     timezone = 'America/Chicago'
     allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
@@ -28,40 +23,31 @@ class ChiLibrarySpider(Spider):
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         year = response.css('div.entry-content h2::text').extract_first()
         for item in response.css('div.entry-content p'):
             if len(item.css('strong')) == 0:
                 continue
-            start_time = self._parse_start(item, year)
-            data = {
-                '_type': 'event',
-                'name': 'Board of Directors',
-                'description': '',
-                'classification': BOARD,
-                'start': {
-                    'date': start_time.date(),
-                    'time': start_time.time(),
-                    'note': '',
-                },
-                'end': {
-                    'date': None,
-                    'time': None,
-                    'note': '',
-                },
-                'all_day': False,
-                'location': self._parse_location(item),
-                'documents': self._parse_documents(start_time),
-                'sources': self._parse_sources(response)
-            }
-            data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data)
-            yield data
+            start = self._parse_start(item, year)
+            meeting = Meeting(
+                title='Board of Directors',
+                description='',
+                classification=BOARD,
+                start=start,
+                end=None,
+                time_notes='',
+                all_day=False,
+                location=self._parse_location(item),
+                links=self._parse_links(start),
+                source=response.url,
+            )
+            meeting['id'] = self._get_id(meeting)
+            meeting['status'] = self._get_status(meeting)
+            yield meeting
 
     def _parse_location(self, item):
         """
@@ -72,10 +58,6 @@ class ChiLibrarySpider(Spider):
         return {
             'name': item.css('a::text').extract_first(),
             'address': addr_str,
-            'coordinates': {
-                'latitude': None,
-                'longitude': None,
-            },
         }
 
     def _parse_start(self, item, year):
@@ -87,7 +69,7 @@ class ChiLibrarySpider(Spider):
             '{} {}'.format(re.sub(r'[,\.]', '', dt_str), year), '%A %B %d %I %p %Y'
         )
 
-    def _parse_documents(self, start_time):
+    def _parse_links(self, start_time):
         """Check if agenda and minutes are valid URLs, add to documents if so"""
         agenda_url = (
             'https://www.chipublib.org/news/board-of-directors-'
@@ -102,18 +84,12 @@ class ChiLibrarySpider(Spider):
         documents = []
         if agenda_res.status_code == 200:
             documents.append({
-                'url': agenda_url,
-                'note': 'Agenda',
+                'href': agenda_url,
+                'title': 'Agenda',
             })
         if minutes_res.status_code == 200:
             documents.append({
-                'url': minutes_url,
-                'note': 'Minutes',
+                'href': minutes_url,
+                'title': 'Minutes',
             })
         return documents
-
-    def _parse_sources(self, response):
-        """
-        Parse sources.
-        """
-        return [{'url': response.url, 'note': ''}]

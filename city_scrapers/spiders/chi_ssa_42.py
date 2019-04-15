@@ -1,78 +1,66 @@
-# -*- coding: utf-8 -*-
 import re
 from datetime import datetime, time
 
 import scrapy
+from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
-from city_scrapers.constants import COMMISSION
-from city_scrapers.spider import Spider
 
-
-class ChiSsa42Spider(Spider):
+class ChiSsa42Spider(CityScrapersSpider):
     name = 'chi_ssa_42'
-    agency_name = 'Chicago Special Service Area #42 71st St/Stony Island'
+    agency = 'Chicago Special Service Area #42 71st St/Stony Island'
     timezone = 'America/Chicago'
     allowed_domains = ['ssa42.org']
     start_urls = ['https://ssa42.org/ssa-42-meeting-dates/']
     location = {
         'name': '',
         'address': '1750 E 71st St Chicago, IL 60649',
-        'neighborhood': '',
     }
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in self._parse_items(response, upcoming=True):
-            yield item
+        for meeting in self._parse_meetings(response, upcoming=True):
+            yield meeting
 
         yield scrapy.Request(
             'https://ssa42.org/minutes-of-meetings/',
-            callback=self._parse_items,
+            callback=self._parse_meetings,
         )
 
-    def _parse_items(self, response, upcoming=False):
-        """Parse items on upcoming and minutes pages"""
-        today = datetime.now().date()
+    def _parse_meetings(self, response, upcoming=False):
+        """Parse meetings on upcoming and minutes pages"""
+        today = datetime.now().replace(hour=0, minute=0)
         for item in response.css('article.entry p'):
             text = item.xpath('./text()').extract_first()
             if not re.match(r'.*day, .*\d{4}', text):
                 continue
             start = self._parse_start(text)
-            if not start['date'] or (upcoming and start['date'] < today):
+            if not start or (upcoming and start < today):
                 continue
-            data = {
-                '_type': 'event',
-                'name': self._parse_name(text),
-                'event_description': '',
-                'classification': COMMISSION,
-                'start': start,
-                'end': {
-                    'date': start['date'],
-                    'time': None,
-                    'note': '',
-                },
-                'all_day': False,
-                'location': self.location,
-                'documents': self._parse_documents(item),
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }],
-            }
-            data['status'] = self._generate_status(data, text=text)
-            data['id'] = self._generate_id(data)
-            yield data
+            meeting = Meeting(
+                title=self._parse_title(text),
+                description='',
+                classification=COMMISSION,
+                start=start,
+                end=None,
+                time_notes='',
+                all_day=False,
+                location=self.location,
+                links=self._parse_links(item),
+                source=response.url,
+            )
+            meeting['status'] = self._get_status(meeting, text=text)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
-    def _parse_name(self, text):
-        """
-        Parse or generate event name.
-        """
+    def _parse_title(self, text):
+        """Parse or generate meeting title."""
         name = 'SSA #42 Commission'
         if 'closed' in text.lower():
             return '{} - Closed Meeting'.format(name)
@@ -99,16 +87,11 @@ class ChiSsa42Spider(Spider):
             tm = datetime.strptime(time_str, '%I:%M%p').time()
         else:
             tm = time(10)
-        return {
-            'date': dt,
-            'time': tm,
-            'note': '',
-        }
+        if dt:
+            return datetime.combine(dt, tm)
 
-    def _parse_documents(self, item):
-        """
-        Parse or generate documents.
-        """
+    def _parse_links(self, item):
+        """Parse or generate links."""
         docs = []
         for doc in item.css('a'):
             doc_text = doc.xpath('./text()').extract_first()
@@ -118,5 +101,5 @@ class ChiSsa42Spider(Spider):
                 doc_note = 'Minutes'
             else:
                 doc_note = doc_text
-            docs.append({'url': doc.attrib['href'], 'note': doc_note})
+            docs.append({'href': doc.attrib['href'], 'title': doc_note})
         return docs

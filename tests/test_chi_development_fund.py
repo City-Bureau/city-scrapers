@@ -1,16 +1,17 @@
-from datetime import date
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.chi_development_fund import ChiDevelopmentFundSpider
 
 test_response = file_response(
     'files/chi_development_fund_chicago_developmentfund.html',
-    'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_developmentfund.html'
+    'https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_developmentfund.html'
 )
 spider = ChiDevelopmentFundSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
 def test_meeting_count():
@@ -21,28 +22,24 @@ def test_unique_id_count():
     assert len(set([item['id'] for item in parsed_items])) == 42
 
 
-def test__type():
-    assert parsed_items[0]['_type'] == 'event'
-
-
-def test_name():
-    assert parsed_items[0]['name'] == 'Chicago Development Fund: Advisory Board'
+def test_title():
+    assert parsed_items[0]['title'] == 'Chicago Development Fund: Advisory Board'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 4, 18),
-        'time': None,
-        'note': 'See agenda for time'
-    }
+    assert parsed_items[0]['start'] == datetime(2018, 4, 18)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': date(2018, 4, 18), 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] is None
+
+
+def test_time_notes():
+    assert parsed_items[0]['time_notes'] == 'See agenda for time'
 
 
 def test_id():
@@ -51,32 +48,29 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'neighborhood': '',
         'name': 'City Hall',
         'address': '121 N LaSalle St, Room 1000, Chicago, IL 60602'
     }
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url':
-            'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_developmentfund.html',  # noqa
-        'note': ''
-    }]
+    assert parsed_items[0][
+        'source'
+    ] == 'https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_developmentfund.html'  # noqa
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == [{
+def test_links():
+    assert parsed_items[0]['links'] == [{
         'url':
-            'https://www.cityofchicago.org/content/dam/city/depts/dcd/agendas/CDF_Advisor_Board_Agenda_April_2018.pdf',  # noqa
+            'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDF_Advisor_Board_Agenda_April_2018.pdf',  # noqa
         'note': 'Agenda'
     }]
-    assert parsed_items[-1]['documents'] == []
+    assert parsed_items[-1]['links'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)

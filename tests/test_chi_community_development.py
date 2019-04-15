@@ -1,17 +1,17 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import COMMISSION, PASSED
 from tests.utils import file_response
 
-from city_scrapers.constants import COMMISSION
 from city_scrapers.spiders.chi_community_development import ChiCommunityDevelopmentSpider
 
 test_response = file_response(
     'files/chi_development_community_developmentcommission.html',
-    'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/community_developmentcommission.html'
+    'https://www.chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html'
 )
 spider = ChiCommunityDevelopmentSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
 def test_meeting_count():
@@ -23,33 +23,20 @@ def test_unique_id_count():
     assert len(set([item['id'] for item in parsed_items])) == 123
 
 
-def test__type():
-    assert parsed_items[0]['_type'] == 'event'
-
-
-def test_name():
-    assert parsed_items[0]['name'] == 'Community Development Commission'
+def test_title():
+    assert parsed_items[0]['title'] == 'Community Development Commission'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == (
-        "The Community Development Commission (CDC) was established by the Chicago City Council in "
-        "1992 to assume the duties of the former Commercial District Development Commission and "
-        "the Department of Urban Renewal. The CDC reviews and recommends action on the provision of"
-        " Tax Increment Financing (TIF) to assist private redevelopment projects; the designation "
-        "of new TIF districts and Redevelopment Areas; the sale of City-owned property located in "
-        "TIF districts and Redevelopment Areas; and the appointment of members to Community "
-        "Conservation Councils. The CDC is comprised of 15 members appointed by the Mayor and "
-        "confirmed by the City Council."
-    )
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 1, 16), 'time': time(13, 0), 'note': ''}
+    assert parsed_items[0]['start'] == datetime(2018, 1, 16, 13)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': date(2018, 1, 16), 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -58,40 +45,37 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'neighborhood': '',
         'name': 'City Hall',
         'address': '121 N LaSalle St, Room 201A, Chicago, IL 60602'
     }
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url':
-            'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/community_developmentcommission.html',  # noqa
-        'note': ''
-    }]
+def test_source():
+    assert parsed_items[0][
+        'source'
+    ] == 'https://www.chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html'  # noqa
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == [{
-        'url':
-            'https://www.cityofchicago.org/content/dam/city/depts/dcd/agendas/CDC_Minutes_Jan_2018.pdf',  # noqa
-        'note': 'Minutes'
+def test_links():
+    assert parsed_items[0]['links'] == [{
+        'href':
+            'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_Minutes_Jan_2018.pdf',  # noqa
+        'title': 'Minutes'
     }]
-    assert parsed_items[1]['documents'] == [{
-        'url':
-            'https://www.cityofchicago.org/content/dam/city/depts/dcd/agendas/CDC_Minutes_Feb_2018.pdf',  # noqa
-        'note': 'Minutes'
+    assert parsed_items[1]['links'] == [{
+        'href':
+            'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_Minutes_Feb_2018.pdf',  # noqa
+        'title': 'Minutes'
     }]
-    assert parsed_items[2]['documents'] == [{
-        'url':
-            'https://www.cityofchicago.org/content/dam/city/depts/dcd/agendas/CDC_March_2018_Minutes.pdf',  # noqa
-        'note': 'Minutes'
+    assert parsed_items[2]['links'] == [{
+        'href':
+            'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_March_2018_Minutes.pdf',  # noqa
+        'title': 'Minutes'
     }]
 
 

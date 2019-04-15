@@ -1,6 +1,7 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.chi_policeboard import ChiPoliceBoardSpider
@@ -10,54 +11,40 @@ test_response = file_response(
     url='https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html'
 )
 spider = ChiPoliceBoardSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
-def test_name():
-    assert parsed_items[8]['name'] == 'Board of Directors'
+def test_title():
+    assert parsed_items[0]['title'] == 'Board of Directors'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    expected_description = (
-        "The Police Board holds a regular public meeting once a month. Members of the public are "
-        "invited to attend and are welcome to address questions or comments to the Board. The "
-        "Superintendent of Police (or his designee) and the Chief Administrator of the Civilian "
-        "Office of Police Accountability (or her designee) will be at the meetings. Prior sign-up "
-        "is required of those wishing to address the Board; contact the Board's office by 4:30 p.m."
-        " of the day before the meeting to add your name to the list of speakers. See below for the"
-        " dates of the regular monthly meetings. Unless otherwise noted, the meetings are on the "
-        "third Thursday of the month, are scheduled to begin at 7:30 p.m., and take place at "
-        "Chicago Public Safety Headquarters, 3510 South Michigan Avenue. Also appearing below are "
-        "links to the transcripts of the meetings and the material made available at the "
-        "meeting--the \"Blue Book\" that includes the meeting agenda, minutes, statistics on "
-        "disciplinary matters, and a list of CPD directives issued by the Superintendent."
-    )
-    assert item['event_description'] == expected_description
+    assert item['description'] == ''
 
 
-def test_start_time():
-    assert parsed_items[8]['start'] == {'date': date(2017, 9, 18), 'time': time(19, 30), 'note': ''}
+def test_start():
+    assert parsed_items[8]['start'] == datetime(2017, 9, 18, 19, 30)
 
 
-def test_documents():
-    assert parsed_items[8]['documents'] == [
+def test_links():
+    assert parsed_items[8]['links'] == [
         {
-            'url':
+            'href':
                 'https://www.cityofchicago.org/content/dam/city/depts/cpb/PubMtgMinutes/BlueBook09182017.pdf',  # noqa
-            'note': 'Blue Book'
+            'title': 'Blue Book'
         },
         {
-            'url':
+            'href':
                 'https://www.cityofchicago.org/content/dam/city/depts/cpb/PubMtgMinutes/PubMtgTranscript09182017.pdf',  # noqa
-            'note': 'Transcript'
+            'title': 'Transcript'
         },
     ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_end_time(item):
-    assert item['end'] == {'date': None, 'time': None, 'note': ''}
+def test_end(item):
+    assert item['end'] is None
 
 
 def test_id():
@@ -71,30 +58,22 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board'
+    assert item['classification'] == BOARD
 
 
 def test_status():
-    assert parsed_items[8]['status'] == 'passed'
+    assert parsed_items[8]['status'] == PASSED
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
     assert item['location'] == {
-        'name': None,
-        'address': 'Chicago Public Safety Headquarters, 3510 South Michigan Avenue',
-        'neighborhood': '',
+        'address': '3510 S Michigan Ave, Chicago IL 60653',
+        'name': 'Chicago Public Safety Headquarters',
     }
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert item['_type'] == 'event'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_sources(item):
-    assert item['sources'] == [{
-        'url': 'https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html',
-        'note': ''
-    }]
+def test_source(item):
+    assert item['source'
+                ] == 'https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html'

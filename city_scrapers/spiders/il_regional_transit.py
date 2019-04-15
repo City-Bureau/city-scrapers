@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
 import re
 from datetime import datetime, time
 
-from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class IlRegionalTransitSpider(Spider):
+class IlRegionalTransitSpider(CityScrapersSpider):
     name = 'il_regional_transit'
-    agency_name = 'Regional Transportation Authority'
+    agency = 'Regional Transportation Authority'
     timezone = 'America/Chicago'
     allowed_domains = ['rtachicago.granicus.com']
     start_urls = [
@@ -22,37 +22,26 @@ class IlRegionalTransitSpider(Spider):
     }
 
     def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard http://docs.opencivicdata.org/en/latest/data/event.html
-        """
         for item in response.css('.row:not(#search):not(.keywords)'):
             start = self._parse_start(item)
             if start is None:
                 continue
-            name = self._parse_name(item)
-            data = {
-                '_type': 'event',
-                'name': name,
-                'classification': self._parse_classification(name),
-                'event_description': '',
-                'start': start,
-                'end': {
-                    'date': start['date'],
-                    'time': None,
-                    'note': ''
-                },
-                'all_day': False,
-                'location': self.location,
-                'documents': self._parse_documents(item),
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }],
-            }
-            data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data)
-            yield data
+            title = self._parse_title(item)
+            meeting = Meeting(
+                title=title,
+                description='',
+                classification=self._parse_classification(title),
+                start=start,
+                end=None,
+                time_notes='Initial meetings begin at 8:30am, with other daily meetings following',
+                all_day=False,
+                location=self.location,
+                links=self._parse_links(item),
+                source=response.url,
+            )
+            meeting['id'] = self._get_id(meeting)
+            meeting['status'] = self._get_status(meeting)
+            yield meeting
 
     @staticmethod
     def _parse_classification(name):
@@ -66,10 +55,7 @@ class IlRegionalTransitSpider(Spider):
         return NOT_CLASSIFIED
 
     @staticmethod
-    def _parse_name(item):
-        """
-        Get event name
-        """
+    def _parse_title(item):
         name_text = item.css('.committee::text').extract_first()
         name_text = name_text.split(' on ')[0].split(' (')[0]
         name_text = re.sub(r'\d{1,2}:\d{2}\s+[APM]{2}', '', name_text)
@@ -82,14 +68,10 @@ class IlRegionalTransitSpider(Spider):
         """
         date_str = ' '.join(item.css('div:first-child::text').extract()).strip()
         date_obj = datetime.strptime(date_str, '%b %d, %Y').date()
-        return {
-            'date': date_obj,
-            'time': time(8, 30),
-            'note': 'Initial meetings begin at 8:30am, with other daily meetings following',
-        }
+        return datetime.combine(date_obj, time(8, 30))
 
     @staticmethod
-    def _parse_documents(item):
+    def _parse_links(item):
         documents = []
         for doc_link in item.css('a'):
             if 'onclick' in doc_link.attrib:
@@ -114,7 +96,7 @@ class IlRegionalTransitSpider(Spider):
             elif 'video' in doc_note.lower():
                 doc_note = 'Video'
             documents.append({
-                'url': doc_url,
-                'note': doc_note,
+                'href': doc_url,
+                'title': doc_note,
             })
         return documents

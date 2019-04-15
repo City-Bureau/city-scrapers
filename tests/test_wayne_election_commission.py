@@ -1,40 +1,33 @@
-from datetime import date
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import COMMISSION, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.wayne_election_commission import WayneElectionCommissionSpider
 
 test_response = file_response(
     'files/wayne_election_commission.html',
-    'https://www.waynecounty.com/elected/clerk/election-commission.aspx'
+    url='https://www.waynecounty.com/elected/clerk/election-commission.aspx'
 )
 spider = WayneElectionCommissionSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Election Commission'
+def test_title():
+    assert parsed_items[0]['title'] == 'Election Commission'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 1, 29),
-        'time': None,
-        'note': 'Meeting time are given in the "Notice" document'
-    }
+    assert parsed_items[0]['start'] == datetime(2018, 1, 29)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': parsed_items[0]['start']['date'],
-        'time': None,
-        'note': ''
-    }
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -42,34 +35,28 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
-        'neighborhood': '',
-        'name': 'Coleman A. Young Municipal Center, Conference Room 700A',
-        'address': '2 Woodward Avenue, Detroit, MI 48226'
-    }
+    assert parsed_items[0]['location'] == spider.location
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'https://www.waynecounty.com/elected/clerk/election-commission.aspx',
-        'note': ''
-    }]
+def test_source():
+    assert parsed_items[0]['source'
+                           ] == 'https://www.waynecounty.com/elected/clerk/election-commission.aspx'
 
 
-def test_documents():
-    assert parsed_items[1]['documents'] == [{
-        'url': 'https://www.waynecounty.com/documents/clerk/wecn2518.pdf',
-        'note': 'Notice'
+def test_links():
+    assert parsed_items[1]['links'] == [{
+        'href': 'https://www.waynecounty.com/documents/clerk/wecn2518.pdf',
+        'title': 'Notice'
     }, {
-        'url': 'https://www.waynecounty.com/documents/clerk/eca20518.pdf',
-        'note': 'Agenda'
+        'href': 'https://www.waynecounty.com/documents/clerk/eca20518.pdf',
+        'title': 'Agenda'
     }, {
-        'url': 'https://www.waynecounty.com/documents/clerk/ecm20518.pdf',
-        'note': 'Minutes'
+        'href': 'https://www.waynecounty.com/documents/clerk/ecm20518.pdf',
+        'title': 'Minutes'
     }]
 
 
@@ -80,9 +67,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Commission'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
+    assert item['classification'] == COMMISSION

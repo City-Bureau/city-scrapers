@@ -1,36 +1,35 @@
-import datetime
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.det_wrecking_examiners import DetWreckingExaminersSpider
 
 test_response = file_response(
     'files/det_wrecking_examiners.html',
-    'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings'  # noqa
+    url=(
+        'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings'  # noqa
+    )
 )
 spider = DetWreckingExaminersSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Board of Wrecking Contractors Examiners'
+def test_title():
+    assert parsed_items[0]['title'] == 'Board of Wrecking Contractors Examiners'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': datetime.date(2018, 2, 14),
-        'time': datetime.time(13, 0),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == datetime(2018, 2, 14, 13)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -39,27 +38,21 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
-        'neighborhood': '',
-        'name': 'Coleman A. Young Municipal Center, Room 412',
-        'address': '2 Woodward Avenue, Detroit, MI 48226'
-    }
+    assert parsed_items[0]['location'] == spider.location
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url':
-            'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings',  # noqa
-        'note': ''
-    }]
+    assert parsed_items[0][
+        'source'
+    ] == 'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings'  # noqa
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
+def test_links():
+    assert parsed_items[0]['links'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -69,9 +62,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
+    assert item['classification'] == BOARD

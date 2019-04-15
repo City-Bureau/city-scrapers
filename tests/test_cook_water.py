@@ -1,28 +1,28 @@
 import json
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 
-from city_scrapers.constants import BOARD
 from city_scrapers.spiders.cook_water import CookWaterSpider
 
 test_response = []
 with open('tests/files/cook_water.json') as f:
     test_response.extend(json.loads(f.read()))
 spider = CookWaterSpider()
-parsed_items = [item for item in spider._parse_events(test_response)]
+parsed_items = [item for item in spider.parse_legistar(test_response)]
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Board of Commissioners'
+def test_title():
+    assert parsed_items[0]['title'] == 'Board of Commissioners'
 
 
-def test_start_time():
-    assert parsed_items[0]['start'] == {
-        'date': date(2018, 12, 20),
-        'time': time(10, 30, 00),
-        'note': '',
-    }
+def test_start():
+    assert parsed_items[0]['start'] == datetime(2018, 12, 20, 10, 30)
+
+
+def test_end():
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -37,62 +37,49 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'address': '100 East Erie Street Chicago, IL 60611',
         'name': 'Board Room',
-        'neighborhood': 'River North'
     }
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'note': '',
-        'url':
-            'https://mwrd.legistar.com/DepartmentDetail.aspx?ID=1622&GUID=5E16B4CD-0692-4016-959D-3F080D6CFFB4'  # noqa
-    }]
+def test_source():
+    assert parsed_items[0][
+        'source'
+    ] == 'https://mwrd.legistar.com/DepartmentDetail.aspx?ID=1622&GUID=5E16B4CD-0692-4016-959D-3F080D6CFFB4'  # noqa
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
-    assert parsed_items[-2]['documents'] == [
+def test_links():
+    assert parsed_items[0]['links'] == []
+    assert parsed_items[-2]['links'] == [
         {
-            'url':
+            'href':
                 'https://mwrd.legistar.com/View.ashx?M=A&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
-            'note': 'Agenda'
+            'title': 'Agenda'
         },
         {
-            'url':
+            'href':
                 'https://mwrd.legistar.com/View.ashx?M=M&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
-            'note': 'Minutes'
+            'title': 'Minutes'
         },
         {
-            'note': 'Video',
-            'url': 'https://mwrd.legistar.com/Video.aspx?Mode=Granicus&ID1=356&Mode2=Video'
+            'title': 'Video',
+            'href': 'https://mwrd.legistar.com/Video.aspx?Mode=Granicus&ID1=356&Mode2=Video'
         },
     ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_name_not_study_session(item):
-    assert item['name'] != 'Study Session'
+def test_title_not_study_session(item):
+    assert item['title'] != 'Study Session'
 
 
 def test_status():
-    assert parsed_items[-1]['status'] == 'passed'
+    assert parsed_items[-1]['status'] == PASSED
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['event_description'] == ''
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_type(item):
-    assert item['_type'] == 'event'
+    assert item['description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
     assert item['all_day'] is False
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test_end_time(item):
-    assert item['end'] == {'date': item['start']['date'], 'time': None, 'note': ''}

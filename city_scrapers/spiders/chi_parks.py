@@ -1,62 +1,37 @@
-# -*- coding: utf-8 -*-
-"""
-All spiders should yield data shaped according to the Open Civic Data
-specification (http://docs.opencivicdata.org/en/latest/data/event.html).
-"""
 import re
-from datetime import datetime, timedelta
 
-import urllib3
-from legistar.events import LegistarEventsScraper
-
-from city_scrapers.constants import BOARD, FORUM
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import BOARD, FORUM
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import LegistarSpider
 
 
-class ChiParksSpider(Spider):
+class ChiParksSpider(LegistarSpider):
     name = 'chi_parks'
-    agency_name = 'Chicago Park District'
-    START_URL = 'https://chicagoparkdistrict.legistar.com'
+    agency = 'Chicago Park District'
+    timezone = 'America/Chicago'
     allowed_domains = ['chicagoparkdistrict.legistar.com']
-    start_urls = [START_URL]
+    start_urls = ['https://chicagoparkdistrict.legistar.com/Calendar.aspx']
 
-    def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the `Open Civic Data
-        event standard <http://docs.opencivicdata.org/en/latest/data/event.html>`_.
-
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
-        events = self._make_legistar_call()
-        return self._parse_events(events)
-
-    def _make_legistar_call(self, since=None):
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        les = LegistarEventsScraper()
-        les.EVENTSPAGE = self.START_URL + '/Calendar.aspx'
-        les.BASE_URL = self.START_URL
-        if not since:
-            since = datetime.today().year
-        return les.events(since=since)
-
-    def _parse_events(self, events):
-        for item, _ in events:
-            data = {
-                '_type': 'event',
-                'name': self._parse_name(item),
-                'event_description': '',
-                'all_day': False,
-                'classification': self._parse_classification(item),
-                'start': self._parse_start(item),
-                'end': self._parse_end(item),
-                'location': self._parse_location(item),
-                'documents': self._parse_documents(item),
-                'sources': self._parse_sources(item),
-            }
-            data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data, text=item['Meeting Location'])
-            yield data
+    def parse_legistar(self, events):
+        for event, _ in events:
+            start = self.legistar_start(event)
+            if not start:
+                continue
+            meeting = Meeting(
+                title=self._parse_title(event),
+                description='',
+                classification=self._parse_classification(event),
+                start=start,
+                end=None,
+                all_day=False,
+                time_notes='Estimated 2 hour duration',
+                location=self._parse_location(event),
+                links=self.legistar_links(event),
+                source=self._parse_source(event),
+            )
+            meeting['status'] = self._get_status(meeting, text=event['Meeting Location'])
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _parse_location(self, item):
         """
@@ -65,13 +40,10 @@ class ChiParksSpider(Spider):
         return {
             'address': self.clean_html(item.get('Meeting Location', None)),
             'name': '',
-            'neighborhood': ''
         }
 
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
+    def _parse_title(self, item):
+        """Parse or generate meeting title."""
         board_str = 'Board of Commissioners'
         if item['Name'].strip() == board_str:
             return board_str
@@ -85,54 +57,13 @@ class ChiParksSpider(Spider):
             return FORUM
         return BOARD
 
-    def _parse_documents(self, item):
-        """
-        Parse or generate documents.
-        """
-        documents = []
-        for doc in ['Agenda', 'Minutes', 'Video']:
-            if isinstance(item.get(doc), dict) and item[doc].get('url'):
-                documents.append({'url': item[doc]['url'], 'note': doc})
-        return documents
+    def _parse_source(self, item):
+        """Parse source from meeting details if available"""
+        default_source = "{}/Calendar.aspx".format(self.base_url)
+        if isinstance(item.get("Meeting Details"), dict):
+            return item["Meeting Details"].get("url", default_source)
+        return default_source
 
-    def _parse_start_datetime(self, item):
-        """
-        Parse the start datetime.
-        """
-        time = item.get('Meeting Time', None)
-        date = item.get('Meeting Date', None)
-        time_string = '{0} {1}'.format(date, time)
-        return datetime.strptime(time_string, '%m/%d/%Y %I:%M %p')
-
-    def _parse_start(self, item):
-        """
-        Parse start date and time.
-        """
-        datetime_obj = self._parse_start_datetime(item)
-        return {'date': datetime_obj.date(), 'time': datetime_obj.time(), 'note': ''}
-
-    def _parse_end(self, item):
-        """
-        No end date listed. Estimate 3 hours after start time.
-        """
-        datetime_obj = self._parse_start_datetime(item)
-        return {
-            'date': datetime_obj.date(),
-            'time': (datetime_obj + timedelta(hours=3)).time(),
-            'note': 'Estimated 3 hours after start time'
-        }
-
-    def _parse_sources(self, item):
-        """
-        Parse sources.
-        """
-        try:
-            url = item['Name']['url']
-        except Exception:
-            url = self.START_URL + '/Calendar.aspx'
-        return [{'url': url, 'note': ''}]
-
-    # TODO move to parent class?
     @staticmethod
     def clean_html(html):
         """

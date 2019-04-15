@@ -2,9 +2,9 @@ import json
 from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import CITY_COUNCIL, PASSED, TENTATIVE
 from freezegun import freeze_time
 
-from city_scrapers.constants import CITY_COUNCIL, PASSED, TENTATIVE
 from city_scrapers.spiders.chi_citycouncil import ChiCityCouncilSpider
 
 freezer = freeze_time('2018-12-19')

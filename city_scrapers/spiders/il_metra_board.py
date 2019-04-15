@@ -1,68 +1,49 @@
-# -*- coding: utf-8 -*-
 import re
 from datetime import datetime
 
-from city_scrapers.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
-from city_scrapers.spider import Spider
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class IlMetraBoardSpider(Spider):
+class IlMetraBoardSpider(CityScrapersSpider):
     name = 'il_metra_board'
-    agency_name = 'Illinois Metra'
+    agency = 'Illinois Metra'
     timezone = 'America/Chicago'
     allowed_domains = ['metrarail.com']
     start_urls = ['https://metrarr.granicus.com/ViewPublisher.php?view_id=5']
     custom_settings = {'ROBOTSTXT_OBEY': False}
+    location = {
+        'name': '',
+        'address': '547 West Jackson Boulevard, Chicago, IL',
+    }
 
     def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
-
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
         for item in response.css('.listingTable .listingRow'):
-            start_time = self._parse_start(item)
+            start = self._parse_start(item)
+            meeting = Meeting(
+                title=self._parse_title(item),
+                description='',
+                classification=self._parse_classification(item),
+                start=start,
+                end=None,
+                time_notes='',
+                all_day=False,
+                location=self.location,
+                links=self._parse_links(item),
+                source=response.url,
+            )
 
-            data = {
-                '_type': 'event',
-                'name': self._parse_name(item),
-                'event_description': '',
-                'all_day': False,
-                'classification': self._parse_classification(item),
-                'start': start_time,
-                'end': {
-                    'date': start_time['date'],
-                    'time': None,
-                    'note': '',
-                },
-                'location': {
-                    'neighborhood': 'West Loop',
-                    'name': '',
-                    'address': '547 West Jackson Boulevard, Chicago, IL',
-                },
-                'documents': self._parse_documents(item),
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }],
-            }
+            meeting['id'] = self._get_id(meeting)
+            meeting['status'] = self._get_status(meeting)
+            yield meeting
 
-            data['id'] = self._generate_id(data)
-            data['status'] = self._generate_status(data)
-            yield data
-
-    def _parse_name(self, item):
-        """
-        Parse or generate event name.
-        """
+    def _parse_title(self, item):
+        """Parse or generate meeting title."""
         return item.css('td[headers=Name]::text').extract_first().strip()
 
     def _parse_classification(self, item):
-        """
-        Parse or generate classification (e.g. public health, education, etc).
-        """
+        """Parse or generate classification (e.g. public health, education, etc)."""
         full_name = item.css('td[headers=Name]::text').extract_first()
 
         if "Metra" in full_name and "Board Meeting" in full_name:
@@ -82,29 +63,24 @@ class IlMetraBoardSpider(Spider):
         date_time_str = re.sub(r'\s+', ' ', raw_date_time).strip()
 
         if not date_time_str:
-            return None
+            return
 
         try:
-            dt = datetime.strptime(date_time_str, '%b %d, %Y - %I:%M %p')
-            return {
-                'date': dt.date(),
-                'time': dt.time(),
-                'note': '',
-            }
+            return datetime.strptime(date_time_str, '%b %d, %Y - %I:%M %p')
         except ValueError:
-            return None
+            pass
 
-    def _parse_documents(self, item):
+    def _parse_links(self, item):
         """Parse documents from current and past meetings"""
         documents = []
         agenda_url = item.css('a[href*=Agenda]::attr(href)').extract_first()
         if agenda_url:
-            documents.append({'url': agenda_url, 'note': 'Agenda'})
+            documents.append({'href': agenda_url, 'title': 'Agenda'})
         minutes_url = item.css('a[href*=Minutes]::attr(href)').extract_first()
         if minutes_url:
-            documents.append({'url': minutes_url, 'note': 'Minutes'})
+            documents.append({'href': minutes_url, 'title': 'Minutes'})
         video_url = item.css('td[headers~=VideoLink] a::attr(onclick)').extract_first()
         video_url_match = re.search(r'http.*(?=\',\'p)', video_url or '')
         if video_url and video_url_match:
-            documents.append({'url': video_url_match.group(), 'note': 'Video'})
+            documents.append({'href': video_url_match.group(), 'title': 'Video'})
         return documents

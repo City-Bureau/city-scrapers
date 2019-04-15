@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.chi_schools import ChiSchoolsSpider
@@ -10,41 +10,33 @@ test_response = file_response(
     'files/cpsboe.html', url='http://www.cpsboe.org/meetings/planning-calendar'
 )
 spider = ChiSchoolsSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
 def test_event_count():
     assert len(parsed_items) == 14
 
 
-@pytest.mark.parametrize('item', parsed_items)
-def test_type(item):
-    assert item['_type'] == 'event'
-
-
 def test_id():
     assert parsed_items[0]['id'] == 'chi_schools/201707261030/x/board_of_education'
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
+def test_links():
+    assert parsed_items[0]['links'] == []
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Board of Education'
+def test_title():
+    assert parsed_items[0]['title'] == 'Board of Education'
 
 
 @pytest.mark.parametrize('item', parsed_items)
-def test_sources(item):
-    assert item['sources'] == [{
-        'note': '',
-        'url': 'http://www.cpsboe.org/meetings/planning-calendar'
-    }]
+def test_source(item):
+    assert item['source'] == 'http://www.cpsboe.org/meetings/planning-calendar'
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_event_description(item):
-    expected_description = (
+    assert item['description'] == (
         'Advance registration will be open the Monday preceding the Board meeting at 10:30 a.m. '
         'and close Tuesday at 5:00 p.m., or until all slots are filled or otherwise noted.'
         '\xa0\xa0Advance registration is available for speakers and observers. You can advance '
@@ -55,32 +47,27 @@ def test_event_description(item):
         'up to two hours. Further, let the official record reflect that the 2017-2018 Planning '
         'Calendar has been prepared in accordance with the  Illinois Open Meetings Act.'
     )
-    assert item['event_description'] == expected_description
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Board'
+    assert item['classification'] == BOARD
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2017, 7, 26),
-        'time': time(10, 30, 00),
-        'note': '',
-    }
+    assert parsed_items[0]['start'] == datetime(2017, 7, 26, 10, 30)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2017, 7, 26),
-        'time': None,
-        'note': '',
-    }
+    assert parsed_items[0]['end'] is None
+
+
+def test_time_notes():
+    assert parsed_items[0]['time_notes'] == ''
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -90,10 +77,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_location(item):
-    assert item[
-        'location'] == {
-            'neighborhood': None,
-            'name': None,
-            'address':
-                'CPS Loop Office 42 W. Madison Street, Garden Level Chicago, IL 60602 Board Room',  # noqa
-        }
+    assert item['location'] == {
+        'name': 'CPS Loop Office',
+        'address': '42 W. Madison Street, Garden Level Chicago, IL 60602 Board Room',
+    }
