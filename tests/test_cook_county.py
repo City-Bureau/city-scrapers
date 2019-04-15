@@ -1,5 +1,6 @@
-from datetime import date, time
+from datetime import datetime
 
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.cook_county import CookCountySpider
@@ -12,20 +13,20 @@ spider = CookCountySpider()
 item = spider._parse_event(test_response)
 
 
-def test_name():
-    assert item['name'] == 'ZBA Public Hearing'
+def test_title():
+    assert item['title'] == 'ZBA Public Hearing'
 
 
-def test_start_time():
-    assert item['start'] == {'date': date(2017, 11, 15), 'time': time(13, 00), 'note': ''}
+def test_start():
+    assert item['start'] == datetime(2017, 11, 15, 13)
 
 
-def test_end_time():
-    assert item['end'] == {
-        'date': date(2017, 11, 15),
-        'time': time(15, 00),
-        'note': '',
-    }
+def test_end():
+    assert item['end'] == datetime(2017, 11, 15, 15)
+
+
+def test_time_notes():
+    assert item['time_notes'] == ''
 
 
 def test_id():
@@ -37,50 +38,41 @@ def test_all_day():
 
 
 def test_classification():
-    assert spider._parse_classification('Board of Commissioners') == 'Board'
+    assert spider._parse_classification('Board of Commissioners') == BOARD
     assert spider._parse_classification(
         'Economic Development Advisory Committee'
-    ) == 'Advisory Committee'
-    assert spider._parse_classification('Finance Committee') == 'Committee'
-    assert spider._parse_classification('Finance Subcommittee on Litigation') == 'Committee'
-    assert spider._parse_classification(
-        'Finance Subcommittee on Workers Compensation'
-    ) == 'Committee'
+    ) == ADVISORY_COMMITTEE
+    assert spider._parse_classification('Finance Committee') == COMMITTEE
+    assert spider._parse_classification('Finance Subcommittee on Litigation') == COMMITTEE
+    assert spider._parse_classification('Finance Subcommittee on Workers Compensation') == COMMITTEE
     assert spider._parse_classification(
         'Committee of Suburban Cook County Commissioners - PACE'
-    ) == 'Committee'
-    assert spider._parse_classification('Rules & Administration Committee') == 'Committee'
-    assert spider._parse_classification('Roads & Bridges Committee') == 'Committee'
-    assert spider._parse_classification('Zoning & Building Committee') == 'Committee'
-    assert spider._parse_classification('Justice Advisory Council') == 'Advisory Committee'
-    assert spider._parse_classification('JAC Council Meeting') == 'Advisory Committee'
+    ) == COMMITTEE
+    assert spider._parse_classification('Rules & Administration Committee') == COMMITTEE
+    assert spider._parse_classification('Roads & Bridges Committee') == COMMITTEE
+    assert spider._parse_classification('Zoning & Building Committee') == COMMITTEE
+    assert spider._parse_classification('Justice Advisory Council') == ADVISORY_COMMITTEE
+    assert spider._parse_classification('JAC Council Meeting') == ADVISORY_COMMITTEE
 
 
 def test_status():
-    assert item['status'] == 'passed'
+    assert item['status'] == PASSED
 
 
 def test_location():
     assert item['location'] == {
-        'neighborhood': None,
-        'name': None,
+        'name': '',
         'address': '69 W. Washington Street Chicago , IL  60602',
     }
 
 
-def test__type():
-    assert item['_type'] == 'event'
-
-
 def test_sources():
-    assert item['sources'] == [{
-        'url': 'https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6',
-        'note': ''
-    }]
+    assert item['source'
+                ] == 'https://www.cookcountyil.gov/event/cook-county-zoning-building-committee-6'
 
 
 def test_description():
-    assert item['event_description'] == (
+    assert item['description'] == (
         'Public Hearing '
         'A public hearing has been scheduled for the Cook County Zoning Board of Appeals on '
         'Wednesday, November 15, 2017, 1:00PM at '
@@ -88,8 +80,8 @@ def test_description():
     )
 
 
-def test_documents():
-    assert item['documents'] == [{
-        'url': 'https://www.cookcountyil.gov/sites/default/files/zba_november_15_agenda.pdf',
-        'note': 'ZBA 11-15-2017 Agenda'
+def test_links():
+    assert item['links'] == [{
+        'href': 'https://www.cookcountyil.gov/sites/default/files/zba_november_15_agenda.pdf',
+        'title': 'ZBA 11-15-2017 Agenda'
     }]

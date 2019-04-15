@@ -1,7 +1,8 @@
 import json
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 
 from city_scrapers.spiders.cook_board import CookBoardSpider
 
@@ -10,29 +11,27 @@ with open('tests/files/cook_board.txt') as f:
     for line in f:
         test_response.append(json.loads(line))
 spider = CookBoardSpider()
-parsed_items = [item for item in spider._parse_events(test_response)]
+parsed_items = [item for item in spider.parse_legistar(test_response)]
 
 
-def test_name():
-    assert parsed_items[25]['name'] == 'Board of Commissioners'
+def test_count():
+    assert len(parsed_items) == 167
+
+
+def test_title():
+    assert parsed_items[25]['title'] == 'Board of Commissioners'
 
 
 def test_description():
-    assert parsed_items[25]['event_description'] == ''
+    assert parsed_items[25]['description'] == ''
 
 
 def test_start():
-    EXPECTED_START = {'date': date(2017, 9, 13), 'time': time(11, 00), 'note': ''}
-    assert parsed_items[25]['start'] == EXPECTED_START
+    assert parsed_items[25]['start'] == datetime(2017, 9, 13, 11)
 
 
 def test_end():
-    EXPECTED_END = {
-        'date': date(2017, 9, 13),
-        'time': time(14, 00),
-        'note': 'Estimated 3 hours after start time'
-    }
-    assert parsed_items[25]['end'] == EXPECTED_END
+    assert parsed_items[25]['end'] is None
 
 
 def test_id():
@@ -40,39 +39,36 @@ def test_id():
 
 
 def test_classification():
-    assert parsed_items[25]['classification'] == 'Board'
+    assert parsed_items[25]['classification'] == BOARD
 
 
 def test_status():
-    assert parsed_items[25]['status'] == 'passed'
+    assert parsed_items[25]['status'] == PASSED
 
 
 def test_location():
     assert parsed_items[25]['location'] == {
         'name': '',
         'address': 'Cook County Building, Board Room, 118 North Clark Street, Chicago, Illinois',
-        'neighborhood': ''
     }
 
 
-def test_sources():
-    assert parsed_items[25]['sources'] == [{
-        'url':
-            'https://cook-county.legistar.com/DepartmentDetail.aspx?ID=20924&GUID=B78A790A-5913-4FBF-8FBF-ECEE445B7796',  # noqa
-        'note': ''
-    }]
+def test_source():
+    assert parsed_items[25][
+        'source'
+    ] == 'https://cook-county.legistar.com/DepartmentDetail.aspx?ID=20924&GUID=B78A790A-5913-4FBF-8FBF-ECEE445B7796'  # noqa
 
 
-def test_documents():
-    assert parsed_items[25]['documents'] == [
+def test_links():
+    assert parsed_items[25]['links'] == [
         {
-            'url':
+            'href':
                 'https://cook-county.legistar.com/View.ashx?M=A&ID=521583&GUID=EA23CB0D-2E10-47EA-B4E2-EC7BA3CB8D76',  # noqa
-            'note': 'Agenda'
+            'title': 'Agenda'
         },
         {
-            'note': 'Video',
-            'url': 'https://cook-county.legistar.comVideo.aspx?Mode=Granicus&ID1=1858&Mode2=Video'
+            'title': 'Video',
+            'href': 'https://cook-county.legistar.comVideo.aspx?Mode=Granicus&ID1=1858&Mode2=Video'
         }
     ]
 
@@ -80,8 +76,3 @@ def test_documents():
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
     assert item['all_day'] is False
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'

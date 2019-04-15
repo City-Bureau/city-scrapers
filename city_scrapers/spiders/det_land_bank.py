@@ -1,27 +1,20 @@
-# -*- coding: utf-8 -*-
 import json
+import re
 
+from city_scrapers_core.constants import BOARD, COMMITTEE
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.parser import parse as dateparse
 
-from city_scrapers.constants import BOARD, COMMITTEE
-from city_scrapers.spider import Spider
 
-
-class DetLandBankSpider(Spider):
+class DetLandBankSpider(CityScrapersSpider):
     name = 'det_land_bank'
-    agency_name = 'Detroit Land Bank Authority'
+    agency = 'Detroit Land Bank Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['buildingdetroit.org']
     start_urls = ['https://buildingdetroit.org/events/meetings']
 
     def parse(self, response):
-        """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
-
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
         data = response.xpath(
             'substring-before(substring-after(//script[contains(text(), "var meeting =")]/text()'
             ', "var meeting ="), "\n")'
@@ -29,30 +22,22 @@ class DetLandBankSpider(Spider):
         entries = json.loads(data.strip()[:-1])
 
         for item in entries:
-            data = {
-                '_type': 'event',
-                'name': item['title_tmp'],
-                'event_description': item['content'],
-                'classification': self._parse_classification(item),
-                'start': self._parse_start(item),
-                'end': {
-                    'date': None,
-                    'time': None,
-                    'note': ''
-                },
-                'all_day': False,
-                'location': self._parse_location(item),
-                'documents': self._parse_documents(item),
-                'sources': [{
-                    'url': response.url,
-                    'note': ''
-                }]
-            }
+            meeting = Meeting(
+                title=item['title_tmp'],
+                description=item['content'],
+                classification=self._parse_classification(item),
+                start=self._parse_start(item),
+                end=None,
+                time_notes='',
+                all_day=False,
+                location=self._parse_location(item),
+                links=self._parse_links(item),
+                source=response.url,
+            )
 
-            data['status'] = self._generate_status(data, text=item['status'])
-            data['id'] = self._generate_id(data)
-
-            yield data
+            meeting['status'] = self._get_status(meeting, text=item['status'])
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _parse_classification(self, item):
         """
@@ -66,8 +51,7 @@ class DetLandBankSpider(Spider):
         """
         Parse start date and time.
         """
-        dt = dateparse(item['start'])
-        return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+        return dateparse(item['start'])
 
     def _parse_location(self, item):
         """
@@ -76,17 +60,16 @@ class DetLandBankSpider(Spider):
         """
         return {
             'address':
-                '{} {}, {} {}'.format(
-                    item['address'], item['city'], item['state'], item['zipcode']
-                ),
+                re.sub(
+                    r'\s+', ' ', '{} {}, {} {}'.format(
+                        item['address'], item['city'], item['state'], item['zipcode']
+                    )
+                ).strip(),
             'name': '',
-            'neighborhood': '',
         }
 
-    def _parse_documents(self, item):
-        """
-        Parse or generate documents.
-        """
+    def _parse_links(self, item):
+        """Parse or generate documents."""
         if item['file_path']:
-            return [{'url': item['file_path'], 'note': 'minutes'}]
+            return [{'href': item['file_path'], 'title': 'Minutes'}]
         return []

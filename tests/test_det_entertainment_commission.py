@@ -1,6 +1,7 @@
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import COMMISSION, PASSED
 from tests.utils import file_response
 
 from city_scrapers.spiders.det_entertainment_commission import DetEntertainmentCommissionSpider
@@ -10,23 +11,23 @@ test_response = file_response(
     'https://www.detroitsentertainmentcommission.com/services'
 )
 spider = DetEntertainmentCommissionSpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, dict)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'Entertainment Commission'
+def test_title():
+    assert parsed_items[0]['title'] == 'Entertainment Commission'
 
 
 def test_description():
-    assert parsed_items[0]['event_description'] == ''
+    assert parsed_items[0]['description'] == ''
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {'date': date(2018, 7, 16), 'time': time(17, 00), 'note': ''}
+    assert parsed_items[0]['start'] == datetime(2018, 7, 16, 17)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {'date': None, 'time': None, 'note': ''}
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -35,26 +36,22 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == 'passed'
+    assert parsed_items[0]['status'] == PASSED
 
 
 def test_location():
     assert parsed_items[0]['location'] == {
-        'neighborhood': '',
         'name': 'Coleman A. Young Municipal Center',
-        'address': '2 Woodward Avenue, Detroit, MI 48226'
+        'address': '2 Woodward Ave, Detroit, MI 48226'
     }
 
 
-def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url': 'https://www.detroitsentertainmentcommission.com/services',
-        'note': ''
-    }]
+def test_source():
+    assert parsed_items[0]['source'] == 'https://www.detroitsentertainmentcommission.com/services'
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
+def test_links():
+    assert parsed_items[0]['links'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)
@@ -64,9 +61,4 @@ def test_all_day(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_classification(item):
-    assert item['classification'] == 'Commission'
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'
+    assert item['classification'] == COMMISSION

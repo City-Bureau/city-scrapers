@@ -1,26 +1,24 @@
-# -*- coding: utf-8 -*-
 import re
 from collections import defaultdict
 
+from city_scrapers_core.constants import BOARD
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.parser import parse
 
-from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
 
-
-class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
+class DetEightMileWoodwardCorridorImprovementAuthoritySpider(CityScrapersSpider):
     name = 'det_eight_mile_woodward_corridor_improvement_authority'
-    agency_name = 'Detroit Eight Mile Woodward Corridor Improvement Authority'
+    agency = 'Detroit Eight Mile Woodward Corridor Improvement Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/emwcia/']
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         yield from self._prev_meetings(response)
@@ -29,12 +27,11 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
             '//p[.//text()[contains(., "The next Regular Board meeting is")]]//text()'
         )
         next_board_text = ' '.join(response.xpath(next_board_meeting_xpath).extract())
-        data = self._set_meeting_defaults(response)
-        data['start'] = self._parse_start(next_board_text)
-        data['status'] = self._generate_status(data)
-        data['id'] = self._generate_id(data)
-
-        yield data
+        meeting = self._set_meeting_defaults(response)
+        meeting['start'] = self._parse_start(next_board_text)
+        meeting['status'] = self._get_status(meeting)
+        meeting['id'] = self._get_id(meeting)
+        yield meeting
 
     def _prev_meetings(self, response):
         past_meetings_xpath = '//a[span/text()="Past Agendas and Minutes"]'
@@ -44,29 +41,20 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
 
     @staticmethod
     def _set_meeting_defaults(response):
-        data = {
-            '_type': 'event',
-            'name': 'Board of Directors',
-            'event_description': '',
-            'classification': BOARD,
-            'end': {
-                'date': None,
-                'time': None,
-                'note': ''
-            },
-            'all_day': False,
-            'location': {
-                'neighborhood': '',
+        return Meeting(
+            title='Board of Directors',
+            description='',
+            classification=BOARD,
+            end=None,
+            time_notes='',
+            all_day=False,
+            location={
                 'name': 'DEGC, Guardian Building',
-                'address': '500 Griswold, Suite 2200, Detroit'
+                'address': '500 Griswold St, Suite 2200, Detroit, MI 48226',
             },
-            'documents': [],
-            'sources': [{
-                'url': response.url,
-                'note': ''
-            }]
-        }
-        return data
+            links=[],
+            source=response.url,
+        )
 
     @staticmethod
     def _parse_start(date_time_text):
@@ -77,20 +65,19 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
         t = time_regex.search(date_time_text)
         d = date_regex.search(date_time_text)
         try:
-            dt = parse(d.group(1) + " " + t.group(1), fuzzy=True)
-            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+            return parse(d.group(1) + " " + t.group(1), fuzzy=True)
         except ValueError:
-            return {'date': None, 'time': None, 'note': ''}
+            pass
 
     def _parse_previous(self, response):
         docs = self._parse_prev_docs(response)
         for meeting_date in docs:
-            data = self._set_meeting_defaults(response)
-            data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
-            data['documents'] = docs[meeting_date]
-            data['status'] = self._generate_status(data)
-            data['id'] = self._generate_id(data)
-            yield data
+            meeting = self._set_meeting_defaults(response)
+            meeting['start'] = meeting_date
+            meeting['links'] = docs[meeting_date]
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _parse_prev_docs(self, response):
         date_regex = re.compile(r'([A-z]+ [0-3]?[0-9], \d{4})')
@@ -102,9 +89,9 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(Spider):
             date_text = date_regex.search(full_text).group(1)
             dt = parse(date_text, fuzzy=True)
             if 'AGENDA' in full_text.upper():
-                docs[dt].append({'url': link, 'note': 'agenda'})
+                docs[dt].append({'href': link, 'title': 'Agenda'})
             elif 'MINUTES' in full_text.upper():
-                docs[dt].append({'url': link, 'note': 'minutes'})
+                docs[dt].append({'href': link, 'title': 'Minutes'})
             else:
-                docs[dt].append({'url': link, 'note': ''})
+                docs[dt].append({'href': link, 'title': ''})
         return docs

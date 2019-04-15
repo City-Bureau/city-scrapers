@@ -1,10 +1,10 @@
 import json
-from datetime import date, time
+from datetime import datetime
 
 import pytest
+from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED, TENTATIVE
 from freezegun import freeze_time
 
-from city_scrapers.constants import BOARD, COMMITTEE, PASSED, TENTATIVE
 from city_scrapers.spiders.cook_forest_preserves import CookForestPreservesSpider
 
 freezer = freeze_time('2018-12-19')
@@ -12,28 +12,20 @@ freezer.start()
 with open('tests/files/cook_forest_preserve.json', 'r') as f:
     test_response = json.load(f)
 spider = CookForestPreservesSpider()
-parsed_items = [item for item in spider._parse_events(test_response)]
+parsed_items = [item for item in spider.parse_legistar(test_response)]
 freezer.stop()
 
 
-def test_name():
-    assert parsed_items[0]['name'] == 'FPD Board of Commissioners'
+def test_title():
+    assert parsed_items[0]['title'] == 'FPD Board of Commissioners'
 
 
 def test_start():
-    assert parsed_items[0]['start'] == {
-        'date': date(2019, 12, 17),
-        'time': time(10, 00),
-        'note': ''
-    }
+    assert parsed_items[0]['start'] == datetime(2019, 12, 17, 10)
 
 
 def test_end():
-    assert parsed_items[0]['end'] == {
-        'date': date(2019, 12, 17),
-        'time': time(13, 00),
-        'note': 'Estimated 3 hours after start time'
-    }
+    assert parsed_items[0]['end'] is None
 
 
 def test_id():
@@ -55,43 +47,35 @@ def test_location():
     assert parsed_items[0]['location'] == {
         'name': '',
         'address': 'Cook County Building, Board Room 118 North Clark Street, Chicago, Illinois',
-        'neighborhood': ''
     }
 
 
 def test_sources():
-    assert parsed_items[0]['sources'] == [{
-        'url':
-            'https://fpdcc.legistar.com/DepartmentDetail.aspx?ID=24752&GUID=714693C0-DBCE-4D3B-A3D9-A5FCBE27378B',  # noqa
-        'note': ''
-    }]
+    assert parsed_items[0][
+        'source'
+    ] == 'https://fpdcc.legistar.com/DepartmentDetail.aspx?ID=24752&GUID=714693C0-DBCE-4D3B-A3D9-A5FCBE27378B'  # noqa
 
 
-def test_documents():
-    assert parsed_items[0]['documents'] == []
-    assert parsed_items[20]['documents'] == [
+def test_links():
+    assert parsed_items[0]['links'] == []
+    assert parsed_items[20]['links'] == [
         {
-            'url':
+            'href':
                 'https://fpdcc.legistar.com/View.ashx?M=A&ID=584806&GUID=C00EFBA7-F086-41D9-B0EE-A9057114D3EE',  # noqa
-            'note': 'Agenda'
+            'title': 'Agenda'
         },
         {
-            'note': 'Video',
-            'url': 'https://fpdcc.legistar.com/Video.aspx?Mode=Granicus&ID1=437&Mode2=Video'
+            'title': 'Video',
+            'href': 'https://fpdcc.legistar.com/Video.aspx?Mode=Granicus&ID1=437&Mode2=Video'
         }
     ]
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_description(item):
-    assert item['event_description'] == ''
+    assert item['description'] == ''
 
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_all_day(item):
     assert item['all_day'] is False
-
-
-@pytest.mark.parametrize('item', parsed_items)
-def test__type(item):
-    assert parsed_items[0]['_type'] == 'event'

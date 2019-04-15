@@ -1,26 +1,24 @@
-# -*- coding: utf-8 -*-
 import re
 from collections import defaultdict
 
+from city_scrapers_core.constants import BOARD
+from city_scrapers_core.items import Meeting
+from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.parser import parse
 
-from city_scrapers.constants import BOARD
-from city_scrapers.spider import Spider
 
-
-class DetDowntownDevelopmentAuthoritySpider(Spider):
+class DetDowntownDevelopmentAuthoritySpider(CityScrapersSpider):
     name = 'det_downtown_development_authority'
-    agency_name = 'Detroit Downtown Development Authority'
+    agency = 'Detroit Downtown Development Authority'
     timezone = 'America/Detroit'
     allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/dda/']
 
     def parse(self, response):
         """
-        `parse` should always `yield` a dict that follows the Event Schema
-        <https://city-bureau.github.io/city-scrapers/06_event_schema.html>.
+        `parse` should always `yield` Meeting items.
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
+        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
         yield from self._prev_meetings(response)
@@ -29,13 +27,13 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
     def _next_meeting(self, response):
         next_meeting_xpath = ('//text()[contains(., "The next Regular DDA Board meeting is")]')
         next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
-        data = self._set_meeting_defaults(response)
-        data['start'] = self._parse_start(next_meeting_text)
-        if data['start']['date'] is not None:
-            data['documents'] = self._parse_docs(response, data['start']['date'])
-            data['status'] = self._generate_status(data)
-            data['id'] = self._generate_id(data)
-            yield data
+        meeting = self._set_meeting_defaults(response)
+        meeting['start'] = self._parse_start(next_meeting_text)
+        if meeting['start'] is not None:
+            meeting['links'] = self._parse_links(response, meeting['start'])
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _prev_meetings(self, response):
         prev_meetings_xpath = '//a[contains(., "Agendas and Minutes")]'
@@ -46,22 +44,21 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
     @staticmethod
     def _parse_start(date_time_text):
         try:
-            dt = parse(date_time_text, fuzzy=True)
-            return {'date': dt.date(), 'time': dt.time(), 'note': ''}
+            return parse(date_time_text, fuzzy=True)
         except ValueError:
-            return {'date': None, 'time': None, 'note': ''}
+            pass
 
     def _parse_prev_meetings(self, response):
         # there are only documents for prev meetings,
         # so use these to create prev meetings
         prev_meeting_docs = self._parse_prev_docs(response)
         for meeting_date in prev_meeting_docs:
-            data = self._set_meeting_defaults(response)
-            data['start'] = {'date': meeting_date.date(), 'time': None, 'note': ''}
-            data['documents'] = prev_meeting_docs[meeting_date]
-            data['status'] = self._generate_status(data)
-            data['id'] = self._generate_id(data)
-            yield data
+            meeting = self._set_meeting_defaults(response)
+            meeting['start'] = meeting_date
+            meeting['links'] = prev_meeting_docs[meeting_date]
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _parse_prev_docs(self, response):
         docs = defaultdict(list)
@@ -71,37 +68,37 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
             is_date = self._parse_date(link_text)
             if is_date:
                 dt = parse(is_date.group(1), fuzzy=True)
-                document = self._create_document(link)
+                document = self._create_link(link)
                 docs[dt].append(document)
         return docs
 
-    def _parse_docs(self, response, meeting_date):
+    def _parse_links(self, response, meeting_date):
         docs = []
         doc_links = response.xpath("//a[span/text()[contains(., 'Agenda')]]")
         for link in doc_links:
             # meeting details and docs are in separate places,
             # so find the docs that match meeting_date
             if self._matches_meeting_date(link, meeting_date):
-                document = self._create_document(link)
+                document = self._create_link(link)
                 docs.append(document)
         return docs
 
-    def _create_document(self, link):
+    def _create_link(self, link):
         link_text = link.xpath('span/text()').extract_first('')
         date = self._parse_date(link_text).group(1)
         desc = link_text.split(date)[-1]
         url = link.xpath("@href").extract_first('')
         if 'AGENDA' in desc.upper():
-            return {'url': url, 'note': 'Agenda'}
+            return {'href': url, 'title': 'Agenda'}
         if 'MINUTES' in desc.upper():
-            return {'url': url, 'note': 'Minutes'}
-        return {'url': url, 'note': desc.strip()}
+            return {'href': url, 'title': 'Minutes'}
+        return {'href': url, 'title': desc.strip()}
 
     def _matches_meeting_date(self, link, meeting_date):
         link_text = link.xpath('span/text()').extract_first('')
         if self._parse_date(link_text):
             agenda_date = parse(link_text, fuzzy=True)
-            if agenda_date.date() == meeting_date:
+            if agenda_date.date() == meeting_date.date():
                 return True
         return False
 
@@ -112,26 +109,16 @@ class DetDowntownDevelopmentAuthoritySpider(Spider):
 
     @staticmethod
     def _set_meeting_defaults(response):
-        data = {
-            '_type': 'event',
-            'name': 'Board of Directors',
-            'event_description': '',
-            'classification': BOARD,
-            'end': {
-                'date': None,
-                'time': None,
-                'note': ''
-            },
-            'all_day': False,
-            'location': {
-                'neighborhood': '',
+        return Meeting(
+            title='Board of Directors',
+            description='',
+            classification=BOARD,
+            end=None,
+            all_day=False,
+            location={
                 'name': 'DEGC, Guardian Building',
-                'address': '500 Griswold, Suite 2200, Detroit'
+                'address': '500 Griswold St, Suite 2200, Detroit, MI 48226'
             },
-            'documents': [],
-            'sources': [{
-                'url': response.url,
-                'note': ''
-            }]
-        }
-        return data
+            links=[],
+            source=response.url,
+        )
