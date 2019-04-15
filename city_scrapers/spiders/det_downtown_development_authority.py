@@ -114,6 +114,7 @@ class DetDowntownDevelopmentAuthoritySpider(CityScrapersSpider):
             description='',
             classification=BOARD,
             end=None,
+            time_notes='',
             all_day=False,
             location={
                 'name': 'DEGC, Guardian Building',
