@@ -55,18 +55,13 @@ def test_location():
 
 
 def test_links():
-    assert parsed_items[0]['links'] == [
-        {
-            'title': 'Agenda',
-            'href':
-                'https://www.chipublib.org/news/board-of-directors-meeting-agenda-january-15-2019/'
-        },
-        {
-            'title': 'Minutes',
-            'href':
-                'https://www.chipublib.org/news/board-of-directors-meeting-minutes-january-15-2019/'
-        }
-    ]
+    assert parsed_items[0]['links'] == [{
+        'title': 'Agenda',
+        'href': 'https://www.chipublib.org/news/board-of-directors-meeting-agenda-january-15-2019/'
+    }, {
+        'title': 'Minutes',
+        'href': 'https://www.chipublib.org/news/board-of-directors-meeting-minutes-january-15-2019/'
+    }]
 
 
 @pytest.mark.parametrize('item', parsed_items)
