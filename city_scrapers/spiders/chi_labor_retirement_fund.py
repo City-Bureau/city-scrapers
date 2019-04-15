@@ -1,7 +1,8 @@
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from datetime import datetime
+
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from datetime import date, datetime
 
 
 class ChiLaborRetirementFundSpider(CityScrapersSpider):
@@ -10,6 +11,10 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     allowed_domains = ["www.labfchicago.org"]
     start_urls = ["http://www.labfchicago.org/agendas-minutes"]
+    location = {
+        "address": "321 N Clark St, Chicago, IL",
+        "name": "Fund Office",
+    }
 
     def parse(self, response):
         """
@@ -18,88 +23,49 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+        description = " ".join(response.css(".mainRail .block p:nth-child(1) *::text").extract())
+        if "321 N" not in description:
+            raise ValueError("Meeting location has changed")
         for item in response.css(".days"):
             meeting = Meeting(
                 title=self._parse_title(item),
-                description=self._parse_description(item),
-                classification=self._parse_classification(item),
+                description="",
+                classification=BOARD,
                 start=self._parse_start(item),
-                end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
-                links=self._parse_links(item),
-                source=self._parse_source(response),
+                end=None,
+                all_day=False,
+                time_notes="",
+                location=self.location,
+                links=self._parse_links(item, response),
+                source=response.url,
             )
 
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(
+                meeting, text=item.css('li:nth-child(3) td::text').extract_first() or ""
+            )
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
 
-    ###### NEEDS DONE
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        title = item.css('li:nth-child(3)::text').extract_first()
-        # Returns \r\n instead of title
-        return title
+        title = item.css('li:nth-child(3) td::text').extract_first()
+        if "special" in title.lower():
+            return "Special Meeting"
+        return "Retirement Board"
 
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return None
-
-    def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
-        return BOARD
-
-    # Needs tested, but the pulledDate and startTime pull correct parts of site
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        pulledDate = item.css('.calendar-day::text').extract_first()
-        year = int(pulledDate[7:])
-        month = int(pulledDate[0:3])
-        day = int(pulledDated[4:6])
-        startTime = item.css('li:nth-child(2)::text').extract_first()
-        i = 0
-        hrs = ''
-        while time[i] != ':':
-            hrs += time[i]
-            i += 1
-        i += 1
-        hrs = int(hrs)
-        minutes = ''
-        while time[i] != ' ':
-            minutes += time[i]
-        minutes = int(minutes)
-        i += 1
-        if time[i] == 'p':
-            hours += 12
-        start = datetime.datetime(year, month, day, hours, minutes, 00, 00)
-        return start
+        cal_date = item.css('.calendar-day::text').extract_first()
+        start_time = item.css('li:nth-child(2)::text').extract_first()
+        return datetime.strptime("{} {}".format(cal_date, start_time.upper()), "%m/%d/%Y %I:%M %p")
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
-
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
-
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
-
-    def _parse_location(self, item):
-        """Parse or generate location."""
-        return {
-            "address": "321 N Clark St, Chicago, IL",
-            "name": "Fund Office",
-        }
-
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
-        return [{"href": "", "title": ""}]
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
+        links = []
+        for link in item.css("li:last-child a"):
+            links.append({
+                "href": response.urljoin(link.attrib["href"]),
+                "title": link.xpath("./text()").extract_first(),
+            })
+        return links
