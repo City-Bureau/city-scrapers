@@ -103,7 +103,7 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         links = []
         agenda = {
             "type": "agenda",
-            "href": item.xpath('@href').get(),
+            "href": 'https://' + self.allowed_domains[0] + item.xpath('@href').get(),
             "title": item.xpath('text()').get()
         }
 
@@ -126,7 +126,7 @@ class IlOpioidResponseSpider(CityScrapersSpider):
 
                     minutes = {
                         "type": "minutes",
-                        "href": minutes.xpath('@href').get(),
+                        "href": 'https://' + self.allowed_domains[0] + minutes.xpath('@href').get(),
                         "title": minutes.xpath('text()').get(),
                     }
 
