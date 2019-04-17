@@ -45,7 +45,7 @@ class IlOpioidResponseSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return ""
+        return "Advisory Council"
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -83,26 +83,17 @@ class IlOpioidResponseSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        return [
-            {
-                "address":
-                    "401 S. Clinton Street, 7th Floor Executive Conference Room,"
-                    " Chicago, IL 60607",
-                "name": "Illinois Department of Human Services Clinton Building",
-            },
-            {
-                "address":
-                    "100 S. Grand Avenue East, 3rd Floor Executive Video Conference Room,"
-                    " Springfield, IL 62762",
-                "name": "Illinois Department of Human Services Harris Building",
-            },
-        ]
+        return {
+            "address":
+                "401 S. Clinton Street, 7th Floor Executive Conference Room,"
+                " Chicago, IL 60607",
+            "name": "Illinois Department of Human Services Clinton Building",
+        }
 
     def _parse_links(self, item, response):
         """Parse or generate links for meeting agenda and minutes."""
         links = []
         agenda = {
-            "type": "agenda",
             "href": 'https://' + self.allowed_domains[0] + item.xpath('@href').get(),
             "title": item.xpath('text()').get()
         }
@@ -125,7 +116,6 @@ class IlOpioidResponseSpider(CityScrapersSpider):
                 if datestr in minutes.get():
 
                     minutes = {
-                        "type": "minutes",
                         "href": 'https://' + self.allowed_domains[0] + minutes.xpath('@href').get(),
                         "title": minutes.xpath('text()').get(),
                     }

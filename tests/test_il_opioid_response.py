@@ -2,9 +2,9 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from freezegun import freeze_time
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
 
 from city_scrapers.spiders.il_opioid_response import IlOpioidResponseSpider
 
@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == ""
+    assert parsed_items[0]["title"] == "Advisory Council"
 
 
 def test_description():
@@ -43,7 +43,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_opioid_response/201904151300/x/"
+    assert parsed_items[0]["id"] == "il_opioid_response/201904151300/x/advisory_council"
 
 
 def test_status():
@@ -51,18 +51,10 @@ def test_status():
 
 
 def test_location():
-    assert parsed_items[0]["location"] == [
-        {
-            "address":
-                "401 S. Clinton Street, 7th Floor Executive Conference Room, Chicago, IL 60607",
-            "name": "Illinois Department of Human Services Clinton Building",
-        },
-        {
-            "address":
-                "100 S. Grand Avenue East, 3rd Floor Executive Video Conference Room, Springfield, IL 62762",
-            "name": "Illinois Department of Human Services Harris Building",
-        },
-    ]
+    assert parsed_items[0]["location"] == {
+        "address": "401 S. Clinton Street, 7th Floor Executive Conference Room, Chicago, IL 60607",
+        "name": "Illinois Department of Human Services Clinton Building",
+    }
 
 
 def test_source():
@@ -71,7 +63,6 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == [{
-        'type': 'agenda',
         'href': 'https://www.dhs.state.il.us/OneNetLibrary/27896/documents/Agenda_04.15.19.pdf',
         'title': 'Agenda 04.15.19 (pdf)'
     }]
