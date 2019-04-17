@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, time
 
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
@@ -21,6 +22,9 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         """
 
         for item in response.xpath('//p//a'):
+            if 'Agenda' not in item.xpath('text()').get():
+                break
+
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -30,12 +34,12 @@ class IlOpioidResponseSpider(CityScrapersSpider):
                 all_day=self._parse_all_day(item),
                 time_notes=self._parse_time_notes(item),
                 location=self._parse_location(item),
-                links=self._parse_links(item),
+                links=self._parse_links(item, response),
                 source=self._parse_source(response),
             )
 
-            # meeting["status"] = self._get_status(meeting)
-            # meeting["id"] = self._get_id(meeting)
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
 
             yield meeting
 
@@ -53,20 +57,20 @@ class IlOpioidResponseSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        text_array = item.xpath('text()').get().split()
-        try: # MISSING A SPACE ON ONE OF ENTRIES
-            start_date = datetime.strptime(text_array[1], '%m.%d.%y')
-            return datetime.combine(start_date, time(13)) # static start time
-        except ValueError:
+        date_match = self._get_date(item)
+        if date_match:
+            start_date = datetime.strptime(date_match.group(0), '%m.%d.%y')
+            return datetime.combine(start_date, time(13))
+        else:
             return None
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        text_array = item.xpath('text()').get().split()
-        try:
-            end_date = datetime.strptime(text_array[1], '%m.%d.%y')
-            return datetime.combine(end_date, time(15)) # static end time
-        except ValueError:
+        date_match = self._get_date(item)
+        if date_match:
+            end_date = datetime.strptime(date_match.group(0), '%m.%d.%y')
+            return datetime.combine(end_date, time(15))
+        else:
             return None
 
     def _parse_time_notes(self, item):
@@ -77,29 +81,61 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    def _parse_location(self, item): # list of dicts instead of dict? 
+    def _parse_location(self, item):
         """Parse or generate location."""
         return [
             {
-                "address": "401 S. Clinton Street, 7th Floor Executive Conference Room, Chicago, IL 60607",
+                "address": "401 S. Clinton Street, 7th Floor Executive Conference Room,"
+                " Chicago, IL 60607",
                 "name": "Illinois Department of Human Services Clinton Building",
             },
             {
-                "address": "100 S. Grand Avenue East, 3rd Floor Executive Video Conference Room, Springfield, IL 62762",
+                "address": "100 S. Grand Avenue East, 3rd Floor Executive Video Conference Room,"
+                " Springfield, IL 62762",
                 "name": "Illinois Department of Human Services Harris Building",
             },
         ]
 
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        # differentiate meeting agenda vs minutes
-        return [
-            {
-                "href": item.xpath('@href').get(),
-                "title": item.xpath('text()').get()
-            }
-        ]
+    def _parse_links(self, item, response):
+        """Parse or generate links for meeting agenda and minutes."""
+        links = []
+        agenda = {
+            "type": "agenda",
+            "href": item.xpath('@href').get(),
+            "title": item.xpath('text()').get()
+        }
+
+        links.append(agenda)
+
+        date_match = self._get_date(item)
+
+        if date_match:
+
+            datestr = date_match.group(0)
+            date_indices = [i for i, x in enumerate(
+                response.xpath('//p//a/text()').getall()) if datestr in x]
+
+            if len(date_indices) > 1:
+                minutes_idx = date_indices[1]
+                minutes = response.xpath('//p//a')[minutes_idx]
+
+                if datestr in minutes.get():
+
+                    minutes = {
+                        "type": "minutes",
+                        "href": minutes.xpath('@href').get(),
+                        "title": minutes.xpath('text()').get(),
+                    }
+
+                    links.append(minutes)
+
+        return links
 
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
+
+    def _get_date(self, item):
+        text_str = item.xpath('text()').get()
+        date_match = re.search(r'\d*\.\d*\.\d*', text_str)
+        return date_match
