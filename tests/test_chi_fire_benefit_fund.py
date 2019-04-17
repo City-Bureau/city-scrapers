@@ -28,7 +28,8 @@ def test_count():
 
 def test_title():
     assert parsed_items[0]["title"] == "Retirement Board"
-    assert parsed_items[-1]["title"] == "Committee"
+    assert parsed_items[-3]["title"] == "Investment Committee"
+    assert parsed_items[-2]["title"] == "Committee"
 
 
 def test_description():
@@ -64,15 +65,12 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "http://www.fabf.org/PDF/Agendas/01-25-2019.pdf",
-        "title": "January Agenda"
+    assert parsed_items[-3]["links"] == [{
+        "href": "http://www.fabf.org/PDF/Agendas/02-19-19INVST.pdf",
+        "title": "Investment Agenda"
     }, {
-        "href": "http://www.fabf.org/PDF/Summary/01-25-2019.pdf",
-        "title": "January Summary"
-    }, {
-        "href": "http://www.fabf.org/PDF/Minutes/01-25-2019.pdf",
-        "title": "January Minutes"
+        "href": "http://www.fabf.org/PDF/Minutes/02-19-2019INVST.pdf",
+        "title": "Investment Minutes"
     }]
 
 

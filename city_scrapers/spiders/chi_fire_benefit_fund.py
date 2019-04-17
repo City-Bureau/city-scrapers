@@ -32,8 +32,9 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
                 if not re.search(r"\d{4}", date_str):
                     continue
                 start = self._parse_start(date_str)
+                links = self._parse_links(start, link_list)
                 meeting = Meeting(
-                    title=self._parse_title(is_board),
+                    title=self._parse_title(is_board, links),
                     description="",
                     classification=self._parse_classification(is_board),
                     start=start,
@@ -41,7 +42,7 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
                     all_day=False,
                     time_notes="See agenda for meeting time",
                     location=self.location,
-                    links=self._parse_links(start, link_list),
+                    links=links,
                     source=response.url,
                 )
 
@@ -52,10 +53,22 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
         for item in response.css(".meetings"):
             start = self._parse_start(item)
 
-    def _parse_title(self, is_board):
+    def _parse_title(self, is_board, links):
         """Parse or generate meeting title."""
         if is_board:
             return "Retirement Board"
+        # Link titles can have committee names in them, return the first time there's a match
+        for link in links:
+            if "invest" in link["title"].lower():
+                return "Investment Committee"
+            if "legal" in link["title"].lower():
+                return "Legal Committee"
+            if "legislative" in link["title"].lower():
+                return "Legislative Committee"
+            if "budget" in link["title"].lower():
+                return "Budget Committee"
+            if "special" in link["title"].lower():
+                return "Special Meeting"
         return "Committee"
 
     def _parse_classification(self, is_board):
@@ -82,4 +95,8 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
 
     def _parse_links(self, start, link_list):
         """Parse links from link list. All links for meetings have the formatted date in the URL"""
-        return [link for link in link_list if start.strftime("%m-%d-%Y") in link["href"]]
+        start_fmts = [start.strftime("%m-%d-%Y"), start.strftime("%m-%d-%y")]
+        return [
+            link for link in link_list
+            if any(start_fmt in link["href"] for start_fmt in start_fmts)
+        ]
