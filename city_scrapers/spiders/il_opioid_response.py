@@ -85,13 +85,15 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         """Parse or generate location."""
         return [
             {
-                "address": "401 S. Clinton Street, 7th Floor Executive Conference Room,"
-                " Chicago, IL 60607",
+                "address":
+                    "401 S. Clinton Street, 7th Floor Executive Conference Room,"
+                    " Chicago, IL 60607",
                 "name": "Illinois Department of Human Services Clinton Building",
             },
             {
-                "address": "100 S. Grand Avenue East, 3rd Floor Executive Video Conference Room,"
-                " Springfield, IL 62762",
+                "address":
+                    "100 S. Grand Avenue East, 3rd Floor Executive Video Conference Room,"
+                    " Springfield, IL 62762",
                 "name": "Illinois Department of Human Services Harris Building",
             },
         ]
@@ -112,8 +114,9 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         if date_match:
 
             datestr = date_match.group(0)
-            date_indices = [i for i, x in enumerate(
-                response.xpath('//p//a/text()').getall()) if datestr in x]
+            date_indices = [
+                i for i, x in enumerate(response.xpath('//p//a/text()').getall()) if datestr in x
+            ]
 
             if len(date_indices) > 1:
                 minutes_idx = date_indices[1]

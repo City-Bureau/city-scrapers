@@ -52,15 +52,17 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == [
-            {
-                "address": "401 S. Clinton Street, 7th Floor Executive Conference Room, Chicago, IL 60607",
-                "name": "Illinois Department of Human Services Clinton Building",
-            },
-            {
-                "address": "100 S. Grand Avenue East, 3rd Floor Executive Video Conference Room, Springfield, IL 62762",
-                "name": "Illinois Department of Human Services Harris Building",
-            },
-        ]
+        {
+            "address":
+                "401 S. Clinton Street, 7th Floor Executive Conference Room, Chicago, IL 60607",
+            "name": "Illinois Department of Human Services Clinton Building",
+        },
+        {
+            "address":
+                "100 S. Grand Avenue East, 3rd Floor Executive Video Conference Room, Springfield, IL 62762",
+            "name": "Illinois Department of Human Services Harris Building",
+        },
+    ]
 
 
 def test_source():
@@ -68,11 +70,11 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [
-        {'type': 'agenda',
-         'href': 'https://www.dhs.state.il.us/OneNetLibrary/27896/documents/Agenda_04.15.19.pdf',
-         'title': 'Agenda 04.15.19 (pdf)'}
-    ]
+    assert parsed_items[0]["links"] == [{
+        'type': 'agenda',
+        'href': 'https://www.dhs.state.il.us/OneNetLibrary/27896/documents/Agenda_04.15.19.pdf',
+        'title': 'Agenda 04.15.19 (pdf)'
+    }]
 
 
 def test_classification():
