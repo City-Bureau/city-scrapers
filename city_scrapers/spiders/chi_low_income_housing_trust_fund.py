@@ -53,6 +53,8 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
         items = []
         for item in response.css('.day-with-date:not(.no-events), .current-day:not(.no-events)'):
             title = self._parse_title(item)
+            if 'training' in title.lower():
+                continue
             description = self._parse_description(item)
             items.append(
                 Meeting(
@@ -89,7 +91,7 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
         """Parse or generate classification (e.g. board, committee, etc)"""
         if 'board' in title.lower():
             return BOARD
-        if 'committee' in title.lower():
+        if 'committe' in title.lower():
             return COMMITTEE
         return NOT_CLASSIFIED
 
