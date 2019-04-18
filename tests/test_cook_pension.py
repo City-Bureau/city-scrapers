@@ -17,7 +17,9 @@ spider = CookPensionSpider()
 freezer = freeze_time("2019-04-17")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+parsed_items = sorted([item for item in spider.parse(test_response)],
+                      key=lambda i: i["start"],
+                      reverse=True)
 
 freezer.stop()
 
