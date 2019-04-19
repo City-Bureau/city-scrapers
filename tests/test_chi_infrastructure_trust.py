@@ -2,9 +2,9 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from freezegun import freeze_time
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_infrastructure_trust import ChiInfrastructureTrustSpider
 
@@ -58,13 +58,17 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == ("http://chicagoinfrastructure.org/"
-    "public-records/meeting-records-2/")
+    assert parsed_items[0]["source"] == (
+        "http://chicagoinfrastructure.org/"
+        "public-records/meeting-records-2/"
+    )
 
 
 def test_links():
     assert parsed_items[0]["links"] == [{
-        "href": "http://chicagoinfrastructure.org/wp-content/uploads/2018/12/Board-Meeting-Agenda-20181211.pdf",
+        "href":
+            "http://chicagoinfrastructure.org/wp-content/uploads/2018/12/"
+            "Board-Meeting-Agenda-20181211.pdf",
         "title": "Meeting Agenda"
     }]
 

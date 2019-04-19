@@ -1,5 +1,5 @@
-from datetime import datetime
 import re
+from datetime import datetime
 
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
@@ -11,7 +11,8 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
     agency = "Chicago Infrastructure Trust"
     timezone = "America/Chicago"
     allowed_domains = ["chicagoinfrastructure.org"]
-    start_urls = ["http://chicagoinfrastructure.org/public-records/meeting-records-2/",
+    start_urls = [
+        "http://chicagoinfrastructure.org/public-records/meeting-records-2/",
         "http://chicagoinfrastructure.org/public-records/scheduled-meetings/"
     ]
 
@@ -28,12 +29,12 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
                     continue
 
                 yield self._generate_meeting(item, response)
-        
+
         elif response.url == self.start_urls[1]:
             item = response.css(".entry").xpath('.//p')[1]
 
             yield self._generate_meeting(item, response)
-    
+
     def _generate_meeting(self, item, response):
         """Generate the meeting object"""
         meeting = Meeting(
