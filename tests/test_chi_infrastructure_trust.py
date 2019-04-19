@@ -3,7 +3,7 @@ from os.path import dirname, join
 
 import pytest
 from freezegun import freeze_time
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.chi_infrastructure_trust import ChiInfrastructureTrustSpider
@@ -22,65 +22,57 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+def test_title():
+    assert parsed_items[0]["title"] == "Board Meeting"
 
 
-"""
-Uncomment below
-"""
-
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+def test_description():
+    assert parsed_items[0]["description"] == ""
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_start():
+    assert parsed_items[0]["start"] == datetime(2018, 12, 11, 0, 0)
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_end():
+    assert parsed_items[0]["end"] is None
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_time_notes():
+    assert parsed_items[0]["time_notes"] == ""
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_id():
+    assert parsed_items[0]["id"] == "chi_infrastructure_trust/201812110000/x/board_meeting"
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_status():
+    assert parsed_items[0]["status"] == "passed"
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_location():
+    assert parsed_items[0]["location"] == {
+        "address": "140 South Dearborn Street, Suite 1400, Chicago, IL 60603",
+        "name": "Metropolitan Planning Council",
+    }
 
 
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
+def test_source():
+    assert parsed_items[0]["source"] == ("http://chicagoinfrastructure.org/"
+    "public-records/meeting-records-2/")
 
 
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+def test_links():
+    assert parsed_items[0]["links"] == [{
+        "href": "http://chicagoinfrastructure.org/wp-content/uploads/2018/12/Board-Meeting-Agenda-20181211.pdf",
+        "title": "Meeting Agenda"
+    }]
 
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+def test_classification():
+    assert parsed_items[0]["classification"] == BOARD
 
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
-
-
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+@pytest.mark.parametrize("item", parsed_items)
+def test_all_day(item):
+    assert item["all_day"] is False
