@@ -57,7 +57,7 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return "Board Meeting"
+        return "Board of Directors"
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
