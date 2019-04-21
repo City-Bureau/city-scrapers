@@ -10,8 +10,8 @@ from city_scrapers_core.items import Meeting
 class DetCityMixin:
     timezone = 'America/Detroit'
     allowed_domains = ['detroitmi.gov']
-    dept_cal_id = None # Agency URL param when filtering calendar page with "Department" drop down
-    dept_doc_id = '' # Agency URL param when filtering documents page with "Department" drop down
+    dept_cal_id = None  # Agency URL param when filtering calendar page with "Department" drop down
+    dept_doc_id = ''  # Agency URL param when filtering documents page with "Department" drop down
     agency_cal_id = None  # Agency URL param when filtering the calendar page
     agency_doc_id = None  # Agency URL param (or list of params) when filtering the documents page
     start_days_prev = 120  # Number of days before today to start searching
@@ -32,8 +32,10 @@ class DetCityMixin:
             if isinstance(agency_doc_id, list):
                 agency_doc_id = agency_doc_id[0]
             return [
-                'https://detroitmi.gov/documents?{}={}&{}={}'.format(self.doc_query_param_dept, \
-                    self.dept_doc_id, self.doc_query_param, agency_doc_id)
+                'https://detroitmi.gov/documents?{}={}&{}={}'.format(self.doc_query_param_dept,
+                                                                     self.dept_doc_id,
+                                                                     self.doc_query_param,
+                                                                     agency_doc_id)
             ]
         else:
             return [self.get_event_start_url()]
@@ -55,7 +57,6 @@ class DetCityMixin:
                 'https://detroitmi.gov/Calendar-and-Events?'
                 'field_start_value={}&term_node_tid_depth={}&term_node_tid_depth_1={}'
             ).format(start_date, self.dept_cal_id, self.agency_cal_id)
-
 
     def parse(self, response):
         """Set parse method based on the response URL"""
@@ -219,7 +220,7 @@ class DetCityMixin:
                 date_str = date_match.group().replace(' ', '-')
             if not date_match:
                 doc_title = doc_link['title'].replace('.', '')
-                date_fmt = '%B %d, %Y' #change to 'b' instead of 'B' to work
+                date_fmt = '%B %d, %Y'
                 date_match = re.search(r'[a-zA-Z]{3,9} \d{1,2},? \d{4}', doc_title)
             if date_match:
                 if not date_str:
