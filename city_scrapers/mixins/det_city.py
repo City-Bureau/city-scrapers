@@ -32,10 +32,9 @@ class DetCityMixin:
             if isinstance(agency_doc_id, list):
                 agency_doc_id = agency_doc_id[0]
             return [
-                'https://detroitmi.gov/documents?{}={}&{}={}'.format(self.doc_query_param_dept,
-                                                                     self.dept_doc_id,
-                                                                     self.doc_query_param,
-                                                                     agency_doc_id)
+                'https://detroitmi.gov/documents?{}={}&{}={}'.format(
+                    self.doc_query_param_dept, self.dept_doc_id, self.doc_query_param, agency_doc_id
+                )
             ]
         else:
             return [self.get_event_start_url()]

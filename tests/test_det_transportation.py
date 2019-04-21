@@ -1,86 +1,91 @@
 from datetime import datetime
 from os.path import dirname, join
 
-import pytest
-from freezegun import freeze_time
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD, PASSED
 from city_scrapers_core.utils import file_response
+# import pytest
+from freezegun import freeze_time
 
 from city_scrapers.spiders.det_transportation import DetTransportationSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "det_transportation.html"),
-    url="https://detroitmi.gov/Calendar-and-Events",
+    url='https://detroitmi.gov/events/community-input-meeting-0'
 )
 spider = DetTransportationSpider()
 
 freezer = freeze_time("2019-04-21")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+item = spider.parse_event_page(test_response)
 
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+def test_title():
+    assert item["title"] == "Community Input Meeting"
 
 
-"""
-Uncomment below
-"""
+def test_description():
+    # fix difficult spacing in the description
+    cleaned = item['description']
+    ours = ' '.join(cleaned.split())
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+    good_description = """Please join us for the first community input meeting of the year!
+                    January 17, 2019 5:00pm - 7:00pm
+                    at the DDOT Admin Bldg. Topics Include:
+                    • Review of December 2018 concerns
+                    • New Fare Overview (Implementing May 1, 2019)"""
 
+    theirs = ' '.join(good_description.split())
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
-
-
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
-
-
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+    assert (ours == theirs)
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_start():
+    assert item["start"] == datetime(2019, 1, 17, 17, 0)
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_end():
+    assert item["end"] == datetime(2019, 1, 17, 19, 0)
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_time_notes():
+    assert item["time_notes"] == ''
 
 
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
+def test_id():
+    assert item["id"] == 'det_transportation/201901171700/x/community_input_meeting'
 
 
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+def test_status():
+    assert item["status"] == PASSED
 
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+def test_location():
+    correct_location = {
+        'address': '1301 East Warren Avenue, Detroit MI 48207',
+        'name': 'Detroit Department of Transportation'
+    }
+
+    # this test is unusually sensitive to whitespace
+    for key in item["location"]:
+        ours = item["location"][key].lstrip()
+        theirs = correct_location[key].lstrip()
+        assert (ours == theirs)
 
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+def test_source():
+    assert item["source"] == 'https://detroitmi.gov/events/community-input-meeting-0'
 
 
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+def test_links():
+    assert item["links"] == []
+
+
+def test_classification():
+    assert item["classification"] == BOARD
+
+
+def test_all_day():
+    assert item["all_day"] is False
