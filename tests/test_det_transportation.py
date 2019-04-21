@@ -6,15 +6,15 @@ from freezegun import freeze_time
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 
-from city_scrapers.spiders.det_ethics_board import DetEthicsBoardSpider
+from city_scrapers.spiders.det_transportation import DetTransportationSpider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "det_ethics_board.html"),
+    join(dirname(__file__), "files", "det_transportation.html"),
     url="https://detroitmi.gov/Calendar-and-Events",
 )
-spider = DetEthicsBoardSpider()
+spider = DetTransportationSpider()
 
-freezer = freeze_time("2019-04-14")
+freezer = freeze_time("2019-04-21")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -34,23 +34,30 @@ Uncomment below
 # def test_title():
 #     assert parsed_items[0]["title"] == "EXPECTED TITLE"
 
+
 # def test_description():
 #     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+
 
 # def test_start():
 #     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
 
+
 # def test_end():
 #     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+
 
 # def test_time_notes():
 #     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
 
+
 # def test_id():
 #     assert parsed_items[0]["id"] == "EXPECTED ID"
 
+
 # def test_status():
 #     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+
 
 # def test_location():
 #     assert parsed_items[0]["location"] == {
@@ -58,8 +65,10 @@ Uncomment below
 #         "address": "EXPECTED ADDRESS"
 #     }
 
+
 # def test_source():
 #     assert parsed_items[0]["source"] == "EXPECTED URL"
+
 
 # def test_links():
 #     assert parsed_items[0]["links"] == [{
@@ -67,8 +76,10 @@ Uncomment below
 #       "title": "EXPECTED TITLE"
 #     }]
 
+
 # def test_classification():
 #     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+
 
 # @pytest.mark.parametrize("item", parsed_items)
 # def test_all_day(item):
