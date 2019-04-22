@@ -373,7 +373,7 @@ You generally want to verify that a spider:
 
 #### C. Create a Pull Request
 
-If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project. In this case, please prefix your pull request name with `WIP` so that everyone knows what kind of feedback you are looking for.
+If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project. In this case, please mark your pull request as a [draft pull request](https://github.blog/2019-02-14-introducing-draft-pull-requests/){:target="\_blank"} when you create it. You can update this status when it is ready for review.
 
 Additionally, please use the pull request description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
 
@@ -414,14 +414,14 @@ When setting values for `classification` or `status` (although `status` should g
 
 #### Classifications
 
-- `ADVISORY_COMMITTEE`
-- `BOARD`
-- `CITY_COUNCIL`
-- `COMMISSION`
-- `COMMITTEE`
-- `FORUM`
-- `POLICE_BEAT`
-- `NOT_CLASSIFIED`
+- `ADVISORY_COMMITTEE`: Advisory Committees or Councils (often Citizen's Advisory Committees)
+- `BOARD`: Boards of Trustees, Directors, etc.
+- `CITY_COUNCIL`: Legislative branch of a local government
+- `COMMISSION`: Any agency with "commission" in the name
+- `COMMITTEE`: Committees of larger agencies
+- `FORUM`: Public hearings, community input meetings, informational meetings etc.
+- `POLICE_BEAT`: Specifically used for police beat meetings
+- `NOT_CLASSIFIED`: Anything that doesn't seem to fit well into any of the prior categories
 
 #### Statuses
 
