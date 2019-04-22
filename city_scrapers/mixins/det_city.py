@@ -10,9 +10,12 @@ from city_scrapers_core.items import Meeting
 class DetCityMixin:
     timezone = 'America/Detroit'
     allowed_domains = ['detroitmi.gov']
+    dept_cal_id = None  # Agency URL param when filtering calendar page with "Department" drop down
+    dept_doc_id = ''  # Agency URL param when filtering documents page with "Department" drop down
     agency_cal_id = None  # Agency URL param when filtering the calendar page
     agency_doc_id = None  # Agency URL param (or list of params) when filtering the documents page
     start_days_prev = 120  # Number of days before today to start searching
+    doc_query_param_dept = 'field_department_target_id[0][target_id]'
     doc_query_param = 'field_department_target_id_1[0][target_id]'
 
     def __init__(self, *args, **kwargs):
@@ -29,7 +32,9 @@ class DetCityMixin:
             if isinstance(agency_doc_id, list):
                 agency_doc_id = agency_doc_id[0]
             return [
-                'https://detroitmi.gov/documents?{}={}'.format(self.doc_query_param, agency_doc_id)
+                'https://detroitmi.gov/documents?{}={}&{}={}'.format(
+                    self.doc_query_param_dept, self.dept_doc_id, self.doc_query_param, agency_doc_id
+                )
             ]
         else:
             return [self.get_event_start_url()]
@@ -37,10 +42,20 @@ class DetCityMixin:
     def get_event_start_url(self):
         """Get the initial calendar filter URL based on start_days_prev and agency_cal_id"""
         start_date = (datetime.now() - timedelta(days=self.start_days_prev)).strftime('%Y-%m-%d')
-        return (
-            'https://detroitmi.gov/Calendar-and-Events?'
-            'field_start_value={}&term_node_tid_depth_1={}'
-        ).format(start_date, self.agency_cal_id)
+
+        # If no department filter is specified, use the "Government" filter only
+        if (self.dept_cal_id is None):
+            return (
+                'https://detroitmi.gov/Calendar-and-Events?'
+                'field_start_value={}&term_node_tid_depth_1={}'
+            ).format(start_date, self.agency_cal_id)
+
+        # Else filter add the Department filter
+        else:
+            return (
+                'https://detroitmi.gov/Calendar-and-Events?'
+                'field_start_value={}&term_node_tid_depth={}&term_node_tid_depth_1={}'
+            ).format(start_date, self.dept_cal_id, self.agency_cal_id)
 
     def parse(self, response):
         """Set parse method based on the response URL"""
