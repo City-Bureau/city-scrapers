@@ -1,4 +1,4 @@
-from city_scrapers_core.constants import BOARD
+from city_scrapers_core.constants import BOARD, ADVISORY_COMMITTEE, FORUM
 from city_scrapers_core.spiders import CityScrapersSpider
 
 from city_scrapers.mixins import DetCityMixin
@@ -13,4 +13,17 @@ class DetTransportationSpider(DetCityMixin, CityScrapersSpider):
     agency_doc_id = 'None'
 
     def _parse_classification(self, response):
-        return BOARD
+        event_title = super()._parse_title(response).lower()
+        if ('input meeting' in event_title):
+            return FORUM
+        elif ('advisory council' in event_title):
+            return ADVISORY_COMMITTEE
+        else:
+            return BOARD
+
+    def parse_event_page(self, response):
+        try:
+            self._parse_start(response)
+        except AttributeError:
+            return
+        return super().parse_event_page(response)
