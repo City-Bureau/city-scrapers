@@ -1,4 +1,4 @@
-from city_scrapers_core.constants import BOARD, ADVISORY_COMMITTEE, FORUM
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, FORUM
 from city_scrapers_core.spiders import CityScrapersSpider
 
 from city_scrapers.mixins import DetCityMixin

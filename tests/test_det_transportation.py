@@ -1,7 +1,7 @@
 from datetime import datetime
 from os.path import dirname, join
 
-from city_scrapers_core.constants import BOARD, PASSED
+from city_scrapers_core.constants import FORUM, PASSED
 from city_scrapers_core.utils import file_response
 # import pytest
 from freezegun import freeze_time
@@ -84,7 +84,7 @@ def test_links():
 
 
 def test_classification():
-    assert item["classification"] == BOARD
+    assert item["classification"] == FORUM
 
 
 def test_all_day():
