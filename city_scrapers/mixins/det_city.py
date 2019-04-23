@@ -126,7 +126,7 @@ class DetCityMixin:
 
     def _parse_description(self, response):
         """Parse the event description"""
-        return ' '.join(response.css('article.description > *::text').extract())
+        return ' '.join(response.css('article.description > *::text').extract()).strip()
 
     def _parse_start(self, response):
         """Parse the start datetime"""
@@ -168,8 +168,9 @@ class DetCityMixin:
         """Parse the location name and address from the page"""
         loc_info = response.css('.location-info')
         return {
-            'name': loc_info.css('p strong span::text').extract_first(),
-            'address': loc_info.css('.field--name-field-address::text').extract_first()
+            'name': (loc_info.css('p strong span::text').extract_first() or '').strip(),
+            'address': (loc_info.css('.field--name-field-address::text').extract_first()
+                        or '').strip(),
         }
 
     def _parse_links(self, response, start):
