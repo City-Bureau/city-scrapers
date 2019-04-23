@@ -4,8 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-inflector = "*"
-jinja2 = "*"
 python-dateutil = "*"
 pytz = "*"
 requests = "*"
