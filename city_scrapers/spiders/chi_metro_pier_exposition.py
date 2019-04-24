@@ -24,7 +24,8 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
         needs.
         """
         description = " ".join(response.css(".vc_col-sm-6 .wpb_wrapper p *::text").extract())
-        if "301 East Cermak" not in description:
+        # Cancelled meetings don't show the address, but otherwise it should be in the description
+        if "cancel" not in description.lower() and "301 East Cermak" not in description:
             raise ValueError("Meeting location has changed")
         for item in response.css(".supsystic-table tr")[3:]:
             title = self._parse_title(item)
