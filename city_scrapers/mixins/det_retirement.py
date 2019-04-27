@@ -39,10 +39,9 @@ class DetRetirementMixin:
             raise ValueError('Meeting location has changed')
 
         meetings = []
-        mtg_title = self._parse_title(response)
         mtg_cls = self._parse_classification(response)
         meeting_kwargs = {
-            'title': mtg_title,
+            'title': self._parse_title(response),
             'description': '',
             'classification': mtg_cls,
             'end': None,
@@ -57,9 +56,10 @@ class DetRetirementMixin:
             if default_start_time is None:
                 default_start_time = start.time()
             links = self.document_date_map.pop(start.date(), [])
+            item_kwargs = {**meeting_kwargs, 'title': self._parse_title(response, item=item)}
             meetings.append(
                 Meeting(
-                    **meeting_kwargs,
+                    **item_kwargs,
                     start=start,
                     location=self._parse_location(item),
                     links=links,
@@ -81,7 +81,12 @@ class DetRetirementMixin:
             meeting['id'] = self._get_id(meeting)
             yield meeting
 
-    def _parse_title(self, response):
+    def _parse_title(self, response, item=None):
+        if (
+            item is not None
+            and 'special' in ' '.join(item.css('td:first-child *::text').extract()).lower()
+        ):
+            return 'Special Meeting'
         if 'board_of_trustees' in response.url:
             return 'Board of Trustees'
         return 'Investment Committee'
@@ -92,9 +97,11 @@ class DetRetirementMixin:
         return COMMITTEE
 
     def _parse_start(self, item):
-        date_str = ' '.join(item.css('td:first-child *::text').extract()).strip()
+        date_str = re.sub(
+            r'\(.+\)', '', ' '.join(item.css('td:first-child *::text').extract()).strip()
+        )
         time_str = ' '.join(item.css('td:nth-child(2) *::text').extract()
-                            ).strip().replace('Noon', 'PM').replace('.', '')
+                            ).strip().replace('Noon', 'PM').replace('.', '').replace(' M', 'M')
         dt_str = re.sub(r'\s+', ' ', '{} {}'.format(date_str, time_str)).strip()
         return datetime.strptime(dt_str, '%B %d, %Y %I:%M %p')
 
