@@ -31,6 +31,8 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
             meetings = self.format_meetings(meetings)
             for meeting in meetings:
                 start = self._parse_start(meeting, year)
+                if start is None:
+                    continue
                 meeting = Meeting(
                     title='Chicago Plan Commission',
                     description='',
@@ -74,6 +76,8 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
     @staticmethod
     def _parse_start(meeting, year):
         m = re.search(r'(?P<month>\w+)\.?\s(?P<day>\d+).*', meeting.strip())
+        if not m:
+            return
         dt = dateutil.parser.parse(m.group('month') + ' ' + m.group('day') + ' ' + year)
         # time based on examining meeting minutes
         return datetime.combine(dt.date(), time(10))
