@@ -6,7 +6,7 @@ USER_AGENT = 'City Scrapers [production mode]. Learn more and say hello at https
 ITEM_PIPELINES = {
     "city_scrapers_core.pipelines.AzureDiffPipeline": 300,
     "city_scrapers_core.pipelines.MeetingPipeline": 400,
-    "city_scrapers_core.pipelines.JSCalendarPipeline": 500,
+    "city_scrapers_core.pipelines.OpenCivicDataPipeline": 500,
 }
 
 SPIDER_MIDDLEWARES = {

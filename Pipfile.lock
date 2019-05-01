@@ -37,10 +37,10 @@
         },
         "azure-common": {
             "hashes": [
-                "sha256:14722caf6c3ed81d2cfdd3e448635fdc78f214dc6f17558dd1ca5b87bccc0631",
-                "sha256:622d9360a1b61172b4c0d1cc58f939c68402aa19ca44872ab3d224d913aa6d0c"
+                "sha256:76e5b85074e25613ad698db2b02f88ed2c43b2fe56d11e03588a6f6e6f5b4d5a",
+                "sha256:80091201f404850b8b2b2c2bf38df1348216b6ed90690f529335879c9ef080f3"
             ],
-            "version": "==1.1.19"
+            "version": "==1.1.20"
         },
         "azure-storage-blob": {
             "hashes": [
@@ -108,11 +108,11 @@
                 "azure"
             ],
             "hashes": [
-                "sha256:e7943073f6f01bbfb9d11a5ba03b42024a409a30be4acbc358a0bb6a6da82c20",
-                "sha256:efe67493e4292413a0f11af2111366c62c708ea7a071d8f3d089e446c4672c84"
+                "sha256:2d59bc7dea63446f280198b212f801f11f7c50c4ea1e8a1da8f164f49bfc12ef",
+                "sha256:5b22cdb5fc07aff9be94d8da6ecf331ae7f95defe950d48e345bb9b8a3bf10ff"
             ],
             "index": "pypi",
-            "version": "==0.3.0"
+            "version": "==0.4.0"
         },
         "constantly": {
             "hashes": [
@@ -182,7 +182,7 @@
         },
         "legistar": {
             "git": "https://github.com/opencivicdata/python-legistar-scraper",
-            "ref": "046308ed7e9f8e522e7bdca2c452686b6731122f"
+            "ref": "0519aa1aaeca4104d69266c2aec4c36b57dfcab5"
         },
         "lxml": {
             "hashes": [
@@ -231,10 +231,10 @@
         },
         "pyasn1-modules": {
             "hashes": [
-                "sha256:79580acf813e3b7d6e69783884e6e83ac94bf4617b36a135b85c599d8a818a7b",
-                "sha256:a52090e8c5841ebbf08ae455146792d9ef3e8445b21055d3a3b7ed9c712b7c7c"
+                "sha256:ef721f68f7951fab9b0404d42590f479e30d9005daccb1699b0a51bb4177db96",
+                "sha256:f309b6c94724aeaf7ca583feb1cc70430e10d7551de5e36edfc1ae6909bcfb3c"
             ],
-            "version": "==0.2.4"
+            "version": "==0.2.5"
         },
         "pycparser": {
             "hashes": [
@@ -265,9 +265,9 @@
         },
         "pyrsistent": {
             "hashes": [
-                "sha256:3ca82748918eb65e2d89f222b702277099aca77e34843c5eb9d52451173970e2"
+                "sha256:5403d37f4d55ff4572b5b5676890589f367a9569529c6f728c11046c4ea4272b"
             ],
-            "version": "==0.14.11"
+            "version": "==0.15.1"
         },
         "python-dateutil": {
             "hashes": [
