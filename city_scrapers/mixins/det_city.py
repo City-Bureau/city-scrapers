@@ -132,7 +132,7 @@ class DetCityMixin:
         """Parse the start datetime"""
         date_str = response.css('.date time::attr(datetime)').extract_first()
         time_str = ''.join(response.css('article.time::text').extract()).strip()
-        time_split = time_str.split('-')
+        time_split = re.split(r'-|(?<=m)\s+(?=\d)', time_str)
         start_str = time_split[0].strip()
         start_str = re.sub(r'\.|from', '', start_str.lower())
         if 'am' not in start_str and 'pm' not in start_str:
@@ -150,7 +150,7 @@ class DetCityMixin:
     def _parse_end(self, response, start):
         """Parse the end datetime, returning a boolean indicating whether it was scraped"""
         time_str = ''.join(response.css('article.time::text').extract()).strip()
-        time_split = time_str.split('-')
+        time_split = re.split(r'-|(?<=m)\s+(?=\d)', time_str)
         if len(time_split) > 1:
             end_str = time_split[1].strip()
             return (
