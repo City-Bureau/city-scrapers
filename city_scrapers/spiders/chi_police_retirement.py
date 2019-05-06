@@ -3,7 +3,6 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 import re
-import sys
 from datetime import datetime
 from dateutil.parser import parse
 
@@ -65,6 +64,7 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
         """Parse or generate meeting description."""
         raw_description = ''.join(response.xpath('//*[@id="content0"]/p/text()').extract())
         clean_description = self._clean_escape_chars(raw_description)
+        print(repr(' '.join(clean_description.split())))
         return ' '.join(clean_description.split())
 
     def _parse_classification(self, item):
@@ -81,7 +81,7 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
     def _parse_end(self):
         return None
 
-        # see here for address: http://www.chipabf.org/ChicagoPolicePension/aboutus.html
+    # see here for address: http://www.chipabf.org/ChicagoPolicePension/aboutus.html
     def _parse_location(self, item):
         """Parse or generate location."""
         return {
@@ -136,7 +136,7 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
 
     def _get_date_string(self, item, year):
         no_tags = self._clean_html_tags(item)
-        date_pieces = self._clean_escape_chars(no_tags, True).split()
+        date_pieces = no_tags.split()
         date_pieces[3] = ''.join([num for num in date_pieces[3] if num.isdigit()])
         date = ' '.join(date_pieces[2:4]) + ' ' + year + ' ' + date_pieces[4]
         return date
