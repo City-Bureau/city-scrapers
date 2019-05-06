@@ -1,12 +1,9 @@
+import re
+from datetime import datetime
+
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-
-import re
-from datetime import datetime
-from dateutil.parser import parse
-
-
 
 
 class ChiPoliceRetirementSpider(CityScrapersSpider):
@@ -17,20 +14,11 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
     start_urls = ["http://www.chipabf.org/ChicagoPolicePension/MonthlyMeetings.html"]
     TAG_RE = re.compile(r'<[^>]+>')
 
-    
-
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
-        """
-
         year = self._parse_year(response)
         date_table = response.xpath('//*[@id="content0"]/div[3]/table')
         date_items = date_table.extract()[0].split('<tr>')
-        
+
         skip_first_item = True
         for item in date_items:
             if skip_first_item:
@@ -74,7 +62,7 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
     def _parse_start(self, item, year):
         start = self._get_date_string(item, year)
         return datetime.strptime(start, '%B %d %Y %I%p')
-        
+
     def _parse_time_notes(self):
         return None
 
@@ -85,9 +73,8 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
     def _parse_location(self, item):
         """Parse or generate location."""
         return {
-            "address":
-                "221 North LaSalle Street, Suite 1626,"
-                " Chicago, Illinois 60601-1203",
+            "address": "221 North LaSalle Street, Suite 1626,"
+                       " Chicago, Illinois 60601-1203",
             "name": "Policemen's Annuity and Benefit Fund",
         }
 
@@ -118,7 +105,7 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
             }
             links.append(minutes)
         return links
-    
+
     def _parse_year(self, item):
         return item.xpath('//*[@id="content0"]/div[3]/h2[1]/text()').extract()[0][:4]
 
@@ -140,5 +127,3 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
         date_pieces[3] = ''.join([num for num in date_pieces[3] if num.isdigit()])
         date = ' '.join(date_pieces[2:4]) + ' ' + year + ' ' + date_pieces[4]
         return date
-
-
