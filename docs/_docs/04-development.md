@@ -211,7 +211,7 @@ We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isor
 ```bash
 $ flake8
 $ isort
-$ yapf --in-place --recursive ./city_scrapers/ ./tests/
+$ yapf --diff --recursive ./city_scrapers/ ./tests/
 ```
 
 Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. Here's an example for VSCode using the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} (which can be modified/added at `.vscode/settings.json` in your project directory):
