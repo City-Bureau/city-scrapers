@@ -19,38 +19,23 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
-"""
-Uncomment below
-"""
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Board Meetings of The Policemen's Annuity & Benefit Fund"
+    assert parsed_items[0]["title"] == "Retirement Board"
 
 
 def test_description():
-    assert parsed_items[0][
-        "description"
-    ] == 'Listed below are the dates scheduled for the regular Board meetings of The Policemen’s ' \
-        'Annuity & Benefit Fund. All meetings are scheduled to begin at 9:00 A.M., and are to be ' \
-        'held in the office of the Fund.'
+    assert parsed_items[0]["description"] == ''
 
 
 def test_start():
     assert parsed_items[0]["start"] == datetime(2019, 1, 31, 9, 0)
 
 
-def test_end():
-    assert parsed_items[0]["end"] is None
-
-
-def test_time_notes():
-    assert parsed_items[0]["time_notes"] is None
-
-
 def test_id():
     assert parsed_items[0]["id"] == 'chi_police_retirement/201901310900/x/' \
-        'board_meetings_of_the_policemen_s_annuity_benefit_fund'
+        'retirement_board'
 
 
 def test_status():
@@ -72,13 +57,16 @@ def test_source():
 
 def test_links():
 
-    assert parsed_items[0]["links"] == [{
-        'href': 'https://www.chipabf.org/ChicagoPolicePension/PDF/Agenda/2019/2019AGENDA01.pdf',
-        'title': 'Agenda'
-    }, {
-        'href': 'www.chipabf.org/ChicagoPolicePension/PDF/Minutes/2019/2019MINUTES01.pdf',
-        'title': 'Minutes'
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            'href': 'http://www.chipabf.org/ChicagoPolicePension/PDF/Agenda/2019/2019AGENDA01.pdf',
+            'title': 'Agenda'
+        },
+        {
+            'href': 'http://www.chipabf.org/ChicagoPolicePension/PDF/Minutes/2019/2019MINUTES01.pdf',
+            'title': 'Minutes'
+        }
+    ]
 
 
 def test_classification():
