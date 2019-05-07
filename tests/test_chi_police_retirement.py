@@ -57,16 +57,13 @@ def test_source():
 
 def test_links():
 
-    assert parsed_items[0]["links"] == [
-        {
-            'href': 'http://www.chipabf.org/ChicagoPolicePension/PDF/Agenda/2019/2019AGENDA01.pdf',
-            'title': 'Agenda'
-        },
-        {
-            'href': 'http://www.chipabf.org/ChicagoPolicePension/PDF/Minutes/2019/2019MINUTES01.pdf',
-            'title': 'Minutes'
-        }
-    ]
+    assert parsed_items[0]["links"] == [{
+        'href': 'http://www.chipabf.org/ChicagoPolicePension/PDF/Agenda/2019/2019AGENDA01.pdf',
+        'title': 'Agenda'
+    }, {
+        'href': 'http://www.chipabf.org/ChicagoPolicePension/PDF/Minutes/2019/2019MINUTES01.pdf',
+        'title': 'Minutes'
+    }]
 
 
 def test_classification():
