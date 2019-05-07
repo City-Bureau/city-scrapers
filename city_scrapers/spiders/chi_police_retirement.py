@@ -29,6 +29,8 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
                 description='',
                 classification=self._parse_classification(date_item),
                 start=self._parse_start(date_item, year),
+                end=None,
+                time_notes="",
                 all_day=False,
                 location=self._parse_location(),
                 source=self._parse_source(response),
