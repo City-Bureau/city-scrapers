@@ -28,14 +28,14 @@ class ChiCommunityDevelopmentSpider(CityScrapersSpider):
         for column in columns:
             year = column.xpath('preceding::h3[1]/text()').re_first(r'(\d{4})(.*)')
             meeting_date_xpath = ('text()[normalize-space()]|p/text()[normalize-space()]')
-            meetings = column.xpath(meeting_date_xpath).extract()
-            meetings = self.format_meetings(meetings)
-            for meeting in meetings:
+            items = column.xpath(meeting_date_xpath).extract()
+            items = self.format_meetings(items)
+            for item in items:
                 meeting = Meeting(
                     title='Community Development Commission',
                     description='',
                     classification=COMMISSION,
-                    start=self._parse_start(meeting, year),
+                    start=self._parse_start(item, year),
                     end=None,
                     time_notes='',
                     all_day=False,
@@ -44,10 +44,10 @@ class ChiCommunityDevelopmentSpider(CityScrapersSpider):
                         'address': '121 N LaSalle St, Room 201A, Chicago, IL 60602'
                     },
                     source=response.url,
-                    links=self._parse_links(column, meeting, response),
+                    links=self._parse_links(column, item, response),
                 )
                 meeting['id'] = self._get_id(meeting)
-                meeting['status'] = self._get_status(meeting)
+                meeting['status'] = self._get_status(meeting, text=item)
                 yield meeting
 
     @staticmethod
