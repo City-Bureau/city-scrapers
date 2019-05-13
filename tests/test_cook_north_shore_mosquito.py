@@ -30,10 +30,6 @@ def test_start():
     assert parsed_items[0]["start"] == datetime(2019, 1, 10, 19, 0)
 
 
-def test_time_notes():
-    assert parsed_items[0]["time_notes"] == ""
-
-
 def test_id():
     assert parsed_items[0]["id"] == "cook_north_shore_mosquito/201901101900/x/board_of_trustees"
 
@@ -45,7 +41,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "NSMAD Office",
-        "address": "117 Northfield Road, Northfield"
+        "address": "117 Northfield Road, Northfield, IL 60093"
     }
 
 

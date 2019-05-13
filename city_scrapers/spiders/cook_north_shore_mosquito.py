@@ -13,6 +13,10 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
     allowed_domains = ["www.nsmad.com"]
     start_urls = ["https://www.nsmad.com/news-events/board-meetings/"]
     TAG_RE = re.compile(r'<[^>]+>')
+    location = {
+        "address": "117 Northfield Road, Northfield, IL 60093",
+        "name": "NSMAD Office",
+    }
 
     def parse(self, response):
         """
@@ -21,21 +25,22 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        self._parse_location(response)
         calendar = response.xpath('//*[@id="post-68"]/div/ul/li/ul')
-        for item in calendar.extract()[0].split('<li>')[1:]:
+        for index, item in enumerate(calendar.extract()[0].split('<li>')[1:]):
+            print(index)
             meeting = Meeting(
                 title=self._parse_title(),
                 description='',
                 classification=self._parse_classification(),
-                start=self._parse_start(item, response),
+                start=self._parse_start(response, index),
                 all_day=False,
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
+                location=self.location,
                 links=self._parse_links(item),
                 source=self._parse_source(response),
             )
 
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting, item)
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
@@ -48,35 +53,23 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
         """Parse or generate classification from allowed options."""
         return BOARD
 
-    def _parse_start(self, item, response):
+    def _parse_start(self, response, index):
         """Parse start datetime as a naive datetime object."""
-        year = '2019'
-        calendar_title = response.xpath('//*[@id="post-68"]/div/h2[1]').extract()[0]
-        if '2019' not in calendar_title:
-            raise ValueError("Year no longer {}".format(year))
-        month_day = self._clean_html_tags(item.split('–')[0])
-        date = month_day + ' ' + year + ' ' + '7 pm'
+        calendar_title = response.xpath('//*[@id="post-68"]/div/h2[1]/text()').extract()[0]
+        year = ''.join([num for num in calendar_title if num.isdigit()])
+        m_day = response.xpath('//*[@id="post-68"]/div/ul/li/ul/li[' + str(index + 1) + ']/text()')
+        m_day = m_day.extract()[0].split('–')[0].strip()
+        date = m_day + ' ' + year + ' ' + '7 pm'
         return datetime.strptime(date, '%B %d %Y %I %p')
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return None
 
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        date = item.split('–')
-        if len(date) > 1:
-            date = date[1]
-            if 'View' not in date:
-                return self._clean_html_tags(date)
-        return ""
-
-    def _parse_location(self, item):
+    def _parse_location(self, response):
         """Parse or generate location."""
-        return {
-            "address": "117 Northfield Road, Northfield",
-            "name": "NSMAD Office",
-        }
+        if "117 North" not in response.xpath('//*[@id="post-68"]/div/p[1]/text()').extract()[0]:
+            raise ValueError("Meeting location has changed")
 
     def _parse_links(self, item):
         """Parse or generate links."""
@@ -85,14 +78,12 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
         if len(after_dash) > 1:
             raw_link = after_dash[1].split()
             if len(raw_link) > 1 and 'a' in raw_link[0]:
+                title = "Minutes" if "Minutes" in str(raw_link) else "Agenda"
                 minutes_link = re.search(r'\"(.+?)\"', raw_link[1]).group(1)
-                minutes = {"href": minutes_link, "title": "Minutes"}
+                minutes = {"href": minutes_link, "title": title}
                 links.append(minutes)
         return links
 
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
-
-    def _clean_html_tags(self, item):
-        return self.TAG_RE.sub('', item).strip()
