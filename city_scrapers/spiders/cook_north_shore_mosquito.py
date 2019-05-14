@@ -28,7 +28,6 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
         self._parse_location(response)
         calendar = response.xpath('//*[@id="post-68"]/div/ul/li/ul')
         for index, item in enumerate(calendar.extract()[0].split('<li>')[1:]):
-            print(index)
             meeting = Meeting(
                 title=self._parse_title(),
                 description='',
