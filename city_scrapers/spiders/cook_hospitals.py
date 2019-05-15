@@ -1,18 +1,24 @@
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from dateutil.parser import parse
 
 
 class CookHospitalsSpider(CityScrapersSpider):
     name = 'cook_hospitals'
     agency = 'Cook County Health and Hospitals System'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.cookcountyhhs.org']
-    start_urls = ['http://www.cookcountyhhs.org/about-cchhs/governance/board-committee-meetings/']
-    domain_root = 'http://www.cookcountyhhs.org'
+    allowed_domains = ['cookcountyhealth.org']
+    start_urls = [
+        'https://cookcountyhealth.org/about/board-of-directors/board-committee-meetings-agendas-minutes/'  # noqa
+    ]
+    custom_settings = {'ROBOTSTXT_OBEY': False}
+    location = {
+        'name': '',
+        'address': '1950 W Polk St, Conference Room 5301, Chicago, IL 60612',
+    }
 
     def parse(self, response):
         """
@@ -21,75 +27,77 @@ class CookHospitalsSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.xpath("//a[@class='h2 accordion-toggle collapsed']"):
-            title = self._parse_title(item)
-            aria_control = item.xpath("@aria-controls").extract_first()
-            item_uncollapsed = item.xpath(
-                "//div[@id='{}']//tbody//td[@data-title='Meeting Information']".
-                format(aria_control)
+        # Only pull from first two year sections because it goes back pretty far
+        for item in response.css(
+            ".eael-tabs-content > .clearfix:first-child .elementor-post, "
+            ".eael-tabs-content > .clearfix:nth-child(2) .elementor-post"
+        ):
+            title, start = self._parse_title_start(item)
+            if start is None:
+                continue
+            meeting = Meeting(
+                title=title,
+                description="",
+                classification=self._parse_classification(title),
+                start=start,
+                end=None,
+                time_notes="Confirm time in agenda",
+                all_day=False,
+                location=self._parse_location(item),
+                links=self._parse_links(item),
+                source=response.url,
             )
-            for subitem in item_uncollapsed:
-                start, end = self._parse_times(subitem)
-                meeting = Meeting(
-                    title=title,
-                    description='',
-                    classification=self._parse_classification(title),
-                    start=start,
-                    end=end,
-                    time_notes='',
-                    all_day=False,
-                    location=self._parse_location(subitem),
-                    links=self._parse_links(subitem),
-                    source=response.url,
-                )
-                meeting['status'] = self._get_status(meeting)
-                meeting['id'] = self._get_id(meeting)
-                yield meeting
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     @staticmethod
-    def _parse_classification(name):
-        if 'BOARD' in name.upper():
+    def _parse_title_start(item):
+        """Get meeting title and start datetime from item's text"""
+        title_str = item.css('.elementor-heading-title::text').extract_first()
+        date_match = re.search(r'\w{3,9} \d{1,2},? \d{4}', title_str)
+        if not date_match:
+            return None, None
+        date_str = date_match.group().replace(',', '')
+
+        title = re.sub(r'(\w+day,?\s+|\w{3,9} \d{1,2},? \d{4}|,)', '', title_str).strip()
+        if 'special' not in title.lower():
+            title = title.replace('Meeting', '').strip()
+
+        start = datetime.strptime(date_str, '%B %d %Y')
+        # Assign time based off of typical meeting times
+        if any(w in title.lower() for w in ['board', 'human resources', 'audit']):
+            start = start.replace(hour=9)
+        elif 'quality' in title.lower():
+            start = start.replace(hour=10)
+        elif 'finance' in title.lower():
+            start = start.replace(hour=8, minute=30)
+        elif 'managed care' in title.lower():
+            start = start.replace(hour=10, minute=30)
+        return title, start
+
+    @staticmethod
+    def _parse_classification(title):
+        if 'board' in title.lower():
             return BOARD
         return COMMITTEE
 
     @staticmethod
-    def _parse_links(subitem):
-        anchors = subitem.xpath("following-sibling::td//a")
-        documents = []
-        if anchors:
-            for a in anchors:
-                documents.append({
-                    'href': a.xpath('@href').extract_first(default=''),
-                    'title': a.xpath('text()').extract_first(default=''),
-                })
-        return documents
+    def _parse_links(item):
+        links = []
+        for link in item.css('.elementor-icon-list-item a'):
+            links.append({
+                'href': link.attrib['href'],
+                'title': ' '.join(link.css('::text').extract()).strip(),
+            })
+        return links
 
-    @staticmethod
-    def _parse_location(subitem):
-        """
-        Parse location
-        """
-        address = subitem.xpath('text()').extract()[1]
-        return {
-            'address': address.strip(),
-            'name': '',
-        }
-
-    @staticmethod
-    def _parse_title(item):
-        """Get meeting title from item's text"""
-        return item.xpath('text()').extract_first().strip()
-
-    @staticmethod
-    def _parse_times(subitem):
-        """
-        Combine start time with year, month, and day.
-        """
-        tokens = subitem.xpath('text()').extract_first().strip().split(' - ')
-        date_obj = parse(tokens[0])
-        time_obj = parse(tokens[1])
-        start = datetime.combine(date_obj, time_obj.time())
-        end = None
-        if len(tokens) > 2:
-            end = datetime.combine(date_obj, parse(tokens[2]).time())
-        return start, end
+    def _parse_location(self, item):
+        """Parse location"""
+        loc_text = item.css(
+            '.elementor-column:first-child li span.elementor-post-info__item::text'
+        ).extract_first()
+        if not loc_text or '5301' in (loc_text or ''):
+            return self.location
+        else:
+            return {'name': '', 'address': loc_text.strip()}
