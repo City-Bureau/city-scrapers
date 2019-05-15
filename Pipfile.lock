@@ -108,11 +108,11 @@
                 "azure"
             ],
             "hashes": [
-                "sha256:69cb7fe88dc629cfbae0ee391f24678b06684d81703a1e49ac0a34657f5b650e",
-                "sha256:87e8338e7a99e58fd9feb5237f3ef0304acba7b964b8ba99faed076ad1e92d70"
+                "sha256:2b578b9e5a54726bd21a87b91b6e848cd9c63af935740e0fbe4c8ce57ee4b9ba",
+                "sha256:ee87b7ebe7e311ac4a48d5f158872dc4f69eb6df954fdcad0659b2d1c062d763"
             ],
             "index": "pypi",
-            "version": "==0.4.1"
+            "version": "==0.4.2"
         },
         "constantly": {
             "hashes": [
@@ -441,11 +441,11 @@
         },
         "isort": {
             "hashes": [
-                "sha256:49293e2ff590cc8d48bc1f51970548b5b102bf038439ca1af77f352164725628",
-                "sha256:ba69a4be8474be11720636bc2f0cf66f7054d417d4c1dbc1dfe504bb8e739541"
+                "sha256:c40744b6bc5162bbb39c1257fe298b7a393861d50978b565f3ccd9cb9de0182a",
+                "sha256:f57abacd059dc3bd666258d1efb0377510a89777fda3e3274e3c01f7c03ae22d"
             ],
             "index": "pypi",
-            "version": "==4.3.19"
+            "version": "==4.3.20"
         },
         "mccabe": {
             "hashes": [
