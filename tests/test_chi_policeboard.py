@@ -8,7 +8,7 @@ from city_scrapers.spiders.chi_policeboard import ChiPoliceBoardSpider
 
 test_response = file_response(
     'files/chi_policeboard_public_meetings.html',
-    url='https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html'
+    url='https://chicago.gov/city/en/depts/cpb/provdrs/public_meetings.html'
 )
 spider = ChiPoliceBoardSpider()
 parsed_items = [item for item in spider.parse(test_response)]
@@ -31,12 +31,12 @@ def test_links():
     assert parsed_items[8]['links'] == [
         {
             'href':
-                'https://www.cityofchicago.org/content/dam/city/depts/cpb/PubMtgMinutes/BlueBook09182017.pdf',  # noqa
+                'https://chicago.gov/content/dam/city/depts/cpb/PubMtgMinutes/BlueBook09182017.pdf',  # noqa
             'title': 'Blue Book'
         },
         {
             'href':
-                'https://www.cityofchicago.org/content/dam/city/depts/cpb/PubMtgMinutes/PubMtgTranscript09182017.pdf',  # noqa
+                'https://chicago.gov/content/dam/city/depts/cpb/PubMtgMinutes/PubMtgTranscript09182017.pdf',  # noqa
             'title': 'Transcript'
         },
     ]
@@ -75,5 +75,4 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_source(item):
-    assert item['source'
-                ] == 'https://www.cityofchicago.org/city/en/depts/cpb/provdrs/public_meetings.html'
+    assert item['source'] == 'https://chicago.gov/city/en/depts/cpb/provdrs/public_meetings.html'

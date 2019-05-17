@@ -8,7 +8,7 @@ from city_scrapers.spiders.chi_animal import ChiAnimalSpider
 
 test_response = file_response(
     'files/chi_animal.html',
-    url='https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html'
+    url='https://chicago.gov/city/en/depts/cacc/supp_info/public_notice.html'
 )
 spider = ChiAnimalSpider()
 parsed_items = [item for item in spider.parse(test_response)]
@@ -65,8 +65,7 @@ def test_status(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
-    assert item['source'
-                ] == 'https://www.cityofchicago.org/city/en/depts/cacc/supp_info/public_notice.html'
+    assert item['source'] == 'https://chicago.gov/city/en/depts/cacc/supp_info/public_notice.html'
 
 
 @pytest.mark.parametrize('item', parsed_items)
