@@ -8,7 +8,7 @@ from city_scrapers.spiders.chi_plan_commission import ChiPlanCommissionSpider
 
 test_response = file_response(
     'files/chi_plan_commission_chicago_plan_commission.html',
-    'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html'
+    'https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html'
 )
 spider = ChiPlanCommissionSpider()
 parsed_items = [item for item in spider.parse(test_response)]
@@ -57,19 +57,19 @@ def test_location():
 def test_source():
     assert parsed_items[0][
         'source'
-    ] == 'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html'  # noqa
+    ] == 'https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html'  # noqa
 
 
 def test_links():
     assert parsed_items[0]['links'] == [
         {
             'href':
-                'https://www.cityofchicago.org/content/dam/city/depts/zlup/Planning_and_Policy/Minutes/CPC_Jan_2018_Minutes.pdf',  # noqa
+                'https://chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Minutes/CPC_Jan_2018_Minutes.pdf',  # noqa
             'title': 'Minutes'
         },
         {
             'href':
-                'https://www.cityofchicago.org/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Jan_2018_Map_rev.pdf',  # noqa
+                'https://chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Jan_2018_Map_rev.pdf',  # noqa
             'title': 'Map'
         }
     ]

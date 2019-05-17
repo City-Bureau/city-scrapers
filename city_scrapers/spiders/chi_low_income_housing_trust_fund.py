@@ -13,7 +13,6 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
     timezone = 'America/Chicago'
     allowed_domains = ['www.chicagotrustfund.org']
     start_urls = ['http://www.chicagotrustfund.org/about-us/upcomingevents/']
-    custom_settings = {'ROBOTSTXT_OBEY': False}
 
     def parse(self, response):
         """

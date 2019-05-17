@@ -11,10 +11,8 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
     name = 'chi_plan_commission'
     agency = 'Chicago Department of Planning and Development'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.cityofchicago.org']
-    start_urls = [
-        'https://www.cityofchicago.org/city/en/depts/dcd/supp_info/chicago_plan_commission.html'
-    ]
+    allowed_domains = ['chicago.gov']
+    start_urls = ['https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html']
 
     def parse(self, response):
         """
