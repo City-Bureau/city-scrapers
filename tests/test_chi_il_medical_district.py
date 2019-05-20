@@ -15,7 +15,7 @@ test_response = file_response(
 )
 spider = ChiIlMedicalDistrictSpider()
 
-freezer = freeze_time("2019-04-11")
+freezer = freeze_time("2019-05-20")
 freezer.start()
 
 parsed_items = sorted([item for item in spider.parse(test_response)], key=itemgetter("start"))
@@ -54,6 +54,7 @@ def test_id():
 
 def test_status():
     assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[-4]["status"] == TENTATIVE
     assert parsed_items[-1]["status"] == TENTATIVE
 
 
@@ -76,6 +77,17 @@ def test_links():
             'href': 'http://medicaldistrict.org/wp-content/uploads/pdf/AgendaRevised-051716.pdf',
             'title': 'Meeting Agenda'
         },
+    ]
+    assert parsed_items[-4]["links"] == [
+        {
+            'href': 'http://medicaldistrict.org/wp-content/uploads/2019/05/agenda_052119.pdf',
+            'title': 'Commission Meeting Agenda'
+        },
+        {
+            'href':
+                'http://medicaldistrict.org/wp-content/uploads/2019/05/notice-of-commission-meeting_05212019.pdf',  # noqa
+            'title': 'Commission Meeting Notice'
+        }
     ]
     assert parsed_items[-1]["links"] == []
 

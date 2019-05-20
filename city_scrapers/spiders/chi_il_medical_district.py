@@ -36,7 +36,7 @@ class ChiIlMedicalDistrictSpider(CityScrapersSpider):
                 meeting_dt_list.append(datetime.combine(link_date, time(0)))
 
         # Iterate through each datetime, parsing details from associated links if found
-        for meeting_dt in meeting_dt_list:
+        for meeting_dt in set(meeting_dt_list):
             meeting_links = link_date_map[meeting_dt.date()]
             meeting = Meeting(
                 title=self._parse_title(meeting_links),
@@ -98,7 +98,7 @@ class ChiIlMedicalDistrictSpider(CityScrapersSpider):
         """Return a list of naive datetimes to upcoming meetings"""
         upcoming_dts = []
         for upcoming in response.css(
-            ".vc_col-sm-4.column_container:nth-child(1) .mk-text-block.indent16 p::text"
+            ".vc_col-sm-4.column_container:nth-child(1) .mk-text-block.indent16 p *::text"
         ):
             start = self._parse_start(upcoming.extract())
             if start:
@@ -108,6 +108,17 @@ class ChiIlMedicalDistrictSpider(CityScrapersSpider):
     def _parse_link_date_map(self, response):
         """Generate a defaultdict mapping of meeting dates and associated links"""
         link_date_map = defaultdict(list)
+        for link in response.css(
+            ".vc_col-sm-4.column_container:nth-child(1) .mk-text-block.indent16"
+        )[:1].css("a"):
+            link_str = link.xpath("./text()").extract_first()
+            link_start = self._parse_start(link_str)
+            if link_start:
+                link_date_map[link_start.date()].append({
+                    "title": re.sub(r"\s+", " ",
+                                    link_str.split(" – ")[-1]).strip(),
+                    "href": link.attrib["href"],
+                })
         for section in response.css(".vc_col-sm-4.column_container:nth-child(1) .vc_tta-panel"):
             year_str = section.css(".vc_tta-title-text::text").extract_first().strip()
             for section_link in section.css("p > a"):
