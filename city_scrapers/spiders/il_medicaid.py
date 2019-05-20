@@ -185,7 +185,7 @@ class IlMedicaidSpider(CityScrapersSpider):
             chicago_location[-1] = last_line[:first_space_index] + "," + last_line[first_space_index:]
 
         # Split street address from name of the building 
-        split_name_address = re.split('\s([\d]+[\w\s]+)',chicago_location[0])
+        split_name_address = re.split(r'\s([\d]+[\w\s]+)',chicago_location[0])
         if len(split_name_address) > 1:
             name, first_line = split_name_address[:2]
             address = first_line + ", " + ", ".join(chicago_location[1:])
