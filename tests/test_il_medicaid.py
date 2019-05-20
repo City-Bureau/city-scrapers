@@ -11,7 +11,7 @@ from city_scrapers.spiders.il_medicaid import IlMedicaidSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "il_medicaid.html"),
-    url="https://www.illinois.gov/hfs/About/BoardsandCommisions/MAC/Pages/MeetingSchedule.aspx",
+    url="https://www.illinois.gov/hfs/About/BoardsandCommisions/MAC/Pages/default.aspx",
 )
 spider = IlMedicaidSpider()
 
