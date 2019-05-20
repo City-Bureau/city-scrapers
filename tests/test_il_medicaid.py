@@ -1,5 +1,6 @@
 from datetime import datetime
 from os.path import dirname, join
+import re
 
 import pytest
 from freezegun import freeze_time
@@ -14,7 +15,7 @@ test_response = file_response(
 )
 spider = IlMedicaidSpider()
 
-freezer = freeze_time("2019-02-27")
+freezer = freeze_time("2019-05-20")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -22,17 +23,17 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+# def test_tests():
+#     print("Please write some tests for this spider or at least disable this one.")
+#     assert False
 
 
 """
 Uncomment below
 """
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+def test_title():
+    assert parsed_items[0]["title"] == "EXPECTED TITLE"
 
 
 # def test_description():
