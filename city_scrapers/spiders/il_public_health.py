@@ -31,9 +31,13 @@ class IlPublicHealthSpider(CityScrapersSpider):
         needs.
         """
         for item in response.css("tr.eventspage"):
+            title = self._parse_title(item)
             description = self._parse_description(item)
+            # Skip meetings in certain categories
+            if self.should_ignore_meeting(title, description):
+                continue
             meeting = Meeting(
-                title=self._parse_title(item),
+                title=title,
                 description=description,
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
@@ -123,3 +127,9 @@ class IlPublicHealthSpider(CityScrapersSpider):
                 "href": link.attrib["href"],
             })
         return links
+
+    def should_ignore_meeting(self, title, description):
+        return any(
+            p in " ".join([title.lower(), description.lower()])
+            for p in ["training session", "symposium", "workshop"]
+        )
