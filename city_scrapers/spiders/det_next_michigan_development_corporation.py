@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from datetime import datetime
 
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
@@ -23,10 +24,9 @@ class DetNextMichiganDevelopmentCorporationSpider(CityScrapersSpider):
         yield from self._next_page_prev_meetings(response)
 
     def _next_meeting(self, response):
-        next_meeting_xpath = ('//p[contains(., "The next D-NMDC meeting is")]//text()')
-        next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
+        next_meeting_text = ' '.join(response.css('.content-itemContent *::text').extract())
         meeting = self._set_meeting_defaults(response)
-        meeting['start'] = self._parse_start(next_meeting_text)
+        meeting['start'] = self._parse_upcoming_start(next_meeting_text)
         if meeting['start']:
             meeting['status'] = self._get_status(meeting)
             meeting['id'] = self._get_id(meeting)
@@ -65,6 +65,16 @@ class DetNextMichiganDevelopmentCorporationSpider(CityScrapersSpider):
                 )
         except ValueError:
             pass
+
+    def _parse_upcoming_start(self, text):
+        date_str = re.search(r'\w{3,10}\s+\d{1,2},?\s+\d{4}', text).group()
+        time_str = re.sub(
+            r'([,\.]|\s+(?=[apAP])|)', '',
+            re.findall(r'(?<=at\s)\s*\d{1,2}:\d{1,2}\s*[apmAPM\.]{2,4}', text)[-1]
+        )
+        return datetime.strptime(
+            ' '.join([date_str, time_str]).replace(',', ''), '%B %d %Y %I:%M%p'
+        )
 
     def _parse_time(self, date_time_text):
         time_regex = re.compile(r'((1[012]|[1-9]):([0-5][0-9])\s?[AP]M)')
