@@ -1,5 +1,6 @@
 from datetime import datetime
 from os.path import dirname, join
+from unittest.mock import MagicMock
 
 import pytest
 from city_scrapers_core.constants import BOARD
@@ -14,89 +15,104 @@ test_response = file_response(
 )
 spider = CookPaceBoardSpider()
 
-freezer = freeze_time("2019-02-05")
-freezer.start()
+JANUARY_IDX = 0
+NOVEMBER_IDX = 10
 
-parsed_items = [item for item in spider.parse(test_response)]
 
-freezer.stop()
+@pytest.fixture
+def parsed_items(monkeypatch):
+    mock_res = MagicMock()
+    mock_res.return_value.status_code = 404
+    monkeypatch.setattr("requests.get", mock_res)
+    freezer = freeze_time("2019-02-05")
+    freezer.start()
+    items = [item for item in spider.parse(test_response)]
+    freezer.stop()
+    return items
+
+
+@pytest.fixture
+def january_item(monkeypatch):
+    mock_res = MagicMock()
+    mock_res.return_value.status_code = 200
+    monkeypatch.setattr("requests.get", mock_res)
+    freezer = freeze_time("2019-02-05")
+    freezer.start()
+    items = [item for item in spider.parse(test_response)]
+    freezer.stop()
+    return items[0]
 
 
 # There are 12 board meetings, one for each month
-def test_12_board_meetings():
+def test_12_board_meetings(parsed_items):
     assert sum(["board" in item["title"].lower() for item in parsed_items]) == 12
 
 
 # Test all items have a start time
-@pytest.mark.parametrize("item", parsed_items)
-def test_start_exists(item):
-    assert isinstance(item['start'], datetime)
+def test_start_exists(parsed_items):
+    assert all(isinstance(item['start'], datetime) for item in parsed_items)
 
 
-# VALUE TEST FOR NOVEMBER MEETING #
-
-november_item = parsed_items[10]
-
-
-def test_title():
-    assert november_item["title"] == "Board Meeting"
+def test_title(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["title"] == "Board Meeting"
 
 
-def test_all_day():
-    assert november_item["all_day"] is False
+def test_all_day(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["all_day"] is False
 
 
-def test_description():
-    assert november_item["description"] == ""
+def test_description(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["description"] == ""
 
 
-def test_start():
-    assert november_item["start"] == datetime(2019, 11, 13, 16, 30)
+def test_start(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["start"] == datetime(2019, 11, 13, 16, 30)
 
 
-def test_end():
-    assert november_item["end"] is None
+def test_end(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["end"] is None
 
 
-def test_time_notes():
-    assert november_item["time_notes"] is None
+def test_time_notes(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["time_notes"] is None
 
 
-def test_id():
-    assert isinstance(november_item["id"], str) and november_item["id"] != ""
+def test_id(parsed_items):
+    assert isinstance(parsed_items[NOVEMBER_IDX]["id"],
+                      str) and parsed_items[NOVEMBER_IDX]["id"] != ""
 
 
-def test_status():
-    assert isinstance(november_item["status"], str) and november_item["id"] != ""
+def test_status(parsed_items):
+    assert isinstance(parsed_items[NOVEMBER_IDX]["status"],
+                      str) and parsed_items[NOVEMBER_IDX]["id"] != ""
 
 
-def test_location():
-    assert november_item["location"] == {
+def test_location(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["location"] == {
         "name": "Pace Headquarters",
         "address": "550 W. Algonquin Rd., Arlington Heights, IL 60005"
     }
 
 
-def test_source():
-    assert november_item["source"] == (
+def test_source(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["source"] == (
         "http://www.pacebus.com/sub/news_events/calendar_of_events.asp"
     )
 
 
-def test_classification():
-    assert november_item["classification"] == BOARD
+def test_classification(parsed_items):
+    assert parsed_items[NOVEMBER_IDX]["classification"] == BOARD
 
 
 # Test links
 # January 2019 should have valid ones
-january_item = parsed_items[0]
 
 
-def test_start_january():
+def test_start_january(january_item):
     assert january_item["start"] == datetime(2019, 1, 16, 16, 30)
 
 
-def test_links_january():
+def test_links_january(january_item):
     assert january_item["links"] == [
         {
             "href": (
