@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from datetime import datetime
 
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
@@ -23,13 +24,16 @@ class DetNeighborhoodDevelopmentCorporationSpider(CityScrapersSpider):
         yield from self._next_page_prev_meetings(response)
 
     def _next_meeting(self, response):
-        next_meeting_xpath = '//p[contains(., "The next Regular meeting is")]//text()'
-        next_meeting_text = ' '.join(response.xpath(next_meeting_xpath).extract())
-        meeting = self._set_meeting_defaults(response)
-        meeting['start'] = self._parse_start(next_meeting_text)
-        meeting['status'] = self._get_status(meeting)
-        meeting['id'] = self._get_id(meeting)
-        yield meeting
+        next_meeting_text = ' '.join(response.css('.content-itemContent *::text').extract())
+        start_time = self._parse_next_start_time(next_meeting_text)
+        for meeting_start in re.findall(
+            r'[a-zA-Z]{3,10}\s+\d{1,2},?\s+\d{4}.*?(?=\.)', next_meeting_text
+        ):
+            meeting = self._set_meeting_defaults(response)
+            meeting['start'] = self._parse_next_start(meeting_start, start_time)
+            meeting['status'] = self._get_status(meeting, text=meeting_start)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _next_page_prev_meetings(self, response):
         prev_meetings_xpath = '//a[contains(., "Past")]'
@@ -52,6 +56,17 @@ class DetNeighborhoodDevelopmentCorporationSpider(CityScrapersSpider):
         for meeting_date in prev_meeting_docs:
             docs = prev_meeting_docs[meeting_date]
             yield self._create_meeting_from_meeting_docs(meeting_date, docs, response)
+
+    @staticmethod
+    def _parse_next_start_time(text):
+        time_str = re.search(r'\d{1,2}:\d{1,2}\s*[apmAPM\.]{2,4}', text).group()
+        return datetime.strptime(re.sub(r'[\.\s]', '', time_str).upper(), '%I:%M%p').time()
+
+    @staticmethod
+    def _parse_next_start(date_text, time_obj):
+        date_str = re.search(r'\w{3,10}\s+\d{1,2},?\s+\d{4}', date_text).group().replace(',', '')
+        date_obj = datetime.strptime(date_str, '%B %d %Y').date()
+        return datetime.combine(date_obj, time_obj)
 
     def _parse_start(self, date_time_text):
         time_match = self._parse_time(date_time_text)
