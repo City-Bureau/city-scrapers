@@ -26,7 +26,7 @@ test_response = file_response(
 freezer = freeze_time('2018-07-25')
 spider = DetDowntownDevelopmentAuthoritySpider()
 freezer.start()
-parsed_items = [item for item in spider._next_meeting(test_response)]
+parsed_items = [item for item in spider._next_meetings(test_response)]
 freezer.stop()
 
 
@@ -61,8 +61,7 @@ def test_end():
 
 def test_id():
     assert parsed_items[0]['id'] == (
-        'det_downtown_development_authority/'
-        '201807251500/x/board_of_directors'
+        'det_downtown_development_authority/201807251500/x/board_of_directors'
     )
 
 
@@ -84,7 +83,7 @@ def test_links():
             'http://www.degc.org/wp-content/uploads'
             '/07-25-18-DDA-Board-Meeting-Agenda-Only.pdf'
         ),
-        'title': 'Agenda'
+        'title': 'DDA Board Meeting Agenda'
     }]
 
 
@@ -132,7 +131,7 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == datetime(2017, 6, 28)
+    assert parsed_prev_items[0]['start'] == datetime(2017, 6, 28, 15)
 
 
 def test_prev_end():
@@ -141,8 +140,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0]['id'] == (
-        'det_downtown_development_authority/201706280000/'
-        'x/board_of_directors'
+        'det_downtown_development_authority/201706281500/x/board_of_directors'
     )
 
 
@@ -168,24 +166,24 @@ def test_prev_links():
                 'http://www.degc.org/wp-content/uploads'
                 '/2017-06-28-dda-special-board-meeting-materials.pdf'
             ),
-            'title': 'Meeting Materials',
+            'title': 'DDA Meeting Materials',
         },
         {
             'href': ('http://www.degc.org/wp-content/uploads'
                      '/2017-06-28-Attachment-D.pdf'),
-            'title': 'Attachment D',
+            'title': 'DDA Attachment D',
         },
         {
             'href': ('http://www.degc.org/wp-content/uploads'
                      '/2017-06-28-Attachment-K.pdf'),
-            'title': 'Attachment k',
+            'title': 'DDA Attachment k',
         },
         {
             'href': (
                 'http://www.degc.org/wp-content/uploads'
                 '/2017-06-28-DDA-Board-Meeting-Minutes.pdf'
             ),
-            'title': 'Minutes',
+            'title': 'DDA Meeting Minutes',
         },
     ]
 

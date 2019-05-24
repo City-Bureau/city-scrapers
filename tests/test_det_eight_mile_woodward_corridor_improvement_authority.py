@@ -25,7 +25,7 @@ test_response = file_response(
 freezer = freeze_time('2018-07-21')
 freezer.start()
 spider = DetEightMileWoodwardCorridorImprovementAuthoritySpider()
-parsed_items = [item for item in spider.parse(test_response) if isinstance(item, Meeting)]
+parsed_items = [item for item in spider._next_meetings(test_response) if isinstance(item, Meeting)]
 freezer.stop()
 
 
@@ -84,7 +84,7 @@ test_prev_response = file_response(
     url='http://www.degc.org/public-authorities/emwcia/'
 )
 parsed_prev_items = [
-    item for item in spider._parse_previous(test_prev_response) if isinstance(item, Meeting)
+    item for item in spider._parse_prev_meetings(test_prev_response) if isinstance(item, Meeting)
 ]
 parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start'], reverse=True)
 
@@ -113,7 +113,7 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == datetime(2017, 6, 13)
+    assert parsed_prev_items[0]['start'] == datetime(2017, 6, 13, 14)
 
 
 def test_prev_end():
@@ -123,7 +123,7 @@ def test_prev_end():
 def test_prev_id():
     assert parsed_prev_items[0][
         'id'
-    ] == 'det_eight_mile_woodward_corridor_improvement_authority/201706130000/x/board_of_directors'
+    ] == 'det_eight_mile_woodward_corridor_improvement_authority/201706131400/x/board_of_directors'
 
 
 def test_prev_status():
@@ -143,12 +143,12 @@ def test_prev_links():
         {
             'href':
                 'http://www.degc.org/wp-content/uploads/2017-06-13-EMWCIA-Board-Meeting-Agenda.pdf',  # noqa
-            'title': 'Agenda',
+            'title': 'EMWCIA Agenda',
         },
         {
             'href':
                 'http://www.degc.org/wp-content/uploads/2017-06-13-EMWCIA-Board-Meeting-Minutes.pdf',  # noqa
-            'title': 'Minutes',
+            'title': 'EMWCIA Minutes',
         },
     ]
 

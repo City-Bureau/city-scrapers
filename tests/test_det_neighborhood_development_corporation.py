@@ -24,21 +24,18 @@ test_response = file_response(
 freezer = freeze_time('2018-07-29')
 spider = DetNeighborhoodDevelopmentCorporationSpider()
 freezer.start()
-parsed_items = [item for item in spider._next_meeting(test_response)]
+parsed_items = [item for item in spider._next_meetings(test_response)]
 freezer.stop()
 
 
 def test_initial_request_count():
     items = list(spider.parse(test_response))
-    assert len(items) == 5
+    assert len(items) == 3
     urls = {r.url for r in items if isinstance(r, scrapy.Request)}
     assert urls == {
         'http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/',
         'http://www.degc.org/public-authorities/ndc/fy-2017-2018-meetings/'
     }
-    items = [i for i in items if not isinstance(i, scrapy.Request)]
-    # current meeting plus two prev meetings on first page
-    assert len(items) == 3
 
 
 # current meeting http://www.degc.org/public-authorities/ndc/
@@ -99,7 +96,7 @@ parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start'], reverse=
 
 
 def test_request_count():
-    items = list(spider._next_page_prev_meetings(test_response))
+    items = list(spider._prev_meetings(test_response))
     urls = {r.url for r in items if isinstance(r, scrapy.Request)}
     assert len(urls) == 2
     assert urls == {
@@ -121,7 +118,7 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == datetime(2016, 6, 27)
+    assert parsed_prev_items[0]['start'] == datetime(2016, 6, 27, 8, 45)
 
 
 def test_prev_end():
@@ -130,7 +127,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0][
-        'id'] == 'det_neighborhood_development_corporation/201606270000/x/board_of_directors'
+        'id'] == 'det_neighborhood_development_corporation/201606270845/x/board_of_directors'
 
 
 def test_prev_status():
@@ -154,7 +151,7 @@ def test_prev_links():
           {
               'href':
                   'http://www.degc.org/wp-content/uploads/2017-06-27-NDC-Board-Meeting-Agenda.pdf',  # noqa
-              'title': 'Agenda',
+              'title': 'NDC Meeting Agenda',
           },
       ]
 

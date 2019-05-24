@@ -24,20 +24,18 @@ test_response = file_response(
 freezer = freeze_time('2018-07-26 12:00:01')
 spider = DetNextMichiganDevelopmentCorporationSpider()
 freezer.start()
-parsed_items = [item for item in spider._next_meeting(test_response)]
+parsed_items = [item for item in spider._next_meetings(test_response)]
 freezer.stop()
 
 
 def test_initial_request_count():
     items = list(spider.parse(test_response))
-    assert len(items) == 4
+    assert len(items) == 3
     urls = {r.url for r in items if isinstance(r, scrapy.Request)}
     assert urls == {
         'http://www.degc.org/public-authorities/d-nmdc/fy-2017-2018-meetings/',
         'http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings/'
     }
-    items = [i for i in items if not isinstance(i, scrapy.Request)]
-    assert len(items) == 2
 
 
 # current meeting http://www.degc.org/public-authorities/ldfa/
@@ -98,7 +96,7 @@ parsed_prev_items = sorted(parsed_prev_items, key=lambda x: x['start'], reverse=
 
 
 def test_request_count():
-    items = list(spider._next_page_prev_meetings(test_response))
+    items = list(spider._prev_meetings(test_response))
     urls = {r.url for r in items if isinstance(r, scrapy.Request)}
     assert len(urls) == 2
     assert urls == {
@@ -121,7 +119,7 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == datetime(2017, 8, 8)
+    assert parsed_prev_items[0]['start'] == datetime(2017, 8, 8, 9)
 
 
 def test_prev_end():
@@ -130,7 +128,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0][
-        'id'] == 'det_next_michigan_development_corporation/201708080000/x/board_of_directors'
+        'id'] == 'det_next_michigan_development_corporation/201708080900/x/board_of_directors'
 
 
 def test_prev_status():
@@ -151,7 +149,7 @@ def test_prev_links():
         {
             'href':
                 'http://www.degc.org/wp-content/uploads/2016-08-09-DNMDC-Special-Board-Meeting-Agenda-4-1.pdf',  # noqa
-            'title': 'Agenda',
+            'title': 'D-NMDC Agenda',
         },
     ]
 

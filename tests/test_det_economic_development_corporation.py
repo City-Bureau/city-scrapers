@@ -23,10 +23,10 @@ test_response = file_response(
     'files/det_economic_development_corporation.html',
     url='http://www.degc.org/public-authorities/edc/',
 )
-freezer = freeze_time('2018-07-27 12:00:01')
+freezer = freeze_time('2018-07-27')
 spider = DetEconomicDevelopmentCorporationSpider()
 freezer.start()
-parsed_items = [item for item in spider._next_meeting(test_response)]
+parsed_items = [item for item in spider._next_meetings(test_response)]
 freezer.stop()
 
 
@@ -128,7 +128,7 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == datetime(2018, 6, 26)
+    assert parsed_prev_items[0]['start'] == datetime(2018, 6, 26, 8, 30)
 
 
 def test_prev_end():
@@ -137,7 +137,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0]['id'] == (
-        'det_economic_development_corporation/201806260000/'
+        'det_economic_development_corporation/201806260830/'
         'x/board_of_directors'
     )
 
@@ -162,14 +162,14 @@ def test_prev_links():
                 'http://www.degc.org/wp-content/uploads/'
                 '06-26-18-EDC-Board-Meeting-Minutes.pdf'
             ),
-            'title': 'Minutes',
+            'title': 'EDC Board Meeting Minutes',
         },
         {
             'href': (
                 'http://www.degc.org/wp-content/uploads/'
                 '06-26-18-EDC-Board-Meeting-Agenda-Only.pdf'
             ),
-            'title': 'Agenda',
+            'title': 'EDC Board Meeting Agenda',
         },
     ]
 
