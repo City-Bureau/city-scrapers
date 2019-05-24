@@ -26,7 +26,7 @@ test_response = file_response(
 freezer = freeze_time('2018-07-26')
 spider = DetLocalDevelopmentFinanceAuthoritySpider()
 freezer.start()
-parsed_items = [item for item in spider._next_meeting(test_response)]
+parsed_items = [item for item in spider._next_meetings(test_response)]
 freezer.stop()
 
 
@@ -123,7 +123,7 @@ def test_prev_description():
 
 
 def test_prev_start():
-    assert parsed_prev_items[0]['start'] == datetime(2018, 6, 19)
+    assert parsed_prev_items[0]['start'] == datetime(2018, 6, 19, 9, 30)
 
 
 def test_prev_end():
@@ -132,7 +132,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0][
-        'id'] == 'det_local_development_finance_authority/201806190000/x/board_of_directors'
+        'id'] == 'det_local_development_finance_authority/201806190930/x/board_of_directors'
 
 
 def test_prev_status():
@@ -152,12 +152,12 @@ def test_prev_links():
     assert parsed_prev_items[1]['links'] == [
         {
             'href': 'http://www.degc.org/wp-content/uploads/12-12-17-LDFA-Board-Meeting-Minutes.pdf',  # noqa
-            'title': 'Minutes',
+            'title': 'LDFA Special Board Meeting Minutes',
         },
         {
             'href':
                 'http://www.degc.org/wp-content/uploads/12-12-17-Special-LDFA-Board-Meeting-Agenda-Only.pdf',  # noqa
-            'title': 'Agenda',
+            'title': 'LDFA Special Board Meeting Agenda',
         },
     ]
 
