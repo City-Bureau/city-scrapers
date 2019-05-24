@@ -14,7 +14,6 @@ class CookHospitalsSpider(CityScrapersSpider):
     start_urls = [
         'https://cookcountyhealth.org/about/board-of-directors/board-committee-meetings-agendas-minutes/'  # noqa
     ]
-    custom_settings = {'ROBOTSTXT_OBEY': False}
     location = {
         'name': '',
         'address': '1950 W Polk St, Conference Room 5301, Chicago, IL 60612',
