@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from datetime import datetime
 
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
@@ -23,15 +24,16 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(CityScrapersSpider)
         """
         yield from self._prev_meetings(response)
 
-        next_board_meeting_xpath = (
-            '//p[.//text()[contains(., "The next Regular Board meeting is")]]//text()'
-        )
-        next_board_text = ' '.join(response.xpath(next_board_meeting_xpath).extract())
-        meeting = self._set_meeting_defaults(response)
-        meeting['start'] = self._parse_start(next_board_text)
-        meeting['status'] = self._get_status(meeting)
-        meeting['id'] = self._get_id(meeting)
-        yield meeting
+        next_meeting_text = ' '.join(response.css('.content-itemContent *::text').extract())
+        start_time = self._parse_start_time(next_meeting_text)
+        for meeting_start in re.findall(
+            r'[a-zA-Z]{3,10}\s+\d{1,2},?\s+\d{4}.*?(?=\.)', next_meeting_text
+        ):
+            meeting = self._set_meeting_defaults(response)
+            meeting['start'] = self._parse_start(meeting_start, start_time)
+            meeting['status'] = self._get_status(meeting, text=meeting_start)
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
 
     def _prev_meetings(self, response):
         past_meetings_xpath = '//a[span/text()="Past Agendas and Minutes"]'
@@ -57,17 +59,15 @@ class DetEightMileWoodwardCorridorImprovementAuthoritySpider(CityScrapersSpider)
         )
 
     @staticmethod
-    def _parse_start(date_time_text):
-        # time + date are spread out in text, so find them with regex
-        # and use parse to convert / validate
-        time_regex = re.compile(r'((1[0-2]|0?[1-9]):([0-5]?[0-9])( ?[AP]M)?)')
-        date_regex = re.compile(r'([A-z]+ [0-3]?[0-9], \d{4})')
-        t = time_regex.search(date_time_text)
-        d = date_regex.search(date_time_text)
-        try:
-            return parse(d.group(1) + " " + t.group(1), fuzzy=True)
-        except ValueError:
-            pass
+    def _parse_start_time(text):
+        time_str = re.search(r'\d{1,2}:\d{1,2}\s*[apmAPM\.]{2,4}', text).group()
+        return datetime.strptime(re.sub(r'[\.\s]', '', time_str).upper(), '%I:%M%p').time()
+
+    @staticmethod
+    def _parse_start(date_text, time_obj):
+        date_str = re.search(r'\w{3,10}\s+\d{1,2},?\s+\d{4}', date_text).group().replace(',', '')
+        date_obj = datetime.strptime(date_str, '%B %d %Y').date()
+        return datetime.combine(date_obj, time_obj)
 
     def _parse_previous(self, response):
         docs = self._parse_prev_docs(response)
