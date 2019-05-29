@@ -60,8 +60,8 @@ class IlMedicaidSpider(CityScrapersSpider):
         Callback method for scraping the 'schedule' pages.
         """
 
-        # The MAC website currently lists the time directly inside the div
-        # container without any tags. The descendant-or-self is used in case
+        # The MAC website currently lists the time directly inside a div
+        # without any tags. The descendant-or-self is used in case
         # this is changed in the future. 
 
         time_xpath = "//h2[starts-with(text(),'Time')]/following::node()[normalize-space()][1]/descendant-or-self::text()"
@@ -78,12 +78,12 @@ class IlMedicaidSpider(CityScrapersSpider):
 
             meeting = Meeting(
                 title= response.meta['title'],
-                description='', # TBD
-                classification=ADVISORY_COMMITTEE, # TBD
+                description='',
+                classification=ADVISORY_COMMITTEE,
                 start=dt.datetime.combine(date,time_start),
                 end=dt.datetime.combine(date,time_end),
-                all_day=False,# TBD
-                time_notes="",# TBD
+                all_day=False,
+                time_notes="",
                 location={
                     'name': chicago_location['name'],
                     'address': chicago_location['address'],
