@@ -220,11 +220,11 @@ class DetCityMixin:
                 date_str = date_match.group().replace(' ', '-')
             if not date_match:
                 doc_title = doc_link['title'].replace('.', '')
-                date_fmt = '%B %d, %Y'
+                date_fmt = '%B %d %Y'
                 date_match = re.search(r'[a-zA-Z]{3,9} \d{1,2},? \d{4}', doc_title)
             if date_match:
                 if not date_str:
-                    date_str = date_match.group()
+                    date_str = date_match.group().replace(',', '')
                 doc_date = datetime.strptime(date_str, date_fmt).date()
                 self.document_date_map[doc_date].append(doc_link)
 
