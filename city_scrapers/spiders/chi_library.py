@@ -64,7 +64,7 @@ class ChiLibrarySpider(CityScrapersSpider):
         """
         Parse start date and time.
         """
-        dt_str = item.css('strong::text').extract_first()
+        dt_str = item.css('strong::text').extract()[-1]
         return datetime.datetime.strptime(
             '{} {}'.format(re.sub(r'[,\.]', '', dt_str), year), '%A %B %d %I %p %Y'
         )
