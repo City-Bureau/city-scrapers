@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -22,65 +22,62 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+@pytest.mark.parametrize('item', parsed_items)
+def test_title(item):
+    assert item["title"] == "SSA #73 Chinatown Board"
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_description(item):
+    assert item["description"] == ''
 
 
-"""
-Uncomment below
-"""
-
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+def test_start():
+    assert parsed_items[1]["start"] == datetime(2019, 2, 26, 18, 30)
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+@pytest.mark.parametrize('item', parsed_items)
+def test_end(item):
+    assert item['end'] is None
+
+def test_id():
+    assert parsed_items[0]["id"] == "chi_ssa_73/201901221830/x/ssa_73_chinatown_board"
+    assert parsed_items[8]["id"] == "chi_ssa_73/201909241830/x/ssa_73_chinatown_board"
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_status():
+    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[5]["status"] == TENTATIVE
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_location():
+    assert parsed_items[0]["location"] == {
+        "name": "Leonard M. Louie Fieldhouse",
+        "address": "1700 S. Wentworth Avenue, Chicago, Illinois"
+    }
+
+@pytest.mark.parametrize("item", parsed_items)
+def test_source(item):
+    assert item["source"] == "https://chinatownssa73.org/meeting-schedule/"
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_links():
+    assert parsed_items[0]["links"] == [
+        {
+            'href': 'https://chinatownssa73.org/wp-content/uploads/2019/01/Agenda-1-22-19.pdf',
+            'title': 'Agenda'
+        },
+        {
+           'href': 'https://chinatownssa73.org/wp-content/uploads/2019/02/Minutes-1-22-2019.pdf',
+            'title': 'Minutes'
+        }
+    ]
+    assert parsed_items[5]["links"] == []
+
+@pytest.mark.parametrize('item', parsed_items)
+def test_classification(item):
+    assert item["classification"] == BOARD
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
-
-
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
-
-
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
-
-
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
-
-
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
-
-
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
-
-
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+@pytest.mark.parametrize("item", parsed_items)
+def test_all_day(item):
+    assert item["all_day"] is False

@@ -24,8 +24,10 @@ class ChiSsa73Spider(CityScrapersSpider):
 
         linksList = self._get_links(response)
         location = self._parse_location(response)
+        idsList = []
+        startTime = self._parse_time(response)
         for item in response.css("article p"):
-            start = self._parse_start(item)
+            start = self._parse_start(item,startTime)
             if not start:
                 continue
             meeting = Meeting(
@@ -43,10 +45,14 @@ class ChiSsa73Spider(CityScrapersSpider):
 
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
+            if meeting["id"] in idsList:
+                continue
+            else:
+                idsList.append(meeting["id"])
 
             yield meeting
 
-    def _parse_start(self, item):
+    def _parse_start(self, item, startTime):
         """
         Parse start date and time.
         """
@@ -54,7 +60,19 @@ class ChiSsa73Spider(CityScrapersSpider):
         date_match = re.search(r'\w{3,9} \d{1,2}, \d{4}', date_str)
         if date_match:
             parsed_date = datetime.strptime(date_match.group(), '%B %d, %Y')
-            return datetime.combine(parsed_date.date(), time(18,30))
+            return datetime.combine(parsed_date.date(), startTime.time())
+
+    def _parse_time(self, response):
+        firstLine = response.css("article p").extract_first()
+        time_match = re.search(r'\d{1,2}:\d{2} [ap]\.m', firstLine)
+        if time_match:
+            tempStr = time_match.group()
+            tempStr = tempStr.replace('.','')
+            tempStr = tempStr.upper()
+            return datetime.strptime(tempStr,'%I:%M %p')
+        else:
+            return time(18,30)    
+    
 
     def _parse_location(self, response):
         """
@@ -84,7 +102,6 @@ class ChiSsa73Spider(CityScrapersSpider):
                 rawRef = item.css('*::text').extract_first()
                 newDict['date'] = rawRef.split()[1]
                 linksList.append(newDict)
-        print(linksList)
         return linksList
 
 
