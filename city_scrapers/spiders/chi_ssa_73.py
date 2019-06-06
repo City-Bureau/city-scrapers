@@ -13,7 +13,6 @@ class ChiSsa73Spider(CityScrapersSpider):
     allowed_domains = ["chinatownssa73.org"]
     start_urls = ["https://chinatownssa73.org/meeting-schedule/"]
 
-
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
@@ -27,7 +26,7 @@ class ChiSsa73Spider(CityScrapersSpider):
         idsList = []
         startTime = self._parse_time(response)
         for item in response.css("article p"):
-            start = self._parse_start(item,startTime)
+            start = self._parse_start(item, startTime)
             if not start:
                 continue
             meeting = Meeting(
@@ -67,12 +66,11 @@ class ChiSsa73Spider(CityScrapersSpider):
         time_match = re.search(r'\d{1,2}:\d{2} [ap]\.m', firstLine)
         if time_match:
             tempStr = time_match.group()
-            tempStr = tempStr.replace('.','')
+            tempStr = tempStr.replace('.', '')
             tempStr = tempStr.upper()
-            return datetime.strptime(tempStr,'%I:%M %p')
+            return datetime.strptime(tempStr, '%I:%M %p')
         else:
-            return time(18,30)    
-    
+            return time(18, 30)
 
     def _parse_location(self, response):
         """
@@ -103,7 +101,6 @@ class ChiSsa73Spider(CityScrapersSpider):
                 newDict['date'] = rawRef.split()[1]
                 linksList.append(newDict)
         return linksList
-
 
     def _parse_links(self, item, start, linksList):
         """Parse or generate links."""
