@@ -27,53 +27,38 @@ class CookHospitalsSpider(CityScrapersSpider):
         needs.
         """
         # Only pull from first two year sections because it goes back pretty far
-        for item in response.css(
-            ".eael-tabs-content > .clearfix:first-child .elementor-post, "
-            ".eael-tabs-content > .clearfix:nth-child(2) .elementor-post"
-        ):
-            title, start = self._parse_title_start(item)
-            if start is None:
-                continue
-            meeting = Meeting(
-                title=title,
-                description="",
-                classification=self._parse_classification(title),
-                start=start,
-                end=None,
-                time_notes="Confirm time in agenda",
-                all_day=False,
-                location=self._parse_location(item),
-                links=self._parse_links(item),
-                source=response.url,
-            )
-            meeting['status'] = self._get_status(meeting)
-            meeting['id'] = self._get_id(meeting)
-            yield meeting
+        for group in response.css(".panel"):
+            title = self._parse_title(group)
+            for item in group.css("tbody > tr"):
+                start = self._parse_start(item)
+                meeting = Meeting(
+                    title=title,
+                    description="",
+                    classification=self._parse_classification(title),
+                    start=start,
+                    end=None,
+                    time_notes="Confirm time in agenda",
+                    all_day=False,
+                    location=self._parse_location(item),
+                    links=self._parse_links(item, response),
+                    source=response.url,
+                )
+                meeting['status'] = self._get_status(meeting)
+                meeting['id'] = self._get_id(meeting)
+                yield meeting
 
     @staticmethod
-    def _parse_title_start(item):
-        """Get meeting title and start datetime from item's text"""
-        title_str = item.css('.elementor-heading-title::text').extract_first()
-        date_match = re.search(r'\w{3,9} \d{1,2},? \d{4}', title_str)
-        if not date_match:
-            return None, None
-        date_str = date_match.group().replace(',', '')
+    def _parse_title(item):
+        title_str = " ".join(item.css(".panel-title *::text").extract()).strip()
+        if "board" in title_str.lower():
+            return "Board of Directors"
+        return re.sub(r"\s+Meetings?", "", title_str)
 
-        title = re.sub(r'(\w+day,?\s+|\w{3,9} \d{1,2},? \d{4}|,)', '', title_str).strip()
-        if 'special' not in title.lower():
-            title = title.replace('Meeting', '').strip()
-
-        start = datetime.strptime(date_str, '%B %d %Y')
-        # Assign time based off of typical meeting times
-        if any(w in title.lower() for w in ['board', 'human resources', 'audit']):
-            start = start.replace(hour=9)
-        elif 'quality' in title.lower():
-            start = start.replace(hour=10)
-        elif 'finance' in title.lower():
-            start = start.replace(hour=8, minute=30)
-        elif 'managed care' in title.lower():
-            start = start.replace(hour=10, minute=30)
-        return title, start
+    @staticmethod
+    def _parse_start(item):
+        """Get start datetime from item's text"""
+        date_str = item.css("td:first-child::text").extract_first().strip().replace(" - ", " ")
+        return datetime.strptime(date_str, "%B %d, %Y %I:%M %p")
 
     @staticmethod
     def _parse_classification(title):
@@ -82,21 +67,19 @@ class CookHospitalsSpider(CityScrapersSpider):
         return COMMITTEE
 
     @staticmethod
-    def _parse_links(item):
+    def _parse_links(item, response):
         links = []
-        for link in item.css('.elementor-icon-list-item a'):
+        for link in item.css('td[data-title="Documents"] > a'):
             links.append({
-                'href': link.attrib['href'],
+                'href': response.urljoin(link.attrib['href']),
                 'title': ' '.join(link.css('::text').extract()).strip(),
             })
         return links
 
     def _parse_location(self, item):
         """Parse location"""
-        loc_text = item.css(
-            '.elementor-column:first-child li span.elementor-post-info__item::text'
-        ).extract_first()
-        if not loc_text or '5301' in (loc_text or ''):
+        loc_text = item.css("td:first-child::text").extract()
+        if len(loc_text) < 2 or not loc_text[1].strip() or '5301' in loc_text[1]:
             return self.location
         else:
-            return {'name': '', 'address': loc_text.strip()}
+            return {'name': '', 'address': loc_text[1].strip()}

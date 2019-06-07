@@ -25,7 +25,7 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 105
+    assert len(parsed_items) == 51
 
 
 def test_title():
@@ -49,14 +49,44 @@ def test_time_notes():
 
 
 def test_links():
-    assert parsed_items[0]['links'] == []
-    assert parsed_items[3]['links'] == [{
-        'href': 'https://cookcountyhealth.org/wp-content/uploads/03-29-19-Board-Agenda.pdf',
-        'title': 'Agenda'
-    }, {
-        'href': 'https://cookcountyhealth.org/wp-content/uploads/Metrics-combined-03-29-19.pdf',
-        'title': 'Metrics - HR, ACC, MCC, Finance and QPS Committees'
-    }]
+    assert parsed_items[0]['links'] == [
+        {
+            'href': 'https://cookcountyhealth.org/wp-content/uploads/01-25-19-Board-Agenda.pdf',
+            'title': 'Agenda'
+        },
+        {
+            'href': 'https://cookcountyhealth.org/wp-content/uploads/Metrics-Finance-01-25-19.pdf',
+            'title': 'Metrics Finance Committee'
+        },
+        {
+            'href': 'https://cookcountyhealth.org/wp-content/uploads/Metrics-HR-01-25-19.pdf',
+            'title': 'Metrics Human Resources Committee'
+        },
+        {
+            'href':
+                'https://cookcountyhealth.org/wp-content/uploads/Metrics-Managed-Care-01-25-19.pdf',
+            'title': 'Metrics Managed Care Committee'
+        },
+        {
+            'href': 'https://cookcountyhealth.org/wp-content/uploads/Metrics-QPS-01-25-19.pdf',
+            'title': 'Metrics QPS Committee'
+        },
+        {
+            'href':
+                'https://cookcountyhealth.org/wp-content/uploads/Item-VIII-Report-from-the-CEO-01-25-19.pdf',  # noqa
+            'title': 'Item VIII Report from CEO'
+        },
+        {
+            'href':
+                'https://cookcountyhealth.org/wp-content/uploads/Item-IXA-SP-Discussion-Federal-State-Landscape-01-25-19.pdf',  # noqa
+            'title': 'Item IV(A) SP discussion State and Federal Issues'
+        },
+        {
+            'href':
+                'https://cookcountyhealth.org/wp-content/uploads/01-25-19-Board-scan-Minutes.pdf',
+            'title': '01-25-19 Board of Directors Meeting Minutes'
+        }
+    ]
 
 
 def test_id():
