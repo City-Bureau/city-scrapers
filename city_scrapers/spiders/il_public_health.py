@@ -20,7 +20,10 @@ class IlPublicHealthSpider(CityScrapersSpider):
         url_list = []
         for months_diff in range(-12, 13):
             month_str = (today + relativedelta(months=months_diff)).strftime("%Y%m")
-            url_list.append("http://www.dph.illinois.gov/events/" + month_str)
+            url_list.extend([
+                "http://www.dph.illinois.gov/events/{}?page={}".format(month_str, i)
+                for i in range(4)
+            ])
         return url_list
 
     def parse(self, response):
