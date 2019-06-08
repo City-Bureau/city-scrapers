@@ -1,6 +1,6 @@
 ## 1. Create a new issue to ask onboarding questions.
 
-We want the technical aspects of the project to be accessible to newcomers. As you're working through the set-up and installation, please create issues for roadblocks you encounter or anything that's confusing in the documentation. We're committed to helping you resolve these and improving the onboarding experience.  
+We want the technical aspects of the project to be accessible to newcomers. As you're working through the set-up and installation, please create issues for roadblocks you encounter or anything that's confusing in the documentation. We're committed to helping you resolve these and improving the onboarding experience. For more information about developing a spider, there is additional documentation [here](https://cityscrapers.org/docs/development/#contribute).
 
 ## 2. Open a Pull Request to talk about code and show us how things are going.
 
