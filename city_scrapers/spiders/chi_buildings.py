@@ -139,10 +139,10 @@ class ChiBuildingsSpider(CityScrapersSpider):
     def _parse_links(self, response):
         """Parse documents if available on previous board meeting pages"""
         links = []
-        for doc_link in response.css('a.vc_btn3-shape-rounded'):
+        for doc_link in response.css('a.vc_btn3-shape-rounded, .entry-content a[href*=".pdf"]'):
             links.append({
                 'href': doc_link.attrib['href'],
-                'title': doc_link.xpath('./text()').extract_first()
+                'title': doc_link.xpath('./text()').extract_first().strip()
             })
         return links
 
