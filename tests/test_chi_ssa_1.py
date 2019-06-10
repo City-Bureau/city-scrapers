@@ -1,4 +1,5 @@
 from datetime import datetime
+from operator import itemgetter
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
@@ -16,7 +17,7 @@ spider = ChiSsa1Spider()
 freezer = freeze_time('2018-10-12')
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+parsed_items = sorted([item for item in spider.parse(test_response)], key=itemgetter("start"))
 
 freezer.stop()
 

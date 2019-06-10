@@ -12,7 +12,7 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     allowed_domains = ["www.fabf.org"]
     start_urls = ["http://www.fabf.org/Meetings.html"]
-    location = {"name": "Fund Office", "address": "20 S Clark St, Suite 1400, Chicago, IL 60602"}
+    location = {"name": "Fund Office", "address": "20 S Clark St, Suite 300, Chicago, IL 60602"}
 
     def parse(self, response):
         """
