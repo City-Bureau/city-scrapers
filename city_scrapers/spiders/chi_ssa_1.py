@@ -21,6 +21,7 @@ class ChiSsa1Spider(CityScrapersSpider):
         needs.
         """
         location = self._parse_location(response)
+        meeting_map = {}
         for item in response.css('.layoutArea li'):
             start = self._parse_start(item)
             if not start:
@@ -34,12 +35,17 @@ class ChiSsa1Spider(CityScrapersSpider):
                 time_notes='',
                 all_day=False,
                 location=location,
-                links=self._parse_links(item),
+                links=self._parse_links(item, response),
                 source=response.url,
             )
 
             meeting['status'] = self._get_status(meeting, text=item.extract())
             meeting['id'] = self._get_id(meeting)
+            if meeting['start'] in meeting_map:
+                meeting_map[meeting['start']]['links'].extend(meeting['links'])
+            else:
+                meeting_map[meeting['start']] = meeting
+        for meeting in meeting_map.values():
             yield meeting
 
     def _parse_start(self, item):
@@ -49,7 +55,9 @@ class ChiSsa1Spider(CityScrapersSpider):
         date_str = item.css('*::text').extract_first()
         date_match = re.search(r'\w{3,9} \d{1,2}, \d{4}', date_str)
         if date_match:
-            parsed_date = datetime.strptime(date_match.group(), '%B %d, %Y')
+            # Replace typo on site
+            date_match_str = date_match.group().replace('2109', '2019')
+            parsed_date = datetime.strptime(date_match_str, '%B %d, %Y')
             return datetime.combine(parsed_date.date(), time(14))
 
     def _parse_location(self, response):
@@ -64,11 +72,14 @@ class ChiSsa1Spider(CityScrapersSpider):
         else:
             raise ValueError('Meeting address has changed')
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """
         Parse or generate documents.
         """
         item_link = item.css('a::attr(href)').extract_first()
         if item_link:
-            return [{'href': 'https://loopchicago.com{}'.format(item_link), 'title': 'Minutes'}]
+            return [{
+                'href': response.urljoin(item_link),
+                'title': 'Agenda' if 'agenda' in item_link.lower() else 'Minutes',
+            }]
         return []
