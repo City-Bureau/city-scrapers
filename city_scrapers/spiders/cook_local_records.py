@@ -16,7 +16,7 @@ class CookLocalRecordsSpider(CityScrapersSpider):
     ]
     location = {
         "name": "James R Thompson Center",
-        "address": "100 W Randolph St, Room 9-036 Chicago, IL 60601",
+        "address": "100 W Randolph St, Room 9-035 Chicago, IL 60601",
     }
 
     def parse(self, response):
