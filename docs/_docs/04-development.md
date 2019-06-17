@@ -126,7 +126,7 @@ To contribute infrastructure and utilities, see the [help-wanted GitHub issues](
 
 ### Spider Setup
 
-#### 1. Find a site to scrape and create an issues
+#### 1. Find a site to scrape and create an issue
 
 First, find an unclaimed event source within the project's [issues](https://github.com/City-Bureau/city-scrapers/issues){:target="\_blank"}. Any unassigned issue is fair game. Add a comment indicating that you're interested in the work.
 
