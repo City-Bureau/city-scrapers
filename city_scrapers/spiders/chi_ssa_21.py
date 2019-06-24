@@ -18,12 +18,15 @@ class ChiSsa21Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.xpath('//div[@id="content-327081"]/p'):
+        for item in response.css('.cms-design-panel p'):
+            start = self._parse_start(item)
+            if not start:
+                continue
             meeting = Meeting(
                 title='Lincoln Square Neighborhood Improvement Program',
                 description=self._parse_description(item),
                 classification=COMMISSION,
-                start=self._parse_start(item),
+                start=start,
                 end=None,
                 time_notes='Estimated 2 hour duration',
                 all_day=False,
@@ -71,7 +74,8 @@ class ChiSsa21Spider(CityScrapersSpider):
     def _parse_start(self, item):
         """Parse start datetime."""
         start = self._parse_date(item)
-        return start.replace(hour=9, minute=0)
+        if start:
+            return start.replace(hour=9, minute=0)
 
     def _parse_end(self, item):
         """Parse end datetime."""
@@ -80,7 +84,8 @@ class ChiSsa21Spider(CityScrapersSpider):
 
     def _parse_date(self, item):
         raw_date = item.xpath('strong/text()').extract_first()
-        return dateutil.parser.parse(raw_date)
+        if raw_date:
+            return dateutil.parser.parse(raw_date)
 
     def _parse_location(self, item):
         """
