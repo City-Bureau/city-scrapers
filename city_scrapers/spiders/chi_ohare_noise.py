@@ -49,7 +49,15 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
         else:
             event_days = response.selector.xpath(".//td[@class='cal_dayshasevents']")
             for item in event_days:
-                print(item)
+                date = item.xpath(".//a[@class='cal_daylink']//span[@class='listview']/text()").get().lstrip()
+                events = item.xpath(".//a[@class='cal_titlelink']")
+                for event in events:
+
+                    time = event.xpath(".//span/text()").get()
+                    name = event.xpath("text()").get()
+                    print(date)
+                    print(name.split()[0].isupper())
+                    print(time)
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
