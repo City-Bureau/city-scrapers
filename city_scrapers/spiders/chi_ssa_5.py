@@ -25,7 +25,7 @@ class ChiSsa5Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        if 'MB Financial Bank' not in response.text:
+        if '3030' not in response.text:
             raise ValueError('Meeting address has changed')
 
         self.meetings = self._parse_current_year(response)
@@ -36,13 +36,18 @@ class ChiSsa5Spider(CityScrapersSpider):
         )
 
     def _parse_current_year(self, response):
-        meetings = response.css('.page-post-content h2:nth-child(2)')[0]
+        meetings = response.css('.page-post-content h2:nth-of-type(2)')[0]
         items = []
         for item in meetings.xpath('child::node()'):
             if isinstance(item.root, str):
                 items.append({'text': item.root})
             elif item.root.tag == 'a':
-                items[-1]['agenda'] = item.root.get('href')
+                text_items = item.css('* ::text').extract()
+                for item_text in text_items:
+                    if item_text and 'agenda' in item_text.lower():
+                        items[-1]['agenda'] = item.root.get('href')
+                    elif item_text:
+                        items.append({'text': item_text})
 
         meetings = []
         for item in items:
@@ -69,6 +74,8 @@ class ChiSsa5Spider(CityScrapersSpider):
         """
         for item in response.css('.page-post-content a'):
             text = item.xpath('text()').extract_first()
+            if not text:
+                continue
             start = self._parse_start(text, minutes=True)
 
             links = [{
