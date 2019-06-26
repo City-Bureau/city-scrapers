@@ -17,9 +17,6 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
         """
         if "agendas" in response.url:
             table_rows = response.selector.xpath(".//tbody//tr")
@@ -27,7 +24,6 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
                 date = self._parse_start(item)
                 url_date = date.strftime("%Y/%m/%d")
                 meeting = Meeting(
-                    # Meeting title will always be second column
                     title=self._parse_title(item),
                     links=self._parse_links(item),
                     start=self._parse_start(item),
@@ -47,39 +43,66 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
             for date in months_urls:
                 yield Request(
                         "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
-                        date.strftime("%Y/%m/%d"), self._parse_calendar)
+                        date.strftime("%Y/%m/%d"), callback=self._parse_calendar)
+            print("done parsing months")
+
+    def _yield_meetings(self):
+        print(len(self.meetings))
+        for date_key, meeting in self.meetings.items():
+            yield meeting
 
     def _parse_calendar(self, response):
         event_urls = response.selector.xpath(".//a[@class='cal_titlelink']//@href").extract()
         for event_url in event_urls:
             yield Request("https://www.oharenoise.org" + event_url, self._parse_event)
 
+        print("done parsing calendar")
+
     def _parse_event(self, response):
         info_body = response.selector.xpath(".//div[@id='jevents_body']")
         name_date_time = info_body.xpath(".//div[@class='jev_evdt_header']")
-        name = name_date_time.xpath(".//h2/text()").get()
-        date_time = name_date_time.xpath(".//p/text()").extract()
-        event_date = datetime.datetime.strptime(date_time[0], "%A, %B %d, %Y")
-        event_time = datetime.datetime.strptime(date_time[1].strip(), "%I:%M%p")
-        event_date = event_date.replace(hour=event_time.hour, minute=event_time.minute)
-        date_key = event_date.strftime("%Y/%m/%d")
-        description = info_body.xpath(".//div[@class='jev_evdt_desc']//p/text()").get()
-        location = info_body.xpath(".//div[@class='jev_evdt_location']/text()").get()
+        start = self._parse_start(name_date_time, is_calen=True)
+        date_key = start.strftime("%Y/%m/%d")
+        description = self._parse_description(info_body)
+        location = self._parse_location(info_body)
+        meeting = None
         if date_key in self.meetings:
             meeting = self.meetings[date_key]
-            meeting['start'] = event_date
+            meeting['start'] = start
+            meeting['description'] = description
+            meeting['location'] = location
+        else:
+            meeting = Meeting(
+                    title=self._parse_title(name_date_time, is_calen=True),
+                    start=start,
+                    description=description,
+                    location=location
+                    )
+            self.meetings[date_key] = meeting
 
+    def _not_empty(self, string):
+        if string is not None and not str.isspace(string):
+            return True
+        else:
+            return False
 
     def _parse_title(self, item, is_calen=False):
         """Parse or generate meeting title."""
         if is_calen:
-            print("calen")
+            title = item.xpath(".//h2/text()").get()
+            return title if self._not_empty(title) else None
         else:
-            return item.xpath(".//td[@class='djc_category']/span/text()").get()
+            title = item.xpath(".//td[@class='djc_category']/span/text()").get()
+            return title if self._not_empty(title) else None
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        return ""
+        description = item.xpath(".//div[@class='jev_evdt_desc']//p/text()").get()
+        extra_info = item.xpath(".//div[@class='jev_evdt_extrainf']/text()").get()
+        if self._not_empty(extra_info):
+            description = description + extra_info
+
+        return description if self._not_empty(description) else None
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
@@ -88,7 +111,11 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
     def _parse_start(self, item, is_calen=False):
         """Parse start datetime as a naive datetime object."""
         if is_calen:
-            print("calen start")
+            date_time = item.xpath(".//p/text()").extract()
+            event_date = datetime.datetime.strptime(date_time[0], "%A, %B %d, %Y")
+            event_time = datetime.datetime.strptime(date_time[1].strip(), "%I:%M%p")
+            event_date.replace(hour=event_time.hour, minute=event_time.minute)
+            return event_date
         else:
             date = item.xpath(".//td[@class='djc_producer']/span/text()").get()
             return datetime.datetime.strptime(date, "%B %d, %Y")
@@ -107,10 +134,13 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        return {
-            "address": "",
-            "name": "",
-        }
+        location = item.xpath(".//div[@class='jev_evdt_location']/text()").get()
+        location_array = location.split(',')
+        if self._not_empty(location):
+            return {
+                "address": location,
+                "name": location_array[0],
+            }
 
     def _parse_links(self, item):
         """Parse or generate links."""
