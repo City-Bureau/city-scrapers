@@ -11,6 +11,9 @@ class DetCharterReviewSpider(DetCityMixin, CityScrapersSpider):
     agency_doc_id = "5621"
 
     def _parse_title(self, response):
+        title = super()._parse_title(response)
+        if "committee" in title.lower():
+            return title
         return "Charter Review Commission"
 
     def _parse_classification(self, response):
