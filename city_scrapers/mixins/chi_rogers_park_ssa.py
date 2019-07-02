@@ -75,7 +75,7 @@ class ChiRogersParkSsaMixin:
                 if not re.match(r"^[a-zA-Z]{3,10} \d{1,2}$", link_text):
                     continue
                 start = self._parse_start(link_text, year_str)
-                link_dict[start].append({"link": link.attrib["href"], "title": link_title})
+                link_dict[start].append({"href": link.attrib["href"], "title": link_title})
         return link_dict
 
     def _validate_location(self, response):

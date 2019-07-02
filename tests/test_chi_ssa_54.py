@@ -64,7 +64,7 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == [{
-        "link": "https://rpba.org/wp-content/uploads/2019/04/54-2.14.19-Agenda.pdf",
+        "href": "https://rpba.org/wp-content/uploads/2019/04/54-2.14.19-Agenda.pdf",
         "title": "Agenda"
     }]
 
