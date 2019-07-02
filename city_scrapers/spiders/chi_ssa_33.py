@@ -31,7 +31,7 @@ class ChiSsa33Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css("#mainContent li a")[5:15]:
+        for item in response.css("#mainContent li a"):
             if ".pdf" in item.attrib["href"]:
                 continue
             yield scrapy.Request(item.attrib["href"], callback=self.parse_docs_page)
