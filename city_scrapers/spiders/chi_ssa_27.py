@@ -34,14 +34,14 @@ class ChiSsa27Spider(CityScrapersSpider):
             items.append(re.sub("\n|\r|</p>", "", i))
 
         for item in items:
-            if re.search('<div', item):
+            if re.search(r'<div', item):
                 continue  # skip these
 
-            if re.search("meetings are held at", item):
+            if re.search(r"meetings are held at", item):
                 meeting_location = self._parse_location(item)
                 continue
 
-            if re.search('http', item):
+            if re.search(r'http', item):
                 date_time, minutes_pdf = self.pdf_parse(item)
             else:
                 date_time = self._parse_start(item)
@@ -68,15 +68,15 @@ class ChiSsa27Spider(CityScrapersSpider):
     def pdf_parse(self, item):
         re1 = '((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))'  # HTTP URL 1
         rg = re.compile(re1, re.IGNORECASE | re.DOTALL)
-        search_res = rg.search(item)
-        if search_res:
-            a_url = search_res.group(1)
-            is_pdf = re.search(r'https?\:.*\.pdf', a_url)
+        search_result = rg.search(item)
+        if search_result:
+            result_url = search_result.group(1)
+            is_pdf = re.search('https?\:.*\.pdf', result_url)
             if is_pdf:
                 # split datetime from url
                 newlist = re.split(r'target=\"_blank">', item)
-                datet = self._parse_start(newlist[1])
-                return datet, a_url
+                date_time = self._parse_start(newlist[1])
+                return date_time, result_url
             else:
                 return False
 
@@ -101,7 +101,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         return COMMISSION
 
     def _parse_start(self, item):
-        st_datetime = None
+        start_datetime = None
         mon_to_digit = {
             "jan": 1,
             "feb": 2,
@@ -126,11 +126,11 @@ class ChiSsa27Spider(CityScrapersSpider):
             tm = item_elems[3].rstrip(',')
             hr = int(tm[0:2].rstrip(':'))
             minit = int(tm[2:4])
-            st_datetime = datetime(yr, month_digit, day, hr, minit)
+            start_datetime = datetime(yr, month_digit, day, hr, minit)
             """
             Parse start datetime as a naive datetime object.
             """
-        return st_datetime
+        return start_datetime
 
     @staticmethod
     def _parse_end():
@@ -150,7 +150,7 @@ class ChiSsa27Spider(CityScrapersSpider):
     @staticmethod
     def _parse_location(item):
         """Parse or generate location."""
-        if "Sheil Park" in item:
+        if re.search(r"Sheil Park", item):
             return {
                 "address": "3505 N. Southport Ave., Chicago, IL 60657",
                 "name": "Sheil Park",
@@ -158,11 +158,11 @@ class ChiSsa27Spider(CityScrapersSpider):
         else:
             raise ValueError('Meeting address has changed')
 
-    @staticmethod
-    def _parse_links(item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
+    # @staticmethod
+    # def _parse_links(item):
+    #     """Parse or generate links."""
+    #     return [{"href": "", "title": ""}]
 
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
+    # def _parse_source(self, response):
+    #     """Parse or generate source."""
+    #     return response.url
