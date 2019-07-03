@@ -64,10 +64,10 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == [{
-        "link": "https://rpba.org/wp-content/uploads/2019/05/24-2.6.19-Agenda.pdf",
+        "href": "https://rpba.org/wp-content/uploads/2019/05/24-2.6.19-Agenda.pdf",
         "title": "Agenda"
     }, {
-        "link": "https://rpba.org/wp-content/uploads/2019/06/24-2.6.19-Minutes.pdf",
+        "href": "https://rpba.org/wp-content/uploads/2019/06/24-2.6.19-Minutes.pdf",
         "title": "Minutes"
     }]
 
