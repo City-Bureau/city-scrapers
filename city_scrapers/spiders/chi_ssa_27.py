@@ -1,4 +1,5 @@
 import re
+
 from datetime import datetime
 
 from city_scrapers_core.constants import COMMISSION
@@ -6,10 +7,12 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
-# from pjsier: #we'll want to parse the agenda links from them too.
-# We also want to get the separate committee meetings and minutes as well.
-# You can get committee meetings and descriptions with div[pageareaid="2"]
-# li:last-child p and minutes with div[pageareaid="Sidebar"] li:last-child a
+""" from pjsier: #we'll want to parse the agenda links from them too.
+ We also want to get the separate committee meetings and minutes as well.
+ You can get committee meetings and descriptions with div[pageareaid="2"]
+ li:last-child p and minutes with div[pageareaid="Sidebar"] li:last-child a
+"""
+
 
 class ChiSsa27Spider(CityScrapersSpider):
     name = "chi_ssa_27"
@@ -25,7 +28,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         `parse` should always `yield` Meeting items.
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.
         """
-        items, minutes_pdf, meeting_location = [], "", ""
+        items, minutes_pdf, meeting_location, meeting = [], "", "", None
         the_url_source = response.url
 
         items_list = (response.css(".panel-body").getall()[4]).split("<p>")
@@ -71,7 +74,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         search_result = rg.search(item)
         if search_result:
             result_url = search_result.group(1)
-            is_pdf = re.search('https?\:.*\.pdf', result_url)
+            is_pdf = re.search('https?:.*\\.pdf', result_url)
             if is_pdf:
                 # split datetime from url
                 newlist = re.split(r'target=\"_blank">', item)
