@@ -11,52 +11,56 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     allowed_domains = ["www.oharenoise.org"]
     meetings = dict()
-    start_urls = ["https://www.oharenoise.org/about-oncc/agendas-and-minutes",
-                  "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/"]
+    start_urls = ["https://www.oharenoise.org/about-oncc/agendas-and-minutes"]
+    requests = []
 
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
         """
-        if "agendas" in response.url:
-            table_rows = response.selector.xpath(".//tbody//tr")
-            for item in table_rows:
-                date = self._parse_start(item)
-                url_date = date.strftime("%Y/%m/%d")
-                meeting = Meeting(
-                    title=self._parse_title(item),
-                    links=self._parse_links(item),
-                    start=self._parse_start(item),
-                    source=self._parse_source(response)
-                )
+        table_rows = response.selector.xpath(".//tbody//tr")
 
-                meeting["status"] = self._get_status(meeting)
-                meeting["id"] = self._get_id(meeting)
-                self.meetings[url_date] = meeting
-        else:
-            curr_date = datetime.date.today()
-            months_urls = [datetime.date(month=curr_date.month-2, day=1, year=curr_date.year),
-                           datetime.date(month=curr_date.month-1, day=1, year=curr_date.year),
-                           curr_date,
-                           datetime.date(month=curr_date.month+1, day=1, year=curr_date.year)
-                           ]
-            for date in months_urls:
-                yield Request(
-                        "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
-                        date.strftime("%Y/%m/%d"), callback=self._parse_calendar)
-            print("done parsing months")
+        for item in table_rows:
+            date = self._parse_start(item)
+            url_date = date.strftime("%Y/%m/%d")
+            meeting = Meeting(
+                title=self._parse_title(item),
+                links=self._parse_links(item),
+                start=self._parse_start(item),
+                source=self._parse_source(response)
+            )
 
-    def _yield_meetings(self):
-        print(len(self.meetings))
-        for date_key, meeting in self.meetings.items():
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
             yield meeting
+            self.meetings[url_date] = meeting
+        curr_date = datetime.date.today()
+        months_urls = [datetime.date(month=curr_date.month-2, day=1, year=curr_date.year),
+                       datetime.date(month=curr_date.month-1, day=1, year=curr_date.year),
+                       curr_date,
+                       datetime.date(month=curr_date.month+1, day=1, year=curr_date.year)
+                       ]
+        for date in months_urls:
+            yield Request(
+                    "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
+                    date.strftime("%Y/%m/%d"), callback=self._parse_calendar, priority=1)
+
+    def _parse_months(self):
+        curr_date = datetime.date.today()
+        months_urls = [datetime.date(month=curr_date.month-2, day=1, year=curr_date.year),
+                       datetime.date(month=curr_date.month-1, day=1, year=curr_date.year),
+                       curr_date,
+                       datetime.date(month=curr_date.month+1, day=1, year=curr_date.year)
+                       ]
+        for date in months_urls:
+            yield Request(
+                    "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
+                    date.strftime("%Y/%m/%d"), callback=self._parse_calendar, priority=1)
 
     def _parse_calendar(self, response):
         event_urls = response.selector.xpath(".//a[@class='cal_titlelink']//@href").extract()
         for event_url in event_urls:
             yield Request("https://www.oharenoise.org" + event_url, self._parse_event)
-
-        print("done parsing calendar")
 
     def _parse_event(self, response):
         info_body = response.selector.xpath(".//div[@id='jevents_body']")
@@ -79,6 +83,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
                     location=location
                     )
             self.meetings[date_key] = meeting
+        yield meeting
 
     def _not_empty(self, string):
         if string is not None and not str.isspace(string):
