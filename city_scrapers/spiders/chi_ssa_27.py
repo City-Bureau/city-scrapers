@@ -25,24 +25,47 @@ class ChiSsa27Spider(CityScrapersSpider):
         `parse` should always `yield` Meeting items.
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.
         """
-        items, minutes_pdf, meeting_location, meeting = [], "", "", None
-        the_url_source = response.url
+        # You can use ' ' .join(item.css('*::text').extract())
+        # content-232764 > div:nth-child(1) > div:nth-child(2)
+        ##This can likely be removed and replaced with just checking for links, and then checking if the
+        # href attribute ends with .pdf. Something like link.attrib['href'].endswith('.pdf'). You can also extract the
+        # href attribute with a CSS selector to do something like item.css('a::attr(href)')
+        # to get all of the href attributes of child links
 
-        items_list = (response.css(".panel-body").getall()[4]).split("<p>")
+        for item in response.css("#content-232764").xpath('div/div[2]//p'):
+            c = item.css('a::attr(href)').extract()   #perfect!!!
 
-        for i in items_list:
-            items.append(re.sub("\n|\r|</p>", "", i))
+            print(str(c))
+            print()
+
+        exit(0)
+
+
+
+
+
+
+
+
+
+           # items_list = (response.css(".panel-body").getall()[4]).split("<p>")
+
+
+
+
+
+        items.append(re.sub("\n|\r|</p>", "", item))
 
         for item in items:
             if re.search(r'<div', item):
                 continue  # skip these
 
-            if re.search(r"meetings are held at", item):
+            if 'meetings are held at' in item:
                 meeting_location = self._parse_location(item)
                 continue
 
             if re.search(r'http', item):
-                date_time, minutes_pdf = self.pdf_parse(item)
+                date_time = self._parse_start(item)
             else:
                 date_time = self._parse_start(item)
 
@@ -55,22 +78,28 @@ class ChiSsa27Spider(CityScrapersSpider):
                 all_day=self._parse_all_day(),  # no indication of such
                 time_notes=self._parse_time_notes(),  # haven't seen any
                 location=meeting_location,
-                links=minutes_pdf,
+                links=self._parse_links(item),
                 source=the_url_source,
             )
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
-        yield meeting
+        #yield meeting
 
     # We can just use "Commission" here, but if it's a committee meeting it should
     # return the name of the committee instead.
 
     def pdf_parse(self, item):
+
         re1 = '((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))'  # HTTP URL 1
         rg = re.compile(re1, re.IGNORECASE | re.DOTALL)
         search_result = rg.search(item)
         if search_result:
             result_url = search_result.group(1)
+
+
+
+
+
             is_pdf = re.search('https?:.*\\.pdf', result_url)
             if is_pdf:
                 # split datetime from url
@@ -130,6 +159,8 @@ class ChiSsa27Spider(CityScrapersSpider):
             """
             Parse start datetime as a naive datetime object.
             """
+            # This should use the datetime.strptime function
+
         return start_datetime
 
     @staticmethod
@@ -157,6 +188,17 @@ class ChiSsa27Spider(CityScrapersSpider):
             }
         else:
             raise ValueError('Meeting address has changed')
+
+    def _parse_links(self, item):
+        """
+        Parse or generate documents.
+        """
+        url = item.xpath('a/@href').extract_first()
+        if url:
+            return [{'href': url, 'title': 'Minutes'}]
+        return []
+
+
 
     # @staticmethod
     # def _parse_links(item):
