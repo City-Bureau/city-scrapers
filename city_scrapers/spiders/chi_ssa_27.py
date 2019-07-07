@@ -31,69 +31,34 @@ class ChiSsa27Spider(CityScrapersSpider):
         # href attribute ends with .pdf. Something like link.attrib['href'].endswith('.pdf'). You can also extract the
         # href attribute with a CSS selector to do something like item.css('a::attr(href)')
         # to get all of the href attributes of child links
+        the_address = ""
+        meeting_list = []
 
-
-        ########div  # content-232764.cms-design-panel div.panel.panel-primary.round-corner
-        zlist = []
         for item in response.css("#content-232764 div.panel-body p"):
-
-            item_hrf = item.css('a::attr(href)').extract()   #perfect!!!
-            item_txt = item.css("p::text").getall()
-            if item_hrf or item_txt:
-
-                zlist.append([item_hrf, item_txt])
-                print()
-
-           # page-layout div.wrapper main div.container.content.no-padding div.row div.col-md-3.col-md-pull-9 div.page-area.local ul.cms-widgets li.cms-widget.published div#content-232764.cms-design-panel div.panel.panel-primary.round-corner
-
-        for item in response.css("#content-232764").xpath('div/div[2].panel-body//p'):
-            c = item.css('a::attr(href)').extract()   #perfect!!!
-
-            print(str(c))
-            print()
-
-        exit(0)
-
-
-
-
-
-
-
-
-
-           # items_list = (response.css(".panel-body").getall()[4]).split("<p>")
-
-
-
-
-
-        items.append(re.sub("\n|\r|</p>", "", item))
-
-        for item in items:
-            if re.search(r'<div', item):
-                continue  # skip these
-
-            if 'meetings are held at' in item:
-                meeting_location = self._parse_location(item)
-                continue
-
-            if re.search(r'http', item):
-                date_time = self._parse_start(item)
+            item_strong = item.css("p > strong ::text").extract()
+            if item_strong:
+                meeting_location = self._parse_location(item_strong[0])
             else:
-                date_time = self._parse_start(item)
+                item_hrf = item.css('a::attr(href)').extract()   #perfect!!!
+                item_txt = item.css("p::text").getall()
+                if item_hrf or item_txt:
+                    meeting_list.append([item_hrf, item_txt])
 
-            meeting = Meeting(
-                title=self._parse_title(item),
-                description=self._parse_description(),
-                classification=self._parse_classification(),
-                start=date_time,
-                end=self._parse_end(),  # no indication of such
-                all_day=self._parse_all_day(),  # no indication of such
-                time_notes=self._parse_time_notes(),  # haven't seen any
-                location=meeting_location,
-                links=self._parse_links(item),
-                source=the_url_source,
+                if item_hrf:
+                    print("meeting past")
+
+
+                meeting = Meeting(
+                    title=self._parse_title(item),
+                    description=self._parse_description(),
+                    classification=self._parse_classification(),
+                    start=date_time,
+                    end=self._parse_end(),  # no indication of such
+                    all_day=self._parse_all_day(),  # no indication of such
+                    time_notes=self._parse_time_notes(),  # haven't seen any
+                    location=meeting_location,
+                    links=self._parse_links(item),
+                    source=item_hrf,
             )
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
@@ -103,7 +68,7 @@ class ChiSsa27Spider(CityScrapersSpider):
     # return the name of the committee instead.
 
     def pdf_parse(self, item):
-
+        is_pdf = False
         re1 = '((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))'  # HTTP URL 1
         rg = re.compile(re1, re.IGNORECASE | re.DOTALL)
         search_result = rg.search(item)
@@ -114,7 +79,10 @@ class ChiSsa27Spider(CityScrapersSpider):
 
 
 
-            is_pdf = re.search('https?:.*\\.pdf', result_url)
+            if ".pdf" in  result_url:
+                print("found pdf")
+                is_pdf = True
+
             if is_pdf:
                 # split datetime from url
                 newlist = re.split(r'target=\"_blank">', item)
@@ -125,7 +93,7 @@ class ChiSsa27Spider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        if re.search(r"Annual Meeting", item):
+        if "Annual Meeting" in item:
             return "Annual Meeting"
         else:
             return COMMISSION
@@ -192,10 +160,9 @@ class ChiSsa27Spider(CityScrapersSpider):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    @staticmethod
-    def _parse_location(item):
+    def _parse_location(self, item):
         """Parse or generate location."""
-        if re.search(r"Sheil Park", item):
+        if  "Sheil Park" in item:
             return {
                 "address": "3505 N. Southport Ave., Chicago, IL 60657",
                 "name": "Sheil Park",
