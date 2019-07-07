@@ -32,7 +32,21 @@ class ChiSsa27Spider(CityScrapersSpider):
         # href attribute with a CSS selector to do something like item.css('a::attr(href)')
         # to get all of the href attributes of child links
 
-        for item in response.css("#content-232764").xpath('div/div[2]//p'):
+
+        ########div  # content-232764.cms-design-panel div.panel.panel-primary.round-corner
+        zlist = []
+        for item in response.css("#content-232764 div.panel-body p"):
+
+            item_hrf = item.css('a::attr(href)').extract()   #perfect!!!
+            item_txt = item.css("p::text").getall()
+            if item_hrf or item_txt:
+
+                zlist.append([item_hrf, item_txt])
+                print()
+
+           # page-layout div.wrapper main div.container.content.no-padding div.row div.col-md-3.col-md-pull-9 div.page-area.local ul.cms-widgets li.cms-widget.published div#content-232764.cms-design-panel div.panel.panel-primary.round-corner
+
+        for item in response.css("#content-232764").xpath('div/div[2].panel-body//p'):
             c = item.css('a::attr(href)').extract()   #perfect!!!
 
             print(str(c))
