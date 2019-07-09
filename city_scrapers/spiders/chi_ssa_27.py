@@ -38,7 +38,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         item_hrf = ""
         item_txt = ""
         start_time = ''
-        
+
         for item in response.css("#content-232764 div.panel-body p"):
             item_strong = item.css("p > strong ::text").getall()
             if item_strong:
@@ -51,7 +51,7 @@ class ChiSsa27Spider(CityScrapersSpider):
                 #     item_txt = item.css("p::text").getall()
 
             if not item_hrf:   ## not a link so it's upcoming
-                start_time = self._parse_start(item)
+                start_time = self._parse_start(item, item_hrf)
 
             elif item_hrf:
                 print("meeting past")
@@ -66,7 +66,7 @@ class ChiSsa27Spider(CityScrapersSpider):
                 title=self._parse_title(item),
                 description=self._parse_description(),
                 classification=self._parse_classification(),
-                start=start_time,
+                start=self._parse_start(item,item_hrf),
                 end=self._parse_end(),  # no indication of such
                 all_day=self._parse_all_day(),  # no indication of such
                 time_notes=self._parse_time_notes(),  # haven't seen any
@@ -120,39 +120,45 @@ class ChiSsa27Spider(CityScrapersSpider):
         # This can return COMMISSION generally or COMMITTEE for the committee meetings
         return COMMISSION
 
-    def _parse_start(self, item):
-        start_datetime = None
-        mon_to_digit = {
-            "jan": 1,
-            "feb": 2,
-            "mar": 3,
-            "apr": 4,
-            "may": 5,
-            "jun": 6,
-            "jul": 7,
-            "aug": 8,
-            "sep": 9,
-            "oct": 10,
-            "nov": 11,
-            "dec": 12,
-        }
+    def _parse_start(self, item, item_hrf):
+        if not item_hrf:  ## not a link so it's upcoming
+            item_hrf = item.css('a::attr(href)').get()  # perfect!!!
+            start_datetime = None
 
-        item_elems = item.split()
-        if not item_elems[0].startswith('Annual', 0, 7):
-            month_str = item_elems[0][0:3].lower().rstrip(',')
-            month_digit = mon_to_digit[month_str]
-            yr = int(item_elems[2].rstrip(','))
-            day = int(item_elems[1].rstrip(','))
-            tm = item_elems[3].rstrip(',')
-            hr = int(tm[0:2].rstrip(':'))
-            minit = int(tm[2:4])
-            start_datetime = datetime(yr, month_digit, day, hr, minit)
-            """
-            Parse start datetime as a naive datetime object.
-            """
-            # This should use the datetime.strptime function
+        if item_hrf:
 
-        return start_datetime
+            start_datetime = None
+            mon_to_digit = {
+                "jan": 1,
+                "feb": 2,
+                "mar": 3,
+                "apr": 4,
+                "may": 5,
+                "jun": 6,
+                "jul": 7,
+                "aug": 8,
+                "sep": 9,
+                "oct": 10,
+                "nov": 11,
+                "dec": 12,
+            }
+
+          #  item_elems = item.split()
+            if not item_elems[0].startswith('Annual', 0, 7):
+                month_str = item_elems[0][0:3].lower().rstrip(',')
+                month_digit = mon_to_digit[month_str]
+                yr = int(item_elems[2].rstrip(','))
+                day = int(item_elems[1].rstrip(','))
+                tm = item_elems[3].rstrip(',')
+                hr = int(tm[0:2].rstrip(':'))
+                minit = int(tm[2:4])
+                start_datetime = datetime(yr, month_digit, day, hr, minit)
+                """
+                Parse start datetime as a naive datetime object.
+                """
+                # This should use the datetime.strptime function
+
+            return start_datetime
 
     @staticmethod
     def _parse_end():
