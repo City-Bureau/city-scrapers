@@ -25,56 +25,33 @@ class ChiSsa27Spider(CityScrapersSpider):
         `parse` should always `yield` Meeting items.
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.
         """
-        # You can use ' ' .join(item.css('*::text').extract())
-        # content-232764 > div:nth-child(1) > div:nth-child(2)
-        ##This can likely be removed and replaced with just checking for links, and then checking if the
-        # href attribute ends with .pdf. Something like link.attrib['href'].endswith('.pdf'). You can also extract the
-        # href attribute with a CSS selector to do something like item.css('a::attr(href)')
-        # to get all of the href attributes of child links
-        the_address = ""
-        meeting_list = []
         meeting = ''
         meeting_location = ''
-        item_hrf = ""
-        item_txt = ""
         start_time = ''
 
-        for item in response.css("#content-232764 div.panel-body p"):
-            item_strong = item.css("p > strong ::text").getall()
-            if item_strong:
-                meeting_location = self._parse_location(item_strong[0])
+        panel = "#content-232764 div.panel-body p"
+        sel =  response.css(panel)
+
+        for item in response.css(panel):
+
+            if item.css("p > strong ::text").getall():
+                meeting_location = self._parse_location(item)
                 continue
-            else:
-                item_hrf = item.css('a::attr(href)').get()   #perfect!!!
-                item_hrf = item_hrf
-                # if not item_hrf.endswith('.pdf'):
-                #     item_txt = item.css("p::text").getall()
-
-            if not item_hrf:   ## not a link so it's upcoming
-                start_time = self._parse_start(item, item_hrf)
-
-            elif item_hrf:
-                print("meeting past")
-                item_txt = 'Past'
-
-            if item_hrf or item_txt:
-                meeting_list.append([item_hrf, item_txt])
-                #else:
-
 
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(),
                 classification=self._parse_classification(),
-                start=self._parse_start(item,item_hrf),
+                start=self._parse_start(item),
                 end=self._parse_end(),  # no indication of such
                 all_day=self._parse_all_day(),  # no indication of such
                 time_notes=self._parse_time_notes(),  # haven't seen any
                 location=meeting_location,
-                links=[self.item_hrf],
-                source=item_hrf,
+                links=self._parse_links(item),
+                source=self._parse_source(response),
             )
             print()
+            print(str(meeting._values))
             #meeting["status"] = self._get_status(meeting)
             #meeting["id"] = self._get_id(meeting)
         #yield meeting
@@ -87,7 +64,7 @@ class ChiSsa27Spider(CityScrapersSpider):
 
         if item.css('a::attr(href)').get():  # perfect!!!
             is_pdf = True
-        item_txt = item.css("p::text").getall()
+        #item_txt = item.css("p::text").getall()
 
 
         if is_pdf:
@@ -100,8 +77,7 @@ class ChiSsa27Spider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        item_txt = ''
-        item_txt = item.css("p::text").getall()
+        item_txt = ''.join(item.css("p::text").getall())
         if "Annual Meeting" in item_txt:
             return "Annual Meeting"
         else:
@@ -120,44 +96,17 @@ class ChiSsa27Spider(CityScrapersSpider):
         # This can return COMMISSION generally or COMMITTEE for the committee meetings
         return COMMISSION
 
-    def _parse_start(self, item, item_hrf):
-        if not item_hrf:  ## not a link so it's upcoming
-            item_hrf = item.css('a::attr(href)').get()  # perfect!!!
+    def _parse_start(self, item):
+        link = item.css('a::attr(href)').get()  # perfect!!!
+
+        if link:
+            print("meeting past")
+           # newlist = re.split(r'target=\"_blank">', item)
+           # date_time = self._parse_start(newlist[1])
+            return 'Past'
+
+        elif not link:  ## not a link so it's upcoming
             start_datetime = None
-
-        if item_hrf:
-
-            start_datetime = None
-            mon_to_digit = {
-                "jan": 1,
-                "feb": 2,
-                "mar": 3,
-                "apr": 4,
-                "may": 5,
-                "jun": 6,
-                "jul": 7,
-                "aug": 8,
-                "sep": 9,
-                "oct": 10,
-                "nov": 11,
-                "dec": 12,
-            }
-
-          #  item_elems = item.split()
-            if not item_elems[0].startswith('Annual', 0, 7):
-                month_str = item_elems[0][0:3].lower().rstrip(',')
-                month_digit = mon_to_digit[month_str]
-                yr = int(item_elems[2].rstrip(','))
-                day = int(item_elems[1].rstrip(','))
-                tm = item_elems[3].rstrip(',')
-                hr = int(tm[0:2].rstrip(':'))
-                minit = int(tm[2:4])
-                start_datetime = datetime(yr, month_digit, day, hr, minit)
-                """
-                Parse start datetime as a naive datetime object.
-                """
-                # This should use the datetime.strptime function
-
             return start_datetime
 
     @staticmethod
@@ -177,30 +126,45 @@ class ChiSsa27Spider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        if  "Sheil Park" in item:
-            return {
-                "address": "3505 N. Southport Ave., Chicago, IL 60657",
-                "name": "Sheil Park",
-            }
-        else:
-            raise ValueError('Meeting address has changed')
+
+        first_note = item.css("p > strong ::text").get()
+
+        if first_note:
+            if  "Sheil Park" in first_note:
+                return {
+                    "address": "3505 N. Southport Ave., Chicago, IL 60657",
+                    "name": "Sheil Park",
+                }
+            else:
+                raise ValueError('Meeting address has changed')
 
     def _parse_links(self, item):
         """
         Parse or generate documents.
         """
-        url = item.xpath('a/@href').extract_first()
+        url = item.css('a::attr(href)').get()      # perfect!!!
         if url:
             return [{'href': url, 'title': 'Minutes'}]
-        return []
+        else:
+            return []
 
+    def get_mon(self, month_str):
+        months = {
+            "jan": 1,
+            "feb": 2,
+            "mar": 3,
+            "apr": 4,
+            "may": 5,
+            "jun": 6,
+            "jul": 7,
+            "aug": 8,
+            "sep": 9,
+            "oct": 10,
+            "nov": 11,
+            "dec": 12,
+        }
+        return months[month_str]
 
-
-    # @staticmethod
-    # def _parse_links(item):
-    #     """Parse or generate links."""
-    #     return [{"href": "", "title": ""}]
-
-    # def _parse_source(self, response):
-    #     """Parse or generate source."""
-    #     return response.url
+    def _parse_source(self, response):
+        """Parse or generate source."""
+        return response.url
