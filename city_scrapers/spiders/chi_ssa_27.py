@@ -33,35 +33,50 @@ class ChiSsa27Spider(CityScrapersSpider):
         # to get all of the href attributes of child links
         the_address = ""
         meeting_list = []
-
+        meeting = ''
+        meeting_location = ''
+        item_hrf = ""
+        item_txt = ""
+        start_time = ''
+        
         for item in response.css("#content-232764 div.panel-body p"):
-            item_strong = item.css("p > strong ::text").extract()
+            item_strong = item.css("p > strong ::text").getall()
             if item_strong:
                 meeting_location = self._parse_location(item_strong[0])
+                continue
             else:
                 item_hrf = item.css('a::attr(href)').get()   #perfect!!!
-                item_txt = item.css("p::text").getall()
-                if item_hrf or item_txt:
-                    meeting_list.append([item_hrf, item_txt])
+                item_hrf = item_hrf
+                # if not item_hrf.endswith('.pdf'):
+                #     item_txt = item.css("p::text").getall()
 
-                if item_hrf:
-                    print("meeting past")
+            if not item_hrf:   ## not a link so it's upcoming
+                start_time = self._parse_start(item)
 
-                meeting = Meeting(
-                    title=self._parse_title(item),
-                    description=self._parse_description(),
-                    classification=self._parse_classification(),
-                    #start=date_time,
-                    start="",
-                    end=self._parse_end(),  # no indication of such
-                    all_day=self._parse_all_day(),  # no indication of such
-                    time_notes=self._parse_time_notes(),  # haven't seen any
-                    location=meeting_location,
-                    links=self._parse_links(item),
-                    source=item_hrf,
+            elif item_hrf:
+                print("meeting past")
+                item_txt = 'Past'
+
+            if item_hrf or item_txt:
+                meeting_list.append([item_hrf, item_txt])
+                #else:
+
+
+            meeting = Meeting(
+                title=self._parse_title(item),
+                description=self._parse_description(),
+                classification=self._parse_classification(),
+                start=start_time,
+                end=self._parse_end(),  # no indication of such
+                all_day=self._parse_all_day(),  # no indication of such
+                time_notes=self._parse_time_notes(),  # haven't seen any
+                location=meeting_location,
+                links=[self.item_hrf],
+                source=item_hrf,
             )
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
+            print()
+            #meeting["status"] = self._get_status(meeting)
+            #meeting["id"] = self._get_id(meeting)
         #yield meeting
 
     # We can just use "Commission" here, but if it's a committee meeting it should
@@ -85,7 +100,9 @@ class ChiSsa27Spider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        if "Annual Meeting" in item:
+        item_txt = ''
+        item_txt = item.css("p::text").getall()
+        if "Annual Meeting" in item_txt:
             return "Annual Meeting"
         else:
             return COMMISSION
