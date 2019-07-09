@@ -10,7 +10,6 @@ from city_scrapers_core.spiders import CityScrapersSpider
  li:last-child p and minutes with div[pageareaid="Sidebar"] li:last-child a
 """
 
-
 class ChiSsa27Spider(CityScrapersSpider):
     name = "chi_ssa_27"
     agency = "Chicago Special Service Area #27 Lakeview West"
@@ -19,6 +18,7 @@ class ChiSsa27Spider(CityScrapersSpider):
     start_urls = ["https://www.lakeviewchamber.com/ssa27"]
 
     # main_page_title = response.css("title::text").get()
+    #mySel = response.Selector
 
     def parse(self, response):
         """
@@ -39,7 +39,7 @@ class ChiSsa27Spider(CityScrapersSpider):
             if item_strong:
                 meeting_location = self._parse_location(item_strong[0])
             else:
-                item_hrf = item.css('a::attr(href)').extract()   #perfect!!!
+                item_hrf = item.css('a::attr(href)').get()   #perfect!!!
                 item_txt = item.css("p::text").getall()
                 if item_hrf or item_txt:
                     meeting_list.append([item_hrf, item_txt])
@@ -47,12 +47,12 @@ class ChiSsa27Spider(CityScrapersSpider):
                 if item_hrf:
                     print("meeting past")
 
-
                 meeting = Meeting(
                     title=self._parse_title(item),
                     description=self._parse_description(),
                     classification=self._parse_classification(),
-                    start=date_time,
+                    #start=date_time,
+                    start="",
                     end=self._parse_end(),  # no indication of such
                     all_day=self._parse_all_day(),  # no indication of such
                     time_notes=self._parse_time_notes(),  # haven't seen any
@@ -69,27 +69,19 @@ class ChiSsa27Spider(CityScrapersSpider):
 
     def pdf_parse(self, item):
         is_pdf = False
-        re1 = '((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s"]*))'  # HTTP URL 1
-        rg = re.compile(re1, re.IGNORECASE | re.DOTALL)
-        search_result = rg.search(item)
-        if search_result:
-            result_url = search_result.group(1)
+
+        if item.css('a::attr(href)').get():  # perfect!!!
+            is_pdf = True
+        item_txt = item.css("p::text").getall()
 
 
-
-
-
-            if ".pdf" in  result_url:
-                print("found pdf")
-                is_pdf = True
-
-            if is_pdf:
-                # split datetime from url
-                newlist = re.split(r'target=\"_blank">', item)
-                date_time = self._parse_start(newlist[1])
-                return date_time, result_url
-            else:
-                return False
+        if is_pdf:
+            # split datetime from url
+            newlist = re.split(r'target=\"_blank">', item)
+            date_time = self._parse_start(newlist[1])
+            return date_time
+        else:
+            return False
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
