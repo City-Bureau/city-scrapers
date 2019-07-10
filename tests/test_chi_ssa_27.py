@@ -34,13 +34,14 @@ Uncomment below
 """
 
 def test_title():
-    assert parsed_items[0]["title"] == "EXPECTED TITLE"
+    val = parsed_items[0]["title"]
+    assert val == "Annual Meeting" or COMMISSION
 
 def test_description():
     assert parsed_items[0]["description"] == ""
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+    assert parsed_items[0]["start"] == datetime(2019, 12, 12, 8, 30)
 
 def test_end():
     assert parsed_items[0]["end"] is None
@@ -63,14 +64,13 @@ def test_location():
 def test_source():
     assert parsed_items[0]["source"] == "https://www.lakeviewchamber.com/ssa27"
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+def test_links():
+    url= 'https://chamberma...a.pdf'
+    assert parsed_items[0]["links"] == []
 
 def test_classification():
-    assert parsed_items[0]["classification"] == ( COMMISSION | COMMITTEE )
+    val = parsed_items[0]["classification"]
+    assert val ==  COMMISSION or COMMITTEE
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_all_day(item):
