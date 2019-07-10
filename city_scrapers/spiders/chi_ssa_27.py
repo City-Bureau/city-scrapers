@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, date, time
 
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
@@ -52,28 +52,13 @@ class ChiSsa27Spider(CityScrapersSpider):
             )
             print()
             print(str(meeting._values))
-            #meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting)
             #meeting["id"] = self._get_id(meeting)
-        #yield meeting
+            meeting["id"] = ''
+        yield meeting
 
     # We can just use "Commission" here, but if it's a committee meeting it should
     # return the name of the committee instead.
-
-    def pdf_parse(self, item):
-        is_pdf = False
-
-        if item.css('a::attr(href)').get():  # perfect!!!
-            is_pdf = True
-        #item_txt = item.css("p::text").getall()
-
-
-        if is_pdf:
-            # split datetime from url
-            newlist = re.split(r'target=\"_blank">', item)
-            date_time = self._parse_start(newlist[1])
-            return date_time
-        else:
-            return False
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -98,16 +83,50 @@ class ChiSsa27Spider(CityScrapersSpider):
 
     def _parse_start(self, item):
         link = item.css('a::attr(href)').get()  # perfect!!!
+        link_txt = item.css('a::text').get()  # perfect!!!
 
         if link:
             print("meeting past")
-           # newlist = re.split(r'target=\"_blank">', item)
-           # date_time = self._parse_start(newlist[1])
-            return 'Past'
+            itmlist = link_txt.split(' ')
+            month_str = itmlist[0].lower().rstrip('.')
+            month_digit = int(self.get_mon(month_str))
+            day = int(itmlist[1].rstrip(','))
+            yr = int(itmlist[2].rstrip(','))
+            tm = itmlist[3].rstrip(',')
+            hr = int(tm[0:2].rstrip(':'))
+            minit = int(tm[2:5].rstrip(' '))
+            ampm = itmlist[4].rstrip(',')
+
+            date1 = datetime(yr, month_digit, day)
+            time_obj = time(hr, minit)
+            dt_obj = datetime.combine(date1, time_obj)
+            return dt_obj
 
         elif not link:  ## not a link so it's upcoming
-            start_datetime = None
-            return start_datetime
+            st_datetime = None
+            item_str = item.css('p::text').get()  # perfect!!!
+            if not item_str[0].startswith('Annual', 0, 7):
+                month_str = item_str[0][0:3].lower().rstrip(',')
+                month_digit = self.get_mon(month_str)
+                yr = int(item_str[2].rstrip(','))
+                day = int(item_str[1].rstrip(','))
+                tm = item_str[3].rstrip(',')
+                hr = int(tm[0:2].rstrip(':'))
+                minit = int(tm[2:4])
+                ampm = item_str[4].rstrip(',')
+
+                date1 = datetime(yr, month_digit, day)
+                time_obj = time(hr, minit)
+
+                #
+                # date_obj = datetime.strptime(st_datetime, "%B %d %Y").date()
+                #
+                # time_fmt = "%I:%M%p" if ":" in time_obj else "%I%p"
+                # time_obj = datetime.strptime(time_obj, time_fmt).time()
+            dt_obj = datetime.combine(date1, time_obj)
+            return dt_obj
+
+
 
     @staticmethod
     def _parse_end():
@@ -119,8 +138,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         """Parse any additional notes on the timing of the meeting"""
         return ""
 
-    @staticmethod
-    def _parse_all_day():
+    def _parse_all_day(self):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
@@ -129,7 +147,7 @@ class ChiSsa27Spider(CityScrapersSpider):
 
         first_note = item.css("p > strong ::text").get()
 
-        if first_note:
+        if item.css("p > strong ::text").get():
             if  "Sheil Park" in first_note:
                 return {
                     "address": "3505 N. Southport Ave., Chicago, IL 60657",
@@ -148,8 +166,8 @@ class ChiSsa27Spider(CityScrapersSpider):
         else:
             return []
 
-    def get_mon(self, month_str):
-        months = {
+    def get_mon(self, mon_int):
+        month = {
             "jan": 1,
             "feb": 2,
             "mar": 3,
@@ -163,7 +181,7 @@ class ChiSsa27Spider(CityScrapersSpider):
             "nov": 11,
             "dec": 12,
         }
-        return months[month_str]
+        return month[mon_int]
 
     def _parse_source(self, response):
         """Parse or generate source."""
