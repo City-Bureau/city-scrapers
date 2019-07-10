@@ -15,6 +15,7 @@ class ChiSsa27Spider(CityScrapersSpider):
     def parse(self, response):
         """   `parse` should always `yield` Meeting items.
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.   """
+        meeting_location = ''
 
         for item in response.css("#content-232764 div.panel-body p"):
 
@@ -27,15 +28,16 @@ class ChiSsa27Spider(CityScrapersSpider):
                 description="",
                 classification=self._parse_classification(),
                 start=self._parse_start(item),
-                end=None,          # no indication of such
-                all_day=False,     # no indication of
-                time_notes="",     # haven't seen any
+                end=None,
+                all_day=False,
+                time_notes="",
                 location=meeting_location,
                 links=self._parse_links(item),
                 source=response.url,
             )
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+            print(str(meeting))
             yield meeting
 
     def _parse_title(self, item):
