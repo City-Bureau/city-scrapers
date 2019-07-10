@@ -36,7 +36,6 @@ class ChiSsa27Spider(CityScrapersSpider):
             )
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
-            print(str(meeting))
             yield meeting
 
     def _parse_title(self, item):
