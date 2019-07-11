@@ -31,6 +31,9 @@ class DetCharterReviewSpider(CityScrapersSpider):
         data = json.loads(response.text)
         for item in data["items"]:
             title = self._parse_title(item)
+            location = self._parse_location(item)
+            if not location:
+                continue
             meeting = Meeting(
                 title=title,
                 description="",
@@ -39,7 +42,7 @@ class DetCharterReviewSpider(CityScrapersSpider):
                 end=self._parse_dt(item["end"]["dateTime"]),
                 time_notes="",
                 all_day=False,
-                location=self._parse_location(item),
+                location=location,
                 links=[],
                 source="https://sites.google.com/view/detroitcharter2018",
             )
@@ -61,6 +64,8 @@ class DetCharterReviewSpider(CityScrapersSpider):
         return datetime.strptime(dt_str[:19], "%Y-%m-%dT%H:%M:%S")
 
     def _parse_location(self, item):
+        if "location" not in item:
+            return
         split_loc = re.split(r"(?<=[a-z]), (?=\d)", item["location"])
         name = ""
         if len(split_loc) == 1:
