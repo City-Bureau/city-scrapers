@@ -12,9 +12,25 @@ class ChiSsa27Spider(CityScrapersSpider):
     allowed_domains = ["lakeviewchamber.com"]
     start_urls = ["https://www.lakeviewchamber.com/ssa27"]
 
+
     def parse(self, response):
         """   `parse` should always `yield` Meeting items.
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.   """
+
+        newres = response.css("#content-238036 div.panel-body *").getall()
+        newres2 = response.css("#content-238036 div.panel-body *")
+
+        for item in newres2:
+            v = item.css
+            vv = item.css("h4::text").get()
+
+            # if '<h4>' in item.css("*::text").get():
+            #     c = item.css("h4::text").get()
+            #     committee = self._parse_committee_title(item)
+            print()
+
+
+# ------------------------------------------------------------------------
         meeting_location = ''
 
         for item in response.css("#content-232764 div.panel-body p"):
@@ -37,8 +53,29 @@ class ChiSsa27Spider(CityScrapersSpider):
             )
             meeting['status'] = self._get_status(meeting)
             meeting['id'] = self._get_id(meeting)
-            print(str(meeting))
             yield meeting
+
+
+
+#---------------------------------------new
+
+    def _parse_committee_title(self, item):
+        """Parse or generate meeting title."""
+        item_txt = ''.join(item.css("h4::text").getall())
+        return item_txt
+
+
+
+
+
+
+
+
+
+
+
+
+#----------------------------------------- regular:
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
