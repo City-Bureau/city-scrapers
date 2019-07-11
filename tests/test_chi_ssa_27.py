@@ -47,8 +47,8 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == (PASSED | TENTATIVE)
-    #assert parsed_items[0]['status'] == TENTATIVE
+    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[-1]["status"] == TENTATIVE
 
 
 def test_location():
