@@ -5,6 +5,7 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 from parsel import SelectorList
+from copy import deepcopy
 
 
 class ChiSsa27Spider(CityScrapersSpider):
@@ -15,18 +16,69 @@ class ChiSsa27Spider(CityScrapersSpider):
     start_urls = ["https://www.lakeviewchamber.com/ssa27"]
 
     def parse_committee(self, two, url2):
+        three = two.css("*").getall()
+        for ii in two.css("*"):
+            v = ii.css("*").get()
+            print("here now2222")
         print("here now2222")
         meeting_group, biglist = [], []
         h1, h2 = "<h4>", "</h4>"
         p1, p2 = "<p>", "</p>"
         s1, s2 = "<strong>", "</strong>"
         e1, e2 = "<em>", "</em>"
-        #nextmeeting = two.css("p > strong ::text").get()
+
         meet_list = two.css("*").getall()
+        m2, m3 = [], []
+
+        prev = None
+        for meeting_itm in meet_list:   # rem dupes
+            if meeting_itm == prev:
+                prev = meeting_itm
+                continue
+            else:
+                m2.append(meeting_itm)
+                prev = meeting_itm
+
+        for m in m2:
+            if h1 in m:
+                m3.append(m)
+                continue
+            if p1 in m:
+                if e1 in m:
+                    m = m.replace(p1,'').replace(p1,'')
+                m3.append(m)
+
+
+        dcomms = []
+        dd = dict({})
+
+        for i3 in m3:
+            if h1 in i3:   #h4
+                my_copy = deepcopy(dd)
+                dcomms.append(my_copy)
+                dd = dict({})
+                dd.update({'committee_name' : i3})
+
+            elif s1 in i3:  #strong
+                dd.update({'comm_nxt_mtg' : i3})
+
+            elif p1 in i3:
+                dd.update({'comm_description' : i3})
+
+            if e1 in i3:
+                comm_addy =  i3
+                my_copy = deepcopy(dd)
+                dcomms.append(my_copy)
 
 
 
-        for meeting_itm in meet_list:
+
+        print()
+
+
+
+
+        for mdict in dcomms:
             if '<h4>' in meeting_itm:
                 print("found h4")
 
