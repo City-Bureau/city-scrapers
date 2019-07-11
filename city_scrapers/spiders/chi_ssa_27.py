@@ -1,8 +1,10 @@
 from datetime import datetime
 
-from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.constants import COMMISSION, COMMITTEE, TENTATIVE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
+from parsel import SelectorList
 
 
 class ChiSsa27Spider(CityScrapersSpider):
@@ -12,29 +14,86 @@ class ChiSsa27Spider(CityScrapersSpider):
     allowed_domains = ["lakeviewchamber.com"]
     start_urls = ["https://www.lakeviewchamber.com/ssa27"]
 
+    def parse_committee(self, two, url2):
+        print("here now2222")
+        meeting_group, biglist = [], []
+        h1, h2 = "<h4>", "</h4>"
+        p1, p2 = "<p>", "</p>"
+        s1, s2 = "<strong>", "</strong>"
+        e1, e2 = "<em>", "</em>"
+        #nextmeeting = two.css("p > strong ::text").get()
+        meet_list = two.css("*").getall()
+
+
+
+        for meeting_itm in meet_list:
+            if '<h4>' in meeting_itm:
+                print("found h4")
+
+
+            if '<hr>' in meeting_itm:  # end of previous meeting
+                meeting_group_copy = [i for i in meeting_group]
+                biglist.append(meeting_group_copy)
+                meeting_group.clear()
+                continue
+            else:
+                meeting_group.append(meeting_itm)
+
+        print("here now345")
+
+        for group_mtg in biglist:
+            commmittee_mtg_desc = ''
+            committee_nxt_mtg = ''
+            for itm in group_mtg:
+                if s1 in itm and p1 not in itm and e1 not in itm:  # for double listing of strong
+                    print(str(meeting))
+                    meeting.clear()
+                    continue
+
+                if h1 in itm:
+                    committee_name = itm.replace(h1, '').replace(h2, '')
+
+                if s1 in itm and e1 not in itm:
+                    committee_nxt_mtg = itm.replace(s1, '').replace(s2, '').replace(p1, '').replace(p2, '')
+
+                if p1 in itm and s1 not in itm and e1 not in itm:
+                    commmittee_mtg_desc = commmittee_mtg_desc + itm.replace(p1, '').replace(p2, '')  # might be 2
+
+                if e1 in meeting_itm:
+                    comm_mtg_location = itm.replace(e1, '').replace(e2, '').replace(p1, '').replace(p2, '')
+
+                print("here now3fff")
+                meeting = Meeting(
+                    title=committee_name,
+                    description=commmittee_mtg_desc,
+                    classification=COMMITTEE,
+                    start=datetime.now(),
+                    #start=self._parse_start(meeting_itm),
+                    end=None,
+                    all_day=False,
+                    time_notes=committee_nxt_mtg,
+                    location=comm_mtg_location,
+                    # links=self._parse_links(meeting_itm),
+                    links='',
+                    source=url2,
+                )
+               # meeting['status'] = self._get_status(meeting)
+                meeting['status'] = TENTATIVE
+                #meeting['id'] = self._get_id(meeting)
+                meeting['id'] = None
+                print(str(meeting))
+
+
 
     def parse(self, response):
         """   `parse` should always `yield` Meeting items.
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.   """
-
-        newres = response.css("#content-238036 div.panel-body *").getall()
-        newres2 = response.css("#content-238036 div.panel-body *")
-
-        for item in newres2:
-            v = item.css
-            vv = item.css("h4::text").get()
-
-            # if '<h4>' in item.css("*::text").get():
-            #     c = item.css("h4::text").get()
-            #     committee = self._parse_committee_title(item)
-            print()
-
-
-# ------------------------------------------------------------------------
+        r = response.css("div.container.content.no-padding")
+        one = r.css("#content-232764 div.panel-body p")
+        two = r.css("#content-238036 div.panel-body *")
         meeting_location = ''
 
-        for item in response.css("#content-232764 div.panel-body p"):
-
+        for item in one:  # for item in response.css("#content-232764 div.panel-body p"):
             if item.css("p > strong ::text").getall():
                 meeting_location = self._parse_location(item)
                 continue
@@ -53,29 +112,17 @@ class ChiSsa27Spider(CityScrapersSpider):
             )
             meeting['status'] = self._get_status(meeting)
             meeting['id'] = self._get_id(meeting)
+
             yield meeting
 
-
-
-#---------------------------------------new
-
-    def _parse_committee_title(self, item):
-        """Parse or generate meeting title."""
-        item_txt = ''.join(item.css("h4::text").getall())
-        return item_txt
+        theurl = response.url
+        self.parse_committee(two, theurl)
+        print("finished")
 
 
 
+    # ----------------------------------------- regular:
 
-
-
-
-
-
-
-
-
-#----------------------------------------- regular:
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -85,9 +132,11 @@ class ChiSsa27Spider(CityScrapersSpider):
         else:
             return COMMISSION
 
+
     def _parse_classification(self):
         # This can return COMMISSION generally or COMMITTEE for the committee meetings
         return COMMISSION
+
 
     def _parse_start(self, item):
         item_txt = item.css('a::text').get()
@@ -100,6 +149,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         time_str = front_str.replace("am", "AM").replace("pm", "PM").replace('.', '')
         return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
 
+
     def _parse_location(self, item):
         first_note = item.css("p > strong ::text").get()
         if item.css("p > strong ::text").get():
@@ -110,6 +160,7 @@ class ChiSsa27Spider(CityScrapersSpider):
                 }
             else:
                 raise ValueError('Meeting address has changed')
+
 
     def _parse_links(self, item):
         if not item.css('a'):
