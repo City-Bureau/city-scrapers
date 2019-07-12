@@ -2,7 +2,7 @@ from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from scrapy.selector import Selector
-from scrapy.http import HtmlResponse
+import requests
 import datetime
 
 
@@ -13,7 +13,6 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
     allowed_domains = ["www.oharenoise.org"]
     meetings = dict()
     start_urls = ["https://www.oharenoise.org/about-oncc/agendas-and-minutes"]
-    requests = []
 
     def parse(self, response):
 
@@ -36,31 +35,50 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
             meeting["id"] = self._get_id(meeting)
             self.meetings[url_date] = meeting
 
-            self._parse_months()
-            for date, meeting in self.meetings.items():
-                yield meeting
+        self._parse_months()
+        for date, meeting in self.meetings.items():
+            yield meeting
 
     def _parse_months(self):
+        """
+        generates list of calendar links and requests them
+        """
         curr_date = datetime.date.today()
-        months_urls = [datetime.date(month=curr_date.month-2, day=1, year=curr_date.year),
-                       datetime.date(month=curr_date.month-1, day=1, year=curr_date.year),
-                       curr_date,
-                       datetime.date(month=curr_date.month+1, day=1, year=curr_date.year)
-                       ]
-        for date in months_urls:
-            self._parse_calendar(HtmlResponse(
+        months_urls = [
+                datetime.date(
+                    month=self._delta_months(curr_date.month, -2),
+                    day=1,
+                    year=curr_date.year),
+                datetime.date(
+                    month=self._delta_months(curr_date.month, -1),
+                    day=1,
+                    year=curr_date.year),
+                curr_date,
+                datetime.date(
+                    month=self._delta_months(curr_date.month, 1),
+                    day=1,
+                    year=curr_date.year)
+                ]
+        for calendar_date in months_urls:
+            self._parse_calendar(requests.get(
                     url="https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
-                    date.strftime("%Y/%m/%d")))
+                    calendar_date.strftime("%Y/%m/%d")))
 
-    def _parse_calendar(self, response):
-        response = Selector(response=response)
-        event_urls = response.xpath(".//a[@class='cal_titlelink']//@href")
+    def _parse_calendar(self, body):
+        """
+        finds all events on calendar and requests detail pages
+        """
+        selector = Selector(text=body.text)
+        event_urls = selector.xpath(".//a[@class='cal_titlelink']//@href").extract()
         for event_url in event_urls:
-            self._parse_event(HtmlResponse(url="https://www.oharenoise.org" + event_url))
+            self._parse_event(requests.get(url="https://www.oharenoise.org" + event_url))
 
-    def _parse_event(self, response):
-        response = Selector(response.content)
-        info_body = response.xpath(".//div[@id='jevents_body']")
+    def _parse_event(self, body):
+        """
+        parses detail page for date, description, location, and title
+        """
+        selector = Selector(text=body.text)
+        info_body = selector.xpath(".//div[@id='jevents_body']")
         name_date_time = info_body.xpath(".//div[@class='jev_evdt_header']")
         start = self._parse_start(name_date_time, is_calen=True)
         date_key = start.strftime("%Y/%m/%d")
@@ -81,29 +99,23 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
                     )
             self.meetings[date_key] = meeting
 
-    def _not_empty(self, string):
-        if string is not None and not str.isspace(string):
-            return True
-        else:
-            return False
-
     def _parse_title(self, item, is_calen=False):
         """Parse or generate meeting title."""
         if is_calen:
             title = item.xpath(".//h2/text()").get()
-            return title if self._not_empty(title) else None
+            return title if title else None
         else:
             title = item.xpath(".//td[@class='djc_category']/span/text()").get()
-            return title if self._not_empty(title) else None
+            return title if title else None
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
         description = item.xpath(".//div[@class='jev_evdt_desc']//p/text()").get()
         extra_info = item.xpath(".//div[@class='jev_evdt_extrainf']/text()").get()
-        if self._not_empty(extra_info):
+        if extra_info:
             description = description + extra_info
 
-        return description if self._not_empty(description) else None
+        return description if description else None
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
@@ -137,7 +149,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
         """Parse or generate location."""
         location = item.xpath(".//div[@class='jev_evdt_location']/text()").get()
         location_array = location.split(',')
-        if self._not_empty(location):
+        if location:
             return {
                 "address": location,
                 "name": location_array[0],
@@ -161,3 +173,11 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
+
+    def _delta_months(self, curr, delta):
+        """
+        handles add and subtracting from months
+        """
+        months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        new = (curr-1) + delta
+        return months[new % 12]
