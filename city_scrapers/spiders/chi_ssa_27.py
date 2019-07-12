@@ -1,5 +1,5 @@
 from copy import deepcopy
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from city_scrapers_core.constants import COMMISSION, COMMITTEE, TENTATIVE
 from city_scrapers_core.items import Meeting
@@ -14,100 +14,87 @@ class ChiSsa27Spider(CityScrapersSpider):
     allowed_domains = ["lakeviewchamber.com"]
     start_urls = ["https://www.lakeviewchamber.com/ssa27"]
 
-
     def parse_committee(self, respon, url):
-        meeting_list, cleaned = [], []
         committee_panel = respon.css("#content-238036 div.panel-body *")
         m2, cleaned = [], []
-        h1, h2 = "<h4>", "</h4>"
+        h1 = "<h4>"
         p1, p2 = "<p>", "</p>"
-        s1, s2 = "<strong>", "</strong>"
-        e1, e2 = "<em>", "</em>"
+        s1 = "<strong>"
+        e1 = "<em>"
         meet_list = committee_panel.css("*").getall()
 
         prev = None
-        for meeting_itm in meet_list:   # rem dupes
+        for meeting_itm in meet_list:  # rem dupes
             if meeting_itm != prev:
                 m2.append(meeting_itm)
                 prev = meeting_itm
 
-        for m in m2:
-            if h1 in m:
-                cleaned.append(m)
+        for this_line in m2:
+            if "<h4>" in this_line:
+                cleaned.append(this_line)
                 continue
-            if p1 in m:
-                if e1 in m:
-                    m = m.replace(p1,'').replace(p1,'')
-                cleaned.append(m)
+            elif p1 in this_line:
+                if e1 in this_line:
+                    this_line = this_line.replace(p1, '').replace(p2, '')
+                cleaned.append(this_line)
 
+        list_mtg_objs, this_mtg = [], dict()
+        comm_meeting_address = ''
 
-        dcomms, dd = [],  dict({})
         for i3 in cleaned:
-            if h1 in i3:   #h4
-                my_copy = deepcopy(dd)
-                dcomms.append(my_copy)
-                dd = dict({})
-                commt_nme = Selector(text=i3).css("h4::text").get()
-                dd.update({'committee_name' : commt_nme})
-                print()
-            elif s1 in i3:  #strong
-                nxt_nme = Selector(text=i3).css("strong::text").get()
-                dd.update({'comm_nxt_mtg' : nxt_nme})
+            if h1 in i3:  # h4
+                if this_mtg:
+                    list_mtg_objs.append(deepcopy(this_mtg))
+                this_mtg = dict()
+                committee_name = Selector(text=i3).css("h4::text").get()
+                this_mtg.update({'committee_name': committee_name})
+            elif s1 in i3:  # strong
+                nxt_nme2 = Selector(text=i3).css("p::text").get()
+                the_href = Selector(text=i3).css('a::attr(href)').get()
+
+                if '2019' in nxt_nme2:
+                    item_txt = nxt_nme2.replace("Sept", 'Sep').replace("June", 'Jun')
+                    p_idx = max(item_txt.find('am'), item_txt.find('pm'), 0) + 2  # so we can slice
+                    front_str = item_txt[:p_idx]  # remove comments from the rest of the string
+                    time_str = front_str.replace("am", "AM").replace("pm", "PM")\
+                        .replace('.', '').replace('\xa0', '')
+                    new_date = datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
+                    this_mtg.update({'date_time': new_date})
+                    this_mtg.update({'time_notes': ''})
+                else:
+                    nxt_nme2 = nxt_nme2.replace('\xa0', '')
+                    this_mtg.update({'date_time': datetime(1900, 1, 1)})
+                    this_mtg.update({'time_notes': nxt_nme2})
+
+                if the_href:
+                    this_mtg.update({'url_link': the_href})
+
             elif p1 in i3:
                 comm_des = Selector(text=i3).css("p::text").get()
-                dd.update({'comm_des' : comm_des})
+                this_mtg.update({'meeting_desc': comm_des})
             if e1 in i3:
-                comm_addy = Selector(text=i3).css("em::text").get()
-                my_copy = deepcopy(dd)
-                dcomms.append(my_copy)
-        raw_meeting_list = []
-        previous_line = None
-        for meeting_itm in committee_panel.xpath("/div "):   # rem dupes
-            mmm = meeting_itm.xpath("div div")
-            if meeting_itm != previous_line:
-                meeting_list.append(meeting_itm)
-                previous_line = meeting_itm
-
-        meeting_dict = []
-        d_item = None
-        for meet in meeting_list:
-            if "<h4>" in meet:   #h4
-                if d_item:
-                    meeting_dict.append(deepcopy(d_item))
-                d_item = dict()    # starting new meeting group
-                comm_name = Selector(text=meet).css("h4::text").get()
-                d_item.update({'committee_name' : comm_name})
-            elif "<strong>" in meet and "<p>" not in meet:  #strong
-                next_name = Selector(text=meet).css("p > strong::text").get()
-                time_item = Selector(text=meet).css("p::text").get()
-                d_item.update({'comm_nxt_mtg' : next_name})
-                d_item.update({'time_item' : time_item})
-            elif "<p>" in meet:
-                comm_des = Selector(text=meet).css("p::text").get()
-                d_item.update({'comm_des' : comm_des})
-            elif "<em>" in meet:
-                comm_addy = Selector(text=meet).css("em::text").get()  # same for every meeting
-
-                meeting_dict.append(deepcopy(d_item))    ## at the end if it has "em"
+                comm_meeting_address = Selector(text=i3).css("em::text").get()
+                list_mtg_objs.append(deepcopy(this_mtg))
 
         final_meeting_obj = []
-        ttime = datetime.now() + timedelta(days=1, hours=3)
-        for m_item in meeting_dict:
+
+        for meeting_group in list_mtg_objs:
             meeting = Meeting(
-                title=m_item.get('committee_name'),
-                description=m_item.get('comm_des'),
+                title=meeting_group.get('committee_name'),
+                description=meeting_group.get('meeting_desc'),
                 classification=COMMITTEE,
-                start=ttime,   # fix soon
+                start=meeting_group.get('date_time'),  # fix soon
                 end=None,
                 all_day=False,
-                time_notes=m_item.get('comm_nxt_mtg'),  # fix soon
-                location=comm_addy,
-                links='',  # fix soon
+                time_notes=meeting_group.get('time_notes'),  # fix soon
+                location=comm_meeting_address,
+                links=meeting_group.get('url_link'),  # fix soon
                 source=url,
             )
             meeting['status'] = TENTATIVE
             meeting['id'] = self._get_id(meeting)
             final_meeting_obj.append(deepcopy(meeting))
+
         return final_meeting_obj
 
     def parse(self, response):
@@ -115,7 +102,6 @@ class ChiSsa27Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.   """
         container = response.css("div.container.content.no-padding")
         regular_panel = container.css("#content-232764 div.panel-body p")
-        committee_panel = container.css("#content-238036 div.panel-body *")
         meeting_location = ''
         meeting_url = response.url
 
@@ -144,10 +130,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         for one_meeting in committee_mtgs:
             yield one_meeting
 
-
-
     # ----------------------------------------- regular:
-
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -157,11 +140,9 @@ class ChiSsa27Spider(CityScrapersSpider):
         else:
             return COMMISSION
 
-
     def _parse_classification(self):
         # This can return COMMISSION generally or COMMITTEE for the committee meetings
         return COMMISSION
-
 
     def _parse_start(self, item):
         item_txt = item.css('a::text').get()
@@ -169,11 +150,11 @@ class ChiSsa27Spider(CityScrapersSpider):
             item_txt = item.css('p::text').get()
 
         item_txt = item_txt.replace("Annual Meeting", '').replace("Sept", 'Sep')
+        item_txt = item_txt.replace("June", 'Jun')
         p_idx = max(item_txt.find('am'), item_txt.find('pm'), 0) + 2  # so we can slice after this
         front_str = item_txt[:p_idx]  # remove comments from the rest of the string
         time_str = front_str.replace("am", "AM").replace("pm", "PM").replace('.', '')
         return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
-
 
     def _parse_location(self, item):
         first_note = item.css("p > strong ::text").get()
@@ -185,7 +166,6 @@ class ChiSsa27Spider(CityScrapersSpider):
                 }
             else:
                 raise ValueError('Meeting address has changed')
-
 
     def _parse_links(self, item):
         if not item.css('a'):
