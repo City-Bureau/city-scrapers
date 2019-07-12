@@ -1,7 +1,8 @@
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from scrapy import Request
+from scrapy.selector import Selector
+from scrapy.http import HtmlResponse
 import datetime
 
 
@@ -15,6 +16,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
     requests = []
 
     def parse(self, response):
+
         """
         `parse` should always `yield` Meeting items.
         """
@@ -32,18 +34,11 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
 
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
-            yield meeting
             self.meetings[url_date] = meeting
-        curr_date = datetime.date.today()
-        months_urls = [datetime.date(month=curr_date.month-2, day=1, year=curr_date.year),
-                       datetime.date(month=curr_date.month-1, day=1, year=curr_date.year),
-                       curr_date,
-                       datetime.date(month=curr_date.month+1, day=1, year=curr_date.year)
-                       ]
-        for date in months_urls:
-            yield Request(
-                    "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
-                    date.strftime("%Y/%m/%d"), callback=self._parse_calendar, priority=1)
+
+            self._parse_months()
+            for date, meeting in self.meetings.items():
+                yield meeting
 
     def _parse_months(self):
         curr_date = datetime.date.today()
@@ -53,17 +48,19 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
                        datetime.date(month=curr_date.month+1, day=1, year=curr_date.year)
                        ]
         for date in months_urls:
-            yield Request(
-                    "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
-                    date.strftime("%Y/%m/%d"), callback=self._parse_calendar, priority=1)
+            self._parse_calendar(HtmlResponse(
+                    url="https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
+                    date.strftime("%Y/%m/%d")))
 
     def _parse_calendar(self, response):
-        event_urls = response.selector.xpath(".//a[@class='cal_titlelink']//@href").extract()
+        response = Selector(response=response)
+        event_urls = response.xpath(".//a[@class='cal_titlelink']//@href")
         for event_url in event_urls:
-            yield Request("https://www.oharenoise.org" + event_url, self._parse_event)
+            self._parse_event(HtmlResponse(url="https://www.oharenoise.org" + event_url))
 
     def _parse_event(self, response):
-        info_body = response.selector.xpath(".//div[@id='jevents_body']")
+        response = Selector(response.content)
+        info_body = response.xpath(".//div[@id='jevents_body']")
         name_date_time = info_body.xpath(".//div[@class='jev_evdt_header']")
         start = self._parse_start(name_date_time, is_calen=True)
         date_key = start.strftime("%Y/%m/%d")
@@ -83,7 +80,6 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
                     location=location
                     )
             self.meetings[date_key] = meeting
-        yield meeting
 
     def _not_empty(self, string):
         if string is not None and not str.isspace(string):
