@@ -1,3 +1,4 @@
+import re
 from copy import deepcopy
 from datetime import datetime
 
@@ -13,112 +14,94 @@ class ChiSsa27Spider(CityScrapersSpider):
     timezone = "America/Chicago"
     allowed_domains = ["lakeviewchamber.com"]
     start_urls = ["https://www.lakeviewchamber.com/ssa27"]
+    location = {
+        "name": "Sheil Park",
+        "address": "3505 N. Southport Ave., Chicago, IL 60657",
+    }
+    location_committee = {
+        "name": "Lakeview Chamber of Commerce",
+        "address": "1409 W. Addison St. in Chicago",
+    }
 
-    def parse_committee(self, respon, url):
+    def clean_lines(self, respon):
+        prev, meet_list_two, list_mtg_objs, cleaned, this_mtg = None, [], [], [], dict()
         committee_panel = respon.css("#content-238036 div.panel-body *")
-        m2, cleaned = [], []
-        h1 = "<h4>"
-        p1, p2 = "<p>", "</p>"
-        s1 = "<strong>"
-        e1 = "<em>"
-        meet_list = committee_panel.css("*").getall()
 
-        prev = None
-        for meeting_itm in meet_list:  # rem dupes
+        for meeting_itm in committee_panel.css("*").getall():  # rem dupes
             if meeting_itm != prev:
-                m2.append(meeting_itm)
+                meet_list_two.append(meeting_itm)
                 prev = meeting_itm
-
-        for this_line in m2:
+        for this_line in meet_list_two:
             if "<h4>" in this_line:
                 cleaned.append(this_line)
-                continue
-            elif p1 in this_line:
-                if e1 in this_line:
-                    this_line = this_line.replace(p1, '').replace(p2, '')
-                cleaned.append(this_line)
+            elif "<p>" in this_line:
+                if "<em>" in this_line:
+                    cleaned.append(this_line.replace("<p>", '').replace("</p>", ''))
+        return cleaned
 
-        list_mtg_objs, this_mtg = [], dict()
-        comm_meeting_address = ''
+    def get_meeting_objects(self, response_main):
+        comm_mtg_addy, meet_list_two, list_mtg_objs, this_mtg = '', [], [], dict()
+        cleaned = self.clean_lines(response_main)
 
-        for i3 in cleaned:
-            if h1 in i3:  # h4
+        for line in cleaned:
+            if "<h4>" in line:  # h4
                 if this_mtg:
                     list_mtg_objs.append(deepcopy(this_mtg))
                 this_mtg = dict()
-                committee_name = Selector(text=i3).css("h4::text").get()
-                this_mtg.update({'committee_name': committee_name})
-            elif s1 in i3:  # strong
-                nxt_nme2 = Selector(text=i3).css("p::text").get()
-                the_href = Selector(text=i3).css('a::attr(href)').get()
+                this_mtg.update({'committee_name': Selector(text=line).css("h4::text").get()})
+            elif "<strong>" in line:  # strong meeting time section
+                item_txt = Selector(text=line).css("p::text").get()
+                the_href = Selector(text=line).css('a::attr(href)').get()
 
-                if '2019' in nxt_nme2:
-                    item_txt = nxt_nme2.replace("Sept", 'Sep').replace("June", 'Jun')
-                    p_idx = max(item_txt.find('am'), item_txt.find('pm'), 0) + 2  # so we can slice
-                    front_str = item_txt[:p_idx]  # remove comments from the rest of the string
-                    time_str = front_str.replace("am", "AM").replace("pm", "PM")\
-                        .replace('.', '').replace('\xa0', '')
-                    new_date = datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
+                if '2019' in item_txt:
+                    words = [("Sept", "Sep"), ("June", "Jun"), ("am", "AM"), ("pm", "PM"),
+                             (".", ""), ("\xa0", ""), ("-", "")]
+                    for tup in words:
+                        item_txt = item_txt.replace(tup[0], tup[1])
+                        while item_txt[-1] == ' ':
+                            item_txt = item_txt.strip(' ')
+
+                    new_date = datetime.strptime(item_txt, '%b %d, %Y, %H:%M %p')
                     this_mtg.update({'date_time': new_date})
                     this_mtg.update({'time_notes': ''})
                 else:
-                    nxt_nme2 = nxt_nme2.replace('\xa0', '')
+                    nxt_nme2 = item_txt.replace('\xa0', '')
                     this_mtg.update({'date_time': datetime(1900, 1, 1)})
                     this_mtg.update({'time_notes': nxt_nme2})
 
                 if the_href:
                     this_mtg.update({'url_link': the_href})
 
-            elif p1 in i3:
-                comm_des = Selector(text=i3).css("p::text").get()
-                this_mtg.update({'meeting_desc': comm_des})
-            if e1 in i3:
-                comm_meeting_address = Selector(text=i3).css("em::text").get()
+            elif "<p>" in line:
+                this_mtg.update({'meeting_desc': Selector(text=line).css("p::text").get()})
+            if "<em>" in line:
                 list_mtg_objs.append(deepcopy(this_mtg))
-
-        final_meeting_obj = []
-
-        for meeting_group in list_mtg_objs:
-            meeting = Meeting(
-                title=meeting_group.get('committee_name'),
-                description=meeting_group.get('meeting_desc'),
-                classification=COMMITTEE,
-                start=meeting_group.get('date_time'),  # fix soon
-                end=None,
-                all_day=False,
-                time_notes=meeting_group.get('time_notes'),  # fix soon
-                location=comm_meeting_address,
-                links=meeting_group.get('url_link'),  # fix soon
-                source=url,
-            )
-            meeting['status'] = TENTATIVE
-            meeting['id'] = self._get_id(meeting)
-            final_meeting_obj.append(deepcopy(meeting))
-
-        return final_meeting_obj
+                comm_mtg_addy = Selector(text=line).css("em::text").get()
+        return list_mtg_objs, comm_mtg_addy
 
     def parse(self, response):
-        """   `parse` should always `yield` Meeting items.
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.   """
+        """   `parse` should always `yield` Meeting items. """
         container = response.css("div.container.content.no-padding")
-        regular_panel = container.css("#content-232764 div.panel-body p")
-        meeting_location = ''
+        commission_panel = container.css("#content-232764 div.panel-body p")
         meeting_url = response.url
+        committee_mtgs, comm_meeting_address = self.get_meeting_objects(response)
+        self._validate_location(response)
+        self._validate_location_Committee(comm_meeting_address)
 
-        for item in regular_panel:  # for item in response.css("#content-232764 div.panel-body p"):
-            if item.css("p > strong ::text").getall():
-                meeting_location = self._parse_location(item)
-                continue
-
+        for item in [*commission_panel, *committee_mtgs]:  # main
+            if "content-232764" in item.css('*::text'):
+                loc = self.location
+            else:
+                loc = self.location_committee
             meeting = Meeting(
                 title=self._parse_title(item),
-                description="",
-                classification=self._parse_classification(),
+                description=self._parse_description(item),
+                classification=self._parse_classification(item),
                 start=self._parse_start(item),
                 end=None,
                 all_day=False,
                 time_notes="",
-                location=meeting_location,
+                location=loc,  ## what about committees?
                 links=self._parse_links(item),
                 source=meeting_url,
             )
@@ -126,85 +109,56 @@ class ChiSsa27Spider(CityScrapersSpider):
             meeting['id'] = self._get_id(meeting)
             yield meeting
 
-        committee_mtgs = self.parse_committee(response, meeting_url)
-        for one_meeting in committee_mtgs:
-            yield one_meeting
-
-    # ----------------------------------------- regular:
 
     def _parse_title(self, item):
-        """Parse or generate meeting title."""
-        item_txt = ''.join(item.css("p::text").getall())
-        if "Annual Meeting" in item_txt:
+        if "content-232764" in item.css('*::text'):
+            return item.get('committee_name')
+        elif "Annual Meeting" in ''.join(item.css("p::text").getall()):
             return "Annual Meeting"
         else:
             return COMMISSION
 
-    def _parse_classification(self):
-        # This can return COMMISSION generally or COMMITTEE for the committee meetings
-        return COMMISSION
+    def _parse_timenotes(self, item):
+        if "content-238036" in item.css('*::text'):  # Committee
+            return item.get('time_notes')
+        else:
+            return ''
+
+    def _parse_classification(self, item):
+        if "content-232764" in item.css('*::text'):
+            return COMMISSION
+        else:
+            return COMMITTEE
+
+    def _parse_description(self, item):
+        if "content-238036" in item.css('*::text'):  # Committee
+            return item.get('meeting_desc')
 
     def _parse_start(self, item):
-        item_txt = ' '.join(item.css('*::text').extract()).strip()
-        item_txt = item_txt.replace("Annual Meeting", '').replace("Sept", 'Sep')
-        item_txt = item_txt.replace("June", 'Jun')
-        p_idx = max(item_txt.find('am'), item_txt.find('pm'), 0) + 2  # so we can slice after this
-        front_str = item_txt[:p_idx]  # remove comments from the rest of the string
-        time_str = front_str.replace("am", "AM").replace("pm", "PM").replace('.', '')
-        return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
+        if "content-232764" in item.css('*::text'):
+            item_txt = ' '.join(item.css('*::text').extract()).strip()
+            item_txt = re.sub("Annual Meeting", "", item_txt)
+            item_txt = item_txt.replace("June", 'Jun').replace("Sept", 'Sep')
+            p_idx = max(item_txt.find('am'), item_txt.find('pm'), 0) + 2  # so we can slice
+            front_str = item_txt[:p_idx]  # strip rest of the string
+            time_str = front_str.replace("am", "AM").replace("pm", "PM").replace('.', '')
+            return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
+        else:
+            return item.get('date_time')
 
-    def _parse_location(self, item):
-        first_note = item.css("p > strong ::text").get()
-        if item.css("p > strong ::text").get():
-            if "Sheil Park" in first_note:
-                return {
-                    "address": "3505 N. Southport Ave., Chicago, IL 60657",
-                    "name": "Sheil Park",
-                }
-            else:
-                raise ValueError('Meeting address has changed')
+    def _validate_location(self, response):
+        css_path = "#content-232764 > div > div.panel-body > p:nth-child(1) > strong::text"
+        if "Sheil" not in " ".join(response.css(css_path).extract()):
+            raise ValueError("Commission Meeting location has changed")
+
+    def _validate_location_Committee(self, item):
+        if "Chamber" not in item:
+            raise ValueError("Committee Meeting location has changed")
 
     def _parse_links(self, item):
-        if not item.css('a'):
+        if "content-238036" in item.css('*::text'):  # Committee
+            return item.get('url_link')
+        elif not item.css('a'):
             return []
         else:
             return [{'href': item.css('a::attr(href)').get(), 'title': 'Minutes'}]
-'''
-It's less relevant now, but once you add committees it'll be good to add a test_count function 
-to make sure that the right meetings are being included like we have here
-
-city-scrapers/tests/test_cook_board.py
-
-Line 17 in bc1d5ff
-
- def test_count(): 
- 
- '''
-
-
-'''Once you start checking committees, it might be easier to pass the response to the function checking the location since the location won't be in the second block of items. We've been storing any location that we're validating in self.location and calling the method _validate_location in this case just to make things more clear. You can see an example here
-
-city-scrapers/city_scrapers/spiders/chi_ssa_34.py
-
-Line 28 in c23f1fd
-
- self._validate_location(response) 
- '''
-
-
-'''tests/test_chi_ssa_27.py
-parsed_items = [item for item in spider.parse(test_response)]
-
- freezer.stop()
-
-  @pjsier
-pjsier 17 hours ago  Member
-It's less relevant now, but once you add committees it'll be good to add a test_count function to make sure that the right meetings are being included like we have here
-
-city-scrapers/tests/test_cook_board.py
-
-Line 17 in bc1d5ff
-
- def test_count(): 
- 
- '''
