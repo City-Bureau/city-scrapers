@@ -145,10 +145,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         return COMMISSION
 
     def _parse_start(self, item):
-        item_txt = item.css('a::text').get()
-        if not item_txt:
-            item_txt = item.css('p::text').get()
-
+        item_txt = ' '.join(item.css('*::text').extract()).strip()
         item_txt = item_txt.replace("Annual Meeting", '').replace("Sept", 'Sep')
         item_txt = item_txt.replace("June", 'Jun')
         p_idx = max(item_txt.find('am'), item_txt.find('pm'), 0) + 2  # so we can slice after this
@@ -172,3 +169,42 @@ class ChiSsa27Spider(CityScrapersSpider):
             return []
         else:
             return [{'href': item.css('a::attr(href)').get(), 'title': 'Minutes'}]
+'''
+It's less relevant now, but once you add committees it'll be good to add a test_count function 
+to make sure that the right meetings are being included like we have here
+
+city-scrapers/tests/test_cook_board.py
+
+Line 17 in bc1d5ff
+
+ def test_count(): 
+ 
+ '''
+
+
+'''Once you start checking committees, it might be easier to pass the response to the function checking the location since the location won't be in the second block of items. We've been storing any location that we're validating in self.location and calling the method _validate_location in this case just to make things more clear. You can see an example here
+
+city-scrapers/city_scrapers/spiders/chi_ssa_34.py
+
+Line 28 in c23f1fd
+
+ self._validate_location(response) 
+ '''
+
+
+'''tests/test_chi_ssa_27.py
+parsed_items = [item for item in spider.parse(test_response)]
+
+ freezer.stop()
+
+  @pjsier
+pjsier 17 hours ago  Member
+It's less relevant now, but once you add committees it'll be good to add a test_count function to make sure that the right meetings are being included like we have here
+
+city-scrapers/tests/test_cook_board.py
+
+Line 17 in bc1d5ff
+
+ def test_count(): 
+ 
+ '''
