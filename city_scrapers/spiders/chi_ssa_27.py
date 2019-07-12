@@ -1,5 +1,5 @@
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from city_scrapers_core.constants import COMMISSION, COMMITTEE, TENTATIVE
 from city_scrapers_core.items import Meeting
@@ -14,84 +14,67 @@ class ChiSsa27Spider(CityScrapersSpider):
     allowed_domains = ["lakeviewchamber.com"]
     start_urls = ["https://www.lakeviewchamber.com/ssa27"]
 
-    def parse_committee(self, two, url2):
-        m2, cleaned = [], []
-        h1, h2 = "<h4>", "</h4>"
-        p1, p2 = "<p>", "</p>"
-        s1, s2 = "<strong>", "</strong>"
-        e1, e2 = "<em>", "</em>"
-        meet_list = two.css("*").getall()
+    def parse_committee(self, two, url):
+        meeting_list, cleaned = [], []
+        raw_meeting_list = two.css("*").getall()
 
-        prev = None
-        for meeting_itm in meet_list:   # rem dupes
-            if meeting_itm == prev:
-                prev = meeting_itm
-                continue
+        previous_line = None
+        for meeting_itm in raw_meeting_list:   # rem dupes
+            if meeting_itm == previous_line:
+                previous_line = meeting_itm
             else:
-                m2.append(meeting_itm)
-                prev = meeting_itm
+                meeting_list.append(meeting_itm)
+                previous_line = meeting_itm
 
-        for m in m2:
-            if h1 in m:
-                cleaned.append(m)
-                continue
-            if p1 in m:
-                if e1 in m:
-                    m = m.replace(p1,'').replace(p1,'')
-                cleaned.append(m)
+        meeting_dict = []
+        d_item = None
+        for meet in meeting_list:
+            if "<h4>" in meet:   #h4
+                if d_item:
+                    meeting_dict.append(deepcopy(d_item))
+                d_item = dict()    # starting new meeting group
+                commt_nme = Selector(text=meet).css("h4::text").get()
+                d_item.update({'committee_name' : commt_nme})
+            elif "<strong>" in meet:  #strong
+                nxt_nme = Selector(text=meet).css("p > strong::text").get()
+                d_item.update({'comm_nxt_mtg' : nxt_nme})
+            elif "<p>" in meet:
+                comm_des = Selector(text=meet).css("p::text").get()
+                d_item.update({'comm_des' : comm_des})
+            elif "<em>" in meet:
+                comm_addy = Selector(text=meet).css("em::text").get()  # same for every meeting
 
-        dcomms, dd = [],  dict()
-        for i3 in cleaned:
-            if h1 in i3:   #h4
-                if dd:
-                    my_copy = deepcopy(dd)
-                    dcomms.append(my_copy)
-                dd = dict({})
-                commt_nme = Selector(text=i3).css("h4::text").get()
-                dd.update({'committee_name' : commt_nme})
-                print()
-            elif s1 in i3:  #strong
-                nxt_nme = Selector(text=i3).css("strong::text").get()
-                dd.update({'comm_nxt_mtg' : nxt_nme})
-            elif p1 in i3:
-                comm_des = Selector(text=i3).css("p::text").get()
-                dd.update({'comm_des' : comm_des})
-            if e1 in i3:
-                comm_addy = Selector(text=i3).css("em::text").get()
-                my_copy = deepcopy(dd)   ## at the end if it has "em"
-                dcomms.append(my_copy)
+                meeting_dict.append(deepcopy(d_item))    ## at the end if it has "em"
 
-        newobj = []
-        for md in dcomms:
+        final_meeting_obj = []
+        for m_item in meeting_dict:
             meeting = Meeting(
-                title=md.get('committee_name'),
-                description=md.get('comm_des'),
+                title=m_item.get('committee_name'),
+                description=m_item.get('comm_des'),
                 classification=COMMITTEE,
-                start=datetime.now(),
+                start=datetime.now()+ timedelta(days=1, hours=3),   # fix soon
                 end=None,
                 all_day=False,
-                time_notes=md.get('comm_nxt_mtg'),
+                time_notes=m_item.get('comm_nxt_mtg'),  # fix soon
                 location=comm_addy,
-                links='',
-                source=url2,
+                links='',  # fix soon
+                source=url,
             )
             meeting['status'] = TENTATIVE
-            meeting['id'] = None
-            print(str(meeting))
-            dc = deepcopy(meeting)
-            newobj.append(dc)
-
-        return newobj
+            meeting['id'] = self._get_id(meeting)
+            final_meeting_obj.append(deepcopy(meeting))
+        return final_meeting_obj
 
     def parse(self, response):
         """   `parse` should always `yield` Meeting items.
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping needs.   """
-        r = response.css("div.container.content.no-padding")
-        one = r.css("#content-232764 div.panel-body p")
-        two = r.css("#content-238036 div.panel-body *")
+        container = response.css("div.container.content.no-padding")
+        regular_panel = container.css("#content-232764 div.panel-body p")
+        committee_panel = container.css("#content-238036 div.panel-body *")
         meeting_location = ''
+        meeting_url = response.url
 
-        for item in one:  # for item in response.css("#content-232764 div.panel-body p"):
+        for item in regular_panel:  # for item in response.css("#content-232764 div.panel-body p"):
             if item.css("p > strong ::text").getall():
                 meeting_location = self._parse_location(item)
                 continue
@@ -106,17 +89,15 @@ class ChiSsa27Spider(CityScrapersSpider):
                 time_notes="",
                 location=meeting_location,
                 links=self._parse_links(item),
-                source=response.url,
+                source=meeting_url,
             )
             meeting['status'] = self._get_status(meeting)
             meeting['id'] = self._get_id(meeting)
-
             yield meeting
 
-        theurl = response.url
-        o = self.parse_committee(two, theurl)
-        for i in o:
-            yield i
+        committee_mtgs = self.parse_committee(committee_panel, meeting_url)
+        for one_meeting in committee_mtgs:
+            yield one_meeting
 
 
 
