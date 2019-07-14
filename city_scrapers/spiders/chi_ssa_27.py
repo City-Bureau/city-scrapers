@@ -133,7 +133,6 @@ class ChiSsa27Spider(CityScrapersSpider):
         else:
             return location_commission
 
-
     def _parse_description(self, item):
         if self.committee_type(item):
             return item.get('desc')
