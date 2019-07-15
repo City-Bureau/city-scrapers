@@ -25,6 +25,7 @@ freezer.stop()
 def test_count():
     assert len(parsed_items) == 15
 
+
 def test_title():
     assert parsed_items[0]["title"] == 'Commission'
 
