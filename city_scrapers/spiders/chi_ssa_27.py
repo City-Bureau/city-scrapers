@@ -18,8 +18,9 @@ class ChiSsa27Spider(CityScrapersSpider):
         """   `parse` should always `yield` Meeting items. """
         container = response.css("div.container.content.no-padding")
         commission_panel = container.css("#content-232764 div.panel-body p")
-        #comm_meets_list, comm_meeting_address = self.get_committees(response)
-        #self._validate_locations(response, comm_meeting_address)
+        minutes_panel = container.css("#content-232768 div.panel-body p")
+        min_panel_items = self.get_minutes_panel_items(minutes_panel)
+
         self._validate_locations(response)
         commission_pan = commission_panel[1:]
 
@@ -41,7 +42,7 @@ class ChiSsa27Spider(CityScrapersSpider):
                 source=response.url,
             )
 
-            if self.committee_type(item):  # committee
+            if self.item_type(item):  # committee
                 meeting['status'] = ''
                 meeting['id'] = ''
             else:
@@ -49,70 +50,33 @@ class ChiSsa27Spider(CityScrapersSpider):
                 meeting['id'] = self._get_id(meeting)
             yield meeting
 
-    def committee_type(self, item):
+    def get_minutes_panel_items(self, panel):
+        panels = panel.css('p').getall()
+        panels2 = panel.css('a::attr(href)').getall()
+        panels3 = panel.css("a::text").getall()
+        for p in panels:
+            p_sel = Selector(text=p)
+
+
+            p_href = p_sel.css('a::attr(href)').get()
+            p_txt = p_sel.css('a::text').getall()
+
+            thislist = []
+            aa = [p.css('a::attr(href)').get()]
+            bb = p.css('a::text').getall()
+            thislist.append(p_href, p_txt)
+            cc = aa.append(bb)
+            print("p is:", p)
+        return panels, panels2
+
+    def item_type(self, item):
         if 'dict' in str(type(item)):
             return True
         else:
             return False
 
-    def get_committees(self, response):
-        counter = response.css("#content-238036 div.panel-body h4::text").getall()
-        meets_len = len(counter) + 1
-        comm_meets_list, comm_mtg_addy = [], ''
-
-        for cycle in range(1, meets_len * 3, 4):
-            this_meet_d = dict()
-            front_str4 = "#content-238036 div.panel-body"
-
-            title_str = front_str4 + " h4:nth-child(" + str(cycle) + ")::text"
-            desc_str = "#content-238036 div.panel-body h4:nth-child(" + str(cycle) + ") + p::text"
-            meet_str = "#content-238036 div.panel-body h4:nth-child(" + str(
-                cycle
-            ) + ") + p + p::text"
-            date_time_str = "#content-238036 div.panel-body h4:nth-child(" + str(
-                cycle
-            ) + ") + p + p strong::text"
-
-            title = response.css(title_str).get()
-            description = response.css(desc_str).get()
-            nxt_meet_str1 = response.css(date_time_str).get()
-
-            this_meet_d.update({'title': title})
-            this_meet_d.update({'desc': description})
-            this_meet_d.update({'next_m1': nxt_meet_str1})
-
-            date_times = response.css(meet_str).get()
-            item_txt = Selector(text=date_times).css("p::text").get()
-            the_href = Selector(text=date_times).css('a::attr(href)').get()
-            com_str = "#content-238036 div.panel-body p em::text"
-            comm_mtg_addy = ' '.join(response.css(com_str).getall())
-
-            if '2019' in item_txt:
-                words = [("Sept", "Sep"), ("June", "Jun"), ("am", "AM"), ("pm", "PM"), (".", ""),
-                         ("\xa0", ""), ("-", "")]
-                for tup in words:
-                    item_txt = item_txt.replace(tup[0], tup[1])
-                    while item_txt[-1] == ' ':
-                        item_txt = item_txt.strip(' ')
-
-                new_date = datetime.strptime(item_txt, '%b %d, %Y, %H:%M %p')
-                this_meet_d.update({'date_time': new_date})
-                this_meet_d.update({'time_notes': ''})
-
-            else:
-                place_holder_date = datetime(1900, 1, 1)
-                time_notes = item_txt.replace('\xa0', '')
-                this_meet_d.update({'date_time': place_holder_date})
-                this_meet_d.update({'time_notes': time_notes})
-
-                if the_href:
-                    this_meet_d.update({'url_link': the_href})
-
-            comm_meets_list.append(this_meet_d)
-        return comm_meets_list, comm_mtg_addy
-
     def _parse_title(self, item):
-        if self.committee_type(item):
+        if self.item_type(item):
             return item.get('title')
         elif "Annual Meeting" in ''.join(item.css("p::text").getall()):
             return "Annual Meeting"
@@ -120,32 +84,32 @@ class ChiSsa27Spider(CityScrapersSpider):
             return COMMISSION
 
     def _parse_timenotes(self, item):
-        if self.committee_type(item):
+        if self.item_type(item):
             return item.get('time_notes')
         else:
             return ''
 
     def _parse_classification(self, item):
-        if self.committee_type(item):
+        if self.item_type(item):
             return COMMITTEE
         else:
             return COMMISSION
 
     def _parse_location(self, item):
         location_commission, location_committee = self.get_expected_locations()
-        if self.committee_type(item):
+        if self.item_type(item):
             return location_committee
         else:
             return location_commission
 
     def _parse_description(self, item):
-        if self.committee_type(item):
+        if self.item_type(item):
             return item.get('desc')
         else:
             return ''
 
     def _parse_start(self, item):
-        if self.committee_type(item):
+        if self.item_type(item):
             return item.get('date_time')
         else:
             item_txt = ' '.join(item.css('*::text').extract()).strip()
