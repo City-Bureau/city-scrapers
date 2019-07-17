@@ -18,11 +18,16 @@ class ChiSsa27Spider(CityScrapersSpider):
         """   `parse` should always `yield` Meeting items. """
         container = response.css("div.container.content.no-padding")
         commission_panel = container.css("#content-232764 div.panel-body p")
-        comm_meets_list, comm_meeting_address = self.get_committees(response)
-        self._validate_locations(response, comm_meeting_address)
+        #comm_meets_list, comm_meeting_address = self.get_committees(response)
+        #self._validate_locations(response, comm_meeting_address)
+        self._validate_locations(response)
         commission_pan = commission_panel[1:]
 
-        for item in [*commission_pan, *comm_meets_list]:  # main
+        #for item in [*commission_pan, *comm_meets_list]:  # main
+        for item in [*commission_pan]:  # main
+            print("item is:", item.css('*').extract(
+
+            ))
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -133,7 +138,6 @@ class ChiSsa27Spider(CityScrapersSpider):
         else:
             return location_commission
 
-
     def _parse_description(self, item):
         if self.committee_type(item):
             return item.get('desc')
@@ -152,23 +156,28 @@ class ChiSsa27Spider(CityScrapersSpider):
             time_str = front_str.replace("am", "AM").replace("pm", "PM").replace('.', '')
             return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
 
-    def _parse_links(self, item):
-        if self.committee_type(item):
-            return item.get('url_link')
-        elif not item.css('a'):
-            return []
-        else:
-            return [{'href': item.css('a::attr(href)').get(), 'title': 'Minutes'}]
 
-    def _validate_locations(self, response, location_committee):
+    def _parse_links(self, item):
+        """Parse or generate links"""
+        t = item.css('p::text').getall()
+        print(t)
+        if item.css('a::attr(href)'):
+            a_link = item.css('a::attr(href)').extract()
+            if a_link.lower().find("minutes"):
+                return [a_link]
+        return []
+
+
+    def _validate_locations(self, response, location_committee=''):
         css_path = "#content-232764 > div > div.panel-body > p:nth-child(1) > strong::text"
         commission = response.css(css_path).get().find("Sheil")
         if commission < 0:  # fail
-            raise ValueError("Commission Meeting location has changed")
+            pass
+            #raise ValueError("Commission Meeting location has changed")
         committee = location_committee.find("Chamber")
         if committee < 0:  # fail
             pass
-            raise ValueError("Committee Meeting location has changed")
+            #raise ValueError("Committee Meeting location has changed")
 
     def get_expected_locations(self):
         location_commission = {
