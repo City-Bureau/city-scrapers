@@ -51,23 +51,22 @@ class ChiSsa27Spider(CityScrapersSpider):
             yield meeting
 
     def get_minutes_panel_items(self, panel):
+        minutes_list = []
         panels = panel.css('p').getall()
-        panels2 = panel.css('a::attr(href)').getall()
-        panels3 = panel.css("a::text").getall()
         for p in panels:
+            this_p = []
             p_sel = Selector(text=p)
 
 
             p_href = p_sel.css('a::attr(href)').get()
-            p_txt = p_sel.css('a::text').getall()
+            p_txt = p_sel.css('a::text').getall() #list
 
-            thislist = []
-            aa = [p.css('a::attr(href)').get()]
-            bb = p.css('a::text').getall()
-            thislist.append(p_href, p_txt)
-            cc = aa.append(bb)
-            print("p is:", p)
-        return panels, panels2
+            this_p.append(p_href)
+            this_p.append(p_txt)
+
+            minutes_list.append(this_p)
+
+        return minutes_list
 
     def item_type(self, item):
         if 'dict' in str(type(item)):
