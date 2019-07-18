@@ -5,6 +5,9 @@ from city_scrapers_core.constants import COMMISSION, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from parsel import Selector
+import scrapy
+
+
 
 
 class ChiSsa27Spider(CityScrapersSpider):
@@ -17,18 +20,13 @@ class ChiSsa27Spider(CityScrapersSpider):
     def parse(self, response):
         """   `parse` should always `yield` Meeting items. """
         container = response.css("div.container.content.no-padding")
-        commission_panel = container.css("#content-232764 div.panel-body p")
-        minutes_panel = container.css("#content-232768 div.panel-body p")
-        min_panel_items = self.get_minutes_panel_items(minutes_panel)
+        commission_panel = container.css("#content-232764 div.panel-body p")[1:]
+        minutes_pan = container.css("#content-232768 div.panel-body p")
+        minutes_panel = self.get_minutes_panel_items(minutes_pan)
 
         self._validate_locations(response)
-        commission_pan = commission_panel[1:]
 
-        #for item in [*commission_pan, *comm_meets_list]:  # main
-        for item in [*commission_pan]:  # main
-            print("item is:", item.css('*').extract(
-
-            ))
+        for item in [*commission_panel, *minutes_panel]:  # main
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -36,46 +34,81 @@ class ChiSsa27Spider(CityScrapersSpider):
                 start=self._parse_start(item),
                 end=None,
                 all_day=False,
-                time_notes=self._parse_timenotes,
+                time_notes='',
                 location=self._parse_location(item),
                 links=self._parse_links(item),
                 source=response.url,
             )
 
-            if self.item_type(item):  # committee
-                meeting['status'] = ''
-                meeting['id'] = ''
+            if self.para_type(item):  # committee
+                meeting['status'] = self._get_status(meeting)
+                meeting['id'] = self._get_id(meeting)
             else:
                 meeting['status'] = self._get_status(meeting)
                 meeting['id'] = self._get_id(meeting)
             yield meeting
 
+
     def get_minutes_panel_items(self, panel):
+        class Paragraph(scrapy.Item):
+            link = scrapy.Field()
+            date = scrapy.Field()
+            title = scrapy.Field()
+
         minutes_list = []
-        panels = panel.css('p').getall()
+        panels = panel.css('p')
+
+        ppa = panels[-1].css('*::text').getall()
+        if '\xa0' in ppa:
+            panels = panels[:-1]
+
+        ppa2 = panels[0:1].css('*::text').getall()
+        if '\xa0' in ppa2:
+            panels = panels[1:]
+
         for p in panels:
-            this_p = []
-            p_sel = Selector(text=p)
+            href = p.css('a::attr(href)').get()
+            tlist = p.css('*::text').getall()
+            dt_date = datetime.strptime(tlist[0], '%B %d, %Y')
+            cname = ''
+            try:
+                cname = tlist[1]
+            except Exception:
+                pass
 
+            if cname == '':
+                thelist = re.split('/', href)[-1]
+                cname = re.split('-', thelist, 3)[-1]
+                cname = cname[:-4]                         #rem ".pdf"
 
-            p_href = p_sel.css('a::attr(href)').get()
-            p_txt = p_sel.css('a::text').getall() #list
+            if len(cname) > 0:
+                while cname[0:1] in ['\n', '(']:
+                    cname = cname[1:]
+                if cname[-1] == ')':
+                    cname = cname[:-1]
 
-            this_p.append(p_href)
-            this_p.append(p_txt)
-
-            minutes_list.append(this_p)
-
+            minutes_list.append(Paragraph(link=href, date=dt_date, title=cname))
         return minutes_list
 
-    def item_type(self, item):
+    def _parse_links(self, item):
+        if 'Paragraph' in str(type(item)):
+            return item.get('link')
+        return ''
+
+    def dict_type(self, item):
         if 'dict' in str(type(item)):
             return True
         else:
             return False
 
+    def para_type(self, item):
+        if 'Paragraph' in str(type(item)):
+            return True
+        else:
+            return False
+
     def _parse_title(self, item):
-        if self.item_type(item):
+        if self.para_type(item):
             return item.get('title')
         elif "Annual Meeting" in ''.join(item.css("p::text").getall()):
             return "Annual Meeting"
@@ -83,33 +116,30 @@ class ChiSsa27Spider(CityScrapersSpider):
             return COMMISSION
 
     def _parse_timenotes(self, item):
-        if self.item_type(item):
-            return item.get('time_notes')
+        if self.para_type(item):
+            return ''
         else:
             return ''
 
     def _parse_classification(self, item):
-        if self.item_type(item):
+        if self.para_type(item):
             return COMMITTEE
         else:
             return COMMISSION
 
     def _parse_location(self, item):
         location_commission, location_committee = self.get_expected_locations()
-        if self.item_type(item):
+        if self.para_type(item):
             return location_committee
         else:
             return location_commission
 
     def _parse_description(self, item):
-        if self.item_type(item):
-            return item.get('desc')
-        else:
             return ''
 
     def _parse_start(self, item):
-        if self.item_type(item):
-            return item.get('date_time')
+        if self.para_type(item):
+            return item.get('date')
         else:
             item_txt = ' '.join(item.css('*::text').extract()).strip()
             item_txt = re.sub("Annual Meeting", "", item_txt)
@@ -118,18 +148,6 @@ class ChiSsa27Spider(CityScrapersSpider):
             front_str = item_txt[:p_idx]  # strip rest of the string
             time_str = front_str.replace("am", "AM").replace("pm", "PM").replace('.', '')
             return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
-
-
-    def _parse_links(self, item):
-        """Parse or generate links"""
-        t = item.css('p::text').getall()
-        print(t)
-        if item.css('a::attr(href)'):
-            a_link = item.css('a::attr(href)').extract()
-            if a_link.lower().find("minutes"):
-                return [a_link]
-        return []
-
 
     def _validate_locations(self, response, location_committee=''):
         css_path = "#content-232764 > div > div.panel-body > p:nth-child(1) > strong::text"
