@@ -1,13 +1,10 @@
-import re
 from datetime import datetime
+from re import split, sub
 
 from city_scrapers_core.constants import COMMISSION, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from parsel import Selector
-import scrapy
-
-
+from scrapy import Field, Item
 
 
 class ChiSsa27Spider(CityScrapersSpider):
@@ -29,7 +26,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         for item in [*commission_panel, *minutes_panel]:  # main
             meeting = Meeting(
                 title=self._parse_title(item),
-                description=self._parse_description(item),
+                description='',
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
                 end=None,
@@ -40,30 +37,26 @@ class ChiSsa27Spider(CityScrapersSpider):
                 source=response.url,
             )
 
-            if self.para_type(item):  # committee
-                meeting['status'] = self._get_status(meeting)
-                meeting['id'] = self._get_id(meeting)
-            else:
-                meeting['status'] = self._get_status(meeting)
-                meeting['id'] = self._get_id(meeting)
+            meeting['status'] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
+
             yield meeting
 
-
     def get_minutes_panel_items(self, panel):
-        class Paragraph(scrapy.Item):
-            link = scrapy.Field()
-            date = scrapy.Field()
-            title = scrapy.Field()
+        class Paragraph(Item):
+            link = Field()
+            date = Field()
+            title = Field()
 
         minutes_list = []
         panels = panel.css('p')
 
-        ppa = panels[-1].css('*::text').getall()
-        if '\xa0' in ppa:
+        empty_line1 = panels[-1].css('*::text').getall()
+        if '\xa0' in empty_line1:
             panels = panels[:-1]
 
-        ppa2 = panels[0:1].css('*::text').getall()
-        if '\xa0' in ppa2:
+        empty_line2 = panels[0:1].css('*::text').getall()
+        if '\xa0' in empty_line2:
             panels = panels[1:]
 
         for p in panels:
@@ -73,13 +66,13 @@ class ChiSsa27Spider(CityScrapersSpider):
             cname = ''
             try:
                 cname = tlist[1]
-            except Exception:
+            except IndexError:
                 pass
 
             if cname == '':
-                thelist = re.split('/', href)[-1]
-                cname = re.split('-', thelist, 3)[-1]
-                cname = cname[:-4]                         #rem ".pdf"
+                a_list = split('/', href)[-1]
+                cname = split('-', a_list, 3)[-1]
+                cname = cname[:-4]  # rem ".pdf"
 
             if len(cname) > 0:
                 while cname[0:1] in ['\n', '(']:
@@ -90,59 +83,40 @@ class ChiSsa27Spider(CityScrapersSpider):
             minutes_list.append(Paragraph(link=href, date=dt_date, title=cname))
         return minutes_list
 
-    def _parse_links(self, item):
+    def p_type(self, item):
         if 'Paragraph' in str(type(item)):
+            return True
+        return False
+
+    def _parse_links(self, item):
+        if self.p_type(item):
             return item.get('link')
         return ''
 
-    def dict_type(self, item):
-        if 'dict' in str(type(item)):
-            return True
-        else:
-            return False
-
-    def para_type(self, item):
-        if 'Paragraph' in str(type(item)):
-            return True
-        else:
-            return False
-
     def _parse_title(self, item):
-        if self.para_type(item):
+        if self.p_type(item):
             return item.get('title')
         elif "Annual Meeting" in ''.join(item.css("p::text").getall()):
             return "Annual Meeting"
-        else:
-            return COMMISSION
-
-    def _parse_timenotes(self, item):
-        if self.para_type(item):
-            return ''
-        else:
-            return ''
+        return COMMISSION
 
     def _parse_classification(self, item):
-        if self.para_type(item):
+        if self.p_type(item):
             return COMMITTEE
-        else:
-            return COMMISSION
+        return COMMISSION
 
     def _parse_location(self, item):
-        location_commission, location_committee = self.get_expected_locations()
-        if self.para_type(item):
-            return location_committee
-        else:
-            return location_commission
-
-    def _parse_description(self, item):
-            return ''
+        commission_loc, committee_loc = self.get_expected_locations()
+        if self.p_type(item):
+            return committee_loc
+        return commission_loc
 
     def _parse_start(self, item):
-        if self.para_type(item):
+        if self.p_type(item):
             return item.get('date')
         else:
             item_txt = ' '.join(item.css('*::text').extract()).strip()
-            item_txt = re.sub("Annual Meeting", "", item_txt)
+            item_txt = sub("Annual Meeting", "", item_txt)
             item_txt = item_txt.replace("June", 'Jun').replace("Sept", 'Sep')
             p_idx = max(item_txt.find('am'), item_txt.find('pm'), 0) + 2  # so we can slice
             front_str = item_txt[:p_idx]  # strip rest of the string
@@ -153,8 +127,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         css_path = "#content-232764 > div > div.panel-body > p:nth-child(1) > strong::text"
         commission = response.css(css_path).get().find("Sheil")
         if commission < 0:  # fail
-            pass
-            #raise ValueError("Commission Meeting location has changed")
+            raise ValueError("Commission Meeting location has changed")
         committee = location_committee.find("Chamber")
         if committee < 0:  # fail
             pass
@@ -170,3 +143,9 @@ class ChiSsa27Spider(CityScrapersSpider):
             "address": "1409 W. Addison St. in Chicago",
         }
         return location_commission, location_committee
+
+    # def _parse_description(self, item):
+    #     return ''
+
+    # def _parse_timenotes(self):
+    #     return ''
