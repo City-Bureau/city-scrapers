@@ -59,7 +59,3 @@ class ChiSsa2Spider(CityScrapersSpider):
         """Parse or generate links."""
         link = item.css('*::attr(href)').extract_first()
         return [{"href": link, "title": "SSA #2 Meeting Minutes"}]
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
