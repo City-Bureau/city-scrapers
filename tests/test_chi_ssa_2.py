@@ -18,6 +18,7 @@ freezer = freeze_time("2019-07-18")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
+freezer.stop()
 
 
 def test_start():
