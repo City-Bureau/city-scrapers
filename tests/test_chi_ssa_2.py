@@ -19,19 +19,13 @@ freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
 
-freezer.stop()
-
-"""
-Uncomment below
-"""
-
 
 def test_start():
     assert parsed_items[0]["start"] == datetime(2018, 10, 2, 14, 0)
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_2/201810021400/x/ssa_2_commissioners_meeting"
+    assert parsed_items[0]["id"] == "chi_ssa_2/201810021400/x/commission"
 
 
 def test_status():
@@ -40,8 +34,9 @@ def test_status():
 
 def test_links():
     assert parsed_items[0]["links"] == [{
-      "href": "http://belmontcentral.org/wp-content/uploads/2018/12/October-2-2018-SSA-Minutes.pdf",
-      "title": "SSA #2 Meeting Minutes"
+        "href":
+            "http://belmontcentral.org/wp-content/uploads/2018/12/October-2-2018-SSA-Minutes.pdf",
+        "title": "Minutes"
     }]
 
 
@@ -52,7 +47,7 @@ def test_all_day(item):
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_title(item):
-    assert item["title"] == "SSA #2 Commissioners’ Meeting"
+    assert item["title"] == "Commission"
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -62,7 +57,7 @@ def test_description(item):
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_end(item):
-    assert item["end"] == None
+    assert item["end"] is None
 
 
 @pytest.mark.parametrize("item", parsed_items)

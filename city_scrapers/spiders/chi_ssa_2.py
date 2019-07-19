@@ -5,6 +5,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 import re
 from datetime import datetime, time
 
+
 class ChiSsa2Spider(CityScrapersSpider):
     name = "chi_ssa_2"
     agency = "Chicago Special Service Are #2 Belmont/Central"
@@ -28,7 +29,7 @@ class ChiSsa2Spider(CityScrapersSpider):
             if not start:
                 continue
             meeting = Meeting(
-                title="SSA #2 Commissioners’ Meeting",
+                title="Commission",
                 description="",
                 classification=COMMISSION,
                 start=start,
@@ -58,4 +59,4 @@ class ChiSsa2Spider(CityScrapersSpider):
     def _parse_links(self, item):
         """Parse or generate links."""
         link = item.css('*::attr(href)').extract_first()
-        return [{"href": link, "title": "SSA #2 Meeting Minutes"}]
+        return [{"href": link, "title": "Minutes"}]
