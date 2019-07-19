@@ -1,7 +1,7 @@
-import datetime
 import re
+from datetime import datetime, time
 
-from city_scrapers_core.constants import ADVISORY_COMMITTEE
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, CANCELLED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -12,6 +12,10 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     allowed_domains = ["www.cookcountyil.gov"]
     start_urls = ["https://www.cookcountyil.gov/service/medical-examiners-advisory-committee"]
+    location = {
+        "name": "Office of the Medical Examiner",
+        "address": "2121 W Harrison St, Chicago, IL 60612",
+    }
 
     def parse(self, response):
         """
@@ -20,74 +24,79 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        meetings = response.css(".field-items strong *::text").getall()
-        dates = []
-        for i, item in enumerate(meetings):
-            if "Time" in item:
-                times = re.findall("(1[0-2]|0?[1-9]):([0-5]\\d)\\s*([AaPp][Mm])", item)
-                start_time = times[0]
-                end_time = times[1]
-            if "Location" in item:
-                venue = item.split(": ")[1]
-                street = meetings[i + 1] + "; " + meetings[i + 2]
-                address = {"name": venue, "address": street.replace(u'\xa0', u' ')}
-            if re.match(
-                "((Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day), "
-                "((Jan|Febr)uary|March|April|May|June|July|August|"
-                "(Septem|Octo|Novem|Decem)ber) "
-                "[1-3]*\\d, "
-                "\\d{4}", item
-            ):
-                dates.append(item)
+        self._validate_location(response)
+        cancel_date = None
+        for header in response.css(".field-items h2::text, .field-items h3::text"):
+            header_text = header.extract()
+            if header_text and "cancel" in header_text.lower():
+                cancel_date = self._parse_date(header_text)
 
-        for i, d in enumerate(dates):
+        # Parse default start and end time from description text
+        default_start_time, default_end_time = self._parse_times(
+            " ".join(response.css(".field-items p:not([align])::text").extract())
+        )
+        for date_item in response.css(".field-items p[align='center']"):
+            date_str = " ".join(date_item.css("*::text").extract())
+            date_obj = self._parse_date(date_str)
+            if not date_obj:
+                continue
+            start_time, end_time = self._parse_times(date_str)
             meeting = Meeting(
-                title=self._parse_title(response),
-                description=self._parse_description(i, response),
+                title="Medical Examiner's Advisory Committee",
+                description="",
                 classification=ADVISORY_COMMITTEE,
-                start=self._parse_start(d, start_time),
-                end=self._parse_end(d, end_time),
-                time_notes='',
+                start=self._parse_start(date_obj, start_time or default_start_time),
+                end=self._parse_end(date_obj, end_time or default_end_time),
+                time_notes="",
                 all_day=False,
-                location=address,
-                links=self._parse_links(d),
-                source=self._parse_source(response),
+                location=self.location,
+                links=[],
+                source=response.url,
             )
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._parse_status(meeting, date_str, date_obj, cancel_date)
             meeting["id"] = self._get_id(meeting)
-
             yield meeting
 
-    def _parse_title(self, response):
-        return response.css("#page-title *::text").get().strip().replace("\\", "")
+    def _parse_date(self, date_str):
+        """Parse date string from common format"""
+        date_match = re.search(r"[a-zA-Z]{3,10} \d{1,2},? \d{4}", date_str)
+        if not date_match:
+            return
+        return datetime.strptime(date_match.group().replace(",", ""), "%B %d %Y").date()
 
-    def _parse_description(self, i, response):
-        """Parse or generate meeting description."""
-        if i == 0:
-            # We only have the agenda for the first meeting.
-            agenda = response.css("li:not([class*='leaf']) *::text").getall()
-            return "\n".join([a.strip().replace("\\", "") for a in agenda if a != ''])
-        else:
-            return ""
+    def _parse_times(self, text):
+        time_strs = re.findall(r"(\d{1,2}(\:\d{2})? ?[apm\.]{2,4})", text, flags=re.I)
+        start_time = None
+        end_time = None
+        if len(time_strs) > 0:
+            start_time_str = re.sub(r"[\s\.]", "", time_strs[0][0])
+            if ":" not in start_time_str:
+                start_time_str = re.sub(r"(\d+)([apm\.])", r"\1:00\2", start_time_str, flags=re.I)
+            start_time = datetime.strptime(start_time_str, "%I:%M%p").time()
+        if len(time_strs) > 1:
+            end_time_str = re.sub(r"[\s\.]", "", time_strs[1][0])
+            if ":" not in end_time_str:
+                end_time_str = re.sub(r"(\d+)([apm\.])", r"\1:00\2", end_time_str, flags=re.I)
+            end_time = datetime.strptime(end_time_str, "%I:%M%p").time()
+        return start_time or time(11), end_time
 
-    def _parse_start(self, date, start_time):
+    def _parse_start(self, date_obj, start_time):
         """Parse start datetime as a naive datetime object."""
-        if "Date" in date:
-            return
-        dt = datetime.datetime.strptime(date + str(start_time), "%A, %B %d, %Y('%I', '%M', '%p')")
-        return dt
+        return datetime.combine(date_obj, start_time)
 
-    def _parse_end(self, date, end_time):
+    def _parse_end(self, date_obj, end_time):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        if "Date" in date:
+        # Dont return an end time if the end time object is None
+        if end_time is None:
             return
-        dt = datetime.datetime.strptime(date + str(end_time), "%A, %B %d, %Y('%I', '%M', '%p')")
-        return dt
+        return datetime.combine(date_obj, end_time)
 
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        return []
+    def _parse_status(self, item, date_str, date_obj, cancel_date):
+        if date_obj == cancel_date:
+            return CANCELLED
+        return self._get_status(item, text=date_str)
 
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
+    def _validate_location(self, response):
+        response_text = " ".join(response.css("*::text").extract())
+        if "2121 W" not in response_text:
+            raise ValueError("Meeting location has changed")
