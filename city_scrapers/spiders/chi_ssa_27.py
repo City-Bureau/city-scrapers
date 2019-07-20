@@ -1,7 +1,7 @@
-from datetime import date, datetime
+from datetime import datetime
 from re import split, sub
 
-from city_scrapers_core.constants import COMMISSION, COMMITTEE
+from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from scrapy import Field, Item
@@ -19,8 +19,8 @@ class ChiSsa27Spider(CityScrapersSpider):
         """   `parse` should always `yield` Meeting items. """
         self.minutes_list = self.get_minutes_panel_items(response)
         self._validate_locations(response)
-        locs = "div.container.content.no-padding #content-232764 div.panel-body p"
-        for item in response.css(locs)[1:]:  # main
+        commission_path = "div #content-232764 div.panel-body p"
+        for item in response.css(commission_path)[1:]:  # main
             meeting = Meeting(
                 title=self._parse_title(item),
                 description='',
@@ -29,7 +29,7 @@ class ChiSsa27Spider(CityScrapersSpider):
                 end=None,
                 all_day=False,
                 time_notes='',
-                location=self._parse_location(item),
+                location=self._parse_location(),
                 links=self._parse_links(item),
                 source=response.url,
             )
@@ -65,53 +65,52 @@ class ChiSsa27Spider(CityScrapersSpider):
             paragraphs = paragraphs[1:]
 
         for p in paragraphs:
-            tname = ''
+            t_name = ''
             href = p.css('a::attr(href)').get()
-            tlist = p.css('*::text').getall()
-            dt_date = datetime.strptime(tlist[0], '%B %d, %Y')
+            t_list = p.css('*::text').getall()
+            dt_date = datetime.strptime(t_list[0], '%B %d, %Y')
             try:
-                tname = tlist[1]
-                if tname == '':
-                    tname = (split('-', split('/', href)[-1], 3)[-1])[:-4]
+                t_name = t_list[1]
+                if t_name == '':
+                    t_name = (split('-', split('/', href)[-1], 3)[-1])[:-4]
             except IndexError:
                 pass
 
-            tname = self.clean_up_title(tname)
-            d2 = dt_date.date()
-            min_list.append(Paragraph(link=href, date=dt_date, date2=d2, title=tname))
+            t_name = self.clean_up_title(t_name)
+            dt_two = dt_date.date()
+            min_list.append(Paragraph(link=href, date=dt_date, date2=dt_two, title=t_name))
         return min_list
 
-
-
     def _parse_links(self, item):
-        # MATCH DATE WITH ITEM IN LIST
-        the_link = ''
         item_txt = ' '.join(item.css('*::text').extract()).strip()
         item_txt = sub("Annual Meeting", "", item_txt)
         item_txt = item_txt.replace("June", 'Jun').replace("Sept", 'Sep')
 
-        myitms = split(',', item_txt, 4)
-        d_date = ''.join([myitms[0], myitms[1]]).replace('.', '')
+        loc_items = split(',', item_txt, 4)
+        d_date = ''.join([loc_items[0], loc_items[1]]).replace('.', '')
         dt = datetime.strptime(d_date, '%b %d %Y')
         date_short = dt.date()
         try:
             records = list(filter(lambda d: d['date2'] == date_short, self.minutes_list))
             the_link = records[0]['link']
-        except:
+        except IndexError:
             the_link = ''
         return the_link
-
 
     def _parse_title(self, item):
         if "Annual Meeting" in ''.join(item.css("p::text").getall()):
             return "Annual Meeting"
         return COMMISSION
 
-    def _parse_location(self, item):
-        commission_loc = {"name": "Sheil Park",
-            "address": "3505 N. Southport Ave., Chicago, IL 60657", }
-        committee_loc = {"name": "Lakeview Chamber of Commerce",
-            "address": "1409 W. Addison St. in Chicago", }
+    def _parse_location(self):
+        commission_loc = {
+            "name": "Sheil Park",
+            "address": "3505 N. Southport Ave., Chicago, IL 60657",
+        }
+        # committee_loc = {
+        #     "name": "Lakeview Chamber of Commerce",
+        #     "address": "1409 W. Addison St. in Chicago",
+        # }
         # if self.committee_type(item):
         #     return committee_loc
         return commission_loc
@@ -129,7 +128,6 @@ class ChiSsa27Spider(CityScrapersSpider):
         commission_path = "#content-232764 div.panel-body > p:nth-child(1) > strong::text"
         commission_addy = response.css(commission_path).get()
         commission_result = commission_addy.find("Sheil")
-
         committee_addy = response.css("#content-238036 div.panel-body p em::text").get()
         committee_result = committee_addy.find("Chamber")
 
