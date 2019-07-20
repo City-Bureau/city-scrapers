@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
+from city_scrapers_core.constants import PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -23,7 +23,8 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 15
+    assert len(parsed_items) == 12
+
 
 def test_title():
     assert parsed_items[0]["title"] == 'Commission'
@@ -67,18 +68,22 @@ def test_source():
 
 def test_links():
     url = (
-        'https://chambermaster.blob.core.windows.net/userfiles/UserFiles/'
-        'chambers/1819/CMS/SSA/Agendas/1-17-2019-SSA-Meeting-Agenda.pdf'
+        'https://chambermaster.blob.core.windows.net/userfiles/UserFiles/chambers/'
+        '1819/CMS/SSA/Minutes/01-17-2019-SSA-Meeting-Minutes.pdf'
     )
 
-    assert parsed_items[0]["links"] == [{
-        'href': url,
-        'title': 'Minutes',
-    }]
+    a = parsed_items[0]
+    link = a['links']
+    assert link == url
+
+    # assert parsed_items[0]["links"] == [{
+    #     'href': url,
+    #     'title': 'Minutes',
+    # }]
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == COMMISSION
+    assert parsed_items[0]["classification"] == ''
 
 
 @pytest.mark.parametrize("item", parsed_items)
