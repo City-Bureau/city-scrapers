@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import ADVISORY_COMMITTEE
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -31,17 +31,7 @@ def test_number():
 
 
 def test_description():
-    agenda = [
-        'Roll Call',
-        'Review and approval of General Meeting Minutes from July 20 and October 19, 2018',
-        'Public Comment', 'Reports from:\n',
-        "Medical Examiner's Office: Deputy Chief Medical Examiner, Eimad Zakariya, MD\n",
-        'General Report', '\n', '\n', 'Vice-Chairman, Jason Moran\n',
-        'Committee Attendance & Annual Report', '\n', '\n', 'Old Business', 'New Business',
-        'Adjournment - Next Meeting: April 19, 2019'
-    ]
-    clean_agenda = "\n".join([a.strip().replace("\\", "") for a in agenda if a != ''])
-    assert parsed_items[0]["description"] == clean_agenda
+    assert parsed_items[0]["description"] == ""
 
 
 def test_start():
@@ -56,20 +46,18 @@ def test_end():
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "passed"
-    assert parsed_items[1]["status"] == "tentative"
+    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[1]["status"] == TENTATIVE
 
 
 def test_location():
-    assert parsed_items[0]["location"] == {
-        "name": "Cook County Medical Examiner’s Office",
-        "address": "2121 W Harrison; Chicago, IL 60612",
-    }
+    assert parsed_items[0]["location"] == spider.location
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.cookcountyil.gov/service/" \
-                                        "medical-examiners-advisory-committee"
+    assert parsed_items[
+        0]["source"
+           ] == "https://www.cookcountyil.gov/service/medical-examiners-advisory-committee"  # noqa
 
 
 @pytest.mark.parametrize('item', parsed_items)

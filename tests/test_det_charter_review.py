@@ -2,14 +2,14 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest  # noqa
-from city_scrapers_core.constants import COMMITTEE, PASSED
+from city_scrapers_core.constants import FORUM, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.det_charter_review import DetCharterReviewSpider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "det_charter_review.html"),
+    join(dirname(__file__), "files", "det_charter_review.json"),
     url=(
         "https://detroitmi.gov/events/detroit-charter-revision-commission-meeting-economic-growth-development-3-20-19"  # noqa
     ),
@@ -19,70 +19,58 @@ spider = DetCharterReviewSpider()
 freezer = freeze_time("2019-04-23")
 freezer.start()
 
-item = spider.parse_event_page(test_response)
+parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
 
 
 def test_title():
-    assert item["title"] == "Charter Review Commission"
+    assert parsed_items[0]["title"] == "Citizen Focus Group: Equitable Planning & Zo"
 
 
 def test_description():
-    assert item["description"] == (
-        'The Detroit Charter Revision Committee - Economic Growth & '
-        'Development Sub-Committee is holding a meeting. The Public is '
-        'invited and encouraged to attend. Additional information '
-        'regarding this meeting may be obtained from the Office of the '
-        'City Clerk at (313) 224-3266.'
-    )
+    assert parsed_items[0]["description"] == ""
 
 
 def test_start():
-    assert item["start"] == datetime(2019, 3, 20, 12, 0)
+    assert parsed_items[0]["start"] == datetime(2019, 7, 10, 17, 30)
 
 
 def test_end():
-    assert item["end"] == datetime(2019, 3, 20, 15, 0)
+    assert parsed_items[0]["end"] == datetime(2019, 7, 10, 19, 30)
 
 
 def test_time_notes():
-    assert item["time_notes"] == "Estimated 3 hour duration"
+    assert parsed_items[0]["time_notes"] == ""
 
 
 def test_id():
-    assert item["id"] == "det_charter_review/201903201200/x/charter_review_commission"
+    assert parsed_items[0][
+        "id"] == "det_charter_review/201907101730/x/citizen_focus_group_equitable_planning_zo"
 
 
 def test_status():
-    assert item["status"] == PASSED
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
 def test_location():
-    assert item["location"] == {
-        "name": "Detroit Association of Black Organizations",
-        "address": "12048 Grand River Ave., Detroit, MI 48204",
+    assert parsed_items[0]["location"] == {
+        "name": "Edison Public Library",
+        "address": "18400 Joy Rd, Detroit, MI 48228, USA",
     }
 
 
 def test_source():
-    assert item[
-        "source"
-    ] == "https://detroitmi.gov/events/detroit-charter-revision-commission-meeting-economic-growth-development-3-20-19"  # noqa
+    assert parsed_items[0]["source"] == "https://sites.google.com/view/detroitcharter2018"
 
 
 def test_links():
-    assert item["links"] == [{
-        'href':
-            'https://detroitmi.gov/sites/detroitmi.localhost/files/events/2019-03/cal%203-20-19%20Charter%20Revision%20Commission_Economic%20and%20Development%20Sub-Committee.pdf',  # noqa
-        'title':
-            'cal 3-20-19 Charter Revision Commission_Economic and Development Sub-Committee.pdf'
-    }]
+    assert parsed_items[0]["links"] == []
 
 
 def test_classification():
-    assert item["classification"] == COMMITTEE
+    assert parsed_items[0]["classification"] == FORUM
 
 
 def test_all_day():
-    assert item["all_day"] is False
+    assert parsed_items[0]["all_day"] is False

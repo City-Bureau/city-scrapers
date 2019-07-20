@@ -34,4 +34,4 @@ def read_test_file_content(file_name):
     else:
         file_path = file_name
 
-    return open(file_path, 'r').read()
+    return open(file_path, 'r', encoding='utf-8').read()
