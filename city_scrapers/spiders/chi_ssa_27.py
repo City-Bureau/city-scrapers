@@ -1,7 +1,7 @@
 from datetime import datetime
-from re import split, sub
 
-from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMISSION, \
+    COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from scrapy import Field, Item
@@ -14,23 +14,31 @@ class ChiSsa27Spider(CityScrapersSpider):
     allowed_domains = ["lakeviewchamber.com"]
     start_urls = ["https://www.lakeviewchamber.com/ssa27"]
     minutes_list = []
+    location = {
+        "name": "Sheil Park",
+        "address": "3505 N. Southport Ave., Chicago, IL 60657",
+    }
 
     def parse(self, response):
         """   `parse` should always `yield` Meeting items. """
         self.minutes_list = self.get_minutes_panel_items(response)
         self._validate_locations(response)
         commission_path = "div #content-232764 div.panel-body p"
+
         for item in response.css(commission_path)[1:]:  # main
+            title = self._parse_title(item)
+            start = self._parse_start(item)
+            link = self._parse_links(item, title),
             meeting = Meeting(
-                title=self._parse_title(item),
+                title=title,
                 description='',
-                classification='',
-                start=self._parse_start(item),
+                classification=COMMISSION,
+                start=start,
                 end=None,
                 all_day=False,
                 time_notes='',
-                location=self._parse_location(),
-                links=self._parse_links(item),
+                location=self.location,
+                links=link,
                 source=response.url,
             )
             meeting['status'] = self._get_status(meeting)
@@ -69,69 +77,62 @@ class ChiSsa27Spider(CityScrapersSpider):
             href = p.css('a::attr(href)').get()
             t_list = p.css('*::text').getall()
             dt_date = datetime.strptime(t_list[0], '%B %d, %Y')
-            try:
-                t_name = t_list[1]
-                if t_name == '':
-                    t_name = (split('-', split('/', href)[-1], 3)[-1])[:-4]
-            except IndexError:
-                pass
-
             t_name = self.clean_up_title(t_name)
             dt_two = dt_date.date()
             min_list.append(Paragraph(link=href, date=dt_date, date2=dt_two, title=t_name))
         return min_list
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, title):
         item_txt = ' '.join(item.css('*::text').extract()).strip()
-        item_txt = sub("Annual Meeting", "", item_txt)
+        item_txt = item_txt.replace("Annual Meeting", "")
         item_txt = item_txt.replace("June", 'Jun').replace("Sept", 'Sep')
 
-        loc_items = split(',', item_txt, 4)
+        loc_items = item_txt.split(',')
         d_date = ''.join([loc_items[0], loc_items[1]]).replace('.', '')
-        dt = datetime.strptime(d_date, '%b %d %Y')
-        date_short = dt.date()
+        date_short = datetime.strptime(d_date, '%b %d %Y').date()
+        #date_short = dt.date()
+        links = []
+
         try:
             records = list(filter(lambda d: d['date2'] == date_short, self.minutes_list))
-            the_link = records[0]['link']
+            href = records[0]['link']
+            links.append({
+                "title": title,
+                "href": href,
+                })
         except IndexError:
-            the_link = ''
-        return the_link
+            links = []
+        return links
 
     def _parse_title(self, item):
         if "Annual Meeting" in ''.join(item.css("p::text").getall()):
             return "Annual Meeting"
         return COMMISSION
 
-    def _parse_location(self):
-        commission_loc = {
-            "name": "Sheil Park",
-            "address": "3505 N. Southport Ave., Chicago, IL 60657",
-        }
-        # committee_loc = {
-        #     "name": "Lakeview Chamber of Commerce",
-        #     "address": "1409 W. Addison St. in Chicago",
-        # }
-        # if self.committee_type(item):
-        #     return committee_loc
-        return commission_loc
-
     def _parse_start(self, item):
         item_txt = ' '.join(item.css('*::text').extract()).strip()
-        item_txt = sub("Annual Meeting", "", item_txt)
-        item_txt = item_txt.replace("June", 'Jun').replace("Sept", 'Sep')
-        p_idx = max(item_txt.find('am'), item_txt.find('pm'), 0) + 2  # so we can slice
-        front_str = item_txt[:p_idx]  # strip rest of the string
-        time_str = front_str.replace("am", "AM").replace("pm", "PM").replace('.', '')
+        replacements = {"Annual Meeting": "", "Sept": "Sep", "June": "Jun", "am": "AM",
+                        "pm": "PM", ".": ""}
+        for k, v in replacements.items():
+            item_txt = item_txt.replace(k, v)
+        p_idx = max(item_txt.find('AM'), item_txt.find('PM'), 0) + 2  # so we can slice
+        time_str = item_txt[:p_idx]  # strip rest of the string
         return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
 
     def _validate_locations(self, response):
         commission_path = "#content-232764 div.panel-body > p:nth-child(1) > strong::text"
         commission_addy = response.css(commission_path).get()
-        commission_result = commission_addy.find("Sheil")
-        committee_addy = response.css("#content-238036 div.panel-body p em::text").get()
-        committee_result = committee_addy.find("Chamber")
-
-        if commission_result < 0:  # fail
+        if commission_addy.find("Sheil") < 0:  # fail
             raise ValueError("Commission Meeting location has changed")
-        if committee_result < 0:  # fail
-            raise ValueError("Committee Meeting location has changed")
+
+    def _parse_classification(self, title):
+        """Parse or generate classification from allowed options."""
+        if "advisory" in title.lower():
+            return ADVISORY_COMMITTEE
+        if "board" in title.lower():
+            return BOARD
+        if "committee" in title.lower():
+            return COMMITTEE
+        if "task force" in title.lower():
+            return COMMISSION
+        return NOT_CLASSIFIED
