@@ -23,6 +23,11 @@ class ChiSsa51Spider(CityScrapersSpider):
         needs.
         """
         for item in response.css("div#element106 font"):
+            """
+            The date and times contained within sibling divs that are identicals, so we have to
+            continue the loop and only create the meeting until both date and times have been
+            parsed.
+            """
             if not self.last_parsed_date:
                 self._parse_date(item)
                 continue
