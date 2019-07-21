@@ -29,7 +29,6 @@ class CookLandbankSpider(CityScrapersSpider):
     For each date, yields get_events_info which requests info for that
     date with parse() as callback
     """
-
     def start_requests(self):
         date_stack = self.stack_dates(self.time_horizon)
         for date in date_stack:

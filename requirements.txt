@@ -8,7 +8,7 @@ azure-storage-common==2.0.0
 certifi==2019.3.9
 cffi==1.12.3
 chardet==3.0.4
-city-scrapers-core[azure]==0.4.2
+city-scrapers-core[azure]==0.5.0
 constantly==15.1.0
 cryptography==2.7
 cssselect==1.0.3
@@ -25,6 +25,7 @@ pycparser==2.19
 pydispatcher==2.0.5
 pyhamcrest==1.9.0
 pyopenssl==19.0.0
+pypdf2==1.26.0
 pyrsistent==0.15.2
 python-dateutil==2.8.0
 pytz==2019.1

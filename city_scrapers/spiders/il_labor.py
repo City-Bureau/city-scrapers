@@ -14,7 +14,6 @@ class IlLaborSpider(CityScrapersSpider):
     This page only lists the next upcoming meeting for each of the three boards.
     All other meetingd dates are `proposed` and only available via PDF.
     """
-
     def parse(self, response):
         for item in response.css('.soi-article-content .container > .row > p'):
             """
