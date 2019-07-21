@@ -67,23 +67,15 @@ def test_source():
 
 
 def test_links():
-    url = (
-        'https://chambermaster.blob.core.windows.net/userfiles/UserFiles/chambers/'
-        '1819/CMS/SSA/Minutes/01-17-2019-SSA-Meeting-Minutes.pdf'
-    )
-
-    a = parsed_items[0]
-    link = a['links']
-    assert link == url
-
-    # assert parsed_items[0]["links"] == [{
-    #     'href': url,
-    #     'title': 'Minutes',
-    # }]
+    url = 'https://chambermaster.blob.core.windows.net/' \
+          'userfiles/UserFiles/chambers/1819/CMS/SSA/Minutes/01-17-2019-SSA-Meeting-Minutes.pdf'
+    mystring = parsed_items[0]['links'][0][0]
+    assert mystring.get('title') == "Minutes"
+    assert mystring.get('href') == url
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == ''
+    assert parsed_items[0]["classification"] == 'Commission'
 
 
 @pytest.mark.parametrize("item", parsed_items)

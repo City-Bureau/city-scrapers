@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMISSION, \
-    COMMITTEE, NOT_CLASSIFIED
+from city_scrapers_core.constants import (
+    ADVISORY_COMMITTEE, BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
+)
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from scrapy import Field, Item
@@ -28,7 +29,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         for item in response.css(commission_path)[1:]:  # main
             title = self._parse_title(item)
             start = self._parse_start(item)
-            link = self._parse_links(item, title),
+            link = self._parse_links(item),
             meeting = Meeting(
                 title=title,
                 description='',
@@ -82,24 +83,24 @@ class ChiSsa27Spider(CityScrapersSpider):
             min_list.append(Paragraph(link=href, date=dt_date, date2=dt_two, title=t_name))
         return min_list
 
-    def _parse_links(self, item, title):
-        item_txt = ' '.join(item.css('*::text').extract()).strip()
-        item_txt = item_txt.replace("Annual Meeting", "")
-        item_txt = item_txt.replace("June", 'Jun').replace("Sept", 'Sep')
-
-        loc_items = item_txt.split(',')
-        d_date = ''.join([loc_items[0], loc_items[1]]).replace('.', '')
-        date_short = datetime.strptime(d_date, '%b %d %Y').date()
-        #date_short = dt.date()
+    def _parse_links(self, item):
         links = []
+        item_txt = ' '.join(item.css('*::text').extract()).strip()
+        title = "Agenda" if "agenda" in item_txt.lower() else "Minutes"
+
+        replacements = {"Annual Meeting": "", "Sept": "Sep", "June": "Jun", "am": "AM", ".": ""}
+        for k, v in replacements.items():
+            item_txt = item_txt.replace(k, v)
+
+        d_date = ''.join(item_txt.split(',')[0:2])
+        date_short = datetime.strptime(d_date, '%b %d %Y').date()
 
         try:
             records = list(filter(lambda d: d['date2'] == date_short, self.minutes_list))
-            href = records[0]['link']
             links.append({
                 "title": title,
-                "href": href,
-                })
+                "href": records[0]['link'],
+            })
         except IndexError:
             links = []
         return links
@@ -111,8 +112,14 @@ class ChiSsa27Spider(CityScrapersSpider):
 
     def _parse_start(self, item):
         item_txt = ' '.join(item.css('*::text').extract()).strip()
-        replacements = {"Annual Meeting": "", "Sept": "Sep", "June": "Jun", "am": "AM",
-                        "pm": "PM", ".": ""}
+        replacements = {
+            "Annual Meeting": "",
+            "Sept": "Sep",
+            "June": "Jun",
+            "am": "AM",
+            "pm": "PM",
+            ".": ""
+        }
         for k, v in replacements.items():
             item_txt = item_txt.replace(k, v)
         p_idx = max(item_txt.find('AM'), item_txt.find('PM'), 0) + 2  # so we can slice
