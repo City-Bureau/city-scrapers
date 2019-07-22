@@ -8,7 +8,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 class ChiSsa2Spider(CityScrapersSpider):
     name = "chi_ssa_2"
-    agency = "Chicago Special Service Are #2 Belmont/Central"
+    agency = "Chicago Special Service Area #2 Belmont/Central"
     timezone = "America/Chicago"
     allowed_domains = ["belmontcentral.org"]
     start_urls = ["http://belmontcentral.org/about-ssa-2/ssa2-meeting-minutes-audit/"]

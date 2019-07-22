@@ -51,7 +51,7 @@ class ChiSsa51Spider(CityScrapersSpider):
                 all_day=False,
                 time_notes="",
                 location=self.location,
-                links=None,
+                links=[],
                 source=response.url,
             )
 
