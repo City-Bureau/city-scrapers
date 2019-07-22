@@ -73,7 +73,7 @@ def test_source(item):
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_links(item):
-    assert item["links"] is None
+    assert item["links"] == []
 
 
 @pytest.mark.parametrize("item", parsed_items)
