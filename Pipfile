@@ -20,6 +20,3 @@ pytest = "*"
 "flake8" = "*"
 isort = "*"
 yapf = "*"
-
-[pipenv]
-allow_prereleases = true
