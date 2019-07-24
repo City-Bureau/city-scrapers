@@ -311,11 +311,11 @@
         },
         "scrapy": {
             "hashes": [
-                "sha256:da8987d199092c3bb33d4d1d021507cd933aa67f5177e2d36f31343e8a6bd7f1",
-                "sha256:e600ab514c7234ae8f320a6dc31ae6fe500c9003c24d36fa51eced5a722262ba"
+                "sha256:7a4ed68cfb44dc86e1895f0fb46257ee4adb1090754ac21faec205763f054464",
+                "sha256:92057487d67103d0e83e44fac253cec407697d9ab2e343fa2f3287b31808f405"
             ],
             "index": "pypi",
-            "version": "==1.7.1"
+            "version": "==1.7.2"
         },
         "scrapy-sentry": {
             "hashes": [
@@ -506,10 +506,10 @@
         },
         "pyparsing": {
             "hashes": [
-                "sha256:530d8bf8cc93a34019d08142593cf4d78a05c890da8cf87ffa3120af53772238",
-                "sha256:f78e99616b6f1a4745c0580e170251ef1bbafc0d0513e270c4bd281bf29d2800"
+                "sha256:1873c03321fc118f4e9746baf201ff990ceb915f433f23b395f5580d1840cb2a",
+                "sha256:9b6323ef4ab914af344ba97510e966d64ba91055d6b9afa6b30799340e89cc03"
             ],
-            "version": "==2.4.1"
+            "version": "==2.4.0"
         },
         "pytest": {
             "hashes": [
