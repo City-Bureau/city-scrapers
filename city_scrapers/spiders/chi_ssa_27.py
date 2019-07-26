@@ -46,23 +46,14 @@ class ChiSsa27Spider(CityScrapersSpider):
             meeting['id'] = self._get_id(meeting)
             yield meeting
 
-    def clean_up_title(self, t_name=''):
-        if len(t_name) > 0:
-            while t_name[0:1] in ['\n', '(']:
-                t_name = t_name[1:]
-            if t_name[-1] == ')':
-                t_name = t_name[:-1]
-        return t_name
-
     def get_minutes_panel_items(self, response):
+        min_list = []
+
         class Paragraph(Item):
             link = Field()
-            date = Field()
-            date2 = Field()
-            title = Field()
+            date_date = Field()
 
         panel = response.css("#content-232768 div.panel-body p")[1:]
-        min_list = []
         paragraphs = panel.css('p')
 
         last_paragraph = paragraphs[-1].css('*::text').getall()
@@ -74,29 +65,27 @@ class ChiSsa27Spider(CityScrapersSpider):
             paragraphs = paragraphs[1:]
 
         for p in paragraphs:
-            t_name = ''
             href = p.css('a::attr(href)').get()
-            t_list = p.css('*::text').getall()
-            dt_date = datetime.strptime(t_list[0], '%B %d, %Y')
-            t_name = self.clean_up_title(t_name)
-            dt_two = dt_date.date()
-            min_list.append(Paragraph(link=href, date=dt_date, date2=dt_two, title=t_name))
+            tmp_list = p.css('*::text').getall()
+            datetime_date = datetime.strptime(tmp_list[0], '%B %d, %Y')
+            date_date = datetime_date.date()
+            min_list.append(Paragraph(link=href, date_date=date_date))
         return min_list
 
     def _parse_links(self, item):
         links = []
         item_txt = ' '.join(item.css('*::text').extract()).strip()
-        title = "Agenda" if "agenda" in item_txt.lower() else "Minutes"
+        title = 'Minutes'  # so far this is all we have, they don't post Agendas in advance
 
         replacements = {"Annual Meeting": "", "Sept": "Sep", "June": "Jun", "am": "AM", ".": ""}
         for k, v in replacements.items():
             item_txt = item_txt.replace(k, v)
 
         d_date = ''.join(item_txt.split(',')[0:2])
-        date_short = datetime.strptime(d_date, '%b %d %Y').date()
+        date_date = datetime.strptime(d_date, '%b %d %Y').date()
 
         try:
-            records = list(filter(lambda d: d['date2'] == date_short, self.minutes_list))
+            records = list(filter(lambda d: d['date_date'] == date_date, self.minutes_list))
             links.append({
                 "title": title,
                 "href": records[0]['link'],
