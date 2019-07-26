@@ -24,9 +24,6 @@ ROBOTSTXT_OBEY = True
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
 
-LOG_LEVEL='ERROR'
-LOG_ENABLED=True
-
 # Throttle results by default
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 0.5
