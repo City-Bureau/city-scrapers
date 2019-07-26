@@ -1,4 +1,4 @@
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core import constants
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from scrapy.selector import Selector
@@ -11,6 +11,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
     agency = "Chicago O'Hare Noise Compatibility Commission"
     timezone = "America/Chicago"
     allowed_domains = ["www.oharenoise.org"]
+    # meetings is indexed in the format meetings[meeting_title + " " + meeting_date]
     meetings = dict()
     start_urls = ["https://www.oharenoise.org/about-oncc/agendas-and-minutes"]
 
@@ -18,14 +19,17 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
 
         """
         `parse` should always `yield` Meeting items.
+        loops through agenda/minutes page and compiles all agenda and minutes pdfs to links
+        parses current month, last two months, and next month calendars for meetings
         """
         table_rows = response.selector.xpath(".//tbody//tr")
 
         for item in table_rows:
             date = self._parse_start(item)
             url_date = date.strftime("%Y/%m/%d")
+            title = self._parse_title(item)
             meeting = Meeting(
-                title=self._parse_title(item),
+                title=title,
                 links=self._parse_links(item),
                 start=self._parse_start(item),
                 source=self._parse_source(response)
@@ -33,7 +37,8 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
 
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
-            self.meetings[url_date] = meeting
+            dict_key = title + " " + url_date
+            self.meetings[dict_key] = meeting
 
         self._parse_months()
         for date, meeting in self.meetings.items():
@@ -75,29 +80,40 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
 
     def _parse_event(self, body):
         """
-        parses detail page for date, description, location, and title
+        parses detail page for
+        date, status, all_day, classification, description, location, and title
         """
         selector = Selector(text=body.text)
         info_body = selector.xpath(".//div[@id='jevents_body']")
         name_date_time = info_body.xpath(".//div[@class='jev_evdt_header']")
         start = self._parse_start(name_date_time, is_calen=True)
-        date_key = start.strftime("%Y/%m/%d")
+        date = start.strftime("%Y/%m/%d")
         description = self._parse_description(info_body)
         location = self._parse_location(info_body)
         meeting = None
-        if date_key in self.meetings:
-            meeting = self.meetings[date_key]
+        title = self._parse_title(name_date_time, is_calen=True)
+        classification = self._parse_classification(title)
+        dict_key = title + " " + date
+        if dict_key in self.meetings:
+            meeting = self.meetings[dict_key]
+            meeting['title'] = title
+            meeting['all_day'] = False
             meeting['start'] = start
             meeting['description'] = description
             meeting['location'] = location
+            meeting['classification'] = classification
+            meeting['status'] = self._get_status(meeting)
         else:
             meeting = Meeting(
-                    title=self._parse_title(name_date_time, is_calen=True),
+                    title=title,
                     start=start,
+                    classification=classification,
                     description=description,
-                    location=location
+                    location=location,
+                    all_day=False
                     )
-            self.meetings[date_key] = meeting
+            meeting['status'] = self._get_status(meeting)
+            self.meetings[dict_key] = meeting
 
     def _parse_title(self, item, is_calen=False):
         """Parse or generate meeting title."""
@@ -115,11 +131,27 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
         if extra_info:
             description = description + extra_info
 
-        return description if description else None
+        return description if description else ""
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
+        result = constants.NOT_CLASSIFIED
+        if constants.ADVISORY_COMMITTEE in item:
+            result = constants.ADVISORY_COMMITTEE
+        elif constants.BOARD in item:
+            result = constants.BOARD
+        elif constants.CITY_COUNCIL in item:
+            result = constants.CITY_COUNCIL
+        elif constants.COMMISSION in item:
+            result = constants.COMMISSION
+        elif constants.COMMITTEE in item:
+            result = constants.COMMITTEE
+        elif constants.FORUM in item:
+            result = constants.FORUM
+        elif constants.POLICE_BEAT in item:
+            result = constants.POLICE_BEAT
+
+        return result
 
     def _parse_start(self, item, is_calen=False):
         """Parse start datetime as a naive datetime object."""
