@@ -28,8 +28,8 @@ class CookSouthMosquitoSpider(CityScrapersSpider):
             ".s5_responsive_mobile_sidebar_sub:last-child > ul > li:first-child > ul > li"
         ):
             year_str = year_group.css("span::text").extract_first().strip()
-            for item in year_group.css("ul li"):
-                item_str = " ".join(item.css("*::text").extract()).strip()
+            for item in year_group.xpath("./ul/li"):
+                item_str = item.css("span::text").extract_first()
                 meeting = Meeting(
                     title="Board of Trustees",
                     description="",
@@ -59,7 +59,7 @@ class CookSouthMosquitoSpider(CityScrapersSpider):
         links = []
         for link in item.css("a"):
             links.append({
-                "title": "Agenda",
+                "title": link.css("*::text").extract_first(),
                 "href": link.attrib["href"],
             })
         return links
