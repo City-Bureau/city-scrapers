@@ -1,9 +1,10 @@
+import datetime
+
+import requests
 from city_scrapers_core import constants
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from scrapy.selector import Selector
-import requests
-import datetime
 
 
 class ChiOhareNoiseSpider(CityScrapersSpider):
@@ -16,7 +17,6 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
     start_urls = ["https://www.oharenoise.org/about-oncc/agendas-and-minutes"]
 
     def parse(self, response):
-
         """
         `parse` should always `yield` Meeting items.
         loops through agenda/minutes page and compiles all agenda and minutes pdfs to links
@@ -50,24 +50,21 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
         """
         curr_date = datetime.date.today()
         months_urls = [
-                datetime.date(
-                    month=self._delta_months(curr_date.month, -2),
-                    day=1,
-                    year=curr_date.year),
-                datetime.date(
-                    month=self._delta_months(curr_date.month, -1),
-                    day=1,
-                    year=curr_date.year),
-                curr_date,
-                datetime.date(
-                    month=self._delta_months(curr_date.month, 1),
-                    day=1,
-                    year=curr_date.year)
-                ]
+            datetime.date(
+                month=self._delta_months(curr_date.month, -2), day=1, year=curr_date.year
+            ),
+            datetime.date(
+                month=self._delta_months(curr_date.month, -1), day=1, year=curr_date.year
+            ), curr_date,
+            datetime.date(month=self._delta_months(curr_date.month, 1), day=1, year=curr_date.year)
+        ]
         for calendar_date in months_urls:
-            self._parse_calendar(requests.get(
+            self._parse_calendar(
+                requests.get(
                     url="https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/" +
-                    calendar_date.strftime("%Y/%m/%d")))
+                    calendar_date.strftime("%Y/%m/%d")
+                )
+            )
 
     def _parse_calendar(self, body):
         """
@@ -105,13 +102,13 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
             meeting['status'] = self._get_status(meeting)
         else:
             meeting = Meeting(
-                    title=title,
-                    start=start,
-                    classification=classification,
-                    description=description,
-                    location=location,
-                    all_day=False
-                    )
+                title=title,
+                start=start,
+                classification=classification,
+                description=description,
+                location=location,
+                all_day=False
+            )
             meeting['status'] = self._get_status(meeting)
             self.meetings[dict_key] = meeting
 
@@ -211,5 +208,5 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
         handles add and subtracting from months
         """
         months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        new = (curr-1) + delta
+        new = (curr - 1) + delta
         return months[new % 12]
