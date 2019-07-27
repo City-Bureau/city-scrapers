@@ -69,7 +69,7 @@ def test_source():
 def test_links():
     url = 'https://chambermaster.blob.core.windows.net/' \
           'userfiles/UserFiles/chambers/1819/CMS/SSA/Minutes/01-17-2019-SSA-Meeting-Minutes.pdf'
-    test_str = parsed_items[0]['links'][0][0]
+    test_str = parsed_items[0]['links'][0]
     assert test_str.get('title') == "Minutes"
     assert test_str.get('href') == url
 

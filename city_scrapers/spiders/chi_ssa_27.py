@@ -29,7 +29,8 @@ class ChiSsa27Spider(CityScrapersSpider):
         for item in response.css(commission_path)[1:]:  # main
             title = self._parse_title(item)
             start = self._parse_start(item)
-            link = self._parse_links(item),
+            links = self._parse_links(item)
+
             meeting = Meeting(
                 title=title,
                 description='',
@@ -39,7 +40,7 @@ class ChiSsa27Spider(CityScrapersSpider):
                 all_day=False,
                 time_notes='',
                 location=self.location,
-                links=link,
+                links=links,
                 source=response.url,
             )
             meeting['status'] = self._get_status(meeting)
@@ -73,26 +74,23 @@ class ChiSsa27Spider(CityScrapersSpider):
         return min_list
 
     def _parse_links(self, item):
-        links = []
         item_txt = ' '.join(item.css('*::text').extract()).strip()
         title = 'Minutes'  # so far this is all we have, they don't post Agendas in advance
-
         replacements = {"Annual Meeting": "", "Sept": "Sep", "June": "Jun", "am": "AM", ".": ""}
         for k, v in replacements.items():
             item_txt = item_txt.replace(k, v)
-
         d_date = ''.join(item_txt.split(',')[0:2])
-        date_date = datetime.strptime(d_date, '%b %d %Y').date()
+        date_needed = datetime.strptime(d_date, '%b %d %Y').date()
 
         try:
-            records = list(filter(lambda d: d['date_date'] == date_date, self.minutes_list))
-            links.append({
+            matched_meets = list(filter(lambda d: d['date_date'] == date_needed, self.minutes_list))
+            matched_meeting = [{
                 "title": title,
-                "href": records[0]['link'],
-            })
+                "href": matched_meets[0]['link'],
+            }]
         except IndexError:
-            links = []
-        return links
+            return []
+        return matched_meeting
 
     def _parse_title(self, item):
         if "Annual Meeting" in ''.join(item.css("p::text").getall()):
