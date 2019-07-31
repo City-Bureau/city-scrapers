@@ -66,6 +66,11 @@ def test_links():
             'href':
                 'http://media.legistar.com/chic/meetings/937FDFCE-F0EA-452A-B8DF-A0CF51DBD681/Corrected%20Summary%20Human%20_20181210125616.pdf'  # noqa
         },
+        {
+            'href':
+                'http://media.legistar.com/chic/meetings/937FDFCE-F0EA-452A-B8DF-A0CF51DBD681/Human%20Relations%20Notice_20181107153726.pdf',  # noqa
+            'title': 'Notice'
+        },
     ]
 
 

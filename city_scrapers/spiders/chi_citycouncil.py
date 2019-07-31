@@ -9,7 +9,7 @@ class ChiCityCouncilSpider(LegistarSpider):
     timezone = 'America/Chicago'
     allowed_domains = ['chicago.legistar.com']
     start_urls = ['https://chicago.legistar.com/Calendar.aspx']
-    link_types = []
+    link_types = ["Notice"]
 
     def parse_legistar(self, events):
         """
@@ -35,7 +35,7 @@ class ChiCityCouncilSpider(LegistarSpider):
                 source=self.legistar_source(event),
             )
 
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting, text=event["Meeting Location"])
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
