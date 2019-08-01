@@ -8,7 +8,7 @@ azure-storage-common==2.0.0
 certifi==2019.3.9
 cffi==1.12.3
 chardet==3.0.4
-city-scrapers-core[azure]==0.5.0
+city-scrapers-core[azure]==0.5.2
 constantly==15.1.0
 cryptography==2.7
 cssselect==1.0.3
