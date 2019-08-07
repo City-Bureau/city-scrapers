@@ -43,7 +43,11 @@ class ChiSsa27Spider(CityScrapersSpider):
                 links=links,
                 source=response.url,
             )
-            meeting['status'] = self._get_status(meeting)
+            # Include status in parsing excluding "rescheduled from" which triggers cancelled
+            status_text = " ".join(item.css("*::text").extract())
+            if "rescheduled from" in status_text:
+                status_text = ""
+            meeting['status'] = self._get_status(meeting, text=status_text)
             meeting['id'] = self._get_id(meeting)
             yield meeting
 
