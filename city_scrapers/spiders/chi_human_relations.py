@@ -58,7 +58,12 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
         """Parse dates and details from schedule PDF"""
         pdf_obj = PdfFileReader(BytesIO(response.body))
         pdf_text = pdf_obj.getPage(0).extractText()
-        clean_text = re.sub(r"([A-Z0-9 ])\1", r"\1", pdf_text)
+        # Remove duplicate characters split onto separate lines
+        clean_text = re.sub(r"([A-Z0-9:\n ]{2})\1", r"\1", pdf_text, flags=re.M)
+        # Join lines where there's only a single character, then remove newlines
+        clean_text = re.sub(r"(?<=[A-Z0-9:])\n", "", clean_text, flags=re.M).replace("\n", " ")
+        # Remove duplicate spaces
+        clean_text = re.sub(r"\s+", " ", clean_text)
         year_str = re.search(r"\d{4}", clean_text).group()
         self._validate_location(clean_text)
 
