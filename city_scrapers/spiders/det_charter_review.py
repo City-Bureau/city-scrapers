@@ -51,7 +51,7 @@ class DetCharterReviewSpider(CityScrapersSpider):
             yield meeting
 
     def _parse_title(self, item):
-        return item["summary"].strip().rstrip(" Meeting")
+        return re.sub(r" Meeting$", "", item["summary"].strip())
 
     def _parse_classification(self, title):
         if "committee" in title.lower():
