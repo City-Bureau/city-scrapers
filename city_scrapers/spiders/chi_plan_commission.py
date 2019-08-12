@@ -9,7 +9,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 class ChiPlanCommissionSpider(CityScrapersSpider):
     name = 'chi_plan_commission'
-    agency = 'Chicago Department of Planning and Development'
+    agency = 'Chicago Plan Commission'
     timezone = 'America/Chicago'
     allowed_domains = ['chicago.gov']
     start_urls = ['https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html']
@@ -32,7 +32,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
                 if start is None:
                     continue
                 meeting = Meeting(
-                    title='Chicago Plan Commission',
+                    title='Commission',
                     description='',
                     classification=COMMISSION,
                     start=start,

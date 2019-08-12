@@ -24,7 +24,7 @@ def test_unique_id_count():
 
 
 def test_title():
-    assert parsed_items[0]['title'] == 'Commission on Chicago Landmarks'
+    assert parsed_items[0]['title'] == 'Commission'
 
 
 def test_description():
@@ -40,8 +40,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0][
-        'id'] == 'chi_landmark_commission/201801111245/x/commission_on_chicago_landmarks'
+    assert parsed_items[0]['id'] == 'chi_landmark_commission/201801111245/x/commission'
 
 
 def test_status():

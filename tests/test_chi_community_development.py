@@ -24,7 +24,7 @@ def test_unique_id_count():
 
 
 def test_title():
-    assert parsed_items[0]['title'] == 'Community Development Commission'
+    assert parsed_items[0]['title'] == 'Commission'
 
 
 def test_description():
@@ -40,8 +40,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0][
-        'id'] == 'chi_community_development/201801161300/x/community_development_commission'
+    assert parsed_items[0]['id'] == 'chi_community_development/201801161300/x/commission'
 
 
 def test_status():

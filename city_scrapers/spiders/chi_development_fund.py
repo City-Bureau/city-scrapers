@@ -8,7 +8,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 class ChiDevelopmentFundSpider(CityScrapersSpider):
     name = 'chi_development_fund'
-    agency = 'Chicago Department of Planning and Development'
+    agency = 'Chicago Development Fund'
     timezone = 'America/Chicago'
     allowed_domains = ['www.chicago.gov']
     start_urls = [
@@ -34,7 +34,7 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
                 if start is None:
                     continue
                 meeting = Meeting(
-                    title="Chicago Development Fund: {}".format(self._parse_title(item)),
+                    title=self._parse_title(item),
                     description='',
                     classification=COMMISSION,
                     start=start,

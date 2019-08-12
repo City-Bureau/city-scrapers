@@ -23,7 +23,7 @@ def test_unique_id_count():
 
 
 def test_title():
-    assert parsed_items[0]['title'] == 'Chicago Development Fund: Advisory Board'
+    assert parsed_items[0]['title'] == 'Advisory Board'
 
 
 def test_description():
@@ -43,8 +43,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0][
-        'id'] == 'chi_development_fund/201804180000/x/chicago_development_fund_advisory_board'
+    assert parsed_items[0]['id'] == 'chi_development_fund/201804180000/x/advisory_board'
 
 
 def test_status():

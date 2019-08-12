@@ -24,7 +24,7 @@ def test_unique_id():
 
 
 def test_title():
-    assert parsed_items[0]['title'] == 'Chicago Plan Commission'
+    assert parsed_items[0]['title'] == 'Commission'
 
 
 def test_description():
@@ -40,7 +40,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_plan_commission/201801181000/x/chicago_plan_commission'
+    assert parsed_items[0]['id'] == 'chi_plan_commission/201801181000/x/commission'
 
 
 def test_status():
