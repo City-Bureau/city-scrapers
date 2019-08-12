@@ -9,7 +9,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 class ChiLandmarkCommissionSpider(CityScrapersSpider):
     name = 'chi_landmark_commission'
-    agency = 'Chicago Department of Planning and Development'
+    agency = 'Commission on Chicago Landmarks'
     timezone = 'America/Chicago'
     allowed_domains = ['www.chicago.gov']
     start_urls = ['https://www.chicago.gov/city/en/depts/dcd/supp_info/landmarks_commission.html']
@@ -30,7 +30,7 @@ class ChiLandmarkCommissionSpider(CityScrapersSpider):
             meetings = self.format_meetings(meetings)
             for item in meetings:
                 meeting = Meeting(
-                    title='Commission on Chicago Landmarks',
+                    title='Commission',
                     description='',
                     classification=COMMISSION,
                     start=self._parse_start(item, year),

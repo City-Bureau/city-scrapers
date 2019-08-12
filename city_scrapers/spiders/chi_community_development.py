@@ -9,12 +9,11 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 class ChiCommunityDevelopmentSpider(CityScrapersSpider):
     name = 'chi_community_development'
-    agency = 'Chicago Department of Planning and Development'
+    agency = 'Chicago Community Development Commission'
     timezone = 'America/Chicago'
     allowed_domains = ['chicago.gov']
     start_urls = [
-        'https://chicago.gov/city/en/depts/dcd/supp_info/'
-        'community_developmentcommission.html'
+        'https://chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html'
     ]
 
     def parse(self, response):
@@ -32,7 +31,7 @@ class ChiCommunityDevelopmentSpider(CityScrapersSpider):
             items = self.format_meetings(items)
             for item in items:
                 meeting = Meeting(
-                    title='Community Development Commission',
+                    title='Commission',
                     description='',
                     classification=COMMISSION,
                     start=self._parse_start(item, year),

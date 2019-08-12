@@ -24,7 +24,7 @@ def test_unique_id_count():
 
 
 def test_title():
-    assert parsed_items[0]['title'] == 'Zoning Board of Appeals'
+    assert parsed_items[0]['title'] == 'Board of Appeals'
 
 
 def test_description():
@@ -40,7 +40,7 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_zoning_board/201801190900/x/zoning_board_of_appeals'
+    assert parsed_items[0]['id'] == 'chi_zoning_board/201801190900/x/board_of_appeals'
 
 
 def test_status():

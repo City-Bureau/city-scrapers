@@ -8,7 +8,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 class ChiZoningBoardSpider(CityScrapersSpider):
     name = 'chi_zoning_board'
-    agency = 'Chicago Department of Planning and Development'
+    agency = 'Chicago Zoning Board of Appeals'
     timezone = 'America/Chicago'
     allowed_domains = ['www.chicago.gov']
     start_urls = [
@@ -30,7 +30,7 @@ class ChiZoningBoardSpider(CityScrapersSpider):
                 if not item.strip():
                     continue
                 meeting = Meeting(
-                    title='Zoning Board of Appeals',
+                    title='Board of Appeals',
                     description='',
                     classification=COMMISSION,
                     start=self._parse_start(item, year),
