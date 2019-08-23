@@ -1,7 +1,6 @@
 import re
 from datetime import datetime, time
 
-import dateutil.parser
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -25,9 +24,23 @@ class IlLotterySpider(CityScrapersSpider):
         if re.search(r'122 South Michigan Avenue, 19th Floor', response.text) is None:
             raise ValueError('Meeting address has changed')
 
-        meetings = self._parse_upcoming(response)
+        upcoming_meetings = self._parse_upcoming_meetings(response)
+        past_meetings = self._parse_past_meetings(response)
+        agenda_links = self._parse_links(response, 'Agenda')
+        minute_links = self._parse_links(response, 'Minutes')
 
-        for item in meetings:
+        # create a master dictionary with one key per meeting date
+        reconciled_meetings = upcoming_meetings
+        only_past_dates = set(past_meetings.keys()).difference(upcoming_meetings.keys())
+        only_past_meetings = {
+            key: value
+            for key, value in past_meetings.items()
+            if key in only_past_dates
+        }
+        reconciled_meetings.update(only_past_meetings)
+
+        for key in sorted(reconciled_meetings.keys(), reverse=True):
+            item = reconciled_meetings[key]
             meeting = Meeting(
                 title=self._parse_title(item),
                 description='',
@@ -44,7 +57,17 @@ class IlLotterySpider(CityScrapersSpider):
             )
             meeting['id'] = self._get_id(meeting)
             meeting['status'] = self._get_status(meeting, text=item)
-            meeting['links'] = self._parse_agenda_links(response, date=meeting['start'].date())
+
+            meeting_agenda_link = agenda_links.get(meeting['start'].date())
+            meeting_minutes_link = minute_links.get(meeting['start'].date())
+
+            if meeting_agenda_link is not None:
+                if meeting_minutes_link is not None:
+                    meeting['links'] = [meeting_agenda_link, meeting_minutes_link]
+                else:
+                    meeting['links'] = [meeting_agenda_link]
+            else:
+                meeting['links'] = []
 
             yield meeting
 
@@ -52,50 +75,71 @@ class IlLotterySpider(CityScrapersSpider):
         """Parse or generate meeting title."""
         suffix = ''
         if 'QTR' in item:
-            suffix = " Quarterly Meeting"
+            suffix = "Quarterly "
         elif 'Special' in item:
-            suffix = ' Special Meeting'
-        return "Lottery Control Board{}".format(suffix)
+            suffix = 'Special '
+        return "Lottery Control Board {}Meeting".format(suffix)
 
     @staticmethod
     def parse_time(source):
         """Returns times given string with format h:mm am|pm"""
         time_regex = re.compile(r'([1-9]):([0-5][0-9])\s?(am|pm)')
-        hour, minute, period = time_regex.search(source).groups()
+        try:
+            hour, minute, period = time_regex.search(source).groups()
 
-        hour = int(hour)
-        minute = int(minute)
-        if (period == 'pm') and (hour != 12):
-            hour += 12
-        return time(hour, minute)
+            hour = int(hour)
+            minute = int(minute)
+            if (period == 'pm') and (hour != 12):
+                hour += 12
+            return time(hour, minute)
+        except AttributeError:
+            default_hour = 13
+            default_minute = 30
+            return time(default_hour, default_minute)
 
     @staticmethod
     def parse_day(source):
         """Returns date"""
         # search for dates with '/' (ex: 08/16/19)
         if "/" in source:
-            m = re.search(
-                r'.+[,-]\s(?P<month>\d{2})\/(?P<day>\d{2})\/(?P<year>\d{2})\s.+', source.strip()
-            )
+            date_match = re.search(r'(\d{2}\/\d{2}\/\d{2})', source).group()
+            dt = datetime.strptime(date_match, "%m/%d/%y").date()
         # search for date in format "[month] [dd], [yyyy]" (ex: 'May 15, 2019')
         else:
-            m = re.search(
-                r'.+[,-]\s*(?P<month>[A-Za-z]+)\s(?P<day>\d{1,2}),\s(?P<year>\d{4}).*',
-                source.strip()
-            )
+            date_match = re.search(r"[a-zA-Z]{3,10} \d{1,2}?,? \d{4}", source).group()
+            dt = datetime.strptime(date_match, "%B %d, %Y").date()
 
-        dt = dateutil.parser.parse(
-            '{mo} {day} {year}'.format(
-                mo=m.group('month'), day=m.group('day'), year=m.group('year')
-            )
-        )
-        return dt.date()
+        return dt
 
     def _parse_start(self, item):
         """Parse start date and time."""
         return datetime.combine(self.parse_day(item), self.parse_time(item))
 
-    def _parse_upcoming(self, response):
+    def _parse_links(self, response, link_text_substring=''):
+        '''
+        Extracts link to agenda for a specific meeting date
+        Args:
+            date: A datetime object with the date of the desired agenda
+        Return:
+            List of dictionaries with the keys title (title/description of the link)
+            and href (link URL) for the agenda for the meeting on the requested date
+        '''
+        links = {}
+        for link in response.xpath('//p//a'):
+            link_text_selector = link.xpath('text()')
+            if link_text_selector:
+                link_text = link_text_selector.get()
+                if link_text_substring in link_text:
+                    link_date = self.parse_day(link_text)
+                    link_href = link.xpath('@href').get()
+                    links[link_date] = {
+                        "href": 'https://www.illinoislottery.com{}'.format(link_href),
+                        "title": link_text.replace(u'\xa0', u' ')
+                    }
+
+        return links
+
+    def _parse_upcoming_meetings(self, response):
         """Returns a list of lines with dates following the string 'Upcoming Meeting Dates' """
 
         meeting_xpath = '//p[contains(., "Upcoming meeting dates")]'
@@ -107,29 +151,39 @@ class IlLotterySpider(CityScrapersSpider):
         weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         meeting_lines = [x for x in meeting_lines if any(weekday in x for weekday in weekdays)]
 
-        return meeting_lines
+        meetings = {}
+        for meeting_text in meeting_lines:
+            meeting_date = self.parse_day(meeting_text)
+            meetings = self._update_meeting_value(meetings, meeting_date, meeting_text)
 
-    def _parse_agenda_links(self, response, date):
+        return meetings
+
+    def _parse_past_meetings(self, response):
+        """Returns a list of start date and documents from meeting minutes page"""
+        meetings = {}
+        for item in response.css('a'):
+            meeting_text = item.xpath('text()').get()
+            if meeting_text is not None:
+                if 'Agenda' in meeting_text or 'Minutes' in meeting_text:
+                    meeting_date = self.parse_day(meeting_text)
+                    meetings = self._update_meeting_value(meetings, meeting_date, meeting_text)
+        return meetings
+
+    def _update_meeting_value(self, meetings, meeting_date, meeting_text):
         '''
-        Extracts link to agenda for a specific meeting date
+        Updates the meetings dictionary
+        If date does not yet exist in dictionary, adds to dictionary
+        If date already exists, updates value with additional text found for the meeting
+
         Args:
-            date: A datetime object with the date of the desired agenda
+            meetings: A dictionary where key = date and value = text associated with the meeting
+            meeting_date: A datetime object representing a meeting date
+            meeting_text: A string with information about a meeting
         Return:
-            List of dictionaries with the keys title (title/description of the link)
-            and href (link URL) for the agenda for the meeting on the requested date
+            An updated version of the meetings dictionary
         '''
-        agenda_links = []
-        for link in response.xpath('//p//a'):
-            link_text_selector = link.xpath('text()')
-            if link_text_selector:
-                link_text = link_text_selector.get()
-                if 'Agenda' in link_text:
-                    agenda_date = self.parse_day(link_text)
-                    if agenda_date == date:
-                        link_href = link.xpath('@href').get()
-                        agenda_links = [{
-                            "href": 'https://www.illinoislottery.com{}'.format(link_href),
-                            "title": link_text.replace(u'\xa0', u' ')
-                        }]
-
-        return agenda_links
+        if meetings.get(meeting_date) is None:
+            meetings[meeting_date] = meeting_text
+        else:
+            meetings[meeting_date] = meetings[meeting_date] + ' ' + meeting_text
+        return meetings
