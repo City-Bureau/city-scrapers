@@ -22,9 +22,13 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
+def test_len():
+    assert len(parsed_items) == 24
+
+
 def test_title():
     assert parsed_items[0]["title"] == "Lottery Control Board Quarterly Meeting"
-    assert parsed_items[3]["title"] == "Lottery Control Board Special Meeting"
+    assert parsed_items[2]["title"] == "Lottery Control Board Special Meeting"
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -33,7 +37,7 @@ def test_description(item):
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 5, 15, 13, 30)
+    assert parsed_items[0]["start"] == datetime(2019, 11, 6, 13, 30)
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -42,8 +46,8 @@ def test_time_notes(item):
 
 
 def test_status():
-    assert parsed_items[0]["status"] == PASSED
-    assert parsed_items[1]["status"] == TENTATIVE
+    assert parsed_items[0]["status"] == TENTATIVE
+    assert parsed_items[2]["status"] == PASSED
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -61,13 +65,13 @@ def test_source(item):
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
+    assert len(parsed_items[0]["links"]) == 0
+    assert parsed_items[3]["links"] == [{
         "href":
             'https://www.illinoislottery.com/content/dam/il/pdfs/' +
             'lottery-control-board/May%202019%20Lottery%20Control%20Board%20Meeting%20Agenda.pdf',
         "title": 'Illinois Lottery Control Board Meeting Agenda - May 15, 2019'
     }]
-    assert len(parsed_items[2]["links"]) == 0
 
 
 @pytest.mark.parametrize("item", parsed_items)
