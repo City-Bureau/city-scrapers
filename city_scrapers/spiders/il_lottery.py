@@ -21,7 +21,7 @@ class IlLotterySpider(CityScrapersSpider):
         needs.
         """
 
-        if re.search(r'122 South Michigan Avenue, 19th Floor', response.text) is None:
+        if '122 South Michigan Avenue, 19th Floor' not in response.text:
             raise ValueError('Meeting address has changed')
 
         upcoming_meetings = self._parse_upcoming_meetings(response)
