@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 from datetime import datetime, time
 
 from city_scrapers_core.constants import BOARD
@@ -26,8 +27,7 @@ class IlLotterySpider(CityScrapersSpider):
 
         upcoming_meetings = self._parse_upcoming_meetings(response)
         past_meetings = self._parse_past_meetings(response)
-        agenda_links = self._parse_links(response, 'Agenda')
-        minute_links = self._parse_links(response, 'Minutes')
+        links = self._parse_links(response)
 
         # create a master dictionary with one key per meeting date
         reconciled_meetings = upcoming_meetings
@@ -57,17 +57,7 @@ class IlLotterySpider(CityScrapersSpider):
             )
             meeting['id'] = self._get_id(meeting)
             meeting['status'] = self._get_status(meeting, text=item)
-
-            meeting_agenda_link = agenda_links.get(meeting['start'].date())
-            meeting_minutes_link = minute_links.get(meeting['start'].date())
-
-            if meeting_agenda_link is not None:
-                if meeting_minutes_link is not None:
-                    meeting['links'] = [meeting_agenda_link, meeting_minutes_link]
-                else:
-                    meeting['links'] = [meeting_agenda_link]
-            else:
-                meeting['links'] = []
+            meeting['links'] = links.get(meeting['start'].date(), [])
 
             yield meeting
 
@@ -115,29 +105,33 @@ class IlLotterySpider(CityScrapersSpider):
         """Parse start date and time."""
         return datetime.combine(self.parse_day(item), self.parse_time(item))
 
-    def _parse_links(self, response, link_text_substring=''):
+    def _parse_links(self, response, link_text_substrings=['Agenda', 'Minutes']):
         '''
         Extracts link to agenda for a specific meeting date
         Args:
             date: A datetime object with the date of the desired agenda
+            link_text_substrings: A list with strings that must exist in link text
+                in order to be added to link dictionary
         Return:
             List of dictionaries with the keys title (title/description of the link)
             and href (link URL) for the agenda for the meeting on the requested date
         '''
-        links = {}
+        link_date_map = defaultdict(list)
         for link in response.xpath('//p//a'):
             link_text_selector = link.xpath('text()')
             if link_text_selector:
                 link_text = link_text_selector.get()
-                if link_text_substring in link_text:
+                if any(
+                    link_text_substring in link_text for link_text_substring in link_text_substrings
+                ):
                     link_date = self.parse_day(link_text)
                     link_href = link.xpath('@href').get()
-                    links[link_date] = {
+                    link_date_map[link_date].append({
                         "href": response.urljoin(link_href),
                         "title": link_text.replace(u'\xa0', u' ')
-                    }
+                    })
 
-        return links
+        return link_date_map
 
     def _parse_upcoming_meetings(self, response):
         """Returns a list of lines with dates following the string 'Upcoming Meeting Dates' """
