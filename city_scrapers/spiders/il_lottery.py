@@ -133,7 +133,7 @@ class IlLotterySpider(CityScrapersSpider):
                     link_date = self.parse_day(link_text)
                     link_href = link.xpath('@href').get()
                     links[link_date] = {
-                        "href": 'https://www.illinoislottery.com{}'.format(link_href),
+                        "href": response.urljoin(link_href),
                         "title": link_text.replace(u'\xa0', u' ')
                     }
 
