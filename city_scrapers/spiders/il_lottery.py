@@ -73,15 +73,11 @@ class IlLotterySpider(CityScrapersSpider):
     @staticmethod
     def parse_time(source):
         """Returns times given string with format h:mm am|pm"""
-        time_regex = re.compile(r'([1-9]):([0-5][0-9])\s?(am|pm)')
-        try:
-            hour, minute, period = time_regex.search(source).groups()
+        time_regex = re.compile(r'([1-9]:[0-5][0-9]\s?[a|p]m)')
 
-            hour = int(hour)
-            minute = int(minute)
-            if (period == 'pm') and (hour != 12):
-                hour += 12
-            return time(hour, minute)
+        try:
+            time_match = time_regex.search(source).group().replace(" ", "")
+            return datetime.strptime(time_match, '%I:%M%p').time()
         except AttributeError:
             default_hour = 13
             default_minute = 30
