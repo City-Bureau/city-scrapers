@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import COMMISSION, COMMITTEE
@@ -81,7 +82,12 @@ class IlEnvironmentalJusticeSpider(CityScrapersSpider):
     def _parse_start(self, date_str, year_str):
         """Parse start datetime as a naive datetime object."""
         # Using the earlier time, even though it's typically at 10am
-        return datetime.strptime("{} {} 9:30".format(date_str, year_str), "%B %d %Y %H:%M")
+        date_match = re.search(r"[a-zA-Z]{3,10}\s+\d{1,2}", date_str)
+        if not date_match:
+            return
+        return datetime.strptime(
+            "{} {} 9:30".format(date_match.group(), year_str), "%B %d %Y %H:%M"
+        )
 
     def _parse_links(self, item, date_item, response):
         """
