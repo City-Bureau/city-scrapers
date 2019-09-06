@@ -109,11 +109,5 @@ class IlEnvironmentalJusticeSpider(CityScrapersSpider):
                     "href": response.urljoin(link.attrib["href"]),
                 })
             if len(links) > 0:
-                if el == date_item:
-                    print("date item")
-                else:
-                    print("item")
-                print(el)
-                print(sel)
                 return links
         return links
