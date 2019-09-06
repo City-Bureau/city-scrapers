@@ -1,22 +1,6 @@
-from functools import reduce, wraps
-from operator import getitem
+from functools import wraps
 
 from scrapy_sentry.utils import get_client
-
-
-def get_key(the_dict, location_string):
-    """
-    Get nested dict key using dot notation.
-
-    ```
-    get_key(mydict, 'key1.key2')
-    ```
-    """
-
-    try:
-        return reduce(getitem, location_string.split('.'), the_dict) or ''
-    except (KeyError, TypeError):
-        return None
 
 
 def report_error(f):
