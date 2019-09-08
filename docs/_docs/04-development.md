@@ -53,7 +53,7 @@ You'll need a fairly standard Python development stack. If you're on OS X, the [
 To setup an environment with `pipenv`, run:
 
 ```bash
-$ pipenv install --dev --three
+$ pipenv install --dev --ignore-pipfile --three
 ```
 
 Then, you can either activate the virtual environment similarly to tools like `virtualenv-wrapper` by running
