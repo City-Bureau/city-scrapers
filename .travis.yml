@@ -5,7 +5,7 @@ python:
   - 3.7-dev
 install:
   - pip install pipenv
-  - pipenv install --dev --three --system
+  - pipenv install --ignore-pipfile --dev --three --system
 script:
   - isort --check-only --diff || exit 1
   - yapf --diff --recursive ./city_scrapers/ ./tests/ || exit 1
