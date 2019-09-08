@@ -7,7 +7,7 @@ from city_scrapers_core.spiders import LegistarSpider
 
 class CookBoardSpider(LegistarSpider):
     name = 'cook_board'
-    agency = 'Cook County Government'
+    agency = 'Cook County Board of Commissioners'
     timezone = 'America/Chicago'
     allowed_domains = ['cook-county.legistar.com']
     start_urls = ['https://www.cook-county.legistar.com/Calendar.aspx']
@@ -60,6 +60,6 @@ class CookBoardSpider(LegistarSpider):
     def _parse_title(self, item):
         """Parse or generate meeting title."""
         BOARD_NAME = 'Board of Commissioners'
-        if item['Name']['label'] != BOARD_NAME:
-            return '{}: {}'.format(BOARD_NAME, item['Name']['label'])
+        if item['Name'].get('label'):
+            return item['Name']['label'].strip()
         return BOARD_NAME
