@@ -9,9 +9,11 @@ ITEM_PIPELINES = {
     "city_scrapers_core.pipelines.OpenCivicDataPipeline": 500,
 }
 
-SPIDER_MIDDLEWARES = {
-    "city_scrapers.middleware.CityScrapersWaybackMiddleware": 500,
-}
+if os.getenv("WAYBACK_ENABLED"):
+    SPIDER_MIDDLEWARES = {
+        **SPIDER_MIDDLEWARES,
+        "city_scrapers.middleware.CityScrapersWaybackMiddleware": 500,
+    }
 
 EXTENSIONS = {
     "scrapy_sentry.extensions.Errors": 10,

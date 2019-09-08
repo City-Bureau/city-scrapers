@@ -36,6 +36,14 @@ ITEM_PIPELINES = {
     # "city_scrapers_core.pipelines.ValidationPipeline": 400,
 }
 
+SPIDER_MIDDLEWARES = {}
+
+if os.getenv("WAYBACK_ENABLED"):
+    SPIDER_MIDDLEWARES = {
+        **SPIDER_MIDDLEWARES,
+        "city_scrapers.middleware.CityScrapersWaybackMiddleware": 500,
+    }
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
