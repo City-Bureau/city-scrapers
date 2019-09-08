@@ -27,7 +27,7 @@ class ChiPoliceBoardSpider(CityScrapersSpider):
         for item in response.xpath('//p[contains(@style,"padding-left")]'):
             start_date = self._parse_start_date(item, year)
             meeting = Meeting(
-                title='Board of Directors',
+                title='Police Board',
                 description='',
                 classification=BOARD,
                 start=datetime.combine(start_date, start_time),
