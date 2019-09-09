@@ -57,7 +57,7 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
                 time_notes='Meeting end time is estimated',
                 all_day=False,
                 location=self.location,
-                links=self._parse_links(response, None),
+                links=self._parse_links(response),
                 source=response.url,
             )
 
@@ -139,8 +139,9 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
     def _parse_links(self, response, meeting=None):
         """Parse agendas and minutes"""
         if meeting is None:
-            link = response.xpath('//a/@href').extract()[2]
-            return [{'href': 'https://app.chicagoelections.com{}'.format(link), 'title': 'Agenda'}]
+            for link in response.css("a"):
+                if "genda" in link.css("*::text").extract_first():
+                    return [{"href": response.urljoin(link.attrib["href"]), "title": "Agenda"}]
         elif 'href' not in meeting:
             return []
         if 'minutes' in response.url:
