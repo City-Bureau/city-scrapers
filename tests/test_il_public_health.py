@@ -2,19 +2,21 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import ADVISORY_COMMITTEE, TENTATIVE
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.il_public_health import IlPublicHealthSpider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "il_public_health.html"),
-    url="http://www.dph.illinois.gov/events/",
+    join(dirname(__file__), "files", "il_public_health.json"),
+    url=(
+        "http://www.dph.illinois.gov/views/ajax?view_name=events&view_display_id=page&view_args=2019/03&page=0"  # noqa
+    )
 )
 spider = IlPublicHealthSpider()
 
-freezer = freeze_time("2019-05-20")
+freezer = freeze_time("2019-09-10")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -27,40 +29,53 @@ def test_count():
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "PANDAS/PANS Advisory Council"
-    assert parsed_items[-1]["title"] == "Perinatal Advisory Committee"
+    assert parsed_items[0]["title"] == "Trauma Advisory Council"
 
 
 def test_description():
-    assert parsed_items[1]["description"] == (
-        "VIDEO CONFERENCE\n"
-        "525 W. Jefferson St., 4th Floor Video Conference Room, Springfield, IL\n"
-        "122 S. Michigan Ave., Conference Room 711, 7th Floor, Chicago, IL\n"
-        "Marion Regional Office, 2309 W. Main Street, Marion, IL\n"
-        "West Chicago Regional Office, 245 W. Roosevelt, Bldg. 5, West Chicago, IL\n"
-        "10:00 a.m. – 12:00 p.m.\n"
-        "Interested persons may contact Elaine Huddleston in the Office of Health Care Regulations, Division of Health Care Facilities and Programs at\n"  # noqa
-        "217-782-0483."
-    )
-    assert parsed_items[-1]["description"] == (
-        "Meeting Agenda TBA\n"
-        "CONFERENCE ROOMS\n"
-        "69 West Washington St., 35th Floor, Chicago\n"
-        "535 West Jefferson St., 5th Floor, Springfield\n"
-        "Conference Call Information\n"
-        "Conference Call-In#: 888.494.4032\n"
-        "Access Code: 6819028741\n"
-        "Interested persons may contact the Office of Women’s Health at 312-814-4035 for information\n"  # noqa
-        "Additional Materials: None"
-    )
+    assert parsed_items[1]["description"] == """Downers Grove
+VIA VIDEOCONFERENCE AT:
+Illinois College of Emergency Physicians, 3000 Woodcreek Dr., Suite #200, Downers Grove, IL
+IDPH Bell Building Conference Room, 422 S. 5
+th
+Street, 3
+rd
+Floor, Springfield, IL
+Illinois Central College (ICC), One College Drive, East Peoria, IL
+Unity Point Health-Trinity, 2701 17
+th
+St., 3
+rd
+Floor, Rock Island, IL
+Memorial Hospital – Belleville, 4550 Memorial Drive, Belleville, IL
+Interested persons may contact the Division of EMS and Highway Safety at
+217-785-2080
+."""
+    assert parsed_items[-1]["description"] == """Rescheduled from February 19, 2019
+Meeting has been
+
+CANCELLED
+
+due to lack of Quorum
+VIDEO CONFERENCE
+525 W. Jefferson St., 4th Floor Video Conference Room, Springfield, IL
+69 W. Washington, 35
+th
+Floor, Director Conf Rm, Chicago, IL
+Marion Regional Office, 2309 W. Main St., Marion
+245 S. Roosevelt Rd., Bldg 5, W. Chicago
+10:00 a.m. – 12:00 p.m.
+I
+nterested persons may contact Elaine Huddleston in the Office of Health Care Regulations, Division of Health Care Facilities and Programs at
+217-782-0483."""  # noqa
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 5, 21, 9, 0)
+    assert parsed_items[0]["start"] == datetime(2019, 3, 7, 11, 0)
 
 
 def test_end():
-    assert parsed_items[0]["end"] == datetime(2019, 5, 21, 10, 0)
+    assert parsed_items[0]["end"] == datetime(2019, 3, 7, 12, 30)
 
 
 def test_time_notes():
@@ -68,17 +83,17 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_public_health/201905210900/x/pandas_pans_advisory_council"
+    assert parsed_items[0]["id"] == "il_public_health/201903071100/x/trauma_advisory_council"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == TENTATIVE
+    assert parsed_items[0]["status"] == PASSED
 
 
 def test_location():
     assert parsed_items[-1]["location"] == {
         "name": "",
-        "address": "69 West Washington St., 35th Floor, Chicago, IL"
+        "address": "69 W. Washington, 35\nth\nFloor, Director Conf Rm, Chicago, IL"
     }
 
 
@@ -89,7 +104,7 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [{
         'href':
-            'http://www.dph.illinois.gov/sites/default/files/events/meeting-agenda/pandas/pans-advisory-council/52119-agenda.pdf',  # noqa
+            'http://www.dph.illinois.gov/sites/default/files/events/meeting-agenda/trauma-advisory-council/trauma-advisory-council-agenda-3719.pdf',  # noqa
         "title": "Meeting Agenda"
     }]
 

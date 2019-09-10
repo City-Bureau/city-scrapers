@@ -1,3 +1,4 @@
+import json
 import re
 from datetime import datetime
 
@@ -5,6 +6,7 @@ from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.relativedelta import relativedelta
+from scrapy.http import HtmlResponse
 
 
 class IlPublicHealthSpider(CityScrapersSpider):
@@ -19,10 +21,10 @@ class IlPublicHealthSpider(CityScrapersSpider):
         today = datetime.now()
         url_list = []
         for months_diff in range(-12, 13):
-            month_str = (today + relativedelta(months=months_diff)).strftime("%Y%m")
+            month_str = (today + relativedelta(months=months_diff)).strftime("%Y/%m")
             url_list.extend([
-                "http://www.dph.illinois.gov/events/{}?page={}".format(month_str, i)
-                for i in range(4)
+                "http://www.dph.illinois.gov/views/ajax?view_name=events&view_display_id=page&view_args={}&page={}"  # noqa
+                .format(month_str, i) for i in range(4)
             ])
         return url_list
 
@@ -33,7 +35,10 @@ class IlPublicHealthSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css("tr.eventspage"):
+        data = json.loads(response.text)
+        body = "".join([d.get("data", "") for d in data])
+        res = HtmlResponse(url=response.url, body=body, encoding="utf-8")
+        for item in res.css("tr.eventspage"):
             title = self._parse_title(item)
             description = self._parse_description(item)
             # Skip meetings in certain categories
@@ -49,7 +54,7 @@ class IlPublicHealthSpider(CityScrapersSpider):
                 time_notes="",
                 location=self._parse_location(description),
                 links=self._parse_links(item),
-                source=response.url,
+                source="http://www.dph.illinois.gov/events/",
             )
 
             meeting["status"] = self._get_status(
