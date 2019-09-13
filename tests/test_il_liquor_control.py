@@ -17,7 +17,7 @@ test_response = file_response(
 )
 
 test_response_sample_meeting = file_response(
-    join(dirname(__file__), "files", "il_liquor_control_for_test.html"),
+    join(dirname(__file__), "files", "il_liquor_control_detail.html"),
     url="https://www2.illinois.gov/ilcc/Events/Pages/Board-Meeting-9-18-19.aspx",
 )  # Sample meeting page.
 
@@ -27,7 +27,7 @@ freezer = freeze_time("2019-09-08")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
-parsed_items_sample_meeting = [item for item in spider.parse(test_response_sample_meeting)]
+parsed_items_sample_meeting = [item for item in spider._next_meeting(test_response_sample_meeting)]
 
 freezer.stop()
 
@@ -77,8 +77,8 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items_sample_meeting[0]["source"] == "https://www2.illinois.gov/ilcc/"
-    "Events/Pages/Board-Meeting-9-18-19.aspx"
+    assert parsed_items_sample_meeting[0]["source"] == ("https://www2.illinois.gov/ilcc/"
+                                                        "Events/Pages/Board-Meeting-9-18-19.aspx")
 
 
 def test_classification():
