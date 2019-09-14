@@ -6,11 +6,7 @@ from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.il_liquor_control import IlLiquorControlSpider
-"""
-Main page does not have all the meeting information.
-Main page is used to obtain hrefs to future meetings.
-Sample page test_il_liquor_control_detail.html included for spider behavior testing.
-"""
+
 test_response = file_response(
     join(dirname(__file__), "files", "il_liquor_control.html"),
     url="https://www2.illinois.gov/ilcc/Divisions/Pages/Legal/"

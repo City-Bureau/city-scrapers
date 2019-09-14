@@ -22,10 +22,8 @@ class IlLiquorControlSpider(CityScrapersSpider):
         """
         `parse` should always `yield` Meeting items.
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-
         Each tentative meeting has own page. start_urls[0] is only used to get links for the pages.
         The links are sent to _next_meeting.
-
         start_urls[1] is for obtaining datetime info for past meetings. Then attempt to parse
         details page. If not status == 200, parses generic Meeting object with meeting date info.
         """
