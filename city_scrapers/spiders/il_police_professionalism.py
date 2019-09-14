@@ -1,5 +1,5 @@
-from time import strptime
 from datetime import datetime
+import re
 
 from city_scrapers_core.constants import (COMMISSION)
 from city_scrapers_core.items import Meeting
@@ -20,46 +20,70 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.xpath("//*[contains(text(),\"Police Professionalism\")]"):
-            meeting = Meeting(
-                title=self._parse_title(item),
-                description=self._parse_description(item),
-                classification=self._parse_classification(item),
-                start=self._parse_start(item),
-                end=None,
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
-                links=self._parse_links(item),
-                source=self._parse_source(response),
-            )
+        list_items = response.xpath("//li[contains(@style,'padding-bottom')]")
+        relavent_links = list_items.xpath(
+            'a[(.//*|.)[contains(text(),"Police Professionalism")]]/@href'
+        ).extract()
+        # titles = relavent_links = list_items.xpath(
+        #     'a[(.//*|.)[contains(text(),"Police Professionalism")]]/text'
+        # ).extract()
+        for i in range(0, len(relavent_links)):
+            link = response.urljoin(relavent_links[i])
+            yield response.follow(link, self._parse_item)
 
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
-
-            yield meeting
+    def _parse_item(self, response):
+        """`_parse_item` should always `yield` Meeting items"""
+        paragraphs = response.xpath('//p')
+        title = response.xpath('//h3/text()').get()
+        meeting = Meeting(
+            title=self._parse_title(response),
+            description=self._parse_description(response, paragraphs),
+            classification=self._parse_classification(title),
+            start=self._parse_start(response, paragraphs),
+            end=None,
+            time_notes='',
+            all_day=False,
+            location=self._parse_location(response),
+            links=self._parse_links(response),
+            source=response.url,
+        )
+        meeting['id'] = self._get_id(meeting)
+        meeting['status'] = self._get_status(meeting, title)
+        return meeting
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
         return "Commission on Police Professionalism"
 
-    def _parse_description(self, item):
+    def _parse_description(self, item, paragraphs):
+        return_list = []
+        # paragraphs = paragraphs[0:len(paragraphs) - 1]
+        for i in paragraphs:
+            xpath_selector = i.xpath('text()').get()
+            if xpath_selector is not None:
+                return_list.append(xpath_selector.strip().replace(u'\xa0', u''))
+        final_description = " ".join(return_list)
         """Parse or generate meeting description."""
-        return ""
+        return final_description
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
         return COMMISSION
 
-    def _parse_start(self, item):
+    def _parse_start(self, item, paragraphs):
         """Parse start datetime as a naive datetime object."""
-        title = item.xpath('text()').get()
-        date = "".join(title[title.index('(') + 1:title.index(')')].split(',')[1:])
-        date = date.strip(' ')
-        date = date.replace('p.m.', 'PM')
-        date = date.replace('a.m.', 'AM')
-        finalDate = datetime.strptime(date, "%B %d %Y %H:%M %p")
-        return finalDate
+        for p in paragraphs.getall():
+            date_match = re.search(r"[a-zA-Z]{3,10} \d{1,2}([a-z]{2})?,? \d{4}", p)
+            time_match = re.search(r"\d{1,2}(:\d{2})? ?[apm\.]{2,4}", p)
+            if date_match:
+                final_date = date_match.group(0)
+            if time_match:
+                final_time = time_match.group(0)
+        final_time = final_time.replace('a.m.', 'AM')
+        final_time = final_time.replace('p.m.', 'PM')
+        final_datetime = final_date + ' ' + final_time
+        final_datetime = datetime.strptime(final_datetime, "%B %d, %Y %H:%M %p")
+        return final_datetime
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
@@ -72,17 +96,13 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
     def _parse_location(self, item):
         """Parse or generate location."""
         return {
-            "address": "",
-            "name": "Commission on Police Professionalism",
+            "address": "301 S 2nd St, Springfield, IL 62701",
+            "name": "Illinois State Capitol",
         }
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        link = item.xpath('@href').get()
-        return [{
-            "href": "https://www.isp.state.il.us/media/" + link,
-            "title": "Commission on Police Professionalism"
-        }]
+        return [{"href": "", "title": "Commission on Police Professionalism"}]
 
     def _parse_source(self, response):
         """Parse or generate source."""
