@@ -1,3 +1,7 @@
+import re
+from time import strptime
+from datetime import datetime
+
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -17,18 +21,18 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.xpath("//div[@class='minutes']"):
+        for item in response.css(".minutes"):
             meeting = Meeting(
-                title="Illinois Board of Examiners",
+                title="Illinois Board of Examiners - Board Meeting Minutes",
                 description=self._parse_description(item),
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
-                end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
+                end=None,
+                all_day=False,
+                time_notes="",
                 location=self._parse_location(item),
                 links=self._parse_links(item),
-                source=self._parse_source(response),
+                source=response.url,
             )
 
             meeting["status"] = self._get_status(meeting)
@@ -46,7 +50,23 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        return None
+        date_str = item.css('.minuteDate::text').get()
+        time_str = item.css('.minuteTime::text').get()
+        date_ar = date_str.rsplit(" ")
+        date = re.sub("\D","",date_ar[1])
+        year = re.sub("\D","",date_ar[2])
+        month = 13
+        in_time = datetime.strptime(time_str, "%I:%M %p")
+        out_time = datetime.strftime(in_time, "%H:%M")
+        try:
+            month = strptime(date_ar[0],'%B').tm_mon
+        except:
+            month = strptime(date_ar[0],'%b').tm_mon
+
+        temp = year+'-'+str(month)+'-'+date+'T'+out_time+':'+'00'
+        datetimeObj = strptime(temp,'%Y-%m-%dT%H:%M:%S')
+
+        return datetimeObj
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -62,15 +82,31 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
+        seperator = ","
+        [name,address] = seperator.join(item.css(".minutes")[3].css(".minuteLocation").css("p::text").extract()).rsplit("\n",1)
+        
         return {
-            "address": "",
-            "name": "",
+            "name": self.remove_special_chars(name),
+            "address": self.remove_special_chars(address),
         }
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        return [{"href": "", "title": ""}]
+        agenda_link = item.css('.minuteAgenda').css('a::attr(href)').get()
+        mom_link = item.css('.minuteMinutes').css('a::attr(href)').get()
+        if(mom_link):
+            return [{"href": agenda_link, "title": "Agenda"},{"href": mom_link, "title": "Minutes"}]
+        else:
+            return [{"href": agenda_link, "title": "Agenda"}]
 
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
+
+    def remove_special_chars(string_val):
+        """Remove all special chars from string"""
+        return re.sub(
+                r'\s+',
+                ' ',
+                re.sub(r'(\n)|(--em--)|(--em)|(em--)', ' ', string_val),
+                ).strip()
