@@ -8,7 +8,8 @@ from freezegun import freeze_time
 from city_scrapers.spiders.il_liquor_control import IlLiquorControlSpider
 """
 Main page does not have all the meeting information.
-Main is used to obtain hrefs to future meetings.
+Main page is used to obtain hrefs to future meetings.
+Sample page test_il_liquor_control_detail.html included for spider behavior testing.
 """
 test_response = file_response(
     join(dirname(__file__), "files", "il_liquor_control.html"),
@@ -77,8 +78,10 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items_sample_meeting[0]["source"] == ("https://www2.illinois.gov/ilcc/"
-                                                        "Events/Pages/Board-Meeting-9-18-19.aspx")
+    assert parsed_items_sample_meeting[0]["source"] == (
+        "https://www2.illinois.gov/ilcc/"
+        "Events/Pages/Board-Meeting-9-18-19.aspx"
+    )
 
 
 def test_classification():
