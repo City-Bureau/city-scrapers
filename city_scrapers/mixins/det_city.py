@@ -149,13 +149,15 @@ class DetCityMixin:
 
     def _parse_end(self, response, start):
         """Parse the end datetime, returning a boolean indicating whether it was scraped"""
-        time_str = ''.join(response.css('article.time::text').extract()).strip()
+        time_str = re.sub(
+            r'[Nn]oon', '12:00 p.m.', ''.join(response.css('article.time::text').extract()).strip()
+        )
         time_split = re.split(r'-|(?<=m)(?: to)?\s+(?=\d)', time_str)
-        apm_match = re.search(r'[ap]m{2}', time_split[0].replace('.', ''))
         if len(time_split) > 1:
             end_str = time_split[1].strip()
             end_num = re.search(r'[\d:]+', end_str).group()
-            if apm_match and not re.search(r'[apm]{2}', end_str.replace('.', '')):
+            apm_match = re.search(r'[ap]m', end_str.replace('.', ''))
+            if apm_match:
                 end_str = end_num + apm_match.group()
             else:
                 end_int = int(re.search(r'\d+', end_str).group())
