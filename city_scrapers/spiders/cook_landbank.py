@@ -1,7 +1,7 @@
 import json
 import re
-import unicodedata
-from datetime import datetime, timedelta
+from collections import defaultdict
+from datetime import datetime
 
 import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE
@@ -13,178 +13,141 @@ class CookLandbankSpider(CityScrapersSpider):
     name = 'cook_landbank'
     agency = 'Cook County Land Bank Authority'
     timezone = 'America/Chicago'
-
     allowed_domains = ['www.cookcountylandbank.org']
-    start_urls = ['http://www.cookcountylandbank.org/wp-admin/admin-ajax.php']
-    """
-    Set 90 day time horizon
-    ie, will poll all dates 45 days before and after today for events.
-    """
-    time_horizon = 45
-    custom_settings = {
-        'DOWNLOAD_DELAY': 1,
-        'CONCURRENT_REQUESTS_PER_UP': 1,
+    start_urls = [
+        "http://www.cookcountylandbank.org/",
+        "http://www.cookcountylandbank.org/agendas-minutes/",
+    ]
+    location = {
+        "name": "Cook County Administration Building",
+        "address": "69 W Washington St Chicago, IL 60602"
     }
-    """
-    For each date, yields get_events_info which requests info for that
-    date with parse() as callback
-    """
-    def start_requests(self):
-        date_stack = self.stack_dates(self.time_horizon)
-        for date in date_stack:
-            yield self.get_events_info(date)
 
-    def get_events_info(self, date):
-        request_body = {
-            'action': 'the_ajax_hook',
-            'current_month': str(date.month),
-            'current_year': str(date.year),
-            'event_count': '0',
-            'fc_focus_day': str(date.day),
-            'filters[0][filter_type]': 'tax',
-            'filters[0][filter_name]': 'event_type',
-            'filters[0][filter_val]': '9, 16, 17, 18, 19, 20, 26, 27',
-            'direction': 'none',
-            'shortcode[hide_past]': 'no',
-            'shortcode[show_et_ft_img]': 'no',
-            'shortcode[event_order]': 'DESC',
-            'shortcode[ft_event_priority]': 'no',
-            'shortcode[lang]': 'L1',
-            'shortcode[month_incre]': '0',
-            'shortcode[evc_open]': 'no',
-            'shortcode[show_limit]': 'no',
-            'shortcode[etc_override]': 'no',
-            'shortcode[tiles]': 'no',
-            'shortcode[tile_height]': '0',
-            'shortcode[tile_bg]': '0',
-            'shortcode[tile_count]': '2'
-        }
-
-        # Making the post request
-        return scrapy.FormRequest(
-            url=self.start_urls[0],
-            formdata=request_body,
-            callback=self.parse,  # Does this by default, making it explicit
-            errback=self.request_err
-        )
+    def __init__(self, *args, **kwargs):
+        self.documents_map = defaultdict(list)
+        super().__init__(*args, **kwargs)
 
     def parse(self, response):
-        data = json.loads(response.text)
-        item = scrapy.Selector(text=data['content'], type="html")
-
-        if not item.css('div.eventon_list_event p.no_events'):
-            start = self._parse_start(item)
-            location = self._parse_location(item)
-            if start is None:
-                yield
-            title = self._parse_title(item)
-            meeting = Meeting(
-                title=title,
-                description=self._parse_description(item),
-                classification=self._parse_classification(title),
-                start=start,
-                end=None,
-                time_notes='',
-                all_day=False,
-                location=location,
-                links=self._parse_links(item),
-                source=self._parse_source(item),
-            )
-            meeting['status'] = self._get_status(meeting)
-            meeting['id'] = self._get_id(meeting)
-            yield meeting
-
-    def daterange(self, start_date, end_date):
-        """Getting dates and setting up AJAX Request"""
-        for n in range(int((end_date - start_date).days)):
-            yield start_date + timedelta(n)
-
-    def stack_dates(self, time_horizon):
-        today = datetime.now()
-        min_date = today - timedelta(days=time_horizon)
-        max_date = today + timedelta(days=time_horizon)
-        dates = [date for date in self.daterange(min_date, max_date)]
-        return dates
-
-    def request_err(self, failure):
-        self.logger.error(repr(failure))
-
-    def _parse_id(self, item):
-        event_id = item.css('div[data-event_id]::attr(data-event_id)').extract_first()
-        return event_id
-
-    def _parse_street_address(self, item):
-        street_address = item.css('item [itemprop=\'streetAddress\']::text').extract_first()
-        return street_address
-
-    def _parse_location(self, item):
-        """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
-        """
-        default_address = '69 W Washington St Chicago, IL 60602'
-        street_address = self._parse_street_address(item)
-        location_detail = item.css(
-            'span[class=\'evcal_desc evo_info \']::attr(data-location_name)'
-        ).extract_first()
-        if location_detail is not None:
-            address = '{}, {}'.format(location_detail, street_address)
+        if response.url == self.start_urls[0]:
+            yield from self._parse_home(response)
         else:
-            address = street_address
-        if address and 'Chicago' not in address:
-            address += ' Chicago, IL'
-        return {
-            'name': '',
-            'address': address or default_address,
-        }
+            self._parse_documents_page(response)
+            dates_to_scrape = set([d for _, d in self.documents_map.keys()])
+            for date_obj in dates_to_scrape:
+                yield scrapy.FormRequest(
+                    url="http://www.cookcountylandbank.org/wp-admin/admin-ajax.php",
+                    formdata={
+                        "action": "the_ajax_hook",
+                        "current_month": date_obj.strftime("%m"),
+                        "current_year": str(date_obj.year),
+                        "fc_focus_day": date_obj.strftime("%d"),
+                        "direction": "none",
+                    },
+                    callback=self._parse_form_response,
+                )
 
-    def _parse_title(self, item):
-        return item.css('span[class=\'evcal_desc2 evcal_event_title\']::text').extract_first()
+    def _parse_home(self, response):
+        for item in response.css(".evosl_slider > .event"):
+            yield from self._parse_detail(item)
 
-    def _parse_description(self, item):
-        raw_description = item.xpath('string(normalize-space(//div[@itemprop="description"]))'
-                                     ).extract_first()
-        normalized_description = unicodedata.normalize("NFKC", raw_description)
-        description = re.sub(r'\s+', ' ', normalized_description)
+    def _parse_documents_page(self, response):
+        for section in response.css(".panel-group"):
+            title = section.css(".fusion-toggle-heading::text").extract_first().strip()
+            title_key = self._parse_title_key(title)
+            sections_split = section.css(".panel-body").extract()[0].split("<hr>")
+            # Parse the most recent three meetings
+            for meeting_section in sections_split[:3]:
+                item = scrapy.Selector(text=meeting_section)
+                date_str = re.sub(
+                    r"((?<=\d)[a-z]+|,)", "", " ".join(item.css("h2 *::text").extract()).strip()
+                )
+                if not date_str:
+                    continue
+                date_obj = datetime.strptime(date_str, "%B %d %Y").date()
+                for doc_link in item.css("a"):
+                    doc_title = " ".join(doc_link.css("*::text").extract()).strip().title()
+                    self.documents_map[(title_key, date_obj)].append({
+                        "title": doc_title,
+                        "href": response.urljoin(doc_link.attrib["href"])
+                    })
 
-        agenda_sentinal = re.search("agenda", description, re.IGNORECASE)
-        if agenda_sentinal:
-            description = description[0:agenda_sentinal.start()]
+    def _parse_form_response(self, response):
+        """Parse detail links for parsing from form response"""
+        data = json.loads(response.text)
+        content = scrapy.Selector(text=data["content"])
+        for meeting_link in content.css("a[itemprop='url']"):
+            yield response.follow(
+                meeting_link.attrib["href"], callback=self._parse_detail, dont_filter=True
+            )
 
-        description = description.strip()
+    def _parse_detail(self, sel):
+        """Parse detail page selector or response"""
+        title_str = sel.css("[itemprop='name']::text").extract_first().strip()
+        # Avoid scraping the contest
+        if "win" in title_str.lower():
+            return
+        start = self._parse_start(sel)
+        meeting = Meeting(
+            title=self._parse_title(title_str),
+            description="",
+            classification=self._parse_classification(title_str),
+            start=start,
+            end=None,
+            time_notes="",
+            all_day=False,
+            location=self._parse_location(sel),
+            links=self._parse_links(sel, title_str, start),
+            source=self._parse_source(sel),
+        )
 
-        return description
+        meeting['status'] = self._get_status(meeting, text=title_str)
+        meeting['id'] = self._get_id(meeting)
 
-    @staticmethod
-    def _parse_datetime(datetime_str):
-        if datetime_str is None:
-            return None
-        return datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M')
+        yield meeting
+
+    def _parse_title(self, title_str):
+        return re.split(r" (?=CCLBA)", title_str)[-1].replace(" Meeting", "").strip()
+
+    def _parse_title_key(self, title):
+        """Get a title key to match documents and meetings"""
+        if "board" in title.lower():
+            return "board"
+        else:
+            return re.search(r"(?<=CCLBA)\s+\w+", title).group().strip().lower()
 
     def _parse_start(self, item):
-        start_date_str = item.css('[itemprop=\'startDate\']::attr(content)').extract_first()
-        return self._parse_datetime(start_date_str)
-
-    def _parse_source(self, item):
-        return item.css('div[class=\'evo_event_schema\'] a[itemprop=\"url\"]::attr(href)'
-                        ).extract_first()
-
-    def _parse_links(self, item):
-        documents = []
-        item.css('div[itemprop="description"] a')
-        for doc_link in item.css('div[itemprop="description"] a'):
-            doc_note = doc_link.css('::text').extract_first()
-            lower_title = doc_link.attrib['href'].lower()
-            if 'click here' in lower_title or 'agenda' in lower_title:
-                doc_note = 'Agenda'
-            documents.append({
-                'href': doc_link.attrib['href'],
-                'title': doc_note,
-            })
-        return documents
+        start_str = item.css("[itemprop='startDate']::attr(content)").extract_first()
+        return datetime.strptime(start_str, "%Y-%m-%dT%H:%M")
 
     def _parse_classification(self, name):
-        if re.search("Board of Directors", name, re.IGNORECASE):
+        if "board" in name.lower():
             return BOARD
-        else:
-            return COMMITTEE
+        return COMMITTEE
+
+    def _parse_location(self, item):
+        item_sel = item.css("[itemprop='location']")
+        loc = {**self.location}
+        loc_name = item_sel.css("[itemprop='name']::text").extract_first()
+        loc_addr = item_sel.css("[itemprop='streetAddress']::text").extract_first()
+        if loc_name and loc_name.strip():
+            loc["name"] = loc_name.strip()
+        if loc_addr and loc_addr.strip() and "69 W" not in loc_addr:
+            loc_addr = loc_addr.strip()
+            if "Chicago" not in loc_addr:
+                loc_addr += " Chicago, IL"
+            loc["address"] = loc_addr
+        return loc
+
+    def _parse_links(self, item, title, start):
+        title_key = self._parse_title_key(title)
+        links = self.documents_map[(title_key, start.date())]
+        for doc_link in item.css(".eventon_full_description a"):
+            doc_title = " ".join(doc_link.css("*::text").extract()).strip()
+            if "pdf" in doc_title.lower() or "agenda" in doc_link.attrib["href"].lower():
+                # Only use agenda scraped from page
+                links = [l for l in links if "agen" not in l["title"].lower()]
+                links.append({"title": "Agenda", "href": doc_link.attrib["href"]})
+        return links
+
+    def _parse_source(self, item):
+        return item.css("a[itemprop='url']::attr(href)").extract_first()
