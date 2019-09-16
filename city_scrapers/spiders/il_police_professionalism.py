@@ -1,7 +1,7 @@
-from datetime import datetime
 import re
+from datetime import datetime
 
-from city_scrapers_core.constants import (COMMISSION)
+from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
