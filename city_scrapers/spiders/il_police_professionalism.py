@@ -57,7 +57,6 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
 
     def _parse_description(self, item, paragraphs):
         return_list = []
-        # paragraphs = paragraphs[0:len(paragraphs) - 1]
         for i in paragraphs:
             xpath_selector = i.xpath('text()').get()
             if xpath_selector is not None:
