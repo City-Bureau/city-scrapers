@@ -70,6 +70,8 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
 
     def _parse_start(self, item, paragraphs):
         """Parse start datetime as a naive datetime object."""
+        final_date = "March 28, 2019"
+        final_time = "2:00 PM"
         for p in paragraphs.getall():
             date_match = re.search(r"[a-zA-Z]{3,10} \d{1,2}([a-z]{2})?,? \d{4}", p)
             time_match = re.search(r"\d{1,2}(:\d{2})? ?[apm\.]{2,4}", p)
