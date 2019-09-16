@@ -61,9 +61,8 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
             xpath_selector = i.xpath('text()').get()
             if xpath_selector is not None:
                 return_list.append(xpath_selector.strip().replace(u'\xa0', u''))
-        final_description = " ".join(return_list)
         """Parse or generate meeting description."""
-        return final_description
+        return " ".join(return_list)
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
