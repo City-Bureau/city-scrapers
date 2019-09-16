@@ -20,13 +20,6 @@ item = spider._parse_item(test_response)
 
 freezer.stop()
 
-# def test_tests():
-#     print("Please write some tests for this spider or at least disable this one.")
-#     assert False
-"""
-Uncomment below
-"""
-
 
 def test_title():
     assert item["title"] == "Commission on Police Professionalism"

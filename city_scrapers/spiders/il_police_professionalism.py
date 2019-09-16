@@ -24,9 +24,6 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
         relavent_links = list_items.xpath(
             'a[(.//*|.)[contains(text(),"Police Professionalism")]]/@href'
         ).extract()
-        # titles = relavent_links = list_items.xpath(
-        #     'a[(.//*|.)[contains(text(),"Police Professionalism")]]/text'
-        # ).extract()
         for i in range(0, len(relavent_links)):
             link = response.urljoin(relavent_links[i])
             yield response.follow(link, self._parse_item)
