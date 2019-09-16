@@ -78,11 +78,9 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
             if date_match:
                 final_date = date_match.group(0)
             if time_match:
-                final_time = time_match.group(0)
-        final_time = final_time.replace('a.m.', 'AM')
-        final_time = final_time.replace('p.m.', 'PM')
+                final_time = time_match.group(0).replace('.', '').upper()
         final_datetime = final_date + ' ' + final_time
-        final_datetime = datetime.strptime(final_datetime, "%B %d, %Y %H:%M %p")
+        final_datetime = datetime.strptime(final_datetime, "%B %d, %Y %I:%M %p")
         return final_datetime
 
     def _parse_time_notes(self, item):
@@ -102,7 +100,7 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        return [{"href": "", "title": "Commission on Police Professionalism"}]
+        return [{"href": item.url, "title": "Agenda"}]
 
     def _parse_source(self, response):
         """Parse or generate source."""
