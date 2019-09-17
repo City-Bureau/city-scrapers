@@ -50,22 +50,14 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        date_str = item.css('.minuteDate::text').get()
+        date_str = re.sub(r"(?<=\d)[a-z]+", "", item.css('.minuteDate::text').get())
         time_str = item.css('.minuteTime::text').get()
-        date_ar = date_str.rsplit(" ")
-        date = re.sub("\D","",date_ar[1])
-        year = re.sub("\D","",date_ar[2])
-        month = 13
-        in_time = datetime.strptime(time_str, "%I:%M %p")
-        out_time = datetime.strftime(in_time, "%H:%M")
+        datetimeObj = ''
         try:
-            month = strptime(date_ar[0],'%B').tm_mon
+            datetimeObj = strptime(date_str+':'+time_str,"%B %d, %Y:%I:%M %p")
         except:
-            month = strptime(date_ar[0],'%b').tm_mon
-
-        temp = year+'-'+str(month)+'-'+date+'T'+out_time+':'+'00'
-        datetimeObj = strptime(temp,'%Y-%m-%dT%H:%M:%S')
-
+            datetimeObj = strptime(date_str+':'+time_str,"%b %d, %Y:%I:%M %p")
+            
         return datetimeObj
 
     def _parse_end(self, item):
@@ -83,7 +75,7 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
     def _parse_location(self, item):
         """Parse or generate location."""
         seperator = ","
-        [name,address] = seperator.join(item.css(".minutes")[3].css(".minuteLocation").css("p::text").extract()).rsplit("\n",1)
+        [name,address] = seperator.join(item.css(".minuteLocation p::text").extract()).rsplit("\n",1)
         
         return {
             "name": self.remove_special_chars(name),
@@ -105,8 +97,4 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def remove_special_chars(string_val):
         """Remove all special chars from string"""
-        return re.sub(
-                r'\s+',
-                ' ',
-                re.sub(r'(\n)|(--em--)|(--em)|(em--)', ' ', string_val),
-                ).strip()
+        return re.sub(r'\s+',' ',string_val).strip()
