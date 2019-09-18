@@ -1,7 +1,6 @@
 from datetime import datetime
 from os.path import dirname, join
 
-import pytest
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
@@ -20,67 +19,57 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
-
-
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
-
-
 """
 Uncomment below
 """
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+
+def test_title():
+    assert parsed_items[0]["title"] == "Illinois Board of Examiners"
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_start():
+    assert parsed_items[0]["start"] == datetime(2019, 7, 24, 10, 0)
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_end():
+    assert parsed_items[0]["end"] is None
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_time_notes():
+    assert parsed_items[0]["time_notes"] == ""
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_id():
+    assert parsed_items[0]["id"
+                           ] == "il_board_of_examiners/201907241000/x/illinois_board_of_examiners"
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_status():
+    assert parsed_items[0]["status"] == "passed"
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_location():
+    assert parsed_items[0]["location"] == {
+        "name": "1120 E. Diehl Road, Suite 165,",
+        "address": "Naperville, IL 60563"
+    }
 
 
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
+def test_source():
+    assert parsed_items[0]["source"] == "https://www.ilboe.org/board-information/board-meetings/"
 
 
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+def test_links():
+    assert parsed_items[0]["links"] == [{
+        "href": "https://www.ilboe.org/wp-content/uploads/2019/07/July-24-2019-Agenda.pdf",
+        "title": "Agenda"
+    }]
 
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+def test_classification():
+    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
 
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
-
-
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+def test_all_day():
+    assert parsed_items[0]["all_day"] is False

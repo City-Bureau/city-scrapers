@@ -1,5 +1,4 @@
 import re
-from time import strptime
 from datetime import datetime
 
 from city_scrapers_core.constants import NOT_CLASSIFIED
@@ -23,7 +22,7 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
         """
         for item in response.css(".minutes"):
             meeting = Meeting(
-                title="Illinois Board of Examiners - Board Meeting Minutes",
+                title="Illinois Board of Examiners",
                 description=self._parse_description(item),
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
@@ -53,11 +52,7 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
         date_str = re.sub(r"(?<=\d)[a-z]+", "", item.css('.minuteDate::text').get())
         time_str = item.css('.minuteTime::text').get()
         datetimeObj = ''
-        try:
-            datetimeObj = strptime(date_str+':'+time_str,"%B %d, %Y:%I:%M %p")
-        except:
-            datetimeObj = strptime(date_str+':'+time_str,"%b %d, %Y:%I:%M %p")
-            
+        datetimeObj = datetime.strptime(date_str + ':' + time_str, "%B %d, %Y:%I:%M %p")
         return datetimeObj
 
     def _parse_end(self, item):
@@ -74,20 +69,29 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        seperator = ","
-        [name,address] = seperator.join(item.css(".minuteLocation p::text").extract()).rsplit("\n",1)
-        
+        temp_address = item.css(".minuteLocation p::text").extract()
+        [name, address] = ['', '']
+        if (temp_address):
+            [name, address] = ",".join(temp_address).rsplit("\n", 1)
+            name = self.remove_special_chars(name)
+            address = self.remove_special_chars(address)
         return {
-            "name": self.remove_special_chars(name),
-            "address": self.remove_special_chars(address),
+            "name": name,
+            "address": address,
         }
 
     def _parse_links(self, item):
         """Parse or generate links."""
         agenda_link = item.css('.minuteAgenda').css('a::attr(href)').get()
         mom_link = item.css('.minuteMinutes').css('a::attr(href)').get()
-        if(mom_link):
-            return [{"href": agenda_link, "title": "Agenda"},{"href": mom_link, "title": "Minutes"}]
+        if (mom_link):
+            return [{
+                "href": agenda_link,
+                "title": "Agenda"
+            }, {
+                "href": mom_link,
+                "title": "Minutes"
+            }]
         else:
             return [{"href": agenda_link, "title": "Agenda"}]
 
@@ -95,6 +99,6 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
         """Parse or generate source."""
         return response.url
 
-    def remove_special_chars(string_val):
+    def remove_special_chars(self, string_val):
         """Remove all special chars from string"""
-        return re.sub(r'\s+',' ',string_val).strip()
+        return re.sub(r'\s+', ' ', string_val).strip()
