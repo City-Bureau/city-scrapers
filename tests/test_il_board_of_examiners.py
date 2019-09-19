@@ -1,7 +1,7 @@
 from datetime import datetime
 from os.path import dirname, join
 
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -19,9 +19,6 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
-"""
-Uncomment below
-"""
 
 
 def test_title():
@@ -51,8 +48,8 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": "1120 E. Diehl Road, Suite 165,",
-        "address": "Naperville, IL 60563"
+        "name": "",
+        "address": "1120 E. Diehl Road, Suite 165, Naperville, IL 60563"
     }
 
 
@@ -68,7 +65,7 @@ def test_links():
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+    assert parsed_items[0]["classification"] == BOARD
 
 
 def test_all_day():

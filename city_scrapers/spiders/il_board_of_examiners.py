@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -45,7 +45,7 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
+        return BOARD
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
@@ -72,9 +72,13 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
         temp_address = item.css(".minuteLocation p::text").extract()
         [name, address] = ['', '']
         if (temp_address):
-            [name, address] = ",".join(temp_address).rsplit("\n", 1)
-            name = self.remove_special_chars(name)
-            address = self.remove_special_chars(address)
+            if (temp_address[0][0].isdigit()):
+                name = ""
+                address = self.remove_special_chars("".join(temp_address))
+            else:
+                [name, address] = "".join(temp_address).split("\n", 1)
+                name = self.remove_special_chars(name)
+                address = self.remove_special_chars(address)
         return {
             "name": name,
             "address": address,
@@ -101,4 +105,4 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def remove_special_chars(self, string_val):
         """Remove all special chars from string"""
-        return re.sub(r'\s+', ' ', string_val).strip()
+        return re.sub(r'\s+', ' ', string_val.replace("\n", ", ")).strip()
