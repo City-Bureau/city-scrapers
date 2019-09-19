@@ -53,11 +53,14 @@ class WayneEthicsBoardSpider(CityScrapersSpider):
         date_str = item.css("td:first-child::text").extract_first()
         if not date_str:
             return
-        date_str = re.sub(r"^\w+day,\s+", "", date_str).strip()
+        date_str = re.sub(r"^\w+day,\s+", "", date_str).strip().replace(".", "")
         if not re.search(r"\d{4}", date_str):
             date_str = "{}, {}".format(date_str, year)
         # Using default time, but doesn't apply to all
-        return datetime.strptime(date_str, "%B %d, %Y").replace(hour=9)
+        try:
+            return datetime.strptime(date_str, "%B %d, %Y").replace(hour=9)
+        except ValueError:
+            return datetime.strptime(date_str.replace("Sept", "Sep"), "%b %d, %Y").replace(hour=9)
 
     def _parse_links(self, item, response):
         """Parse or generate links."""
