@@ -75,9 +75,10 @@ class IlRegionalTransitSpider(CityScrapersSpider):
         documents = []
         for doc_link in item.css('a'):
             if 'onclick' in doc_link.attrib:
-                doc_url = re.search(
-                    r'(?<=window\.open\(\')http.+(?=\',)', doc_link.attrib['onclick']
-                ).group()
+                doc_url = re.search(r'(?<=window\.open\(\').+(?=\',)',
+                                    doc_link.attrib['onclick']).group()
+                if doc_url.startswith('//'):
+                    doc_url = 'http:' + doc_url
             else:
                 doc_url = doc_link.attrib['href']
             doc_note = doc_link.css('img::attr(alt)').extract_first()
