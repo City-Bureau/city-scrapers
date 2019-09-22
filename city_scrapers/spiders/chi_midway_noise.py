@@ -88,9 +88,9 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         elif 'Committee' in text:
             desc = 'Committee Meeting'
             if 'Executive' in text:
-                desc = f"Executive {desc}"
+                desc = "Executive {}".format(desc)
             elif 'Residential' in text:
-                desc = f"Residential {desc}"
+                desc = "Residential {}".format(desc)
         return desc
 
     def _parse_start(self, item):
