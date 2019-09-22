@@ -31,8 +31,13 @@ def test_title(item):
     assert item["title"] == "Midway Noise Compatibility Commission Meeting"
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_description():
+    c_e, c_r, r, s = 'Executive Committee Meeting', 'Residential Committee Meeting', \
+                     'Regular Meeting', 'Special Meeting'
+    expected_descs = [r, c_e, s, r, r, c_r, r, r, r, r, r, r, r, r, r, r, r, c_e, r, r, c_r, r,
+                      r, r, r, r, c_e, r, r, r, r, r, r, r]
+    for i in range(len(parsed_items)):
+        assert parsed_items[i]["description"] == expected_descs[i]
 
 def test_start():
     expected_starts = [datetime(2013, 1, 24, 18, 30),

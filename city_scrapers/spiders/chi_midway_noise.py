@@ -53,7 +53,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
             # Skip item if start date in the past, because the meeting has been captured above.
             if start < datetime.now():
                 continue
-            candidates.append({'description': 'Regular', 'start': start, 'links': []})
+            candidates.append({'description': 'Regular Meeting', 'start': start, 'links': []})
 
         meeting_list = []
         for elem in candidates:
