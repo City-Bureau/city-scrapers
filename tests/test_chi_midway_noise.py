@@ -34,8 +34,46 @@ def test_title(item):
 # def test_description():
 #     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_start():
+    expected_starts = [datetime(2013, 1, 24, 18, 30),
+                       datetime(2013, 2, 28, 18, 30),
+                       datetime(2013, 4, 2, 18, 30),
+                       datetime(2013, 4, 25, 18, 30),
+                       datetime(2013, 7, 25, 18, 30),
+                       datetime(2013, 10, 22, 18, 30),
+                       datetime(2013, 10, 24, 18, 30),
+                       datetime(2014, 1, 23, 18, 30),
+                       datetime(2014, 4, 24, 18, 30),
+                       datetime(2014, 7, 24, 18, 30),
+                       datetime(2014, 10, 23, 18, 30),
+                       datetime(2015, 1, 22, 18, 30),
+                       datetime(2015, 4, 23, 18, 30),
+                       datetime(2015, 7, 23, 18, 30),
+                       datetime(2015, 10, 22, 18, 30),
+                       datetime(2016, 1, 28, 18, 30),
+                       datetime(2016, 4, 28, 18, 30),
+                       datetime(2016, 7, 26, 18, 30),
+                       datetime(2016, 7, 28, 18, 30),
+                       datetime(2016, 10, 27, 18, 30),
+                       datetime(2017, 1, 23, 18, 30),
+                       datetime(2017, 1, 26, 18, 30),
+                       datetime(2017, 4, 27, 18, 30),
+                       datetime(2017, 7, 27, 18, 30),
+                       datetime(2017, 10, 26, 18, 30),
+                       datetime(2018, 1, 25, 18, 30),
+                       datetime(2018, 1, 30, 18, 30),
+                       datetime(2018, 4, 26, 18, 30),
+                       datetime(2018, 7, 26, 18, 30),
+                       datetime(2018, 10, 25, 18, 30),
+                       datetime(2019, 1, 24, 18, 30),
+                       datetime(2019, 4, 25, 18, 30),
+                       datetime(2019, 7, 25, 18, 30),
+                       datetime(2019, 10, 24, 18, 30),
+                       ]
+
+    for i in range(len(parsed_items)):
+        assert parsed_items[i]["start"] == expected_starts[i]
+
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_end(item):
