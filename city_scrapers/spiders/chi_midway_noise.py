@@ -13,7 +13,9 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
     agency = "Chicago Midway Noise Compatibility Commission"
     timezone = "America/Chicago"
     allowed_domains = ["www.flychicago.com"]
-    start_urls = ["https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"]  # noqa
+    start_urls = [
+        "https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"
+    ]  # noqa
     title = "Midway Noise Compatibility Commission Meeting"
     location = {
         "name": "The Mayfield",
@@ -36,9 +38,11 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
                 # Odd case that requires special treatment. See _parse_malformed_row() for details.
                 candidates.extend(self._parse_malformed_row(item))
                 continue
-            candidates.append({'description': self._parse_description(item),
-                               'start': self._parse_start(item),
-                               'links': self._parse_links(item)})
+            candidates.append({
+                'description': self._parse_description(item),
+                'start': self._parse_start(item),
+                'links': self._parse_links(item)
+            })
 
         # Process the meetings presented in the "Commission Meeting Schedule for ..." list:
         selector_str = "(//h3/following-sibling::ul)[1]/li/text()"
@@ -109,9 +113,11 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         m = regex.search(item)
 
         try:
-            return {'month': datetime.strptime(m.group('month'), '%B').month,
-                    'day': int(m.group('day')),
-                    'year': int(m.group('year'))}
+            return {
+                'month': datetime.strptime(m.group('month'), '%B').month,
+                'day': int(m.group('day')),
+                'year': int(m.group('year'))
+            }
         except AttributeError:  # Regex failed to match.
             return None
 
@@ -147,9 +153,11 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
 
         candidates = list()
         for pair in zip(dates_and_types, links):
-            candidates.append({'description': self._parse_description(pair[0]),
-                               'start': self._parse_start(pair[0]),
-                               'links': self._parse_links(pair[1])})
+            candidates.append({
+                'description': self._parse_description(pair[0]),
+                'start': self._parse_start(pair[0]),
+                'links': self._parse_links(pair[1])
+            })
 
         return candidates
 
