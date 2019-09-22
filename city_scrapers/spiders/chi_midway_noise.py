@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from urllib.parse import urljoin
 
-from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from scrapy.selector import Selector
@@ -69,6 +69,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
                 location=self.location,
                 links=elem['links'],
                 source=self.source,
+                status=self._parse_status(elem['start'])
             )
             meeting_list.append(meeting)
 
@@ -139,6 +140,13 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
                 except AttributeError:
                     continue  # Not a problem, some of these do not contain links.
         return documents
+
+    def _parse_status(self, start):
+        """Parse scheduling status."""
+        if start > datetime.now():
+            return TENTATIVE
+        else:
+            return PASSED
 
     def _parse_malformed_row(self, item):
         """Parse a special case of meeting information."""

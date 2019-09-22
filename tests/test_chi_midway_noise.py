@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -49,8 +49,12 @@ def test_time_notes(item):
 # def test_id():
 #     assert parsed_items[0]["id"] == "EXPECTED ID"
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+
+def test_status():
+    expected_statuses = [PASSED for i in range(33)]
+    expected_statuses.append(TENTATIVE)
+    for j in range(len(parsed_items)):
+        assert parsed_items[j]["status"] == expected_statuses[j]
 
 
 @pytest.mark.parametrize("item", parsed_items)
