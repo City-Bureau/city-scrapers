@@ -90,8 +90,46 @@ def test_end(item):
 def test_time_notes(item):
     assert item["time_notes"] == "No start times given; past records indicate 6:30PM."
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+
+def test_id():
+    expected_ids = ["chi_midway_noise/201301241830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201302281830/Executive Committee Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201304021830/Special Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201304251830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201307251830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201310221830/Residential Committee Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201310241830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201401231830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201404241830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201407241830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201410231830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201501221830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201504231830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201507231830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201510221830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201601281830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201604281830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201607261830/Executive Committee Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201607281830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201610271830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201701231830/Residential Committee Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201701261830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201704271830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201707271830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201710261830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201801251830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201801301830/Executive Committee Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201804261830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201807261830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201810251830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201901241830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201904251830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201907251830/Regular Meeting/midway_noise_compatibility_commission_meeting",
+                    "chi_midway_noise/201910241830/Regular Meeting/midway_noise_compatibility_commission_meeting"
+                    ]
+
+    for i in range(len(parsed_items)):
+        assert parsed_items[i]["id"] == expected_ids[i]
 
 
 def test_status():

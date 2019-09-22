@@ -69,8 +69,9 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
                 location=self.location,
                 links=elem['links'],
                 source=self.source,
-                status=self._parse_status(elem['start'])
+                status=self._parse_status(elem['start']),
             )
+            meeting['id'] = self._get_id(meeting, identifier=meeting['description'])
             meeting_list.append(meeting)
 
         yield from meeting_list
@@ -168,6 +169,10 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
             })
 
         return candidates
+
+    # def _get_id(self, item, identifier=None):
+    #     pass
+
 
     def _clean_bad_chars(self, text):
         """ Remove unwanted unicode characters (only one found so far). """
