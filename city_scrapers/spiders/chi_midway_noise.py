@@ -14,7 +14,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
     agency = "Chicago Midway Noise Compatibility Commission"
     timezone = "America/Chicago"
     allowed_domains = ["www.flychicago.com"]
-    start_urls = ["https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"]
+    start_urls = ["https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"]  # noqa
     title = "Midway Noise Compatibility Commission Meeting"
     location = {
         "name": "The Mayfield",
@@ -23,9 +23,10 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
     source = "https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"
 
     def parse(self, response):
-        # This page contains meetings in two different sections, which are formatted differently and contain some
-        # duplication. For this reason the meeting properties will be scraped from their separate sections, and only
-        # at the end converted into Meeting objects and yielded as a list with the 'yield from ...' behavior.
+        # This page contains meetings in two different sections, which are formatted differently
+        # and contain some duplication. For this reason the meeting properties will be scraped
+        # from their separate sections, and only at the end converted into Meeting objects and
+        # yielded as a list with the 'yield from ...' behavior.
 
         candidates = list()  # Elements will be dicts having Meeting property names as keys
 
@@ -33,7 +34,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         selector_str = "//h3/following-sibling::table/tbody/tr"
         for item in response.xpath(selector_str):
             if '<br>' in item.extract():
-                # This is an odd case that requires special treatment. See _parse_malformed_row() for details.
+                # Odd case that requires special treatment. See _parse_malformed_row() for details.
                 candidates.extend(self._parse_malformed_row(item))
                 continue
             candidates.append({'description': self._parse_description(item),
@@ -46,7 +47,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
             start = self._parse_start(item)
             if start is None:  # Skip this item if start time could not be determined.
                 continue
-            # Check to see if start date is in the past - if so, skip it because the meeting has been captured above.
+            # Skip item if start date in the past, because the meeting has been captured above.
             if start < datetime.now():
                 continue
             candidates.append({'description': 'Regular', 'start': start, 'links': []})
@@ -89,7 +90,8 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse the meeting start time."""
-        # No (clock) times are given on the site, but records of past meetings show a consistent 6:30PM start time.
+        # No (clock) times are given on the site, but records of past meetings show a consistent
+        # 6:30PM start time.
         date = self._parse_date(item)
         if date is None:
             return None
@@ -108,7 +110,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         m = regex.search(item)
 
         try:
-            return {'month': datetime.strptime(m.group('month'), '%B').month,  # This return statement is clunky.
+            return {'month': datetime.strptime(m.group('month'), '%B').month,
                     'day': int(m.group('day')),
                     'year': int(m.group('year'))}
         except AttributeError:  # Regex failed to match.
@@ -135,8 +137,8 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
 
     def _parse_malformed_row(self, item):
         """Parse a special case of meeting information."""
-        # This row diverges from the previous pattern in that it uses <br> tags within <td> cells instead of new <tr>
-        # tags for table rows.
+        # This row diverges from the previous pattern in that it uses <br> tags within <td> cells
+        # instead of new <tr> tags for table rows.
 
         # The first (left-most) <td> contains the <br>-separated list of meeting dates and types.
         # The second (right-most) <td> contains the <br>-separated list of agenda and minutes links.
