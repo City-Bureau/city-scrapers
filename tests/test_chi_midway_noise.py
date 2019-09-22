@@ -39,6 +39,7 @@ def test_description():
     for i in range(len(parsed_items)):
         assert parsed_items[i]["description"] == expected_descs[i]
 
+
 def test_start():
     expected_starts = [datetime(2013, 1, 24, 18, 30),
                        datetime(2013, 2, 28, 18, 30),
@@ -112,11 +113,104 @@ def test_location(item):
 def test_source(item):
     assert item["source"] == "https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+
+def test_links():
+    expected_links = []
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingAgenda2013.01.24.pdf', 'title': 'Agenda'},  # January 24, 2013
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2013.01.24.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingAgenda2013.02.28.pdf', 'title': 'Agenda'},  # February 28, 2013
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2013.02.28.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingAgenda2013.04.02.pdf', 'title': 'Agenda'},  # April 2, 2013
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2013.04.02.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingAgenda2013.04.25.pdf', 'title': 'Agenda'},  # April 25, 2013
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2013.04.25.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingAgenda2013.07.25.pdf', 'title': 'Agenda'},  # July 25, 2013
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes20130725Final.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2013.10MeetingAgendaResidential.pdf', 'title': 'Agenda'},  # October 22, 2013
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2013.10.22%20FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2013.10MeetingAgenda.pdf', 'title': 'Agenda'},  # October 24, 2013
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2013.10.24.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingAgenda2014.01.23.pdf', 'title': 'Agenda'},  # January 23, 2014
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2014.01.23%20FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2014.04MeetingAgenda.pdf', 'title': 'Agenda'},  # April 24, 2014
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2014.04.24%20FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/201407%20Meeting%20Agenda.pdf', 'title': 'Agenda'},  # July 24, 2014
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2014.07.24%20FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/201410MeetingAgenda.pdf', 'title': 'Agenda'},  # October 23, 2014
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2014.10.23%20FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/201501MeetingAgenda.pdf', 'title': 'Agenda'},  # January 22, 2015
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2015.01.22FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2015.04MeetingAgenda.pdf', 'title': 'Agenda'},  # April 23, 2015
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2015.04.23FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2015.07MeetingAgenda.pdf', 'title': 'Agenda'},  # July​ 23, 2015
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes_2015.07.23_FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2015.10_Meeting_Agenda.pdf', 'title': 'Agenda'},  # October 22, 2015
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes_2015.10.22_FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2016.01_Meeting_Agenda.pdf', 'title': 'Agenda'},  # January 28, 2016
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/Meeting_Minutes_2016.01.28_FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2016.04MeetingAgenda.pdf', 'title': 'Agenda'},  # April 28, 2016
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2016.04.28FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2016.07.26ExecCmteMeetingAgenda.pdf', 'title': 'Agenda'}])  # July 26, 2016
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2016.07MeetingAgenda.pdf', 'title': 'Agenda'},  # July 28, 2016
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2016.07.28FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2016.10MeetingAgenda.pdf', 'title': 'Agenda'},  # October 27, 2016
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2016-10-27FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2017.01_Residential_Meeting_Agenda.pdf', 'title': 'Agenda'}])  # January 23, 2017
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2017.01_Meeting_Agenda.pdf', 'title': 'Agenda'},  # January 26, 2017
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/Meeting_Minutes_2017.01.26_FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2017.04_Meeting_Agenda.pdf', 'title': 'Agenda'},  # April 27, 2017
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/Meeting_Minutes_2017.04.27_FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2017.07_Meeting_Agenda.pdf', 'title': 'Agenda'},  # July 27, 2017
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/Meeting_Minutes_2017.07.27_FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2017.10_Meeting_Agenda.pdf', 'title': 'Agenda'},  # October 26, 2017
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/Meeting_Minutes_2017.10.26_FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2018.01_Meeting_Agenda.pdf', 'title': 'Agenda'},  # January 25, 2018
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/MeetingMinutes2018.01.25FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2018.01_MeetingAgendaExecCmte.pdf', 'title': 'Agenda'}])  # January 30, 2018
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2018.04_Meeting_Agenda.pdf', 'title': 'Agenda'}])  # April 26, 2018
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2018.07.26_Meeting_Agenda.pdf', 'title': 'Agenda'}])  # July 26, 2018
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2018.10_Meeting_Agenda.pdf', 'title': 'Agenda'}])  # October 25, 2018
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.01_Meeting_Agenda.pdf', 'title': 'Agenda'},  # January 24, 2019
+                           {'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/Meeting_Minutes_2019.01.24_FINAL.pdf', 'title': 'Minutes'}])
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.04_Meeting_Agenda.pdf', 'title': 'Agenda'}])  # April 25, 2019
+
+    expected_links.append([{'href': 'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.07_Meeting_Agenda.pdf', 'title': 'Agenda'}])  # July 25, 2019
+
+    expected_links.append([])  # October 24, 2019 - this one is in the future and has no documents yet.
+
+    for i in range(len(parsed_items)):
+        assert parsed_items[i]["links"] == expected_links[i]
 
 
 @pytest.mark.parametrize("item", parsed_items)

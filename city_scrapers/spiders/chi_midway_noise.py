@@ -128,7 +128,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         if type(item) == Selector:
             relative_urls = item.xpath('.//a/@href').extract()
             for relative_url in relative_urls:
-                documents.append(self._build_full_url(relative_url))
+                documents.append(self._build_link_dict(relative_url))
         else:
             elems = item.split(',')
             for elem in elems:
@@ -136,7 +136,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
                 m = regex.search(elem)
                 try:
                     relative_url = m.group('url')
-                    documents.append(self._build_full_url(relative_url))
+                    documents.append(self._build_link_dict(relative_url))
                 except AttributeError:
                     continue  # Not a problem, some of these do not contain links.
         return documents
@@ -175,3 +175,12 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
 
     def _build_full_url(self, relative_url):
         return urljoin('https://' + self.allowed_domains[0], relative_url)
+
+    def _build_link_dict(self, relative_url):
+        url = self._build_full_url(relative_url)
+        if 'agenda' in url.lower():
+            return {'href': url, 'title': 'Agenda'}
+        elif 'minutes' in url.lower():
+            return {'href': url, 'title': 'Minutes'}
+        else:
+            return {'href': url, 'title': ''}
