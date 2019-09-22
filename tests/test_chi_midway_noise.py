@@ -14,7 +14,7 @@ test_response = file_response(
 )
 spider = ChiMidwayNoiseSpider()
 
-freezer = freeze_time("2019-09-19")
+freezer = freeze_time("2019-09-22")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -22,17 +22,17 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+# def test_tests():
+#     print("Please write some tests for this spider or at least disable this one.")
+#     assert False
+
+def test_count():
+    assert len(parsed_items) == 34
 
 
-"""
-Uncomment below
-"""
-
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+@pytest.mark.parametrize("item", parsed_items)
+def test_title(item):
+    assert parsed_items[0]["title"] == "Midway Noise Compatibility Commission Meeting"
 
 # def test_description():
 #     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
