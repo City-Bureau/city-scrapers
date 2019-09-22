@@ -2,11 +2,10 @@ import re
 from datetime import datetime
 from urllib.parse import urljoin
 
-from scrapy.selector import Selector
-
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from scrapy.selector import Selector
 
 
 class ChiMidwayNoiseSpider(CityScrapersSpider):
