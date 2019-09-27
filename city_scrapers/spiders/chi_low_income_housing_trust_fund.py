@@ -11,8 +11,8 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
     name = 'chi_low_income_housing_trust_fund'
     agency = 'Chicago Low-Income Housing Trust Fund'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.chicagotrustfund.org']
-    start_urls = ['http://www.chicagotrustfund.org/about-us/upcomingevents/']
+    allowed_domains = ['clihtf.org']
+    start_urls = ['http://www.clihtf.org/about-us/upcomingevents/']
 
     def parse(self, response):
         """
@@ -45,7 +45,7 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
         return a scrapy request.
         """
         next_url = response.css('.calendar-next a::attr(href)').extract_first()
-        return scrapy.Request(next_url, callback=self.parse)
+        return scrapy.Request(next_url, callback=self.parse, dont_filter=True)
 
     def _parse_calendar(self, response):
         """Parse items on the main calendar page"""
