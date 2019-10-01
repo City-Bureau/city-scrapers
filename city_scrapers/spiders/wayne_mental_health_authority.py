@@ -11,11 +11,11 @@ from city_scrapers_core.spiders import CityScrapersSpider
 class WayneMentalHealthAuthoritySpider(CityScrapersSpider):
     name = "wayne_mental_health_authority"
     agency = "Detroit Wayne Mental Health Authority"
-    timezone = "America/Chicago"
-    allowed_domains = ["www.dwmha.com"]
-    start_urls = ["https://www.dwmha.com/about-us/dwmha-authority-board/board-meeting-documents/"]
+    timezone = "America/Detroit"
+    allowed_domains = ["www.dwihn.org"]
+    start_urls = ["https://www.dwihn.org/about-us/dwmha-authority-board/board-meeting-documents/"]
     location = {
-        "name": "Detroit Wayne Mental Health Authority",
+        "name": "Detroit Wayne Integrated Health Network",
         "address": "707 W Milwaukee Ave, Detroit, MI 48202",
     }
 
@@ -24,15 +24,12 @@ class WayneMentalHealthAuthoritySpider(CityScrapersSpider):
         super().__init__(*args, **kwargs)
 
     def parse(self, response):
-        if response.url == self.start_urls[0]:
-            self._parse_documents(response)
-            yield scrapy.Request(
-                "https://www.dwmha.com/about-us/dwmha-authority-board/board-directors-2017-committee-and-board-meeting-schedule/",  # noqa
-                callback=self._parse_schedule,
-                dont_filter=True
-            )
-        else:
-            yield from self._parse_schedule(response)
+        self._parse_documents(response)
+        yield scrapy.Request(
+            "https://www.dwihn.org/about-us/dwmha-authority-board/board-directors-2017-committee-and-board-meeting-schedule/",  # noqa
+            callback=self._parse_schedule,
+            dont_filter=True
+        )
 
     def _parse_documents(self, response):
         """Parse links from documents page"""

@@ -12,12 +12,12 @@ from city_scrapers.spiders.wayne_mental_health_authority import WayneMentalHealt
 test_response = file_response(
     join(dirname(__file__), "files", "wayne_mental_health_authority.html"),
     url=(
-        "https://www.dwmha.com/about-us/dwmha-authority-board/board-directors-2017-committee-and-board-meeting-schedule/"  # noqa
+        "https://www.dwihn.org/about-us/dwmha-authority-board/board-directors-2017-committee-and-board-meeting-schedule/"  # noqa
     ),
 )
 test_doc_response = file_response(
     join(dirname(__file__), "files", "wayne_mental_health_authority_docs.html"),
-    url="https://www.dwmha.com/about-us/dwmha-authority-board/board-meeting-documents/",
+    url="https://www.dwihn.org/about-us/dwmha-authority-board/board-meeting-documents/",
 )
 spider = WayneMentalHealthAuthoritySpider()
 
@@ -71,7 +71,7 @@ def test_location():
 def test_source():
     assert parsed_items[0][
         "source"
-    ] == "https://www.dwmha.com/about-us/dwmha-authority-board/board-directors-2017-committee-and-board-meeting-schedule/"  # noqa
+    ] == "https://www.dwihn.org/about-us/dwmha-authority-board/board-directors-2017-committee-and-board-meeting-schedule/"  # noqa
 
 
 def test_links():
