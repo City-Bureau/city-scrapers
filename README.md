@@ -12,7 +12,7 @@ That’s why City Bureau is working together with a team of civic coders to deve
 
 ## What are the City Scrapers?
 
-The City Scrapers collect information about public meetings. Everyday, the City Scrapers go out and fetch information about new meetings from Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them.
+The City Scrapers collect information about public meetings. Every day, the City Scrapers go out and fetch information about new meetings from the Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them.
 
 Community members are also welcome to use this code to set up their own databases.
 
@@ -25,8 +25,8 @@ From building a scraper, you'll gain experience with:
 - how the web works (HTTP requests and responses, reading HTML)
 - writing functions and tests in Python
 - version control and collaborative coding (git and Github)
-- a basic data file format (json), working with a schema and data validation
-- problem solving, finding patterns, designing robust code
+- a basic data file format (JSON), working with a schema and data validation
+- problem-solving, finding patterns, designing robust code
 
 ## How can I set up City Scrapers for my area?
 
@@ -52,7 +52,7 @@ Point of contact: Darryl Holliday [@diaholliday](https://github.com/diaholliday)
 2. Read about [how we collaborate](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md) and review our [Code of Conduct](https://github.com/City-Bureau/city-scrapers/blob/master/CODE_OF_CONDUCT.md).
 3. Check out our [documentation](https://cityscrapers.org/docs/development/), and get started with [Installation](https://cityscrapers.org/docs/development/#installation) and [Contributing a spider](https://cityscrapers.org/docs/development/#contribute).
 
-We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on [Slack](https://citybureau.slack.com/#labs_city_scrapers) for support if you need it. We also meet up in person to work together regularly, and post about upcoming meetups in Slack.
+We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on [Slack](https://citybureau.slack.com/#labs_city_scrapers) for support if you need it. We also meet up in person to work together regularly and post about upcoming meetups in Slack.
 
 For those familiar with the project, please see the [help-wanted GitHub issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
 

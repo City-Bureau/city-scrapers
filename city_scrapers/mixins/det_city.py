@@ -213,6 +213,9 @@ class DetCityMixin:
         time_str = re.sub(r'\s+', '', re.sub(r'to|from|\.', '', time_str.lower())).replace('o', '0')
         if ':' not in time_str:
             time_fmt = '%I%p'
+        elif len(time_str) < 6:
+            time_fmt = '%I%p'
+            time_str = time_str.replace(':', '')
         return datetime.strptime(time_str, time_fmt).time()
 
     def _response_next_url(self, response):

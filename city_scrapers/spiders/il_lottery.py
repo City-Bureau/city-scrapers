@@ -135,14 +135,21 @@ class IlLotterySpider(CityScrapersSpider):
         meeting_xpath = '//p[contains(., "Upcoming meeting dates")]'
 
         # future meetings are separated by <br> tags
-        meeting_lines = response.xpath(meeting_xpath).css('p').get().split("<br>")
+        meeting_lines = response.xpath(meeting_xpath).css('p *::text').extract()
 
-        # only keep <br> lines that include a weekday
+        special_meeting_xpath = '//p[contains(., "Special meeting of")]'
+        special_meeting_lines = response.xpath(special_meeting_xpath).css("p *::text").extract()
+        # only keep lines that include a weekday
         weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         meeting_lines = [x for x in meeting_lines if any(weekday in x for weekday in weekdays)]
+        special_meeting_lines = [
+            'Special ' + line
+            for line in special_meeting_lines
+            if any(weekday in line for weekday in weekdays)
+        ]
 
         meetings = {}
-        for meeting_text in meeting_lines:
+        for meeting_text in meeting_lines + special_meeting_lines:
             meeting_date = self.parse_day(meeting_text)
             meetings = self._update_meeting_value(meetings, meeting_date, meeting_text)
 
