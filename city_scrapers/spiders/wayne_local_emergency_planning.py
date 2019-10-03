@@ -6,7 +6,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
     name = "wayne_local_emergency_planning"
     agency = "Wayne County Local Emergency Planning Committee"
-    timezone = "America/Chicago"
+    timezone = "America/Detroit"
     allowed_domains = ["www.waynecounty.com"]
     start_urls = ["https://www.waynecounty.com/departments/hsem/wayne-county-lepc.aspx"]
 
