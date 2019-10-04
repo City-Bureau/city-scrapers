@@ -24,7 +24,8 @@ freezer.stop()
 
 def test_tests():
     print("Please write some tests for this spider or at least disable this one.")
-    assert False
+    #assert False
+    assert True # disabled this test
 
 
 """
@@ -77,8 +78,9 @@ Uncomment below
 #     }]
 
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+def test_classification():
+    print("len=" + str(len(parsed_items)))	
+    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
 
 
 # @pytest.mark.parametrize("item", parsed_items)
