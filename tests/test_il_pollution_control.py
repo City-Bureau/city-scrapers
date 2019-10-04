@@ -8,31 +8,52 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.il_pollution_control import IlPollutionControlSpider
 
+# TODO - Don't forget to implement this.
+# test_minutes_response = file_response(
+#     join(dirname(__file__), "files", "il_pollution_control.html"),
+#     url="https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
+# )
+
 test_response = file_response(
-    join(dirname(__file__), "files", "il_pollution_control.html"),
-    url="https://pcb.illinois.gov/ClerksOffice/Calendar",
+    join(dirname(__file__), "files", "il_pollution_control.json"),
+    url="https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents",
 )
 spider = IlPollutionControlSpider()
 
 freezer = freeze_time("2019-10-03")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+parsed_items = [item for item in spider._parse_json(test_response)]
 
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+def test_count():
+    assert len(parsed_items) == 87
 
 
-"""
-Uncomment below
-"""
+def test_title():
+    # Define expected number of occurrences of each title:
+    expected_title_counts = {"Board Meeting": 30,
+                             "Brown Bag Seminar": 4,
+                             "Hearing PCB 2012-035": 1,
+                             "Hearing PCB 2014-003": 4,
+                             "Hearing PCB 2018-083": 1,
+                             "Hearing R2018-020": 9,
+                             "Hearing R2018-024": 4,
+                             "Hearing R2018-029": 2,
+                             "Hearing R2018-030": 4,
+                             "Hearing R2018-032": 12,
+                             "Hearing R2019-001": 10,
+                             "Hearing R2019-006": 2,
+                             "Hearing R2019-018": 4}
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+    # Calculate actual counts from scraped items:
+    all_titles = [item["title"] for item in parsed_items]
+    unique_titles = set(all_titles)
+    title_counts = {ut: len([t for t in all_titles if t == ut]) for ut in unique_titles}
+    for title in title_counts:
+        assert(title_counts[title] == expected_title_counts[title])
 
 
 # def test_description():

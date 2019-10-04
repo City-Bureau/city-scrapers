@@ -42,7 +42,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             if item["CalendarTypeDesc"] == "Holiday":
                 continue  # Not a meeting - just an indication of a holiday on the calendar.
             meeting = Meeting(
-                title=item["CalendarTypeDesc"].strip(),
+                title=item["CalendarTypeDesc"].replace("CANCELLED", "").strip(),
                 description=self._parse_description(item),
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
