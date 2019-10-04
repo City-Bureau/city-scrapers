@@ -38,8 +38,8 @@ class DetCharterReviewSpider(CityScrapersSpider):
                 title=title,
                 description="",
                 classification=self._parse_classification(title),
-                start=self._parse_dt(item["start"]["dateTime"]),
-                end=self._parse_dt(item["end"]["dateTime"]),
+                start=self._parse_dt(item["start"]),
+                end=self._parse_dt(item["end"]),
                 time_notes="",
                 all_day=False,
                 location=location,
@@ -60,8 +60,11 @@ class DetCharterReviewSpider(CityScrapersSpider):
             return FORUM
         return COMMISSION
 
-    def _parse_dt(self, dt_str):
-        return datetime.strptime(dt_str[:19], "%Y-%m-%dT%H:%M:%S")
+    def _parse_dt(self, dt_obj):
+        if "dateTime" in dt_obj:
+            return datetime.strptime(dt_obj["dateTime"][:19], "%Y-%m-%dT%H:%M:%S")
+        elif "date" in dt_obj:
+            return datetime.strptime(dt_obj["date"], "%Y-%m-%d")
 
     def _parse_location(self, item):
         if "location" not in item:
