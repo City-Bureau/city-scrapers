@@ -54,14 +54,11 @@ def test_time_notes():
 
 
 def test_id():
-    #print(parsed_items[0]["id"])
-    #print("Wayne County LEPC - Wednesday, March 6, 2019")
-    #exit()
     assert parsed_items[0]["id"] == "wayne_local_emergency_planning/201903061400/x/wayne_county_lepc_meeting_wednesday_march_6_2019"
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_status():
+    assert parsed_items[0]["status"] == "passed"
 
 
 def test_location():
