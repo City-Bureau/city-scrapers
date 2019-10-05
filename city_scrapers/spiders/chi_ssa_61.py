@@ -19,6 +19,7 @@ class ChiSsa61Spider(CityScrapersSpider):
 
     def parse(self, response):
         """Parse meetings on upcoming and minutes pages"""
+        self._validate_location(response)
         today = datetime.now().replace(hour=0, minute=0)
         for item in response.xpath('//div[@rel="1"]/ul/li/strong'):
             text = item.xpath('./text()').extract_first()
@@ -63,3 +64,8 @@ class ChiSsa61Spider(CityScrapersSpider):
             tm = time(10)
         if dt:
             return datetime.combine(dt, tm)
+
+    def _validate_location(self, response):
+        xpath_test = "//*[@id=\"about\"]/div/div[2]/div/div[2]/div[1]/p[10]/text()"
+        if "Polsky Center for Innovation" not in " ".join(response.xpath(xpath_test).extract()):
+            raise ValueError("Meeting location has changed")
