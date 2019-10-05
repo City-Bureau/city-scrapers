@@ -68,10 +68,6 @@ def test_title():
 #     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
-
-
 # def test_id():
 #     assert parsed_items[0]["id"] == "EXPECTED ID"
 

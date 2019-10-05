@@ -49,7 +49,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
                 start=self._parse_start(item),
                 end=None,
                 all_day=item["IsFullDay"],
-                time_notes=self._parse_time_notes(item),
+                time_notes="",
                 location=self._parse_location(item),
                 links=self._parse_links(item),
                 source=self._parse_source(response),
@@ -76,10 +76,6 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         return datetime.strptime(item["StartDateTime"], '%m/%d/%Y %H:%M:%S %p')
-
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
 
     def _parse_location(self, item):
         """Parse or generate location."""
