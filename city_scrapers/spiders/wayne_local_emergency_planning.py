@@ -11,6 +11,20 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
     timezone = "America/Detroit"
     allowed_domains = ["www.waynecounty.com"]
     start_urls = ["https://www.waynecounty.com/departments/hsem/wayne-county-lepc.aspx"]
+	
+	
+	
+	
+	
+    def parse_meetings(response):
+        #meeting_xpath = """
+        #        //td[preceding::h3[1]/text()[
+        #            contains(., "Meeting Schedule")
+        #            ]]"""
+					
+        meeting_xpath = '''//p/p'''
+		
+        return response.xpath(meeting_xpath)		
 
     def parse(self, response):
         """
@@ -35,11 +49,23 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 		
         #exit()
 		
-        test_list = ["test item", "next test item"]
+        #test_list = ["test item", "next test item"]
+        #test_list = self.parse_meetings(response)
+        #test_list = response.xpath('//p/p')
+        meeting_dates = response.xpath('''//p[contains(text(),'day, ')]''')
+        #test_list = response.xpath("//div//p[text() = 'Meeting Schedule']/following-sibling:://div//p")		
+        #test_list = response.xpath("//div//p[text() = '<strong>Meeting Schedule</strong>']//p")		
+
 		
+		
+        #print('length of test_list = ' + str(len(test_list)))
+        #exit()
 		
         #for item in response.css(".meetings"):
-        for item in test_list:
+        for item in meeting_dates:
+            #print('------------')
+            #print(item)
+            
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -52,7 +78,7 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
                 links=self._parse_links(item),
                 source=self._parse_source(response),
             )
-			
+            
 			
 			
 
@@ -60,7 +86,8 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
-
+        #exit()
+		
     def _parse_title(self, item):
         """Parse or generate meeting title."""
         return "test title"
