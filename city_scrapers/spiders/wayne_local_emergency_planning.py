@@ -2,8 +2,8 @@ from city_scrapers_core.constants import NOT_CLASSIFIED, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
-
 from datetime import datetime
+from dateutil import parser
 
 
 class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
@@ -27,6 +27,8 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
         meeting_dates = response.xpath('''//p[contains(text(),'day, ')]''') 
 
         for item in meeting_dates:
+            # clean off the paragraph tags from the parsed meeting date (item)
+            item = str(item.extract()).replace('<p>','').replace('</p>','')
             #print('------------')
             #print(item)
             
@@ -53,15 +55,14 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
         """Parse or generate meeting title."""
         prefix = 'Wayne County LEPC Meeting - '
 		# create a unique title for each meeting by combining a meaningful prefix with a specific meeting date
-		# don't forget to clean off the paragraph tags from the parsed meeting date
-        ret_val = prefix + str(item.extract()).replace('<p>','').replace('</p>','')
+        ret_val = prefix + item
         #print(ret_val)
         #exit()
         return ret_val
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        return "test description"
+        return "" # no description of this specific meeting is shown, so we return an empty string
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
@@ -69,8 +70,9 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 		
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        test_dt = datetime.now()
-        return test_dt
+        dt = parser.parse(item)
+        #test_dt = datetime.now()
+        return dt
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
