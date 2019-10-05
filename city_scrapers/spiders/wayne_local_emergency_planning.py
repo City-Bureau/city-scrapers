@@ -42,9 +42,6 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
                 links=self._parse_links(item),
                 source=self._parse_source(response),
             )
-            
-			
-			
 
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
@@ -54,7 +51,13 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 		
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return "test title"
+        prefix = 'Wayne County LEPC Meeting - '
+		# create a unique title for each meeting by combining a meaningful prefix with a specific meeting date
+		# don't forget to clean off the paragraph tags from the parsed meeting date
+        ret_val = prefix + str(item.extract()).replace('<p>','').replace('</p>','')
+        #print(ret_val)
+        #exit()
+        return ret_val
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
