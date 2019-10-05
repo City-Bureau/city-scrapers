@@ -70,28 +70,30 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 		
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        dt = parser.parse(item)
-        #test_dt = datetime.now()
+        dt = parser.parse(item + " 2pm") # all meetings will be at 2pm
         return dt
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        test_dt = datetime.now()
-        return None
+        return None # no end time is shown on the webpage
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
-        return "test notes"
+        return "The Wayne County LEPC meets quarterly. All meetings will be at 2:00 p.m."
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
-        return False
+        return False # Since the meetings start at 2pm, I assume this must be False
 
     def _parse_location(self, item):
         """Parse or generate location."""
+        ''' from webpage:
+            Wayne County Community College, 21000 Northline Road, Taylor, 
+            in the MIPSE Building. The MIPSE Building is the fire training 
+            facility located at the rear of the campus.'''
         return {
-            "address": "1234",
-            "name": "teststreet",
+            "address": "21000 Northline Road, Taylor, MI",
+            "name": "Wayne County Community College, in the MIPSE Building",
         }
 
     def _parse_links(self, item):
