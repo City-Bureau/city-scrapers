@@ -46,7 +46,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             title = item["CalendarTypeDesc"].replace("CANCELLED", "").strip()
             meeting = Meeting(
                 title=title,
-                description=self._parse_description(item),
+                description="",  # Too inconsistent to parse with expectation of accuracy
                 classification=self._parse_classification(title),
                 start=self._parse_start(item),
                 end=None,
@@ -63,9 +63,6 @@ class IlPollutionControlSpider(CityScrapersSpider):
             print(meeting)
             yield meeting
 
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""

@@ -56,10 +56,6 @@ def test_title():
         assert(title_counts[title] == expected_title_counts[title])
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
-
-
 # def test_start():
 #     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
 
