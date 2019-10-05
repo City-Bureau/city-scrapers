@@ -33,7 +33,7 @@ queuelib==1.5.0
 raven==6.10.0
 requests==2.22.0
 scrapy-sentry==0.9.0
-scrapy-wayback-middleware==0.0.2
+scrapy-wayback-middleware==0.1.0
 scrapy==1.7.3
 service-identity==18.1.0
 six==1.12.0

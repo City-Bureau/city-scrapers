@@ -2,10 +2,7 @@ language: python
 python:
   - 3.5
   - 3.6
-  - 3.7-dev
-install:
-  - pip install pipenv
-  - pipenv install --ignore-pipfile --dev --three --system
+  - 3.7
 script:
   - isort --check-only --diff || exit 1
   - yapf --diff --recursive ./city_scrapers/ ./tests/ || exit 1
