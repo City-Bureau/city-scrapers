@@ -1,6 +1,7 @@
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import NOT_CLASSIFIED, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
 
 from datetime import datetime
 
@@ -98,8 +99,7 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
-        #return COMMITTEE #done
+        return COMMITTEE #done
 		
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""

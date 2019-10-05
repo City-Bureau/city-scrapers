@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import NOT_CLASSIFIED, COMMITTEE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -80,7 +80,7 @@ Uncomment below
 
 def test_classification():
     print("len=" + str(len(parsed_items)))	
-    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+    assert parsed_items[0]["classification"] == COMMITTEE
 
 
 # @pytest.mark.parametrize("item", parsed_items)
