@@ -83,8 +83,24 @@ def test_title():
 #     }
 
 
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+def test_source():
+    expected_counts = {"https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=15564": 2,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=15596": 10,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=15588": 12,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=15480": 9,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=15559": 4,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=15565": 4,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=15607": 2,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=16703": 4,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=15594": 1,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=14216": 1,
+                       "https://pcb.illinois.gov/Cases/GetCaseDetailsById?caseId=14657": 4,
+                       "https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents": 34
+                       }
+    actual_counts = {}
+    for key in expected_counts:
+        actual_counts[key] = len([item for item in parsed_items if item['source'] == key])
+        assert actual_counts[key] == expected_counts[key]
 
 
 # def test_links():

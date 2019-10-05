@@ -1,8 +1,9 @@
 from collections import defaultdict
 from datetime import datetime
 import json
+from urllib.parse import urljoin
 
-from scrapy import Request
+from scrapy import Request, Selector
 
 from city_scrapers_core.constants import BOARD, FORUM, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
@@ -15,6 +16,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     allowed_domains = ["pcb.illinois.gov"]
     start_urls = ["https://pcb.illinois.gov/ClerksOffice/MeetingMinutes"]
+    json_url = "https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents"
 
     def __init__(self, *args, **kwargs):
         self.link_map = defaultdict(list)  # Populated by self._parse_minutes()
@@ -28,7 +30,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
         self._parse_minutes(response)
 
         # Parse JSON containing meeting data:
-        yield Request("https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents", callback=self._parse_json)
+        yield Request(self.json_url, callback=self._parse_json)
 
     def _parse_minutes(self, response):
         """ Populate self.link_map """
@@ -52,7 +54,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
                 time_notes="",
                 location=self._parse_location(item),
                 links=self._parse_links(item),
-                source=self._parse_source(response),
+                source=self._parse_source(item),
             )
 
             # meeting["status"] = self._get_status(meeting)
@@ -88,6 +90,11 @@ class IlPollutionControlSpider(CityScrapersSpider):
         """Parse or generate links."""
         return [{"href": "", "title": ""}]
 
-    def _parse_source(self, response):
+    def _parse_source(self, item):
         """Parse or generate source."""
-        return response.url
+        # Look for links for further details:
+        rel_url = Selector(text=item["Description"]).xpath(".//a/@href").get()
+        if rel_url:
+            return urljoin(f"https://{self.allowed_domains[0]}", rel_url)  # TODO WRITE TEST IN MORNING
+        else:
+            return self.json_url
