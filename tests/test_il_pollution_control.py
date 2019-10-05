@@ -3,6 +3,7 @@ from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, FORUM, NOT_CLASSIFIED
+from city_scrapers_core.constants import CANCELLED, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -68,8 +69,15 @@ def test_title():
 #     assert parsed_items[0]["id"] == "EXPECTED ID"
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_status():
+    expected_counts = {CANCELLED: 11,
+                       PASSED: 66,
+                       TENTATIVE: 10}
+    actual_counts = {}
+    for key in expected_counts:
+        actual_counts[key] = len([item for item in parsed_items if item['status'] == key])
+        print(f"{key}: {actual_counts[key]}")
+        assert actual_counts[key] == expected_counts[key]
 
 
 # def test_location():

@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 from scrapy import Request, Selector
 
 from city_scrapers_core.constants import BOARD, FORUM, NOT_CLASSIFIED
+from city_scrapers_core.constants import CANCELLED, PASSED, TENTATIVE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -57,12 +58,20 @@ class IlPollutionControlSpider(CityScrapersSpider):
                 source=self._parse_source(item),
             )
 
-            # meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._parse_status(meeting, item)
             meeting["id"] = self._get_id(meeting)
 
             print(meeting)
             yield meeting
 
+    def _parse_status(self, meeting, item):
+        text = " ".join([item['CalendarTypeDesc'], item['Description']]).lower()
+        if "cancel" in text:
+            return CANCELLED
+        elif meeting["start"] < datetime.now():
+            return PASSED
+        else:
+            return TENTATIVE
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
