@@ -14,18 +14,6 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
     start_urls = ["https://www.waynecounty.com/departments/hsem/wayne-county-lepc.aspx"]
 	
 	
-	
-	
-	
-    def parse_meetings(response):
-        #meeting_xpath = """
-        #        //td[preceding::h3[1]/text()[
-        #            contains(., "Meeting Schedule")
-        #            ]]"""
-					
-        meeting_xpath = '''//p/p'''
-		
-        return response.xpath(meeting_xpath)		
 
     def parse(self, response):
         """
@@ -34,35 +22,10 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-		
-        #print("type=" + str(type(response)))
-        #print("response=" + str(response))	
-        #print("response.css=" + str(response.css))			
-		
-        #from scrapy.selector import Selector
-        #selector = Selector(response)
-        html = response.xpath('//body//text()')
-        #print("html=" + str(html))	
-		
-        '''current_year_non_empty_rows = response.xpath(
-            '//section[contains(.,"%s")]//tbody/tr[child::td/text()]' % current_year
-        '''
-		
-        #exit()
-		
-        #test_list = ["test item", "next test item"]
-        #test_list = self.parse_meetings(response)
-        #test_list = response.xpath('//p/p')
-        meeting_dates = response.xpath('''//p[contains(text(),'day, ')]''')
-        #test_list = response.xpath("//div//p[text() = 'Meeting Schedule']/following-sibling:://div//p")		
-        #test_list = response.xpath("//div//p[text() = '<strong>Meeting Schedule</strong>']//p")		
 
-		
-		
-        #print('length of test_list = ' + str(len(test_list)))
-        #exit()
-		
-        #for item in response.css(".meetings"):
+        # the meeting dates I've seen all had the substring 'day, ' as in 'Wednesday, March 6, 2019'       
+        meeting_dates = response.xpath('''//p[contains(text(),'day, ')]''') 
+
         for item in meeting_dates:
             #print('------------')
             #print(item)
