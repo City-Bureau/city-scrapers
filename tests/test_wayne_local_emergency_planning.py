@@ -47,6 +47,8 @@ def test_start():
 
 def test_end():
     assert parsed_items[0]["end"] is None
+
+
 #     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
 
 
@@ -79,6 +81,8 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == []
+
+
 #     assert parsed_items[0]["links"] == [{
 #       "href": "EXPECTED HREF",
 #       "title": "EXPECTED TITLE"
@@ -92,3 +96,7 @@ def test_classification():
 @pytest.mark.parametrize("item", parsed_items)
 def test_all_day(item):
     assert item["all_day"] is False
+
+
+def test_correct_number_of_items():
+    assert len(parsed_items) == 4
