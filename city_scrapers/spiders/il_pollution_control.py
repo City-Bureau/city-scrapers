@@ -4,7 +4,7 @@ import json
 
 from scrapy import Request
 
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD, FORUM, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -41,10 +41,11 @@ class IlPollutionControlSpider(CityScrapersSpider):
         for item in data:
             if item["CalendarTypeDesc"] == "Holiday":
                 continue  # Not a meeting - just an indication of a holiday on the calendar.
+            title = item["CalendarTypeDesc"].replace("CANCELLED", "").strip()
             meeting = Meeting(
-                title=item["CalendarTypeDesc"].replace("CANCELLED", "").strip(),
+                title=title,
                 description=self._parse_description(item),
-                classification=self._parse_classification(item),
+                classification=self._parse_classification(title),
                 start=self._parse_start(item),
                 end=None,
                 all_day=item["IsFullDay"],
@@ -64,9 +65,14 @@ class IlPollutionControlSpider(CityScrapersSpider):
         """Parse or generate meeting description."""
         return ""
 
-    def _parse_classification(self, item):
+    def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
+        if "Board" in title:
+            return BOARD
+        elif "Seminar" in title:
+            return FORUM
+        else:
+            return NOT_CLASSIFIED
 
     def _parse_start(self, item):
         return datetime.strptime(item["StartDateTime"], '%m/%d/%Y %H:%M:%S %p')

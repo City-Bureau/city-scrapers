@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD, FORUM, NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -98,10 +98,14 @@ def test_title():
 #     }]
 
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+def test_classification():
+    expected_counts = {BOARD: 30, FORUM: 4, NOT_CLASSIFIED: 53}
+    actual_counts = {}
+    for key in expected_counts:
+        actual_counts[key] = len([item for item in parsed_items if item['classification'] == key])
+        assert actual_counts[key] == expected_counts[key]
 
 
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+@pytest.mark.parametrize("item", parsed_items)
+def test_all_day(item):
+    assert item["all_day"] is False
