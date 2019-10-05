@@ -60,10 +60,6 @@ class IlPollutionControlSpider(CityScrapersSpider):
             print(meeting)
             yield meeting
 
-    def _parse_title(self, item):
-        """Parse or generate meeting title."""
-        return ""
-
     def _parse_description(self, item):
         """Parse or generate meeting description."""
         return ""
@@ -75,17 +71,9 @@ class IlPollutionControlSpider(CityScrapersSpider):
     def _parse_start(self, item):
         return datetime.strptime(item["StartDateTime"], '%m/%d/%Y %H:%M:%S %p')
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
-
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
         return ""
-
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
 
     def _parse_location(self, item):
         """Parse or generate location."""
