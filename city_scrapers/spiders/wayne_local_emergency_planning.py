@@ -98,8 +98,8 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        return [{"href": "google.com", "title": "google"}]
+        return [] # I didn't see any links for minutes or agendas
 
     def _parse_source(self, response):
         """Parse or generate source."""
-        return response.url
+        return response.url # I did't see a more specific detail page
