@@ -67,6 +67,18 @@ def test_status():
     assert parsed_items[0]["status"] == "passed"
 
 
+def test_status1():
+    assert parsed_items[1]["status"] == "passed"
+
+
+def test_status2():
+    assert parsed_items[2]["status"] == "passed"
+
+
+def test_status3():
+    assert parsed_items[3]["status"] == "tentative"
+
+
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Wayne County Community College, in the MIPSE Building",
