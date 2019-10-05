@@ -80,11 +80,16 @@ def test_status():
         assert actual_counts[key] == expected_counts[key]
 
 
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
+def test_location():
+    expected_counts = {"Chicago IPCB Office": 55,
+                       "Springfield IPCB Office": 14,
+                       "Illinois EPA": 3,
+                       "": 15}
+    actual_counts = {}
+    for key in expected_counts:
+        actual_counts[key] = len([item for item in parsed_items if item['location']['name'] == key])
+        print(f"{key}: {actual_counts[key]}")
+        assert actual_counts[key] == expected_counts[key]
 
 
 def test_source():

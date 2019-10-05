@@ -47,7 +47,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             title = item["CalendarTypeDesc"].replace("CANCELLED", "").strip()
             meeting = Meeting(
                 title=title,
-                description="",  # Too inconsistent to parse with expectation of accuracy
+                description="",  # Too inconsistent to parse accurately
                 classification=self._parse_classification(title),
                 start=self._parse_start(item),
                 end=None,
@@ -87,10 +87,28 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        return {
-            "address": "",
-            "name": "",
-        }
+        text = " ".join([item['Description'], item['Location']]).lower()
+        if "thompson" in text:
+            return {
+                "address": "James R. Thompson Center - 100 W. Randolph St. Suite 11-500, Chicago, IL 60601",  # noqa
+                "name": "Chicago IPCB Office",
+            }
+        elif "springfield" in text or "llinois pollution control board" in text:
+            return {
+                "address": "1021 N. Grand Ave. E. - Room 1244 N, Springfield, IL 62702",
+                "name": "Springfield IPCB Office",
+            }
+        elif "sangamo room" in text:
+            return {
+                "address": "1021 N. Grand Ave. E. - Sangamo Room, Springfield, IL 62702",
+                "name": "Illinois EPA",
+            }
+        else:
+            return {
+                "address": "",
+                "name": "",
+            }
+
 
     def _parse_links(self, item):
         """Parse or generate links."""
