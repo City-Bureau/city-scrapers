@@ -3,9 +3,6 @@ python:
   - 3.5
   - 3.6
   - 3.7
-install:
-  - pip install pipenv
-  - pipenv install --ignore-pipfile --dev
 script:
   - isort --check-only --diff || exit 1
   - yapf --diff --recursive ./city_scrapers/ ./tests/ || exit 1
