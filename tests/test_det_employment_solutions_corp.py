@@ -3,7 +3,7 @@ from operator import itemgetter
 from os.path import dirname, join
 
 import pytest  # noqa
-from city_scrapers_core.constants import NOT_CLASSIFIED, PASSED
+from city_scrapers_core.constants import COMMITTEE, BOARD, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -27,7 +27,7 @@ freezer.start()
 
 spider._parse_schedule_pdf(test_pdf_response)
 parsed_items = sorted(
-    [item for item in spider._parse_documents(test_response)],
+    [item for item in spider.parse(test_response)],
     key=itemgetter("start"),
 )
 
@@ -39,8 +39,7 @@ def test_count():
 
 
 def test_title():
-    #FIXME see if way to find right board titles (perhaps from links?)
-    assert parsed_items[0]["title"] == "Detroit Employment Solutions Corporation"
+    assert parsed_items[0]["title"] == "Audit and Finance Committee"
 
 
 def test_description():
@@ -74,25 +73,21 @@ def test_location():
 def test_source():
     assert parsed_items[0]["source"] == "https://www.descmiworks.com/about-us/public-meetings/"
 
-# FIXME functionality still WIP
-#def test_links():
-    #assert parsed_items[0]["links"] == [
-        #{
-            #"href":
-                #"https://www.chicago.gov/content/dam/city/depts/cchr/BoardMeetings/BoardAgenda/2019JanuaryBoardAgenda.pdf",  # noqa
-            #"title": "Agenda"
-        #},
-        #{
-            #"href":
-                #"https://www.chicago.gov/content/dam/city/depts/cchr/BoardMeetings/BoardMinutes/2019JanuaryMinutesCCHR%20Board.pdf",  # noqa
-            #"title": "Minutes"
-        #}
-    #]
-    #assert parsed_items[-1]["links"] == []
+
+def test_links():
+    assert parsed_items[0]["links"] == [
+        {
+            "href":
+                "https://www.descmiworks.com/wp-content/uploads/Audit-and-Finance-Committe-Meeting-January-31-2019.pdf",  # noqa
+            "title": "Minutes"
+        }
+    ]
+    assert parsed_items[-1]["links"] == []
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+    assert parsed_items[0]["classification"] == COMMITTEE
+    assert parsed_items[1]["classification"] == BOARD
 
 
 def test_all_day():

@@ -4,7 +4,7 @@ from datetime import datetime
 from io import BytesIO
 
 import scrapy
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMITTEE, BOARD, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from PyPDF2 import PdfFileReader
@@ -13,7 +13,7 @@ from PyPDF2 import PdfFileReader
 class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
     name = "det_employment_solutions_corp"
     agency = "Detroit Employment Solutions Corporation"
-    timezone = "America/Chicago"
+    timezone = "America/Detroit"
     allowed_domains = ["www.descmiworks.com"]
     start_urls = ["https://www.descmiworks.com/about-us/public-meetings/"]
     location = {
@@ -25,18 +25,18 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
         self.meeting_dates = []
         self.docs_link = ""
         super().__init__(*args, **kwargs)
+    
 
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
+        #`parse` should always `yield` Meeting items.
 
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
-        """
+        #Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
+        #needs.
+
         schedule_link = ""
-        for link in response.css(".related-links a"):
+        for link in response.css("a"):
             link_text = " ".join(link.css("*::text").extract())
-            if "Board" in link_text and "Schedule" in link_text:
+            if "Schedule" in link_text:
                 schedule_link = link.attrib["href"]
             elif "Minutes" in link_text:
                 self.docs_link = link.attrib["href"]
@@ -47,12 +47,15 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
         else:
             raise ValueError("Required links not found")
 
+
     def _parse_schedule(self, response):
-        """Parse PDF and then yield to documents page"""
+        #Parse PDF and then yield to documents page""""
+
         self._parse_schedule_pdf(response)
         yield scrapy.Request(
             response.urljoin(self.docs_link), callback=self._parse_documents, dont_filter=True
         )
+
 
     def _parse_schedule_pdf(self, response):
         """Parse dates and details from schedule PDF"""
@@ -69,15 +72,13 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
         clean_text = re.sub(r"(?<=[A-Z0-9:])\n", "", clean_text, flags=re.M).replace("\n", " ")
         # Remove duplicate spaces
         clean_text = re.sub(r"\s+", " ", clean_text)
-        # FIXME must delete later
-        print(clean_text)
+
         year_str = re.search(r"\d{4}", clean_text).group()
         self._validate_location(clean_text)
 
         time_strs = re.findall(
             r"\d{1,2}[:]\d{2}\s*[a|p|A|P][m|M].*?\d{1,2}[:]\d{2}\s*[a|p|A|P][m|M]", clean_text)
 
-        print(time_strs)
         time_tuples = []
         for time_str in time_strs:
             time_tuples.append(tuple(re.findall(r"\d{1,2}[:]\d{2}\s*[a|p|A|P][m|M]", time_str)))
@@ -106,15 +107,13 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
     def _parse_documents(self, response):
         """Parse agenda and minutes page"""
         link_map = self._parse_link_map(response)
+        title_map = self._parse_title_map(response)
         for date in self.meeting_dates:
-            meeting = Meeting(
-                # FIXME may be able to be more specific by by matching
-                # with links found with _parse_link_map?
-                title="Detroit Employment Solutions Corporation",
+            title_in = self._parse_title(date, title_map)
+            meeting = Meeting(   
+                title=title_in,
                 description="",
-                # FIXME may also need to specify by matching with l
-                # inks found with _parse_link_map
-                classification=NOT_CLASSIFIED,
+                classification=self._parse_classification(title_in),
                 start=date['start'],
                 end=date['end'],
                 all_day=False,
@@ -129,8 +128,22 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
 
             yield meeting
 
-    def _parse_classification(self, item):
+
+    def _parse_title(self, date, title_map):
+        """Generate title from title map or return generic title"""
+        if title_map[(date['start'].month, date['start'].year)]:
+            return title_map[(date['start'].month, date['start'].year)]
+        return "Detroit Employment Solutions Corporation"
+
+
+    def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
+        if "Board" in title:
+            return BOARD
+
+        if "Committee" in title:
+            return COMMITTEE
+
         return NOT_CLASSIFIED
 
     def _parse_datetime(self, time_str, date_str, year_str):
@@ -146,10 +159,27 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
             link_text = " ".join(link.css("*::text").extract()).strip()
             link_start = datetime.strptime(link_text, "%B %Y")
             link_map[(link_start.month, link_start.year)].append({
-                "title": "Agenda" if "Agenda" in link.attrib["href"] else "Minutes",
+                "title": "Minutes",
                 "href": response.urljoin(link.attrib["href"])
             })
         return link_map
+
+
+    #FIXME : if get this  working, links should be easy, may want to call above in here
+    def _parse_title_map(self, response):
+        """parse or generate titles Returns a dictionary of month, year tuples and title lists"""
+        title_map = defaultdict(list)
+        
+        title_divs  = response.css('div[class="meeting-min_inner-wrapper"]')
+        for div in title_divs:
+            date = div.css("p::text").extract_first().strip()
+            date = date.split('/')
+            title_date = datetime(int(date[2]), int(date[0]), int(date[1]))
+            title_text = div.css("h3::text").extract_first().strip()
+            title_map[(title_date.month, title_date.year)] = title_text
+
+        return title_map
+
 
     def _validate_location(self, text):
         if "440" not in text:
