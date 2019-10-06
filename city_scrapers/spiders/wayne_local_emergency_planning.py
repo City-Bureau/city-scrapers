@@ -24,7 +24,7 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 
         for item in meeting_dates:
             # clean off the paragraph tags from the parsed meeting date (item)
-            item = str(item.extract()).replace('<p>',  '').replace('</p>', '')
+            item = str(item.extract()).replace('<p>', '').replace('</p>', '')
             # print('------------')
             # print(item)
 
