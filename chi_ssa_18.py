@@ -73,7 +73,7 @@ class ChiSsa18Spider(CityScrapersSpider):
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
 
-        return False        
+        return False
 
     def _parse_location(self, item):
         """Parse or generate location."""
@@ -94,8 +94,7 @@ class ChiSsa18Spider(CityScrapersSpider):
                 )
 
             self.link_map[dt] = [{"title": "Minutes", "href": link.attrib["href"]}]
-        
+
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
-        
