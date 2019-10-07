@@ -20,16 +20,13 @@ class ChiSsa61Spider(CityScrapersSpider):
     def parse(self, response):
         """Parse meetings on upcoming and minutes pages"""
         self._validate_location(response)
-        today = datetime.now().replace(hour=0, minute=0)
         for item in response.xpath('//div[@rel="1"]/ul/li/strong'):
             text = item.xpath('./text()').extract_first()
             if not re.search(r"[ pam\.]{2,5}", text):
                 continue
             start = self._parse_start(text)
-            if not start or (start < today):
-                continue
             meeting = Meeting(
-                title="commission",
+                title="Commission",
                 description='',
                 classification=COMMISSION,
                 start=start,

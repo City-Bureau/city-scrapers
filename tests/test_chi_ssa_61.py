@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 10, 22, 11, 0)
+    assert parsed_items[0]["start"] == datetime(2019, 1, 22, 11, 0)
 
 
 def test_end():
@@ -35,7 +35,7 @@ def test_location():
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "commission"
+    assert parsed_items[0]["title"] == "Commission"
 
 
 def test_description():
@@ -47,11 +47,11 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_61/201910221100/x/commission"
+    assert parsed_items[0]["id"] == "chi_ssa_61/201901221100/x/commission"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == 'tentative'
+    assert parsed_items[0]["status"] == 'passed'
 
 
 def test_source():
