@@ -29,7 +29,7 @@ class ChiSsa61Spider(CityScrapersSpider):
             if not start or (start < today):
                 continue
             meeting = Meeting(
-                title=self.agency,
+                title="commission",
                 description='',
                 classification=COMMISSION,
                 start=start,
@@ -38,7 +38,10 @@ class ChiSsa61Spider(CityScrapersSpider):
                 all_day=False,
                 location=self.location,
                 source=response.url,
+                links=[],
             )
+            meeting["status"] = self._get_status(meeting)
+            meeting['id'] = self._get_id(meeting)
             yield meeting
 
     def _parse_start(self, text):
