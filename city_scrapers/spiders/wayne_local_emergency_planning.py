@@ -1,8 +1,9 @@
+import re
+
 from city_scrapers_core.constants import COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil import parser
-import re
 
 
 class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
@@ -24,7 +25,7 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
         relevant_text = response.text[response.text.index("Schedule"):]
         # match dates and try to grab the day of the week if it is present
         days = "Sunday, |Monday, |Tuesday, |Wednesday, |Thursday, |Friday, |Saturday, "
-        date_expression = "[A-Z][a-z]{2,8} \d{1,2},? \d{4}"
+        date_expression = "[A-Z][a-z]{2,8} \\d{1,2},? \\d{4}"
         meeting_dates = re.findall(r"(?:" + days + ")?" + date_expression, str(relevant_text))
 
         for item in meeting_dates:
