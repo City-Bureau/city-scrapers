@@ -4,7 +4,7 @@ from datetime import datetime
 from io import BytesIO
 
 import scrapy
-from city_scrapers_core.constants import COMMITTEE, BOARD, NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from PyPDF2 import PdfFileReader

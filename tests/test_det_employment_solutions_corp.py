@@ -3,7 +3,7 @@ from operator import itemgetter
 from os.path import dirname, join
 
 import pytest  # noqa
-from city_scrapers_core.constants import COMMITTEE, BOARD, PASSED
+from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
