@@ -77,6 +77,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
                     continue  # Could not find a matching format_str - can't process link.
 
                 self.link_map[dt] = url
+                yield (dt, url)  # Used for testing purposes only
 
     def _parse_json(self, response):
         """ Parse JSON from https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents -> Meetings """

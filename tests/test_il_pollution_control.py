@@ -10,10 +10,10 @@ from freezegun import freeze_time
 from city_scrapers.spiders.il_pollution_control import IlPollutionControlSpider
 
 # TODO - Don't forget to implement this.
-# test_minutes_response = file_response(
-#     join(dirname(__file__), "files", "il_pollution_control.html"),
-#     url="https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
-# )
+test_minutes_response = file_response(
+    join(dirname(__file__), "files", "il_pollution_control.html"),
+    url="https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
+)
 
 test_response = file_response(
     join(dirname(__file__), "files", "il_pollution_control.json"),
@@ -25,6 +25,7 @@ freezer = freeze_time("2019-10-03")
 freezer.start()
 
 parsed_items = [item for item in spider._parse_json(test_response)]
+parsed_links = {dt: link for (dt, link) in spider._parse_minutes(test_minutes_response)}
 
 freezer.stop()
 
@@ -112,7 +113,23 @@ def test_source():
         assert actual_counts[key] == expected_counts[key]
 
 
-# def test_links():
+def test_links():
+    expected_links = {datetime(2019, 1, 17).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf",  # noqa
+                      datetime(2019, 2, 28).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99956/2-28-2019 draft2.pdf",  # noqa
+                      datetime(2019, 3, 14).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99970/3-14-2019 draft2.pdf",  # noqa
+                      datetime(2019, 3, 28).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-100053/3-28-2019 draft2.pdf",  # noqa
+                      datetime(2019, 2, 14).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99955/2-14-2019 draft2.pdf",  # noqa
+                      datetime(2019, 4, 11).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-100602/04-11-2019 draft1.pdf",  # noqa
+                      datetime(2019, 4, 25).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-100603/04-25-2019 draft1.pdf",  # noqa
+                      datetime(2019, 5, 30).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-100725/05-30-2019 draft1.pdf",  # noqa
+                      datetime(2019, 6, 20).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-100854/06-20-2019 draft1.pdf",  # noqa
+                      datetime(2019, 7, 25).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-100956/07-25-2019 draft1.pdf",  # noqa
+                      datetime(2019, 8, 22).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-101165/08-22-2019 draft1.pdf",  # noqa
+                      datetime(2019, 9, 19).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-101211/09-19-2019 draft1.pdf",  # noqa
+                      }
+    for dt in expected_links:
+        assert expected_links[dt] == parsed_links[dt]
+
 #     assert parsed_items[0]["links"] == [{
 #       "href": "EXPECTED HREF",
 #       "title": "EXPECTED TITLE"
