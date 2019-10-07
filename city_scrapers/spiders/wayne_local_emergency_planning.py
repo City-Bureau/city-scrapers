@@ -2,6 +2,7 @@ from city_scrapers_core.constants import COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil import parser
+import re
 
 
 class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
@@ -21,13 +22,37 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 
         # the meeting dates I've seen all had the substring 'day, ' as in 'Wednesday, March 6, 2019'
         # meeting_dates = response.xpath('''//p[contains(text(),'day, ')]''')
-        meeting_dates = response.xpath('''//p[contains(text(),'day, ')]/text()''').extract()
+        # meeting_dates = response.xpath('''//p[contains(text(),'day, ')]/text()''').extract()
+        # response_text = response.xpath('''//p[contains(text(),'day, ')]/text()''').extract()
+        # response_text = response.xpath('''/text()''').extract()
+		
+        ##relevant_text = response.text
+        ##exit()
+		
+        relevant_text = response.text[response.text.index("Schedule"):]
+        response_text = relevant_text	
+        #response_text = relevant_text.xpath('''//text()''').extract()		
+        print('type of response_text=' + str(type(response_text)))
+        print(len(response_text))	
+        print(response_text[5])			
+		
+        #exit()
 
+        t = "Wednesday, March 6, 2019  Wednesday, September 4, 2019   cal Emergency Planning Co  Wednesday, December 4, 2019	"
+        meeting_dates = re.findall(r"(?:Wednesday, )?[A-Z][a-z]{2,8} \d{1,2},? \d{4}", str(response_text))
+        #meeting_dates = re.search('[A-Z][a-z]{2,8} ', response_text)
+        print('len of meeting dates = ' + str(len(meeting_dates)))
+        print(meeting_dates)
+        # exit()
+		
+
+		
         for item in meeting_dates:
             # clean off the paragraph tags from the parsed meeting date (item)
             # item = str(item.extract()).replace('<p>', '').replace('</p>', '')
-            # print('------------')
-            # print(item)
+            print('------------')
+            print(item)
+            #exit()
 
             meeting = Meeting(
                 title=self._parse_title(item),
