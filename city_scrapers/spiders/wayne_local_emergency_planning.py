@@ -20,11 +20,12 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
         """
 
         # the meeting dates I've seen all had the substring 'day, ' as in 'Wednesday, March 6, 2019'
-        meeting_dates = response.xpath('''//p[contains(text(),'day, ')]''')
+        # meeting_dates = response.xpath('''//p[contains(text(),'day, ')]''')
+        meeting_dates = response.xpath('''//p[contains(text(),'day, ')]/text()''').extract()
 
         for item in meeting_dates:
             # clean off the paragraph tags from the parsed meeting date (item)
-            item = str(item.extract()).replace('<p>', '').replace('</p>', '')
+            # item = str(item.extract()).replace('<p>', '').replace('</p>', '')
             # print('------------')
             # print(item)
 
