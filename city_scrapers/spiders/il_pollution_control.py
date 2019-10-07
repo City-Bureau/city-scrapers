@@ -1,9 +1,8 @@
-from collections import defaultdict
 from datetime import datetime
 import json
 from urllib.parse import urljoin
 
-from scrapy import Request, Selector
+import scrapy
 
 from city_scrapers_core.constants import BOARD, FORUM, NOT_CLASSIFIED
 from city_scrapers_core.constants import CANCELLED, PASSED, TENTATIVE
@@ -20,22 +19,64 @@ class IlPollutionControlSpider(CityScrapersSpider):
     json_url = "https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents"
 
     def __init__(self, *args, **kwargs):
-        self.link_map = defaultdict(list)  # Populated by self._parse_minutes()
+        self.link_map = dict()  # Populated by self._parse_minutes()
+        self.link_parse_complete = False
         super().__init__(*args, **kwargs)
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        """ Overridden `from_crawler` to connect `spider_idle` signal. """
+        spider = super(IlPollutionControlSpider, cls).from_crawler(crawler, *args, **kwargs)
+        crawler.signals.connect(spider.spider_idle, signal=scrapy.signals.spider_idle)
+        return spider
+
+    def spider_idle(self):
+        """ React to `spider_idle` signal by starting JSON parsing. Must happen after _parse_minutes. """
+        if not self.link_parse_complete:
+            self.crawler.signals.disconnect(self.spider_idle,
+                                            signal=scrapy.signals.spider_idle)
+            self.crawler.engine.crawl(scrapy.Request(self.json_url, callback=self._parse_json),
+                                      self)
+            self.link_parse_complete = True
+            raise scrapy.exceptions.DontCloseSpider
 
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
         """
-        # Gather links to meeting minutes, to be associated with Meeting objects later:
-        self._parse_minutes(response)
-
-        # Parse JSON containing meeting data:
-        yield Request(self.json_url, callback=self._parse_json)
+        for item in response.xpath("//iframe/@src"):
+            yield scrapy.Request(item.get(), callback=self._parse_minutes)
 
     def _parse_minutes(self, response):
-        """ Populate self.link_map """
-        return None
+        """ Traverse tree of URLs and populate self.link_map """
+        for item in response.xpath("//td[@class='name']/a"):
+            try:
+                href = item.xpath("@href")[0].get()
+                text = item.xpath("b/text()")[0].get().strip()
+                if text[-4:] == ".pdf":
+                    text = text[:-4]
+            except IndexError:
+                continue
+
+            url = urljoin(f"https://{self.allowed_domains[0]}", href)
+            if ".pdf" not in url:
+                # Not a link to meeting minutes file - go a level deeper
+                yield scrapy.Request(url, callback=self._parse_minutes)
+            else:
+                # Dates are given in several formats:
+                format_strs = ["%m-%d-%Y", "%m-%d-%y", "%m/%d/%Y", "%m/%d/%y"]
+                dt = None
+                for format_str in format_strs:
+                    try:
+                        dt = datetime.strptime(text, format_str).date()
+                    except ValueError:
+                        continue
+                    else:
+                        break  # Found a format_str that matches - stop looking
+                if dt is None:
+                    continue  # Could not find a matching format_str - can't process link.
+
+                self.link_map[dt] = url
 
     def _parse_json(self, response):
         """ Parse JSON from https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents -> Meetings """
@@ -54,14 +95,14 @@ class IlPollutionControlSpider(CityScrapersSpider):
                 all_day=item["IsFullDay"],
                 time_notes="",
                 location=self._parse_location(item),
-                links=self._parse_links(item),
+                links=list(),
                 source=self._parse_source(item),
             )
 
+            meeting["links"] = self._parse_links(meeting)
             meeting["status"] = self._parse_status(meeting, item)
             meeting["id"] = self._get_id(meeting)
 
-            print(meeting)
             yield meeting
 
     def _parse_status(self, meeting, item):
@@ -109,16 +150,16 @@ class IlPollutionControlSpider(CityScrapersSpider):
                 "name": "",
             }
 
-
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
+    def _parse_links(self, meeting):
+        """ Associate Meeting objects with previously-scraped links """
+        key = meeting['start'].date()
+        if key in self.link_map:
+            return [{"href": self.link_map[key], "title": f"Meeting Minutes - {key}"}]
 
     def _parse_source(self, item):
         """Parse or generate source."""
-        # Look for links for further details:
-        rel_url = Selector(text=item["Description"]).xpath(".//a/@href").get()
+        rel_url = scrapy.Selector(text=item["Description"]).xpath(".//a/@href").get()
         if rel_url:
-            return urljoin(f"https://{self.allowed_domains[0]}", rel_url)  # TODO WRITE TEST IN MORNING
+            return urljoin(f"https://{self.allowed_domains[0]}", rel_url)
         else:
             return self.json_url
