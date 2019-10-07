@@ -89,11 +89,10 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
             "address": "21000 Northline Road, Taylor, MI  48180",
             "name": "Wayne County Community College, in the MIPSE Building",
         }
-		
+
     def _validate_location(self, relevant_text):
         if "21000 Northline" not in relevant_text:
             raise ValueError("Meeting location has changed")
-			
 
     def _parse_links(self, item):
         """Parse or generate links."""
