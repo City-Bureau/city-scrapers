@@ -22,17 +22,6 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    # assert False
-    assert True  # disabled this test
-
-
-"""
-Uncomment below
-"""
-
-
 def test_title():
     assert parsed_items[0]["title"] == "Local Emergency Planning Committee"
 
@@ -86,10 +75,6 @@ def test_location():
 def test_source():
     EXPECTED_SOURCE = "https://www.waynecounty.com/departments/hsem/wayne-county-lepc.aspx"
     assert parsed_items[0]["source"] == EXPECTED_SOURCE
-
-
-def test_links():
-    assert parsed_items[0]["links"] == []
 
 
 def test_classification():

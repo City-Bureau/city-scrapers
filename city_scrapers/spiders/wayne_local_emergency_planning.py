@@ -23,6 +23,8 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 
         # dates in the page before 'Schedule' are not relevant
         relevant_text = response.text[response.text.index("Schedule"):]
+        # check to see if the meeting location still looks right (didn't move)
+        self._validate_location(relevant_text)
         # match dates and try to grab the day of the week if it is present
         days = "Sunday, |Monday, |Tuesday, |Wednesday, |Thursday, |Friday, |Saturday, "
         date_expression = "[A-Z][a-z]{2,8} \\d{1,2},? \\d{4}"
@@ -84,9 +86,14 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
             in the MIPSE Building. The MIPSE Building is the fire training
             facility located at the rear of the campus.'''
         return {
-            "address": "21000 Northline Road, Taylor, MI",
+            "address": "21000 Northline Road, Taylor, MI  48180",
             "name": "Wayne County Community College, in the MIPSE Building",
         }
+		
+    def _validate_location(self, relevant_text):
+        if "21000 Northline" not in relevant_text:
+            raise ValueError("Meeting location has changed")
+			
 
     def _parse_links(self, item):
         """Parse or generate links."""
