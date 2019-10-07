@@ -68,7 +68,7 @@ def test_status3():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Wayne County Community College, in the MIPSE Building",
-        "address": "21000 Northline Road, Taylor, MI"
+        "address": "21000 Northline Road, Taylor, MI  48180"
     }
 
 
