@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMITTEE
+from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -33,8 +33,8 @@ Uncomment below
 """
 
 
-# def test_title():
-#    assert parsed_items[0]["title"] == "Local Emergency Planning Committee"
+def test_title():
+    assert parsed_items[0]["title"] == "Local Emergency Planning Committee"
 
 
 def test_description():
@@ -54,10 +54,10 @@ def test_time_notes():
     assert parsed_items[0]["time_notes"] == EXPECTED_TIME_NOTES
 
 
-#  def test_id():
-#    EXPECTED_ID = '''wayne_local_emergency_planning/201903061400/'''
-#    EXPECTED_ID += '''x/local_emergency_planning_committee'''
-#    assert parsed_items[0]["id"] == EXPECTED_ID
+def test_id():
+    EXPECTED_ID = '''wayne_local_emergency_planning/201903061400/'''
+    EXPECTED_ID += '''x/local_emergency_planning_committee'''
+    assert parsed_items[0]["id"] == EXPECTED_ID
 
 
 def test_status():
@@ -93,7 +93,7 @@ def test_links():
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == COMMITTEE
+    assert parsed_items[0]["classification"] == ADVISORY_COMMITTEE
 
 
 @pytest.mark.parametrize("item", parsed_items)

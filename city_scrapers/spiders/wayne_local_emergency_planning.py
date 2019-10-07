@@ -1,6 +1,6 @@
 import re
 
-from city_scrapers_core.constants import COMMITTEE
+from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil import parser
@@ -49,11 +49,8 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        prefix = 'Wayne County LEPC Meeting - '
-        # create a unique title for each meeting by combining
-        # a meaningful prefix with a specific meeting date
-        ret_val = prefix + item
-        return ret_val
+        # best to stay with 'Local Emergency Planning Committee' for all meetings
+        return 'Local Emergency Planning Committee'
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -61,7 +58,7 @@ class WayneLocalEmergencyPlanningSpider(CityScrapersSpider):
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
-        return COMMITTEE
+        return ADVISORY_COMMITTEE
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
