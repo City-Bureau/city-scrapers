@@ -8,7 +8,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 class ChiSsa61Spider(CityScrapersSpider):
     name = "chi_ssa_61"
-    agency = "Chicago Special Service Area #60 Hyde Park"
+    agency = "Chicago Special Service Area #61 Hyde Park"
     timezone = "America/Chicago"
     allowed_domains = ["www.downtownhydeparkchicago.com"]
     start_urls = ["http://www.downtownhydeparkchicago.com/about/"]
