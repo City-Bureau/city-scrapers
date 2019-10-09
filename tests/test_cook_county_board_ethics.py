@@ -30,7 +30,8 @@ def test_time_notes():
 
 
 def test_id():
-    assert item['id'] == 'cook_county_board_ethics/201908291400/x/cook_county_board_of_ethics_meeting'
+    assert item['id'
+                ] == 'cook_county_board_ethics/201908291400/x/cook_county_board_of_ethics_meeting'
 
 
 def test_all_day():
@@ -53,8 +54,7 @@ def test_location():
 
 
 def test_sources():
-    assert item['source'
-                ] == 'https://www.cookcountyil.gov/event/cook-county-board-ethics-meeting-3'
+    assert item['source'] == 'https://www.cookcountyil.gov/event/cook-county-board-ethics-meeting-3'
 
 
 def test_description():
