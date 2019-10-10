@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from city_scrapers_core.constants import BOARD, PASSED
+from freezegun import freeze_time
 from tests.utils import file_response
 
 from city_scrapers.spiders.cook_county_board_ethics import CookCountyBoardEthicsSpider
@@ -10,7 +11,11 @@ test_response = file_response(
     url='https://www.cookcountyil.gov/event/cook-county-board-ethics-meeting-3'
 )
 spider = CookCountyBoardEthicsSpider()
+
+freezer = freeze_time("2019-10-9")
+freezer.start()
 item = spider._parse_event(test_response)
+freezer.stop()
 
 
 def test_title():
@@ -39,7 +44,7 @@ def test_all_day():
 
 
 def test_classification():
-    assert spider._parse_classification('Board of Ethics') == BOARD
+    assert item['classification'] == BOARD
 
 
 def test_status():

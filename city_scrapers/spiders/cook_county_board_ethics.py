@@ -1,10 +1,7 @@
-import re
 from datetime import datetime, timedelta
 
 import scrapy
-from city_scrapers_core.constants import (
-    ADVISORY_COMMITTEE, BOARD, COMMISSION, COMMITTEE, NOT_CLASSIFIED
-)
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -39,7 +36,7 @@ class CookCountyBoardEthicsSpider(CityScrapersSpider):
         meeting = Meeting(
             title=title,
             description=self._parse_description(response),
-            classification=self._parse_classification(title),
+            classification=BOARD,
             start=self._parse_start(response),
             end=self._parse_end(response),
             time_notes='',
@@ -57,22 +54,10 @@ class CookCountyBoardEthicsSpider(CityScrapersSpider):
         Get urls for all Board of ethics meetings on the page.
         """
         return [
-            response.urljoin(href) for href in
-            response.xpath('//a[contains(@href, "board-ethics")]').css('a::attr(href)').extract()
+            response.urljoin(href)
+            for href in response.xpath('//a[contains(text(), "Board of Ethics")]'
+                                       ).css('a::attr(href)').extract()
         ]
-
-    @staticmethod
-    def _parse_classification(name):
-        name = name.upper()
-        if re.search(r'A(C|(DVISORY)) (COMMITTEE|COUNCIL)', name):
-            return ADVISORY_COMMITTEE
-        if 'BOARD' in name:
-            return BOARD
-        if 'COMMITTEE' in name:
-            return COMMITTEE
-        if 'COMMISSION' in name:
-            return COMMISSION
-        return NOT_CLASSIFIED
 
     def _parse_location(self, response):
         """
