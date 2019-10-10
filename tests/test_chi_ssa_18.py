@@ -1,9 +1,11 @@
 from datetime import datetime
 from os.path import dirname, join
 
+import sys
 import pytest
+sys.path.append('city-scrapers\city_scrapers\spiders')
 from chi_ssa_18 import ChiSsa18Spider
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -32,11 +34,11 @@ Uncomment below
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "EXPECTED TITLE"
+    assert parsed_items[0]["title"] == EXPECTED TITLE
 
 
 def test_description():
-    assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+    assert parsed_items[0]["description"] == EXPECTED DESCRIPTION
 
 
 def test_start():
@@ -48,31 +50,31 @@ def test_end():
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+    assert parsed_items[0]["time_notes"] == EXPECTED TIME NOTES
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "EXPECTED ID"
+    assert parsed_items[0]["id"] == EXPECTED ID
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "EXPECTED STATUS"
+    assert parsed_items[0]["status"] == EXPECTED STATUS
 
 
 def test_location():
-    assert parsed_items[0]["links"] == [{"href": "EXPECTED HREF", "title": "EXPECTED TITLE"}]
+    assert parsed_items[0]["links"] == [{"href": EXPECTED HREF, "title": EXPECTED TITLE}]
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "EXPECTED URL"
+    assert parsed_items[0]["source"] == EXPECTED URL
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{"href": "EXPECTED HREF", "title": "EXPECTED TITLE"}]
+    assert parsed_items[0]["links"] == [{"href": EXPECTED HREF, "title": EXPECTED TITLE}]
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+    assert parsed_items[0]["classification"] == COMMISSION
 
 
 @pytest.mark.parametrize("item", parsed_items)
