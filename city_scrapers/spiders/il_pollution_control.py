@@ -124,7 +124,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             return NOT_CLASSIFIED
 
     def _parse_start(self, item):
-        return datetime.strptime(item["StartDateTime"], '%m/%d/%Y %H:%M:%S %p')
+        return datetime.strptime(item["StartDateTime"], '%m/%d/%Y %I:%M:%S %p')
 
     def _parse_location(self, item):
         """Parse or generate location."""

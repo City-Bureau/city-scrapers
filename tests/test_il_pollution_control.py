@@ -56,12 +56,19 @@ def test_title():
         assert(title_counts[title] == expected_title_counts[title])
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_start():
+    expected_starts = {0: datetime(2018, 10, 4, 12, 0),
+                       1: datetime(2019, 5, 23, 11, 0),
+                       38: datetime(2018, 11, 28, 13, 0)
+                       }
+
+    for n in expected_starts:
+        assert parsed_items[n]["start"] == expected_starts[n]
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+@pytest.mark.parametrize("item", parsed_items)
+def test_end(item):
+    assert item["end"] is None
 
 
 # def test_id():
