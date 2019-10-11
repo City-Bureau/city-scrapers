@@ -71,8 +71,8 @@ def test_end(item):
     assert item["end"] is None
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_id():
+    assert parsed_items[0]["id"] == 'il_pollution_control/201810041200/x/brown_bag_seminar'
 
 
 def test_status():
