@@ -10,7 +10,6 @@ class ChiSsa73Spider(CityScrapersSpider):
     name = "chi_ssa_73"
     agency = "Chicago Special Service Area #73 Chinatown"
     timezone = "America/Chicago"
-    allowed_domains = ["chinatownssa73.org"]
     start_urls = ["https://chinatownssa73.org/meeting-schedule/"]
 
     def parse(self, response):

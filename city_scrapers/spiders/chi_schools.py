@@ -10,7 +10,6 @@ class ChiSchoolsSpider(CityScrapersSpider):
     name = 'chi_schools'
     agency = 'Chicago Public Schools'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.cpsboe.org']
     start_urls = [
         'http://www.cpsboe.org/meetings/planning-calendar',
         'https://www.cpsboe.org/meetings/past-meetings',

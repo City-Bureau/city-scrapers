@@ -12,7 +12,6 @@ class ChiTeacherPensionSpider(CityScrapersSpider):
     name = 'chi_teacherpension'
     agency = 'Chicago Teachers Pension Fund'
     timezone = 'America/Chicago'
-    allowed_domains = ['boarddocs.org', 'ctpf.org']
     start_urls = ['https://www.ctpf.org/board-trustees-meeting-minutes']
     location = {'name': 'CTPF Office', 'address': '203 N LaSalle St, Suite 2600 Chicago, IL 60601'}
 

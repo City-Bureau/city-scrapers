@@ -9,7 +9,6 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
     name = "chi_metro_pier_exposition"
     agency = "Chicago Metropolitan Pier and Exposition Authority"
     timezone = "America/Chicago"
-    allowed_domains = ["www.mpea.com"]
     start_urls = ["http://www.mpea.com/mpea-board-members/"]
     location = {
         "name": "MPEA Corporate Center",

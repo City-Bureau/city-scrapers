@@ -11,7 +11,6 @@ class DetBrownfieldRedevelopmentAuthoritySpider(CityScrapersSpider):
     name = 'det_brownfield_redevelopment_authority'
     agency = 'Detroit Brownfield Redevelopment Authority'
     timezone = 'America/Detroit'
-    allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/dbra/']
     location = {
         'name': 'DEGC, Guardian Building',

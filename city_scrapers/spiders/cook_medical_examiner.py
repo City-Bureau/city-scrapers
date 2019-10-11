@@ -10,7 +10,6 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
     name = "cook_medical_examiner"
     agency = "Cook County Medical Examiner's Advisory Committee"
     timezone = "America/Chicago"
-    allowed_domains = ["www.cookcountyil.gov"]
     start_urls = ["https://www.cookcountyil.gov/service/medical-examiners-advisory-committee"]
     location = {
         "name": "Office of the Medical Examiner",

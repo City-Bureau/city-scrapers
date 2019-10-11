@@ -10,7 +10,6 @@ from city_scrapers_core.spiders import CityScrapersSpider
 class DetCharterReviewSpider(CityScrapersSpider):
     name = "det_charter_review"
     agency = "Detroit Charter Review Commission"
-    allowed_domains = ["google.com"]
 
     @property
     def start_urls(self):

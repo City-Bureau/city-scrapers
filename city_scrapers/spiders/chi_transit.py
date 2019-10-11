@@ -10,7 +10,6 @@ class ChiTransitSpider(CityScrapersSpider):
     name = 'chi_transit'
     agency = 'Chicago Transit Authority'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.transitchicago.com']
     base_url = 'http://www.transitchicago.com'
     start_urls = ['https://www.transitchicago.com/board/notices-agendas-minutes/']
 

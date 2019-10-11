@@ -11,7 +11,6 @@ class ChiLandmarkCommissionSpider(CityScrapersSpider):
     name = "chi_landmark_commission"
     agency = "Commission on Chicago Landmarks"
     timezone = "America/Chicago"
-    allowed_domains = ["www.chicago.gov"]
     start_urls = ["https://www.chicago.gov/city/en/depts/dcd/supp_info/landmarks_commission.html"]
     location = {
         "name": "City Hall",

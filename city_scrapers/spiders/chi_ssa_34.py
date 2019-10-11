@@ -10,7 +10,6 @@ class ChiSsa34Spider(CityScrapersSpider):
     name = "chi_ssa_34"
     agency = "Chicago Special Service Area #34 Uptown"
     timezone = "America/Chicago"
-    allowed_domains = ["exploreuptown.org"]
     start_urls = ["https://exploreuptown.org/ssa/"]
     custom_settings = {'ROBOTSTXT_OBEY': False}
     location = {

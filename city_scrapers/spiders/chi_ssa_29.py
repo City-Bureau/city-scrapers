@@ -10,7 +10,6 @@ class ChiSsa29Spider(CityScrapersSpider):
     name = "chi_ssa_29"
     agency = "Chicago Special Service Area #29 2014 West Town"
     timezone = "America/Chicago"
-    allowed_domains = ["www.westtownssa.org"]
     start_urls = ["http://www.westtownssa.org/transparency/"]
     location = {
         "name": "West Town Chamber of Commerce",

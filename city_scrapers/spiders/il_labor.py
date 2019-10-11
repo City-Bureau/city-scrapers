@@ -7,7 +7,6 @@ from dateutil.parser import parse
 class IlLaborSpider(CityScrapersSpider):
     name = 'il_labor'
     agency = 'Illinois Labor Relations Board'
-    allowed_domains = ['www2.illinois.gov']
     start_urls = ['https://www2.illinois.gov/ilrb/meetings/Pages/default.aspx']
     event_timezone = 'America/Chicago'
     """

@@ -10,7 +10,6 @@ class ChiPoliceBoardSpider(CityScrapersSpider):
     name = 'chi_policeboard'
     timezone = 'America/Chicago'
     agency = 'Chicago Police Board'
-    allowed_domains = ['chicago.gov']
     start_urls = ['http://chicago.gov/city/en/depts/cpb/provdrs/public_meetings.html']
 
     def parse(self, response):

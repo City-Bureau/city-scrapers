@@ -14,7 +14,6 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
     name = "chi_human_relations"
     agency = "Chicago Commission on Human Relations"
     timezone = "America/Chicago"
-    allowed_domains = ["www.chicago.gov"]
     start_urls = ["https://www.chicago.gov/city/en/depts/cchr.html"]
     location = {
         "name": "",

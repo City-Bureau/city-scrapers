@@ -8,7 +8,6 @@ class ChiSsa21Spider(CityScrapersSpider):
     name = 'chi_ssa_21'
     agency = 'Chicago Special Service Area #21 Lincoln Square Ravenswood'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.lincolnsquare.org']
     start_urls = ['http://www.lincolnsquare.org/SSA-no-21-Commission-meetings']
 
     def parse(self, response):

@@ -8,7 +8,6 @@ from city_scrapers_core.items import Meeting
 
 class ChiRogersParkSsaMixin:
     timezone = "America/Chicago"
-    allowed_domains = ["rpba.org"]
 
     def parse(self, response):
         """

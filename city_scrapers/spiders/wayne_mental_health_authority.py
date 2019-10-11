@@ -12,7 +12,6 @@ class WayneMentalHealthAuthoritySpider(CityScrapersSpider):
     name = "wayne_mental_health_authority"
     agency = "Detroit Wayne Mental Health Authority"
     timezone = "America/Detroit"
-    allowed_domains = ["www.dwihn.org"]
     start_urls = ["https://www.dwihn.org/about-us/dwmha-authority-board/board-meeting-documents/"]
     location = {
         "name": "Detroit Wayne Integrated Health Network",

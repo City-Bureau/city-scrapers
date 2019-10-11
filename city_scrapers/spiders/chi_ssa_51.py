@@ -10,7 +10,6 @@ class ChiSsa51Spider(CityScrapersSpider):
     name = "chi_ssa_51"
     agency = "Chicago Special Service Area #51 Chatham"
     timezone = "America/Chicago"
-    allowed_domains = ["www.cbatechworks.org"]
     start_urls = ["http://www.cbatechworks.org/"]
     location = {"address": "806 East 78th Street, Chicago IL 60619", "name": "QBG Foundation"}
 

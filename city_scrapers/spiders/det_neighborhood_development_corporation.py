@@ -8,7 +8,6 @@ class DetNeighborhoodDevelopmentCorporationSpider(DetAuthorityMixin, CityScraper
     name = 'det_neighborhood_development_corporation'
     agency = 'Detroit Neighborhood Development Corporation'
     timezone = 'America/Detroit'
-    allowed_domains = ['www.degc.org']
     start_urls = ['http://www.degc.org/public-authorities/ndc/']
     title = 'Board of Directors'
     classification = BOARD

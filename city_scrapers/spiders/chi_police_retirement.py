@@ -10,7 +10,6 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
     name = "chi_police_retirement"
     agency = "Policemen's Annuity and Benefit Fund of Chicago"
     timezone = "America/Chicago"
-    allowed_domains = ["www.chipabf.org"]
     start_urls = ["http://www.chipabf.org/ChicagoPolicePension/MonthlyMeetings.html"]
     TAG_RE = re.compile(r'<[^>]+>')
 

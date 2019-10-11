@@ -13,7 +13,6 @@ class CookCountySpider(CityScrapersSpider):
     name = 'cook_county'
     agency = 'Cook County Government'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.cookcountyil.gov']
 
     def start_requests(self):
         # Only filter for Public Forums (20) in the current and upcoming month

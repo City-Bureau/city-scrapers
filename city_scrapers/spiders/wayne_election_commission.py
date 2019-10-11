@@ -10,7 +10,6 @@ class WayneElectionCommissionSpider(CityScrapersSpider):
     name = 'wayne_election_commission'
     agency = 'Wayne County Election Commission'
     timezone = 'America/Detroit'
-    allowed_domains = ['www.waynecounty.com']
     start_urls = ['https://www.waynecounty.com/elected/clerk/election-commission.aspx']
     location = {
         'name': 'Coleman A. Young Municipal Center, Conference Room 700A',

@@ -10,7 +10,6 @@ class IlGamingBoardSpider(CityScrapersSpider):
     name = "il_gaming_board"
     agency = "Illinois Gaming Board"
     timezone = "America/Chicago"
-    allowed_domains = ["www.igb.illinois.gov"]
     start_urls = ["http://www.igb.illinois.gov/MeetingsMinutes.aspx"]
     location = {
         "name": "5th Floor, Michael A Bilandic Building",

@@ -10,7 +10,6 @@ class ChiZoningBoardSpider(CityScrapersSpider):
     name = 'chi_zoning_board'
     agency = 'Chicago Zoning Board of Appeals'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.chicago.gov']
     start_urls = [
         'https://www.chicago.gov/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html'
     ]

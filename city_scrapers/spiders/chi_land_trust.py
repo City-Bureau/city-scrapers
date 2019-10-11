@@ -10,7 +10,6 @@ class ChiLandTrustSpider(CityScrapersSpider):
     name = "chi_land_trust"
     agency = "Chicago Community Land Trust"
     timezone = "America/Chicago"
-    allowed_domains = ["www.chicago.gov"]
     start_urls = [
         "https://www.chicago.gov/city/en/depts/doh/supp_info/chicago_communitylandtrust0.html"
     ]

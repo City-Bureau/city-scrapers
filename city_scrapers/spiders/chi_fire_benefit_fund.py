@@ -10,7 +10,6 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
     name = "chi_fire_benefit_fund"
     agency = "Chicago Firemen's Annuity and Benefit Fund"
     timezone = "America/Chicago"
-    allowed_domains = ["www.fabf.org"]
     start_urls = ["http://www.fabf.org/Meetings.html"]
     location = {"name": "Fund Office", "address": "20 S Clark St, Suite 300, Chicago, IL 60602"}
 
