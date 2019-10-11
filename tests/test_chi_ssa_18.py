@@ -3,12 +3,10 @@ from os.path import dirname, join
 
 import sys
 import pytest
-from chi_ssa_18 import ChiSsa18Spider
+from city_scrapers.spiders.chi_ssa_18 import ChiSsa18Spider
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-
-sys.path.append('city-scrapers\city_scrapers\spiders')
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_18.html"),
