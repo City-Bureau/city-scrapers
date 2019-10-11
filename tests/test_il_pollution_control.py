@@ -9,7 +9,6 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.il_pollution_control import IlPollutionControlSpider
 
-# TODO - Don't forget to implement this.
 test_minutes_response = file_response(
     join(dirname(__file__), "files", "il_pollution_control.html"),
     url="https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
@@ -25,7 +24,6 @@ freezer = freeze_time("2019-10-03")
 freezer.start()
 
 parsed_items = [item for item in spider._parse_json(test_response)]
-parsed_links = {dt: link for (dt, link) in spider._parse_minutes(test_minutes_response)}
 
 freezer.stop()
 
@@ -114,6 +112,8 @@ def test_source():
 
 
 def test_links():
+    # Must use `list()` so generator is fully consumed and spider.link_map is populated.
+    list(spider._parse_minutes(test_minutes_response))
     expected_links = {datetime(2019, 1, 17).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf",  # noqa
                       datetime(2019, 2, 28).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99956/2-28-2019 draft2.pdf",  # noqa
                       datetime(2019, 3, 14).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99970/3-14-2019 draft2.pdf",  # noqa
@@ -127,13 +127,9 @@ def test_links():
                       datetime(2019, 8, 22).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-101165/08-22-2019 draft1.pdf",  # noqa
                       datetime(2019, 9, 19).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-101211/09-19-2019 draft1.pdf",  # noqa
                       }
-    for dt in expected_links:
-        assert expected_links[dt] == parsed_links[dt]
 
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+    for dt in expected_links:
+        assert expected_links[dt] == spider.link_map[dt]
 
 
 def test_classification():
