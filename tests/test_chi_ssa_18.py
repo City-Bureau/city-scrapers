@@ -1,7 +1,7 @@
 from datetime import datetime
 from os.path import dirname, join
 
-import sys
+Upimport sys
 import pytest
 sys.path.append('city-scrapers\city_scrapers\spiders')
 from chi_ssa_18 import ChiSsa18Spider
@@ -34,43 +34,46 @@ Uncomment below
 
 
 def test_title():
-    assert parsed_items[0]["title"] == EXPECTED TITLE
+    assert parsed_items[0]["title"] == "Community - Northalsted Business Alliance"
 
 
 def test_description():
-    assert parsed_items[0]["description"] == EXPECTED DESCRIPTION
+    assert parsed_items[0]["description"] == "The first officially recognized gay village in the United States, Boystown in Chicago, Illinois is the commonly accepted nickname for the eclectic Lakeview neighborhood that is home to Chicago’s visible and active LGBT community. Boystown is situated just east of Wrigleyville."
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+    assert parsed_items[0]["start"] == datetime(2019, 12, 4)
 
 
 def test_end():
-    assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+    assert parsed_items[0]["end"] == "None"
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == EXPECTED TIME NOTES
+    assert parsed_items[0]["time_notes"] == ""
 
 
 def test_id():
-    assert parsed_items[0]["id"] == EXPECTED ID
+    assert parsed_items[0]["id"] == ""
 
 
 def test_status():
-    assert parsed_items[0]["status"] == EXPECTED STATUS
+    assert parsed_items[0]["status"] == ""
 
 
 def test_location():
-    assert parsed_items[0]["links"] == [{"href": EXPECTED HREF, "title": EXPECTED TITLE}]
+    assert parsed_items[0]["location"] == {
+        "address": "3656 N Halsted Street, Chicago, IL 60613"
+        "name": "Center on Halsted"
+    }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == EXPECTED URL
+    assert parsed_items[0]["source"] == "https://northalsted.com/community/"
 
-
+@pytest.mark.parametrize('item', 'response')    
 def test_links():
-    assert parsed_items[0]["links"] == [{"href": EXPECTED HREF, "title": EXPECTED TITLE}]
+    assert parsed_items[0]["links"] == [{"href": response.url, "title": "Minutes"}]
 
 
 def test_classification():
