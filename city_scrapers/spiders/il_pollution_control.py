@@ -56,7 +56,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             except IndexError:
                 continue
 
-            url = urljoin(f"https://{self.allowed_domains[0]}", href)
+            url = urljoin("https://{}".format(self.allowed_domains[0]), href)
             if ".pdf" not in url:
                 # Not a link to meeting minutes file - go a level deeper
                 yield scrapy.Request(url, callback=self._parse_minutes)
@@ -153,12 +153,12 @@ class IlPollutionControlSpider(CityScrapersSpider):
         """ Associate Meeting objects with previously-scraped links """
         key = meeting['start'].date()
         if key in self.link_map:
-            return [{"href": self.link_map[key], "title": f"Meeting Minutes - {key}"}]
+            return [{"href": self.link_map[key], "title": "Meeting Minutes - {}".format(key)}]
 
     def _parse_source(self, item):
         """Parse or generate source."""
         rel_url = scrapy.Selector(text=item["Description"]).xpath(".//a/@href").get()
         if rel_url:
-            return urljoin(f"https://{self.allowed_domains[0]}", rel_url)
+            return urljoin("https://{}".format(self.allowed_domains[0]), rel_url)
         else:
             return self.json_url

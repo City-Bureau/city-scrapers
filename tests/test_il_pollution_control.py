@@ -82,7 +82,6 @@ def test_status():
     actual_counts = {}
     for key in expected_counts:
         actual_counts[key] = len([item for item in parsed_items if item['status'] == key])
-        print(f"{key}: {actual_counts[key]}")
         assert actual_counts[key] == expected_counts[key]
 
 
@@ -96,7 +95,6 @@ def test_location():
     actual_counts = {}
     for key in expected_counts:
         actual_counts[key] = len([item for item in parsed_items if item['location']['name'] == key])
-        print(f"{key}: {actual_counts[key]}")
         assert actual_counts[key] == expected_counts[key]
 
 
