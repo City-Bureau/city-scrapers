@@ -10,7 +10,6 @@ class CookHospitalsSpider(CityScrapersSpider):
     name = 'cook_hospitals'
     agency = 'Cook County Health and Hospitals System'
     timezone = 'America/Chicago'
-    allowed_domains = ['cookcountyhealth.org']
     start_urls = [
         'https://cookcountyhealth.org/about/board-of-directors/board-committee-meetings-agendas-minutes/'  # noqa
     ]

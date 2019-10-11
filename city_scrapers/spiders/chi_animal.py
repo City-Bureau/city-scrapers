@@ -10,7 +10,6 @@ class ChiAnimalSpider(CityScrapersSpider):
     name = 'chi_animal'
     agency = 'Chicago Animal Care and Control'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.chicago.gov']
     start_urls = ['https://www.chicago.gov/city/en/depts/cacc/supp_info/public_notice.html']
 
     def parse(self, response):

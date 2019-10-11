@@ -12,7 +12,6 @@ class DetLibraryCommissionSpider(CityScrapersSpider):
     name = 'det_library_commission'
     agency = 'Detroit Public Library'
     timezone = 'America/Detroit'
-    allowed_domains = ['detroitpubliclibrary.org']
 
     @property
     def start_urls(self):

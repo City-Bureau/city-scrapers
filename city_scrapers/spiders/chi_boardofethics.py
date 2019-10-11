@@ -9,7 +9,6 @@ from city_scrapers_core.spiders import CityScrapersSpider
 class ChiBoardOfEthicsSpider(CityScrapersSpider):
     name = 'chi_boardofethics'
     agency = 'Chicago Board of Ethics'
-    allowed_domains = ['chicago.gov']
     start_urls = ['https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html']
 
     def parse(self, response):

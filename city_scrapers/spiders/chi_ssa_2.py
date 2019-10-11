@@ -10,7 +10,6 @@ class ChiSsa2Spider(CityScrapersSpider):
     name = "chi_ssa_2"
     agency = "Chicago Special Service Area #2 Belmont/Central"
     timezone = "America/Chicago"
-    allowed_domains = ["belmontcentral.org"]
     start_urls = ["http://belmontcentral.org/about-ssa-2/ssa2-meeting-minutes-audit/"]
     location = {
         "address": "5534 W. Belmont Avenue Chicago, IL 60641",

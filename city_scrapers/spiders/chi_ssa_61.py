@@ -10,7 +10,6 @@ class ChiSsa61Spider(CityScrapersSpider):
     name = "chi_ssa_61"
     agency = "Chicago Special Service Area #61 Hyde Park"
     timezone = "America/Chicago"
-    allowed_domains = ["www.downtownhydeparkchicago.com"]
     start_urls = ["http://www.downtownhydeparkchicago.com/about/"]
     location = {
         "name": "Polsky Center for Innovation",

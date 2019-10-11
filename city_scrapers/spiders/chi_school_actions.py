@@ -10,7 +10,6 @@ class ChiSchoolActionsSpider(CityScrapersSpider):
     name = 'chi_school_actions'
     agency = 'Chicago Public Schools'
     timezone = 'America/Chicago'
-    allowed_domains = ['schoolinfo.cps.edu']
     start_urls = ['http://schoolinfo.cps.edu/SchoolActions/Documentation.aspx']
 
     def parse(self, response):

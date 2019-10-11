@@ -11,7 +11,6 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
     name = 'chi_low_income_housing_trust_fund'
     agency = 'Chicago Low-Income Housing Trust Fund'
     timezone = 'America/Chicago'
-    allowed_domains = ['clihtf.org']
     start_urls = ['http://www.clihtf.org/about-us/upcomingevents/']
 
     def parse(self, response):

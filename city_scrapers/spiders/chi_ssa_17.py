@@ -10,7 +10,6 @@ class ChiSsa17Spider(CityScrapersSpider):
     name = 'chi_ssa_17'
     agency = 'Chicago Special Service Area #17 Lakeview East'
     timezone = 'America/Chicago'
-    allowed_domains = ['lakevieweast.com']
     start_urls = ['https://lakevieweast.com/ssa-17/']
     location = {
         'name': 'Lakeview East Chamber of Commerce',

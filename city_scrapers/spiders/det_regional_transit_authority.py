@@ -8,7 +8,6 @@ class DetRegionalTransitAuthoritySpider(CityScrapersSpider):
     name = 'det_regional_transit_authority'
     agency = 'Regional Transit Authority of Southeast Michigan'
     timezone = 'America/Detroit'
-    allowed_domains = ['www.rtamichigan.org']
     start_urls = ['http://www.rtamichigan.org/board-and-committee-meetings/']
     location = {
         'name': 'RTA Office',

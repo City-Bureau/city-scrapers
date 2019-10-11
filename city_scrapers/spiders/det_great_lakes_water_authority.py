@@ -9,7 +9,6 @@ class DetGreatLakesWaterAuthoritySpider(LegistarSpider):
     name = 'det_great_lakes_water_authority'
     agency = 'Detroit Great Lakes Water Authority'
     timezone = 'America/Detroit'
-    allowed_domains = ['glwater.legistar.com']
     start_urls = ['https://glwater.legistar.com/Calendar.aspx']
 
     def parse_legistar(self, events):

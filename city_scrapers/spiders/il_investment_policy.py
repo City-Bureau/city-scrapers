@@ -12,7 +12,6 @@ class IlInvestmentPolicySpider(CityScrapersSpider):
     name = "il_investment_policy"
     agency = "Illinois Investment Policy Board"
     timezone = "America/Chicago"
-    allowed_domains = ["www2.illinois.gov"]
     start_urls = ["https://www2.illinois.gov/sites/iipb/Pages/MeetingInformation.aspx"]
 
     def parse(self, response):

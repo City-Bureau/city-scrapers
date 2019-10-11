@@ -9,7 +9,6 @@ class CookForestPreservesSpider(LegistarSpider):
     name = 'cook_forest_preserves'
     agency = 'Cook County Forest Preserves District'
     timezone = 'America/Chicago'
-    allowed_domains = ['fpdcc.legistar.com']
     start_urls = ['https://fpdcc.legistar.com/Calendar.aspx']
 
     def parse_legistar(self, events):

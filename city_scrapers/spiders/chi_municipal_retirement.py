@@ -10,7 +10,6 @@ class ChiMunicipalRetirementSpider(CityScrapersSpider):
     name = "chi_municipal_retirement"
     agency = "Municipal Employees' Annuity and Benefit Fund of Chicago"
     timezone = "America/Chicago"
-    allowed_domains = ["www.meabf.org"]
     start_urls = ["https://www.meabf.org/retirement-board/minutes"]
     location = {
         "name": "Fund Office",

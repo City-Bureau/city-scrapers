@@ -9,7 +9,6 @@ class ChiParksSpider(LegistarSpider):
     name = 'chi_parks'
     agency = 'Chicago Park District'
     timezone = 'America/Chicago'
-    allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = ['https://chicagoparkdistrict.legistar.com/Calendar.aspx']
 
     def parse_legistar(self, events):

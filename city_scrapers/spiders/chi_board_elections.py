@@ -10,7 +10,6 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
     name = 'chi_board_elections'
     agency = 'Chicago Board of Elections'
     timezone = 'America/Chicago'
-    allowed_domains = ['chicagoelections.com']
     start_urls = [
         'https://app.chicagoelections.com/pages/en/board-meetings.aspx',
         'https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx'

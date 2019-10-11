@@ -10,7 +10,6 @@ class CookLocalRecordsSpider(CityScrapersSpider):
     name = "cook_local_records"
     agency = "Cook County Local Records Commission"
     timezone = "America/Chicago"
-    allowed_domains = ["cyberdriveillinois.com"]
     start_urls = [
         "https://cyberdriveillinois.com/departments/archives/records_management/lrc_cook_county_meeting_schedule.html"  # noqa
     ]

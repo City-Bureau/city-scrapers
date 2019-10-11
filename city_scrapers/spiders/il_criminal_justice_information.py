@@ -13,7 +13,6 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
     name = "il_criminal_justice_information"
     agency = "Illinois Criminal Justice Information Authority"
     timezone = "America/Chicago"
-    allowed_domains = ["www.icjia.state.il.us"]
     start_urls = ["http://www.icjia.state.il.us/about/overview"]
     location = {
         "name": "Illinois Criminal Justice Information Authority",

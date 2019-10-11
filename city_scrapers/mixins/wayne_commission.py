@@ -7,7 +7,6 @@ from dateutil.parser import parse as dateparse
 
 class WayneCommissionMixin:
     timezone = 'America/Detroit'
-    allowed_domains = ['www.waynecounty.com']
     classification = COMMITTEE
     location = {
         'name': '7th floor meeting room, Guardian Building',

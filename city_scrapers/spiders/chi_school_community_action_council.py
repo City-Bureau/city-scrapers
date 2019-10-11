@@ -10,7 +10,6 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
     name = 'chi_school_community_action_council'
     agency = 'Chicago Public Schools'
     timezone = 'America/Chicago'
-    allowed_domains = ['cps.edu']
     start_urls = ['http://cps.edu/FACE/Pages/CAC.aspx']
 
     def parse(self, response):

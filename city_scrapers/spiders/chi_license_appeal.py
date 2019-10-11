@@ -10,7 +10,6 @@ class ChiLicenseAppealSpider(CityScrapersSpider):
     name = "chi_license_appeal"
     agency = "Chicago License Appeal Commission"
     timezone = "America/Chicago"
-    allowed_domains = ["www.chicago.gov"]
     start_urls = ["https://www.chicago.gov/city/en/depts/lac/supp_info.html"]
     location = {
         "name": "Richard J Daley Center",

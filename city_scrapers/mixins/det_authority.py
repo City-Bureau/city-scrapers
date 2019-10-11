@@ -9,7 +9,6 @@ from city_scrapers_core.items import Meeting
 class DetAuthorityMixin:
     """Mixin for shared behavior on Detroit public authority scrapers"""
     timezone = 'America/Detroit'
-    allowed_domains = ['www.degc.org']
     title = 'Board of Directors'
     classification = BOARD
     location = {

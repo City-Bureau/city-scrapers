@@ -11,7 +11,6 @@ class ChiHousingAuthoritySpider(CityScrapersSpider):
     name = 'chi_housing_authority'
     agency = 'Chicago Housing Authority'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.thecha.org']
     start_urls = [
         'http://www.thecha.org/about/board-meetings-agendas-and-resolutions/board-information-and-meetings',  # noqa
     ]

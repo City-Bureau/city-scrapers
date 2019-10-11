@@ -10,7 +10,6 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
     name = 'chi_development_fund'
     agency = 'Chicago Development Fund'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.chicago.gov']
     start_urls = [
         'https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_developmentfund.html'
     ]

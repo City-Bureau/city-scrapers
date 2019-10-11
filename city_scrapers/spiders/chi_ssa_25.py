@@ -10,7 +10,6 @@ class ChiSsa25Spider(CityScrapersSpider):
     name = 'chi_ssa_25'
     agency = 'Chicago Special Service Area #25 Little Village'
     timezone = 'America/Chicago'
-    allowed_domains = ['littlevillagechamber.org']
     start_urls = [
         'http://littlevillagechamber.org/{}-meetings-minutes/'.format(datetime.now().year)
     ]

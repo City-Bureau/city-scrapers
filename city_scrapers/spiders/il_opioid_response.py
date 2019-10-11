@@ -10,7 +10,6 @@ class IlOpioidResponseSpider(CityScrapersSpider):
     name = "il_opioid_response"
     agency = "Illinois Opioid Crisis Response Advisory Council"
     timezone = "America/Chicago"
-    allowed_domains = ["www.dhs.state.il.us"]
     start_urls = ["https://www.dhs.state.il.us/page.aspx?item=104682"]
 
     def parse(self, response):
@@ -94,7 +93,7 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         """Parse or generate links for meeting agenda and minutes."""
         links = []
         agenda = {
-            "href": 'https://' + self.allowed_domains[0] + item.xpath('@href').get(),
+            "href": response.urljoin(item.xpath('@href').get()),
             "title": item.xpath('text()').get()
         }
 
@@ -116,7 +115,7 @@ class IlOpioidResponseSpider(CityScrapersSpider):
                 if datestr in minutes.get():
 
                     minutes = {
-                        "href": 'https://' + self.allowed_domains[0] + minutes.xpath('@href').get(),
+                        "href": response.urljoin(minutes.xpath('@href').get()),
                         "title": minutes.xpath('text()').get(),
                     }
 

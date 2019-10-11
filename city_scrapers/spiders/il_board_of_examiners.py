@@ -10,7 +10,6 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
     name = "il_board_of_examiners"
     agency = "Illinois Board of Examiners"
     timezone = "America/Chicago"
-    allowed_domains = ["www.ilboe.org"]
     start_urls = ["https://www.ilboe.org/board-information/board-meetings/"]
 
     def parse(self, response):

@@ -7,7 +7,6 @@ class ChiCityCouncilSpider(LegistarSpider):
     name = 'chi_citycouncil'
     agency = 'Chicago City Council'
     timezone = 'America/Chicago'
-    allowed_domains = ['chicago.legistar.com']
     start_urls = ['https://chicago.legistar.com/Calendar.aspx']
     link_types = ["Notice"]
 

@@ -10,7 +10,6 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
     name = "cook_north_shore_mosquito"
     agency = "Cook County North Shore Mosquito Abatement District"
     timezone = "America/Chicago"
-    allowed_domains = ["www.nsmad.com"]
     start_urls = ["https://www.nsmad.com/news-events/board-meetings/"]
     location = {
         "address": "117 Northfield Road, Northfield, IL 60093",

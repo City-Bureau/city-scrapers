@@ -13,7 +13,6 @@ class CookLandbankSpider(CityScrapersSpider):
     name = 'cook_landbank'
     agency = 'Cook County Land Bank Authority'
     timezone = 'America/Chicago'
-    allowed_domains = ['www.cookcountylandbank.org']
     start_urls = [
         "http://www.cookcountylandbank.org/",
         "http://www.cookcountylandbank.org/agendas-minutes/",

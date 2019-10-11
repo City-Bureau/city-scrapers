@@ -10,7 +10,6 @@ class CookHousingSpider(CityScrapersSpider):
     name = "cook_housing"
     agency = "Cook County Housing Authority"
     timezone = "America/Chicago"
-    allowed_domains = ["thehacc.org"]
 
     @property
     def start_urls(self):

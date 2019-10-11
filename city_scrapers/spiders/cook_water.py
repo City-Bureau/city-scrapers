@@ -6,7 +6,6 @@ from city_scrapers_core.spiders import LegistarSpider
 class CookWaterSpider(LegistarSpider):
     name = 'cook_water'
     agency = 'Metropolitan Water Reclamation District of Greater Chicago'
-    allowed_domains = ['mwrd.legistar.com']
     event_timezone = 'America/Chicago'
     start_urls = ['https://mwrd.legistar.com']
     address = '100 East Erie Street Chicago, IL 60611'

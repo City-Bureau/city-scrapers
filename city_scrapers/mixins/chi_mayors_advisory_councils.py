@@ -8,7 +8,6 @@ from lxml import etree
 
 class ChiMayorsAdvisoryCouncilsMixin:
     timezone = 'America/Chicago'
-    allowed_domains = ['chicagocompletestreets.org']
     BASE_URL = 'http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/'
     title = ''
 
