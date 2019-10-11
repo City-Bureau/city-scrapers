@@ -2,7 +2,7 @@
 from os.path import dirname, join
 
 # import pytest
-# from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -60,8 +60,14 @@ Uncomment below
 #       "title": "EXPECTED TITLE"
 #     }]
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+
+def test_classification():
+    print(parsed_items[0])
+    print("len=" + str(len(parsed_items)))
+    # exit()
+
+    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+
 
 # @pytest.mark.parametrize("item", parsed_items)
 # def test_all_day(item):

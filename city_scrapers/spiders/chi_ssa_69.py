@@ -17,7 +17,9 @@ class ChiSsa69Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".meetings"):
+
+        # meetings = ["test meeting 1","test meeting 2"]
+        for item in response.css(".color_14"):
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -31,8 +33,8 @@ class ChiSsa69Spider(CityScrapersSpider):
                 source=self._parse_source(response),
             )
 
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
+            # meeting["status"] = self._get_status(meeting)
+            # meeting["id"] = self._get_id(meeting)
 
             yield meeting
 
