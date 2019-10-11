@@ -1,11 +1,9 @@
-from datetime import datetime
 import json
+from datetime import datetime
 from urllib.parse import urljoin
 
 import scrapy
-
-from city_scrapers_core.constants import BOARD, FORUM, NOT_CLASSIFIED
-from city_scrapers_core.constants import CANCELLED, PASSED, TENTATIVE
+from city_scrapers_core.constants import BOARD, CANCELLED, FORUM, NOT_CLASSIFIED, PASSED, TENTATIVE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -31,12 +29,12 @@ class IlPollutionControlSpider(CityScrapersSpider):
         return spider
 
     def spider_idle(self):
-        """ React to `spider_idle` signal by starting JSON parsing. Must happen after _parse_minutes. """
+        """ React to `spider_idle` signal by starting JSON parsing after _parse_minutes."""
         if not self.link_parse_complete:
-            self.crawler.signals.disconnect(self.spider_idle,
-                                            signal=scrapy.signals.spider_idle)
-            self.crawler.engine.crawl(scrapy.Request(self.json_url, callback=self._parse_json),
-                                      self)
+            self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
+            self.crawler.engine.crawl(
+                scrapy.Request(self.json_url, callback=self._parse_json), self
+            )
             self.link_parse_complete = True
             raise scrapy.exceptions.DontCloseSpider
 
@@ -131,7 +129,8 @@ class IlPollutionControlSpider(CityScrapersSpider):
         text = " ".join([item['Description'], item['Location']]).lower()
         if "thompson" in text:
             return {
-                "address": "James R. Thompson Center - 100 W. Randolph St. Suite 11-500, Chicago, IL 60601",  # noqa
+                "address":
+                    "James R. Thompson Center - 100 W. Randolph St. Suite 11-500, Chicago, IL 60601",  # noqa
                 "name": "Chicago IPCB Office",
             }
         elif "springfield" in text or "llinois pollution control board" in text:
