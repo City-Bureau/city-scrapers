@@ -339,11 +339,11 @@
         },
         "scrapy-wayback-middleware": {
             "hashes": [
-                "sha256:2cae763f759de31ace20a64c5509c969f3b029d272cdde1fcec187791bf0dd99",
-                "sha256:d34abd590796ca1f93b2ca9e4f0864260fab74f3fcbb4189ffafd0ac4fa94e81"
+                "sha256:9d402437092ad2e2d36ea2d41e6f88cc8f9813e80d4ada0cfe0dcd061af0e3f5",
+                "sha256:f91477f420bc7feeaa0197de74d199626c6418f10032b3b777495894dcbc0136"
             ],
             "index": "pypi",
-            "version": "==0.1.1"
+            "version": "==0.2.0"
         },
         "service-identity": {
             "hashes": [
