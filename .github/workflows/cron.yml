@@ -2,12 +2,12 @@ name: Cron Build
 
 on:
   schedule:
-    - cron: '12 7 * * *'
+    - cron: '12 5 * * *'
 
 env:
   CI: true
   SCRAPY_SETTINGS_MODULE: city_scrapers.settings.prod
-  WAYBACK_ENABLED: true
+  # WAYBACK_ENABLED: true
   AUTOTHROTTLE_MAX_DELAY: 30.0
   AUTOTHROTTLE_START_DELAY: 1.5
   AUTOTHROTTLE_TARGET_CONCURRENCY: 3.0
