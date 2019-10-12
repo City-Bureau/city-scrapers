@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import scrapy
 from city_scrapers_core.constants import BOARD
@@ -14,9 +14,8 @@ class CookCountyBoardEthicsSpider(CityScrapersSpider):
 
     def start_requests(self):
         today = datetime.now()
-        next_month = today.replace(day=28) + timedelta(days=5)
-        for dt in [today, next_month]:
-            mo_str = dt.strftime('%Y-%m')
+        for month_delta in range(-2, 3):
+            mo_str = today.replace(month=today.month + month_delta).strftime('%Y-%m')
             url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
