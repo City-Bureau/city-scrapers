@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -19,16 +21,19 @@ class ChiNorthRiverMentalHealthSpider(CityScrapersSpider):
         """
         for item in response.css(".meetings"):
             meeting = Meeting(
-                title=self._parse_title(item),
-                description=self._parse_description(item),
-                classification=self._parse_classification(item),
+                title="Governing Commission",
+                description='',
+                classification="COMMISSION",
                 start=self._parse_start(item),
-                end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
+                end=None,
+                all_day=False,
+                time_notes='',
+                location={
+                    "name": "North River Expanded Mental Health Services Program Governing Commission Office",
+                    "address": "3525 W. Peterson Ave, Unit 306, Chicago, IL 60659",
+                },
                 links=self._parse_links(item),
-                source=self._parse_source(response),
+                source=response.url,
             )
 
             meeting["status"] = self._get_status(meeting)
@@ -36,45 +41,20 @@ class ChiNorthRiverMentalHealthSpider(CityScrapersSpider):
 
             yield meeting
 
-    def _parse_title(self, item):
-        """Parse or generate meeting title."""
-        return ""
-
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
-
-    def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
-
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        return None
+        date = item.xpath("//div[@class=‘paragraph’][2]/font[1]/font[2]/text()[1]").get()
+        time = item.xpath("//div[@class=‘paragraph’][2]/font[1]/font[2]/text()[2]").get()
+        date_time = date + ‘ ‘ + time
+        return datetime.strptime(date_time,"%A: %B %d, %Y @ %I %p")
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
-
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
-
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
-
-    def _parse_location(self, item):
-        """Parse or generate location."""
-        return {
-            "address": "",
-            "name": "",
-        }
-
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
-        return [{"href": "", "title": ""}]
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
+        links = []
+        document = item.xpath(“//a[@href=‘/minutes.html’]”).get()
+        for link in document:
+            links.append({
+            “href”: response.urljoin(link.xpath(‘@href’)).get(),
+            “title”: “Minutes”,
+            })
+        return links
