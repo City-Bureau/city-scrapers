@@ -1,6 +1,10 @@
+from datetime import datetime
+
+import lxml.html as lh
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from lxml.html.clean import clean_html
 
 
 class ChiSsa69Spider(CityScrapersSpider):
@@ -10,6 +14,29 @@ class ChiSsa69Spider(CityScrapersSpider):
     allowed_domains = ["auburngresham.wixsite.com"]
     start_urls = ["https://auburngresham.wixsite.com/ssa69/calendar"]
 
+    def lxml_to_text(self, html):
+        doc = lh.fromstring(html)
+        doc = clean_html(doc)
+        return doc.text_content()
+
+    def is_title_line(self, line):
+        if ('font-weight:600' in line.extract()):
+            return True
+        else:
+            return False
+
+    def is_date_line(self, line):
+        if ('date' in line.extract()):
+            return True
+        else:
+            return False
+
+    def is_wixguard(self, line):
+        if ('<span class="wixGuard">	' in line.extract()):
+            return True
+        else:
+            return False
+
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
@@ -18,25 +45,68 @@ class ChiSsa69Spider(CityScrapersSpider):
         needs.
         """
 
-        # meetings = ["test meeting 1","test meeting 2"]
-        for item in response.css(".color_14"):
-            meeting = Meeting(
-                title=self._parse_title(item),
-                description=self._parse_description(item),
-                classification=self._parse_classification(item),
-                start=self._parse_start(item),
-                end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
-                links=self._parse_links(item),
-                source=self._parse_source(response),
-            )
+        all_spans = response.css("span")
 
-            # meeting["status"] = self._get_status(meeting)
-            # meeting["id"] = self._get_id(meeting)
+        title_line = ""
+        date_line = ""
+        line_position_within_listing = -1
+        for _ in range(len(all_spans)):
+            if (line_position_within_listing == 0):
+                if (self.is_title_line(all_spans[_])):
+                    title_line = all_spans[_].extract()
+                    try:
+                        title_line = self.lxml_to_text(title_line)
+                    except Exception:
+                        title_line = "unable to get text from title line"
+                line_position_within_listing += 1
+            if (line_position_within_listing == 1):
+                # check the next line to see if it is the line with event date(s)
+                if (self.is_date_line(all_spans[_])):
+                    date_line = all_spans[_]
+                else:
+                    # have to deal with this case in a special way
+                    date_line = 'no specific date'
+                    # special_info_line = all_spans[_]
+                line_position_within_listing += 1
+            if (all_spans[_].css(".wixGuard")):
+                line_position_within_listing = 0
 
-            yield meeting
+                # print(date_line)
+
+                meeting = Meeting(
+                    title=title_line,
+                    # date_line is used below just to satisfy flake8 linter
+                    description='this is a test description' + date_line,
+                    classification=NOT_CLASSIFIED,
+                    start=datetime.now(),
+                    end=datetime.now(),
+                    all_day=False,
+                    time_notes="time notes test",
+                    location="test location",
+                    links=None,
+                    source=self._parse_source(response),
+                )
+                yield meeting
+
+        # meetings = response.css("font-weight:600")
+        # for item in meetings:
+        #    meeting = Meeting(
+        #        title=self._parse_title(item),
+        #        description=self._parse_description(item),
+        #        classification=self._parse_classification(item),
+        #        start=self._parse_start(item),
+        #        end=self._parse_end(item),
+        #        all_day=self._parse_all_day(item),
+        #        time_notes=self._parse_time_notes(item),
+        #        location=self._parse_location(item),
+        #        links=self._parse_links(item),
+        #        source=self._parse_source(response),
+        #    )
+
+        # meeting["status"] = self._get_status(meeting)
+        # meeting["id"] = self._get_id(meeting)
+
+        #  yield meeting
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""

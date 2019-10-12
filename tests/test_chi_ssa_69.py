@@ -62,8 +62,8 @@ Uncomment below
 
 
 def test_classification():
-    print(parsed_items[0])
-    print("len=" + str(len(parsed_items)))
+    # print(parsed_items[7]['title'])
+    # print("len=" + str(len(parsed_items)))
     # exit()
 
     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
