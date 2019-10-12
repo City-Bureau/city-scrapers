@@ -2,7 +2,7 @@ name: Cron Build
 
 on:
   schedule:
-    - cron: '7 10 * * *'
+    - cron: '12 7 * * *'
 
 env:
   CI: true
