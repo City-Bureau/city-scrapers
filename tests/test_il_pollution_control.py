@@ -23,6 +23,8 @@ freezer = freeze_time("2019-10-03")
 freezer.start()
 
 parsed_items = [item for item in spider._parse_json(test_response)]
+# Must use `list()` so generator is fully consumed and spider.link_map is populated.
+list(spider._parse_minutes(test_minutes_response))
 
 freezer.stop()
 
@@ -68,8 +70,6 @@ def test_source(item):
 
 
 def test_links():
-    # Must use `list()` so generator is fully consumed and spider.link_map is populated.
-    list(spider._parse_minutes(test_minutes_response))
     sample_link = "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
     assert sample_link in list(spider.link_map.values())
 
