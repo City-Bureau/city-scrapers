@@ -150,6 +150,8 @@ class IlPollutionControlSpider(CityScrapersSpider):
         key = meeting['start'].date()
         if key in self.link_map:
             return [{"href": self.link_map[key], "title": "Minutes"}]
+        else:
+            return list()
 
     def _parse_source(self, item):
         """Parse or generate source."""
