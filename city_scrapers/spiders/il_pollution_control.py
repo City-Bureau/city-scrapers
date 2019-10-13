@@ -3,7 +3,7 @@ from datetime import datetime
 from urllib.parse import urljoin
 
 import scrapy
-from city_scrapers_core.constants import BOARD, CANCELLED, FORUM, NOT_CLASSIFIED, PASSED, TENTATIVE
+from city_scrapers_core.constants import BOARD, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -19,8 +19,10 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
     def __init__(self, *args, **kwargs):
         self.link_map = dict()  # Populated by self._parse_minutes()
-        self.relevant_years = [str(y) for y in range(datetime.now().year - 1,
-                                                     datetime.now().year + 1)]
+        self.relevant_years = [
+            str(y) for y in range(datetime.now().year - 1,
+                                  datetime.now().year + 1)
+        ]
         super().__init__(*args, **kwargs)
 
     @classmethod
@@ -33,9 +35,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
     def spider_idle(self):
         """ React to `spider_idle` signal by starting JSON parsing after _parse_minutes."""
         self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
-        self.crawler.engine.crawl(
-            scrapy.Request(self.json_url, callback=self._parse_json), self
-        )
+        self.crawler.engine.crawl(scrapy.Request(self.json_url, callback=self._parse_json), self)
         raise scrapy.exceptions.DontCloseSpider
 
     def parse(self, response):
@@ -83,7 +83,9 @@ class IlPollutionControlSpider(CityScrapersSpider):
         data = json.loads(response.body_as_unicode())
 
         for item in data:
-            if any(s in item["CalendarTypeDesc"].lower() for s in ("holiday", "seminar", "hearing")):
+            if any(
+                s in item["CalendarTypeDesc"].lower() for s in ("holiday", "seminar", "hearing")
+            ):
                 continue  # Not interested in this event type
 
             title = item["CalendarTypeDesc"].replace("CANCELLED", "").strip()
@@ -101,9 +103,9 @@ class IlPollutionControlSpider(CityScrapersSpider):
             )
 
             meeting["links"] = self._parse_links(meeting)
-            meeting["status"] = self._get_status(meeting,
-                                                 text=" ".join([item['CalendarTypeDesc'],
-                                                                item['Description']]).lower())
+            meeting["status"] = self._get_status(
+                meeting, text=" ".join([item['CalendarTypeDesc'], item['Description']]).lower()
+            )
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
