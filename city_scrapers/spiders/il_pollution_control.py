@@ -15,6 +15,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
     allowed_domains = ["pcb.illinois.gov"]
     start_urls = ["https://pcb.illinois.gov/ClerksOffice/MeetingMinutes"]
     json_url = "https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents"
+    calendar_url = "https://pcb.illinois.gov/ClerksOffice/Calendar"
 
     def __init__(self, *args, **kwargs):
         self.link_map = dict()  # Populated by self._parse_minutes()
@@ -161,4 +162,4 @@ class IlPollutionControlSpider(CityScrapersSpider):
         if rel_url:
             return urljoin("https://{}".format(self.allowed_domains[0]), rel_url)
         else:
-            return self.json_url
+            return self.calendar_url
