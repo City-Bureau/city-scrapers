@@ -101,19 +101,12 @@ class IlPollutionControlSpider(CityScrapersSpider):
             )
 
             meeting["links"] = self._parse_links(meeting)
-            meeting["status"] = self._parse_status(meeting, item)
+            meeting["status"] = self._get_status(meeting,
+                                                 text=" ".join([item['CalendarTypeDesc'],
+                                                                item['Description']]).lower())
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
-
-    def _parse_status(self, meeting, item):
-        text = " ".join([item['CalendarTypeDesc'], item['Description']]).lower()
-        if "cancel" in text:
-            return CANCELLED
-        elif meeting["start"] < datetime.now():
-            return PASSED
-        else:
-            return TENTATIVE
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
