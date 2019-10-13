@@ -28,44 +28,16 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 87
+    assert len(parsed_items) == 30
 
 
-def test_title():
-    # Define expected number of occurrences of each title:
-    expected_title_counts = {
-        "Board Meeting": 30,
-        "Brown Bag Seminar": 4,
-        "Hearing PCB 2012-035": 1,
-        "Hearing PCB 2014-003": 4,
-        "Hearing PCB 2018-083": 1,
-        "Hearing R2018-020": 9,
-        "Hearing R2018-024": 4,
-        "Hearing R2018-029": 2,
-        "Hearing R2018-030": 4,
-        "Hearing R2018-032": 12,
-        "Hearing R2019-001": 10,
-        "Hearing R2019-006": 2,
-        "Hearing R2019-018": 4
-    }
-
-    # Calculate actual counts from scraped items:
-    all_titles = [item["title"] for item in parsed_items]
-    unique_titles = set(all_titles)
-    title_counts = {ut: len([t for t in all_titles if t == ut]) for ut in unique_titles}
-    for title in title_counts:
-        assert (title_counts[title] == expected_title_counts[title])
+@pytest.mark.parametrize("item", parsed_items)
+def test_title(item):
+    assert item["title"] == "Board Meeting"
 
 
 def test_start():
-    expected_starts = {
-        0: datetime(2018, 10, 4, 12, 0),
-        1: datetime(2019, 5, 23, 11, 0),
-        38: datetime(2018, 11, 28, 13, 0)
-    }
-
-    for n in expected_starts:
-        assert parsed_items[n]["start"] == expected_starts[n]
+    assert parsed_items[0]["start"] == datetime(2019, 5, 23, 11, 0)
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -74,28 +46,20 @@ def test_end(item):
 
 
 def test_id():
-    assert parsed_items[0]["id"] == 'il_pollution_control/201810041200/x/brown_bag_seminar'
+    assert parsed_items[0]["id"] == 'il_pollution_control/201905231100/x/board_meeting'
 
 
 def test_status():
-    expected_counts = {CANCELLED: 11, PASSED: 66, TENTATIVE: 10}
+    expected_counts = {CANCELLED: 2, PASSED: 22, TENTATIVE: 6}
     actual_counts = {}
     for key in expected_counts:
         actual_counts[key] = len([item for item in parsed_items if item['status'] == key])
         assert actual_counts[key] == expected_counts[key]
 
 
-def test_location():
-    expected_counts = {
-        "Chicago IPCB Office": 55,
-        "Springfield IPCB Office": 14,
-        "Illinois EPA": 3,
-        "": 15
-    }
-    actual_counts = {}
-    for key in expected_counts:
-        actual_counts[key] = len([item for item in parsed_items if item['location']['name'] == key])
-        assert actual_counts[key] == expected_counts[key]
+@pytest.mark.parametrize("item", parsed_items)
+def test_location(item):
+    assert item["location"]["name"] == "Chicago IPCB Office"
 
 
 def test_source():
@@ -153,12 +117,9 @@ def test_links():
         assert expected_links[dt] == spider.link_map[dt]
 
 
-def test_classification():
-    expected_counts = {BOARD: 30, FORUM: 4, NOT_CLASSIFIED: 53}
-    actual_counts = {}
-    for key in expected_counts:
-        actual_counts[key] = len([item for item in parsed_items if item['classification'] == key])
-        assert actual_counts[key] == expected_counts[key]
+@pytest.mark.parametrize("item", parsed_items)
+def test_classification(item):
+    assert item["classification"] == BOARD
 
 
 @pytest.mark.parametrize("item", parsed_items)

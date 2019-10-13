@@ -82,8 +82,9 @@ class IlPollutionControlSpider(CityScrapersSpider):
         data = json.loads(response.body_as_unicode())
 
         for item in data:
-            if item["CalendarTypeDesc"] == "Holiday":
-                continue  # Not a meeting - just an indication of a holiday on the calendar.
+            if any(s in item["CalendarTypeDesc"].lower() for s in ("holiday", "seminar", "hearing")):
+                continue  # Not interested in this event type
+
             title = item["CalendarTypeDesc"].replace("CANCELLED", "").strip()
             meeting = Meeting(
                 title=title,
@@ -117,8 +118,6 @@ class IlPollutionControlSpider(CityScrapersSpider):
         """Parse or generate classification from allowed options."""
         if "Board" in title:
             return BOARD
-        elif "Seminar" in title:
-            return FORUM
         else:
             return NOT_CLASSIFIED
 
