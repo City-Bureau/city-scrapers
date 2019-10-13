@@ -48,7 +48,9 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "wayne_land_bank/201901171400/x/"
+    assert parsed_items[0]["id"] == "wayne_land_bank/201901171400/x/board_of_directors"
+    assert parsed_items[1]["id"] == "wayne_land_bank/201902201100/x/board_of_directors"\
+                                    + "_special_meeting"
 
 
 def test_status():

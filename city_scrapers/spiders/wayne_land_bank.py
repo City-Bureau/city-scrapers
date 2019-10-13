@@ -47,8 +47,10 @@ class WayneLandBankSpider(CityScrapersSpider):
         self._validate_location(self.response_data)
 
         for item in data:
+            title = item[2].strip(" .()")
+            title = 'Board of Directors' if not title else 'Board of Directors ' + title
             meeting = Meeting(
-                title='Board of Directors ' + item[2].strip(" .()"),
+                title=title,
                 description="",
                 classification=BOARD,
                 start=self._parse_start("".join(item[0:2])),
