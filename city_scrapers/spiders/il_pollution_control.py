@@ -18,6 +18,8 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
     def __init__(self, *args, **kwargs):
         self.link_map = dict()  # Populated by self._parse_minutes()
+        self.relevant_years = [str(y) for y in range(datetime.now().year - 1,
+                                                     datetime.now().year + 1)]
         super().__init__(*args, **kwargs)
 
     @classmethod
@@ -48,6 +50,8 @@ class IlPollutionControlSpider(CityScrapersSpider):
             try:
                 href = item.xpath("@href")[0].get()
                 text = item.xpath("b/text()")[0].get().strip()
+                if not any([(year in text) for year in self.relevant_years]):
+                    continue  # Link does not contain documents from recent years
                 if text[-4:] == ".pdf":
                     text = text[:-4]
             except IndexError:
