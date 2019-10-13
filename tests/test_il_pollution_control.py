@@ -23,8 +23,10 @@ freezer = freeze_time("2019-10-03")
 freezer.start()
 
 parsed_items = [item for item in spider._parse_json(test_response)]
-# Must use `list()` so generator is fully consumed and spider.link_map is populated.
-list(spider._parse_minutes(test_minutes_response))
+spider.link_map = {
+    datetime(2019, 1, 17).date():
+        "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
+}
 
 for item in parsed_items:
     item["links"] = spider._parse_links(item)
