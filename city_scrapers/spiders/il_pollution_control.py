@@ -18,25 +18,22 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
     def __init__(self, *args, **kwargs):
         self.link_map = dict()  # Populated by self._parse_minutes()
-        self.link_parse_complete = False
         super().__init__(*args, **kwargs)
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
         """ Overridden `from_crawler` to connect `spider_idle` signal. """
-        spider = super(IlPollutionControlSpider, cls).from_crawler(crawler, *args, **kwargs)
+        spider = super().from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_idle, signal=scrapy.signals.spider_idle)
         return spider
 
     def spider_idle(self):
         """ React to `spider_idle` signal by starting JSON parsing after _parse_minutes."""
-        if not self.link_parse_complete:
-            self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
-            self.crawler.engine.crawl(
-                scrapy.Request(self.json_url, callback=self._parse_json), self
-            )
-            self.link_parse_complete = True
-            raise scrapy.exceptions.DontCloseSpider
+        self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
+        self.crawler.engine.crawl(
+            scrapy.Request(self.json_url, callback=self._parse_json), self
+        )
+        raise scrapy.exceptions.DontCloseSpider
 
     def parse(self, response):
         """
