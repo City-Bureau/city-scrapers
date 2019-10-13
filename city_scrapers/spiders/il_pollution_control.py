@@ -149,7 +149,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
         """ Associate Meeting objects with previously-scraped links """
         key = meeting['start'].date()
         if key in self.link_map:
-            return [{"href": self.link_map[key], "title": "Minutes - {}".format(key)}]
+            return [{"href": self.link_map[key], "title": "Minutes"}]
 
     def _parse_source(self, item):
         """Parse or generate source."""

@@ -70,35 +70,8 @@ def test_source(item):
 def test_links():
     # Must use `list()` so generator is fully consumed and spider.link_map is populated.
     list(spider._parse_minutes(test_minutes_response))
-    expected_links = {
-        datetime(2019, 1, 17).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf",  # noqa
-        datetime(2019, 2, 28).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-99956/2-28-2019 draft2.pdf",  # noqa
-        datetime(2019, 3, 14).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-99970/3-14-2019 draft2.pdf",  # noqa
-        datetime(2019, 3, 28).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-100053/3-28-2019 draft2.pdf",  # noqa
-        datetime(2019, 2, 14).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-99955/2-14-2019 draft2.pdf",  # noqa
-        datetime(2019, 4, 11).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-100602/04-11-2019 draft1.pdf",  # noqa
-        datetime(2019, 4, 25).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-100603/04-25-2019 draft1.pdf",  # noqa
-        datetime(2019, 5, 30).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-100725/05-30-2019 draft1.pdf",  # noqa
-        datetime(2019, 6, 20).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-100854/06-20-2019 draft1.pdf",  # noqa
-        datetime(2019, 7, 25).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-100956/07-25-2019 draft1.pdf",  # noqa
-        datetime(2019, 8, 22).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-101165/08-22-2019 draft1.pdf",  # noqa
-        datetime(2019, 9, 19).date():
-            "https://pcb.illinois.gov/documents/dsweb/Get/Document-101211/09-19-2019 draft1.pdf",  # noqa
-    }
-
-    for dt in expected_links:
-        assert expected_links[dt] == spider.link_map[dt]
+    sample_link = "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
+    assert sample_link in [spider.link_map[key] for key in spider.link_map]
 
 
 @pytest.mark.parametrize("item", parsed_items)
