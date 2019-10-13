@@ -19,8 +19,8 @@ class ChiSsa69Spider(CityScrapersSpider):
         doc = clean_html(doc)
         return doc.text_content()
 
-    def is_title_line(self, line):
-        if ('font-weight:600' in line.extract()):
+    def is_title_line(self, line, lpos):
+        if ('font-weight:600' in line.extract()) and (lpos == 1):
             return True
         else:
             return False
@@ -32,10 +32,23 @@ class ChiSsa69Spider(CityScrapersSpider):
             return False
 
     def is_wixguard(self, line):
-        if ('<span class="wixGuard">	' in line.extract()):
+        if ('<span class="wixGuard">' in line.extract()):
             return True
         else:
             return False
+
+    def combine_consecutive_wixguard_spans(self, spans):
+        cur = ""
+        prev = ""
+        next = ""
+        out_spans = []
+        for i in range(len(spans) - 1):
+            cur = spans[i]
+            next = spans[i + 1]
+            if self.is_wixguard(cur) == False or self.is_wixguard(next) == False:
+                out_spans.append(spans[i])
+        out_spans.append(spans[-1])
+        return out_spans
 
     def parse(self, response):
         """
@@ -46,30 +59,33 @@ class ChiSsa69Spider(CityScrapersSpider):
         """
 
         all_spans = response.css("span")
+        spans = self.combine_consecutive_wixguard_spans(all_spans)
 
         title_line = ""
         date_line = ""
-        line_position_within_listing = -1
-        for _ in range(len(all_spans)):
-            if (line_position_within_listing == 0):
-                if (self.is_title_line(all_spans[_])):
-                    title_line = all_spans[_].extract()
-                    try:
-                        title_line = self.lxml_to_text(title_line)
-                    except Exception:
-                        title_line = "unable to get text from title line"
-                line_position_within_listing += 1
-            if (line_position_within_listing == 1):
+        lpos = 999  # line position within meeting listing - 999 mesnd unset
+        for i in range(len(spans)):
+            lpos += 1
+            print(str(i) + "-" + str(lpos) + "---" + spans[i].extract())
+            # print(lpos)
+            if (self.is_title_line(spans[i], lpos)):
+                title_line = spans[i].extract()
+                try:
+                    title_line = self.lxml_to_text(title_line)
+                except Exception:
+                    title_line = "unable to get text from title line"
+                # line_position_within_listing += 1
+            if (lpos == 1):
                 # check the next line to see if it is the line with event date(s)
-                if (self.is_date_line(all_spans[_])):
-                    date_line = all_spans[_]
+                if (self.is_date_line(spans[i])):
+                    date_line = spans[i]
                 else:
                     # have to deal with this case in a special way
                     date_line = 'no specific date'
-                    # special_info_line = all_spans[_]
-                line_position_within_listing += 1
-            if (all_spans[_].css(".wixGuard")):
-                line_position_within_listing = 0
+                    # special_info_line = spans[_]
+                lpos += 1
+            if (spans[i].css(".wixGuard")):
+                lpos = 0
 
                 # print(date_line)
 
@@ -87,6 +103,8 @@ class ChiSsa69Spider(CityScrapersSpider):
                     source=self._parse_source(response),
                 )
                 yield meeting
+                if (i > 143):
+                    exit()
 
         # meetings = response.css("font-weight:600")
         # for item in meetings:

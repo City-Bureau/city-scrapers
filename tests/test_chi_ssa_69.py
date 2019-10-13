@@ -27,6 +27,10 @@ Uncomment below
 # def test_title():
 #     assert parsed_items[0]["title"] == "EXPECTED TITLE"
 
+# def test_title():
+#        expected_value = "GAGDC & SSA#69 Neighborhood Opportunity Fund Grant Training"
+#    assert parsed_items[1]["title"] == expected_value
+
 # def test_description():
 #     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
 
@@ -62,8 +66,10 @@ Uncomment below
 
 
 def test_classification():
-    # print(parsed_items[7]['title'])
-    # print("len=" + str(len(parsed_items)))
+    print("len=" + str(len(parsed_items)))
+    # print(parsed_items[2]['title'])
+    print(parsed_items)
+    print("len=" + str(len(parsed_items)))
     # exit()
 
     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
