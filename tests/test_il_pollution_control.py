@@ -26,6 +26,9 @@ parsed_items = [item for item in spider._parse_json(test_response)]
 # Must use `list()` so generator is fully consumed and spider.link_map is populated.
 list(spider._parse_minutes(test_minutes_response))
 
+for item in parsed_items:
+    item["links"] = spider._parse_links(item)
+
 freezer.stop()
 
 
@@ -71,7 +74,7 @@ def test_source(item):
 
 def test_links():
     sample_link = "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
-    assert sample_link in list(spider.link_map.values())
+    assert parsed_items[2]["links"][0]["href"] == sample_link
 
 
 @pytest.mark.parametrize("item", parsed_items)
