@@ -23,8 +23,8 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == ""
-    assert parsed_items[1]["title"] == "Special Meeting"
+    assert parsed_items[0]["title"] == "Board of Directors"
+    assert parsed_items[1]["title"] == "Board of Directors Special Meeting"
 
 
 def test_description():
@@ -58,7 +58,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Wayne County Treasurer's Office",
-        "address": "400 Monroe St 5th Floor, Detroit, MI 48226, United States"
+        "address": "400 Monroe St 5th Floor, Detroit, MI 48226"
     }
 
 
