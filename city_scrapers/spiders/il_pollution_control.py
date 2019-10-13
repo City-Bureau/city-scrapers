@@ -58,7 +58,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             except IndexError:
                 continue
 
-            url = urljoin("https://{}".format(self.allowed_domains[0]), href)
+            url = response.urljoin(href)
             if ".pdf" not in url:
                 # Not a link to meeting minutes file - go a level deeper
                 yield scrapy.Request(url, callback=self._parse_minutes)
