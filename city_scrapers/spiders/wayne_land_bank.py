@@ -76,6 +76,7 @@ class WayneLandBankSpider(CityScrapersSpider):
         return start_datetime
 
     def _validate_location(self, data):
-        if '400 Monroe' not in re.findall('The Board of Directors holds meetings at (.*?)(?=\\n)',
-                                          data[0])[0]:
+        if '400 Monroe' not in re.findall(
+            'The Board of Directors holds meetings at (.*?)(?=\\n)', data[0]
+        )[0]:
             raise ValueError("Meeting location has changed")
