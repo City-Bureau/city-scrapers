@@ -39,13 +39,12 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def combine_consecutive_wixguard_spans(self, spans):
         cur = ""
-        prev = ""
         next = ""
         out_spans = []
         for i in range(len(spans) - 1):
             cur = spans[i]
             next = spans[i + 1]
-            if self.is_wixguard(cur) == False or self.is_wixguard(next) == False:
+            if self.is_wixguard(cur) is False or self.is_wixguard(next) is False:
                 out_spans.append(spans[i])
         out_spans.append(spans[-1])
         return out_spans
