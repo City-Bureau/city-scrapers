@@ -2,7 +2,6 @@ import json
 import re
 from datetime import datetime
 from io import BytesIO
-from urllib.parse import urljoin
 
 import scrapy
 from city_scrapers_core.constants import BOARD, NOT_CLASSIFIED
@@ -15,7 +14,6 @@ class IlPollutionControlSpider(CityScrapersSpider):
     name = "il_pollution_control"
     agency = "Illinois Pollution Control Board"
     timezone = "America/Chicago"
-    allowed_domains = ["pcb.illinois.gov"]
     start_urls = [
         "https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
         "https://pcb.illinois.gov/CurrentAgendas"
@@ -137,7 +135,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
                 time_notes="",
                 location=self._parse_location(item),
                 links=list(),
-                source=self._parse_source(item),
+                source=self._parse_source(item, response),
             )
 
             meeting["links"] = self._parse_links(meeting)
@@ -194,10 +192,10 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
         return links
 
-    def _parse_source(self, item):
+    def _parse_source(self, item, response):
         """Parse or generate source."""
         rel_url = scrapy.Selector(text=item["Description"]).xpath(".//a/@href").get()
         if rel_url:
-            return urljoin("https://{}".format(self.allowed_domains[0]), rel_url)
+            return response.urljoin(rel_url)
         else:
             return self.calendar_url
