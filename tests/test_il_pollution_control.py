@@ -8,11 +8,6 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.il_pollution_control import IlPollutionControlSpider
 
-test_minutes_response = file_response(
-    join(dirname(__file__), "files", "il_pollution_control.html"),
-    url="https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
-)
-
 test_response = file_response(
     join(dirname(__file__), "files", "il_pollution_control.json"),
     url="https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents",
