@@ -19,7 +19,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         doc = clean_html(doc)
         return doc.text_content()
 
-    def is_title_line(self, line, lpos):
+    def is_title_line(self, line, lpos=1):
         if ('font-weight:600' in line.extract()) and (lpos == 1):
             return True
         else:
@@ -49,6 +49,18 @@ class ChiSsa69Spider(CityScrapersSpider):
         out_spans.append(spans[-1])
         return out_spans
 
+    def combine_consecutive_font_weight_600s(self, spans):
+        cur = ""
+        next = ""
+        out_spans = []
+        for i in range(len(spans) - 1):
+            cur = spans[i]
+            next = spans[i + 1]
+            if self.is_title_line(cur) is False or self.is_title_line(next) is False:
+                out_spans.append(spans[i])
+        out_spans.append(spans[-1])
+        return out_spans
+
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
@@ -59,6 +71,7 @@ class ChiSsa69Spider(CityScrapersSpider):
 
         all_spans = response.css("span")
         spans = self.combine_consecutive_wixguard_spans(all_spans)
+        spans = self.combine_consecutive_font_weight_600s(all_spans)
 
         title_line = ""
         date_line = ""
@@ -102,8 +115,9 @@ class ChiSsa69Spider(CityScrapersSpider):
                     source=self._parse_source(response),
                 )
                 yield meeting
-                if (i > 143):
-                    exit()
+                # print(str(i) + "-" + str(lpos) + "---" + title_line)
+                # if (i > 131):
+                #    # exit()
 
         # meetings = response.css("font-weight:600")
         # for item in meetings:
