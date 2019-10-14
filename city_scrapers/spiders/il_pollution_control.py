@@ -1,11 +1,14 @@
 import json
+import re
 from datetime import datetime
+from io import BytesIO
 from urllib.parse import urljoin
 
 import scrapy
 from city_scrapers_core.constants import BOARD, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from PyPDF2 import PdfFileReader
 
 
 class IlPollutionControlSpider(CityScrapersSpider):
@@ -13,12 +16,16 @@ class IlPollutionControlSpider(CityScrapersSpider):
     agency = "Illinois Pollution Control Board"
     timezone = "America/Chicago"
     allowed_domains = ["pcb.illinois.gov"]
-    start_urls = ["https://pcb.illinois.gov/ClerksOffice/MeetingMinutes"]
+    start_urls = [
+        "https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
+        "https://pcb.illinois.gov/CurrentAgendas"
+    ]
     json_url = "https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents"
     calendar_url = "https://pcb.illinois.gov/ClerksOffice/Calendar"
 
     def __init__(self, *args, **kwargs):
-        self.link_map = dict()  # Populated by self._parse_minutes()
+        self.minutes_map = dict()  # Populated by self._parse_minutes()
+        self.agenda_map = dict()  # Populated by self._parse_agenda()
         self.relevant_years = [
             str(y) for y in range(datetime.now().year - 1,
                                   datetime.now().year + 1)
@@ -42,11 +49,16 @@ class IlPollutionControlSpider(CityScrapersSpider):
         """
         `parse` should always `yield` Meeting items.
         """
+        # Gather and store links to meeting minutes:
         for item in response.xpath("//iframe/@src"):
             yield scrapy.Request(item.get(), callback=self._parse_minutes)
 
+        # Gather and store link to agenda:
+        for agenda_url in self._parse_agenda_page(response):
+            yield scrapy.Request(agenda_url, callback=self._parse_agenda)
+
     def _parse_minutes(self, response):
-        """ Traverse tree of URLs and populate self.link_map """
+        """ Traverse tree of URLs and populate self.minutes_map """
         for item in response.xpath("//td[@class='name']/a"):
             try:
                 href = item.xpath("@href")[0].get()
@@ -76,7 +88,33 @@ class IlPollutionControlSpider(CityScrapersSpider):
                 if dt is None:
                     continue  # Could not find a matching format_str - can't process link.
 
-                self.link_map[dt] = url
+                self.minutes_map[dt] = url
+
+    def _parse_agenda_page(self, response):
+        """Scrape link to agenda PDF"""
+        for item in response.xpath("//div/div/a"):
+            for _ in item.xpath(".//div/h5[text()='Board Meeting']"):
+                for href in item.xpath("./@href"):
+                    yield href.get()
+
+    def _parse_agenda(self, response):
+        """Parse PDF with agenda for date and store link + date"""
+        pdf_obj = PdfFileReader(BytesIO(response.body))
+        pdf_text = pdf_obj.getPage(0).extractText().replace("\n", "")
+
+        # Find and extract strings for month/day/year:
+        regex = re.compile(r'(?P<month>[a-zA-Z]+) (?P<day>[0-9]+), (?P<year>[0-9]{4})')
+        m = regex.search(pdf_text)
+
+        try:
+            month = datetime.strptime(m.group('month'), '%B').month
+            day = int(m.group('day'))
+            year = int(m.group('year'))
+            self.agenda_map[datetime(year, month, day).date()] = response.url
+        except AttributeError:  # Regex failed to match.
+            return None
+
+        return None
 
     def _parse_json(self, response):
         """ Parse JSON from https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents -> Meetings """
@@ -147,11 +185,14 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
     def _parse_links(self, meeting):
         """ Associate Meeting objects with previously-scraped links """
+        links = list()
         key = meeting['start'].date()
-        if key in self.link_map:
-            return [{"href": self.link_map[key], "title": "Minutes"}]
-        else:
-            return list()
+        if key in self.minutes_map:
+            links.append({"href": self.minutes_map[key], "title": "Minutes"})
+        if key in self.agenda_map:
+            links.append({"href": self.agenda_map[key], "title": "Agenda"})
+
+        return links
 
     def _parse_source(self, item):
         """Parse or generate source."""

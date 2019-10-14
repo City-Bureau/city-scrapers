@@ -23,9 +23,12 @@ freezer = freeze_time("2019-10-03")
 freezer.start()
 
 parsed_items = [item for item in spider._parse_json(test_response)]
-spider.link_map = {
+spider.minutes_map = {
     datetime(2019, 1, 17).date():
         "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
+}
+spider.agenda_map = {
+    datetime(2019, 10, 3).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-53692/"
 }
 
 for item in parsed_items:
@@ -75,8 +78,11 @@ def test_source(item):
 
 
 def test_links():
-    sample_link = "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
-    assert parsed_items[2]["links"][0]["href"] == sample_link
+    minutes_url = "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
+    assert parsed_items[2]["links"][0]["href"] == minutes_url
+
+    agenda_url = "https://pcb.illinois.gov/documents/dsweb/Get/Document-53692/"
+    assert parsed_items[14]["links"][0]["href"] == agenda_url
 
 
 @pytest.mark.parametrize("item", parsed_items)
