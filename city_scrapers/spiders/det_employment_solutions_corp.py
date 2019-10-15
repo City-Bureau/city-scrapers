@@ -46,7 +46,7 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
             raise ValueError("Required links not found")
 
     def _parse_schedule(self, response):
-        # Parse PDF and then yield to documents page""""
+        # Parse PDF and then yield to documents page
 
         self._parse_schedule_pdf(response)
         yield scrapy.Request(
@@ -108,7 +108,13 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
         link_map = self._parse_link_map(response)
         title_map = self._parse_title_map(response)
         for date in self.meeting_dates:
-            title_in = self._parse_title(date, title_map)
+            start_in = date['start']
+            title_in = "DESC Meeting"
+            if start_in in title_map:
+                title_in = title_map[start_in]
+            title_in = title_map[start_in]
+            # FIXME : this function might become irrelevant or need reworking
+            # self._parse_title(date, title_map)
             meeting = Meeting(
                 title=title_in,
                 description="",
@@ -118,7 +124,8 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
                 all_day=False,
                 time_notes="",
                 location=self.location,
-                links=link_map[(date['start'].month, date['start'].year)],
+                links=link_map[
+                    (self.get_map_text(title_in), date['start'].month, date['start'].year)],
                 source=self.start_urls[0],
             )
 
@@ -155,26 +162,57 @@ class DetEmploymentSolutionsCorpSpider(CityScrapersSpider):
 
         title_divs = response.css('div[class="meeting-min_inner-wrapper"]')
         for div in title_divs:
+            title_text = div.css("h3::text").extract_first().strip()
             date = div.css("p::text").extract_first().strip()
             date = date.split('/')
             link_start = datetime(int(date[2]), int(date[0]), int(date[1]))
             link = div.css("a").xpath('@href').get()
-            print(link)
-            link_map[(link_start.month, link_start.year)].append({"title": "Minutes", "href": link})
+            link_map[(title_text, link_start.month, link_start.year)].append({
+                "title": "Minutes",
+                "href": link
+            })
 
         return link_map
 
     def _parse_title_map(self, response):
-        """parse or generate titles Returns a dictionary of month, year tuples and title lists"""
-        title_map = defaultdict(list)
+        """parse/generate titles Returns a dictionary of datetimes and titles"""
+        title_map = defaultdict(datetime)
 
         title_divs = response.css('div[class="meeting-min_inner-wrapper"]')
         for div in title_divs:
             date = div.css("p::text").extract_first().strip()
             date = date.split('/')
-            title_date = datetime(int(date[2]), int(date[0]), int(date[1]))
+            year = int(date[2])
+            month = int(date[0])
+            day = int(date[1])
+            link = div.css("a").xpath('@href').get()
+
+            # get start time from minutes pdf so can find right title for each meeting
+
+            # FIXME I'm trying to read the minutes here so I can use them to match titles to
+            # a specific meeting based on the minutes and hours it starts at
+            response = scrapy.http.Response(link, request=scrapy.http.Request(link))
+            pdf_obj = PdfFileReader(BytesIO(response.body))
+            pdf_text = pdf_obj.getPage(0).extractText()
+
+            # Remove duplicate characters split onto separate lines
+            clean_text = re.sub(r"([A-Z0-9:\n ]{2})\1", r"\1", pdf_text, flags=re.M)
+            # Join lines where there's only a single character, then remove newlines
+            clean_text = re.sub(r"(?<=[A-Z0-9:])\n", "", clean_text, flags=re.M).replace("\n", " ")
+            # Remove duplicate spaces
+            clean_text = re.sub(r"\s+", " ", clean_text)
+
+            time_strs = re.findall(
+                r"\d{1,2}[:]\d{2}\s*[a|p|A|P][m|M].*?\d{1,2}[:]\d{2}\s*[a|p|A|P][m|M]", clean_text
+            )
+            start = time_strs[0].split(':')
+            hour = int(start[0])
+            # meetings don't start on time
+            minutes = int(int(start[1]) / 15) * 15
+
+            title_date = datetime(year, month, day, hour, minutes)
             title_text = div.css("h3::text").extract_first().strip()
-            title_map[(title_date.month, title_date.year)] = title_text
+            title_map[title_date] = title_text
 
         return title_map
 
