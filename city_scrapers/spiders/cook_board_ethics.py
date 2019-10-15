@@ -1,4 +1,3 @@
-import re
 from datetime import datetime
 
 import scrapy
@@ -7,8 +6,8 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class CookCountyBoardEthicsSpider(CityScrapersSpider):
-    name = 'cook_county_board_ethics'
+class CookBoardEthicsSpider(CityScrapersSpider):
+    name = 'cook_board_ethics'
     agency = 'Cook County Government Board of Ethics'
     timezone = 'America/Chicago'
     allowed_domains = ['www.cookcountyil.gov']
@@ -86,9 +85,9 @@ class CookCountyBoardEthicsSpider(CityScrapersSpider):
     def _parse_title(self, response):
         """Parse or generate event title."""
         title = response.xpath('//h1/text()').extract_first()
-        if re.search(r"Special", title):
+        if "Special" in title:
             return "Special Board of Ethics Meeting"
-        elif re.search(r"Board of Ethics", title):
+        elif "Board of Ethics" in title:
             return "Board of Ethics"
         else:
             return title

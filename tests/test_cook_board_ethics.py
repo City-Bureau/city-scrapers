@@ -4,13 +4,13 @@ from city_scrapers_core.constants import BOARD, PASSED
 from freezegun import freeze_time
 from tests.utils import file_response
 
-from city_scrapers.spiders.cook_county_board_ethics import CookCountyBoardEthicsSpider
+from city_scrapers.spiders.cook_board_ethics import CookBoardEthicsSpider
 
 test_response = file_response(
-    'files/cook_county_board_ethics_event.html',
+    'files/cook_board_ethics.html',
     url='https://www.cookcountyil.gov/event/cook-county-board-ethics-meeting-3'
 )
-spider = CookCountyBoardEthicsSpider()
+spider = CookBoardEthicsSpider()
 
 freezer = freeze_time("2019-10-9")
 freezer.start()
@@ -35,7 +35,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert item['id'] == 'cook_county_board_ethics/201908291400/x/board_of_ethics'
+    assert item['id'] == 'cook_board_ethics/201908291400/x/board_of_ethics'
 
 
 def test_all_day():
