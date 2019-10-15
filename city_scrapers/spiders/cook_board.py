@@ -9,7 +9,7 @@ class CookBoardSpider(LegistarSpider):
     name = 'cook_board'
     agency = 'Cook County Board of Commissioners'
     timezone = 'America/Chicago'
-    start_urls = ['https://www.cook-county.legistar.com/Calendar.aspx']
+    start_urls = ['https://cook-county.legistar.com/Calendar.aspx']
 
     def parse_legistar(self, events):
         for event, _ in events:
