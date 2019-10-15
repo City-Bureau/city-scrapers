@@ -65,8 +65,9 @@ class CookCountyBoardEthicsSpider(CityScrapersSpider):
         """
         address = response.xpath('//div[@class="field event-location"]/descendant::*/text()'
                                  ).extract()
-        address = ' '.join([x.strip() for x in address])
-        address = address.replace('Location:', '').strip()
+        for word in ['Location:', ', ', ' ']:
+            address.remove(word)
+        address = ' '.join(address)
         return {
             'address': address,
             'name': '',

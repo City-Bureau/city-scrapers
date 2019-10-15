@@ -54,7 +54,7 @@ def test_status():
 def test_location():
     assert item['location'] == {
         'name': '',
-        'address': '69 W. Washington Street, Suite 3040 Chicago , IL  60602',
+        'address': '69 W. Washington Street, Suite 3040 Chicago IL 60602',
     }
 
 
