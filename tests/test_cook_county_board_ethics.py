@@ -19,7 +19,7 @@ freezer.stop()
 
 
 def test_title():
-    assert item['title'] == 'Cook County: Board of Ethics Meeting'
+    assert item['title'] == 'Board of Ethics'
 
 
 def test_start():
@@ -35,8 +35,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert item['id'
-                ] == 'cook_county_board_ethics/201908291400/x/cook_county_board_of_ethics_meeting'
+    assert item['id'] == 'cook_county_board_ethics/201908291400/x/board_of_ethics'
 
 
 def test_all_day():

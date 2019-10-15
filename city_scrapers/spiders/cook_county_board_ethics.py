@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 import scrapy
@@ -84,7 +85,11 @@ class CookCountyBoardEthicsSpider(CityScrapersSpider):
 
     def _parse_title(self, response):
         """Parse or generate event title."""
-        return response.xpath('//h1/text()').extract_first()
+        title = response.xpath('//h1/text()').extract_first()
+        if re.match(r'(?i)^Cook County(:?) Board of Ethics Meeting$', title):
+            return 'Board of Ethics'
+        else:
+            return re.sub(r'(?i)^Cook County(:?) ', '', title)
 
     def _parse_description(self, response):
         """
