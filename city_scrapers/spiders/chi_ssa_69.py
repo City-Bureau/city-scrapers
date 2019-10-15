@@ -61,6 +61,18 @@ class ChiSsa69Spider(CityScrapersSpider):
         out_spans.append(spans[-1])
         return out_spans
 
+    def trim_extra_at_beginning(self, spans):
+        beginning_triggered = False
+        out_spans = []
+        for i in range(len(spans) - 1):
+            if (self.is_wixguard(spans[i])):
+                beginning_triggered = True
+            if beginning_triggered is True:
+                out_spans.append(spans[i])
+            # if(self.is_wixguard(spans[i])):
+            # beginning_triggered = True
+        return out_spans
+
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
@@ -71,7 +83,8 @@ class ChiSsa69Spider(CityScrapersSpider):
 
         all_spans = response.css("span")
         spans = self.combine_consecutive_wixguard_spans(all_spans)
-        spans = self.combine_consecutive_font_weight_600s(all_spans)
+        spans = self.combine_consecutive_font_weight_600s(spans)
+        spans = self.trim_extra_at_beginning(spans)
 
         title_line = ""
         date_line = ""
@@ -115,8 +128,8 @@ class ChiSsa69Spider(CityScrapersSpider):
                     source=self._parse_source(response),
                 )
                 yield meeting
-                # print(str(i) + "-" + str(lpos) + "---" + title_line)
-                # if (i > 131):
+                print(str(i) + "-" + str(lpos) + "---" + title_line)
+                # if (i > 95):
                 #    # exit()
 
         # meetings = response.css("font-weight:600")
