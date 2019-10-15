@@ -86,10 +86,12 @@ class CookCountyBoardEthicsSpider(CityScrapersSpider):
     def _parse_title(self, response):
         """Parse or generate event title."""
         title = response.xpath('//h1/text()').extract_first()
-        if re.match(r'(?i)^Cook County(:?) Board of Ethics Meeting$', title):
-            return 'Board of Ethics'
+        if re.search(r"Special", title):
+            return "Special Board of Ethics Meeting"
+        elif re.search(r"Board of Ethics", title):
+            return "Board of Ethics"
         else:
-            return re.sub(r'(?i)^Cook County(:?) ', '', title)
+            return title
 
     def _parse_description(self, response):
         """
