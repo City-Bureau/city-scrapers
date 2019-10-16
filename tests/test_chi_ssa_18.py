@@ -1,24 +1,22 @@
-from datetime import datetime
-from os.path import dirname, join
-
-import sys
+import os
 import pytest
-from city_scrapers.spiders.chi_ssa_18 import ChiSsa18Spider
+
+from datetime import datetime
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
+from city_scrapers.spiders.chi_ssa_18 import ChiSsa18Spider
+
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_18.html"),
-    url="https://northalsted.com/community/",
+    # join(dirname(__file__), "files", "chi_ssa_18.html"),
+    # url="https://northalsted.com/community/",
+    os.path.dirname(__file__).join("files", "chi_ssa_18.html")
 )
 spider = ChiSsa18Spider()
-
 freezer = freeze_time("2019-10-04")
 freezer.start()
-
 parsed_items = [item for item in spider.parse(test_response)]
-
 freezer.stop()
 
 
@@ -37,7 +35,13 @@ def test_title():
 
 
 def test_description():
-    assert parsed_items[0]["description"] == "The first officially recognized gay village in the United States, Boystown in Chicago, Illinois is the commonly accepted nickname for the eclectic Lakeview neighborhood that is home to Chicago’s visible and active LGBT community. Boystown is situated just east of Wrigleyville."
+    assert parsed_items[
+        0]["description"
+           ] == """The first officially recognized gay village in the United States, Boystown in
+    Chicago, Illinois is the commonly accepted nickname for the
+    eclectic Lakeview neighborhood that is
+    home to Chicago’s visible and active LGBT community.
+    Boystown is situated just east of Wrigleyville."""
 
 
 def test_start():
@@ -62,7 +66,7 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "address": "3656 N Halsted Street, Chicago, IL 60613"
+        "address": "3656 N Halsted Street, Chicago, IL 60613",
         "name": "Center on Halsted"
     }
 
@@ -70,9 +74,10 @@ def test_location():
 def test_source():
     assert parsed_items[0]["source"] == "https://northalsted.com/community/"
 
-@pytest.mark.parametrize('item', 'response')    
+
+@pytest.mark.parametrize('item', 'response')
 def test_links():
-    assert parsed_items[0]["links"] == [{"href": response.url, "title": "Minutes"}]
+    assert parsed_items[0]["links"] == [{"href": 'response'.url, "title": "Minutes"}]
 
 
 def test_classification():
