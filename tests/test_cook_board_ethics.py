@@ -1,14 +1,15 @@
 from datetime import datetime
+from os.path import dirname, join
 
 from city_scrapers_core.constants import BOARD, PASSED
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.cook_board_ethics import CookBoardEthicsSpider
 
 test_response = file_response(
-    'files/cook_board_ethics.html',
-    url='https://www.cookcountyil.gov/event/cook-county-board-ethics-meeting-3'
+    join(dirname(__file__), "files", "cook_board_ethics.html"),
+    url="https://www.cookcountyil.gov/event/cook-county-board-ethics-meeting-3",
 )
 spider = CookBoardEthicsSpider()
 
