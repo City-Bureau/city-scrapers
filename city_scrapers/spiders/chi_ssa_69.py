@@ -26,7 +26,7 @@ class ChiSsa69Spider(CityScrapersSpider):
             return False
 
     def is_date_line(self, line):
-        if ('date' in line.extract()):
+        if ('Date' in line.extract()):
             return True
         else:
             return False
@@ -113,37 +113,40 @@ class ChiSsa69Spider(CityScrapersSpider):
                 except Exception:
                     title_line = "unable to get text from title line"
                 # line_position_within_listing += 1
-            if (lpos == 1):
+            if (lpos == 2):
                 # check the next line to see if it is the line with event date(s)
                 if (self.is_date_line(spans[i])):
-                    date_line = spans[i]
+                    date_line = self.lxml_to_text(spans[i].extract())
                 else:
                     # have to deal with this case in a special way
                     date_line = 'no specific date'
                     # special_info_line = spans[_]
+                print(date_line)
+                print('------')
+                # print(spans[i])
+                # exit()
                 lpos += 1
             if (spans[i].css(".wixGuard")):
                 lpos = 0
 
-                # print(date_line)
-
-                meeting = Meeting(
-                    title=title_line,
-                    # date_line is used below just to satisfy flake8 linter
-                    description='this is a test description' + date_line,
-                    classification=NOT_CLASSIFIED,
-                    start=datetime.now(),
-                    end=datetime.now(),
-                    all_day=False,
-                    time_notes="time notes test",
-                    location="test location",
-                    links=None,
-                    source=self._parse_source(response),
-                )
-                yield meeting
-                print(str(i) + "-" + str(lpos) + "---" + title_line)
-                if (i > 64):
-                    exit()
+                if (title_line != ""):
+                    meeting = Meeting(
+                        title=title_line,
+                        # date_line is used below just to satisfy flake8 linter
+                        description='this is a test description' + date_line,
+                        classification=NOT_CLASSIFIED,
+                        start=datetime.now(),
+                        end=datetime.now(),
+                        all_day=False,
+                        time_notes="time notes test",
+                        location="test location",
+                        links=None,
+                        source=self._parse_source(response),
+                    )
+                    yield meeting
+                    print(str(i) + "-" + str(lpos) + "---" + title_line)
+                # if (i > 60):
+                # exit()
 
         # meetings = response.css("font-weight:600")
         # for item in meetings:
