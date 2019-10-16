@@ -61,6 +61,18 @@ class ChiSsa69Spider(CityScrapersSpider):
         out_spans.append(spans[-1])
         return out_spans
 
+    def combine_consecutive_duplicate_text_lines(self, spans):
+        cur = ""
+        next = ""
+        out_spans = []
+        for i in range(len(spans) - 1):
+            cur = spans[i]
+            next = spans[i + 1]
+            if self.lxml_to_text(cur.extract()) != self.lxml_to_text(next.extract()):
+                out_spans.append(spans[i])
+        out_spans.append(spans[-1])
+        return out_spans
+
     def trim_extra_at_beginning(self, spans):
         beginning_triggered = False
         out_spans = []
@@ -85,6 +97,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         spans = self.combine_consecutive_wixguard_spans(all_spans)
         spans = self.combine_consecutive_font_weight_600s(spans)
         spans = self.trim_extra_at_beginning(spans)
+        spans = self.combine_consecutive_duplicate_text_lines(spans)
 
         title_line = ""
         date_line = ""
@@ -129,8 +142,8 @@ class ChiSsa69Spider(CityScrapersSpider):
                 )
                 yield meeting
                 print(str(i) + "-" + str(lpos) + "---" + title_line)
-                # if (i > 95):
-                #    # exit()
+                if (i > 64):
+                    exit()
 
         # meetings = response.css("font-weight:600")
         # for item in meetings:
