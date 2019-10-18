@@ -12,6 +12,7 @@ test_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_24.html"),
     url="https://northalsted.com/community/",
 )
+
 spider = ChiSsa18Spider()
 freezer = freeze_time("2019-10-04")
 freezer.start()
@@ -74,7 +75,7 @@ def test_source():
     assert parsed_items[0]["source"] == "https://northalsted.com/community/"
 
 
-@pytest.mark.parametrize('item', 'response')
+@pytest.mark.parametrize('response')
 def test_links():
     assert parsed_items[0]["links"] == [{"href": 'response'.url, "title": "Minutes"}]
 
