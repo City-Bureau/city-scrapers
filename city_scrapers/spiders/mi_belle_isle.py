@@ -24,6 +24,8 @@ class MiBelleIsleSpider(CityScrapersSpider):
         for item in response.xpath('//tbody/tr'):
             # Adapted the combined start and end from chi_city_college
             start, end = self._parse_start_end(item)
+            if not start:
+                continue
             meeting = Meeting(
                 title='Belle Isle Advisory Committee',
                 description='',
@@ -57,7 +59,10 @@ class MiBelleIsleSpider(CityScrapersSpider):
         time_start_str = re.findall(r'(\d+?:*?\d*?)(?=\s*-)', time_str)[0]
         time_end_str = re.findall(r'((?<=-)\s*)(\d+?:*?\d*)', time_str)[0][1]
 
-        date_value = dateparse(date_str)
+        try:
+            date_value = dateparse(date_str)
+        except Exception:
+            return None, None
         start_value = dateparse('{} {} {}'.format(date_str, time_start_str, meridian_str))
         end_value = dateparse('{} {} {}'.format(date_str, time_end_str, meridian_str))
 
@@ -97,12 +102,18 @@ class MiBelleIsleSpider(CityScrapersSpider):
             link_href = agendasItem.xpath('./@href').extract_first()
             link_text = agendasItem.xpath('./text()').extract_first().replace(' (draft)', '')
             link_text = link_text.split(' - ')[0]
-            agendas_dict[dateparse(link_text).date()] = link_href
+            try:
+                agendas_dict[dateparse(link_text).date()] = link_href
+            except Exception:
+                continue
 
         for minutesItem in response.xpath('//div[contains(@id, "comp_101141")]//a'):
             link_href = minutesItem.xpath('./@href').extract_first()
             link_text = minutesItem.xpath('./text()').extract_first().replace(' (draft)', '')
-            minutes_dict[dateparse(link_text).date()] = link_href
+            try:
+                minutes_dict[dateparse(link_text).date()] = link_href
+            except Exception:
+                continue
 
         return agendas_dict, minutes_dict
 
