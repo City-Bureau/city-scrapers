@@ -8,11 +8,6 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_ssa_18 import ChiSsa18Spider
 
-test_response = file_response(
-    # join(dirname(__file__), "files", "chi_ssa_18.html"),
-    # url="https://northalsted.com/community/",
-    os.path.dirname(__file__).join("files/chi_ssa_18.html")
-)
 spider = ChiSsa18Spider()
 freezer = freeze_time("2019-10-04")
 freezer.start()
