@@ -1,4 +1,4 @@
-import os.path import dirname, join
+from os.path import dirname, join
 from datetime import datetime
 
 import pytest
