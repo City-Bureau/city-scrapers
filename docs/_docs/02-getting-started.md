@@ -28,6 +28,14 @@ We focused our universe of meetings on the local- and county-level, at agencies 
   - Sub-committees
   - Advisory boards
 
+### Finding agencies
+
+It can be challenging to find all of the different appointed bodies in an area, but there are a few approaches that have worked for us:
+
+- See if your area includes a list of appointed bodies like [Chicago's directory](https://webapps1.chicago.gov/moboco/){:target="\_blank"} or the [Boards and Commissions site in Cuyahoga County](http://bc.cuyahogacounty.us/){:target="\_blank"}.
+- Check the website of your local municipal or county government for any appointments that required legislative approval. The body for the appointment will be listed and can help find agencies not listed in other locations.
+- Find your local code of ordinances (or an equivalent) usually hosted through companies like Municode or American Legal Publishing. Many agencies are described in these ordinances like in [Akron's municipal code](https://library.municode.com/oh/akron/codes/code_of_ordinances?nodeId=TIT3AD_CH31DEBOCO){:target="\_blank"}.
+
 ## Web Scrapers
 
 Given the amount of different agencies we wanted to pull information from, we realized early on that checking each agency website manually would take too much time to be sustainable. By looking at patterns in how each website lists its meetings, we can write small programs that visit these web pages and follow custom rules to pull information for each site. This process is called [web scraping](https://en.wikipedia.org/wiki/Web_scraping){:target="\_blank"}, and we saved time by using freely available open source libraries like [Scrapy](https://scrapy.org/){:target="\_blank"} as a foundation for our code.

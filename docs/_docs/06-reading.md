@@ -43,6 +43,8 @@ Written by: India Daniels, Darryl Holliday
 
 ### Contributors
 
+**[Updated list on GitHub](https://github.com/City-Bureau/city-scrapers/graphs/contributors)**
+
 - Dan Bergren
 - Novella Chiechi
 - Vince Cima

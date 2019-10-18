@@ -59,18 +59,3 @@ $ source venv/bin/activate
 ```
 
 Here we are naming the virtual environment `venv`, which has been added to the project's `.gitignore` file.
-
-## Getting Google API credentials
-
-The system has a few scrapers that use the Google Sheets API to pull in data from manually updated spreadsheets. If you want to run or test these scrapers, you'll need to get an API key.
-
-If you need an API key for Google Sheets, you can get one for free by:
-
-- Logging into the [Google API console](https://console.cloud.google.com/apis){:target="\_blank"}, choosing "Enabled APIs and services", and then searching for "Sheets API", selecting "Google Sheets API", and then clicking "ENABLE".
-- Then, in the left sidebar, choose "Credentials" and then "CREATE CREDENTIALS" -> "API Key". You will be shown a key that you can save somewhere safe.
-
-You'll need to set this as an environment variable before running the new scraper. An easy way to do this is to just put it on the command line like so:
-
-```shell
-$ CITY_SCRAPERS_GOOGLE_API_KEY=TheTokenYouCreatedAbove scrapy crawl localschoolcouncil
-```
