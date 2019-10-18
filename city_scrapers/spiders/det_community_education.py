@@ -11,7 +11,6 @@ class DetCommunityEducationSpider(CityScrapersSpider):
     name = "det_community_education"
     agency = "Detroit Community Education Commission"
     timezone = "America/Detroit"
-    allowed_domains = ["cecdetroit.org"]
     start_urls = [
         "https://cecdetroit.org/wp-json/tribe/events/v1/events?start_date=2018-01-01&per_page=100"
     ]

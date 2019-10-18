@@ -10,7 +10,6 @@ class DetEntertainmentCommissionSpider(CityScrapersSpider):
     name = 'det_entertainment_commission'
     agency = 'Detroit Entertainment Commission'
     timezone = 'America/Detroit'
-    allowed_domains = ['www.detroitsentertainmentcommission.com']
     start_urls = ['https://www.detroitsentertainmentcommission.com/services']
     location = {
         'name': 'Coleman A. Young Municipal Center',

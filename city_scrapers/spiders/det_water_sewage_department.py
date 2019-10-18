@@ -10,7 +10,6 @@ class DetWaterSewageDepartmentSpider(LegistarSpider):
     agency = 'Detroit Water and Sewage Department'
     timezone = 'America/Detroit'
     start_urls = ['https://dwsd.legistar.com/Calendar.aspx']
-    allowed_domains = ['dwsd.legistar.com']
 
     def parse_legistar(self, events):
         for event, _ in events:

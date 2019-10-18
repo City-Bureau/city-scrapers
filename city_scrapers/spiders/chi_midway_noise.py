@@ -1,6 +1,5 @@
 import re
 from datetime import datetime
-from urllib.parse import urljoin
 
 from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.items import Meeting
@@ -12,7 +11,6 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
     name = "chi_midway_noise"
     agency = "Chicago Midway Noise Compatibility Commission"
     timezone = "America/Chicago"
-    allowed_domains = ["www.flychicago.com"]
     start_urls = [
         "https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"
     ]  # noqa
@@ -36,12 +34,12 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         for item in response.xpath(selector_str):
             if '<br>' in item.extract():
                 # Odd case that requires special treatment. See _parse_malformed_row() for details.
-                candidates.extend(self._parse_malformed_row(item))
+                candidates.extend(self._parse_malformed_row(item, response))
                 continue
             candidates.append({
                 'description': self._parse_description(item),
                 'start': self._parse_start(item),
-                'links': self._parse_links(item)
+                'links': self._parse_links(item, response)
             })
 
         # Process the meetings presented in the "Commission Meeting Schedule for ..." list:
@@ -123,13 +121,13 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         except AttributeError:  # Regex failed to match.
             return None
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
         documents = []
         if type(item) == Selector:
             relative_urls = item.xpath('.//a/@href').extract()
             for relative_url in relative_urls:
-                documents.append(self._build_link_dict(relative_url))
+                documents.append(self._build_link_dict(response.urljoin(relative_url)))
         else:
             elems = item.split(',')
             for elem in elems:
@@ -137,7 +135,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
                 m = regex.search(elem)
                 try:
                     relative_url = m.group('url')
-                    documents.append(self._build_link_dict(relative_url))
+                    documents.append(self._build_link_dict(response.urljoin(relative_url)))
                 except AttributeError:
                     continue  # Not a problem, some of these do not contain links.
         return documents
@@ -149,7 +147,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         else:
             return PASSED
 
-    def _parse_malformed_row(self, item):
+    def _parse_malformed_row(self, item, response):
         """Parse a special case of meeting information."""
         # This row diverges from the previous pattern in that it uses <br> tags within <td> cells
         # instead of new <tr> tags for table rows.
@@ -165,7 +163,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
             candidates.append({
                 'description': self._parse_description(pair[0]),
                 'start': self._parse_start(pair[0]),
-                'links': self._parse_links(pair[1])
+                'links': self._parse_links(pair[1], response)
             })
 
         return candidates
@@ -174,14 +172,10 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         """ Remove unwanted unicode characters (only one found so far). """
         return text.replace(u'\u200b', '')
 
-    def _build_full_url(self, relative_url):
-        return urljoin('https://' + self.allowed_domains[0], relative_url)
-
-    def _build_link_dict(self, relative_url):
-        url = self._build_full_url(relative_url)
+    def _build_link_dict(self, url):
         if 'agenda' in url.lower():
             return {'href': url, 'title': 'Agenda'}
         elif 'minutes' in url.lower():
             return {'href': url, 'title': 'Minutes'}
         else:
-            return {'href': url, 'title': ''}
+            return {'href': url, 'title': 'Link'}

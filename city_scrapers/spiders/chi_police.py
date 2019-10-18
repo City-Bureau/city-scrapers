@@ -11,7 +11,6 @@ class ChiPoliceSpider(CityScrapersSpider):
     name = 'chi_police'
     agency = 'Chicago Police Department'
     timezone = 'America/Chicago'
-    allowed_domains = ['home.chicagopolice.org']
     start_urls = [
         'https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/'  # noqa
     ]

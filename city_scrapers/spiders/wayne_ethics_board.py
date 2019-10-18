@@ -10,7 +10,6 @@ class WayneEthicsBoardSpider(CityScrapersSpider):
     name = "wayne_ethics_board"
     agency = "Wayne County Ethics Board"
     timezone = "America/Detroit"
-    allowed_domains = ["www.waynecounty.com"]
     start_urls = ["https://www.waynecounty.com/boards/ethicsboard/documents.aspx"]
     location = {
         "name": "Guardian Building",

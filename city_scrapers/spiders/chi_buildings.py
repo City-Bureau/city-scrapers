@@ -11,7 +11,6 @@ from city_scrapers_core.spiders import CityScrapersSpider
 class ChiBuildingsSpider(CityScrapersSpider):
     name = 'chi_buildings'
     agency = 'Public Building Commission of Chicago'
-    allowed_domains = ['www.pbcchicago.com']
     base_url = 'https://www.pbcchicago.com/wp-admin/admin-ajax.php?action=eventorganiser-fullcal'
     timezone = 'America/Chicago'
     start_urls = [

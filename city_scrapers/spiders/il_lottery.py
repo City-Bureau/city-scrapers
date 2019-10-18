@@ -11,7 +11,6 @@ class IlLotterySpider(CityScrapersSpider):
     name = "il_lottery"
     agency = "Illinois Lottery Control Board"
     timezone = "America/Chicago"
-    allowed_domains = ["www.illinoislottery.com"]
     start_urls = ["https://www.illinoislottery.com/illinois-lottery/lottery-control-board/"]
 
     def parse(self, response):

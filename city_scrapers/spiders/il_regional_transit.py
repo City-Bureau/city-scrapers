@@ -10,7 +10,6 @@ class IlRegionalTransitSpider(CityScrapersSpider):
     name = 'il_regional_transit'
     agency = 'Regional Transportation Authority'
     timezone = 'America/Chicago'
-    allowed_domains = ['rtachicago.granicus.com']
     start_urls = [
         'http://rtachicago.granicus.com/ViewPublisher.php?view_id=5',
         'http://rtachicago.granicus.com/ViewPublisher.php?view_id=4',

@@ -11,7 +11,6 @@ class ChiSsa5Spider(CityScrapersSpider):
     name = 'chi_ssa_5'
     agency = 'Chicago Special Service Area #5 Commercial Ave'
     timezone = 'America/Chicago'
-    allowed_domains = ['scpf-inc.org']
     start_urls = ['http://scpf-inc.org/ssa5/meeting-calendar/']
     location = {
         'address': '3030 E 92nd St Chicago, IL 60617',

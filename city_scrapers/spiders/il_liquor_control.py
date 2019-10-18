@@ -9,7 +9,6 @@ class IlLiquorControlSpider(CityScrapersSpider):
     name = "il_liquor_control"
     agency = "Illinois Liquor Control Commission"
     timezone = "America/Chicago"
-    allowed_domains = ["www2.illinois.gov"]
     start_urls = [
         "https://www2.illinois.gov/ilcc/Divisions/Pages/Legal/"
         "Hearing-Schedule-for-Chicago-IL-and-Springfield-IL.aspx",

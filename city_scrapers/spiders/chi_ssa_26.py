@@ -10,7 +10,6 @@ class ChiSsa26Spider(CityScrapersSpider):
     name = "chi_ssa_26"
     agency = "Chicago Special Service Area #26 Broadway Commercial District"
     timezone = "America/Chicago"
-    allowed_domains = ["www.edgewater.org"]
     start_urls = ["https://www.edgewater.org/ssa-26/commissionmeetings/"]
     location = {
         "name": "Edgewater Chamber of Commerce",

@@ -9,7 +9,6 @@ from city_scrapers_core.items import Meeting
 
 class DetCityMixin:
     timezone = 'America/Detroit'
-    allowed_domains = ['detroitmi.gov']
     dept_cal_id = None  # Agency URL param when filtering calendar page with "Department" drop down
     dept_doc_id = ''  # Agency URL param when filtering documents page with "Department" drop down
     agency_cal_id = None  # Agency URL param when filtering the calendar page

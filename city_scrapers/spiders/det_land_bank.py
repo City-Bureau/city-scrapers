@@ -11,7 +11,6 @@ class DetLandBankSpider(CityScrapersSpider):
     name = 'det_land_bank'
     agency = 'Detroit Land Bank Authority'
     timezone = 'America/Detroit'
-    allowed_domains = ['buildingdetroit.org']
     start_urls = ['https://buildingdetroit.org/events/meetings']
 
     def parse(self, response):

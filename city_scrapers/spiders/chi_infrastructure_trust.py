@@ -10,7 +10,6 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
     name = "chi_infrastructure_trust"
     agency = "Chicago Infrastructure Trust"
     timezone = "America/Chicago"
-    allowed_domains = ["chicagoinfrastructure.org"]
     start_urls = [
         "http://chicagoinfrastructure.org/public-records/meeting-records-2/",
         "http://chicagoinfrastructure.org/public-records/scheduled-meetings/"

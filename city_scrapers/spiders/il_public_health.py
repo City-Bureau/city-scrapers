@@ -13,7 +13,6 @@ class IlPublicHealthSpider(CityScrapersSpider):
     name = "il_public_health"
     agency = "Illinois Department of Public Health"
     timezone = "America/Chicago"
-    allowed_domains = ["www.dph.illinois.gov"]
 
     @property
     def start_urls(self):

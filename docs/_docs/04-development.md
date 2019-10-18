@@ -242,7 +242,6 @@ Open `city_scrapers/spiders/chi_housing.py` to work on your spider. A simple str
 The spider should look something like this:
 
 ```python
-# -*- coding: utf-8 -*-
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -252,7 +251,6 @@ class ChiHousingSpider(CityScrapersSpider):
     name = 'chi_housing'
     agency = 'Chicago Housing Authority'
     timezone = 'America/Chicago'
-    allowed_domains = ['thecha.org']
     start_urls = ['http://thecha.org']
 
     def parse(self, response):

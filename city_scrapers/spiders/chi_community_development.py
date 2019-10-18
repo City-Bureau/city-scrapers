@@ -11,7 +11,6 @@ class ChiCommunityDevelopmentSpider(CityScrapersSpider):
     name = 'chi_community_development'
     agency = 'Chicago Community Development Commission'
     timezone = 'America/Chicago'
-    allowed_domains = ['chicago.gov']
     start_urls = [
         'https://chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html'
     ]

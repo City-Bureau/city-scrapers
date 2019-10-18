@@ -12,7 +12,6 @@ class ChiSsa33Spider(CityScrapersSpider):
     name = "chi_ssa_33"
     agency = "Chicago Special Service Area #33 Wicker Park/Bucktown"
     timezone = "America/Chicago"
-    allowed_domains = ["www.wickerparkbucktown.com"]
     start_urls = ["http://www.wickerparkbucktown.com/ssa/commission-meetings/"]
     location = {
         "address": "1414 N Ashland Ave Chicago, IL 60622",

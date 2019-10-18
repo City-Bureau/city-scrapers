@@ -10,7 +10,6 @@ class DetWreckingExaminersSpider(CityScrapersSpider):
     name = 'det_wrecking_examiners'
     agency = 'Detroit Wrecking Contractors Board of Examiners'
     timezone = 'America/Detroit'
-    allowed_domains = ['www.detroitmi.gov']
     start_urls = [
         'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings'  # noqa
     ]

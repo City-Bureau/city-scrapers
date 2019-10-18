@@ -1,5 +1,5 @@
 #!/bin/bash
-scrapy runall -s LOG_ENABLED=False &
+scrapy list | xargs -I {} scrapy crawl {} -s LOG_ENABLED=False &
 
 # Output to the screen every 9 minutes to prevent a travis timeout
 # https://stackoverflow.com/a/40800348

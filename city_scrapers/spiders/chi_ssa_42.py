@@ -11,7 +11,6 @@ class ChiSsa42Spider(CityScrapersSpider):
     name = 'chi_ssa_42'
     agency = 'Chicago Special Service Area #42 71st St/Stony Island'
     timezone = 'America/Chicago'
-    allowed_domains = ['ssa42.org']
     start_urls = ['https://ssa42.org/ssa-42-meeting-dates/']
     location = {
         'name': '',

@@ -12,7 +12,6 @@ class MiBelleIsleSpider(CityScrapersSpider):
     name = 'mi_belle_isle'
     agency = 'Michigan Belle Isle Advisory Committee'
     timezone = 'America/Detroit'
-    allowed_domains = ['www.michigan.gov']
     start_urls = ['https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html']
 
     def parse(self, response):

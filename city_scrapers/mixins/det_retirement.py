@@ -9,7 +9,6 @@ from city_scrapers_core.items import Meeting
 
 class DetRetirementMixin:
     timezone = 'America/Detroit'
-    allowed_domains = ['rscd.org']
     location = {
         'address': '500 Woodward Ave. Suite 300 Detroit, MI 48226',
         'name': 'Retirement Systems',

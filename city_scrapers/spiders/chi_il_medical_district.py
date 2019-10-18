@@ -11,7 +11,6 @@ class ChiIlMedicalDistrictSpider(CityScrapersSpider):
     name = "chi_il_medical_district"
     agency = "Illinois Medical District Commission"
     timezone = "America/Chicago"
-    allowed_domains = ["medicaldistrict.org"]
     start_urls = ["http://medicaldistrict.org/commission/"]
     location = {
         "name": "Illinois Medical District Commission",

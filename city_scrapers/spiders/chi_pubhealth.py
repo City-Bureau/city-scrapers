@@ -9,7 +9,6 @@ from city_scrapers_core.spiders import CityScrapersSpider
 class ChiPubHealthSpider(CityScrapersSpider):
     name = 'chi_pubhealth'
     agency = 'Chicago Department of Public Health'
-    allowed_domains = ['www.chicago.gov']
     timezone = 'America/Chicago'
 
     @property

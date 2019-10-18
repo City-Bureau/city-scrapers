@@ -10,7 +10,6 @@ class CookSouthMosquitoSpider(CityScrapersSpider):
     name = "cook_south_mosquito"
     agency = "South Cook County Mosquito Abatement District"
     timezone = "America/Chicago"
-    allowed_domains = ["sccmad.org"]
     start_urls = ["https://sccmad.org/"]
     location = {
         "name": "South Cook County Mosquito Abatement District Office",

@@ -9,7 +9,6 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
     name = "chi_labor_retirement_fund"
     agency = "Laborers' & Retirement Board Employees' Annuity & Benefit Fund"
     timezone = "America/Chicago"
-    allowed_domains = ["www.labfchicago.org"]
     start_urls = ["http://www.labfchicago.org/agendas-minutes"]
     location = {
         "address": "321 N Clark St, Chicago, IL",

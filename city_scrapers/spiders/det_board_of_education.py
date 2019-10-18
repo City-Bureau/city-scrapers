@@ -11,7 +11,6 @@ class DetBoardOfEducationSpider(CityScrapersSpider):
     name = "det_board_of_education"
     agency = "Detroit Public Schools Community District"
     timezone = "America/Detroit"
-    allowed_domains = ["www.detroitk12.org"]
     start_urls = ["https://www.detroitk12.org/site/handlers/icalfeed.ashx?MIID=14864"]
 
     def parse(self, response):

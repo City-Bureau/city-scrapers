@@ -10,7 +10,6 @@ class ChiSsa1Spider(CityScrapersSpider):
     name = 'chi_ssa_1'
     agency = 'Chicago Special Service Area #1-2015'
     timezone = 'America/Chicago'
-    allowed_domains = ['loopchicago.com']
     start_urls = ['https://loopchicago.com/about-state-street-ssa1-2015/state-street-commission/']
 
     def parse(self, response):
