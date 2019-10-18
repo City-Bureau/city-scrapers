@@ -21,7 +21,11 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def is_title_line(self, line, lpos=1):
         if ('font-weight:600' in line.extract()) and (lpos == 1):
-            return True
+            # check that the title text is not just whitespace
+            if (self.lxml_to_text(line.extract()).isspace()):
+                return False
+            else:
+                return True
         else:
             return False
 
@@ -56,7 +60,8 @@ class ChiSsa69Spider(CityScrapersSpider):
         for i in range(len(spans) - 1):
             cur = spans[i]
             next = spans[i + 1]
-            if self.is_title_line(cur) is False or self.is_title_line(next) is False:
+            if self.is_title_line(cur) is False or self.is_title_line(next) is False or \
+                    self.lxml_to_text(cur.extract()) != self.lxml_to_text(next.extract()):
                 out_spans.append(spans[i])
         out_spans.append(spans[-1])
         return out_spans
@@ -104,9 +109,11 @@ class ChiSsa69Spider(CityScrapersSpider):
         lpos = 999  # line position within meeting listing - 999 mesnd unset
         for i in range(len(spans)):
             lpos += 1
+
             print(str(i) + "-" + str(lpos) + "---" + spans[i].extract())
             # print(lpos)
             if (self.is_title_line(spans[i], lpos)):
+                # if (self.is_title_line(spans[i])):
                 title_line = spans[i].extract()
                 try:
                     title_line = self.lxml_to_text(title_line)
@@ -129,7 +136,7 @@ class ChiSsa69Spider(CityScrapersSpider):
             if (spans[i].css(".wixGuard")):
                 lpos = 0
 
-                if (title_line != ""):
+                if (title_line.isspace() is not True):
                     meeting = Meeting(
                         title=title_line,
                         # date_line is used below just to satisfy flake8 linter
@@ -145,7 +152,10 @@ class ChiSsa69Spider(CityScrapersSpider):
                     )
                     yield meeting
                     print(str(i) + "-" + str(lpos) + "---" + title_line)
-                # if (i > 60):
+            else:
+                if (self.lxml_to_text(spans[i].extract()).isspace()):
+                    lpos = lpos - 1
+                # if (i > 590000):
                 # exit()
 
         # meetings = response.css("font-weight:600")
