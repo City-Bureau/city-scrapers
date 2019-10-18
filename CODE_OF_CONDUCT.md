@@ -6,7 +6,7 @@ In the interest of fostering an open and welcoming environment, we as contributo
 
 ## Our Aim
 
-The goal of this project is to create a central database of public events in Chicago, Cook County, and Illinois to be used by the City Bureau Documenters, journalists, activists, and engaged citizens (our use of “citizens” includes everyone who participates in or is impacted by a local government or municipality, including undocumented persons, disenfranchised voters and others often excluded from “Citizenship”). 
+The goal of this project is to create a central database of public events in Chicago, Cook County, and Illinois to be used by the City Bureau Documenters, journalists, activists, and engaged citizens (our use of “citizens” includes everyone who participates in or is impacted by a local government or municipality, including undocumented persons, disenfranchised voters and others often excluded from “Citizenship”).
 
 ## Our Standards
 
@@ -48,5 +48,3 @@ Project maintainers who do not follow or enforce the Code of Conduct in good fai
 
 This Code of Conduct is adapted from the Contributor Covenant, version 1.4,
 available at http://contributor-covenant.org/version/1/4/
-
-

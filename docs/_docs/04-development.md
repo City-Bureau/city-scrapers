@@ -389,20 +389,66 @@ meeting = Meeting(
 meeting['source'] = 'https://example.com'  # This sets a value on the Meeting
 ```
 
-`Meeting` objects accept the following values:
+Each of the values in `Meeting` should adhere to some guidelines.
 
-- `id`: `string` Unique identifier for the meeting based on its details, should be populated by `_get_id` method
-- `title`: `string` Title of the individual meeting
-- `description`: `string` Description of the specific meeting (not the overall agency) if available, otherwise empty string
-- `classification`: `string` One of the [allowed classifications](#classifications) defined in `city_scrapers_core.constants` (`ADVISORY_COMMITTEE`, `BOARD`, `CITY_COUNCIL`, `COMMISSION`, `COMMITTEE`, `FORUM`, `POLICE_BEAT`, `NOT_CLASSIFIED`)
-- `status`: `string` One of the [allowed statuses](#statuses) defined in `city_scrapers_core.constants`, should be populated by `_get_status` method (`CANCELLED`, `TENTATIVE`, `CONFIRMED`, `PASSED`)
-- `start`: `datetime` Naive datetime object indicating the date and time when the meeting starts
-- `end`: `datetime` Naive datetime object indicating the date and time the meeting ends
-- `all_day`: `boolean` Whether the meeting takes place for an entire day
-- `time_notes`: `string` Any additional notes on the timing of the meeting (i.e. if the start or end is estimated or subject to change)
-- `location`: `dict` Dictionary with the keys `name` and `address` containing a location name (if available, otherwise an empty string) and the full address
-- `links`: `list` List of dictionaries with the keys `title` (title/description of the link) and `href` (link URL) for all relevant links on the page, most importantly agenda and minutes if available
-- `source`: `string` URL for meeting, typically a detail page if available otherwise the page it was scraped from
+#### `id`
+
+Unique identifier for a meeting created from the scraped its scraped details. This should almost always be populated by the `_get_id` method inherited from `CityScrapersSpider` and not set directly.
+
+#### `title`
+
+The title of an individual instance of a meeting. Because most of the meetings we're scraping occur on a regular basis, sometimes this is alright to set statically if we can be reasonably certain that it won't change. Some common examples are "Board of Directors" or "Finance Committee".
+
+#### `description`
+
+A string describing the specific meeting (not the overall agency). This usually isn't available, and in that case it should default to an empty string.
+
+#### `classification`
+
+One of the [allowed classification constants](#classifications) describing the type of the meeting.
+
+#### `status`
+
+One of the [allowed status constants](#statuses) describing the meeting's current status. Generally you shouldn't edit this other than to set it with the `_get_status` method which checks the meeting title and description for any indication of a cancellation. If there is relevant text in a meeting's description (like "CANCELLED" displaying next to the meeting name outside of the title) you can pass it to the `_get_status` method as a keyword argument like this:
+
+```python
+meeting["status"] = self._get_status(item, text="Meeting is cancelled")
+```
+
+#### `start`
+
+Naive `datetime` object indicating the date and time a meeting will start. The agency's timezone (from the spider's `timezone` property) will be applied in the pipelines, so that doesn't need to be managed in the spider. All spiders should have a value for `start`, and if a time is unavailable and there are no sensible defaults it should be listed as 12:00 am.
+
+#### `end`
+
+Naive `datetime` or `None` indicating the date and time a meeting will end. This is most often not available, but otherwise the same rules apply to it as `start`.
+
+#### `all_day`
+
+Boolean indicating whether or not the meeting occurs all day. It's mostly a carryover from the [Open Civic Data event specification](https://opencivicdata.readthedocs.io/en/latest/data/event.html), and is almost always set to `False`.
+
+#### `time_notes`
+
+String indicating anything people should know about the meeting's time. This can be anything from indicating that a meeting will start immediately following the previous one (so the time might not be accurate) or a general indication to double-check the time if the agency suggests that attendees should confirm in advance.
+
+#### `location`
+
+Dictionary with required `name` and `address` strings indicating where the meeting will take place. Either or both values can be empty strings, but if no location is available either a default should be found (most meetings have usual locations) or `TBD` should be listed as the `name`. If a meeting has a standing location that is listed separate from individual meetings, creating a [`_validate_location`](https://github.com/City-Bureau/city-scrapers/blob/20a12ba5d76186cba65b45f7f764f02393d4a991/city_scrapers/spiders/chi_ssa_34.py#L57-L59) that checks whether the meeting location has changed (and returns an error if it has) can be sometimes be more straightforward than trying to parse the same location each time.
+
+```python
+{
+    "name": "City Hall",
+    "address": "1234 Fake St, Chicago, IL 60601"
+}
+```
+
+#### `links`
+
+A list of dictionaries including values `title` and `href` for any relevant links like agendas, minutes or other materials. The `href` property should always return the full URL and not relative paths like `/doc.pdf`.
+
+#### `source`
+
+The URL the meeting was scraped from, which will almost always be `response.url` with the exception of scraping some lists with detail pages.
 
 Since we're aggregating a wide variety of different types of meetings and information into a single schema, there are bound to be cases where the categories are unclear or don't seem to fit. Don't hesitate to reach out in a GitHub issue or on Slack if you aren't sure where certain information should go.
 
