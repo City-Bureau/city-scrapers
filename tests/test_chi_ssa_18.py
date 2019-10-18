@@ -1,7 +1,7 @@
 import os
-import pytest
-
 from datetime import datetime
+
+import pytest
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
