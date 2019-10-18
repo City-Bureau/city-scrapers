@@ -1,4 +1,4 @@
-import os
+import os.path import dirname, join
 from datetime import datetime
 
 import pytest
@@ -8,6 +8,10 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_ssa_18 import ChiSsa18Spider
 
+test_response = file_response(
+    join(dirname(__file__), "files", "chi_ssa_24.html"),
+    url="https://northalsted.com/community/",
+)
 spider = ChiSsa18Spider()
 freezer = freeze_time("2019-10-04")
 freezer.start()
