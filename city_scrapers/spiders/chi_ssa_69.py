@@ -20,7 +20,9 @@ class ChiSsa69Spider(CityScrapersSpider):
         return doc.text_content()
 
     def is_title_line(self, line, lpos=1):
-        if ('font-weight:600' in line.extract()) and (lpos == 1):
+        # if ('font-weight:600' in line.extract()) and (lpos == 1):
+        if (lpos == 1) and (('font-weight:600' in line.extract()) or
+                            ('font-weight:bold;' in line.extract())):
             # check that the title text is not just whitespace
             if (self.lxml_to_text(line.extract()).isspace()):
                 return False
@@ -102,7 +104,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         spans = self.combine_consecutive_wixguard_spans(all_spans)
         spans = self.combine_consecutive_font_weight_600s(spans)
         spans = self.trim_extra_at_beginning(spans)
-        spans = self.combine_consecutive_duplicate_text_lines(spans)
+        # spans = self.combine_consecutive_duplicate_text_lines(spans)
 
         title_line = ""
         date_line = ""
@@ -110,11 +112,12 @@ class ChiSsa69Spider(CityScrapersSpider):
         for i in range(len(spans)):
             lpos += 1
 
-            print(str(i) + "-" + str(lpos) + "---" + spans[i].extract())
+            print(str(i) + "-" + str(lpos) + "--->>" + spans[i].extract())
             # print(lpos)
             if (self.is_title_line(spans[i], lpos)):
                 # if (self.is_title_line(spans[i])):
                 title_line = spans[i].extract()
+                print('SETTING title = ' + str(self.lxml_to_text(spans[i].extract())))
                 try:
                     title_line = self.lxml_to_text(title_line)
                 except Exception:
@@ -136,7 +139,7 @@ class ChiSsa69Spider(CityScrapersSpider):
             if (spans[i].css(".wixGuard")):
                 lpos = 0
 
-                if (title_line.isspace() is not True):
+                if (title_line.isspace() is not True and title_line != ''):
                     meeting = Meeting(
                         title=title_line,
                         # date_line is used below just to satisfy flake8 linter
@@ -151,11 +154,11 @@ class ChiSsa69Spider(CityScrapersSpider):
                         source=self._parse_source(response),
                     )
                     yield meeting
-                    print(str(i) + "-" + str(lpos) + "---" + title_line)
+                    print(str(i) + "-" + str(lpos) + "--->" + title_line)
             else:
                 if (self.lxml_to_text(spans[i].extract()).isspace()):
                     lpos = lpos - 1
-                # if (i > 590000):
+                # if (i > 59):
                 # exit()
 
         # meetings = response.css("font-weight:600")
