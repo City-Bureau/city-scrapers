@@ -122,9 +122,9 @@ class WayneMentalHealthAuthoritySpider(CityScrapersSpider):
         if not date_match:
             return
         date_str = date_match.group()
-        time_match = re.search(r"\d{1,2}(:\d{2})?\s*[apm\. ]{2,6}", item_str)
+        time_match = re.search(r"\d{1,2}(:\d{2})?\s*[apm\.\s]{2,6}", item_str)
         if time_match:
-            time_str = re.sub(r"[\. ]", "", time_match.group())
+            time_str = re.sub(r"[\.\s]", "", time_match.group())
         elif start_time_str:
             time_str = start_time_str
         else:
@@ -140,9 +140,9 @@ class WayneMentalHealthAuthoritySpider(CityScrapersSpider):
     def _parse_time_str(self, item):
         """Parse time string from meeting block"""
         title_block = " ".join(item.css("div")[1:3].css("*::text").extract())
-        time_match = re.search(r"\d{1,2}(:\d{2})?\s*[apm\. ]{2,6}", title_block)
+        time_match = re.search(r"\d{1,2}(:\d{2})?\s*[apm\.\s]{2,6}", title_block)
         if time_match:
-            return re.sub(r"[\. ]", "", time_match.group())
+            return re.sub(r"[\.\s]", "", time_match.group())
 
     def _parse_link_meeting_title(self, item):
         item_str = re.sub(r"\s+", " ", " ".join(item.css("*::text").extract()).title()).strip()
