@@ -74,7 +74,12 @@ class ChiSsa60Spider(CityScrapersSpider):
     def _parse_description(self, item):
         """Parse or generate meeting description."""
         desc = html.unescape(item["description"])
-        removeables = ["<p>", "</p>", "\\n", "\\", ]
+        removeables = [
+            "<p>",
+            "</p>",
+            "\\n",
+            "\\",
+        ]
         for r in removeables:
             desc = desc.replace(r, "")
         return desc
@@ -122,4 +127,3 @@ class ChiSsa60Spider(CityScrapersSpider):
         """Replace certain HTML entities"""
         # Couldn't use something like `html.unescape()` because it replaced quotes and broke JSON
         return inp_str.replace("&#8211;", "-").replace("&#8217;", "'").replace("&#038;", "&")
-
