@@ -36,22 +36,24 @@ class ChiSsa60Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        print(f"------------------------ START {response.url} ------------------------")
-        sel_str = "//script[@type='application/ld+json']/text()"
-        for item in response.xpath(sel_str):
+        event_list = list()
+        for item in response.xpath("//script[@type='application/ld+json']/text()"):
             try:
-                event_list = json.loads(item.get())
-                for event_dict in event_list:
-                    for k, v in event_dict.items():
-                        print(f"{k}: {v}")
+                event_list = json.loads(self._clean(item.get()))
+                # for event_dict in event_list:
+                #     for k, v in event_dict.items():
+                #         print(f"{k}: {v}")
             except Exception as e:
                 print(e)
-        print(f"------------------------- END {response.url} -------------------------")
-        print('\n')
+                return
 
-        for item in response.css(".meetings"):
+        for item in event_list:
+            title = self._parse_title(item)
+            if title is None:
+                continue
+
             meeting = Meeting(
-                title=self._parse_title(item),
+                title=title,
                 description=self._parse_description(item),
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
@@ -63,14 +65,17 @@ class ChiSsa60Spider(CityScrapersSpider):
                 source=self._parse_source(response),
             )
 
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
+            # meeting["status"] = self._get_status(meeting)
+            # meeting["id"] = self._get_id(meeting)
 
             yield meeting
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return ""
+        allowed = ['meeting', 'committee', 'advisory council']
+        if not any([a in item['name'].lower() for a in allowed]):  # Not a meeting type we want
+            return None
+        return item['name']
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -82,7 +87,8 @@ class ChiSsa60Spider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        return None
+        return datetime.now()  # Temporary
+        # return None
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -110,3 +116,9 @@ class ChiSsa60Spider(CityScrapersSpider):
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
+
+    def _clean(self, inp_str):
+        """Replace certain HTML entities"""
+        # Couldn't use something like `html.unescape()` because it replaced quotes and broke JSON
+        return inp_str.replace("&#8211;", "-").replace("&#8217;", "'").replace("&#038;", "&")
+
