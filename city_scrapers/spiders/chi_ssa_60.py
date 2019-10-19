@@ -55,7 +55,7 @@ class ChiSsa60Spider(CityScrapersSpider):
                 all_day=False,  # Found no events of interest scheduled for all day
                 time_notes="",
                 location=self._parse_location(item),
-                links=self._parse_links(item),
+                links=list(),
                 source=item["url"],
             )
 
@@ -117,10 +117,6 @@ class ChiSsa60Spider(CityScrapersSpider):
             "address": "{} {}, {} {}".format(street, city, state, zipcode),
             "name": name,
         }
-
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
 
     def _clean(self, inp_str):
         """Replace certain HTML entities"""

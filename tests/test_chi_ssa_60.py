@@ -63,11 +63,8 @@ def test_source():
     assert parsed_items[0]["source"] == "https://northrivercommission.org/event/economic-development-meeting/"
 
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+def test_links():
+    assert parsed_items[0]["links"] == list()
 
 
 def test_classification():
