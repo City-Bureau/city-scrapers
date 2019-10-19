@@ -57,7 +57,7 @@ class WayneCommissionMixin:
         # let's normalize them using scrapy's regular expressions.
         month_str = item.xpath('.//td[2]/text()').re(r'[a-zA-Z]{3}')[0]
         day_str = item.xpath('.//td[2]/text()').re(r'\d+')[0]
-        time_str = item.xpath('.//td[3]/text()').extract_first()
+        time_str = item.xpath('.//td[3]/text()').extract_first().replace(";", ":")
         return dateparse('{0} {1} {2} {3}'.format(month_str, day_str, year_str, time_str))
 
     def _parse_status(self, item, meeting):
