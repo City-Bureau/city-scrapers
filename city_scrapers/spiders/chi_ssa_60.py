@@ -59,7 +59,7 @@ class ChiSsa60Spider(CityScrapersSpider):
                 source=item["url"],
             )
 
-            # meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting)
             # meeting["id"] = self._get_id(meeting)
 
             yield meeting
