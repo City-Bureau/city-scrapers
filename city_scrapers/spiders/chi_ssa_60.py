@@ -55,7 +55,7 @@ class ChiSsa60Spider(CityScrapersSpider):
                 time_notes=self._parse_time_notes(item),
                 location=self._parse_location(item),
                 links=self._parse_links(item),
-                source=self._parse_source(response),
+                source=item["url"],
             )
 
             # meeting["status"] = self._get_status(meeting)
@@ -121,9 +121,6 @@ class ChiSsa60Spider(CityScrapersSpider):
         """Parse or generate links."""
         return [{"href": "", "title": ""}]
 
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
 
     def _clean(self, inp_str):
         """Replace certain HTML entities"""

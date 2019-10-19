@@ -54,8 +54,8 @@ def test_location():
     }
 
 
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+def test_source():
+    assert parsed_items[0]["source"] == "https://northrivercommission.org/event/economic-development-meeting/"
 
 
 # def test_links():
