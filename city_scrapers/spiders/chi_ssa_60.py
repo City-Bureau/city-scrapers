@@ -1,3 +1,4 @@
+import html
 import json
 from datetime import datetime
 
@@ -72,7 +73,11 @@ class ChiSsa60Spider(CityScrapersSpider):
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        return ""
+        desc = html.unescape(item["description"])
+        removeables = ["<p>", "</p>", "\\n", "\\", ]
+        for r in removeables:
+            desc = desc.replace(r, "")
+        return desc
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""

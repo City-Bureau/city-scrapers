@@ -26,6 +26,11 @@ def test_title():
     assert parsed_items[0]["title"] == "Economic Development Meeting"
 
 
+def test_description():
+    test_str = "You are invited to join North River Commission and the Albany Park Chamber of"
+    assert parsed_items[0]["description"].startswith(test_str)
+
+
 def test_start():
     assert parsed_items[0]["start"] == datetime(2019, 10, 1, 19, 0)
 
