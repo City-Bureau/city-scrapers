@@ -44,8 +44,8 @@ def test_end():
 #     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_id():
+    assert parsed_items[0]["id"] == "chi_ssa_60/201910011900/x/economic_development_meeting"
 
 
 def test_status():
