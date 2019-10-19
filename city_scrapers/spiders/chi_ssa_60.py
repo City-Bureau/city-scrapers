@@ -51,7 +51,7 @@ class ChiSsa60Spider(CityScrapersSpider):
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
                 end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
+                all_day=False,  # Found no events of interest scheduled for all day
                 time_notes=self._parse_time_notes(item),
                 location=self._parse_location(item),
                 links=self._parse_links(item),
@@ -94,10 +94,6 @@ class ChiSsa60Spider(CityScrapersSpider):
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
         return ""
-
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
 
     def _parse_location(self, item):
         """Parse or generate location."""
