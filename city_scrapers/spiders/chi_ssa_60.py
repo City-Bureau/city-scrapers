@@ -106,9 +106,15 @@ class ChiSsa60Spider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
+        name = item["location"]["name"]
+        addr_dict = item["location"]["address"]
+        street = addr_dict["streetAddress"]
+        city = addr_dict["addressLocality"]
+        state = addr_dict["addressRegion"]
+        zipcode = addr_dict["postalCode"]
         return {
-            "address": "",
-            "name": "",
+            "address": "{} {}, {} {}".format(street, city, state, zipcode),
+            "name": name,
         }
 
     def _parse_links(self, item):

@@ -47,11 +47,11 @@ def test_end():
 #     assert parsed_items[0]["status"] == "EXPECTED STATUS"
 
 
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
+def test_location():
+    assert parsed_items[0]["location"] == {
+        "name": "Oso Apartments",
+        "address": "3445 W. Montrose Ave. Chicago, IL 60625"
+    }
 
 
 # def test_source():
