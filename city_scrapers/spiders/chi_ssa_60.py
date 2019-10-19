@@ -53,7 +53,7 @@ class ChiSsa60Spider(CityScrapersSpider):
                 start=self._parse_start(item),
                 end=self._parse_end(item),
                 all_day=False,  # Found no events of interest scheduled for all day
-                time_notes=self._parse_time_notes(item),
+                time_notes="",
                 location=self._parse_location(item),
                 links=self._parse_links(item),
                 source=item["url"],
@@ -105,10 +105,6 @@ class ChiSsa60Spider(CityScrapersSpider):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return self._parse_time(item, 'endDate')
 
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
-
     def _parse_location(self, item):
         """Parse or generate location."""
         name = item["location"]["name"]
@@ -125,7 +121,6 @@ class ChiSsa60Spider(CityScrapersSpider):
     def _parse_links(self, item):
         """Parse or generate links."""
         return [{"href": "", "title": ""}]
-
 
     def _clean(self, inp_str):
         """Replace certain HTML entities"""
