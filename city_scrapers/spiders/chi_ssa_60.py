@@ -38,14 +38,7 @@ class ChiSsa60Spider(CityScrapersSpider):
         """
         event_list = list()
         for item in response.xpath("//script[@type='application/ld+json']/text()"):
-            try:
-                event_list = json.loads(self._clean(item.get()))
-                # for event_dict in event_list:
-                #     for k, v in event_dict.items():
-                #         print(f"{k}: {v}")
-            except Exception as e:
-                print(e)
-                return
+            event_list = json.loads(self._clean(item.get()))
 
         for item in event_list:
             title = self._parse_title(item)
@@ -85,14 +78,18 @@ class ChiSsa60Spider(CityScrapersSpider):
         """Parse or generate classification from allowed options."""
         return NOT_CLASSIFIED
 
+    def _parse_time(self, item, index):
+        # index must be either 'startDate' or 'endDate'
+        return datetime.strptime(item[index][:-6], "%Y-%m-%dT%H:%M:%S")
+
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        return datetime.now()  # Temporary
+        return self._parse_time(item, 'startDate')
         # return None
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+        return self._parse_time(item, 'endDate')
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""

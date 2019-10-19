@@ -26,16 +26,13 @@ def test_title():
     assert parsed_items[0]["title"] == "Economic Development Meeting"
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_start():
+    assert parsed_items[0]["start"] == datetime(2019, 10, 1, 19, 0)
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
-
-
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_end():
+    print(parsed_items[0]["end"])
+    assert parsed_items[0]["end"] == datetime(2019, 10, 1, 21, 0)
 
 
 # def test_time_notes():
