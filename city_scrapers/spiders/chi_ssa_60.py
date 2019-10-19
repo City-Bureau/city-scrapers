@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, COMMISSION, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.relativedelta import relativedelta
@@ -48,7 +48,7 @@ class ChiSsa60Spider(CityScrapersSpider):
             meeting = Meeting(
                 title=title,
                 description=self._parse_description(item),
-                classification=self._parse_classification(item),
+                classification=self._parse_classification(title),
                 start=self._parse_start(item),
                 end=self._parse_end(item),
                 all_day=False,  # Found no events of interest scheduled for all day
@@ -74,9 +74,18 @@ class ChiSsa60Spider(CityScrapersSpider):
         """Parse or generate meeting description."""
         return ""
 
-    def _parse_classification(self, item):
+    def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
+        title = title.lower()
+        if 'advisory' in title:
+            return ADVISORY_COMMITTEE
+        elif 'committee' in title:
+            return COMMITTEE
+        # elif 'economic' in title or 'environmental' in title:
+        elif any(s in title for s in ['economic', 'environmental', 'membership', 'commission']):
+            return COMMISSION
+        else:
+            return NOT_CLASSIFIED
 
     def _parse_time(self, item, index):
         # index must be either 'startDate' or 'endDate'
