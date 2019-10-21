@@ -118,7 +118,7 @@ There are many ways to contribute to this project: coding a spider (webscraper),
 
 The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on Slack for support--we can meet up in person to troubleshoot some headaches like virtual environment issues.
 
-To contribute infrastructure and utilities, see the [help-wanted GitHub issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="\_blank"}.
+You can find tasks to work on in the ["help wanted" GitHub issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="\_blank"}. Issues that are already being worked on will be labeled "claimed".
 
 ### Familiarize yourself with how we work!
 
@@ -128,7 +128,7 @@ To contribute infrastructure and utilities, see the [help-wanted GitHub issues](
 
 #### 1. Find a site to scrape and create an issue
 
-First, find an unclaimed event source within the project's [issues](https://github.com/City-Bureau/city-scrapers/issues){:target="\_blank"}. Any unassigned issue is fair game. Add a comment indicating that you're interested in the work.
+First, find an issue labeled "help wanted" within the project's [issue tracker](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="\_blank"}. Any issue without the "claimed" label is fair game. Add a comment indicating that you're interested in the work.
 
 Save and note the issue number.
 
@@ -373,7 +373,7 @@ You generally want to verify that a spider:
 
 If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project. In this case, please mark your pull request as a [draft pull request](https://github.blog/2019-02-14-introducing-draft-pull-requests/){:target="\_blank"} when you create it. You can update this status when it is ready for review.
 
-Additionally, please use the pull request description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
+Please include the issue number you're working on in the pull request description with a # in front of it (i.e. "Spider for issue #100). This links the PR directly to the issue it resolves and makes review on GitHub easier. You can use the rest of the description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
 
 ### `Meeting` Items
 
