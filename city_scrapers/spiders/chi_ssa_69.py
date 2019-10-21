@@ -20,7 +20,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         return doc.text_content()
 
     def is_title_line(self, line, lpos=1):
-        # if ('font-weight:600' in line.extract()) and (lpos == 1):
+        ''' figure out if this line is the title line '''
         if (lpos == 1) and (('font-weight:600' in line.extract()) or
                             ('font-weight:bold;' in line.extract())):
             # check that the title text is not just whitespace
@@ -32,12 +32,37 @@ class ChiSsa69Spider(CityScrapersSpider):
             return False
 
     def is_date_line(self, line):
+        ''' figure our if this line is the date line '''
         if ('Date' in line.extract()):
             return True
         else:
             return False
 
+    def is_location_line(self, line, lpos=3):
+        ''' figure our if this line is the location line '''
+        if ((lpos == 3) and ('Location:' in line.extract())):
+            print('')
+            print('')
+            print('')
+            print('')
+            print('')
+            print('')
+            # print('y' + line.extract())
+            print('')
+            print('')
+            print('')
+            print('')
+            print('')
+            print('')
+            # exit()
+            return True
+        else:
+            print('n' + line.extract())
+            # exit()
+            return False
+
     def is_wixguard(self, line):
+        ''' figure out if this line is the wixguard line that separates listings '''
         if ('<span class="wixGuard">' in line.extract()):
             return True
         else:
@@ -121,7 +146,29 @@ class ChiSsa69Spider(CityScrapersSpider):
                     date_line = 'no specific date'
                     # special_info_line = spans[_]
                 print("------>" + date_line + "<---------")
-                print('------')
+            if (lpos == 3):
+                if (self.is_location_line(these_spans[i])):
+                    location_line = self.lxml_to_text(these_spans[i].extract())
+
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('YY' + location_line)
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    # exit()
+                else:
+                    # have to deal with this case in a special way
+                    location_line = 'no specific location found on line position 3'
+                    # special_info_line = spans[_]
+                print("------>" + location_line + "<---------")
 
                 lpos += 1
             if (these_spans[i].css(".wixGuard")):
@@ -135,7 +182,7 @@ class ChiSsa69Spider(CityScrapersSpider):
                     end = datetime.now()  # not correct yet
                     all_day = False
                     time_notes = date_line  # not correct yet
-                    location = "test location"  # not correct yet
+                    location = location_line
                     links = None
                     source = self._parse_source(response)
 
@@ -184,13 +231,13 @@ class ChiSsa69Spider(CityScrapersSpider):
 
         meeting_info_for_titles = self.parse_spans(spans, response)
         meeting_info_for_dates = self.parse_spans(spans_for_date, response)
+        assert len(meeting_info_for_dates) == len(meeting_info_for_titles)
 
         # munge info for titles and dates together
         for i in range(len((meeting_info_for_dates))):
 
             meeting = Meeting(
                 title=meeting_info_for_titles[i][0],
-                # date_line is used below just to satisfy flake8 linter
                 description='this is a test description',
                 classification=NOT_CLASSIFIED,
                 start=datetime.now(),
@@ -198,7 +245,7 @@ class ChiSsa69Spider(CityScrapersSpider):
                 all_day=False,
                 # time_notes="time notes test",
                 time_notes=meeting_info_for_dates[i][6],
-                location="test location",
+                location=meeting_info_for_dates[i][7],
                 links=None,
                 source=self._parse_source(response),
             )
