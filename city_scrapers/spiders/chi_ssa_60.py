@@ -47,8 +47,8 @@ class ChiSsa60Spider(CityScrapersSpider):
                 title=title,
                 description=self._parse_description(item),
                 classification=self._parse_classification(title),
-                start=self._parse_start(item),
-                end=self._parse_end(item),
+                start=self._parse_time(item, "startDate"),
+                end=self._parse_time(item, "endDate"),
                 all_day=False,  # Found no events of interest scheduled for all day
                 time_notes="",
                 location=self._parse_location(item),
@@ -94,14 +94,6 @@ class ChiSsa60Spider(CityScrapersSpider):
     def _parse_time(self, item, index):
         # index must be either 'startDate' or 'endDate'
         return datetime.strptime(item[index][:-6], "%Y-%m-%dT%H:%M:%S")
-
-    def _parse_start(self, item):
-        """Parse start datetime as a naive datetime object."""
-        return self._parse_time(item, 'startDate')
-
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return self._parse_time(item, 'endDate')
 
     def _parse_location(self, item):
         """Parse or generate location."""
