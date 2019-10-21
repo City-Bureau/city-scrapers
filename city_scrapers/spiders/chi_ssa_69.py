@@ -101,14 +101,25 @@ class ChiSsa69Spider(CityScrapersSpider):
         """
 
         all_spans = response.css("span")
+        all_spans_for_date = response.css("span")
         spans = self.combine_consecutive_wixguard_spans(all_spans)
         spans = self.combine_consecutive_font_weight_600s(spans)
         spans = self.trim_extra_at_beginning(spans)
         # spans = self.combine_consecutive_duplicate_text_lines(spans)
 
+        # I discovered that if I treat the spans differently,
+        # I can make it work for date, but that wouls mess update
+        # the way they work for titles
+        spans_for_date = self.combine_consecutive_wixguard_spans(all_spans_for_date)
+        spans_for_date = self.combine_consecutive_font_weight_600s(spans_for_date)
+        spans_for_date = self.trim_extra_at_beginning(spans_for_date)
+        spans_for_date = self.combine_consecutive_duplicate_text_lines(spans_for_date)
+
         title_line = ""
         date_line = ""
         lpos = 999  # line position within meeting listing - 999 mesnd unset
+        meeting_info_for_title = []
+        meeting_info_for_titles = []
         for i in range(len(spans)):
             lpos += 1
 
@@ -131,55 +142,143 @@ class ChiSsa69Spider(CityScrapersSpider):
                     # have to deal with this case in a special way
                     date_line = 'no specific date'
                     # special_info_line = spans[_]
-                print(date_line)
+                print("------>" + date_line + "<---------")
                 print('------')
-                # print(spans[i])
-                # exit()
+
                 lpos += 1
             if (spans[i].css(".wixGuard")):
                 lpos = 0
 
                 if (title_line.isspace() is not True and title_line != ''):
-                    meeting = Meeting(
-                        title=title_line,
-                        # date_line is used below just to satisfy flake8 linter
-                        description='this is a test description' + date_line,
-                        classification=NOT_CLASSIFIED,
-                        start=datetime.now(),
-                        end=datetime.now(),
-                        all_day=False,
-                        time_notes="time notes test",
-                        location="test location",
-                        links=None,
-                        source=self._parse_source(response),
-                    )
-                    yield meeting
+                    title = title_line
+                    description = 'this is a test description' + date_line
+                    classification = NOT_CLASSIFIED
+                    start = datetime.now()
+                    end = datetime.now()
+                    all_day = False
+                    time_notes = date_line
+                    location = "test location"
+                    links = None
+                    source = self._parse_source(response)
+
+                    meeting_info_for_title = [
+                        title, description, classification, start, end, all_day, time_notes,
+                        location, links, source
+                    ]
+                    meeting_info_for_titles.append(meeting_info_for_title)
                     print(str(i) + "-" + str(lpos) + "--->" + title_line)
             else:
+                # if something weird slips through, we might have to
+                # backup the line position (lpos)
                 if (self.lxml_to_text(spans[i].extract()).isspace()):
                     lpos = lpos - 1
-                # if (i > 59):
+                # if (self.lxml_to_text(spans[i].extract()) == title_line):
+                # lpos = 0
+                # print("BACKING UP FOR 2ND TITLE")
+
+                # if (i > 5900):
                 # exit()
 
-        # meetings = response.css("font-weight:600")
-        # for item in meetings:
-        #    meeting = Meeting(
-        #        title=self._parse_title(item),
-        #        description=self._parse_description(item),
-        #        classification=self._parse_classification(item),
-        #        start=self._parse_start(item),
-        #        end=self._parse_end(item),
-        #        all_day=self._parse_all_day(item),
-        #        time_notes=self._parse_time_notes(item),
-        #        location=self._parse_location(item),
-        #        links=self._parse_links(item),
-        #        source=self._parse_source(response),
-        #    )
+        title_line = ""
+        date_line = ""
+        lpos = 999  # line position within meeting listing - 999 mesnd unset
+        meeting_info_for_date = []
+        meeting_info_for_dates = []
+        for i in range(len(spans_for_date)):
+            lpos += 1
 
-        # meeting["status"] = self._get_status(meeting)
-        # meeting["id"] = self._get_id(meeting)
+            print(str(i) + "-" + str(lpos) + "--->>" + spans_for_date[i].extract())
+            # print(lpos)
+            if (self.is_title_line(spans_for_date[i], lpos)):
+                # if (self.is_title_line(spans[i])):
+                title_line = spans_for_date[i].extract()
+                print('SETTING title = ' + str(self.lxml_to_text(spans_for_date[i].extract())))
+                try:
+                    title_line = self.lxml_to_text(title_line)
+                except Exception:
+                    title_line = "unable to get text from title line"
+                # line_position_within_listing += 1
+            if (lpos == 2):
+                # check the next line to see if it is the line with event date(s)
+                if (self.is_date_line(spans_for_date[i])):
+                    date_line = self.lxml_to_text(spans_for_date[i].extract())
+                    print(">x>x>x>x>x>x>x>x>" + date_line + "<x<x<x<x<x<x<x<")
+                else:
+                    # have to deal with this case in a special way
+                    date_line = 'no specific date'
+                    # special_info_line = spans[_]
+                    print(">>>>>>>>>" + date_line + "<<<<<<<<")
+                    # exit()
+                print('------')
 
-        #  yield meeting
+                lpos += 1
+            if (spans_for_date[i].css(".wixGuard")):
+                lpos = 0
+
+                if (title_line.isspace() is not True and title_line != ''):
+                    title = title_line
+                    description = 'this is a test description' + date_line
+                    classification = NOT_CLASSIFIED
+                    start = datetime.now()
+                    end = datetime.now()
+                    all_day = False
+                    time_notes = date_line
+                    location = "test location"
+                    links = None
+                    source = self._parse_source(response)
+
+                    meeting_info_for_date = [
+                        title, description, classification, start, end, all_day, time_notes,
+                        location, links, source
+                    ]
+                    meeting_info_for_dates.append(meeting_info_for_date)
+
+                    print(str(i) + "-" + str(lpos) + "--->" + title_line)
+            else:
+                # if something weird slips through, we might have to
+                # backup the line position (lpos)
+                if (self.lxml_to_text(spans_for_date[i].extract()).isspace()):
+                    lpos = lpos - 1
+                # if (self.lxml_to_text(spans[i].extract()) == title_line):
+                # lpos = 0
+                # print("BACKING UP FOR 2ND TITLE")
+
+                # if (i > 5900):
+                # exit()
+
+        print(meeting_info_for_dates[0][6])
+        print(meeting_info_for_dates[1][6])
+        print(meeting_info_for_dates[2][6])
+        print(meeting_info_for_dates[3][6])
+        print(meeting_info_for_dates[4][6])
+        print(meeting_info_for_dates[5][6])
+        print(meeting_info_for_dates[6][6])
+        print(meeting_info_for_dates[7][6])
+        print(meeting_info_for_dates[8][6])
+        print(meeting_info_for_dates[9][6])
+
+        #############
+        for i in range(len((meeting_info_for_dates))):
+
+            meeting = Meeting(
+                title=meeting_info_for_titles[i][0],
+                # date_line is used below just to satisfy flake8 linter
+                description='this is a test description',
+                classification=NOT_CLASSIFIED,
+                start=datetime.now(),
+                end=datetime.now(),
+                all_day=False,
+                # time_notes="time notes test",
+                time_notes=meeting_info_for_dates[i][6],
+                location="test location",
+                links=None,
+                source=self._parse_source(response),
+            )
+            print(meeting_info_for_titles[i][0])
+            print(meeting_info_for_dates[i][6])
+            print(len(meeting_info_for_titles))
+            print(len(meeting_info_for_dates))
+            yield meeting
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
