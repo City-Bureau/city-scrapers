@@ -13,8 +13,8 @@ class ChiSsa60Spider(CityScrapersSpider):
     name = "chi_ssa_60"
     agency = "Chicago Special Service Area #60 Albany Park"
     timezone = "America/Chicago"
-    months_backward = 10
-    months_forward = 1
+    months_backward = 6
+    months_forward = 3
 
     def start_requests(self):
         requests = []
