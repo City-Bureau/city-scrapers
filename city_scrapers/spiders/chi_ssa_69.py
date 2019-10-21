@@ -61,6 +61,26 @@ class ChiSsa69Spider(CityScrapersSpider):
             # exit()
             return False
 
+    def is_location_determined(self, line):
+        ''' return whether the location line has been set to a location yet '''
+        print("running is_location_determined")
+        print(line)
+
+        if (line == 'no specific location found on line position 3'):
+            print('a')
+            return False
+        elif (line == ''):
+            print('b')
+            return False
+        # below would work if is_location_line didn't perform extract()
+        # elif ( self.is_location_line(line) ):
+        elif ('Location:' in line):
+            print('c')
+            return True
+        else:
+            print('d')
+            return False
+
     def is_wixguard(self, line):
         ''' figure out if this line is the wixguard line that separates listings '''
         if ('<span class="wixGuard">' in line.extract()):
@@ -120,6 +140,7 @@ class ChiSsa69Spider(CityScrapersSpider):
     def parse_spans(self, these_spans, response):
         title_line = ""
         date_line = ""
+        location_line = ""
         lpos = 999  # line position within meeting listing - 999 means unset
         meeting_info = []
         meetings_info_list = []
@@ -171,6 +192,25 @@ class ChiSsa69Spider(CityScrapersSpider):
                 print("------>" + location_line + "<---------")
 
                 lpos += 1
+
+            if ((lpos > 3) and self.is_location_determined(location_line) is False):
+                if (self.is_location_line(these_spans[i])):
+                    location_line = self.lxml_to_text(these_spans[i].extract())
+
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('ZA' + location_line)
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+                    print('')
+
             if (these_spans[i].css(".wixGuard")):
                 lpos = 0
 
