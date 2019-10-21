@@ -36,7 +36,6 @@ def test_start():
 
 
 def test_end():
-    print(parsed_items[0]["end"])
     assert parsed_items[0]["end"] == datetime(2019, 10, 1, 21, 0)
 
 
