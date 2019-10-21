@@ -216,21 +216,21 @@ class ChiSsa69Spider(CityScrapersSpider):
 
         all_spans = response.css("span")
 
-        spans = self.combine_consecutive_wixguard_spans(all_spans)
-        spans = self.combine_consecutive_font_weight_600s(spans)
-        spans = self.trim_extra_at_beginning(spans)
+        spans_for_title = self.combine_consecutive_wixguard_spans(all_spans)
+        spans_for_title = self.combine_consecutive_font_weight_600s(spans_for_title)
+        spans_for_title = self.trim_extra_at_beginning(spans_for_title)
         # spans = self.combine_consecutive_duplicate_text_lines(spans)
 
         # I discovered that if I treat the spans differently,
         # I can make it work for date, but that would mess up
         # the way they work for titles
-        spans_for_date = self.combine_consecutive_wixguard_spans(all_spans)
-        spans_for_date = self.combine_consecutive_font_weight_600s(spans_for_date)
-        spans_for_date = self.trim_extra_at_beginning(spans_for_date)
-        spans_for_date = self.combine_consecutive_duplicate_text_lines(spans_for_date)
+        spans_for_general_use = self.combine_consecutive_wixguard_spans(all_spans)
+        spans_for_general_use = self.combine_consecutive_font_weight_600s(spans_for_general_use)
+        spans_for_general_use = self.trim_extra_at_beginning(spans_for_general_use)
+        spans_for_general_use = self.combine_consecutive_duplicate_text_lines(spans_for_general_use)
 
-        meeting_info_for_titles = self.parse_spans(spans, response)
-        meeting_info_for_dates = self.parse_spans(spans_for_date, response)
+        meeting_info_for_titles = self.parse_spans(spans_for_title, response)
+        meeting_info_for_dates = self.parse_spans(spans_for_general_use, response)
         assert len(meeting_info_for_dates) == len(meeting_info_for_titles)
 
         # munge info for titles and dates together
