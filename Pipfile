@@ -13,6 +13,7 @@ legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper"}
 scrapy-wayback-middleware = "*"
 city-scrapers-core = {extras = ["azure"],version = "*"}
 pypdf2 = "*"
+pypiwin32 = "*"
 
 [dev-packages]
 freezegun = "*"
@@ -20,3 +21,4 @@ pytest = "*"
 "flake8" = "*"
 isort = "*"
 yapf = "*"
+pylint = "*"
