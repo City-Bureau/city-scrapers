@@ -35,7 +35,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                     'name': 'Stratton Office Building',
                     'address': '401 S Spring St, Springfield, IL 62704',
                 },
-                links=self._parse_links(item),
+                links=self._parse_links(item, response),
                 source=response.url,
             )
             meeting["status"] = self._get_status(meeting)
@@ -78,9 +78,17 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         """Parse or generate location."""
         return None
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
-        return [{"href": "", "title": ""}]
+        links = []
+        title_str = " ".join(item.css("*::text").extract()).strip()
+        title_str = re.sub("Agenda.pdf", "", title_str).strip()
+        title_str += " Agenda"
+        links.append({
+            'title': title_str,
+            'href': response.urljoin(item.attrib['href']),
+        })
+        return links
 
     def _parse_source(self, response):
         """Parse or generate source."""
