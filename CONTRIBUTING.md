@@ -12,7 +12,7 @@ Prepend the title of all pull requests containing incomplete code with `WIP: `, 
 
 ## 4. Keep the tests green
 
-We use Travis CI to check that tests pass and to maintain consistent style. Before marking your pull request as done, please make sure there are no failing checks and that the branch does not conflict with the master branch. A passing branch is indicated by green checkmarks at the bottom of the pull request page; a failing branch has red X’s.
+We use [GitHub Actions](https://github.com/features/actions) to check that tests pass and to maintain consistent style. Before marking your pull request as done, please make sure there are no failing checks and that the branch does not conflict with the master branch. A passing branch is indicated by green checkmarks at the bottom of the pull request page; a failing branch has red X’s.
 
 If you have any questions about failing checks or merge conflicts, please reach out on Slack!
 

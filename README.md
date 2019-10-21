@@ -1,6 +1,6 @@
 # City Scrapers
 
-[![Build Status](https://travis-ci.org/City-Bureau/city-scrapers.svg?branch=master)](https://travis-ci.org/City-Bureau/city-scrapers)
+[![Build status](https://github.com/City-Bureau/city-scrapers/workflows/CI%20Checks/badge.svg)](https://github.com/City-Bureau/city-scrapers/actions)
 
 ## Who are the City Bureau Documenters, and why do they want to scrape websites?
 
