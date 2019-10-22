@@ -41,20 +41,6 @@ class ChiSsa69Spider(CityScrapersSpider):
     def is_location_line(self, line, lpos=3):
         ''' figure our if this line is the location line '''
         if ((lpos == 3) and ('Location:' in line.extract())):
-            print('')
-            print('')
-            print('')
-            print('')
-            print('')
-            print('')
-            # print('y' + line.extract())
-            print('')
-            print('')
-            print('')
-            print('')
-            print('')
-            print('')
-            # exit()
             return True
         else:
             print('n' + line.extract())
@@ -133,8 +119,6 @@ class ChiSsa69Spider(CityScrapersSpider):
                 beginning_triggered = True
             if beginning_triggered is True:
                 out_spans.append(spans[i])
-            # if(self.is_wixguard(spans[i])):
-            # beginning_triggered = True
         return out_spans
 
     def parse_spans(self, these_spans, response):
@@ -148,7 +132,6 @@ class ChiSsa69Spider(CityScrapersSpider):
             lpos += 1
 
             print(str(i) + "-" + str(lpos) + "--->>" + these_spans[i].extract())
-            # print(lpos)
             if (self.is_title_line(these_spans[i], lpos)):
                 # if (self.is_title_line(spans[i])):
                 title_line = these_spans[i].extract()
@@ -170,21 +153,6 @@ class ChiSsa69Spider(CityScrapersSpider):
             if (lpos == 3):
                 if (self.is_location_line(these_spans[i])):
                     location_line = self.lxml_to_text(these_spans[i].extract())
-
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('YY' + location_line)
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    # exit()
                 else:
                     # have to deal with this case in a special way
                     location_line = 'no specific location found on line position 3'
@@ -197,26 +165,12 @@ class ChiSsa69Spider(CityScrapersSpider):
                 if (self.is_location_line(these_spans[i])):
                     location_line = self.lxml_to_text(these_spans[i].extract())
 
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('ZA' + location_line)
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-                    print('')
-
             if (these_spans[i].css(".wixGuard")):
                 lpos = 0
 
                 if (title_line.isspace() is not True and title_line != ''):
                     title = title_line
-                    description = 'this is a test description' + date_line
+                    description = ''  # intentionally empty
                     classification = NOT_CLASSIFIED
                     start = datetime.now()  # not correct yet
                     end = datetime.now()  # not correct yet
@@ -278,7 +232,7 @@ class ChiSsa69Spider(CityScrapersSpider):
 
             meeting = Meeting(
                 title=meeting_info_for_titles[i][0],
-                description='this is a test description',
+                description='', # intentionally empty
                 classification=NOT_CLASSIFIED,
                 start=datetime.now(),
                 end=datetime.now(),
