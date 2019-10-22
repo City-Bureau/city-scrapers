@@ -232,7 +232,7 @@ class ChiSsa69Spider(CityScrapersSpider):
 
             meeting = Meeting(
                 title=meeting_info_for_titles[i][0],
-                description='', # intentionally empty
+                description='',  # intentionally empty
                 classification=NOT_CLASSIFIED,
                 start=datetime.now(),
                 end=datetime.now(),
