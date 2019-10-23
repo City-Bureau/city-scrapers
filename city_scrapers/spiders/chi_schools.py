@@ -1,123 +1,172 @@
 import re
-from datetime import datetime, time
+from datetime import datetime
 
-from city_scrapers_core.constants import BOARD
+import scrapy
+from city_scrapers_core.constants import BOARD, COMMITTEE, FORUM
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
 class ChiSchoolsSpider(CityScrapersSpider):
-    name = 'chi_schools'
-    agency = 'Chicago Public Schools'
-    timezone = 'America/Chicago'
+    name = "chi_schools"
+    agency = "Chicago Public Schools"
+    timezone = "America/Chicago"
     start_urls = [
-        'http://www.cpsboe.org/meetings/planning-calendar',
-        'https://www.cpsboe.org/meetings/past-meetings',
+        "https://www.cpsboe.org/meetings/past-meetings",
+        "https://www.cpsboe.org/meetings",
     ]
+    location = {
+        "name": "CPS Loop Office, Board Room",
+        "address": "42 W Madison St, Chicago, IL 60602",
+    }
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        """Connect to spider_idle for when all detail pages are scraped"""
+        spider = super().from_crawler(crawler, *args, **kwargs)
+        spider.meeting_dates = []
+        crawler.signals.connect(spider.spider_idle, signal=scrapy.signals.spider_idle)
+        return spider
+
+    def spider_idle(self):
+        """Parse planning calendar after all detail pages scraped"""
+        self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
+        self.crawler.engine.crawl(
+            scrapy.Request(
+                "https://www.cpsboe.org/meetings/planning-calendar",
+                callback=self._parse_calendar,
+            ),
+            self,
+        )
+        raise scrapy.exceptions.DontCloseSpider
 
     def parse(self, response):
-        description = self._parse_description(response)
-        for idx, item in enumerate(response.css('#content-primary tr')):
-            if idx == 0 and 'calendar' in response.url:
-                continue
-            if 'calendar' in response.url:
-                start = self._parse_start_time(item)
-            else:
-                start = self._parse_past_start(item)
-            if start is not None:
-                meeting = Meeting(
-                    title=self._parse_title(item, response),
-                    description=description,
-                    classification=BOARD,
-                    start=start,
-                    end=None,
-                    time_notes='',
-                    all_day=False,
-                    location=self._parse_location(item),
-                    links=self._parse_links(item, start, response),
-                    source=self._parse_source(item, response),
-                )
-                meeting['id'] = self._get_id(meeting)
-                meeting['status'] = self._get_status(meeting, text=description)
-                yield meeting
+        if "past" in response.url:
+            # Only pull past 2 years of meetings
+            for link in response.css(".past-meetings")[:2].css("th a"):
+                yield response.follow(link.attrib["href"], callback=self._parse_detail)
+        else:
+            for link in response.css(".meetings dl a"):
+                yield response.follow(link.attrib["href"], callback=self._parse_detail)
 
-    def _parse_title(self, item, response):
-        title = 'Board of Education'
-        alt_title = item.css('.mute::text').extract_first()
-        if 'past' in response.url and alt_title is not None:
-            title = re.sub(r'[\(\)]', '', alt_title)
-        return title
+    def _parse_detail(self, response):
+        """Parse information from meeting detail pages"""
+        title = self._parse_title(response)
+        start = self._parse_start(
+            re.sub(r"\s+", " ", " ".join(response.css("h2.datetime *::text").extract()))
+        )
+        if not start:
+            return
+        self.meeting_dates.append(start.date())
+        meeting = Meeting(
+            title=title,
+            description=self._parse_description(response),
+            classification=self._parse_classification(title),
+            start=start,
+            end=None,
+            time_notes="",
+            all_day=False,
+            location=self._parse_location(
+                response.css("h2.datetime + p")[:1].css("*::text").extract()
+            ),
+            links=self._parse_links(response),
+            source=response.url,
+        )
+        meeting["status"] = self._get_status(meeting)
+        meeting["id"] = self._get_id(meeting)
+        yield meeting
+
+    def _parse_calendar(self, response):
+        for item in response.css("#content-primary tr"):
+            start = self._parse_start(
+                re.sub(r"\s+", " ", " ".join(item.css("td:first-child *::text").extract()))
+            )
+            if not start or start.date() in self.meeting_dates:
+                continue
+            meeting = Meeting(
+                title="Board of Education",
+                description="",
+                classification=BOARD,
+                start=start,
+                end=None,
+                time_notes="",
+                all_day=False,
+                location=self._parse_location(response.css("td:last-child *::text").extract()),
+                links=[],
+                source=response.url,
+            )
+            meeting["status"] = self._get_status(
+                meeting, text=" ".join(item.css("*::text").extract())
+            )
+            meeting["id"] = self._get_id(meeting)
+            yield meeting
+
+    def _parse_title(self, response):
+        title_str = " ".join(response.css("#content-primary h1::text").extract()).strip()
+        if "Special" in title_str:
+            return title_str
+        if "Board" in title_str:
+            return "Board of Education"
+        return title_str.replace("Meeting", "").strip()
 
     def _parse_description(self, response):
-        desc_xpath = '//table/following-sibling::ul//text()|//table/following-sibling::p//text()'
-        desc_text = response.xpath(desc_xpath).extract()
-        if len(desc_text) == 0:
-            return ''
-        return ' '.join(desc_text)
+        split_lines = response.css("#content-primary > *:not(table):not(.box)"
+                                   )[3:-1].css("*::text").extract()
+        combined_lines = " ".join([
+            re.sub(r"\s+(?=\n)", "", re.sub(r"[^\S\n]+", " ", line)) for line in split_lines
+        ])
+        cleaned_text = "\n".join([line.strip() for line in combined_lines.split("\n")]).strip()
+        return re.sub(r"((?<=\n\n)\n+|(?<=[^\S\n])\s| (?=[\.,]))", "", cleaned_text)
 
-    def _remove_line_breaks(self, collection):
-        return [x.strip() for x in collection if x.strip() != '']
+    def _parse_classification(self, title):
+        if "Committee" in title:
+            return COMMITTEE
+        if "hearing" in title.lower():
+            return FORUM
+        return BOARD
 
-    def _parse_start_time(self, item):
-        raw_strings = item.css('::text').extract()
-        date_string_list = self._remove_line_breaks(raw_strings)
-        date_string = ''
-        if len(date_string_list) > 0:
-            date_string = date_string_list[0]
-        date_string = date_string.replace(' at', '')
-        date_string = date_string.replace(',', "").replace(':', " ")
-        try:
-            return datetime.strptime(date_string, '%B %d %Y %I %M %p')
-        except Exception:
-            pass
+    def _parse_start(self, dt_str):
+        date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2},? \d{4}", dt_str)
+        if not date_match:
+            return
+        date_str = date_match.group().replace(",", "")
+        time_match = re.search(r"(\d{1,2}(:\d{2})? ?[apmAPM\.]{2,4})", dt_str)
+        time_str = "12:00am"
+        if time_match:
+            time_str = re.sub(r"[\s\.]", "", time_match.group())
+        dt_fmt = "%B %d %Y %I:%M%p"
+        if ":" not in time_str:
+            dt_fmt = "%B %d %Y %I%p"
+        return datetime.strptime(" ".join([date_str, time_str]), dt_fmt)
 
-    def _parse_past_start(self, item):
-        date_str = item.css('th a::text').extract_first()
-        date_obj = datetime.strptime(date_str.strip(), '%B %d, %Y').date()
-        return datetime.combine(date_obj, time(8, 30))
-
-    def _parse_location(self, item):
-        raw_text_list = item.css('::text').extract()
-        text_list = self._remove_line_breaks(raw_text_list)[1:]
-        text_list = [x for x in text_list if '(' not in x and ')' not in x]
-        address = " ".join(text_list)
-        if 'actions' in address.lower():
-            return {
-                'name': 'CPS Loop Office',
-                'address': '42 W Madison St, Board Room, Chicago, IL 60602',
-            }
-        loop_office = 'CPS Loop Office'
-        if loop_office in address:
-            return {
-                'address': address.replace(loop_office, '').strip(),
-                'name': loop_office,
-            }
+    def _parse_location(self, loc_lines):
+        loc_list = [line.strip() for line in loc_lines if "calendar" not in line]
+        loc_name = ""
+        loc_addr = ""
+        # If the first character of the location string is a number, assume it's the address
+        if loc_list[0][0].isdigit():
+            loc_addr = " ".join(loc_list)
+        else:
+            loc_name = loc_list[0]
+            loc_addr = " ".join(loc_list[1:])
+        if "42 W" in loc_addr:
+            return self.location
         return {
-            'address': address,
-            'name': '',
+            "name": loc_name,
+            "address": loc_addr,
         }
 
-    def _parse_links(self, item, start, response):
-        documents = []
-        for doc_link in item.css('td a'):
-            doc_url = response.urljoin(doc_link.attrib['href'])
-            doc_note = doc_link.css('::text').extract_first()
-            if doc_note.lower() == 'proceedings':
-                mo_str = start.strftime('%b').lower()
-                doc_url = response.urljoin(
-                    '/content/documents/{}{dt.day}_{dt.year}proceedings.pdf'.format(
-                        mo_str, dt=start
-                    )
-                )
-            documents.append({
-                'href': doc_url,
-                'title': doc_note,
+    def _parse_links(self, response):
+        links = []
+        for link in response.css("#content-primary a"):
+            title = " ".join(link.css("*::text").extract()).strip()
+            if (
+                "calendar" in title.lower() or "back to meetings" in title.lower()
+                or "past-meetings" in title.lower()
+            ):
+                continue
+            links.append({
+                "title": title,
+                "href": response.urljoin(link.attrib["href"]),
             })
-        return documents
-
-    def _parse_source(self, item, response):
-        """Parse source."""
-        if 'past' in response.url:
-            detail_url = item.css('th a')[0].attrib['href']
-            return response.urljoin(detail_url)
-        return response.url
+        return links
