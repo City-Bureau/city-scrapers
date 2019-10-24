@@ -22,25 +22,10 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".ms-rtestate-field p strong a")[0:]:
-            meeting = Meeting(
-                title='Procurement Policy Board',
-                description='',
-                classification=self._parse_classification(item),
-                start=self._parse_start(item),
-                end='',
-                all_day='',
-                time_notes='End time not specified',
-                location = {
-                    'name': 'Stratton Office Building',
-                    'address': '401 S Spring St, Springfield, IL 62704',
-                },
-                links=self._parse_links(item, response),
-                source=response.url,
-            )
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
-            yield meeting
+        if 'board_minutes' in response.url:
+            yield from self._upcoming_meetings(response)
+        else:
+            yield from self._prev_meetings(response)
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -70,14 +55,6 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         """Parse any additional notes on the timing of the meeting"""
         return ""
 
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
-
-    def _parse_location(self, item):
-        """Parse or generate location."""
-        return None
-
     def _parse_links(self, item, response):
         """Parse or generate links."""
         links = []
@@ -93,3 +70,27 @@ class IlProcurementPolicySpider(CityScrapersSpider):
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
+    
+    def _upcoming_meetings(self, response):
+        for item in response.css(".ms-rtestate-field p strong a")[0:]:
+            meeting = Meeting(
+                title='Procurement Policy Board',
+                description='',
+                classification=self._parse_classification(item),
+                start=self._parse_start(item),
+                end=None,
+                all_day=False,
+                time_notes='End time not specified',
+                location = {
+                    'name': 'Stratton Office Building',
+                    'address': '401 S Spring St, Springfield, IL 62704',
+                },
+                links=self._parse_links(item, response),
+                source=response.url,
+            )
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
+            yield meeting
+
+    def _prev_meetings(self, response):
+        yield None
