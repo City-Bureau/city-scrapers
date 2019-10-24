@@ -1,8 +1,9 @@
+import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import lxml.html as lh
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMISSION, COMMITTEE, FORUM, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from lxml.html.clean import clean_html
@@ -12,8 +13,37 @@ class ChiSsa69Spider(CityScrapersSpider):
     name = "chi_ssa_69"
     agency = "Chicago Special Service Area #69 95th & Ashland Avenue"
     timezone = "America/Chicago"
-    allowed_domains = ["auburngresham.wixsite.com"]
-    start_urls = ["https://auburngresham.wixsite.com/ssa69/calendar"]
+
+    @property
+    def start_urls(self):
+        today = datetime.now()
+        last_week = today - timedelta(days=7)
+        in_two_months = today + timedelta(days=60)
+
+        return [(
+            "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
+            "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone=-05:00&"
+            "sanitizeHtml=true&timeMin={}T00:00:00-05:00&timeMax={}T00:00:00-05:00&"
+            "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
+        ).format(
+            last_week.strftime("%Y-%m-%d"),
+            in_two_months.strftime("%Y-%m-%d"),
+        )]
+
+    def create_url(self):
+        today = datetime.now()
+        last_week = today - timedelta(days=7)
+        in_two_months = today + timedelta(days=60)
+
+        return [(
+            "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
+            "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone=-05:00&"
+            "sanitizeHtml=true&timeMin={}T00:00:00-05:00&timeMax={}T00:00:00-05:00&"
+            "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
+        ).format(
+            last_week.strftime("%Y-%m-%d"),
+            in_two_months.strftime("%Y-%m-%d"),
+        )]
 
     def lxml_to_text(self, html):
         doc = lh.fromstring(html)
@@ -124,6 +154,11 @@ class ChiSsa69Spider(CityScrapersSpider):
         lpos = 999  # line position within meeting listing - 999 means unset
         meeting_info = []
         meetings_info_list = []
+
+        u = self.create_url()
+        print(u)
+        # exit()
+
         for i in range(len(these_spans)):
             lpos += 1
 
@@ -190,19 +225,78 @@ class ChiSsa69Spider(CityScrapersSpider):
                 # lpos = 0
                 # print("BACKING UP FOR 2ND TITLE")
 
-                # if (i > 5900):
-                # exit()
+                if (i > 59):
+                    exit()
 
         return meetings_info_list
 
     def parse(self, response):
+        data = json.loads(response.text)
+        for item in data["items"]:
+            title = self._parse_title(item)
+            location = self._parse_location(item)
+            if not location:
+                continue
+            meeting = Meeting(
+                title=title,
+                description="",
+                classification=self._parse_classification(title),
+                start=self._parse_dt(item["start"]),
+                end=self._parse_dt(item["end"]),
+                time_notes="",
+                all_day=False,
+                location=location,
+                links=[],
+                source="https://sites.google.com/view/detroitcharter2018",
+            )
+            meeting['status'] = self._get_status(meeting, text=item["status"])
+            meeting['id'] = self._get_id(meeting)
+            yield meeting
+
+    def _parse_title(self, item):
+        return re.sub(r" Meeting$", "", item["summary"].strip())
+
+    def _parse_classification(self, title):
+        if "committee" in title.lower():
+            return COMMITTEE
+        elif "focus group" in title.lower():
+            return FORUM
+        return COMMISSION
+
+    def _parse_dt(self, dt_obj):
+        if "dateTime" in dt_obj:
+            return datetime.strptime(dt_obj["dateTime"][:19], "%Y-%m-%dT%H:%M:%S")
+        elif "date" in dt_obj:
+            return datetime.strptime(dt_obj["date"], "%Y-%m-%d")
+
+    def _parse_location(self, item):
+        if "location" not in item:
+            return
+        split_loc = re.split(r"(?<=[a-z]), (?=\d)", item["location"])
+        name = ""
+        if len(split_loc) == 1:
+            address = split_loc[0]
+        else:
+            name = split_loc[0]
+            address = ", ".join(split_loc[1:])
+        return {
+            "name": name,
+            "address": address,
+        }
+
+    def parse_old(self, response):
         """
         `parse` should always `yield` Meeting items.
 
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        u = self.create_url()
+        print(u)
+        # exit()
 
+        print(response.text)
+        exit()
         all_spans = response.css("span")
 
         spans_for_title = self.combine_consecutive_wixguard_spans(all_spans)
@@ -243,7 +337,7 @@ class ChiSsa69Spider(CityScrapersSpider):
             )
             yield meeting
 
-    def _parse_title(self, item):
+    def _parse_title_old(self, item):
         """Parse or generate meeting title."""
         return ""
 
@@ -251,7 +345,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         """Parse or generate meeting description."""
         return ""
 
-    def _parse_classification(self, item):
+    def _parse_classification_old(self, item):
         """Parse or generate classification from allowed options."""
         return NOT_CLASSIFIED
 
@@ -284,7 +378,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    def _parse_location(self, item):
+    def _parse_location_old(self, item):
         """Parse or generate location."""
         address = ""
         name = ""

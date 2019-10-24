@@ -2,16 +2,17 @@
 from os.path import dirname, join
 
 # import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMISSION, NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_ssa_69 import ChiSsa69Spider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_69.html"),
+    join(dirname(__file__), "files", "chi_ssa_69.json"),
     url="https://auburngresham.wixsite.com/ssa69/calendar",
 )
+
 spider = ChiSsa69Spider()
 
 freezer = freeze_time("2019-10-09")
@@ -36,13 +37,6 @@ def test_description():
     assert parsed_items[0]["description"] == ""
     assert parsed_items[1]["description"] == ""
     assert parsed_items[2]["description"] == ""
-    assert parsed_items[3]["description"] == ""
-    assert parsed_items[4]["description"] == ""
-    assert parsed_items[5]["description"] == ""
-    assert parsed_items[6]["description"] == ""
-    assert parsed_items[7]["description"] == ""
-    assert parsed_items[8]["description"] == ""
-    assert parsed_items[9]["description"] == ""
 
 
 # def test_start():
@@ -85,25 +79,11 @@ def test_classification():
     print("\n\n")
     print(parsed_items[2])
     print("\n\n")
-    print(parsed_items[3])
-    print("\n\n")
-    print(parsed_items[4])
-    print("\n\n")
-    print(parsed_items[5])
-    print("\n\n")
-    print(parsed_items[6])
-    print("\n\n")
-    print(parsed_items[7])
-    print("\n\n")
-    print(parsed_items[8])
-    print("\n\n")
-    print(parsed_items[9])
-    print("\n\n")
 
     print("len=" + str(len(parsed_items)))
     # exit()
 
-    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+    assert parsed_items[0]["classification"] == COMMISSION
 
 
 # @pytest.mark.parametrize("item", parsed_items)
