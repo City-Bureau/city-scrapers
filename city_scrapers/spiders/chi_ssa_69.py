@@ -261,7 +261,9 @@ class ChiSsa69Spider(CityScrapersSpider):
             return COMMITTEE
         elif "focus group" in title.lower():
             return FORUM
-        return COMMISSION
+        elif "commission" in title.lower():
+            return COMMISSION
+        return NOT_CLASSIFIED
 
     def _parse_dt(self, dt_obj):
         if "dateTime" in dt_obj:
