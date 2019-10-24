@@ -224,16 +224,19 @@ class ChiSsa69Spider(CityScrapersSpider):
 
         # munge info for titles and dates together
         for i in range(len((meeting_info_for_dates))):
-
+            date_str = str(meeting_info_for_dates[i][6]).replace(u'\xa0', u' ')
             meeting = Meeting(
                 title=meeting_info_for_titles[i][0].replace(u'\xa0', u' '),
                 description='',  # intentionally empty
                 classification=NOT_CLASSIFIED,
-                start=datetime.now(),
+                # start=datetime.now(),
+                # start=datetime.strptime(date_str, "%d-%m-%Y %H:%M:%S"),
+                start=self._parse_start(date_str),
                 end=datetime.now(),
                 all_day=False,
                 # time_notes="time notes test",
-                time_notes=meeting_info_for_dates[i][6],
+                # time_notes=meeting_info_for_dates[i][6],
+                time_notes=date_str,
                 location=self._parse_location(meeting_info_for_dates[i][7]),
                 links=None,
                 source=self._parse_source(response),
@@ -254,6 +257,19 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
+        if 'Dates:' in item:
+            print('have to deal with multiple dates')
+            return 'have to deal with multiple dates'
+        elif ' through ' in item:
+            # looks like a date range as opposed to a single day
+            print('have to deal with date range')
+            return 'have to deal with date range'
+        elif 'Date:' in item:
+            # inner_date_string = re.findall(r"(?:Date).*", item)
+            inner_date_string = item.split("Date: ", 1)[-1]
+
+            return inner_date_string
+
         return None
 
     def _parse_end(self, item):
