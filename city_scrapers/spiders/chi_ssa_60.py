@@ -1,12 +1,13 @@
 import html
 import json
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import ADVISORY_COMMITTEE, COMMISSION, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.relativedelta import relativedelta
-from scrapy import Request
+from scrapy import Request, Selector
 
 
 class ChiSsa60Spider(CityScrapersSpider):
@@ -71,16 +72,10 @@ class ChiSsa60Spider(CityScrapersSpider):
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        desc = html.unescape(item["description"])
-        removeables = [
-            "<p>",
-            "</p>",
-            "\\n",
-            "\\",
-        ]
-        for r in removeables:
-            desc = desc.replace(r, "")
-        return desc
+        desc_text = " ".join(
+            Selector(text=html.unescape(item["description"])).css("*::text").extract()
+        )
+        return re.sub(r"\s+", " ", desc_text).strip()
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
