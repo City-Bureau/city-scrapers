@@ -14,6 +14,7 @@ class ChiTeacherPensionSpider(CityScrapersSpider):
     timezone = 'America/Chicago'
     start_urls = ['https://www.ctpf.org/board-trustees-meeting-minutes']
     location = {'name': 'CTPF Office', 'address': '203 N LaSalle St, Suite 2600 Chicago, IL 60601'}
+    custom_settings = {"ROBOTSTXT_OBEY": False}
 
     def __init__(self, *args, **kwargs):
         self.month_year_minutes = defaultdict(list)
