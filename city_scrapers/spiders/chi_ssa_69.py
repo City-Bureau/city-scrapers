@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 import lxml.html as lh
@@ -44,7 +45,6 @@ class ChiSsa69Spider(CityScrapersSpider):
             return True
         else:
             print('n' + line.extract())
-            # exit()
             return False
 
     def is_location_determined(self, line):
@@ -53,18 +53,14 @@ class ChiSsa69Spider(CityScrapersSpider):
         print(line)
 
         if (line == 'no specific location found on line position 3'):
-            print('a')
             return False
         elif (line == ''):
-            print('b')
             return False
         # below would work if is_location_line didn't perform extract()
         # elif ( self.is_location_line(line) ):
         elif ('Location:' in line):
-            print('c')
             return True
         else:
-            print('d')
             return False
 
     def is_wixguard(self, line):
@@ -140,7 +136,6 @@ class ChiSsa69Spider(CityScrapersSpider):
                     title_line = self.lxml_to_text(title_line)
                 except Exception:
                     title_line = "unable to get text from title line"
-                # line_position_within_listing += 1
             if (lpos == 2):
                 # check the next line to see if it is the line with event date(s)
                 if (self.is_date_line(these_spans[i])):
@@ -157,7 +152,7 @@ class ChiSsa69Spider(CityScrapersSpider):
                     # have to deal with this case in a special way
                     location_line = 'no specific location found on line position 3'
                     # special_info_line = spans[_]
-                print("------>" + location_line + "<---------")
+                # print("------>" + location_line + "<---------")
 
                 lpos += 1
 
@@ -239,7 +234,7 @@ class ChiSsa69Spider(CityScrapersSpider):
                 all_day=False,
                 # time_notes="time notes test",
                 time_notes=meeting_info_for_dates[i][6],
-                location=meeting_info_for_dates[i][7],
+                location=self._parse_location(meeting_info_for_dates[i][7]),
                 links=None,
                 source=self._parse_source(response),
             )
@@ -279,9 +274,19 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
+        address = ""
+        name = ""
+        item_str = str(item)
+        address_regex = r"((?i)\d+ ((?! \d+ ).)*(il|illinois)(, \d{5}| \d{5}|\b))"
+        address_matches = re.findall(address_regex, item_str)
+        assert len(address_matches) < 2
+        if len(address_matches) > 0:
+            address = address_matches[0][0]
+        else:
+            name = item_str
         return {
-            "address": "",
-            "name": "",
+            "address": address,
+            "name": name,
         }
 
     def _parse_links(self, item):
