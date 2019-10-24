@@ -226,7 +226,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         for i in range(len((meeting_info_for_dates))):
 
             meeting = Meeting(
-                title=meeting_info_for_titles[i][0],
+                title=meeting_info_for_titles[i][0].replace(u'\xa0', u' '),
                 description='',  # intentionally empty
                 classification=NOT_CLASSIFIED,
                 start=datetime.now(),
@@ -238,10 +238,6 @@ class ChiSsa69Spider(CityScrapersSpider):
                 links=None,
                 source=self._parse_source(response),
             )
-            # print(meeting_info_for_titles[i][0])
-            # print(meeting_info_for_dates[i][6])
-            # print(len(meeting_info_for_titles))
-            # print(len(meeting_info_for_dates))
             yield meeting
 
     def _parse_title(self, item):
@@ -282,6 +278,8 @@ class ChiSsa69Spider(CityScrapersSpider):
         assert len(address_matches) < 2
         if len(address_matches) > 0:
             address = address_matches[0][0]
+            # take care of unicode non-breaking space \xa0
+            address = address.replace(u'\xa0', u' ')
         else:
             name = item_str
         return {
