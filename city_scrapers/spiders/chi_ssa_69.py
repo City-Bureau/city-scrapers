@@ -71,7 +71,7 @@ class ChiSsa69Spider(CityScrapersSpider):
                 all_day=False,
                 location=location,
                 links=[],
-                source="https://sites.google.com/view/detroitcharter2018",
+                source=response.url,
             )
             meeting['status'] = self._get_status(meeting, text=item["status"])
             meeting['id'] = self._get_id(meeting)
@@ -173,7 +173,3 @@ class ChiSsa69Spider(CityScrapersSpider):
     def _parse_links(self, item):
         """Parse or generate links."""
         return [{"href": "", "title": ""}]
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
