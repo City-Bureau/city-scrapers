@@ -27,28 +27,24 @@ def test_tests():
     assert False
 
 
-"""
-Uncomment below
-"""
-
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+def test_title():
+    assert parsed_items[0]["title"] == "Procurement Policy Board"
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_description():
+    assert parsed_items[0]["description"] == ""
+    
+
+def test_start():
+    assert parsed_items[0]["start"] == datetime(2019, 10, 15, 10, 0)
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_end():
+    assert parsed_items[0]["end"] is None
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
-
-
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_time_notes():
+    assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
 
 
 # def test_id():
