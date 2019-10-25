@@ -18,28 +18,9 @@ class ChiSsa69Spider(CityScrapersSpider):
         last_week = today - timedelta(days=7)
         in_two_months = today + timedelta(days=60)
 
-        return [(
-            "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
-            "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone=-05:00&"
-            "sanitizeHtml=true&timeMin={}T00:00:00-05:00&timeMax={}T00:00:00-05:00&"
-            "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
-        ).format(
-            last_week.strftime("%Y-%m-%d"),
-            in_two_months.strftime("%Y-%m-%d"),
-        )]
+        # I think there is a problem where the timezone in Chicago will be
+        # changing during tis two month periods
 
-    def create_url(self):
-        today = datetime.now()
-        last_week = today - timedelta(days=7)
-        in_two_months = today + timedelta(days=60)
-
-        # I think the time in the url below is GMT -5:00 which was
-        # probably set up for the Detroit scraper I stole this code from
-        # I think it will be incorrect for Chicago
-        # Should I go with GMT -6:00 ?
-        # Actually, now that I am looking up the time online, it looks
-        # like GMT -5 is not correct for Detroit, should be GMT -4
-        # Is the time off on the Detroit scraper due to Daylght Savings?
         return [(
             "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
             "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone=-05:00&"
@@ -149,26 +130,15 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
-        return False
+        #  I am unsure how to check for this
+        #  There doesn't appear to be a field in the calendar for allDay
+        #  Checking the lenght of the meeting seems wrong - what would be
+        #  the cutoff? Anything over 6 hours?
 
-    def _parse_location_old(self, item):
-        """Parse or generate location."""
-        address = ""
-        name = ""
-        item_str = str(item)
-        address_regex = r"((?i)\d+ ((?! \d+ ).)*(il|illinois)(, \d{5}| \d{5}|\b))"
-        address_matches = re.findall(address_regex, item_str)
-        assert len(address_matches) < 2
-        if len(address_matches) > 0:
-            address = address_matches[0][0]
-            # take care of unicode non-breaking space \xa0
-            address = address.replace(u'\xa0', u' ')
-        else:
-            name = item_str
-        return {
-            "address": address,
-            "name": name,
-        }
+        # Since I don't see a calendar field for allDay
+        # I am going to set this to True if the lenght of the meeting
+        # is greater than 4 hours
+        return False
 
     def _parse_links(self, item):
         """Parse or generate links."""
