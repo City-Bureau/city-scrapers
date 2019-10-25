@@ -33,6 +33,13 @@ class ChiSsa69Spider(CityScrapersSpider):
         last_week = today - timedelta(days=7)
         in_two_months = today + timedelta(days=60)
 
+        # I think the time in the url below is GMT -5:00 which was
+        # probably set up for the Detroit scraper I stole this code from
+        # I think it will be incorrect for Chicago
+        # Should I go with GMT -6:00 ?
+        # Actually, now that I am looking up the time online, it looks
+        # like GMT -5 is not correct for Detroit, should be GMT -4
+        # Is the time off on the Detroit scraper due to Daylght Savings?
         return [(
             "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
             "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone=-05:00&"
@@ -45,6 +52,10 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def parse(self, response):
         data = json.loads(response.text)
+        print(self.start_urls)
+        # exit()
+        print(data)
+        # exit()
         for item in data["items"]:
             title = self._parse_title(item)
             location = self._parse_location(item)
@@ -52,7 +63,7 @@ class ChiSsa69Spider(CityScrapersSpider):
                 continue
             meeting = Meeting(
                 title=title,
-                description="",
+                description=self._parse_description(item),
                 classification=self._parse_classification(title),
                 start=self._parse_dt(item["start"]),
                 end=self._parse_dt(item["end"]),
@@ -101,7 +112,11 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        return ""
+        try:
+            # not sure if I should format this differently
+            return item['description']
+        except Exception:
+            return ""
 
     def _parse_classification_old(self, item):
         """Parse or generate classification from allowed options."""

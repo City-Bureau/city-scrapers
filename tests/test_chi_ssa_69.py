@@ -32,12 +32,10 @@ Uncomment below
 #        expected_value = "GAGDC & SSA#69 Neighborhood Opportunity Fund Grant Training"
 #    assert parsed_items[1]["title"] == expected_value
 
-
-def test_description():
-    assert parsed_items[0]["description"] == ""
-    assert parsed_items[1]["description"] == ""
-    assert parsed_items[2]["description"] == ""
-
+# def test_description():
+# assert parsed_items[0]["description"] == ""
+# assert parsed_items[1]["description"] == ""
+# assert parsed_items[2]["description"] == ""
 
 # def test_start():
 #     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
