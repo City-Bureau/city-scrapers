@@ -47,7 +47,7 @@ class ChiSsa69Spider(CityScrapersSpider):
                 start=self._parse_dt(item["start"]),
                 end=self._parse_dt(item["end"]),
                 time_notes="",
-                all_day=self._parse_all_day(item),
+                all_day=False,
                 location=location,
                 links=[],
                 source=item["htmlLink"],
@@ -108,15 +108,3 @@ class ChiSsa69Spider(CityScrapersSpider):
             return item['description']
         except Exception:
             return ""
-
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        # Since I don't see a calendar field for allDay
-        # I am going to set this to True if the length of the meeting
-        # is greater than 4 hours
-        meeting_duration = self._parse_dt(item["end"]) - self._parse_dt(item["start"])
-        print(str(meeting_duration))
-        if (meeting_duration > timedelta(hours=4)):
-            return True
-        else:
-            return False
