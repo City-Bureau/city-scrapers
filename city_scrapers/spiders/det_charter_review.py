@@ -18,7 +18,7 @@ class DetCharterReviewSpider(CityScrapersSpider):
         in_two_months = today + timedelta(days=60)
         return [(
             "https://clients6.google.com/calendar/v3/calendars/detroitcrc2018@gmail.com/events"
-            "?calendarId=detroitcrc2018@gmail.com&singleEvents=true&timeZone=GMT-5:0&"
+            "?calendarId=detroitcrc2018@gmail.com&singleEvents=true&timeZone=America/Detroit&"
             "sanitizeHtml=true&timeMin={}T00:00:00-05:00&timeMax={}T00:00:00-05:00&"
             "key=AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs"
         ).format(
