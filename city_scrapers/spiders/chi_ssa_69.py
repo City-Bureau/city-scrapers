@@ -102,9 +102,4 @@ class ChiSsa69Spider(CityScrapersSpider):
         }
 
     def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        try:
-            # not sure if I should format this differently
-            return item['description']
-        except Exception:
-            return ""
+        return item.get("description", "")
