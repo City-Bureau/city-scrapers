@@ -1,6 +1,6 @@
 from os.path import dirname, join
 
-from city_scrapers_core.constants import COMMISSION, COMMITTEE
+from city_scrapers_core.constants import COMMISSION, COMMITTEE, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -84,9 +84,9 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]["status"] == 'tentative'
-    assert parsed_items[1]["status"] == 'passed'
-    assert parsed_items[2]["status"] == 'tentative'
+    assert parsed_items[0]["status"] == TENTATIVE
+    assert parsed_items[1]["status"] == PASSED
+    assert parsed_items[2]["status"] == TENTATIVE
 
 
 def test_location():
