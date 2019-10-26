@@ -2,7 +2,7 @@ import json
 import re
 from datetime import datetime, timedelta
 
-from city_scrapers_core.constants import COMMISSION, COMMITTEE, NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMISSION, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -64,7 +64,8 @@ class ChiSsa69Spider(CityScrapersSpider):
             return COMMITTEE
         elif "commission" in title.lower():
             return COMMISSION
-        return NOT_CLASSIFIED
+        # we think we can safely return COMMISSION by default
+        return COMMISSION
 
     def _parse_dt(self, dt_obj):
         if "dateTime" in dt_obj:
