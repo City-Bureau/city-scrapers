@@ -26,8 +26,8 @@ class ChiSsa69Spider(CityScrapersSpider):
         # determine the current GMT offset for Chicago time (varies throughout the year)
         current_chicago_time = datetime.now(tz.gettz('America/Chicago'))
         current_chicago_time_gmt_offset = str(current_chicago_time)[-6:]
-        print(current_chicago_time)
-        print(current_chicago_time_gmt_offset)
+        # print(current_chicago_time)
+        # print(current_chicago_time_gmt_offset)
 
         return [(
             "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
@@ -45,7 +45,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         # print(self.start_urls)
 
         # exit()
-        print(data)
+        # print(data)
         # exit()
         for item in data["items"]:
             title = self._parse_title(item)
@@ -59,10 +59,11 @@ class ChiSsa69Spider(CityScrapersSpider):
                 start=self._parse_dt(item["start"]),
                 end=self._parse_dt(item["end"]),
                 time_notes="",
-                all_day=False,
+                all_day=self._parse_all_day(item),
                 location=location,
                 links=[],
-                source=response.url,
+                # source=response.url,
+                source=item["htmlLink"],
             )
             meeting['status'] = self._get_status(meeting, text=item["status"])
             meeting['id'] = self._get_id(meeting)
@@ -87,12 +88,29 @@ class ChiSsa69Spider(CityScrapersSpider):
             return datetime.strptime(dt_obj["date"], "%Y-%m-%d")
 
     def _parse_location(self, item):
+        # print(item["location"])
+        print(item)
+        # if item["location"] != '7901 S Racine Ave, Chicago, IL 60620, USA':
+        # exit()
         if "location" not in item:
             return
         split_loc = re.split(r"(?<=[a-z]), (?=\d)", item["location"])
         name = ""
         if len(split_loc) == 1:
             address = split_loc[0]
+
+            # Sometimes they put a room name in the location field and
+            # and address in the description
+            if (
+                "Chicago" not in address and "Il" not in address
+                and "006th district police station" in address
+            ):
+                name = address
+                lines_in_desc = re.split(r"\n", item["description"])
+                for line in lines_in_desc:
+                    if "Chicago" in line:
+                        address = line
+
         else:
             name = split_loc[0]
             address = ", ".join(split_loc[1:])
@@ -111,15 +129,15 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
-        #  I am unsure how to check for this
-        #  There doesn't appear to be a field in the calendar for allDay
-        #  Checking the lenght of the meeting seems wrong - what would be
-        #  the cutoff? Anything over 6 hours?
-
         # Since I don't see a calendar field for allDay
         # I am going to set this to True if the lenght of the meeting
         # is greater than 4 hours
-        return False
+        meeting_duration = self._parse_dt(item["end"]) - self._parse_dt(item["start"])
+        print(str(meeting_duration))
+        if (meeting_duration > timedelta(hours=4)):
+            return True
+        else:
+            return False
 
     def _parse_links(self, item):
         """Parse or generate links."""
