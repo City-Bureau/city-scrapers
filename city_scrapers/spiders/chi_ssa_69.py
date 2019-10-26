@@ -18,9 +18,9 @@ class ChiSsa69Spider(CityScrapersSpider):
         last_week = today - timedelta(days=7)
         in_two_months = today + timedelta(days=60)
 
-        # we decided to go with a static offsetthat could be off by an hour
+        # we decided to go with a static offset that could be off by an hour
         # should be good enough for naive datetime
-		chicago_time_gmt_offset = "-05:00"
+        chicago_time_gmt_offset = "-05:00"
 
         return [(
             "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
@@ -28,8 +28,7 @@ class ChiSsa69Spider(CityScrapersSpider):
             "sanitizeHtml=true&timeMin={}T00:00:00{}&timeMax={}T00:00:00{}&"
             "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
         ).format(
-            chicago_time_gmt_offset,
-            last_week.strftime("%Y-%m-%d"), chicago_time_gmt_offset,
+            chicago_time_gmt_offset, last_week.strftime("%Y-%m-%d"), chicago_time_gmt_offset,
             in_two_months.strftime("%Y-%m-%d"), chicago_time_gmt_offset
         )]
 
