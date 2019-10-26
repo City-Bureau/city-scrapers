@@ -2,7 +2,7 @@ import json
 import re
 from datetime import datetime, timedelta
 
-from city_scrapers_core.constants import COMMISSION, COMMITTEE, FORUM, NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMISSION, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -62,8 +62,6 @@ class ChiSsa69Spider(CityScrapersSpider):
     def _parse_classification(self, title):
         if "committee" in title.lower():
             return COMMITTEE
-        elif "focus group" in title.lower():
-            return FORUM
         elif "commission" in title.lower():
             return COMMISSION
         return NOT_CLASSIFIED
