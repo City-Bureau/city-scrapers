@@ -26,8 +26,6 @@ class ChiSsa69Spider(CityScrapersSpider):
         # determine the current GMT offset for Chicago time (varies throughout the year)
         current_chicago_time = datetime.now(tz.gettz('America/Chicago'))
         current_chicago_time_gmt_offset = str(current_chicago_time)[-6:]
-        # print(current_chicago_time)
-        # print(current_chicago_time_gmt_offset)
 
         return [(
             "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
@@ -138,7 +136,3 @@ class ChiSsa69Spider(CityScrapersSpider):
             return True
         else:
             return False
-
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
