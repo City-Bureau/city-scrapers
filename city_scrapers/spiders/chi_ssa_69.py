@@ -19,21 +19,31 @@ class ChiSsa69Spider(CityScrapersSpider):
         in_two_months = today + timedelta(days=60)
 
         # I think there is a problem where the timezone in Chicago will be
-        # changing during tis two month periods
+        # changing during tis two month period
+
+        from dateutil import tz
+
+        # determine the current GMT offset for Chicago time (varies throughout the year)
+        current_chicago_time = datetime.now(tz.gettz('America/Chicago'))
+        current_chicago_time_gmt_offset = str(current_chicago_time)[-6:]
+        print(current_chicago_time)
+        print(current_chicago_time_gmt_offset)
 
         return [(
             "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
-            "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone=-05:00&"
-            "sanitizeHtml=true&timeMin={}T00:00:00-05:00&timeMax={}T00:00:00-05:00&"
+            "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone={}&"
+            "sanitizeHtml=true&timeMin={}T00:00:00{}&timeMax={}T00:00:00{}&"
             "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
         ).format(
-            last_week.strftime("%Y-%m-%d"),
-            in_two_months.strftime("%Y-%m-%d"),
+            current_chicago_time_gmt_offset,
+            last_week.strftime("%Y-%m-%d"), current_chicago_time_gmt_offset,
+            in_two_months.strftime("%Y-%m-%d"), current_chicago_time_gmt_offset
         )]
 
     def parse(self, response):
         data = json.loads(response.text)
-        print(self.start_urls)
+        # print(self.start_urls)
+
         # exit()
         print(data)
         # exit()
@@ -98,35 +108,6 @@ class ChiSsa69Spider(CityScrapersSpider):
             return item['description']
         except Exception:
             return ""
-
-    def _parse_classification_old(self, item):
-        """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
-
-    def _parse_start(self, item):
-        """Parse start datetime as a naive datetime object."""
-        if 'Dates:' in item:
-            print('have to deal with multiple dates')
-            return 'have to deal with multiple dates'
-        elif ' through ' in item:
-            # looks like a date range as opposed to a single day
-            print('have to deal with date range')
-            return 'have to deal with date range'
-        elif 'Date:' in item:
-            # inner_date_string = re.findall(r"(?:Date).*", item)
-            inner_date_string = item.split("Date: ", 1)[-1]
-
-            return inner_date_string
-
-        return None
-
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
-
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
