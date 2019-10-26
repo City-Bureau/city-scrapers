@@ -1,7 +1,5 @@
-# from datetime import datetime
 from os.path import dirname, join
 
-# import pytest
 from city_scrapers_core.constants import COMMISSION, COMMITTEE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
@@ -123,18 +121,6 @@ def test_links():
 
 
 def test_classification():
-    print("len=" + str(len(parsed_items)))
-
-    print(parsed_items[0])
-    print("\n\n")
-    print(parsed_items[1])
-    print("\n\n")
-    print(parsed_items[2])
-    print("\n\n")
-
-    print("len=" + str(len(parsed_items)))
-    # exit()
-
     assert parsed_items[0]["classification"] == COMMISSION
     assert parsed_items[1]["classification"] == COMMITTEE
     assert parsed_items[2]["classification"] == COMMITTEE

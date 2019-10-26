@@ -20,6 +20,7 @@ class ChiSsa69Spider(CityScrapersSpider):
 
         # I think there is a problem where the timezone in Chicago will be
         # changing during tis two month period
+        # This results in meeting times that look wrong (off by an hour)
 
         from dateutil import tz
 
@@ -40,11 +41,7 @@ class ChiSsa69Spider(CityScrapersSpider):
 
     def parse(self, response):
         data = json.loads(response.text)
-        # print(self.start_urls)
 
-        # exit()
-        # print(data)
-        # exit()
         for item in data["items"]:
             title = self._parse_title(item)
             location = self._parse_location(item)
@@ -60,7 +57,6 @@ class ChiSsa69Spider(CityScrapersSpider):
                 all_day=self._parse_all_day(item),
                 location=location,
                 links=[],
-                # source=response.url,
                 source=item["htmlLink"],
             )
             meeting['status'] = self._get_status(meeting, text=item["status"])
@@ -86,10 +82,6 @@ class ChiSsa69Spider(CityScrapersSpider):
             return datetime.strptime(dt_obj["date"], "%Y-%m-%d")
 
     def _parse_location(self, item):
-        # print(item["location"])
-        print(item)
-        # if item["location"] != '7901 S Racine Ave, Chicago, IL 60620, USA':
-        # exit()
         if "location" not in item:
             return
         split_loc = re.split(r"(?<=[a-z]), (?=\d)", item["location"])
@@ -98,7 +90,7 @@ class ChiSsa69Spider(CityScrapersSpider):
             address = split_loc[0]
 
             # Sometimes they put a room name in the location field and
-            # and address in the description
+            # and address in the description, so fix that
             if (
                 "Chicago" not in address and "Il" not in address
                 and "006th district police station" in address
@@ -128,7 +120,7 @@ class ChiSsa69Spider(CityScrapersSpider):
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
         # Since I don't see a calendar field for allDay
-        # I am going to set this to True if the lenght of the meeting
+        # I am going to set this to True if the length of the meeting
         # is greater than 4 hours
         meeting_duration = self._parse_dt(item["end"]) - self._parse_dt(item["start"])
         print(str(meeting_duration))
