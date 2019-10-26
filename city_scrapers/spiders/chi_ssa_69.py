@@ -18,15 +18,9 @@ class ChiSsa69Spider(CityScrapersSpider):
         last_week = today - timedelta(days=7)
         in_two_months = today + timedelta(days=60)
 
-        # I think there is a problem where the timezone in Chicago will be
-        # changing during tis two month period
-        # This results in meeting times that look wrong (off by an hour)
-
-        from dateutil import tz
-
-        # determine the current GMT offset for Chicago time (varies throughout the year)
-        current_chicago_time = datetime.now(tz.gettz('America/Chicago'))
-        current_chicago_time_gmt_offset = str(current_chicago_time)[-6:]
+        # we decided to go with a static offsetthat could be off by an hour
+        # should be good enough for naive datetime
+		chicago_time_gmt_offset = "-05:00"
 
         return [(
             "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
@@ -34,9 +28,9 @@ class ChiSsa69Spider(CityScrapersSpider):
             "sanitizeHtml=true&timeMin={}T00:00:00{}&timeMax={}T00:00:00{}&"
             "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
         ).format(
-            current_chicago_time_gmt_offset,
-            last_week.strftime("%Y-%m-%d"), current_chicago_time_gmt_offset,
-            in_two_months.strftime("%Y-%m-%d"), current_chicago_time_gmt_offset
+            chicago_time_gmt_offset,
+            last_week.strftime("%Y-%m-%d"), chicago_time_gmt_offset,
+            in_two_months.strftime("%Y-%m-%d"), chicago_time_gmt_offset
         )]
 
     def parse(self, response):
