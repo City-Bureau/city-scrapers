@@ -1,0 +1,49 @@
+name: CI Checks
+
+on: [push, pull_request]
+
+env:
+  CI: true
+  AUTOTHROTTLE_MAX_DELAY: 30.0
+  AUTOTHROTTLE_START_DELAY: 1.5
+  AUTOTHROTTLE_TARGET_CONCURRENCY: 3.0
+
+jobs:
+  check:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.5, 3.6, 3.7]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Check imports with isort
+      run: |
+        isort --check-only --diff || exit 1
+    - name: Check style with yapf
+      run: |
+        yapf --diff --recursive ./city_scrapers/ ./tests/ || exit 1
+    - name: Lint with flake8
+      run: |
+        flake8
+    - name: Test with pytest
+      run: |
+        pytest
+    - name: Validate output with scrapy
+      if: github.event_name == 'pull_request'
+      run: |
+        git checkout ${{ github.base_ref }}
+        git checkout $(git show-ref | grep pull | awk '{ print $2 }')
+        git diff-index --name-only --diff-filter=d $(git merge-base HEAD ${{ github.base_ref }}) | \
+        grep -Pio '(?<=/spiders/).*(?=\.py)' | \
+        xargs scrapy validate
