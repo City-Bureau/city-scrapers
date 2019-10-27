@@ -37,6 +37,8 @@ class ChiSsa69Spider(CityScrapersSpider):
             location = self._parse_location(item)
             if not location:
                 continue
+            if not title:
+                continue
             meeting = Meeting(
                 title=title,
                 description=self._parse_description(item),
@@ -54,7 +56,13 @@ class ChiSsa69Spider(CityScrapersSpider):
             yield meeting
 
     def _parse_title(self, item):
-        return re.sub(r" Meeting$", "", item["summary"].strip())
+        # ignore CPD and C.A.P.S meetings (tracked elsewhere)
+        if "CPD" in item["summary"]:
+            return False
+        # ignore festivals and things not containing "Meeting" or "SSA"
+        elif ("Meeting" not in item["summary"]) and ("SSA" not in item["summary"]):
+            return False
+        return item["summary"].replace("Meeting", "").strip()
 
     def _parse_classification(self, title):
         if "committee" in title.lower():
