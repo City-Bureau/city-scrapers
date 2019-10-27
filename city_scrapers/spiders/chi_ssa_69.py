@@ -85,19 +85,6 @@ class ChiSsa69Spider(CityScrapersSpider):
         name = ""
         if len(split_loc) == 1:
             address = split_loc[0]
-
-            # Sometimes they put a room name in the location field and
-            # and address in the description, so fix that
-            if (
-                "Chicago" not in address and "Il" not in address
-                and "006th district police station" in address
-            ):
-                name = address
-                lines_in_desc = re.split(r"\n", item["description"])
-                for line in lines_in_desc:
-                    if "Chicago" in line:
-                        address = line
-
         else:
             name = split_loc[0]
             address = ", ".join(split_loc[1:])
