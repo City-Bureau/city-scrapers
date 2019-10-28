@@ -17,7 +17,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         today = datetime.now()
         last_week = today - timedelta(days=7)
         in_two_months = today + timedelta(days=60)
-        chicago_timezone = "America/Chicago"
+        chicago_time_offset = "-05:00"
 
         return [(
             "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
@@ -25,8 +25,8 @@ class ChiSsa69Spider(CityScrapersSpider):
             "sanitizeHtml=true&timeMin={}T00:00:00{}&timeMax={}T00:00:00{}&"
             "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
         ).format(
-            chicago_timezone, last_week.strftime("%Y-%m-%d"), chicago_timezone,
-            in_two_months.strftime("%Y-%m-%d"), chicago_timezone
+            chicago_time_offset, last_week.strftime("%Y-%m-%d"), chicago_time_offset,
+            in_two_months.strftime("%Y-%m-%d"), chicago_time_offset
         )]
 
     def parse(self, response):
