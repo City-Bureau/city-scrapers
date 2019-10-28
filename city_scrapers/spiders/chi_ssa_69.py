@@ -35,9 +35,7 @@ class ChiSsa69Spider(CityScrapersSpider):
         for item in data["items"]:
             title = self._parse_title(item)
             location = self._parse_location(item)
-            if not location:
-                continue
-            if not title:
+            if not (location and title):
                 continue
             meeting = Meeting(
                 title=title,
