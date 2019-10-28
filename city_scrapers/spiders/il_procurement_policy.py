@@ -22,7 +22,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        if 'board_minutes' in response.url:
+        if 'future' in response.url:
             yield from self._upcoming_meetings(response)
         else:
             yield from self._prev_meetings(response)
