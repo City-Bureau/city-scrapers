@@ -35,7 +35,8 @@ class IlArtsCouncilSpider(CityScrapersSpider):
                     source=self._parse_source(response),
                 )
 
-                meeting["status"] = self._get_status(meeting)
+                meeting["status"] = self._get_status(item,
+                                                     text=item.xpath('td[2]/text()').get())
                 meeting["id"] = self._get_id(meeting)
 
                 yield meeting
