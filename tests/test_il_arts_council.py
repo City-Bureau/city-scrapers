@@ -55,17 +55,17 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "http://www.arts.illinois.gov/about-iac/governance/council-meetings"  # noqa
+    assert parsed_items[0][
+        "source"] == "http://www.arts.illinois.gov/about-iac/governance/council-meetings"  # noqa
 
 
 def test_links():
     print(parsed_items[8]["links"])
-    assert parsed_items[8]["links"] == [
-        {
-            'href': 'http://www.arts.illinois.gov/sites/default/files/content/11-16-18%20COUNCILMINUTES.pdf',  # noqa
-            'title': '11-16-18 COUNCILMINUTES.pdf'
-        }
-    ]
+    assert parsed_items[8]["links"] == [{
+        'href':
+            'http://www.arts.illinois.gov/sites/default/files/content/11-16-18%20COUNCILMINUTES.pdf',  # noqa
+        'title': '11-16-18 COUNCILMINUTES.pdf'
+    }]
 
 
 def test_classification():

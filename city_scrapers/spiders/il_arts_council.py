@@ -88,7 +88,8 @@ class IlArtsCouncilSpider(CityScrapersSpider):
             location = item.xpath('td[2]/a/text()').get()
 
         jrtc = {
-            "address": "James R. Thompson Center, 100 West Randolph, Suite 10-500, Chicago, IL 60601",  # noqa
+            "address":
+                "James R. Thompson Center, 100 West Randolph, Suite 10-500, Chicago, IL 60601",  # noqa
             "name": "IACA/JRTC"
         }
 
@@ -114,12 +115,7 @@ class IlArtsCouncilSpider(CityScrapersSpider):
         agenda_link = item.xpath('td/a/@href').get()
         if agenda_link:
             title = agenda_link.split('/')[-1].replace('%20', ' ')
-            return [
-                {
-                    "href": agenda_link,
-                    "title": title
-                }
-            ]
+            return [{"href": agenda_link, "title": title}]
         return [{"href": "", "title": ""}]
 
     def _parse_source(self, response):
