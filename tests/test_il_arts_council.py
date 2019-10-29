@@ -60,7 +60,6 @@ def test_source():
 
 
 def test_links():
-    print(parsed_items[8]["links"])
     assert parsed_items[8]["links"] == [{
         'href':
             'http://www.arts.illinois.gov/sites/default/files/content/11-16-18%20COUNCILMINUTES.pdf',  # noqa

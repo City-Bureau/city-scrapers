@@ -31,7 +31,7 @@ class IlArtsCouncilSpider(CityScrapersSpider):
                     all_day=self._parse_all_day(item),
                     time_notes=self._parse_time_notes(item),
                     location=self._parse_location(item),
-                    links=self._parse_links(item),
+                    links=self._parse_links(item, response),
                     source=self._parse_source(response),
                 )
 
@@ -110,11 +110,13 @@ class IlArtsCouncilSpider(CityScrapersSpider):
                 "name": "",
             }
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
         agenda_link = item.xpath('td/a/@href').get()
         if agenda_link:
             title = agenda_link.split('/')[-1].replace('%20', ' ')
+            if 'www.arts.illinois.gov' not in agenda_link:
+                agenda_link = response.urljoin(agenda_link)
             return [{"href": agenda_link, "title": title}]
         return []
 
