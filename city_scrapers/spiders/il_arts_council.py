@@ -1,5 +1,5 @@
-from datetime import datetime as dt
 import unicodedata
+from datetime import datetime as dt
 
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
