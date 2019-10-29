@@ -89,8 +89,7 @@ class IlArtsCouncilSpider(CityScrapersSpider):
             location = item.xpath('td[2]/a/text()').get()
 
         jrtc = {
-            "address":
-                "100 West Randolph, Suite 10-500, Chicago, IL 60601",
+            "address": "100 West Randolph, Suite 10-500, Chicago, IL 60601",
             "name": "IACA/JRTC"
         }
 
