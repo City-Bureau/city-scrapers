@@ -43,11 +43,11 @@ class IlArtsCouncilSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return "Board Meeting"
+        return "Agency Board"
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        return "llinois Arts Council Agency Board Meeting"
+        return ""
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
@@ -90,7 +90,7 @@ class IlArtsCouncilSpider(CityScrapersSpider):
 
         jrtc = {
             "address":
-                "James R. Thompson Center, 100 West Randolph, Suite 10-500, Chicago, IL 60601",  # noqa
+                "100 West Randolph, Suite 10-500, Chicago, IL 60601",
             "name": "IACA/JRTC"
         }
 
@@ -117,7 +117,7 @@ class IlArtsCouncilSpider(CityScrapersSpider):
         if agenda_link:
             title = agenda_link.split('/')[-1].replace('%20', ' ')
             return [{"href": agenda_link, "title": title}]
-        return [{"href": "", "title": ""}]
+        return []
 
     def _parse_source(self, response):
         """Parse or generate source."""

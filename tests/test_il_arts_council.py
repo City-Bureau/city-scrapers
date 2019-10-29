@@ -23,11 +23,11 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Board Meeting"
+    assert parsed_items[0]["title"] == "Agency Board"
 
 
 def test_description():
-    assert parsed_items[0]["description"] == "llinois Arts Council Agency Board Meeting"
+    assert parsed_items[0]["description"] == ""
 
 
 def test_start():
@@ -43,7 +43,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_arts_council/202005150000/x/board_meeting"
+    assert parsed_items[0]["id"] == "il_arts_council/202005150000/x/agency_board"
 
 
 def test_status():
