@@ -16,8 +16,6 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
     }
 
     def parse(self, response):
-        """
-        """
         for item in response.xpath("//tbody/tr"):
             self._validate_location(item)
             meeting = Meeting(
