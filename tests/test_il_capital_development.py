@@ -43,7 +43,8 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_capital_development/201907091100/x/cdb_board_meeting"
+    assert parsed_items[0]["id"
+                           ] == "il_capital_development/201907091100/x/capital_development_board"
 
 
 def test_status():
