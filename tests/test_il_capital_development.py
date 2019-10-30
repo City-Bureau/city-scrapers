@@ -63,19 +63,23 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        'href':
-            'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/TableOfContentsWEB-July.pdf',
-        'title': ' Agenda'
-    }, {
-        'href':
-            'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/July%20Board%20Book%20-%20Public.pdf',
-        'title': ' Board Book'
-    }, {
-        'href':
-            'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/07.09.19%20Meeting%20Minutes.docx',
-        'title': ' Meeting Minutes'
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            'href':
+                'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/TableOfContentsWEB-July.pdf',  # noqa
+            'title': ' Agenda'
+        },
+        {
+            'href':
+                'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/July%20Board%20Book%20-%20Public.pdf',  # noqa
+            'title': ' Board Book'
+        },
+        {
+            'href':
+                'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/07.09.19%20Meeting%20Minutes.docx',  # noqa
+            'title': ' Meeting Minutes'
+        }
+    ]
 
 
 def test_classification():
