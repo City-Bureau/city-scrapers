@@ -23,11 +23,11 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "CDB Board Meeting"
+    assert parsed_items[0]["title"] == "Capital Development Board"
 
 
 def test_description():
-    assert parsed_items[0]["description"] == "video-conference"
+    assert parsed_items[0]["description"] == ""
 
 
 def test_start():

@@ -21,31 +21,22 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
         for item in response.xpath("//tbody/tr"):
             self._validate_location(item)
             meeting = Meeting(
-                title="CDB Board Meeting",
-                description=self._parse_description(item),
+                title="Capital Development Board",
+                description="",
                 classification=BOARD,
                 start=self._parse_start(item),
                 end=self._parse_end(item),
                 all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
+                time_notes="",
                 location=self.location,
                 links=self._parse_links(item),
                 source=self._parse_source(response),
             )
 
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting, text=item.xpath('.//td/text()').get())
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
-
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        description = item.xpath('.//td/text()').get()
-        for i in ["Chicago,", "Chicago", "Springfield", "&", "Collinsville"]:
-            if i in description:
-                description = description.replace(i, '')
-        description = description.lstrip()
-        return description
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
@@ -62,14 +53,6 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
         end += timedelta(days=1)
         return end
 
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        time_notes = item.xpath('.//td/text()').get()
-        if any(x in time_notes.lower() for x in ["rescheduled", "cancelled", "changed"]):
-            return time_notes
-        else:
-            return ""
-
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
         return False
@@ -83,7 +66,10 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         for href in item.xpath('.//ul/li/a'):
-            links.append({"title": href.xpath('text()').get(), "href": href.xpath('@href').get()})
+            links.append({
+                "title": href.xpath('text()').get().strip(),
+                "href": href.xpath('@href').get().strip()
+            })
         return links
 
     def _parse_source(self, response):
