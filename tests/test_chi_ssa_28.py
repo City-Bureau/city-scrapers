@@ -69,7 +69,7 @@ def test_links():
             'title': 'agenda'
         },
         {
-            'href': '/s/1_17_19-SSA-Minutes-reformatted.pdf',
+            'href': 'https://sixcorners.com/s/1_17_19-SSA-Minutes-reformatted.pdf',
             'title': 'minutes'
         }
     ]

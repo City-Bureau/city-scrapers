@@ -31,7 +31,7 @@ class ChiSsa28Spider(CityScrapersSpider):
                 all_day=self._parse_all_day(date),
                 time_notes="",
                 location=self.location,
-                links=self._parse_links(item, date, dates),
+                links=self._parse_links(item, date, dates, response),
                 source=self._parse_source(response),
             )
 
@@ -65,7 +65,7 @@ class ChiSsa28Spider(CityScrapersSpider):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    def _parse_links(self, item, date, dates):
+    def _parse_links(self, item, date, dates, response):
         """Parse or generate links. Uses the index from the dates list."""
         links = []
         if dates.index(date) == 0:
@@ -80,7 +80,7 @@ class ChiSsa28Spider(CityScrapersSpider):
             if href:
                 links.append({
                     "title": href.xpath('.//text()').get(),
-                    "href": href.xpath('.//@href').get()
+                    "href": response.urljoin(href.xpath('.//@href').get())
                 })
         return links
 
