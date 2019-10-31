@@ -1,93 +1,101 @@
+import re
+from collections import defaultdict
+from datetime import datetime
+from itertools import zip_longest
+
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from dateutil.parser import parse
+
+
+def grouper(n, iterable, fillvalue=None):
+    """From itertools recipes"""
+    args = [iter(iterable)] * n
+    return zip_longest(fillvalue=fillvalue, *args)
 
 
 class IlLaborSpider(CityScrapersSpider):
-    name = 'il_labor'
-    agency = 'Illinois Labor Relations Board'
-    start_urls = ['https://www2.illinois.gov/ilrb/meetings/Pages/default.aspx']
-    event_timezone = 'America/Chicago'
-    """
-    This page only lists the next upcoming meeting for each of the three boards.
-    All other meetingd dates are `proposed` and only available via PDF.
-    """
+    name = "il_labor"
+    agency = "Illinois Labor Relations Board"
+    start_urls = ["https://www2.illinois.gov/ilrb/meetings/Pages/default.aspx"]
+    event_timezone = "America/Chicago"
+    location = {
+        "name": "Room S-401",
+        "address": "160 N LaSalle St, Chicago, IL 60602",
+    }
+
     def parse(self, response):
-        for item in response.css('.soi-article-content .container > .row > p'):
-            """
-            Some monthly meetings are skipped. Instead of providing a date,
-            there's text that says 'No /name/ meeting in month'.
-            If the date/time info can't be parsed, assume that it is a `no meeting`
-            notice.
-            """
+        agenda_map = self._parse_links(response)
+        content_lines = response.css(".soi-article-content * *::text").extract()
+        clean_lines = [re.sub(r"\s+", " ", l).strip() for l in content_lines if l.strip()]
+        content = "\n".join(clean_lines)
+        meeting_split = re.split(r"^([A-Z ]+)$", content, flags=re.M)
+        if not re.match(r"^[A-Z ]+$", meeting_split[0]):
+            meeting_split = meeting_split[1:]
+
+        for title_str, item in grouper(2, meeting_split, fillvalue=""):
+            title = self._parse_title(title_str)
             start = self._parse_start(item)
-            if start is None:
+            if not start:
                 continue
-            title = self._parse_title(item)
             meeting = Meeting(
                 title=title,
-                description=self._parse_description(response),
+                description="",
                 classification=BOARD,
                 start=start,
                 end=None,
-                time_notes='',
+                time_notes="",
                 all_day=False,
                 location=self._parse_location(item),
-                links=self._parse_links(item, response),
+                links=agenda_map[title],
                 source=response.url,
             )
-            meeting['id'] = self._get_id(meeting)
-            meeting['status'] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting, text=" ".join([title_str, item]))
+            meeting["id"] = self._get_id(meeting)
             yield meeting
 
-    def _parse_location(self, item):
-        """
-        Get address from the next paragraph following the event item.
-        Note: the structure of the page is not consistent. Usually the
-        next row contains the meeting time, but sometimes
-        multiple meeting locations are listed within a single div.
-        """
-        addr_in_row = item.xpath('following-sibling::*//p//text()')
-        addr_next_row = item.xpath('../following-sibling::div[1]//p//text()')
-        address_list = addr_in_row if len(addr_in_row) > 0 else addr_next_row
-        chi_address_list = [
-            addr.replace('\xa0', '').strip()
-            for addr in address_list.extract()
-            if 'chicago' in addr.lower()
-        ]
-        return {'address': chi_address_list[0], 'name': ''}
-
-    def _parse_title(self, item):
-        """
-        Get meeting title from the first `<strong>`.
-        """
-        name = item.css('a::text').extract_first()
-        if name:
-            return name.title()
-        return item.css('strong::text').extract_first().title()
-
-    def _parse_description(self, response):
-        """
-        No meeting-specific description, so use a generic description from page.
-        """
-        return response.css('#ctl00_PlaceHolderMain_ctl01__ControlWrapper_RichHtmlField p::text'
-                            ).extract_first().strip()
+    def _parse_title(self, title_str):
+        return re.sub(r" meeting$", "", title_str.strip(), flags=re.I).strip().title()
 
     def _parse_start(self, item):
-        """
-        Parse start date and time from the second `<strong>`
-        """
-        try:
-            dt_str = item.css('strong:nth-of-type(2)::text').extract_first()
-            if not dt_str:
-                dt_str = item.css('strong:nth-of-type(3)::text').extract_first()
-            return parse(dt_str or '')
-        except ValueError:
-            return None
+        """Parse start date and time from item text"""
+        date_line = " ".join(item.split("\n")[1:])
+        date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2}", date_line)
+        if not date_match:
+            return
+        year_str = str(datetime.now().year)
+        year_match = re.search(r"\d{4}", date_line)
+        if year_match:
+            year_str = year_match.group()
 
-    def _parse_links(self, item, response):
-        href = item.css('a::attr(href)').extract_first()
-        if href:
-            return [{'href': response.urljoin(href), 'title': 'Agenda'}]
-        return []
+        date_str = " ".join([date_match.group().replace(",", ""), year_str])
+        time_match = re.search(r"\d{1,2}:\d{2} ?[apm\.]{2,4}", item, flags=re.I)
+        time_str = "12:00am"
+        if time_match:
+            time_str = re.sub(r"[ \.]", "", time_match.group())
+        return datetime.strptime(" ".join([date_str, time_str]), "%B %d %Y %I:%M%p")
+
+    def _parse_location(self, item):
+        addr_matches = re.findall(r"^\d+ .*$", item, flags=re.M | re.DOTALL)
+        if "160 N" in item or len(addr_matches) == 0:
+            return self.location
+        chi_addrs = [a for a in addr_matches if "Chicago" in a]
+        if len(chi_addrs) == 0:
+            addr_str = addr_matches[0]
+        else:
+            addr_str = chi_addrs[0]
+        return {
+            "name": "",
+            "address": addr_str.replace(" and").strip(),
+        }
+
+    def _parse_links(self, response):
+        agenda_map = defaultdict(list)
+        for link in response.css(".soi-article-content a"):
+            link_title = " ".join(link.css("*::text").extract()).strip()
+            meeting_title = self._parse_title(link_title)
+            agenda_map[meeting_title].append({
+                "title": "Agenda",
+                "href": response.urljoin(link.attrib["href"]),
+            })
+        return agenda_map
