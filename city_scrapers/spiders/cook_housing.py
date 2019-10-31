@@ -1,3 +1,6 @@
+import json
+import re
+from collections import defaultdict
 from datetime import datetime
 
 from city_scrapers_core.constants import BOARD, NOT_CLASSIFIED
@@ -10,80 +13,97 @@ class CookHousingSpider(CityScrapersSpider):
     name = "cook_housing"
     agency = "Cook County Housing Authority"
     timezone = "America/Chicago"
-
-    @property
-    def start_urls(self):
-        """Pull events from the calendar pages for 2 months past through 2 months ahead"""
-        now = datetime.now()
-        urls = []
-        for months_delta in range(-2, 3):
-            month_str = (now + relativedelta(months=months_delta)).strftime("%Y-%m")
-            urls.append("http://thehacc.org/events/{}".format(month_str))
-        return urls
+    start_urls = ["http://thehacc.org/about/"]
+    location = {
+        "name": "HACC Central Office Board Room",
+        "address": "175 West Jackson, Suite 350, Chicago, IL 60604",
+    }
 
     def parse(self, response):
+        self.link_date_map = defaultdict(list)
+        for link in response.css(".additional-resources li a"):
+            link_title = re.sub(r"\s+", " ", " ".join(link.css("*::text").extract()).strip())
+            date_match = re.search(r"[a-zA-Z]{3,10} \d{1,2}([a-z]{2})?,? \d{4}", link_title)
+            if not date_match:
+                continue
+            date_str = re.sub(r"((?<=\d)[a-z]+|,)", "", date_match.group())
+            link_date = datetime.strptime(date_str, "%B %d %Y").date()
+            if "agenda" in link_title.lower():
+                link_title = "Agenda"
+            elif "minutes" in link_title.lower():
+                link_title = "Minutes"
+            self.link_date_map[link_date].append({
+                "title": link_title,
+                "href": response.urljoin(link.attrib["href"]),
+            })
+
+        now = datetime.now()
+        for months_delta in range(-2, 3):
+            month_str = (now + relativedelta(months=months_delta)).strftime("%Y-%m")
+            yield response.follow("/events/{}/".format(month_str), callback=self._parse_calendar)
+
+    def _parse_calendar(self, response):
         """
         `parse` should always `yield` Meeting items.
         """
-        for item in response.xpath('//div[@class="item-wrapper"]'):
-            classification = self._parse_classification(item)
+        year_str = re.search(r"\d{4}", response.url).group()
+        for event in response.css(".type-tribe_events"):
+            item = json.loads(event.attrib["data-tribejson"])
+            classification = self._parse_classification(item["title"])
             if classification == BOARD:
+                start = self._parse_dt(item["startTime"], year_str)
                 meeting = Meeting(
-                    title=self._parse_title(item),
+                    title=self._parse_title(item["title"]),
                     description="",
                     classification=BOARD,
-                    start=self._parse_times(item)[0],
-                    end=self._parse_times(item)[1],
+                    start=start,
+                    end=self._parse_dt(item["endTime"], year_str),
                     all_day=False,
                     time_notes="",
                     location=self._parse_location(item),
-                    links=[],
-                    source=self._parse_source(item),
+                    links=self.link_date_map[start.date()],
+                    source=item["permalink"],
                 )
 
-                meeting["status"] = self._get_status(meeting)
+                meeting["status"] = self._get_status(meeting, text=item["excerpt"])
                 meeting["id"] = self._get_id(meeting)
 
                 yield meeting
 
     @staticmethod
-    def _parse_title(item):
+    def _parse_title(title):
         """Parse or generate meeting title."""
-        title = item.xpath(".//a/text()[normalize-space(.)]").get().strip()
-        if title == "Housing Authority of Cook County Board Meeting":
+        if "board meeting" in title.lower():
             return "Board of Commissioners"
         return title
 
     @staticmethod
-    def _parse_classification(item):
+    def _parse_classification(title):
         """Parse or generate classification from allowed options."""
-        title = item.xpath(".//a/text()[normalize-space(.)]").get().lower()
-        if 'board' in title:
+        if "board" in title.lower():
             return BOARD
         return NOT_CLASSIFIED
 
     @staticmethod
-    def _parse_times(item):
+    def _parse_dt(date_str, year_str):
         """Parse start and end datetimes as a naive datetime object."""
-        month = item.xpath('.//span[@class="month"]/text()').get().strip()
-        day = item.xpath('.//span[@class="day"]/text()').get().strip()
-        year = item.xpath('//div[@class="header"]/span[@class="month"]/text()').get().split()[1]
-        ddate = datetime.strptime("%s %s %s" % (month, day, year), "%b %d %Y").date()
+        return datetime.strptime(" ".join([year_str, date_str]), "%Y %B %d @ %I:%M %p")
 
-        times = item.xpath('.//p[@class="subtitle"]/br/following-sibling::text()').get().strip()
-        ttimes = [datetime.strptime(item, "%I:%M %p") for item in times.split(" - ")]
-
-        return datetime.combine(ddate, ttimes[0].time()), datetime.combine(ddate, ttimes[1].time())
-
-    @staticmethod
-    def _parse_location(item):
+    def _parse_location(self, item):
         """Parse or generate location."""
-        times = item.xpath('.//p[@class="subtitle"]/br/following-sibling::text()').get().strip()
-        address = item.xpath('.//div[@class="info"]/p/text()').get().replace(times, '').strip()
-        name = item.xpath('.//p[@class="subtitle"]/text()').get().strip()
-        return {"address": address + ", Chicago, IL", "name": name}
-
-    @staticmethod
-    def _parse_source(item):
-        """Parse or generate source."""
-        return item.xpath('.//div[@class="info"]//a/@href').get()
+        desc_str = item["excerpt"]
+        if "175 W" in desc_str:
+            return self.location
+        addr_match = re.search(r"(?<=[\< ])\d+ .*(?=\<)", item["excerpt"])
+        if not addr_match:
+            return {
+                "name": "TBD",
+                "address": "",
+            }
+        addr_str = addr_match.group()
+        if "Chicago" not in addr_str:
+            addr_str += " Chicago, IL"
+        return {
+            "name": "",
+            "address": addr_str,
+        }
