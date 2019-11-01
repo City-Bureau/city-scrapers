@@ -30,7 +30,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
     def _parse_title(self, item):
         """Parse or generate meeting title."""
         title_str = item['title'].split()
-        name_str = title_str[len(title_str) - 1].join(" Board Meeting Minutes")
+        name_str = title_str[len(title_str) - 1] + " Board Meeting Minutes"
         return name_str
 
     def _parse_description(self, item):
@@ -71,7 +71,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         return links
 
     def _parse_past_links(self, response):
-        """append title to string using link[title]"""
+        """parse start datetime as a naive datetime object"""
         links = []
         for item in response.css(".ms-rtestate-field p a")[0:]:
             title_str = " ".join(item.css("*::text").extract()).strip()
@@ -81,6 +81,15 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                 'href': response.urljoin(item.attrib['href'])
             })
         return links
+
+    def _past_start(self, item):
+        """parse or generate links from past meetings"""
+        time_object = time(10,0)
+        date_str = item['title']
+        if '.pdf' in date_str:
+            date_str = re.sub(".pdf", "", date_str).strip()
+        date_object = datetime.strptime(date_str, "%B %d, %Y").date()
+        return datetime.combine(date_object, time_object)
 
     def _parse_source(self, response):
         """Parse or generate source."""
@@ -114,7 +123,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                 title= self._parse_title(item),
                 description='',
                 classification=BOARD,
-                start=datetime.now(),
+                start=self._past_start(item),
                 end=None,
                 all_day=False,
                 time_notes='End time not specified',
