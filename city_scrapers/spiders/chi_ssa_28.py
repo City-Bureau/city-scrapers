@@ -10,7 +10,10 @@ class ChiSsa28Spider(CityScrapersSpider):
     agency = "Chicago Special Service Area #28 Six Corners"
     timezone = "America/Chicago"
     start_urls = ["https://sixcorners.com/ssa28"]
-    location = {"name": "Portage Arts Lofts", "address": "4041 N. Milwaukee Ave. #302"}
+    location = {
+        "name": "Portage Arts Lofts",
+        "address": "4041 N. Milwaukee Ave. #302, Chicago, IL 60641"
+    }
 
     def parse(self, response):
         """Since the meeting dates are in an unordered text block, we'll need to parse
@@ -20,14 +23,15 @@ class ChiSsa28Spider(CityScrapersSpider):
         dates = response.xpath('//div[@class="col sqs-col-3 span-3"]/div/div/p[2]/text()').getall()
         dates = [d.strip(', ')[:-2] for d in dates]
         dates = [d for d in dates if d]
+        self._validate_location(response)
         for date in dates:
             item = response.xpath('//div[@class="col sqs-col-3 span-3"]/div/div/p[2]')
             meeting = Meeting(
-                title="Six Corners Association Meeting",
+                title="Six Corners Commission",
                 description="",
                 classification=self._parse_classification(date),
                 start=self._parse_start(item, date),
-                end=self._parse_end(item, date),
+                end=None,
                 all_day=self._parse_all_day(date),
                 time_notes="",
                 location=self.location,
@@ -40,6 +44,12 @@ class ChiSsa28Spider(CityScrapersSpider):
 
             yield meeting
 
+    def _validate_location(self, response):
+        if "4041 N" not in response.xpath(
+            '//div[@class="col sqs-col-3 span-3"]/div/div/p[1]/em/text()'
+        ).get():
+            raise ValueError("Meeting location has changed")
+
     def _parse_classification(self, date):
         """Parse or generate classification from allowed options."""
         return COMMISSION
@@ -51,15 +61,6 @@ class ChiSsa28Spider(CityScrapersSpider):
         start_time = "1:30 PM"
         start = datetime.strptime(start_date + start_year + start_time, "%B %d%Y%H:%M %p")
         return start
-
-    def _parse_end(self, item, date):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        end_year = item.xpath('.//strong/text()').get()
-        end_date = date
-        end_time = "12:00 AM"
-        end = datetime.strptime(end_date + end_year + end_time, "%B %d%Y%H:%M %p")
-        end += timedelta(days=1)
-        return end
 
     def _parse_all_day(self, date):
         """Parse or generate all-day status. Defaults to False."""

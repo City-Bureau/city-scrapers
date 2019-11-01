@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Six Corners Association Meeting"
+    assert parsed_items[0]["title"] == "Six Corners Commission"
 
 
 def test_description():
@@ -34,16 +34,12 @@ def test_start():
     assert parsed_items[0]["start"] == datetime(2019, 1, 17, 1, 30)
 
 
-def test_end():
-    assert parsed_items[0]["end"] == datetime(2019, 1, 18, 12, 0)
-
-
 def test_time_notes():
     assert parsed_items[0]["time_notes"] == ""
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_28/201901170130/x/six_corners_association_meeting"
+    assert parsed_items[0]["id"] == "chi_ssa_28/201901170130/x/six_corners_commission"
 
 
 def test_status():
@@ -53,7 +49,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Portage Arts Lofts",
-        "address": "4041 N. Milwaukee Ave. #302"
+        "address": "4041 N. Milwaukee Ave. #302, Chicago, IL 60641"
     }
 
 
