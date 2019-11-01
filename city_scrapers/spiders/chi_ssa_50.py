@@ -1,6 +1,7 @@
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from datetime import datetime
 
 
 class ChiSsa50Spider(CityScrapersSpider):
@@ -8,25 +9,24 @@ class ChiSsa50Spider(CityScrapersSpider):
     agency = "Chicago Special Service Area"
     timezone = "America/Chicago"
     start_urls = ["http://southeastchgochamber.org/special-service-area-50/"]
+    base_xpath = '//div[@class="entry-content"]'
+    item_xpath = base_xpath + '//p[@style="text-align: center;"]/text()'
 
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
+        title = self._parse_title(response)
+        description = self._parse_description(response)
 
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
-        """
-        for item in response.css(".meetings"):
+        for item in response.xpath(self.item_xpath).getall():
             meeting = Meeting(
-                title=self._parse_title(item),
-                description=self._parse_description(item),
+                title=title,
+                description=description,
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
                 end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
-                links=self._parse_links(item),
+                all_day=self._parse_all_day(),
+                time_notes=self._parse_time_notes(),
+                location=self._parse_location(),
+                links=self._parse_links(),
                 source=self._parse_source(response),
             )
 
@@ -35,45 +35,41 @@ class ChiSsa50Spider(CityScrapersSpider):
 
             yield meeting
 
-    def _parse_title(self, item):
-        """Parse or generate meeting title."""
-        return ""
+    def _parse_title(self, response):
+        title = response.css("title::text").get()
+        return title
 
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
+    def _parse_description(self, response):
+        description_xpath = '//div[@class="container-fluid page-full-description-above"]'
+        description_content = '//div[@class="row"]//div["col-xs-12"]//p/text()'
+        description = response.xpath(self.base_xpath + description_xpath + description_content).get()
+        return description
 
     def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
         return NOT_CLASSIFIED
 
     def _parse_start(self, item):
-        """Parse start datetime as a naive datetime object."""
-        return None
+        date = datetime.strptime(item, "%B %d, %Y")
+        return date
 
     def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+        date = datetime.strptime(item, "%B %d, %Y")
+        return date
 
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
+    def _parse_time_notes(self):
         return ""
 
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
+    def _parse_all_day(self):
         return False
 
-    def _parse_location(self, item):
-        """Parse or generate location."""
+    def _parse_location(self):
         return {
-            "address": "",
-            "name": "",
+            "address": "8334 S Stony Island Ave, Chicago, IL 60617",
+            "name": "Southeast Chicago Chamber",
         }
 
-    def _parse_links(self, item):
-        """Parse or generate links."""
+    def _parse_links(self):
         return [{"href": "", "title": ""}]
 
     def _parse_source(self, response):
-        """Parse or generate source."""
         return response.url
