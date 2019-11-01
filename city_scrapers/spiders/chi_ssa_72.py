@@ -86,11 +86,8 @@ class ChiSsa72Spider(CityScrapersSpider):
         """Parse or generate links."""
         links = item.xpath('./font/strong/em/a')
         if links:
-            return [
-                {
-                    "href": response.urljoin(link.xpath('./@href').get()),
-                    "title": link.xpath('./text()').get()
-                }
-                for link in links
-            ]
+            return [{
+                "href": response.urljoin(link.xpath('./@href').get()),
+                "title": link.xpath('./text()').get()
+            } for link in links]
         return []
