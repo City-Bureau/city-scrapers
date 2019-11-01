@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
