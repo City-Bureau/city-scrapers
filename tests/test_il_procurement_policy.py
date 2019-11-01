@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, PASSED
+from city_scrapers_core.constants import BOARD, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -42,7 +42,7 @@ def test_end():
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+    assert parsed_items[0]["time_notes"] == "End time not specified"
 
 
 def test_id():
@@ -50,7 +50,7 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[0]['status'] == TENTATIVE
 
 
 def test_location():
@@ -65,10 +65,7 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx",
-       "title": "October 15, 2019 Agenda"
-    }]
+    assert parsed_items[0]["links"][0]['href'] == 'https://www2.illinois.gov/sites/ppb/Documents/191015%20Agenda.pdf'
 
 
 def test_classification():

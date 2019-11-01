@@ -73,7 +73,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
     def _parse_past_links(self, response):
         """parse start datetime as a naive datetime object"""
         links = []
-        for item in response.css(".ms-rtestate-field p a")[0:]:
+        for item in response.css(".ms-rtestate-field p a"):
             title_str = " ".join(item.css("*::text").extract()).strip()
             title_str = re.sub(".pdf", "", title_str).strip()
             links.append({
@@ -96,7 +96,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         return response.url
     
     def _upcoming_meetings(self, response):
-        for item in response.css(".ms-rtestate-field p strong a")[0:]:
+        for item in response.css(".ms-rtestate-field p strong a"):
             meeting = Meeting(
                 title='Procurement Policy Board',
                 description='',
