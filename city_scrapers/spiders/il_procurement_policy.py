@@ -29,7 +29,9 @@ class IlProcurementPolicySpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return ""
+        title_str = item['title'].split()
+        name_str = title_str[len(title_str) - 1].join(" Board Meeting Minutes")
+        return name_str
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -59,12 +61,25 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         title_str = " ".join(item.css("*::text").extract()).strip()
-        title_str = re.sub("Agenda.pdf", "", title_str).strip()
-        title_str += " Agenda"
+        if 'pdf' in title_str:
+            title_str = re.sub("Agenda.pdf", "", title_str).strip()
+            title_str += " Agenda"
         links.append({
             'title': title_str,
             'href': response.urljoin(item.attrib['href']),
         })
+        return links
+
+    def _parse_past_links(self, response):
+        """append title to string using link[title]"""
+        links = []
+        for item in response.css(".ms-rtestate-field p a")[0:]:
+            title_str = " ".join(item.css("*::text").extract()).strip()
+            title_str = re.sub(".pdf", "", title_str).strip()
+            links.append({
+                'title': title_str,
+                'href': response.urljoin(item.attrib['href'])
+            })
         return links
 
     def _parse_source(self, response):
@@ -93,4 +108,23 @@ class IlProcurementPolicySpider(CityScrapersSpider):
             yield meeting
 
     def _prev_meetings(self, response):
-        yield None
+        meets = self._parse_past_links(response)
+        for item in meets:
+            meeting = Meeting(
+                title= self._parse_title(item),
+                description='',
+                classification=BOARD,
+                start=datetime.now(),
+                end=None,
+                all_day=False,
+                time_notes='End time not specified',
+                location = {
+                    'name': 'Stratton Office Building',
+                    'address': '401 S Spring St, Springfield, IL 62704',
+                },
+                links=item,
+                source=response.url,
+            )
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
+            yield meeting
