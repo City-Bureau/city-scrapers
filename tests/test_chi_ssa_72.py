@@ -47,7 +47,7 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "passed"
+    assert parsed_items[0]["status"] == "cancelled"
 
 
 def test_location():

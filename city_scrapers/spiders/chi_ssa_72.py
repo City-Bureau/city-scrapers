@@ -27,11 +27,12 @@ class ChiSsa72Spider(CityScrapersSpider):
         """
         year = response.xpath('//u/font/strong/em/text()').get()[0:4]
         for item in response.xpath('//ol/li'):
+            date_text = item.xpath('./font/strong/em/text()').get()
             meeting = Meeting(
                 title=self.title,
                 description="",
                 classification=COMMISSION,
-                start=self._parse_start(item, year),
+                start=self._parse_start(date_text, year),
                 end=None,
                 all_day=False,
                 time_notes="",
@@ -40,15 +41,13 @@ class ChiSsa72Spider(CityScrapersSpider):
                 source=response.url,
             )
 
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting, text=date_text)
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
 
-    def _parse_start(self, item, year):
+    def _parse_start(self, date_text, year):
         """Parse start datetime as a naive datetime object."""
-        date_text = item.xpath('./font/strong/em/text()').get()
-
         def _date_helper(text):
             day_str_with_suffix, time_str_raw = stripped_text.split(',')
             day_str = day_str_with_suffix[:-2]
