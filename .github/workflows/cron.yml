@@ -16,6 +16,9 @@ env:
   AZURE_CONTAINER: ${{ secrets.AZURE_CONTAINER }}
   AZURE_STATUS_CONTAINER: ${{ secrets.AZURE_STATUS_CONTAINER }}
   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  OPENVPN_USER: ${{ secrets.OPENVPN_USER }}
+  OPENVPN_PASS: ${{ secrets.OPENVPN_PASS }}
+  OPENVPN_CONFIG: ${{ secrets.OPENVPN_CONFIG }}
 
 jobs:
   crawl:
@@ -26,6 +29,14 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.7
+    - name: Connect to OpenVPN
+      run: |
+        sudo apt-get install -y openvpn
+        echo "$OPENVPN_USER" | sudo tee -a /etc/openvpn/client/auth
+        echo "$OPENVPN_PASS" | sudo tee -a /etc/openvpn/client/auth
+        echo "$OPENVPN_CONFIG" | sudo tee -a /etc/openvpn/ovpn.conf
+        sudo openvpn --config /etc/openvpn/ovpn.conf --daemon
+        sleep 120
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
