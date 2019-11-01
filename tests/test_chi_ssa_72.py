@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.constants import CANCELLED, COMMISSION
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -47,7 +47,7 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "cancelled"
+    assert parsed_items[0]["status"] == CANCELLED
 
 
 def test_location():
@@ -62,7 +62,6 @@ def test_source():
 
 
 def test_links():
-    print(parsed_items[1])
     assert parsed_items[1]["links"] == [{
         'href': 'http://www.av72chicago.com/uploads/9/7/3/6/97363464/av72_may_1_2019_minutes.pdf',
         'title': 'Meeting Minutes'
