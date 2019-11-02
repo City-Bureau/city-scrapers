@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from os.path import dirname, join
 
@@ -7,8 +8,6 @@ from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_ssa_50 import ChiSsa50Spider
-
-import json
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_50.html"),
