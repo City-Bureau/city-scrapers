@@ -1,18 +1,19 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 import scrapy
 from city_scrapers_core.constants import BOARD, CANCELLED, PASSED
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.det_brownfield_redevelopment_authority import (
     DetBrownfieldRedevelopmentAuthoritySpider
 )
 
 test_response = file_response(
-    'files/det_brownfield_redevelopment_authority.html',
-    'http://www.degc.org/public-authorities/dbra/'
+    join(dirname(__file__), "files", "det_brownfield_redevelopment_authority.html"),
+    url='http://www.degc.org/public-authorities/dbra/'
 )
 spider = DetBrownfieldRedevelopmentAuthoritySpider()
 
@@ -29,10 +30,10 @@ def test_initial_request_count():
 
 
 test_meetings = file_response(
-    'files/det_brownfield_redevelopment_authority_meetings.html',
-    'http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/'
+    join(dirname(__file__), "files", "det_brownfield_redevelopment_authority_meetings.html"),
+    url='http://www.degc.org/public-authorities/dbra/fy-2017-2018-meetings/'
 )
-freezer = freeze_time('2018-07-28 12:00:01')
+freezer = freeze_time('2018-07-28')
 spider = DetBrownfieldRedevelopmentAuthoritySpider()
 freezer.start()
 

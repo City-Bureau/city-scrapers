@@ -1,13 +1,15 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, PASSED
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.il_metra_board import IlMetraBoardSpider
 
 test_response = file_response(
-    'files/il_metra_board.html', url='https://metrarr.granicus.com/ViewPublisher.php?view_id=5'
+    join(dirname(__file__), "files", "il_metra_board.html"),
+    url='https://metrarr.granicus.com/ViewPublisher.php?view_id=5'
 )
 spider = IlMetraBoardSpider()
 parsed_items = [item for item in spider.parse(test_response)]

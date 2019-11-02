@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED, TENTATIVE
@@ -9,8 +10,10 @@ from city_scrapers.spiders.cook_forest_preserves import CookForestPreservesSpide
 
 freezer = freeze_time('2018-12-19')
 freezer.start()
-with open('tests/files/cook_forest_preserve.json', 'r') as f:
+
+with open(join(dirname(__file__), "files", "cook_forest_preserve.json"), "r") as f:
     test_response = json.load(f)
+
 spider = CookForestPreservesSpider()
 parsed_items = [item for item in spider.parse_legistar(test_response)]
 freezer.stop()

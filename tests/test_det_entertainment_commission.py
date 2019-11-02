@@ -1,14 +1,15 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.det_entertainment_commission import DetEntertainmentCommissionSpider
 
 test_response = file_response(
-    'files/det_entertainment_commission.html',
-    'https://www.detroitsentertainmentcommission.com/services'
+    join(dirname(__file__), "files", "det_entertainment_commission.html"),
+    url='https://www.detroitsentertainmentcommission.com/services'
 )
 spider = DetEntertainmentCommissionSpider()
 parsed_items = [item for item in spider.parse(test_response)]

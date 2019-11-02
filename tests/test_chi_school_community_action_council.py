@@ -1,9 +1,10 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMITTEE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_school_community_action_council import (
     ChiSchoolCommunityActionCouncilSpider
@@ -12,7 +13,8 @@ from city_scrapers.spiders.chi_school_community_action_council import (
 freezer = freeze_time('2018-06-01')
 freezer.start()
 test_response = file_response(
-    'files/chi_school_community_action_council_CAC.html', url='http://cps.edu/FACE/Pages/CAC.aspx'
+    join(dirname(__file__), "files", "chi_school_community_action_council.html"),
+    url='http://cps.edu/FACE/Pages/CAC.aspx'
 )
 spider = ChiSchoolCommunityActionCouncilSpider()
 parsed_items = [item for item in spider.parse(test_response)]

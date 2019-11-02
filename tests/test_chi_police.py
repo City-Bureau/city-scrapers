@@ -1,11 +1,12 @@
 from datetime import datetime
+from os.path import dirname, join
 
 from city_scrapers_core.constants import PASSED, POLICE_BEAT
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.chi_police import ChiPoliceSpider
 
-test_response = file_response('files/chi_police.json')
+test_response = file_response(join(dirname(__file__), "files", "chi_police.json"))
 spider = ChiPoliceSpider()
 parsed_items = [item for item in spider.parse(test_response)]
 

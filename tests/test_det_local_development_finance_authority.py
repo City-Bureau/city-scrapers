@@ -1,10 +1,11 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 import scrapy
 from city_scrapers_core.constants import BOARD, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.det_local_development_finance_authority import (
     DetLocalDevelopmentFinanceAuthoritySpider
@@ -20,7 +21,7 @@ LOCATION = {
 TITLE = 'Board of Directors'
 
 test_response = file_response(
-    'files/det_local_development_finance_authority.html',
+    join(dirname(__file__), "files", "det_local_development_finance_authority.html"),
     url='http://www.degc.org/public-authorities/ldfa/'
 )
 freezer = freeze_time('2018-07-26')
@@ -92,7 +93,7 @@ def test_classification(item):
 
 # # previous meetings e.g. http://www.degc.org/public-authorities/ldfa/fy-2017-2018-meetings/
 test_prev_response = file_response(
-    'files/det_local_development_finance_authority_prev.html',
+    join(dirname(__file__), "files", "det_local_development_finance_authority_prev.html"),
     url='http://www.degc.org/public-authorities/ldfa/fy-2017-2018-meetings/'
 )
 parsed_prev_items = [item for item in spider._parse_prev_meetings(test_prev_response)]

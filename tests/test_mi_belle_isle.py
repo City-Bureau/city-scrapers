@@ -1,14 +1,15 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import ADVISORY_COMMITTEE, PASSED
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.mi_belle_isle import MiBelleIsleSpider
 
 test_response = file_response(
-    'files/mi_belle_isle.html',
-    'https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html',
+    join(dirname(__file__), "files", "mi_belle_isle.html"),
+    url='https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html',
 )
 spider = MiBelleIsleSpider()
 parsed_items = [item for item in spider.parse(test_response)]

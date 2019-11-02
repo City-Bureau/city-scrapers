@@ -1,20 +1,21 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, PASSED, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.il_regional_transit import IlRegionalTransitSpider
 
 freezer = freeze_time('2018-07-01')
 freezer.start()
 upcoming_response = file_response(
-    'files/il_regional_transit_upcoming.html',
+    join(dirname(__file__), "files", "il_regional_transit_upcoming.html"),
     url='http://rtachicago.granicus.com/ViewPublisher.php?view_id=5'
 )
 past_response = file_response(
-    'files/il_regional_transit_past.html',
+    join(dirname(__file__), "files", "il_regional_transit_past.html"),
     url='http://rtachicago.granicus.com/ViewPublisher.php?view_id=4'
 )
 

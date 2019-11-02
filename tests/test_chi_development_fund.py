@@ -1,14 +1,15 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.chi_development_fund import ChiDevelopmentFundSpider
 
 test_response = file_response(
-    'files/chi_development_fund_chicago_developmentfund.html',
-    'https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_developmentfund.html'
+    join(dirname(__file__), "files", "chi_development_fund.html"),
+    url='https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_developmentfund.html'
 )
 spider = ChiDevelopmentFundSpider()
 parsed_items = [item for item in spider.parse(test_response)]
