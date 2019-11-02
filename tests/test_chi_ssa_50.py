@@ -8,6 +8,8 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_ssa_50 import ChiSsa50Spider
 
+import json
+
 test_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_50.html"),
     url="http://southeastchgochamber.org/special-service-area-50/",
@@ -21,66 +23,44 @@ parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
 
+with open(join(dirname(__file__), "files", "chi_ssa_50.json")) as expected_file:
+    expected = json.load(expected_file)
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+def test_title():
+    assert parsed_items[0]["title"] == expected[0]["title"]
 
+def test_description():
+    assert parsed_items[0]["description"] == expected[0]["description"]
 
-"""
-Uncomment below
-"""
+def test_start():
+    expected_date = expected[0]["start"].split()[0]
+    assert parsed_items[0]["start"] == datetime.strptime(expected_date, "%Y-%m-%d")
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+def test_end():
+    expected_date = expected[0]["end"].split()[0]
+    assert parsed_items[0]["end"] == datetime.strptime(expected_date, "%Y-%m-%d")
 
+def test_time_notes():
+    assert parsed_items[0]["time_notes"] == expected[0]["time_notes"]
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_id():
+    assert parsed_items[0]["id"] == expected[0]["id"]
 
+def test_status():
+    assert parsed_items[0]["status"] == expected[0]["status"]
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_location():
+    assert parsed_items[0]["location"] == expected[0]["location"]
 
+def test_source():
+    assert parsed_items[0]["source"] == expected[0]["source"]
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_links():
+    assert parsed_items[0]["links"] == expected[0]["links"]
 
+def test_classification():
+    assert parsed_items[0]["classification"] == expected[0]["classification"]
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
-
-
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
-
-
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
-
-
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
-
-
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
-
-
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
-
-
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
-
-
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+@pytest.mark.parametrize("item", parsed_items)
+def test_all_day(item):
+    assert item["all_day"] is False
