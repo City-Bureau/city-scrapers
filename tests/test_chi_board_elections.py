@@ -1,16 +1,17 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_board_elections import ChiBoardElectionsSpider
 
 freezer = freeze_time('2018-11-30 12:00:01')
 freezer.start()
 test_response = file_response(
-    'files/chi_board_elections.html',
+    join(dirname(__file__), "files", "chi_board_elections.html"),
     url='https://app.chicagoelections.com/pages/en/board-meetings.aspx'
 )
 spider = ChiBoardElectionsSpider()
@@ -73,7 +74,9 @@ def test_classification(item):
 
 # Previous meetings on different page
 prev_url = "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx"
-test_response_prev = file_response('files/chi_board_elections_prev.html', url=prev_url)
+test_response_prev = file_response(
+    join(dirname(__file__), "files", "chi_board_elections_prev.html"), url=prev_url
+)
 parsed_items_prev = [item for item in spider._prev_meetings(test_response_prev)]
 freezer.stop()
 

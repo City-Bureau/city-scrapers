@@ -1,13 +1,14 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import FORUM
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.chi_school_actions import ChiSchoolActionsSpider
 
 test_response = file_response(
-    'files/chi_school_actions.html',
+    join(dirname(__file__), "files", "chi_school_actions.html"),
     url='http://schoolinfo.cps.edu/SchoolActions/Documentation.aspx',
 )
 spider = ChiSchoolActionsSpider()

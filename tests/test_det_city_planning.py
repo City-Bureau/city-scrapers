@@ -1,9 +1,10 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest  # noqa
 from city_scrapers_core.constants import COMMISSION, PASSED
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.det_city_planning import DetCityPlanningSpider
 
@@ -11,7 +12,7 @@ freezer = freeze_time('2019-02-22')
 freezer.start()
 
 test_response = file_response(
-    'files/det_city_planning.html',
+    join(dirname(__file__), "files", "det_city_planning.html"),
     url='https://detroitmi.gov/events/city-planning-commission-meeting-0'
 )
 spider = DetCityPlanningSpider()

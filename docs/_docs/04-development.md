@@ -327,14 +327,18 @@ Here is the test setup and an example test:
 
 ```python
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_housing import ChiHousingSpider
 
-test_response = file_response("files/chi_housing.html")
+test_response = file_response(
+    join(dirname(__file__), "files", "chi_housing.html"),
+    url="https://www.thecha.org/"
+)
 spider = ChiHousingSpider()
 
 freezer = freeze_time("2018-10-12")

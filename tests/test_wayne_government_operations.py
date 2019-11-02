@@ -1,16 +1,17 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import CANCELLED, COMMITTEE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.wayne_government_operations import WayneGovernmentOperationsSpider
 
 freezer = freeze_time('2018-03-27')
 freezer.start()
 test_response = file_response(
-    'files/wayne_government-operations.html',
+    join(dirname(__file__), "files", "wayne_government_operations.html"),
     url='https://www.waynecounty.com/elected/commission/government-operations.aspx'
 )
 spider = WayneGovernmentOperationsSpider()

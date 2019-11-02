@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMITTEE, TENTATIVE
@@ -7,7 +8,7 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.det_great_lakes_water_authority import DetGreatLakesWaterAuthoritySpider
 
-with open('tests/files/det_great_lakes_water_authority.json', 'r') as f:
+with open(join(dirname(__file__), "files", "det_great_lakes_water_authority.json"), "r") as f:
     test_response = json.load(f)
 
 freezer = freeze_time('2018-12-27')

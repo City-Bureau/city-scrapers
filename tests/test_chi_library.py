@@ -1,10 +1,11 @@
 from datetime import datetime
+from os.path import dirname, join
 from unittest.mock import MagicMock
 
 import pytest
 from city_scrapers_core.constants import BOARD, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_library import ChiLibrarySpider
 
@@ -15,7 +16,7 @@ res_mock = MagicMock()
 res_mock.status_code = 200
 session.get.return_value = res_mock
 test_response = file_response(
-    'files/chi_library.html',
+    join(dirname(__file__), "files", "chi_library.html"),
     url='https://www.chipublib.org/board-of-directors/board-meeting-schedule/',
 )
 spider = ChiLibrarySpider(session=session)
