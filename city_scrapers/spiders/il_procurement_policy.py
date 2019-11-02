@@ -30,6 +30,8 @@ class IlProcurementPolicySpider(CityScrapersSpider):
     def _parse_title(self, item):
         """Parse or generate meeting title."""
         title_str = item['title'].split()
+        if not len(title_str):
+            return ""
         name_str = title_str[len(title_str) - 1] + " Board Meeting Minutes"
         return name_str
 
@@ -48,14 +50,6 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         date_str = re.sub("Agenda.pdf", "", date_str).strip()
         date_object = datetime.strptime(date_str, "%B %d, %Y").date()
         return datetime.combine(date_object, time_object)
-
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
-
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
 
     def _parse_links(self, item, response):
         """Parse or generate links."""
@@ -76,6 +70,16 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         for item in response.css(".ms-rtestate-field p a"):
             title_str = " ".join(item.css("*::text").extract()).strip()
             title_str = re.sub(".pdf", "", title_str).strip()
+            title_str = title_str.replace("\u200b", "")
+            links.append({
+                'title': title_str,
+                'href': response.urljoin(item.attrib['href'])
+            })
+        for item in response.css(".ms-rtestate-field .list-unstyled li a"):
+            title_str = " ".join(item.css("*::text").extract()).strip()
+            title_str = re.sub(".pdf", "", title_str).strip()
+            if '- Amended' in title_str:
+                title_str = title_str.replace("- Amended", "").strip()
             links.append({
                 'title': title_str,
                 'href': response.urljoin(item.attrib['href'])
@@ -86,8 +90,11 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         """parse or generate links from past meetings"""
         time_object = time(10,0)
         date_str = item['title']
+        if not len(date_str):
+            return datetime.now()
         if '.pdf' in date_str:
             date_str = re.sub(".pdf", "", date_str).strip()
+        date_str = date_str.replace('\u200b', '').strip()
         date_object = datetime.strptime(date_str, "%B %d, %Y").date()
         return datetime.combine(date_object, time_object)
 
