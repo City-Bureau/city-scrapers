@@ -43,7 +43,8 @@ class ChiSsa50Spider(CityScrapersSpider):
     def _parse_description(self, response):
         description_xpath = '//div[@class="container-fluid page-full-description-above"]'
         description_content = '//div[@class="row"]//div["col-xs-12"]//p/text()'
-        description = response.xpath(self.base_xpath + description_xpath + description_content).get()
+        description = response.xpath(self.base_xpath + description_xpath +
+                                     description_content).get()
         return description
 
     def _parse_classification(self, item):
