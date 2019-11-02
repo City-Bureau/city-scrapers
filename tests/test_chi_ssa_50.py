@@ -3,7 +3,6 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -22,8 +21,7 @@ parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
 
-with open(join(dirname(__file__), "files",
-               "chi_ssa_50.json")) as expected_file:
+with open(join(dirname(__file__), "files", "chi_ssa_50.json")) as expected_file:
     expected = json.load(expected_file)
 
 
@@ -37,14 +35,12 @@ def test_description():
 
 def test_start():
     expected_date = expected[0]["start"].split()[0]
-    assert parsed_items[0]["start"] == datetime.strptime(
-        expected_date, "%Y-%m-%d")
+    assert parsed_items[0]["start"] == datetime.strptime(expected_date, "%Y-%m-%d")
 
 
 def test_end():
     expected_date = expected[0]["end"].split()[0]
-    assert parsed_items[0]["end"] == datetime.strptime(expected_date,
-                                                       "%Y-%m-%d")
+    assert parsed_items[0]["end"] == datetime.strptime(expected_date, "%Y-%m-%d")
 
 
 def test_time_notes():
