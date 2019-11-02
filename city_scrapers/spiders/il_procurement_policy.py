@@ -90,10 +90,17 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         """parse or generate links from past meetings"""
         time_object = time(10,0)
         date_str = item['title']
+        index = None
         if not len(date_str):
             return datetime.now()
         if '.pdf' in date_str:
-            date_str = re.sub(".pdf", "", date_str).strip()
+            #date_str = re.sub(".pdf", "", date_str).strip()
+            index = date_str.index('.pdf')
+        if '[' in date_str:
+            index = date_str.index('[')
+        if '-' in date_str:
+            index = date_str.index('-')
+        date_str = date_str[:index].strip()
         date_str = date_str.replace('\u200b', '').strip()
         date_object = datetime.strptime(date_str, "%B %d, %Y").date()
         return datetime.combine(date_object, time_object)
