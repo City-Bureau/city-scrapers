@@ -17,9 +17,8 @@ spider = IlProcurementPolicySpider()
 freezer = freeze_time("2019-10-07")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+parsed_items = [item for item in spider._upcoming_meetings(test_response)]
 
-freezer.stop()
 
 def test_len():
     assert len(parsed_items) == 1
@@ -74,4 +73,66 @@ def test_classification():
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_all_day(item):
+    assert item["all_day"] is False
+
+
+#previous meeting minutes
+prev_url = "https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx"
+test_response2 = file_response(
+    join(dirname(__file__), "files", "il_procurement_policy_prev.html"), 
+    url=prev_url,
+)
+parsed_items_prev = [item for item in spider._prev_meetings(test_response2)]
+freezer.stop()
+
+
+def prev_test_title():
+    assert parsed_items_prev[0]["title"] == "2018 Board Meeting Minutes"
+
+
+def prev_test_description():
+    assert parsed_items_prev[0]["description"] == ""
+    
+
+def prev_test_start():
+    assert parsed_items_prev[0]["start"] == datetime(2019, 10, 15, 10, 0)
+
+
+def prev_test_end():
+    assert parsed_items_prev[0]["end"] is None
+
+
+def prev_test_time_notes():
+    assert parsed_items_prev[0]["time_notes"] == "End time not specified"
+
+
+def prev_test_id():
+    assert parsed_items_prev[0]["id"] == "il_procurement_policy/201801171000/x/2018_board_meeting_minutes"
+
+
+def prev_test_status():
+    assert parsed_items_prev[0]['status'] == PASSED
+
+
+def prev_test_location():
+    assert parsed_items_prev[0]["location"] == {
+        "name": "Stratton Office Building",
+        "address": "401 S Spring St, Springfield, IL 62704"
+    }
+
+
+def prev_test_source():
+    assert parsed_items_prev[0]["source"] == "https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx"
+
+
+def prev_test_links():
+    assert parsed_items_prev[0]["links"][0]['href'] == 'https://www2.illinois.gov/sites/ppb/Documents/180117%20Minutes.pdf'
+
+
+def prev_test_classification():
+    assert parsed_items_prev[0]["classification"] == BOARD
+
+
+@pytest.mark.parametrize("item", parsed_items_prev)
+def prev_test_all_day(item):
     assert item["all_day"] is False
