@@ -1,13 +1,14 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.wayne_election_commission import WayneElectionCommissionSpider
 
 test_response = file_response(
-    'files/wayne_election_commission.html',
+    join(dirname(__file__), "files", "wayne_election_commission.html"),
     url='https://www.waynecounty.com/elected/clerk/election-commission.aspx'
 )
 spider = WayneElectionCommissionSpider()

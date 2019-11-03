@@ -1,14 +1,15 @@
 import json
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, PASSED
 
 from city_scrapers.spiders.cook_water import CookWaterSpider
 
-test_response = []
-with open('tests/files/cook_water.json') as f:
-    test_response.extend(json.loads(f.read()))
+with open(join(dirname(__file__), "files", "cook_water.json"), "r") as f:
+    test_response = json.load(f)
+
 spider = CookWaterSpider()
 parsed_items = [item for item in spider.parse_legistar(test_response)]
 

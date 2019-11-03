@@ -1,13 +1,14 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, PASSED
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.det_wrecking_examiners import DetWreckingExaminersSpider
 
 test_response = file_response(
-    'files/det_wrecking_examiners.html',
+    join(dirname(__file__), "files", "det_wrecking_examiners.html"),
     url=(
         'https://www.detroitmi.gov/government/boards/board-wrecking-contractors-examiners/board-wrecking-contractors-meetings'  # noqa
     )

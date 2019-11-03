@@ -1,15 +1,16 @@
 from datetime import datetime
 from operator import itemgetter
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_ssa_1 import ChiSsa1Spider
 
 test_response = file_response(
-    'files/chi_ssa_1.html',
+    join(dirname(__file__), "files", "chi_ssa_1.html"),
     url='https://loopchicago.com/about-state-street-ssa1-2015/state-street-commission/'
 )
 spider = ChiSsa1Spider()

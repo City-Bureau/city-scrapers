@@ -1,16 +1,16 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, PASSED
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.chi_pubhealth import ChiPubHealthSpider
 
 test_response = file_response(
-    'files/chi_pubhealth.html',
+    join(dirname(__file__), "files", "chi_pubhealth.html"),
     url=(
-        'https://www.chicago.gov/city/en/depts/cdph/supp_info/'
-        'boh/2018-board-of-health-meetings.html'
+        'https://www.chicago.gov/city/en/depts/cdph/supp_info/boh/2018-board-of-health-meetings.html'  # noqa
     )
 )
 spider = ChiPubHealthSpider()

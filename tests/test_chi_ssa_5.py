@@ -1,9 +1,10 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_ssa_5 import ChiSsa5Spider
 
@@ -12,11 +13,14 @@ spider = ChiSsa5Spider()
 freezer = freeze_time('2018-10-12')
 freezer.start()
 minutes_req = file_response(
-    'files/chi_ssa_5_minutes.html',
+    join(dirname(__file__), "files", "chi_ssa_5_minutes.html"),
     url='http://scpf-inc.org/ssa5/meeting-minutes/',
 )
 spider.meetings = spider._parse_current_year(
-    file_response('files/chi_ssa_5.html', url='http://scpf-inc.org/ssa5/meeting-calendar/')
+    file_response(
+        join(dirname(__file__), "files", "chi_ssa_5.html"),
+        url="http://scpf-inc.org/ssa5/meeting-calendar/"
+    )
 )
 parsed_items = [item for item in spider._parse_minutes(minutes_req)]
 freezer.stop()

@@ -1,9 +1,9 @@
 from datetime import datetime
 from os.path import dirname, join
 
+import pytest  # noqa
 from city_scrapers_core.constants import FORUM, PASSED
 from city_scrapers_core.utils import file_response
-# import pytest
 from freezegun import freeze_time
 
 from city_scrapers.spiders.det_transportation import DetTransportationSpider

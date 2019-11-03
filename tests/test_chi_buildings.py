@@ -1,15 +1,17 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_buildings import ChiBuildingsSpider
 
-test_json_response = file_response('files/chi_buildings.json')
-test_event_response = file_response('files/chi_buildings.html')
+test_json_response = file_response(join(dirname(__file__), "files", "chi_buildings.json"))
+test_event_response = file_response(join(dirname(__file__), "files", "chi_buildings.html"))
+
 spider = ChiBuildingsSpider()
 
 

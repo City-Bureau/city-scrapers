@@ -1,19 +1,20 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, PASSED, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.det_general_retirement_system import DetGeneralRetirementSystemSpider
 
 test_response = file_response(
-    'files/det_general_retirement_system.html',
-    'http://www.rscd.org/member_resources_/board_of_trustees/upcoming_meetings.php'
+    join(dirname(__file__), "files", "det_general_retirement_system.html"),
+    url='http://www.rscd.org/member_resources_/board_of_trustees/upcoming_meetings.php'
 )
 test_past_response = file_response(
-    'files/det_general_retirement_system_past.html',
-    'http://www.rscd.org/member_resources_/board_of_trustees/past_meeting_agendas___minutes.php'
+    join(dirname(__file__), "files", "det_general_retirement_system_past.html"),
+    url='http://www.rscd.org/member_resources_/board_of_trustees/past_meeting_agendas___minutes.php'
 )
 
 spider = DetGeneralRetirementSystemSpider()

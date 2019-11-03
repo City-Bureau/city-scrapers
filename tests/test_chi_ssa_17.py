@@ -1,16 +1,17 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import CANCELLED, COMMISSION, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_ssa_17 import ChiSsa17Spider
 
 freezer = freeze_time('2019-03-17')
 freezer.start()
 spider = ChiSsa17Spider()
-res = file_response('files/chi_ssa_17.html')
+res = file_response(join(dirname(__file__), "files", "chi_ssa_17.html"))
 parsed_items = [item for item in spider.parse(res)]
 freezer.stop()
 
