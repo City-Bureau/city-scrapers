@@ -67,10 +67,17 @@ class IlProcurementPolicySpider(CityScrapersSpider):
     def _parse_past_links(self, response):
         """parse start datetime as a naive datetime object"""
         links = []
+        index = None
         for item in response.css(".ms-rtestate-field p a"):
             title_str = " ".join(item.css("*::text").extract()).strip()
-            title_str = re.sub(".pdf", "", title_str).strip()
             title_str = title_str.replace("\u200b", "")
+            if '.pdf' in title_str:
+                index = title_str.index('.pdf')
+            if '[' in title_str:
+               index = title_str.index('[')
+            if '-' in title_str:
+               index = title_str.index('-')
+            title_str = title_str[:index]
             links.append({
                 'title': title_str,
                 'href': response.urljoin(item.attrib['href'])
@@ -78,8 +85,15 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         for item in response.css(".ms-rtestate-field .list-unstyled li a"):
             title_str = " ".join(item.css("*::text").extract()).strip()
             title_str = re.sub(".pdf", "", title_str).strip()
+            title_str = title_str.replace("\u200b", "")
+            index = len(title_str)
             if '- Amended' in title_str:
-                title_str = title_str.replace("- Amended", "").strip()
+               title_str = title_str.replace("- Amended", "").strip()
+            if '[' in title_str:
+               index = title_str.index('[')
+            if '-' in title_str:
+               index = title_str.index('-')
+            title_str = title_str[:index].strip()
             links.append({
                 'title': title_str,
                 'href': response.urljoin(item.attrib['href'])
@@ -92,16 +106,9 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         date_str = item['title']
         index = None
         if not len(date_str):
-            return datetime.now()
-        if '.pdf' in date_str:
-            #date_str = re.sub(".pdf", "", date_str).strip()
-            index = date_str.index('.pdf')
-        if '[' in date_str:
-            index = date_str.index('[')
-        if '-' in date_str:
-            index = date_str.index('-')
-        date_str = date_str[:index].strip()
-        date_str = date_str.replace('\u200b', '').strip()
+           date_str = "December 2, 2015"
+           date_object = datetime.strptime(date_str, "%B %d, %Y").date()
+           return datetime.combine(date_object, time_object)
         date_object = datetime.strptime(date_str, "%B %d, %Y").date()
         return datetime.combine(date_object, time_object)
 
