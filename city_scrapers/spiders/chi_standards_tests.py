@@ -21,7 +21,7 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
                 continue
             meeting = Meeting(
                 title="Committee on Standards and Tests",
-                description="The Committee on Standards and Tests is a panel of distinguished building industry professionals and city staff that assist the Department of Buildings and the Chicago Fire Department with project-specific evaluation of building products, systems, equipment, and design solutions not addressed by the Chicago Building Code.\nThe Committee considers requests to use: (1) materials, products and systems shown to be equal to or better than the requirements of the Chicago Building Code; and (2) comprehensive building design solutions that may not meet a specific requirement of the Chicago Building Code but are shown to meet the intent of the code.",
+                description="",
                 classification=COMMITTEE,
                 start=self._parse_start(item),
                 end=None,
