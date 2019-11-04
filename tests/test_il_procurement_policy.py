@@ -22,7 +22,7 @@ parsed_items = [item for item in spider._upcoming_meetings(test_response)]
 
 def test_len():
     assert len(parsed_items) == 1
-    
+
 
 def test_title():
     assert parsed_items[0]["title"] == "Procurement Policy Board"
@@ -30,7 +30,7 @@ def test_title():
 
 def test_description():
     assert parsed_items[0]["description"] == ""
-    
+
 
 def test_start():
     assert parsed_items[0]["start"] == datetime(2019, 10, 15, 10, 0)
@@ -60,11 +60,14 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx"
+    assert parsed_items[0]["source"].startswith("https://www2.illinois.gov/sites/ppb/Pages/future")
 
 
 def test_links():
-    assert parsed_items[0]["links"][0]['href'] == 'https://www2.illinois.gov/sites/ppb/Documents/191015%20Agenda.pdf'
+    assert parsed_items[0]["links"] == [{
+        'href': 'https://www2.illinois.gov/sites/ppb/Documents/191015%20Agenda.pdf',
+        'title': 'October 15, 2019 Agenda'
+    }]
 
 
 def test_classification():
@@ -76,10 +79,10 @@ def test_all_day(item):
     assert item["all_day"] is False
 
 
-#previous meeting minutes
+# previous meeting minutes
 prev_url = "https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx"
 test_response2 = file_response(
-    join(dirname(__file__), "files", "il_procurement_policy_prev.html"), 
+    join(dirname(__file__), "files", "il_procurement_policy_prev.html"),
     url=prev_url,
 )
 parsed_items_prev = [item for item in spider._prev_meetings(test_response2)]
@@ -92,7 +95,7 @@ def prev_test_title():
 
 def prev_test_description():
     assert parsed_items_prev[0]["description"] == ""
-    
+
 
 def prev_test_start():
     assert parsed_items_prev[0]["start"] == datetime(2019, 10, 15, 10, 0)
@@ -107,7 +110,7 @@ def prev_test_time_notes():
 
 
 def prev_test_id():
-    assert parsed_items_prev[0]["id"] == "il_procurement_policy/201801171000/x/2018_board_meeting_minutes"
+    assert parsed_items_prev[0]["id"].startswith("il_procurement_policy/201801171000/x/")
 
 
 def prev_test_status():
@@ -122,11 +125,14 @@ def prev_test_location():
 
 
 def prev_test_source():
-    assert parsed_items_prev[0]["source"] == "https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx"
+    assert parsed_items_prev[0]["source"].startswith("https://www2.illinois.gov/sites/ppb/Pages/")
 
 
 def prev_test_links():
-    assert parsed_items_prev[0]["links"][0]['href'] == 'https://www2.illinois.gov/sites/ppb/Documents/180117%20Minutes.pdf'
+    assert parsed_items_prev[0]["links"] == [{
+        'href': 'https://www2.illinois.gov/sites/ppb/Documents/180117%20Minutes.pdf',
+        'title': 'Feburary 27, 2019'
+    }]
 
 
 def prev_test_classification():

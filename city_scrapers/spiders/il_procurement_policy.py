@@ -11,7 +11,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
     agency = "Illinois Procurement Policy Board"
     timezone = "America/Chicago"
     start_urls = [
-        'https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx', 
+        'https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx',
         'https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx'
     ]
 
@@ -45,7 +45,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        time_object = time(10,0)
+        time_object = time(10, 0)
         date_str = " ".join(item.css("*::text").extract()).strip()
         date_str = re.sub("Agenda.pdf", "", date_str).strip()
         date_object = datetime.strptime(date_str, "%B %d, %Y").date()
@@ -74,48 +74,41 @@ class IlProcurementPolicySpider(CityScrapersSpider):
             if '.pdf' in title_str:
                 index = title_str.index('.pdf')
             if '[' in title_str:
-               index = title_str.index('[')
+                index = title_str.index('[')
             if '-' in title_str:
-               index = title_str.index('-')
+                index = title_str.index('-')
             title_str = title_str[:index]
-            links.append({
-                'title': title_str,
-                'href': response.urljoin(item.attrib['href'])
-            })
+            links.append({'title': title_str, 'href': response.urljoin(item.attrib['href'])})
         for item in response.css(".ms-rtestate-field .list-unstyled li a"):
             title_str = " ".join(item.css("*::text").extract()).strip()
             title_str = re.sub(".pdf", "", title_str).strip()
             title_str = title_str.replace("\u200b", "")
             index = len(title_str)
             if '- Amended' in title_str:
-               title_str = title_str.replace("- Amended", "").strip()
+                title_str = title_str.replace("- Amended", "").strip()
             if '[' in title_str:
-               index = title_str.index('[')
+                index = title_str.index('[')
             if '-' in title_str:
-               index = title_str.index('-')
+                index = title_str.index('-')
             title_str = title_str[:index].strip()
-            links.append({
-                'title': title_str,
-                'href': response.urljoin(item.attrib['href'])
-            })
+            links.append({'title': title_str, 'href': response.urljoin(item.attrib['href'])})
         return links
 
     def _past_start(self, item):
         """parse or generate links from past meetings"""
-        time_object = time(10,0)
+        time_object = time(10, 0)
         date_str = item['title']
-        index = None
         if not len(date_str):
-           date_str = "December 2, 2015"
-           date_object = datetime.strptime(date_str, "%B %d, %Y").date()
-           return datetime.combine(date_object, time_object)
+            date_str = "December 2, 2015"
+            date_object = datetime.strptime(date_str, "%B %d, %Y").date()
+            return datetime.combine(date_object, time_object)
         date_object = datetime.strptime(date_str, "%B %d, %Y").date()
         return datetime.combine(date_object, time_object)
 
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
-    
+
     def _upcoming_meetings(self, response):
         for item in response.css(".ms-rtestate-field p strong a"):
             meeting = Meeting(
@@ -126,7 +119,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                 end=None,
                 all_day=False,
                 time_notes='End time not specified',
-                location = {
+                location={
                     'name': 'Stratton Office Building',
                     'address': '401 S Spring St, Springfield, IL 62704',
                 },
@@ -141,14 +134,14 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         meets = self._parse_past_links(response)
         for item in meets:
             meeting = Meeting(
-                title= self._parse_title(item),
+                title=self._parse_title(item),
                 description='',
                 classification=BOARD,
                 start=self._past_start(item),
                 end=None,
                 all_day=False,
                 time_notes='End time not specified',
-                location = {
+                location={
                     'name': 'Stratton Office Building',
                     'address': '401 S Spring St, Springfield, IL 62704',
                 },
