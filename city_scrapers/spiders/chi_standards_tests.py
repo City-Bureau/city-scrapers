@@ -4,11 +4,14 @@ from city_scrapers_core.constants import COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
+
 class ChiStandardsTestsSpider(CityScrapersSpider):
     name = "chi_standards_tests"
     agency = "Chicago Committee on Standards and Tests"
     timezone = "America/Chicago"
-    start_urls = ["https://www.chicago.gov/city/en/depts/bldgs/supp_info/committee_on_standardsandtests.html"]
+    start_urls = [
+        "https://www.chicago.gov/city/en/depts/bldgs/supp_info/committee_on_standardsandtests.html"
+    ]
 
     def parse(self, response):
         """
@@ -16,7 +19,7 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.xpath("//div[@class='col-xs-12']/table[1]//td/p"):            
+        for item in response.xpath("//div[@class='col-xs-12']/table[1]//td/p"):
             if self._pass_filter(item) is False:
                 continue
             meeting = Meeting(
@@ -26,8 +29,12 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
                 start=self._parse_start(item),
                 end=None,
                 all_day=False,
-                time_notes="Meetings are scheduled by appointments and, thus, may not take place. Confirm details with the agency",
-                location={"address": "121 North LaSalle Street, Room 906, Chicago, Illinois 60602", "name": "City Hall"},
+                time_notes=
+                "Meetings are scheduled by appointments and, thus, may not take place. Confirm details with the agency",
+                location={
+                    "address": "121 North LaSalle Street, Room 906, Chicago, Illinois 60602",
+                    "name": "City Hall"
+                },
                 links=self._parse_links(item),
                 source=response.url,
             )
@@ -40,8 +47,10 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
         if item.xpath('.//em/text()').get() == 'no meeting':
             return False
 
-        # Check if date string 
-        months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+        # Check if date string
+        months = [
+            'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'
+        ]
         date_str = item.xpath('.//text()').get()
         if any(date_str.lower().startswith(month) for month in months):
             return True
@@ -70,7 +79,7 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
             href = 'chicago.gov' + a_tag.xpath('.//@href').get()
             title = a_tag.xpath('.//text()').get()
             links.append({
-                "href": 'chicago.gov' + a_tag.xpath('.//@href').get(), 
+                "href": 'chicago.gov' + a_tag.xpath('.//@href').get(),
                 "title": a_tag.xpath('.//text()').get(),
             })
         return links

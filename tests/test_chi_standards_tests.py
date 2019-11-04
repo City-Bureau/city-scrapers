@@ -40,7 +40,9 @@ def test_start():
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == "Meetings are scheduled by appointments and, thus, may not take place. Confirm details with the agency"
+    assert parsed_items[0][
+        "time_notes"
+    ] == "Meetings are scheduled by appointments and, thus, may not take place. Confirm details with the agency"
 
 
 def test_location():
@@ -51,14 +53,17 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.chicago.gov/city/en/depts/bldgs/supp_info/committee_on_standardsandtests.html"
+    assert parsed_items[0][
+        "source"
+    ] == "https://www.chicago.gov/city/en/depts/bldgs/supp_info/committee_on_standardsandtests.html"
 
 
 def test_links():
     assert parsed_items[0]["links"] == []
     assert parsed_items[1]["links"] == [{
-      "href": "chicago.gov/content/dam/city/depts/bldgs/general/Standards_Tests/S&T%20Decisions%20April%202019.pdf",
-      "title": "Decisions"
+        "href":
+            "chicago.gov/content/dam/city/depts/bldgs/general/Standards_Tests/S&T%20Decisions%20April%202019.pdf",
+        "title": "Decisions"
     }]
 
 
