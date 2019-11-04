@@ -29,8 +29,7 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
                 start=self._parse_start(item),
                 end=None,
                 all_day=False,
-                time_notes=
-                "Meetings are scheduled by appointments and, thus, may not take place. Confirm details with the agency",
+                time_notes="Confirm details with the agency",
                 location={
                     "address": "121 North LaSalle Street, Room 906, Chicago, Illinois 60602",
                     "name": "City Hall"
@@ -76,8 +75,6 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
         links = []
         a_tag = item.xpath('.//a')
         if a_tag:
-            href = 'chicago.gov' + a_tag.xpath('.//@href').get()
-            title = a_tag.xpath('.//text()').get()
             links.append({
                 "href": 'chicago.gov' + a_tag.xpath('.//@href').get(),
                 "title": a_tag.xpath('.//text()').get(),
