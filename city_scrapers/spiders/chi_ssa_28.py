@@ -59,7 +59,7 @@ class ChiSsa28Spider(CityScrapersSpider):
         start_year = item.xpath('.//strong/text()').get()
         start_date = date
         start_time = "1:30 PM"
-        start = datetime.strptime(start_date + start_year + start_time, "%B %d%Y%H:%M %p")
+        start = datetime.strptime(start_date + start_year + start_time, "%B %d%Y%I:%M %p")
         return start
 
     def _parse_all_day(self, date):

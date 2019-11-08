@@ -13,7 +13,7 @@ class ChiSsa43Spider(ChiRogersParkSsaMixin, CityScrapersSpider):
         "name": "Ald. Silverstein's Office",
         "address": "2949 W Devon Ave Chicago, IL 60659",
     }
-    start_time = time(2, 30)
+    start_time = time(14, 30)
 
     def _validate_location(self, response):
         if "2949 w" not in " ".join(response.css(".et_pb_tab_0 *::text").extract()).lower():
