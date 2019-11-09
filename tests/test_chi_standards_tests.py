@@ -59,8 +59,7 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == []
     assert parsed_items[1]["links"] == [{
-        "href":
-            "chicago.gov/content/dam/city/depts/bldgs/general/Standards_Tests/S&T%20Decisions%20April%202019.pdf",  # noqa
+        "href": "https://www.chicago.gov/content/dam/city/depts/bldgs/general/Standards_Tests/S&T%20Decisions%20April%202019.pdf",  # noqa
         "title": "Decisions"
     }]
 

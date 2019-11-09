@@ -20,7 +20,7 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
         needs.
         """
         for item in response.xpath("//div[@class='col-xs-12']/table[1]//td/p"):
-            if self._pass_filter(item) is False:
+            if not self._pass_filter(item):
                 continue
             meeting = Meeting(
                 title="Committee on Standards and Tests",
@@ -34,7 +34,7 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
                     "address": "121 North LaSalle Street, Room 906, Chicago, IL 60602",
                     "name": "City Hall"
                 },
-                links=self._parse_links(item),
+                links=self._parse_links(item, response),
                 source=response.url,
             )
             meeting["status"] = self._get_status(meeting)
@@ -70,13 +70,13 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
         time_obj = datetime.time(13, 30, 0)
         return datetime.datetime.combine(date_obj, time_obj)
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
         links = []
         a_tag = item.xpath('.//a')
         if a_tag:
             links.append({
-                "href": 'chicago.gov' + a_tag.xpath('.//@href').get(),
+                "href": response.urljoin(a_tag.xpath('.//@href').get()),
                 "title": a_tag.xpath('.//text()').get(),
             })
         return links
