@@ -31,7 +31,7 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
                 all_day=False,
                 time_notes="Confirm details with the agency",
                 location={
-                    "address": "121 North LaSalle Street, Room 906, Chicago, Illinois 60602",
+                    "address": "121 North LaSalle Street, Room 906, Chicago, IL 60602",
                     "name": "City Hall"
                 },
                 links=self._parse_links(item),
