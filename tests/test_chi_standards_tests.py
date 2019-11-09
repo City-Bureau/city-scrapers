@@ -46,7 +46,7 @@ def test_time_notes():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "City Hall",
-        "address": "121 North LaSalle Street, Room 906, Chicago, Illinois 60602"
+        "address": "121 North LaSalle Street, Room 906, Chicago, IL 60602"
     }
 
 
