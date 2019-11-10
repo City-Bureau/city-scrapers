@@ -97,7 +97,6 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                 description='',
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
-                end=None,
                 all_day=False,
                 time_notes='End time not specified',
                 location={
@@ -119,7 +118,6 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                 description='',
                 classification=BOARD,
                 start=item,
-                end=None,
                 all_day=False,
                 time_notes='End time not specified',
                 location={
