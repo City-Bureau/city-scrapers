@@ -99,9 +99,8 @@ class DetRetirementMixin:
         date_str = re.sub(
             r'\(.+\)', '', ' '.join(item.css('td:first-child *::text').extract()).strip()
         )
-        time_str = ' '.join(item.css('td:nth-child(2) *::text').extract()).strip().replace(
-            'Noon', 'PM'
-        ).replace('.', '').replace(' M', 'M')
+        time_str = ' '.join(item.css('td:nth-child(2) *::text').extract()
+                            ).strip().replace('Noon', 'PM').replace('.', '').replace(' M', 'M')
         dt_str = re.sub(r'\s+', ' ', '{} {}'.format(date_str, time_str)).strip()
         return datetime.strptime(dt_str, '%B %d, %Y %I:%M %p')
 

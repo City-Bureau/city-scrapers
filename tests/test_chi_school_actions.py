@@ -21,8 +21,7 @@ def test_count():
 
 def test_title():
     assert parsed_items[0][
-        'title'
-    ] == 'School Actions: Castellanos - Cardenas Community Meetings: Consolidation'
+        'title'] == 'School Actions: Castellanos - Cardenas Community Meetings: Consolidation'
 
 
 def test_classification():

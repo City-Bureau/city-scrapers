@@ -114,8 +114,7 @@ def test_location_prev():
 
 def test_source_prev():
     assert parsed_items_prev[0][
-        'source'
-    ] == 'https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx'
+        'source'] == 'https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx'
 
 
 def test_links_prev():

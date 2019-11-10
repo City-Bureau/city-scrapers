@@ -21,8 +21,10 @@ class WayneLandBankSpider(CityScrapersSpider):
     def start_requests(self):
         yield FormRequest(
             self.start_urls[0],
-            formdata={"templateName": "BoardofDirectors",
-                      "title": "Board+of+Directors"},
+            formdata={
+                "templateName": "BoardofDirectors",
+                "title": "Board+of+Directors"
+            },
             callback=self.parse,
             dont_filter=True
         )

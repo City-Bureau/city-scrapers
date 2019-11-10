@@ -56,8 +56,7 @@ def test_location():
 
 def test_source():
     assert parsed_items[0][
-        "source"
-    ] == "http://www.arts.illinois.gov/about-iac/governance/council-meetings"  # noqa
+        "source"] == "http://www.arts.illinois.gov/about-iac/governance/council-meetings"  # noqa
 
 
 def test_links():

@@ -39,9 +39,9 @@ def test_end_time():
 
 
 def test_id():
-    assert parsed_items[0][
-        'id'
-    ] == 'chi_school_community_action_council/201806121730/x/austin_community_action_council'
+    assert parsed_items[
+        0]['id'
+           ] == 'chi_school_community_action_council/201806121730/x/austin_community_action_council'
 
 
 def test_location():

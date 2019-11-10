@@ -58,8 +58,7 @@ def test_end():
 
 def test_id():
     assert parsed_items[0][
-        'id'
-    ] == 'det_next_michigan_development_corporation/201809110900/x/board_of_directors'
+        'id'] == 'det_next_michigan_development_corporation/201809110900/x/board_of_directors'
 
 
 def test_status():
@@ -130,8 +129,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0][
-        'id'
-    ] == 'det_next_michigan_development_corporation/201708080900/x/board_of_directors'
+        'id'] == 'det_next_michigan_development_corporation/201708080900/x/board_of_directors'
 
 
 def test_prev_status():
@@ -144,8 +142,7 @@ def test_prev_location():
 
 def test_prev_source():
     assert parsed_prev_items[0][
-        'source'
-    ] == 'http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings'
+        'source'] == 'http://www.degc.org/public-authorities/d-nmdc/dnmdc-fy-2016-2017-meetings'
 
 
 def test_prev_links():

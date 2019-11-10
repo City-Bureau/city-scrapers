@@ -58,8 +58,7 @@ def test_end():
 
 def test_id():
     assert parsed_items[0][
-        'id'
-    ] == 'det_neighborhood_development_corporation/201807240845/x/board_of_directors'
+        'id'] == 'det_neighborhood_development_corporation/201807240845/x/board_of_directors'
 
 
 def test_status():
@@ -129,8 +128,7 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0][
-        'id'
-    ] == 'det_neighborhood_development_corporation/201606270845/x/board_of_directors'
+        'id'] == 'det_neighborhood_development_corporation/201606270845/x/board_of_directors'
 
 
 def test_prev_status():
@@ -143,8 +141,7 @@ def test_prev_location():
 
 def test_prev_sources():
     assert parsed_prev_items[0][
-        'source'
-    ] == 'http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/'
+        'source'] == 'http://www.degc.org/public-authorities/ndc/fy-2015-2016-meetings/'
 
 
 def test_prev_links():

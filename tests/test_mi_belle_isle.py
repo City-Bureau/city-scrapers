@@ -50,8 +50,7 @@ def test_location():
 
 def test_sources():
     assert parsed_items[0][
-        'source'
-    ] == 'https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html'
+        'source'] == 'https://www.michigan.gov/dnr/0,4570,7-350-79137_79763_79901---,00.html'
 
 
 def test_links():

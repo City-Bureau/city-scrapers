@@ -49,8 +49,7 @@ def test_time_notes():
 
 def test_id():
     assert parsed_items[0][
-        "id"
-    ] == "chi_il_medical_district/201605170000/x/illinois_medical_district_commission"
+        "id"] == "chi_il_medical_district/201605170000/x/illinois_medical_district_commission"
 
 
 def test_status():

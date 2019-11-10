@@ -57,8 +57,7 @@ def test_time_notes():
 
 def test_id():
     assert parsed_items[0][
-        "id"
-    ] == "wayne_mental_health_authority/201901071300/x/recipient_rights_advisory_committee"
+        "id"] == "wayne_mental_health_authority/201901071300/x/recipient_rights_advisory_committee"
 
 
 def test_status():
