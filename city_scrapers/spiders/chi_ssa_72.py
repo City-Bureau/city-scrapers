@@ -48,6 +48,7 @@ class ChiSsa72Spider(CityScrapersSpider):
 
     def _parse_start(self, date_text, year):
         """Parse start datetime as a naive datetime object."""
+
         def _date_helper(text):
             day_str_with_suffix, time_str_raw = stripped_text.split(',')
             day_str = day_str_with_suffix[:-2]

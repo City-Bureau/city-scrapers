@@ -68,7 +68,8 @@ def test_location():
 
 def test_source():
     assert parsed_items[0][
-        'source'] == 'http://www.rscd.org/member_resources_/board_of_trustees/upcoming_meetings.php'
+        'source'
+    ] == 'http://www.rscd.org/member_resources_/board_of_trustees/upcoming_meetings.php'
 
 
 def test_links():

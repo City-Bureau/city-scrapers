@@ -78,13 +78,13 @@ def test_time_notes(parsed_items):
 
 
 def test_id(parsed_items):
-    assert isinstance(parsed_items[NOVEMBER_IDX]["id"],
-                      str) and parsed_items[NOVEMBER_IDX]["id"] != ""
+    assert isinstance(parsed_items[NOVEMBER_IDX]["id"], str
+                      ) and parsed_items[NOVEMBER_IDX]["id"] != ""
 
 
 def test_status(parsed_items):
-    assert isinstance(parsed_items[NOVEMBER_IDX]["status"],
-                      str) and parsed_items[NOVEMBER_IDX]["id"] != ""
+    assert isinstance(parsed_items[NOVEMBER_IDX]["status"], str
+                      ) and parsed_items[NOVEMBER_IDX]["id"] != ""
 
 
 def test_location(parsed_items):

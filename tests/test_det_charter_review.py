@@ -46,7 +46,8 @@ def test_time_notes():
 
 def test_id():
     assert parsed_items[0][
-        "id"] == "det_charter_review/201907101730/x/citizen_focus_group_equitable_planning_zoning"
+        "id"
+    ] == "det_charter_review/201907101730/x/citizen_focus_group_equitable_planning_zoning"
 
 
 def test_status():

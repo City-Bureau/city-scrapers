@@ -1,6 +1,7 @@
 import re
-from datetime import datetime, time
 from collections import defaultdict
+from datetime import datetime, time
+
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider

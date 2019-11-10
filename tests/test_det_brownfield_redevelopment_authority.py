@@ -68,7 +68,8 @@ def test_end():
 
 def test_id():
     assert parsed_items[0][
-        'id'] == 'det_brownfield_redevelopment_authority/201912191600/x/board_of_directors'
+        'id'
+    ] == 'det_brownfield_redevelopment_authority/201912191600/x/board_of_directors'
 
 
 def test_status():

@@ -41,7 +41,8 @@ def test_time_notes():
 
 def test_id():
     assert parsed_items[0][
-        'id'] == 'chi_ssa_21/201801290900/x/lincoln_square_neighborhood_improvement_program'
+        'id'
+    ] == 'chi_ssa_21/201801290900/x/lincoln_square_neighborhood_improvement_program'
 
 
 def test_location():

@@ -55,9 +55,9 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[
-        0]["source"
-           ] == "https://www.cookcountyil.gov/service/medical-examiners-advisory-committee"  # noqa
+    assert parsed_items[0][
+        "source"
+    ] == "https://www.cookcountyil.gov/service/medical-examiners-advisory-committee"  # noqa
 
 
 @pytest.mark.parametrize('item', parsed_items)

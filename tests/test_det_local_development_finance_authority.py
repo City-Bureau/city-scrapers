@@ -62,7 +62,8 @@ def test_end():
 
 def test_id():
     assert parsed_items[0][
-        'id'] == 'det_local_development_finance_authority/201810230930/x/board_of_directors'
+        'id'
+    ] == 'det_local_development_finance_authority/201810230930/x/board_of_directors'
 
 
 def test_status():
@@ -133,7 +134,8 @@ def test_prev_end():
 
 def test_prev_id():
     assert parsed_prev_items[0][
-        'id'] == 'det_local_development_finance_authority/201806190930/x/board_of_directors'
+        'id'
+    ] == 'det_local_development_finance_authority/201806190930/x/board_of_directors'
 
 
 def test_prev_status():
@@ -146,7 +148,8 @@ def test_prev_location():
 
 def test_prev_source():
     assert parsed_prev_items[0][
-        'source'] == 'http://www.degc.org/public-authorities/ldfa/fy-2017-2018-meetings/'
+        'source'
+    ] == 'http://www.degc.org/public-authorities/ldfa/fy-2017-2018-meetings/'
 
 
 def test_prev_links():

@@ -35,7 +35,8 @@ def test_end():
 
 def test_id():
     assert parsed_items[0][
-        'id'] == 'det_wrecking_examiners/201802141300/x/board_of_wrecking_contractors_examiners'
+        'id'
+    ] == 'det_wrecking_examiners/201802141300/x/board_of_wrecking_contractors_examiners'
 
 
 def test_status():

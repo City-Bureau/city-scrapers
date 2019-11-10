@@ -65,7 +65,8 @@ def test_start():
 
 def test_id():
     assert parsed_items[0][
-        'id'] == 'wayne_government_operations/201801090930/x/committee_on_government_operations'
+        'id'
+    ] == 'wayne_government_operations/201801090930/x/committee_on_government_operations'
 
 
 def test_status():

@@ -56,9 +56,9 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[
-        0]['source'
-           ] == 'https://www.chicago.gov/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html'
+    assert parsed_items[0][
+        'source'
+    ] == 'https://www.chicago.gov/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html'
 
 
 def test_links():

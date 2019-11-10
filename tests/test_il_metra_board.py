@@ -36,9 +36,8 @@ def test_sources():
 
 
 def test_id():
-    assert parsed_items[0]['id'] == (
-        'il_metra_board/201802211030/x/metra_february_2018_board_meeting'
-    )
+    assert parsed_items[0]['id'
+                           ] == ('il_metra_board/201802211030/x/metra_february_2018_board_meeting')
 
 
 def test_status():

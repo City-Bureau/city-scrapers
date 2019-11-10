@@ -78,9 +78,9 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[
-        0]["source"
-           ] == "http://www.cookcountylandbank.org/events/cclba-data-marketing-committee-20190918/"
+    assert parsed_items[0][
+        "source"
+    ] == "http://www.cookcountylandbank.org/events/cclba-data-marketing-committee-20190918/"
 
 
 def test_links():

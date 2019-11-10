@@ -33,7 +33,8 @@ def test_end():
 
 def test_id():
     assert parsed_items[0][
-        'id'] == 'chi_city_college/201902071200/x/committee_on_finance_and_administrative_services'
+        'id'
+    ] == 'chi_city_college/201902071200/x/committee_on_finance_and_administrative_services'
 
 
 def test_all_day():

@@ -55,8 +55,8 @@ class CookBoardEthicsSpider(CityScrapersSpider):
         """
         return [
             response.urljoin(href)
-            for href in response.xpath('//a[contains(text(), "Board of Ethics")]'
-                                       ).css('a::attr(href)').extract()
+            for href in response.xpath('//a[contains(text(), "Board of Ethics")]')
+            .css('a::attr(href)').extract()
         ]
 
     def _parse_location(self, response):

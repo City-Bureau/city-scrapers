@@ -89,4 +89,5 @@ def test_location(item):
 
 def test_source():
     assert parsed_items[0][
-        'source'] == 'http://www.boarddocs.com/il/ctpf/Board.nsf/goto?open&id=B55S995DF24B'
+        'source'
+    ] == 'http://www.boarddocs.com/il/ctpf/Board.nsf/goto?open&id=B55S995DF24B'

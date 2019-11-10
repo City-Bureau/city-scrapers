@@ -66,7 +66,8 @@ def test_location():
 
 def test_source():
     assert parsed_items[0][
-        "source"] == "https://public-wclb.epropertyplus.com/landmgmtpub/app/base/customPage"
+        "source"
+    ] == "https://public-wclb.epropertyplus.com/landmgmtpub/app/base/customPage"
 
 
 def test_links():

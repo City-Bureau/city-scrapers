@@ -36,10 +36,8 @@ class ChiZoningBoardSpider(CityScrapersSpider):
                     end=None,
                     time_notes='',
                     all_day=False,
-                    location={
-                        'name': 'City Hall',
-                        'address': '121 N LaSalle St Chicago, IL 60602'
-                    },
+                    location={'name': 'City Hall',
+                              'address': '121 N LaSalle St Chicago, IL 60602'},
                     source=response.url,
                 )
                 meeting['links'] = self._parse_links(column, meeting, response)

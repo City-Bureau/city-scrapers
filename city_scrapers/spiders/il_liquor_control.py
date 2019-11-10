@@ -102,10 +102,8 @@ class IlLiquorControlSpider(CityScrapersSpider):
                 end=dt_object + datetime.timedelta(hours=16),
                 all_day=False,
                 time_notes='Meeting time is estimated.',
-                location={
-                    'address': '100 West Randolph 9-040 Chicago, IL',
-                    'name': ''
-                },
+                location={'address': '100 West Randolph 9-040 Chicago, IL',
+                          'name': ''},
                 links=self._parse_link(response, dt_object, minutes_href),
                 source=minutes_href,
             )

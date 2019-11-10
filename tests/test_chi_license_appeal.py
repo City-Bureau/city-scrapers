@@ -60,7 +60,8 @@ def test_location():
 
 def test_source():
     assert parsed_items[0][
-        "source"] == "https://www.chicago.gov/city/en/depts/lac/supp_info/2009hearings.html"
+        "source"
+    ] == "https://www.chicago.gov/city/en/depts/lac/supp_info/2009hearings.html"
 
 
 def test_links():

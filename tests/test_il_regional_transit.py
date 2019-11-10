@@ -43,7 +43,8 @@ def test_end_time():
 
 def test_time_notes():
     assert parsed_items[0][
-        'time_notes'] == 'Initial meetings begin at 8:30am, with other daily meetings following'
+        'time_notes'
+    ] == 'Initial meetings begin at 8:30am, with other daily meetings following'
 
 
 def test_id():

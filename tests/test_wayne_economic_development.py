@@ -68,7 +68,8 @@ def test_start():
 
 def test_id():
     assert parsed_items[0][
-        'id'] == 'wayne_economic_development/201801091100/x/committee_on_economic_development'
+        'id'
+    ] == 'wayne_economic_development/201801091100/x/committee_on_economic_development'
 
 
 def test_status():

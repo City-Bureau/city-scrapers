@@ -33,7 +33,8 @@ def test_end():
 
 def test_id():
     assert parsed_items[0][
-        'id'] == 'det_entertainment_commission/201807161700/x/entertainment_commission'
+        'id'
+    ] == 'det_entertainment_commission/201807161700/x/entertainment_commission'
 
 
 def test_status():
