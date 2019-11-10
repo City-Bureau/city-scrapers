@@ -1,6 +1,6 @@
 import re
 from datetime import datetime, time
-
+from collections import defaultdict
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -27,18 +27,6 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         else:
             yield from self._prev_meetings(response)
 
-    def _parse_title(self, item):
-        """Parse or generate meeting title."""
-        title_str = item['title'].split()
-        if not len(title_str):
-            return ""
-        name_str = title_str[len(title_str) - 1] + " Board Meeting Minutes"
-        return name_str
-
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
-
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
         return BOARD
@@ -64,45 +52,38 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         })
         return links
 
-    def _parse_past_links(self, response):
-        """parse start datetime as a naive datetime object"""
-        links = []
-        index = None
+    def _link_date_map(self, response):
+        link_map = defaultdict(list)
         for item in response.css(".ms-rtestate-field p a"):
-            title_str = " ".join(item.css("*::text").extract()).strip()
-            title_str = title_str.replace("\u200b", "")
-            if '.pdf' in title_str:
-                index = title_str.index('.pdf')
-            if '[' in title_str:
-                index = title_str.index('[')
-            if '-' in title_str:
-                index = title_str.index('-')
-            title_str = title_str[:index]
-            links.append({'title': title_str, 'href': response.urljoin(item.attrib['href'])})
+            date = self._past_start(item)
+            title_str = date.strftime('%B %d, %Y')
+            link_map[date].append({'title': date, 'href': response.urljoin(item.attrib['href'])})
         for item in response.css(".ms-rtestate-field .list-unstyled li a"):
-            title_str = " ".join(item.css("*::text").extract()).strip()
-            title_str = re.sub(".pdf", "", title_str).strip()
-            title_str = title_str.replace("\u200b", "")
-            index = len(title_str)
-            if '- Amended' in title_str:
-                title_str = title_str.replace("- Amended", "").strip()
-            if '[' in title_str:
-                index = title_str.index('[')
-            if '-' in title_str:
-                index = title_str.index('-')
-            title_str = title_str[:index].strip()
-            links.append({'title': title_str, 'href': response.urljoin(item.attrib['href'])})
-        return links
+            date = self._past_start(item)
+            if date is None:
+                continue
+            title_str = date.strftime('%B %d, %Y')
+            link_map[date].append({
+                'title': title_str,
+                'href': response.urljoin(item.attrib['href'])
+            })
+        return link_map
 
     def _past_start(self, item):
         """parse or generate links from past meetings"""
+        str_list = ['.docx', '.pdf', '-', '[']
         time_object = time(10, 0)
-        date_str = item['title']
-        if not len(date_str):
-            date_str = "December 2, 2015"
-            date_object = datetime.strptime(date_str, "%B %d, %Y").date()
-            return datetime.combine(date_object, time_object)
-        date_object = datetime.strptime(date_str, "%B %d, %Y").date()
+        date_str = " ".join(item.css("*::text").extract()).strip()
+        if len(date_str) == 0:
+            return None
+        date_str = date_str.replace("\u200b", "")
+        index = None
+        for item in str_list:
+            if item in date_str:
+                index = date_str.index(item)
+                break
+        date_str = date_str[:index]
+        date_object = datetime.strptime(date_str.strip(), "%B %d, %Y").date()
         return datetime.combine(date_object, time_object)
 
     def _parse_source(self, response):
@@ -131,13 +112,13 @@ class IlProcurementPolicySpider(CityScrapersSpider):
             yield meeting
 
     def _prev_meetings(self, response):
-        meets = self._parse_past_links(response)
+        meets = self._link_date_map(response)
         for item in meets:
             meeting = Meeting(
-                title=self._parse_title(item),
+                title="Procurement Policy Board",
                 description='',
                 classification=BOARD,
-                start=self._past_start(item),
+                start=item,
                 end=None,
                 all_day=False,
                 time_notes='End time not specified',
@@ -145,7 +126,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                     'name': 'Stratton Office Building',
                     'address': '401 S Spring St, Springfield, IL 62704',
                 },
-                links=item,
+                links=meets[item][0],
                 source=response.url,
             )
             meeting["status"] = self._get_status(meeting)
