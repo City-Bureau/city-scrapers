@@ -14,7 +14,7 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
         "http://chicagoinfrastructure.org/public-records/meeting-records-2/",
         "http://chicagoinfrastructure.org/public-records/scheduled-meetings/"
     ]
-
+ 
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
