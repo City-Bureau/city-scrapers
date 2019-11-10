@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_result_count():
-    assert len(parsed_items) == 11
+    assert len(parsed_items) == 34
 
 
 def test_title():
@@ -37,6 +37,7 @@ def test_description():
 def test_start():
     assert parsed_items[0]["start"] == datetime(2019, 1, 16, 13, 30)
     assert parsed_items[3]["start"] == datetime(2019, 10, 16, 13, 30)
+    assert parsed_items[-1]["start"] == datetime(2017, 12, 20, 13, 30)
 
 
 def test_time_notes():
@@ -59,7 +60,8 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == []
     assert parsed_items[1]["links"] == [{
-        "href": "https://www.chicago.gov/content/dam/city/depts/bldgs/general/Standards_Tests/S&T%20Decisions%20April%202019.pdf",  # noqa
+        "href":
+            "https://www.chicago.gov/content/dam/city/depts/bldgs/general/Standards_Tests/S&T%20Decisions%20April%202019.pdf",  # noqa
         "title": "Decisions"
     }]
 

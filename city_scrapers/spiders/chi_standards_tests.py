@@ -19,27 +19,37 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.xpath("//div[@class='col-xs-12']/table[1]//td/p"):
-            if not self._pass_filter(item):
-                continue
-            meeting = Meeting(
-                title="Committee on Standards and Tests",
-                description="",
-                classification=COMMITTEE,
-                start=self._parse_start(item),
-                end=None,
-                all_day=False,
-                time_notes="Confirm details with the agency",
-                location={
-                    "address": "121 North LaSalle Street, Room 906, Chicago, IL 60602",
-                    "name": "City Hall"
-                },
-                links=self._parse_links(item, response),
-                source=response.url,
-            )
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
-            yield meeting
+        for year, months in self.get_year_month_pairs(response):
+            for item in months.xpath(".//td/p"):
+                if not self._pass_filter(item):
+                    continue
+                meeting = Meeting(
+                    title="Committee on Standards and Tests",
+                    description="",
+                    classification=COMMITTEE,
+                    start=self._parse_start(item, year),
+                    end=None,
+                    all_day=False,
+                    time_notes="Confirm details with the agency",
+                    location={
+                        "address": "121 North LaSalle Street, Room 906, Chicago, IL 60602",
+                        "name": "City Hall"
+                    },
+                    links=self._parse_links(item, response),
+                    source=response.url,
+                )
+                meeting["status"] = self._get_status(meeting)
+                meeting["id"] = self._get_id(meeting)
+                yield meeting
+
+    def get_year_month_pairs(self, response):
+        container = response.xpath("//div[@class='container-fluid page-full-description']")
+        years = [i.get() for i in container.xpath(".//p/strong/text()") if i.get()]
+        months = [i for i in container.xpath(".//table")]
+        if len(years) == len(months):
+            return zip(years, months)
+        else:
+            return None
 
     def _pass_filter(self, item):
         # If no meeting
@@ -56,11 +66,11 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
         else:
             return False
 
-    def _parse_start(self, item):
+    def _parse_start(self, item, year):
         """Parse start datetime as a naive datetime object."""
-        year = item.xpath(".//../../../../../p[1]/strong/text()").get()
         year = year.split()[0]
         month_day = item.xpath(".//text()").get()
+        month_day = month_day.replace('*', '')
         if month_day.startswith('Feb'):
             # February has typo on website
             month_day = month_day.replace('Feburary', 'February')
