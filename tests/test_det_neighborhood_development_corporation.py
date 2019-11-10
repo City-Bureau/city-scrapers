@@ -10,7 +10,7 @@ from freezegun import freeze_time
 from city_scrapers.spiders.det_neighborhood_development_corporation import (
     DetNeighborhoodDevelopmentCorporationSpider
 )
-
+ 
 LOCATION = {
     'name': 'DEGC, Guardian Building',
     'address': '500 Griswold St, Suite 2200, Detroit, MI 48226',

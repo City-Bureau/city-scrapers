@@ -60,8 +60,7 @@ def test_location():
 
 def test_source():
     assert parsed_items[0][
-        "source"
-    ] == "https://www2.illinois.gov/cdb/about/boardmeetings/Pages/20192020Meetings.aspx"
+        "source"] == "https://www2.illinois.gov/cdb/about/boardmeetings/Pages/20192020Meetings.aspx"
 
 
 def test_links():

@@ -55,8 +55,7 @@ def test_classification():
 
 def test_id():
     assert parsed_items[0][
-        'id'
-    ] == 'chi_transit/201806151400/x/employee_retirement_review_committee_meeting'
+        'id'] == 'chi_transit/201806151400/x/employee_retirement_review_committee_meeting'
 
 
 def test_status():

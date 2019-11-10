@@ -52,8 +52,7 @@ def test_location():
 
 def test_sources():
     assert parsed_items[0][
-        'source'
-    ] == 'https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html'
+        'source'] == 'https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html'
 
 
 @pytest.mark.parametrize('item', parsed_items)

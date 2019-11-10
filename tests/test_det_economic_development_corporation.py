@@ -153,8 +153,7 @@ def test_prev_location():
 
 def test_prev_source():
     assert parsed_prev_items[0][
-        'source'
-    ] == 'http://www.degc.org/public-authorities/edc/fy-2017-2018-meetings/'
+        'source'] == 'http://www.degc.org/public-authorities/edc/fy-2017-2018-meetings/'
 
 
 def test_prev_links():

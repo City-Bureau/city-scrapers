@@ -36,8 +36,7 @@ def test_end():
 
 def test_id():
     assert parsed_items[3][
-        'id'
-    ] == 'det_water_sewage_department/201807181400/x/board_of_water_commissioners'
+        'id'] == 'det_water_sewage_department/201807181400/x/board_of_water_commissioners'
 
 
 def test_status():

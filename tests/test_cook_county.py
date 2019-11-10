@@ -18,7 +18,7 @@ freezer.start()
 item = spider._parse_event(test_response)
 freezer.stop()
 
-
+ 
 def test_title():
     assert item['title'] == 'Public Hearing - Zoning Board of Appeals'
 

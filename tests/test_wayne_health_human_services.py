@@ -68,8 +68,7 @@ def test_start():
 
 def test_id():
     assert parsed_items[0][
-        'id'
-    ] == 'wayne_health_human_services/201801091330/x/committee_on_health_and_human_services'
+        'id'] == 'wayne_health_human_services/201801091330/x/committee_on_health_and_human_services'
 
 
 def test_status():
