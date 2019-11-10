@@ -36,7 +36,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 1, 14, 2, 30)
+    assert parsed_items[0]["start"] == datetime(2019, 1, 14, 14, 30)
 
 
 def test_end():
@@ -48,7 +48,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_43/201901140230/x/commission"
+    assert parsed_items[0]["id"] == "chi_ssa_43/201901141430/x/commission"
 
 
 def test_status():
