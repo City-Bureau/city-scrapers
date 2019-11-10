@@ -177,8 +177,8 @@ class DetCityMixin:
         loc_info = response.css('.location-info')
         return {
             'name': (loc_info.css('p strong span::text').extract_first() or '').strip(),
-            'address': (loc_info.css('.field--name-field-address::text').extract_first()
-                        or '').strip(),
+            'address': (loc_info.css('.field--name-field-address::text').extract_first() or '')
+                       .strip(),
         }
 
     def _parse_links(self, response, start):
