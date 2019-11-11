@@ -102,7 +102,8 @@ def test_prev_time_notes():
 
 
 def test_prev_id():
-    assert parsed_items_prev[0]["id"].startswith("il_procurement_policy/201902271000/x/")
+    assert parsed_items_prev[0]["id"
+                                ] == "il_procurement_policy/201902271000/x/procurement_policy_board"
 
 
 def test_prev_status():
@@ -121,10 +122,10 @@ def test_prev_source():
 
 
 def test_prev_links():
-    assert parsed_items_prev[0]["links"] == {
+    assert parsed_items_prev[0]["links"] == [{
         'href': 'https://www2.illinois.gov/sites/ppb/Documents/190227%20Minutes.pdf',
         'title': 'February 27, 2019'
-    }
+    }]
 
 
 def test_prev_classification():

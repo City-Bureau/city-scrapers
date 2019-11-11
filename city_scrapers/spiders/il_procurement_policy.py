@@ -128,7 +128,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                     'name': 'Stratton Office Building',
                     'address': '401 S Spring St, Springfield, IL 62704',
                 },
-                links=meets[item][0],
+                links=meets[item],
                 source=response.url,
             )
             meeting["status"] = self._get_status(meeting)
