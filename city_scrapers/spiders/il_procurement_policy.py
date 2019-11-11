@@ -58,7 +58,10 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         for item in response.css(".ms-rtestate-field p a"):
             date = self._past_start(item)
             title_str = date.strftime('%B %d, %Y')
-            link_map[date].append({'title': date, 'href': response.urljoin(item.attrib['href'])})
+            link_map[date].append({
+                'title': title_str,
+                'href': response.urljoin(item.attrib['href'])
+            })
         for item in response.css(".ms-rtestate-field .list-unstyled li a"):
             date = self._past_start(item)
             if date is None:
@@ -98,9 +101,8 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                 description='',
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
-                end=None,
                 all_day=False,
-                time_notes='End time not specified',
+                time_notes='',
                 location={
                     'name': 'Stratton Office Building',
                     'address': '401 S Spring St, Springfield, IL 62704',
@@ -120,9 +122,8 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                 description='',
                 classification=BOARD,
                 start=item,
-                end=None,
                 all_day=False,
-                time_notes='End time not specified',
+                time_notes='',
                 location={
                     'name': 'Stratton Office Building',
                     'address': '401 S Spring St, Springfield, IL 62704',

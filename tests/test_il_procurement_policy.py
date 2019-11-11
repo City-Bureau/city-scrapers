@@ -36,12 +36,8 @@ def test_start():
     assert parsed_items[0]["start"] == datetime(2019, 10, 15, 10, 0)
 
 
-def test_end():
-    assert parsed_items[0]["end"] is None
-
-
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == "End time not specified"
+    assert parsed_items[0]["time_notes"] == ""
 
 
 def test_id():
@@ -89,56 +85,52 @@ parsed_items_prev = [item for item in spider._prev_meetings(test_response2)]
 freezer.stop()
 
 
-def prev_test_title():
-    assert parsed_items_prev[0]["title"] == "2018 Board Meeting Minutes"
+def test_prev_title():
+    assert parsed_items_prev[0]["title"] == "Procurement Policy Board"
 
 
-def prev_test_description():
+def test_prev_description():
     assert parsed_items_prev[0]["description"] == ""
 
 
-def prev_test_start():
-    assert parsed_items_prev[0]["start"] == datetime(2019, 10, 15, 10, 0)
+def test_prev_start():
+    assert parsed_items_prev[0]["start"] == datetime(2019, 2, 27, 10, 0)
 
 
-def prev_test_end():
-    assert parsed_items_prev[0]["end"] is None
+def test_prev_time_notes():
+    assert parsed_items_prev[0]["time_notes"] == ""
 
 
-def prev_test_time_notes():
-    assert parsed_items_prev[0]["time_notes"] == "End time not specified"
+def test_prev_id():
+    assert parsed_items_prev[0]["id"].startswith("il_procurement_policy/201902271000/x/")
 
 
-def prev_test_id():
-    assert parsed_items_prev[0]["id"].startswith("il_procurement_policy/201801171000/x/")
-
-
-def prev_test_status():
+def test_prev_status():
     assert parsed_items_prev[0]['status'] == PASSED
 
 
-def prev_test_location():
+def test_prev_location():
     assert parsed_items_prev[0]["location"] == {
         "name": "Stratton Office Building",
         "address": "401 S Spring St, Springfield, IL 62704"
     }
 
 
-def prev_test_source():
+def test_prev_source():
     assert parsed_items_prev[0]["source"].startswith("https://www2.illinois.gov/sites/ppb/Pages/")
 
 
-def prev_test_links():
-    assert parsed_items_prev[0]["links"] == [{
-        'href': 'https://www2.illinois.gov/sites/ppb/Documents/180117%20Minutes.pdf',
-        'title': 'Feburary 27, 2019'
-    }]
+def test_prev_links():
+    assert parsed_items_prev[0]["links"] == {
+        'href': 'https://www2.illinois.gov/sites/ppb/Documents/190227%20Minutes.pdf',
+        'title': 'February 27, 2019'
+    }
 
 
-def prev_test_classification():
+def test_prev_classification():
     assert parsed_items_prev[0]["classification"] == BOARD
 
 
 @pytest.mark.parametrize("item", parsed_items_prev)
-def prev_test_all_day(item):
+def test_prev_all_day(item):
     assert item["all_day"] is False
