@@ -18,6 +18,7 @@ freezer = freeze_time("2019-10-07")
 freezer.start()
 
 parsed_items = [item for item in spider._upcoming_meetings(test_response)]
+freezer.stop()
 
 
 def test_len():
@@ -83,7 +84,6 @@ test_response2 = file_response(
     url=prev_url,
 )
 parsed_items_prev = [item for item in spider._prev_meetings(test_response2)]
-freezer.stop()
 
 
 def test_title_prev():
@@ -108,7 +108,7 @@ def test_id_prev():
 
 
 def test_status_prev():
-    assert parsed_items_prev[0]['status'] == PASSED
+    assert parsed_items_prev[2]['status'] == PASSED
 
 
 def test_location_prev():
@@ -124,12 +124,10 @@ def test_source_prev():
 
 
 def test_links_prev():
-    assert parsed_items_prev[0]["links"] == [
-        {
-            'href': 'https://www2.illinois.gov/sites/ppb/Documents/190227%20Minutes.pdf',
-            'title': 'February 27, 2019'
-        },
-    ]
+    assert parsed_items_prev[0]["links"] == [{
+        'href': 'https://www2.illinois.gov/sites/ppb/Documents/190227%20Minutes.pdf',
+        'title': 'February 27, 2019'
+    }]
 
 
 def test_classification_prev():
