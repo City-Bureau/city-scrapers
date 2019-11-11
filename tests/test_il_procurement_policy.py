@@ -56,7 +56,8 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"].startswith("https://www2.illinois.gov/sites/ppb/Pages/future")
+    assert parsed_items[0][
+        "source"] == 'https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx'
 
 
 def test_links():
@@ -85,53 +86,56 @@ parsed_items_prev = [item for item in spider._prev_meetings(test_response2)]
 freezer.stop()
 
 
-def test_prev_title():
+def test_title_prev():
     assert parsed_items_prev[0]["title"] == "Procurement Policy Board"
 
 
-def test_prev_description():
+def test_description_prev():
     assert parsed_items_prev[0]["description"] == ""
 
 
-def test_prev_start():
+def test_start_prev():
     assert parsed_items_prev[0]["start"] == datetime(2019, 2, 27, 10, 0)
 
 
-def test_prev_time_notes():
+def test_time_notes_prev():
     assert parsed_items_prev[0]["time_notes"] == ""
 
 
-def test_prev_id():
+def test_id_prev():
     assert parsed_items_prev[0]["id"
                                 ] == "il_procurement_policy/201902271000/x/procurement_policy_board"
 
 
-def test_prev_status():
+def test_status_prev():
     assert parsed_items_prev[0]['status'] == PASSED
 
 
-def test_prev_location():
+def test_location_prev():
     assert parsed_items_prev[0]["location"] == {
         "name": "Stratton Office Building",
         "address": "401 S Spring St, Springfield, IL 62704"
     }
 
 
-def test_prev_source():
-    assert parsed_items_prev[0]["source"].startswith("https://www2.illinois.gov/sites/ppb/Pages/")
+def test_source_prev():
+    assert parsed_items_prev[0]["source"
+                                ] == 'https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx'
 
 
-def test_prev_links():
-    assert parsed_items_prev[0]["links"] == [{
-        'href': 'https://www2.illinois.gov/sites/ppb/Documents/190227%20Minutes.pdf',
-        'title': 'February 27, 2019'
-    }]
+def test_links_prev():
+    assert parsed_items_prev[0]["links"] == [
+        {
+            'href': 'https://www2.illinois.gov/sites/ppb/Documents/190227%20Minutes.pdf',
+            'title': 'February 27, 2019'
+        },
+    ]
 
 
-def test_prev_classification():
+def test_classification_prev():
     assert parsed_items_prev[0]["classification"] == BOARD
 
 
 @pytest.mark.parametrize("item", parsed_items_prev)
-def test_prev_all_day(item):
+def test_all_day_prev(item):
     assert item["all_day"] is False
