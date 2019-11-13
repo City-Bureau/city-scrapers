@@ -95,7 +95,6 @@ def test_description_prev():
 
 
 def test_start_prev():
-    assert parsed_items_prev[0]["start"] == datetime(2019, 2, 27, 10, 0)
     assert parsed_items_prev[55]["start"] == datetime(2013, 6, 12, 10, 0)
     assert parsed_items_prev[2]["start"] != datetime(2019, 2, 27, 10, 0)
 
