@@ -1,6 +1,6 @@
 from datetime import datetime
 from os.path import dirname, join
-
+from operator import itemgetter
 import pytest
 from city_scrapers_core.constants import BOARD, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
@@ -82,7 +82,8 @@ test_response2 = file_response(
     join(dirname(__file__), "files", "il_procurement_policy_prev.html"),
     url=prev_url,
 )
-parsed_items_prev = [item for item in spider._prev_meetings(test_response2)]
+parsed_items_prev = sorted([item for item in spider._prev_meetings(test_response2)],
+                           key=itemgetter("start"))
 freezer.stop()
 
 
@@ -95,8 +96,7 @@ def test_description_prev():
 
 
 def test_start_prev():
-    assert parsed_items_prev[55]["start"] == datetime(2013, 6, 12, 10, 0)
-    assert parsed_items_prev[2]["start"] != datetime(2019, 2, 27, 10, 0)
+    assert parsed_items_prev[0]["start"] == datetime(2008, 1, 15, 10, 0)
 
 
 def test_time_notes_prev():
@@ -105,7 +105,7 @@ def test_time_notes_prev():
 
 def test_id_prev():
     assert parsed_items_prev[0]["id"
-                                ] == "il_procurement_policy/201902271000/x/procurement_policy_board"
+                                ] == "il_procurement_policy/200801151000/x/procurement_policy_board"
 
 
 def test_status_prev():
@@ -126,8 +126,8 @@ def test_source_prev():
 
 def test_links_prev():
     assert parsed_items_prev[0]["links"] == [{
-        'href': 'https://www2.illinois.gov/sites/ppb/Documents/190227%20Minutes.pdf',
-        'title': 'February 27, 2019'
+        'href': 'https://www2.illinois.gov/sites/ppb/Documents/080115m.pdf',
+        'title': 'January 15, 2008'
     }]
 
 
