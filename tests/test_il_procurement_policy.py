@@ -18,7 +18,6 @@ freezer = freeze_time("2019-10-07")
 freezer.start()
 
 parsed_items = [item for item in spider._upcoming_meetings(test_response)]
-freezer.stop()
 
 
 def test_len():
@@ -84,6 +83,7 @@ test_response2 = file_response(
     url=prev_url,
 )
 parsed_items_prev = [item for item in spider._prev_meetings(test_response2)]
+freezer.stop()
 
 
 def test_title_prev():
@@ -96,6 +96,8 @@ def test_description_prev():
 
 def test_start_prev():
     assert parsed_items_prev[0]["start"] == datetime(2019, 2, 27, 10, 0)
+    assert parsed_items_prev[55]["start"] == datetime(2013, 6, 12, 10, 0)
+    assert parsed_items_prev[2]["start"] != datetime(2019, 2, 27, 10, 0)
 
 
 def test_time_notes_prev():
