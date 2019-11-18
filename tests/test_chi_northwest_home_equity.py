@@ -47,25 +47,15 @@ def test_end_upcoming():
 
 
 def test_address_upcoming():
-    assert parsed_items[10]["location"] == {
-        "name": "",
-        "address": "3022 N. Harlem, Chicago, IL"
-    }
+    assert parsed_items[10]["location"] == {"name": "", "address": "3022 N. Harlem, Chicago, IL"}
 
 
 def test_default_start_time():
     assert parsed_items[9]["start"] == datetime(2019, 3, 14, 12, 0)
 
 
-def test_default_end_time():
-    assert parsed_items[9]["end"] == None
-
-
 def test_no_location():
-    assert parsed_items[9]["location"] == {
-        "name": "TBD",
-        "address": ""
-    } 
+    assert parsed_items[9]["location"] == {"name": "TBD", "address": ""}
 
 
 def test_title():
@@ -89,7 +79,8 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_northwest_home_equity/201910101200/x/october_10_2019_meeting_minutes_and_agenda"
+    id = "chi_northwest_home_equity/201910101200/x/october_10_2019_meeting_minutes_and_agenda"
+    assert parsed_items[0]["id"] == id
 
 
 def test_status():
@@ -97,10 +88,7 @@ def test_status():
 
 
 def test_location():
-    assert parsed_items[0]["location"] == {
-        "name": "",
-        "address": "3022 N. Harlem, Chicago, IL"
-    }
+    assert parsed_items[0]["location"] == {"name": "", "address": "3022 N. Harlem, Chicago, IL"}
 
 
 def test_source():
@@ -109,8 +97,8 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == [{
-      "href": "https://nwheap.com/2019/10/09/october-10-2019-meeting-minutes-and-agenda/",
-      "title": "October 10, 2019 – Meeting Minutes and Agenda"
+        "href": "https://nwheap.com/2019/10/09/october-10-2019-meeting-minutes-and-agenda/",
+        "title": "October 10, 2019 – Meeting Minutes and Agenda"
     }]
 
 
