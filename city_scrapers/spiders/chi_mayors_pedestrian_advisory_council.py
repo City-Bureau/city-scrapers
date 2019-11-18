@@ -11,6 +11,6 @@ class ChiMayorsPedestrianAdvisoryCouncilSpider(ChiMayorsAdvisoryCouncilsMixin, C
     ]
     title = "Mayor's Pedestrian Advisory Council"
     location = {
-        'address': '121 N LaSalle Dr, Chicago, IL 60602',
+        'address': '121 N LaSalle St, Chicago, IL 60602',
         'name': 'City Hall, Room 1103',
     }
