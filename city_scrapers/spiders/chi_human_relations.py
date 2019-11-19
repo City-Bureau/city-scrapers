@@ -56,7 +56,7 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
     def _parse_schedule_pdf(self, response):
         """Parse dates and details from schedule PDF"""
         pdf_obj = PdfFileReader(BytesIO(response.body))
-        pdf_text = pdf_obj.getPage(0).extractText()
+        pdf_text = pdf_obj.getPage(0).extractText().replace("\n", "")
         # Remove duplicate characters not followed by lowercase (as in 5:00pm)
         clean_text = re.sub(r"([A-Z0-9:])\1(?![a-z])", r"\1", pdf_text, flags=re.M)
         # Remove duplicate spaces
