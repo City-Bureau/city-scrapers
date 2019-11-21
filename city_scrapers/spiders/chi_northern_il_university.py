@@ -32,14 +32,12 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
         self.material_map = dict()
 
     def parse(self, response):
-        #print(response)
         """
         `parse` should always `yield` Meeting items.
 
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs. 
         """
-        #print(response)
 
         self._parse_links()
         yield None
@@ -74,11 +72,9 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
         """Parse or generate meeting title."""
         pattern= re.compile('-(.*(Committee|Meeting))',re.IGNORECASE)
         title_list = re.findall(pattern, item)
-        #print(title_list)
         if title_list == None:
             return 'Board of Trustees'
         title, ign=title_list[-1]
-        #print(title)
         return title.replace("<strong>","").replace("</strong>","").replace("\xa0"," ")
 
     def _parse_classification(self, title):
