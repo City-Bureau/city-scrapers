@@ -23,7 +23,6 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        location = self._parse_location(response)
         for item in response.css('div.wpb_text_column div.wpb_wrapper div.inner-text h2'):
             meeting = Meeting(
                 title=self._parse_h2_title(item),
@@ -53,7 +52,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
                 end=None,
                 all_day=False,
                 time_notes='',
-                location=location,
+                location=self.location,
                 links=self._parse_links(item),
                 source=response.url,
             )
@@ -70,7 +69,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_h2_title(self, item):
         """Parse meeting title from the h2 tag."""
-        return item.css('::text').re_first(r'.*[a-zA-Z] Meeting')
+        return item.css('::text').re_first(r'.*[a-zA-Z] Meeting').replace('Next ', '')
 
     def _parse_location(self, item):
         """Parse the location of the meeting."""
