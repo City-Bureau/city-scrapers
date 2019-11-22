@@ -1,47 +1,47 @@
+import re
+from collections import defaultdict
+from datetime import datetime
+
+import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-import scrapy
-import datetime
-import re
-
-month_mapping = {
-    "January"  : 1,
-    "February" : 2,
-    "March"    : 3,
-    "April"    : 4,
-    "May"      : 5,
-    "June"     : 6,
-    "July"     : 7,
-    "August"   : 8,
-    "September": 9,
-    "October"  : 10,
-    "November" : 11,
-    "December" : 12,
-}
 
 
 class ChiNorthernIlUniversitySpider(CityScrapersSpider):
     name = "chi_northern_il_university"
     agency = "Northeastern Illinois University"
     timezone = "America/Chicago"
-    start_urls = ["https://www.neiu.edu/about/board-of-trustees/calendar-of-meetings"]
+    start_urls = ["https://www.neiu.edu/about/board-of-trustees/board-meeting-materials"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.material_map = dict()
+    def parse(self,response):
+        self.link_date_map = defaultdict(list)
+        link_list = response.xpath('//div[@class="field field--name-field-generic-body field--type-text-long field--label-hidden field--item"]/h3')
+        for title in link_list.xpath(".//text()").extract():
+            date = title.split("-")[0].split("(")[0]
+            date_obj = datetime.strptime(date.strip(" "),'%B %d, %Y')
+            new_date_obj = datetime(date_obj.year, date_obj.month, date_obj.day, 13, 00)
+            for one_day_links in link_list.xpath('.//following-sibling::ul[1]/li'):
+                href = one_day_links.xpath('.//@href').get()
+                name = one_day_links.xpath('.//text()').extract()
+                if href is None:
+                    link = ''
+                else:
+                    link = response.urljoin(href)
+                self.link_date_map.setdefault(new_date_obj,[]).append({
+                    "title" : ''.join(name),
+                    "href"  : link
+                })
+        yield response.follow("https://www.neiu.edu/about/board-of-trustees/calendar-of-meetings",callback = self._parse_detail)
 
-    def parse(self, response):
+
+    def _parse_detail(self, response):
         """
         `parse` should always `yield` Meeting items.
 
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs. 
         """
-
-        self._parse_links()
-        yield None
-        '''
         items_list = response.xpath('//div[@class="field field--name-field-generic-body field--type-text-long field--label-hidden field--item"]')
         year_list = items_list.xpath('.//h2')
         for years in year_list.extract():
@@ -49,33 +49,34 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
             year = re.findall('\d{4}',years)[0]
             items = year_list.xpath('.//following-sibling::ul[1]/li').extract()
             for item in items:
-                #print(item)
+               # print(item)
+                start  = self._parse_start(item,year)
                 meeting = Meeting(
                     title=self._parse_title(item),
                     description='',
                     classification=self._parse_classification(item),
-                    start=self._parse_start(item,year),
+                    start=start,
                     end=None,
                     #all_day=self._parse_all_day(item),
                     time_notes="See agenda for meeting time",
                     location=self._parse_location(item),
-                    #links=self._parse_links(item),
+                    links=self.link_date_map[start],
                     #source=self._parse_source(response),
                 )
-
                 meeting["status"] = self._get_status(meeting)
                 meeting["id"] = self._get_id(meeting)
-                yield meeting'''
+                yield meeting
 
     def _parse_title(self, item):
-
         """Parse or generate meeting title."""
-        pattern= re.compile('-(.*(Committee|Meeting))',re.IGNORECASE)
-        title_list = re.findall(pattern, item)
-        if title_list == None:
-            return 'Board of Trustees'
-        title, ign=title_list[-1]
-        return title.replace("<strong>","").replace("</strong>","").replace("\xa0"," ")
+        title_obj = item.split('-')
+        title=str()
+        for i in range(1,len(title_obj)):
+            title = title + title_obj[i]
+        title = re.sub('<strong>|</strong>|<li>|</li>',' ',title)
+        #title = title_obj[1].replace("<strong>",'(').replace("</strong>",")") + title_obj[2].strip(" ")
+        #print(title)
+        return title
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
@@ -85,12 +86,12 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
             return BOARD
         return NOT_CLASSIFIED
 
-    def _parse_start(self, item,year):
+    def _parse_start(self, item, year):
         """Parse start datetime as a naive datetime object."""
-        pattern = re.compile('([a-z]+)(,|\u00a0|\u0020)+([a-z]+)(,|\u00a0|\u0020)+([0-9]{1,2})',re.IGNORECASE)
-        day, ign1, month, ign2, date = re.findall(pattern,item)[0]
-        date_obj = datetime.datetime(int(year),month_mapping[month],int(date),13,00)
-        return date_obj
+        date = re.sub('<li>|,|\xa0|\*|\*\*|<strong>|</strong>','',item.split("-")[0]).strip(" ")
+        date_obj = datetime.strptime(date,'%A %B %d')
+        new_date_obj = datetime(int(year),date_obj.month,date_obj.day,13,00)
+        return new_date_obj
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -112,7 +113,6 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
                 "address": "",
                 'name'   : "El Centro"
             }
-
         return {
             "address": "5500 North St. Louis Avenue, Chicago, Ill., 60625",
             "name"   : 'Northeastern Illinois University'
@@ -120,14 +120,7 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
 
     def _parse_links(self):
         """Parse or generate links."""
-
-        link_response = scrapy.Request("https://www.neiu.edu/about/board-of-trustees/board-meeting-materials")
-        material_list = link_response.xpath('//div[@class="field field--name-field-generic-body field--type-text-long field--label-hidden field--item"]/h3')
-        
-        print(material_list)
-
-        url_infos = ''
-        return [{"href": "", "title": ""}]
+        return ''
 
     def _parse_source(self, response):
         """Parse or generate source."""
