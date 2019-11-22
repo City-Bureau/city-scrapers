@@ -22,11 +22,11 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[1]["title"] == "Board Meeting"
+    assert parsed_items[1]["title"] == "Audit, Finance and Investment Committee Meeting"
 
 
 def test_start():
-    assert parsed_items[1]["start"] == datetime(2019, 9, 19, 10, 0)
+    assert parsed_items[1]["start"] == datetime(2019, 11, 25, 10, 0)
 
 
 def test_location():
@@ -44,7 +44,7 @@ def test_links():
     assert parsed_items[1]["links"] == [{
         'href': (
             'https://236c3m49r38mg7ixa39zqru1-wpengine.netdna-ssl.com/'
-            'wp-content/uploads/2019/09/ISFA-Board-Meeting-Agenda-9-2019.pdf'
+            'wp-content/uploads/2019/11/AFI-Committee-Mtg-AGENDA-11-25-19.pdf'
         ),
         'title': 'Agenda'
     }]
