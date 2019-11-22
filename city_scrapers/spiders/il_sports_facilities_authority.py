@@ -1,6 +1,7 @@
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from datetime import datetime, timedelta
 
 
 class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
@@ -21,8 +22,8 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        location = self._validate_location(response)
-        for item in response.css('div .wpb_wrapper p'):
+        location = self._parse_location(response)
+        for item in response.css('div.wpb_text_column div.wpb_wrapper p'):
             meeting = Meeting(
                 title=self._parse_title(item),
                 description='',
@@ -43,16 +44,16 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return item.css('.inner-text h2::text') or item.css('p::text').re(r'.*[a-zA-Z] Meeting')
+        return item.css('::text').re_first(r'.*[a-zA-Z] Meeting')
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
         return BOARD
 
-    def _validate_location(self, response):
+    def _parse_location(self, response):
         """Parse the location of the meeting."""
-        if 'Guaranteed Rate Field' not in ' '.join(
-                response.css('div .wpb_wrapper .inner-test hs::text')
+        if 'Guaranteed Rate Field, 333 West 35th Street, Chicago, IL' not in ' '.join(
+                response.css('div .wpb_wrapper p strong::text').getall()
         ):
             return response.css(
                 'div .wpb_wrapper .inner-test h2::text'
@@ -62,15 +63,21 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        return item.css('::text').re(r'[0-9]*[.][0-9]*[.][0-9]*')
+        parsed = item.css('::text').re_first(r'[0-9]*[.][0-9]*[.][0-9]*')
+        if parsed:
+            try:
+                val = datetime.strptime(parsed, '%m.%d.%Y') + timedelta(hours=10)
+            except ValueError:
+                val = datetime.strptime(parsed, '%m.%d.%y') + timedelta(hours=10)
+            return val
 
     def _parse_links(self, item):
         """Parse or generate links."""
         return [
             {
                 "href": parsed.xpath('@href').get(),
-                "title": parsed.css('::text').getall()
-            } for parsed in item.css('p a')
+                "title": parsed.css('::text').get()
+            } for parsed in item.css('a')
         ]
 
     def _parse_source(self, response):

@@ -22,36 +22,36 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Board Meeting"
+    assert parsed_items[1]["title"] == "Board Meeting"
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 9, 19, 0, 0)
+    assert parsed_items[1]["start"] == datetime(2019, 9, 19, 10, 0)
 
 
 def test_location():
-    assert parsed_items[0]["location"] == {
-        "name": "Authority Offices",
+    assert parsed_items[1]["location"] == {
+        "name": "Authority offices",
         "address": "Guaranteed Rate Field, 333 West 35th Street, Chicago, IL"
     }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.isfauthority.com/governance/board-meetings/"
+    assert parsed_items[1]["source"] == "https://www.isfauthority.com/governance/board-meetings/"
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": (
-            "https://236c3m49r38mg7ixa39zqru1-wpengine.netdna-ssl."
-            "com/wp-content/uploads/2019/07/DOC073019-Minutes.pdf"
+    assert parsed_items[1]["links"] == [{
+        'href': (
+            'https://236c3m49r38mg7ixa39zqru1-wpengine.netdna-ssl.com/'
+            'wp-content/uploads/2019/09/ISFA-Board-Meeting-Agenda-9-2019.pdf'
         ),
-        "title": "Agenda"
+        'title': 'Agenda'
     }]
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == BOARD
+    assert parsed_items[1]["classification"] == BOARD
 
 
 @pytest.mark.parametrize("item", parsed_items)
