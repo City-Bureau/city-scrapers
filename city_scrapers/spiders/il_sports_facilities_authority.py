@@ -54,11 +54,10 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
     def _parse_location(self, response):
         """Parse the location of the meeting."""
         if 'Guaranteed Rate Field, 333 West 35th Street, Chicago, IL' not in ' '.join(
-                response.css('div .wpb_wrapper p strong::text').getall()
+            response.css('div .wpb_wrapper p strong::text').getall()
         ):
-            return response.css(
-                'div .wpb_wrapper .inner-test h2::text'
-            ).re(r'\b \d* [a-zA-Z].*, [0-9][a-zA-Z].*')
+            return response.css('div .wpb_wrapper .inner-test h2::text'
+                                ).re(r'\b \d* [a-zA-Z].*, [0-9][a-zA-Z].*')
         else:
             return self.location
 
@@ -74,12 +73,10 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        return [
-            {
-                "href": parsed.xpath('@href').get(),
-                "title": parsed.css('::text').get()
-            } for parsed in item.css('a')
-        ]
+        return [{
+            "href": parsed.xpath('@href').get(),
+            "title": parsed.css('::text').get()
+        } for parsed in item.css('a')]
 
     def _parse_source(self, response):
         """Parse or generate source."""
