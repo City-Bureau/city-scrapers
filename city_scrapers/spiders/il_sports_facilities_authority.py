@@ -1,7 +1,8 @@
+from datetime import datetime, timedelta
+
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from datetime import datetime, timedelta
 
 
 class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
