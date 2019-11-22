@@ -37,10 +37,11 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
                 links=self._parse_links(item),
                 source=self._parse_source(response),
             )
-
-            # meeting['status'] = self._get_status(meeting)
-            # meeting['id'] = self._get_id(meeting)
-
+            try:
+                meeting['status'] = self._get_status(meeting)
+                meeting['id'] = self._get_id(meeting)
+            except TypeError:
+                continue
             yield meeting
 
     def _parse_title(self, item):
