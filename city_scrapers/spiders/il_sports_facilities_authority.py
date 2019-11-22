@@ -75,7 +75,8 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         """Parse the location of the meeting."""
         return {
             'name': '',
-            'address': item.css('::text').re_first(r'\b \d* [a-zA-Z].*, [0-9][a-zA-Z].*').lstrip(' ')
+            'address':
+                item.css('::text').re_first(r'\b \d* [a-zA-Z].*, [0-9][a-zA-Z].*').lstrip(' ')
         }
 
     def _parse_start(self, item):
@@ -94,7 +95,6 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
             r'[a-zA-Z]* [0-9]*, [0-9]* at [0-9]*[:][0-9]* [APM.]*'
         ).replace('.', '')
         return datetime.strptime(parsed, '%B %d, %Y at %I:%M %p')
-
 
     def _parse_links(self, item):
         """Parse or generate links."""

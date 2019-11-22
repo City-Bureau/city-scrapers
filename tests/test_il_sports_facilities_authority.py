@@ -43,8 +43,9 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]['source'] == 'https://www.isfauthority.com/governance/board-meetings/'
-    assert parsed_items[1]['source'] == 'https://www.isfauthority.com/governance/board-meetings/'
+    assert parsed_items[0]['source'] ==\
+           parsed_items[1]['source'] ==\
+           'https://www.isfauthority.com/governance/board-meetings/'
 
 
 def test_links():
