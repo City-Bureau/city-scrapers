@@ -21,13 +21,6 @@ class IlPortDistrictSpider(CityScrapersSpider):
         "address": "3600 E. 95th St. Chicago, IL 60617",
     }
 
-    # def parse(self, response):
-    #     if response.url == self.start_urls[0]:
-    #         return self.parse_agendas(response)
-    #     if response.url == self.start_urls[1]:
-    #         return self.parse_minutes(response)
-    #     if response.url == self.start_urls[2]:
-    #         return self.parse_schedules(response)
 
     def start_requests(self):
         start_urls = [
