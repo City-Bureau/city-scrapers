@@ -20,4 +20,4 @@ pytest = "*"
 "flake8" = "*"
 isort = "*"
 yapf = "*"
-
+pylint = "*"
