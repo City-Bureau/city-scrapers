@@ -2,74 +2,142 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.il_port_district import IlPortDistrictSpider
 
-test_response = file_response(
-    join(dirname(__file__), "files", "il_port_district.html"),
-    url="https://www.iipd.com",
+agendas_response = file_response(
+    join(dirname(__file__), "files", "il_port_district_agendas.html"),
+    url="https://www.iipd.com/calendar/agendas",
 )
+
+minutes_response = file_response(
+    join(dirname(__file__), "files", "il_port_district_minutes.html"),
+    url="https://www.iipd.com/about/board-meeting-minutes",
+)
+
+schedules_response = file_response(
+    join(dirname(__file__), "files", "il_port_district_schedules.html"),
+    url="https://www.iipd.com/calendar/schedules",
+)
+
 spider = IlPortDistrictSpider()
 
 freezer = freeze_time("2019-11-22")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+spider.parse_agendas(agendas_response)
+spider.parse_minutes(minutes_response)
+
+parsed_items = [item for item in spider.parse_schedules(schedules_response)]
 
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+def test_title():
+    assert parsed_items[0]["title"] == "Special Committee Meeting"
+    assert parsed_items[1]["title"] == "Special Board Meeting"
+    assert parsed_items[3]["title"] == "Board Meeting"
 
 
-"""
-Uncomment below
-"""
+def test_start():
+    assert parsed_items[0]["start"] == datetime(2019, 3, 1, 9, 0)
+    assert parsed_items[1]["start"] == datetime(2019, 3, 1, 9, 0)
+    assert parsed_items[3]["start"] == datetime(2019, 1, 18, 9, 0)
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_end():
+    assert parsed_items[0]["end"] is None
+    assert parsed_items[1]["end"] is None
+    assert parsed_items[3]["end"] is None
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_id():
+    assert parsed_items[0]["id"] == "il_port_district/201903010900/x/special_committee_meeting"
+    assert parsed_items[1]["id"] == "il_port_district/201903010900/x/special_board_meeting"
+    assert parsed_items[3]["id"] == "il_port_district/201901180900/x/board_meeting"
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_status():
+    assert parsed_items[0]["status"] == "passed"
+    assert parsed_items[1]["status"] == "passed"
+    assert parsed_items[3]["status"] == "passed"
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
 
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
+def test_location():
+    assert parsed_items[0]["location"] == {
+        'address': '3600 E. 95th St. Chicago, IL 60617',
+        'name': 'Illinois International Port District '
+    }
 
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+    assert parsed_items[1]["location"] == {
+        'address': '3600 E. 95th St. Chicago, IL 60617',
+        'name': 'Illinois International Port District '
+    }
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+    assert parsed_items[3]["location"] == {
+        'address': '3600 E. 95th St. Chicago, IL 60617',
+        'name': 'Illinois International Port District '
+    }
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
 
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+def test_source():
+    assert parsed_items[0]["source"] == "https://www.iipd.com/calendar/schedules"
+    assert parsed_items[1]["source"] == "https://www.iipd.com/calendar/schedules"
+    assert parsed_items[3]["source"] == "https://www.iipd.com/calendar/schedules"
+
+
+def test_links():
+    # Spider returns https links, but test file sees them as http
+    assert parsed_items[0]["links"][0] == {
+        "href":
+            "http://www.iipd.com/sites/default/files/documents/L%26A%20Agenda%20November"
+            "%202019.pdf",
+        "title": "Leases and Agreement Committee Agenda L 26A 20Agenda 20November 202019"
+    }
+
+    assert parsed_items[0]["links"][1] == {
+        "href":
+            "http://www.iipd.com/sites/default/files/documents/F%26P%20Agenda%20November"
+            "%202019.pdf",
+        "title": "Finance and Personnel Committee Agenda F 26P 20Agenda 20November 202019"
+    }
+
+    assert parsed_items[1]["links"][0] == {
+        "href":
+            "http://www.iipd.com/sites/default/files/documents/Bd%20Agenda%20November%202019.pdf",
+        "title": "Board Agenda Bd 20Agenda 20November 202019"
+    }
+
+    assert parsed_items[1]["links"][1] == {
+        "href":
+            "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes%20_"
+            "%20Special%20Bd%20Meeting_3-1-19.pdf",
+        "title": "Board Meeting March 01, 2019"
+    }
+
+    assert parsed_items[3]["links"][0] == {
+        "href":
+            "http://www.iipd.com/sites/default/files/documents/Bd%20Agenda%20November%202019.pdf",
+        "title": "Board Agenda Bd 20Agenda 20November 202019"
+    }
+
+    assert parsed_items[3]["links"][1] == {
+        "href":
+            "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes"
+            "%201-18-19.pdf",
+        "title": "Board Meeting January 18, 2019"
+    }
+
+
+def test_classification():
+    assert parsed_items[0]["classification"] == COMMITTEE
+    assert parsed_items[1]["classification"] == BOARD
+    assert parsed_items[3]["classification"] == BOARD
+
+
+@pytest.mark.parametrize("item", parsed_items)
+def test_all_day(item):
+    assert item["all_day"] is False

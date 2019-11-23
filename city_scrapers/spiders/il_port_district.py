@@ -1,7 +1,7 @@
 import datetime
 import re
-import scrapy
 
+import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -11,7 +11,7 @@ class IlPortDistrictSpider(CityScrapersSpider):
     name = "il_port_district"
     agency = "Illinois International Port District"
     timezone = "America/Chicago"
-    allowed_domains = ["www.iipd.com"]
+    allowed_domains = ["https://www.iipd.com"]
     start_urls = [
         "https://www.iipd.com/calendar/agendas", "https://www.iipd.com/about/board-meeting-minutes",
         "https://www.iipd.com/calendar/schedules"
@@ -21,10 +21,10 @@ class IlPortDistrictSpider(CityScrapersSpider):
         "address": "3600 E. 95th St. Chicago, IL 60617",
     }
 
-
     def start_requests(self):
         start_urls = [
-            "https://www.iipd.com/calendar/agendas", "https://www.iipd.com/about/board-meeting-minutes",
+            "https://www.iipd.com/calendar/agendas",
+            "https://www.iipd.com/about/board-meeting-minutes",
             "https://www.iipd.com/calendar/schedules"
         ]
         for url in start_urls:
@@ -34,7 +34,6 @@ class IlPortDistrictSpider(CityScrapersSpider):
                 yield scrapy.Request(url=url, callback=self.parse_minutes)
             if url == start_urls[2]:
                 yield scrapy.Request(url=url, callback=self.parse_schedules)
-
 
     def parse_schedules(self, response):
 
@@ -169,7 +168,8 @@ class IlPortDistrictSpider(CityScrapersSpider):
         link = self.minutes_dict.get(start, None)
         if link:
             name = "Board Meeting " + datetime.datetime.strftime(start, "%B %d, %Y")
-            return [{name: link}]
+            print('NAME: LINK MINUTES: ', {name: link})
+            return [{'title': name, 'href': link}]
         else:
             return None
 
