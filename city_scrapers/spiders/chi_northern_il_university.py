@@ -19,12 +19,13 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
             '//div[@class="field field--name-field-generic-body field--type-text-long \
 field--label-hidden field--item"]/h3'
         )
-        for title in link_list.xpath(".//text()").extract():
-            date = title.split("-")[0].split("(")[0]
+        for title in link_list:
+            full_str = title.xpath(".//text()").extract()[0]
+            date = full_str.split("-")[0].split("(")[0]
 
             date_obj = datetime.strptime(date.strip(" "), '%B %d, %Y')
             new_date_obj = datetime(date_obj.year, date_obj.month, date_obj.day, 13, 00)
-            for one_day_links in link_list.xpath('.//following-sibling::ul[1]/li'):
+            for one_day_links in title.xpath('.//following-sibling::ul[1]/li'):
                 href = one_day_links.xpath('.//@href').get()
                 name = one_day_links.xpath('.//text()').extract()
                 if href is None:
@@ -67,11 +68,13 @@ field--label-hidden field--item"]'
                     time_notes="See agenda for meeting time",
                     location=self._parse_location(item),
                     links=self.link_date_map[start],
-                    # source=self._parse_source(response),
+                    source=self._parse_source(response),
                 )
                 meeting["status"] = self._get_status(meeting)
                 meeting["id"] = self._get_id(meeting)
                 yield meeting
+                
+        print(self.link_date_map)
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -79,7 +82,7 @@ field--label-hidden field--item"]'
         title = str()
         for i in range(1, len(title_obj)):
             title = title + title_obj[i]
-        title = re.sub('<strong>|</strong>|<li>|</li>', ' ', title)
+        title = re.sub(r'<strong>|</strong>|<li>|</li>|\xa0', ' ', title)
         return title
 
     def _parse_classification(self, title):
