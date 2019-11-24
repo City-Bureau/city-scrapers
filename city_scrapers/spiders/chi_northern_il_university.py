@@ -73,8 +73,6 @@ field--label-hidden field--item"]'
                 meeting["status"] = self._get_status(meeting)
                 meeting["id"] = self._get_id(meeting)
                 yield meeting
-                
-        print(self.link_date_map)
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
