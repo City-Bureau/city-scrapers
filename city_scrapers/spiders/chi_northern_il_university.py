@@ -81,7 +81,7 @@ field--label-hidden field--item"]'
         for i in range(1, len(title_obj)):
             title = title + title_obj[i]
         title = re.sub(r'<strong>|</strong>|<li>|</li>|\xa0', ' ', title)
-        return title
+        return title.strip(" ")
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""

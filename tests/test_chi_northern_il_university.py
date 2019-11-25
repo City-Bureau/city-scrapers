@@ -9,12 +9,12 @@ from freezegun import freeze_time
 from city_scrapers.spiders.chi_northern_il_university import ChiNorthernIlUniversitySpider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_northern_il_university_calendar.html"),
+    join(dirname(__file__), "files", "chi_northern_il_university.html"),
     url="https://www.neiu.edu/about/board-of-trustees/calendar-of-meetings",
 )
 
 docs_response = file_response(
-    join(dirname(__file__), "files", "chi_northern_il_university_docs.html"),
+    join(dirname(__file__), "files", "chi_northern_il_university_material.html"),
     url="https://www.neiu.edu/about/board-of-trustees/board-meeting-materials",
 )
 
@@ -23,7 +23,9 @@ spider = ChiNorthernIlUniversitySpider()
 freezer = freeze_time("2019-11-15")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+for item in spider.parse(docs_response):
+    pass
+parsed_items = [item for item in spider._parse_detail(test_response)]
 
 freezer.stop()
 
@@ -36,9 +38,10 @@ Uncomment below
 
 
 def test_title():
-    assert parsed_items[0][
-        "title"] == "(was previously scheduled for January 17)  Academic/Student Affairs \
-          and Enrollment Management Committee"
+    assert parsed_items[
+        0]["title"
+           ] == "Rescheduled (was previously scheduled for January 17)  Academic/Student Affairs \
+and Enrollment Management Committee"
 
 
 def test_description():
@@ -50,7 +53,7 @@ def test_start():
 
 
 def test_end():
-    assert parsed_items[0]["end"] == datetime(2019, 1, 16, 15, 0)
+    assert parsed_items[0]["end"] is None
 
 
 def test_time_notes():
@@ -58,10 +61,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[
-        0]["id"
-           ] == "chi_northern_il_university/201901161300/x/_was_previously_scheduled_for_january_17\
-    _academic_student_affairs_and_enrollment_management_committee"
+    assert parsed_items[0][
+        "id"
+    ] == "chi_northern_il_university/201901161300/x/_was_previously_scheduled_for_january_17_\
+academic_student_affairs_and_enrollment_management_committee"
 
 
 def test_status():
@@ -70,8 +73,8 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": "5500 North St. Louis Avenue, Chicago, Ill., 60625",
-        "address": "Northeastern Illinois University"
+        "address": "5500 North St. Louis Avenue, Chicago, Ill., 60625",
+        "name": "Northeastern Illinois University"
     }
 
 
