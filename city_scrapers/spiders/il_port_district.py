@@ -20,15 +20,12 @@ class IlPortDistrictSpider(CityScrapersSpider):
     schedules_url = "https://www.iipd.com/calendar/schedules"
 
     def start_requests(self):
-        start_urls = [
-            "https://www.iipd.com/calendar/agendas",
-            "https://www.iipd.com/about/board-meeting-minutes"
-        ]
-        for url in start_urls:
-            if url == start_urls[0]:
-                yield scrapy.Request(url=url, callback=self.parse_agendas)
-            if url == start_urls[1]:
-                yield scrapy.Request(url=url, callback=self.parse_minutes)
+        yield scrapy.Request(
+            url="https://www.iipd.com/calendar/agendas", callback=self.parse_agendas
+        )
+        yield scrapy.Request(
+            url="https://www.iipd.com/about/board-meeting-minutes", callback=self.parse_minutes
+        )
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
