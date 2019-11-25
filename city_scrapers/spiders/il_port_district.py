@@ -11,29 +11,38 @@ class IlPortDistrictSpider(CityScrapersSpider):
     name = "il_port_district"
     agency = "Illinois International Port District"
     timezone = "America/Chicago"
-    allowed_domains = ["https://www.iipd.com"]
-    start_urls = [
-        "https://www.iipd.com/calendar/agendas", "https://www.iipd.com/about/board-meeting-minutes",
-        "https://www.iipd.com/calendar/schedules"
-    ]
+    allowed_domains = ["www.iipd.com"]
     location = {
         "name": "Illinois International Port District ",
         "address": "3600 E. 95th St. Chicago, IL 60617",
     }
 
+    schedules_url = "https://www.iipd.com/calendar/schedules"
+
     def start_requests(self):
         start_urls = [
             "https://www.iipd.com/calendar/agendas",
-            "https://www.iipd.com/about/board-meeting-minutes",
-            "https://www.iipd.com/calendar/schedules"
+            "https://www.iipd.com/about/board-meeting-minutes"
         ]
         for url in start_urls:
             if url == start_urls[0]:
                 yield scrapy.Request(url=url, callback=self.parse_agendas)
             if url == start_urls[1]:
                 yield scrapy.Request(url=url, callback=self.parse_minutes)
-            if url == start_urls[2]:
-                yield scrapy.Request(url=url, callback=self.parse_schedules)
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = super().from_crawler(crawler, *args, **kwargs)
+        crawler.signals.connect(spider.spider_idle, signal=scrapy.signals.spider_idle)
+        return spider
+
+    def spider_idle(self):
+        """Call parse_schedules if spider is idle (finished parsing minutes and agendas)"""
+        self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
+        self.crawler.engine.crawl(
+            scrapy.Request(self.schedules_url, callback=self.parse_schedules), self
+        )
+        raise scrapy.exceptions.DontCloseSpider
 
     def parse_schedules(self, response):
 
@@ -111,17 +120,15 @@ class IlPortDistrictSpider(CityScrapersSpider):
                 yield meeting
 
     def parse_agendas(self, response):
-        file_prefix = response.xpath("//tr/td[@class='views-field views-field-title']/text()")\
+        file_names = response.xpath("//tr/td[@class='views-field views-field-title']/text()")\
             .extract()
-        file_prefix = [x.strip("\n ") for x in file_prefix]
+        file_names = [x.strip("\n ") for x in file_names]
         file_links = response.xpath("//tr/td/a[@class='file-download']/@href").extract()
-        name_pattern = r"(?<=documents\/)(.*?)(?=.pdf)"
-        file_names = [re.findall(name_pattern, x)[0].replace('%', ' ') for x in file_links]
 
         self.files_list = []
 
-        for link, prefix, name in list(zip(file_links, file_prefix, file_names)):
-            self.files_list.append({'title': prefix + " " + name, 'href': link})
+        for link, name in list(zip(file_links, file_names)):
+            self.files_list.append({'title': name, 'href': link})
 
     def parse_minutes(self, response):
         rows = response.xpath("//tr")
@@ -139,7 +146,7 @@ class IlPortDistrictSpider(CityScrapersSpider):
             file_link = row.xpath(".//td[@class='views-field views-field-field-file']/a/@href")\
                 .extract_first()
 
-            self.minutes_dict.setdefault(file_name_dt, file_link)
+            self.minutes_dict.setdefault(file_name_dt.date(), file_link)
 
     def _parse_classification(self, i, meeting_types):
         if "board" in meeting_types.lower():
@@ -159,16 +166,14 @@ class IlPortDistrictSpider(CityScrapersSpider):
         elif classification == 'Committee':
             link_list = [d for d in self.files_list if 'Committee' in d['title']]
         else:
-            link_list = [{}]
+            link_list = []
 
         return link_list
 
     def _parse_minutes_links(self, start):
-        start = start.replace(hour=0, minute=0, second=0, microsecond=0)
-        link = self.minutes_dict.get(start, None)
+        link = self.minutes_dict.get(start.date(), None)
         if link:
-            name = "Board Meeting " + datetime.datetime.strftime(start, "%B %d, %Y")
-            print('NAME: LINK MINUTES: ', {name: link})
+            name = "Board Meeting Minutes"
             return [{'title': name, 'href': link}]
         else:
             return None

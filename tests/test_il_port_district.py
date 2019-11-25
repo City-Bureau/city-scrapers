@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, COMMITTEE
+from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -61,9 +61,9 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "passed"
-    assert parsed_items[1]["status"] == "passed"
-    assert parsed_items[3]["status"] == "passed"
+    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[1]["status"] == PASSED
+    assert parsed_items[3]["status"] == PASSED
 
 
 def test_location():
@@ -95,40 +95,40 @@ def test_links():
         "href":
             "http://www.iipd.com/sites/default/files/documents/L%26A%20Agenda%20November"
             "%202019.pdf",
-        "title": "Leases and Agreement Committee Agenda L 26A 20Agenda 20November 202019"
+        "title": "Leases and Agreement Committee Agenda"
     }
 
     assert parsed_items[0]["links"][1] == {
         "href":
             "http://www.iipd.com/sites/default/files/documents/F%26P%20Agenda%20November"
             "%202019.pdf",
-        "title": "Finance and Personnel Committee Agenda F 26P 20Agenda 20November 202019"
+        "title": "Finance and Personnel Committee Agenda"
     }
 
     assert parsed_items[1]["links"][0] == {
         "href":
             "http://www.iipd.com/sites/default/files/documents/Bd%20Agenda%20November%202019.pdf",
-        "title": "Board Agenda Bd 20Agenda 20November 202019"
+        "title": "Board Agenda"
     }
 
     assert parsed_items[1]["links"][1] == {
         "href":
             "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes%20_"
             "%20Special%20Bd%20Meeting_3-1-19.pdf",
-        "title": "Board Meeting March 01, 2019"
+        "title": "Board Meeting Minutes"
     }
 
     assert parsed_items[3]["links"][0] == {
         "href":
             "http://www.iipd.com/sites/default/files/documents/Bd%20Agenda%20November%202019.pdf",
-        "title": "Board Agenda Bd 20Agenda 20November 202019"
+        "title": "Board Agenda"
     }
 
     assert parsed_items[3]["links"][1] == {
         "href":
             "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes"
             "%201-18-19.pdf",
-        "title": "Board Meeting January 18, 2019"
+        "title": "Board Meeting Minutes"
     }
 
 
