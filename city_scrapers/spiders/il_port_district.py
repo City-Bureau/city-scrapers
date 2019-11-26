@@ -55,8 +55,7 @@ class IlPortDistrictSpider(CityScrapersSpider):
         strong_meetings = list(zip(strong_meetings[0::2], strong_meetings[1::2]))
 
         additional_info = response.xpath("//p[contains(text(), '*')]/text()").extract()
-        changed_meeting_time = re.findall(r"\d{1,2}:\d{2}am|pm", additional_info[2])[0]
-        meeting_time = "9:00am"
+        self.changed_meeting_time = re.findall(r"\d{1,2}:\d{2}am|pm", additional_info[2])[0]
 
         self._validate_location(response)
 
@@ -71,25 +70,18 @@ class IlPortDistrictSpider(CityScrapersSpider):
             for i, date in enumerate(meetings_dates):
                 if not date:
                     continue
-                special_meeting = None
-                if date.startswith("***") or date.endswith("***"):
-                    meeting_time = changed_meeting_time
-                elif date.startswith("**") or date.endswith("**"):
-                    special_meeting = "Special "
-                elif date.startswith("*") or date.endswith("*"):
-                    new_date = re.findall(r"(?<=\()(.*?)(?=NEW)", date)
-                    date = new_date[0][:-3] if new_date else date
+                self.special_meeting = None
 
-                date = date.strip(" *")
+                meeting_time = "9:00am"
 
-                title = meeting_types[i] if not special_meeting\
-                    else special_meeting + meeting_types[i]
+                start = self._parse_start(date, year, meeting_time)
+
+                title = meeting_types[i] if not self.special_meeting\
+                    else self.special_meeting + meeting_types[i]
 
                 classification = self._parse_classification(i, meeting_types[i])
 
-                start = self._parse_start(year, date, meeting_time)
-
-                agendas_links = self._parse_agendas_links(classification)
+                agendas_links = self._parse_agendas_links(classification, start)
 
                 minutes_links = None
 
@@ -122,10 +114,13 @@ class IlPortDistrictSpider(CityScrapersSpider):
         file_names = [x.strip("\n ") for x in file_names]
         file_links = response.xpath("//tr/td/a[@class='file-download']/@href").extract()
 
+        date_pattern = r"(?<=Agenda)(.*?)(?=.pdf)"
+        agenda_dates = [re.findall(date_pattern, x)[0].replace('%20', ' ') for x in file_links]
+
         self.files_list = []
 
-        for link, name in list(zip(file_links, file_names)):
-            self.files_list.append({'title': name, 'href': link})
+        for link, name, date in list(zip(file_links, file_names, agenda_dates)):
+            self.files_list.append({'title': name + date, 'href': link})
 
     def parse_minutes(self, response):
         rows = response.xpath("//tr")
@@ -153,15 +148,30 @@ class IlPortDistrictSpider(CityScrapersSpider):
         else:
             return NOT_CLASSIFIED
 
-    def _parse_start(self, year, date, meeting_time):
-        dt = " ".join([year, date, meeting_time])
-        return datetime.datetime.strptime(dt, "%Y %B %d %I:%M%p")
+    def _parse_start(self, date, year, meeting_time):
 
-    def _parse_agendas_links(self, classification):
+        if date.startswith("***") or date.endswith("***"):
+            meeting_time = self.changed_meeting_time
+        elif date.startswith("**") or date.endswith("**"):
+            self.special_meeting = "Special "
+        elif date.startswith("*") or date.endswith("*"):
+            new_date = re.findall(r"(?<=\()(.*?)(?=NEW)", date)
+            date = new_date[0][:-3] if new_date else date
+
+        date = date.strip(" *")
+        dt = " ".join([year, date, meeting_time])
+        dt = datetime.datetime.strptime(dt, "%Y %B %d %I:%M%p")
+
+        return dt
+
+    def _parse_agendas_links(self, classification, start):
+        date = datetime.datetime.strftime(start, '%B %Y')
         if classification == 'Board':
-            link_list = [d for d in self.files_list if 'Board' in d['title']]
+            link_list = [d for d in self.files_list if 'Board' in d['title'] and date in d['title']]
         elif classification == 'Committee':
-            link_list = [d for d in self.files_list if 'Committee' in d['title']]
+            link_list = [
+                d for d in self.files_list if 'Committee' in d['title'] and date in d['title']
+            ]
         else:
             link_list = []
 
@@ -173,11 +183,11 @@ class IlPortDistrictSpider(CityScrapersSpider):
             name = "Board Meeting Minutes"
             return [{'title': name, 'href': link}]
         else:
-            return None
+            return []
 
     def _validate_location(self, response):
         loc = response.xpath("//strong")[-1].xpath(".//text()").extract()
         loc = [x.strip("\n ") for x in loc]
         loc = " ".join(loc[-2:])
-        if '3600 E. 95th St. Chicago, IL 60617' != loc:
+        if '3600' not in loc:
             raise ValueError("Meeting location has changed")
