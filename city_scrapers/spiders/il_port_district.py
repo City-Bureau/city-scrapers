@@ -1,5 +1,6 @@
-import datetime
 import re
+from collections import defaultdict
+from datetime import datetime
 
 import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
@@ -55,7 +56,7 @@ class IlPortDistrictSpider(CityScrapersSpider):
         strong_meetings = list(zip(strong_meetings[0::2], strong_meetings[1::2]))
 
         additional_info = response.xpath("//p[contains(text(), '*')]/text()").extract()
-        self.changed_meeting_time = re.findall(r"\d{1,2}:\d{2}am|pm", additional_info[2])[0]
+        changed_meeting_time = re.findall(r"\d{1,2}:\d{2}am|pm", additional_info[2])[0]
 
         self._validate_location(response)
 
@@ -70,25 +71,23 @@ class IlPortDistrictSpider(CityScrapersSpider):
             for i, date in enumerate(meetings_dates):
                 if not date:
                     continue
-                self.special_meeting = None
 
-                meeting_time = "9:00am"
+                start = self._parse_start(date, year, changed_meeting_time)
 
-                start = self._parse_start(date, year, meeting_time)
-
-                title = meeting_types[i] if not self.special_meeting\
-                    else self.special_meeting + meeting_types[i]
+                title = self._parse_title(date, meeting_types[i])
 
                 classification = self._parse_classification(i, meeting_types[i])
 
-                agendas_links = self._parse_agendas_links(classification, start)
+                agendas_links = self.agendas_dict.get(
+                    (classification, datetime.strftime(start, '%B %Y')), []
+                )
 
-                minutes_links = None
+                minutes_links = []
 
-                if classification == "Board":
-                    minutes_links = self._parse_minutes_links(start)
-                links = agendas_links if not minutes_links else\
-                    agendas_links + minutes_links
+                if classification == BOARD:
+                    minutes_links = self.minutes_dict.get(start.date(), [])
+
+                links = agendas_links + minutes_links
 
                 meeting = Meeting(
                     title=title,
@@ -117,10 +116,12 @@ class IlPortDistrictSpider(CityScrapersSpider):
         date_pattern = r"(?<=Agenda)(.*?)(?=.pdf)"
         agenda_dates = [re.findall(date_pattern, x)[0].replace('%20', ' ') for x in file_links]
 
-        self.files_list = []
+        self.agendas_dict = defaultdict()
 
         for link, name, date in list(zip(file_links, file_names, agenda_dates)):
-            self.files_list.append({'title': name + date, 'href': link})
+            classification = BOARD if BOARD in name else COMMITTEE
+            self.agendas_dict.setdefault((classification, date.strip()), [])\
+                .append({'title': name + date, 'href': link})
 
     def parse_minutes(self, response):
         rows = response.xpath("//tr")
@@ -133,57 +134,47 @@ class IlPortDistrictSpider(CityScrapersSpider):
 
             file_name = file_name.strip("\n ")
             file_name_dt = re.findall(r"(?:.*?)(?:\d{4})", file_name)[0]
-            file_name_dt = datetime.datetime.strptime(file_name_dt, "%B %d, %Y")
+            file_name_dt = datetime.strptime(file_name_dt, "%B %d, %Y")
 
             file_link = row.xpath(".//td[@class='views-field views-field-field-file']/a/@href")\
                 .extract_first()
 
-            self.minutes_dict.setdefault(file_name_dt.date(), file_link)
+            self.minutes_dict.setdefault(
+                file_name_dt.date(), [{
+                    'title': 'Board Meeting Minutes',
+                    'href': file_link
+                }]
+            )
 
     def _parse_classification(self, i, meeting_types):
-        if "board" in meeting_types.lower():
+        if BOARD in meeting_types:
             return BOARD
-        elif "committee" in meeting_types.lower():
+        elif COMMITTEE in meeting_types:
             return COMMITTEE
         else:
             return NOT_CLASSIFIED
 
-    def _parse_start(self, date, year, meeting_time):
+    def _parse_start(self, date, year, changed_meeting_time):
+        meeting_time = "9:00am"
 
         if date.startswith("***") or date.endswith("***"):
-            meeting_time = self.changed_meeting_time
-        elif date.startswith("**") or date.endswith("**"):
-            self.special_meeting = "Special "
+            meeting_time = changed_meeting_time
         elif date.startswith("*") or date.endswith("*"):
             new_date = re.findall(r"(?<=\()(.*?)(?=NEW)", date)
             date = new_date[0][:-3] if new_date else date
 
         date = date.strip(" *")
         dt = " ".join([year, date, meeting_time])
-        dt = datetime.datetime.strptime(dt, "%Y %B %d %I:%M%p")
+        dt = datetime.strptime(dt, "%Y %B %d %I:%M%p")
 
         return dt
 
-    def _parse_agendas_links(self, classification, start):
-        date = datetime.datetime.strftime(start, '%B %Y')
-        if classification == 'Board':
-            link_list = [d for d in self.files_list if 'Board' in d['title'] and date in d['title']]
-        elif classification == 'Committee':
-            link_list = [
-                d for d in self.files_list if 'Committee' in d['title'] and date in d['title']
-            ]
+    def _parse_title(self, date, meeting_type):
+        if (date.startswith("**") or date.endswith("**")) and\
+                not (date.startswith("***") or date.endswith("***")):
+            return "Special " + meeting_type
         else:
-            link_list = []
-
-        return link_list
-
-    def _parse_minutes_links(self, start):
-        link = self.minutes_dict.get(start.date(), None)
-        if link:
-            name = "Board Meeting Minutes"
-            return [{'title': name, 'href': link}]
-        else:
-            return []
+            return meeting_type
 
     def _validate_location(self, response):
         loc = response.xpath("//strong")[-1].xpath(".//text()").extract()
