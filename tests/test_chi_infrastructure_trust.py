@@ -39,7 +39,7 @@ def test_end():
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == ""
+    assert parsed_items[0]["time_notes"] == "Confirm details in meeting documents"
 
 
 def test_id():

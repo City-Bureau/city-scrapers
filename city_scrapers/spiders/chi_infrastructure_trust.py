@@ -22,93 +22,71 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        if response.url == self.start_urls[0]:
-            for item in response.css(".entry").xpath('.//p'):
-                if item.xpath('.//span'):
-                    continue
+        for item in response.css(".entry p"):
+            if item.xpath(".//span"):
+                continue
 
-                yield self._generate_meeting(item, response)
+            start = self._parse_start(item, response)
+            if not start:
+                return
 
-        elif response.url == self.start_urls[1]:
-            item = response.css(".entry").xpath('.//p')[1]
+            meeting = Meeting(
+                title="Board of Directors",
+                description="",
+                classification=BOARD,
+                start=start,
+                end=None,
+                all_day=False,
+                time_notes="Confirm details in meeting documents",
+                location=self._parse_location(start),
+                links=self._parse_links(item),
+                source=response.url,
+            )
 
-            yield self._generate_meeting(item, response)
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
 
-    def _generate_meeting(self, item, response):
-        """Generate the meeting object"""
-        meeting = Meeting(
-            title=self._parse_title(item),
-            description=self._parse_description(item),
-            classification=self._parse_classification(item),
-            start=self._parse_start(item, response),
-            end=self._parse_end(item),
-            all_day=self._parse_all_day(item),
-            time_notes=self._parse_time_notes(item),
-            location=self._parse_location(item),
-            links=self._parse_links(item),
-            source=self._parse_source(response),
-        )
-
-        meeting["status"] = self._get_status(meeting)
-        meeting["id"] = self._get_id(meeting)
-
-        return meeting
-
-    def _parse_title(self, item):
-        """Parse or generate meeting title."""
-        return "Board of Directors"
-
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
-
-    def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
-        return BOARD
+            yield meeting
 
     def _parse_start(self, item, response):
         """Parse start datetime as a naive datetime object."""
-        item_html = item.get()
-        date_arr = re.split('strong>| – |<|p>', item_html)
-        date_arr_clean = [x for x in date_arr if x]
-        date_str = date_arr_clean[0].replace(" ", "").replace("\xa0", "").strip('stndrdth')
-        if response.url == self.start_urls[0]:
-            return datetime.strptime(date_str, '%B%d,%Y')
-        elif response.url == self.start_urls[1]:
-            return datetime.strptime(date_str + str(datetime.now().year), '%A,%B%d%Y')
+        item_text = re.sub(r"\s+", " ", " ".join(item.css("*::text").extract())).strip()
+        date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2},? \d{4}", item_text)
+        if date_match:
+            date_str = date_match.group().replace(",", "")
+            return datetime.strptime(date_str, "%B %d %Y")
+        else:
+            header_str = " ".join(response.css(".entry strong")[0].css("*::text").extract()).strip()
+            year_match = re.search(r"\d{4}", header_str)
+            if not year_match:
+                return
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+            date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2}", item_text)
+            if not date_match:
+                return
 
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
+            return datetime.strptime(" ".join([date_match.group(), year_match.group()]), "%B %d %Y")
 
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
-
-    def _parse_location(self, item):
+    def _parse_location(self, start):
         """Parse or generate location."""
-        return {
-            "address": "140 South Dearborn Street, Suite 1400, Chicago, IL 60603",
-            "name": "Metropolitan Planning Council",
-        }
+        # Not a clean fix, but changing the address after a certain date
+        if start > datetime(2019, 11, 1):
+            return {
+                "name": "",
+                "address": "35 E Wacker Dr, Chicago, IL 60601",
+            }
+        else:
+            return {
+                "name": "Metropolitan Planning Council",
+                "address": "140 South Dearborn Street, Suite 1400, Chicago, IL 60603",
+            }
 
     def _parse_links(self, item):
         """Parse or generate links."""
         links = []
-
-        item_links = item.xpath('./following-sibling::ul[1]')
-
-        for link in item_links.xpath('.//li'):
+        for link in item.xpath("./following-sibling::ul[1]/li/a"):
             links.append({
-                "href": link.xpath('.//a/@href').get(),
-                "title": link.xpath('.//a/text()').get(),
+                "href": link.attrib["href"],
+                "title": " ".join(link.css("*::text").extract()),
             })
-        return links if links else [{"href": "", "title": ""}]
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
+        return links

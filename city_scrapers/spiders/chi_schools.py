@@ -46,7 +46,7 @@ class ChiSchoolsSpider(CityScrapersSpider):
             for link in response.css(".past-meetings")[:2].css("th a"):
                 yield response.follow(link.attrib["href"], callback=self._parse_detail)
         else:
-            for link in response.css(".meetings dl a"):
+            for link in response.css(".meetings dl a:not(.action)"):
                 yield response.follow(link.attrib["href"], callback=self._parse_detail)
 
     def _parse_detail(self, response):
