@@ -1,4 +1,5 @@
 import itertools
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import FORUM
@@ -71,15 +72,16 @@ class ChiSchoolActionsSpider(CityScrapersSpider):
         """
         Parse datetime string from date and time strings
         """
-        time_str = time_str.strip().replace('.', '')[:]
-        # Enforce max length, select format string
-        if ':' in time_str:
-            time_str = time_str[:7]
-            time_format_str = '%I:%M %p'
-        else:
-            time_str = time_str[:4]
-            time_format_str = '%I %p'
-        return datetime.strptime(date_str + time_str, '%Y-%b-%d' + time_format_str)
+        time_match = re.search(r"(\d{1,2}(:\d{2})?[apm]{2})", re.sub(r"[\s\.]", "", time_str))
+        if not time_match:
+            return
+        clean_time_str = time_match.group()
+        time_format_str = "%I:%M%p"
+        if ":" not in time_str:
+            time_format_str = "%I%p"
+        return datetime.strptime(
+            " ".join([date_str, clean_time_str]), "%Y-%b-%d " + time_format_str
+        )
 
     def _parse_start(self, item):
         """
