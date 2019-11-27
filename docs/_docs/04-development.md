@@ -15,16 +15,13 @@ Follow the following directions for cloning the repository and installing requir
 - Git installed
 - GitHub account
 - Working internet connection
-- Python 3.5, 3.6, or 3.7 installed
-- Virtual environment manager (`pipenv`, `virtualenv`, `virtualenv-wrapper`, etc.)
+- Docker installed
 
 If in doubt, please also refer to the [Setup Help](/docs/setup-help/), which should be useful for common first-time setup issues.
 
 ### Clone the Repository
 
 **Note:** If you're interested in setting up and managing a group of scrapers for your area, follow these instructions for our [City-Bureau/city-scrapers-template](https://github.com/city-bureau/city-scrapers-template) repo instead.
-
-These steps are the same, regardless of which option below you choose.
 
 1. Fork the repository (either from the repo for the local City Scrapers project you're working on or [City-Bureau/city-scrapers](https://github.com/City-Bureau/city-scrapers))
 
@@ -42,73 +39,51 @@ $ cd city-scrapers
 
 **If you do not plan on doing any development, you can skip creating a fork and just clone the repo**
 
-## Local Python3 and Virtualenv
+## The Docker Workspace
 
-You'll need a fairly standard Python development stack. If you're on OS X, the [NPR Visuals Guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html){:target="\_blank"} is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
+Run the `city-scrapers` service with Docker Compose to enter the workspace.
 
-### `pipenv` installation
-
-[`pipenv`](https://pipenv.readthedocs.io/en/latest/) is package management tool for Python which combines managing dependencies and virtual environments. It's also designed to be compatible with Windows.
-
-To setup an environment with `pipenv`, run:
-
-```bash
-$ pipenv install --dev --ignore-pipfile --three
+```{bash}
+$ docker-compose run city-scrapers
+(city-scrapers) /usr/src/app (master)
+$>
 ```
 
-Then, you can either activate the virtual environment similarly to tools like `virtualenv-wrapper` by running
-
-```bash
-$ pipenv shell
+If this is your first time running this, you should see some output like:
+```{bash}
+Pulling workspace (mrdiggles/city-scrapers:latest)...
+latest: Pulling from mrdiggles/city-scrapers
+89d9c30c1d48: Already exists
+910c49c00810: Already exists
+e573a2f39893: Already exists
+a147d60101b9: Already exists
+04550de40735: Already exists
+aa5c5c9d5a63: Pull complete
+c434b0a82a86: Pull complete
+10ffe74c1dfc: Pull complete
+bb3e13614601: Pull complete
+4c6edcd74c4d: Pull complete
+Digest: sha256:35f5703a37b7ab9c9291339445855332733f039a3aa4944cc5bc158362ac8b0a
+Status: Downloaded newer image for mrdiggles/city-scrapers:latest
 ```
 
-after which all of your commands will be in a virtual environment. You can exit this environment by running `exit`, or by entering CTRL+D.
+You can use this workspace to run any commands or make any changes.
 
-Alternatively, you can prefix commands with `pipenv run`. Here's an example that will run the Chicago Public Library scraper:
+To exit workspace, you can run:
 
-```bash
-$ pipenv run scrapy crawl chi_library
+```
+(city-scrapers) /usr/src/app (master)
+$> exit
+$
 ```
 
-### `virtualenv-wrapper` installation
+### On Windows
 
-**SKIP THIS section if `pipenv install` was successful**
+If this is your first time running Docker on your Windows machine, you will be prompted to share your C drive. You will need to accept to begin developing.
 
-The following assumes you have `virtualenv` and `virtualenv-wrapper` installed.
-If you are using a different virtual environment manager, please refer to its
-documentation (steps 1-3 should be the same).
+If this does not happen automatically, navigate to the Docker settings and manually share the correct drive.
 
-1. Create a virtual environment (also called `city-scrapers`) for the project:
-
-```bash
-$ mkvirtualenv -p `which python3` city-scrapers
-```
-
-The virtual environment should now be activated.
-
-2. Install the required packages into the virtual environment:
-
-```bash
-(city-scrapers)$ pip install -r requirements.txt
-```
-
-You should now have a working environment for running the project or making changes to it. Remember to always activate the virtual environment before working with it:
-
-```bash
-$ workon city-scrapers
-```
-
-Should you need to deactivate the virtual environment, it is as simple as:
-
-```bash
-(city-scrapers)$ deactivate
-```
-
-### Windows Dependencies
-
-If you're setting up the project in a Windows environment, you'll also need to install `pypiwin32`.
-
-You can do this by running `pipenv install pypiwin32` for `pipenv` or installing normally with `pip install pypiwin32` in a virtual environment.
+![Docker for Windows: Sharing Drives](../_data/sharing-drives-on-windows.png)
 
 ## Contribute
 
@@ -144,10 +119,11 @@ $ git checkout -b XXXX-spider-NAMEOFAGENCY
 
 #### 3. Create a spider
 
-Create a spider from our template with a spider slug, agency name, and a URL to start scraping. Inside your virtual environment following the previous examples (or prefixed by `pipenv run`) run:
+Create a spider from our template with a spider slug, agency name, and a URL to start scraping. Inside your workspace following the previous examples run:
 
 ```bash
-(city-scrapers)$ scrapy genspider chi_housing "Chicago Housing Authority" http://www.thecha.org
+(city-scrapers) /usr/src/app (master)
+$> scrapy genspider chi_housing "Chicago Housing Authority" http://www.thecha.org
 ```
 
 You should see some output like:
@@ -163,7 +139,8 @@ Created file: /Users/eads/Code/city-scrapers/tests/files/chi_housing.html
 You now have a spider named `chi_housing`. To run it (admittedly, not much will happen until you start editing the scraper), run:
 
 ```bash
-(city-scrapers)$ scrapy crawl chi_housing
+(city-scrapers) /usr/src/app (master)
+$> scrapy crawl chi_housing
 ```
 
 If there are no error messages, congratulations! You have a barebones spider.
@@ -173,7 +150,8 @@ If there are no error messages, congratulations! You have a barebones spider.
 We use the [`pytest`](https://docs.pytest.org/en/latest/){:target="\_blank"} testing framework to verify the behavior of the project's code. To run this, simply run `pytest` in your project environment.
 
 ```bash
-(city-scrapers)$ pytest
+(city-scrapers) /usr/src/app (master)
+$> pytest
 ```
 
 Whoops! The tests for new spiders fail by default. Here's typical output:
@@ -209,29 +187,46 @@ That's OK.
 We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isort`](https://isort.readthedocs.io/en/stable/){:target="\_blank"}, and [`yapf`](https://github.com/google/yapf){:target="\_blank"} to check that all code is written in the proper style. To run these tools individually, you can run the following commands:
 
 ```bash
-$ flake8
-$ isort
-$ yapf --in-place --recursive ./city_scrapers/ ./tests/
+(city-scrapers) /usr/src/app (master)
+$> flake8
+(city-scrapers) /usr/src/app (master)
+$> isort
+(city-scrapers) /usr/src/app (master)
+$> yapf --in-place --recursive ./city_scrapers/ ./tests/
 ```
 
-Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. Here's an example for VSCode using the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} (which can be modified/added at `.vscode/settings.json` in your project directory):
+#### 7. Configuring VSCode
+
+VSCode can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`.
+
+First install the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} and the [Remote - Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
+
+Then add the file `.vscode/settings.json` containing the following:
 
 ```json
 {
-  "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
-  "python.linting.pylintEnabled": false,
-  "python.linting.flake8Enabled": true,
-  "python.envFile": "${workspaceRoot}/.env",
-  "python.linting.flake8Args": ["--config", "${workspaceRoot}/setup.cfg"],
-  "python.formatting.provider": "yapf",
-  "python.formatting.yapfArgs": ["--style", "${workspaceRoot}/setup.cfg"],
-  "python.sortImports.path": "${workspaceRoot}/setup.cfg",
-  "editor.formatOnSave": true,
-  "editor.rulers": [100]
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--config",
+        "${workspaceRoot}/setup.cfg"
+    ],
+    "python.formatting.provider": "yapf",
+    "python.formatting.yapfArgs": [
+        "--style",
+        "${workspaceRoot}/setup.cfg"
+    ],
+    "python.sortImports.path": "${workspaceRoot}/setup.cfg",
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        100
+    ]
 }
 ```
 
-This configuration will run linting and style checks for you, and also make necessary changes automatically any time you save. Packages are available for [Atom](https://atom.io/packages/linter-flake8){:target="\_blank"} and [Sublime Text](https://fosstack.com/setup-sublime-python/){:target="\_blank"} as well.
+Then open the project in the remote container by clicking the green button on the bottom left and then selecting "Remote Container: Reopen in Container".
+
+This configuration will run linting and style checks for you, and also make necessary changes automatically any time you save.
 
 ### Building a spider
 
