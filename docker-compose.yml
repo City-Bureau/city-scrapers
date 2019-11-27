@@ -2,4 +2,4 @@ version: '3.7'
 
 services:
   city-scrapers:
-    image: mrdiggles/city-scrapers:latest
+    image: mrdiggles/city-scrapers:1.0.0

@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   city-scrapers:
-    image: mrdiggles/city-scrapers:latest
+    image: mrdiggles/city-scrapers:${TAG_NAME}
     build:
       context: ./
       dockerfile: ./Dockerfile

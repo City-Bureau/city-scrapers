@@ -2,7 +2,6 @@ version: '3.7'
 
 services:
   city-scrapers:
-    image: mrdiggles/city-scrapers:latest
     volumes:
       - ./:/usr/src/app/
       - .docker.bashrc:/root/.bashrc
