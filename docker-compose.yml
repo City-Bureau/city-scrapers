@@ -1,0 +1,5 @@
+version: '3.7'
+
+services:
+  city-scrapers:
+    image: mrdiggles/city-scrapers:latest
