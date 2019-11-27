@@ -199,9 +199,7 @@ $> yapf --in-place --recursive ./city_scrapers/ ./tests/
 
 VSCode can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`.
 
-First install the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} and the [Remote - Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
-
-Then add the file `.vscode/settings.json` containing the following:
+First install the [Remote - Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) then add the file `.vscode/settings.json` containing the following:
 
 ```json
 {
