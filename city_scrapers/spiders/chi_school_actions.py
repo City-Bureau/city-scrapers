@@ -72,7 +72,9 @@ class ChiSchoolActionsSpider(CityScrapersSpider):
         """
         Parse datetime string from date and time strings
         """
-        time_match = re.search(r"(\d{1,2}(:\d{2})?[apm]{2})", re.sub(r"[\s\.]", "", time_str))
+        time_match = re.search(
+            r"(\d{1,2}(:\d{2})?[apm]{2})", re.sub(r"[\s\.]", "", time_str.lower())
+        )
         if not time_match:
             return
         clean_time_str = time_match.group()
@@ -88,16 +90,16 @@ class ChiSchoolActionsSpider(CityScrapersSpider):
         Parse start date and time.
         """
         date_str = self._parse_date_str(item)
-        time = item.css('.time::text').extract_first()
-        return self._parse_datetime_str(date_str, time.split('-')[0])
+        time_str = item.css('.time::text').extract_first()
+        return self._parse_datetime_str(date_str, time_str.split('-')[0])
 
     def _parse_end(self, item):
         """
         Parse end date and time.
         """
         date_str = self._parse_date_str(item)
-        time = item.css('.time::text').extract_first()
-        split_time = time.split('-')
+        time_str = item.css('.time::text').extract_first()
+        split_time = time_str.split('-')
         if len(split_time) > 1:
             return self._parse_datetime_str(date_str, split_time[1])
 
