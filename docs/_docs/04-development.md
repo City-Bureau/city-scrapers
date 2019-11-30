@@ -26,15 +26,17 @@ You can find more details on setting up these tools and other common issues in [
 
 These steps are the same, regardless of which option below you choose.
 
-1. Fork the repository (either from the repo for the local City Scrapers project you're working on or [City-Bureau/city-scrapers](https://github.com/City-Bureau/city-scrapers))
+#### 1. Fork the repository
 
-2. Clone the fork to your local machine:
+This can be from the repo for the local City Scrapers project you're working on or [City-Bureau/city-scrapers](https://github.com/City-Bureau/city-scrapers).
+
+#### 2. Clone the fork to your local machine
 
 ```bash
 $ git clone https://github.com/YOUR-USERNAME/city-scrapers.git
 ```
 
-3. Change directories into the main project folder:
+#### 3. Change directories into the main project folder
 
 ```bash
 $ cd city-scrapers
@@ -47,7 +49,7 @@ $ cd city-scrapers
 To setup an environment with Pipenv, run:
 
 ```bash
-$ pipenv sync --dev --ignore-pipfile --three
+$ pipenv sync --dev --three
 ```
 
 Then, you can activate the virtual environment by running:
@@ -74,7 +76,7 @@ The best way to familiarize yourself with the code base is to build a spider. Fo
 
 ### Familiarize yourself with how we work
 
-**Please read the project's [`CONTRIBUTING.md`](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} file to learn about how we use GitHub to manage the project and our pull request policy.**
+Please read the project's [`CONTRIBUTING.md`](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} file to learn about how we use GitHub to manage the project and our pull request policy.
 
 ### Spider Setup
 

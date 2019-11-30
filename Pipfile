@@ -13,6 +13,7 @@ legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper"}
 scrapy-wayback-middleware = "*"
 city-scrapers-core = {extras = ["azure"],version = "*"}
 pypdf2 = "*"
+pywin32 = {version = "*", sys_platform = "== 'win32'"}
 
 [dev-packages]
 freezegun = "*"
@@ -21,3 +22,5 @@ pytest = "*"
 isort = "*"
 yapf = "*"
 
+[scripts]
+style = "yapf --in-place --recursive ./city_scrapers/ ./tests/"
