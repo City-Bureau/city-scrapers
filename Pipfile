@@ -12,6 +12,7 @@ scrapy-sentry = "*"
 legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper"}
 scrapy-wayback-middleware = "*"
 city-scrapers-core = {extras = ["azure"],version = "*"}
+azure-storage-blob = "<3"
 pypdf2 = "*"
 pywin32 = {version = "*", sys_platform = "== 'win32'"}
 
