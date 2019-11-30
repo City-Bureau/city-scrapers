@@ -1,24 +1,24 @@
 ---
 title: "Development"
 permalink: /docs/development/
-excerpt: "Intro to City Scrapers"
+excerpt: "City Scrapers development documentation"
 last_modified_at: 2018-10-04T20:15:56-04:00
 toc: true
 ---
 
-## Installation
+## Setup
 
 Follow the following directions for cloning the repository and installing requirements.
 
-### Prerequisites
+### What you'll need
 
-- Git installed
-- GitHub account
+- [Git](https://git-scm.com/)
+- [GitHub](https://github.com/) account
 - Working internet connection
-- Python 3.5, 3.6, or 3.7 installed
-- Virtual environment manager (`pipenv`, `virtualenv`, `virtualenv-wrapper`, etc.)
+- [Python](https://www.python.org/) 3.5, 3.6, or 3.7 installed
+- [Pipenv](https://pipenv.readthedocs.io/en/latest/) for managing dependencies and virtual environments
 
-If in doubt, please also refer to the [Setup Help](/docs/setup-help/), which should be useful for common first-time setup issues.
+You can find more details on setting up these tools and other common issues in [Setup Help](/docs/setup-help/).
 
 ### Clone the Repository
 
@@ -40,23 +40,17 @@ $ git clone https://github.com/YOUR-USERNAME/city-scrapers.git
 $ cd city-scrapers
 ```
 
-**If you do not plan on doing any development, you can skip creating a fork and just clone the repo**
+### Install dependencies
 
-## Local Python3 and Virtualenv
+[Pipenv](https://pipenv.readthedocs.io/en/latest/) is package management tool for Python which combines managing dependencies and virtual environments. It's also designed to be compatible with Windows. Other tools like `virtualenv` and `virtualenv-wrapper` can be used, but our documentation will only refer to Pipenv since it's quickly being adopted as the standard for Python dependency management.
 
-You'll need a fairly standard Python development stack. If you're on OS X, the [NPR Visuals Guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html){:target="\_blank"} is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
-
-### `pipenv` installation
-
-[`pipenv`](https://pipenv.readthedocs.io/en/latest/) is package management tool for Python which combines managing dependencies and virtual environments. It's also designed to be compatible with Windows.
-
-To setup an environment with `pipenv`, run:
+To setup an environment with Pipenv, run:
 
 ```bash
-$ pipenv install --dev --ignore-pipfile --three
+$ pipenv sync --dev --ignore-pipfile --three
 ```
 
-Then, you can either activate the virtual environment similarly to tools like `virtualenv-wrapper` by running
+Then, you can activate the virtual environment by running:
 
 ```bash
 $ pipenv shell
@@ -70,65 +64,23 @@ Alternatively, you can prefix commands with `pipenv run`. Here's an example that
 $ pipenv run scrapy crawl chi_library
 ```
 
-### `virtualenv-wrapper` installation
-
-**SKIP THIS section if `pipenv install` was successful**
-
-The following assumes you have `virtualenv` and `virtualenv-wrapper` installed.
-If you are using a different virtual environment manager, please refer to its
-documentation (steps 1-3 should be the same).
-
-1. Create a virtual environment (also called `city-scrapers`) for the project:
-
-```bash
-$ mkvirtualenv -p `which python3` city-scrapers
-```
-
-The virtual environment should now be activated.
-
-2. Install the required packages into the virtual environment:
-
-```bash
-(city-scrapers)$ pip install -r requirements.txt
-```
-
-You should now have a working environment for running the project or making changes to it. Remember to always activate the virtual environment before working with it:
-
-```bash
-$ workon city-scrapers
-```
-
-Should you need to deactivate the virtual environment, it is as simple as:
-
-```bash
-(city-scrapers)$ deactivate
-```
-
-### Windows Dependencies
-
-If you're setting up the project in a Windows environment, you'll also need to install `pypiwin32`.
-
-You can do this by running `pipenv install pypiwin32` for `pipenv` or installing normally with `pip install pypiwin32` in a virtual environment.
-
 ## Contribute
 
 ### Ways to contribute
 
-There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [Slack](https://citybureau.slack.com/){:target="\_blank"} about code and design choices.
+There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [Slack](https://citybureau.slack.com/){:target="\_blank"} about code and design choices. Request an invite to our Slack by filling out [this form](https://airtable.com/shrRv027NLgToRFd6){:target="\_blank"}.
 
-The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on Slack for support--we can meet up in person to troubleshoot some headaches like virtual environment issues.
+The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on Slack for support.
 
-You can find tasks to work on in the ["help wanted" GitHub issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="\_blank"}. Issues that are already being worked on will be labeled "claimed".
-
-### Familiarize yourself with how we work!
+### Familiarize yourself with how we work
 
 **Please read the project's [`CONTRIBUTING.md`](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} file to learn about how we use GitHub to manage the project and our pull request policy.**
 
 ### Spider Setup
 
-#### 1. Find a site to scrape and create an issue
+#### 1. Find an open issue to work on
 
-First, find an issue labeled "help wanted" within the project's [issue tracker](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="\_blank"}. Any issue without the "claimed" label is fair game. Add a comment indicating that you're interested in the work.
+First, find an issue labeled "help wanted" within the project's [issue tracker](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="\_blank"}. Any issue without the "claimed" label is fair game. Add a comment indicating that you're interested in the work, and once a maintainer has replied and marked the issue "claimed" you're good to go.
 
 Save and note the issue number.
 
@@ -209,29 +161,12 @@ That's OK.
 We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isort`](https://isort.readthedocs.io/en/stable/){:target="\_blank"}, and [`yapf`](https://github.com/google/yapf){:target="\_blank"} to check that all code is written in the proper style. To run these tools individually, you can run the following commands:
 
 ```bash
-$ flake8
-$ isort
-$ yapf --in-place --recursive ./city_scrapers/ ./tests/
+$ pipenv run flake8
+$ pipenv run isort
+$ pipenv run style
 ```
 
-Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. Here's an example for VSCode using the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} (which can be modified/added at `.vscode/settings.json` in your project directory):
-
-```json
-{
-  "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
-  "python.linting.pylintEnabled": false,
-  "python.linting.flake8Enabled": true,
-  "python.envFile": "${workspaceRoot}/.env",
-  "python.linting.flake8Args": ["--config", "${workspaceRoot}/setup.cfg"],
-  "python.formatting.provider": "yapf",
-  "python.formatting.yapfArgs": ["--style", "${workspaceRoot}/setup.cfg"],
-  "python.sortImports.path": "${workspaceRoot}/setup.cfg",
-  "editor.formatOnSave": true,
-  "editor.rulers": [100]
-}
-```
-
-This configuration will run linting and style checks for you, and also make necessary changes automatically any time you save. Packages are available for [Atom](https://atom.io/packages/linter-flake8){:target="\_blank"} and [Sublime Text](https://fosstack.com/setup-sublime-python/){:target="\_blank"} as well.
+Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. See an example of this for VSCode in [Setup Help](/docs/setup-help/).
 
 ### Building a spider
 
@@ -375,9 +310,9 @@ You generally want to verify that a spider:
 
 #### C. Create a Pull Request
 
-If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project. In this case, please mark your pull request as a [draft pull request](https://github.blog/2019-02-14-introducing-draft-pull-requests/){:target="\_blank"} when you create it. You can update this status when it is ready for review.
+If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project.
 
-Please include the issue number you're working on in the pull request description with a # in front of it (i.e. "Spider for issue #100). This links the PR directly to the issue it resolves and makes review on GitHub easier. You can use the rest of the description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
+When you go to open a pull request, you'll see a template with details pre-populated including a checklist of tasks to complete. Fill out the information as best you can (it's alright if you can't check everything off yet). It's designed to provide some reminders for tasks to complete as well as making review easier. You can use the rest of the description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
 
 ### `Meeting` Items
 

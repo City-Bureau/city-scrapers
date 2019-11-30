@@ -8,11 +8,7 @@ toc: false
 
 This document covers some of the issues associated with first-time development environment setup and with collaboration using Git.
 
-## GitHub
-
-### Creating a GitHub account
-
-If you do not have an account already, go to [GitHub](https://github.com){:target="\_blank"} and sign up for an account.
+## Git and GitHub
 
 ### Installing Git
 
@@ -47,15 +43,42 @@ $ git merge upstream/master
 
 4. The final step is to update your fork on Github with the changes from the original repository by running `git push`.
 
-## Creating a virtual environment
+### Creating a GitHub account
 
-The [following gist](https://gist.github.com/bonfirefan/c5556ca54e8bbe9d83764730c36a4b3e){:target="\_blank"} covers common headaches with setting up a virtual environment on a Linux-like environment.
+If you do not have an account already, go to [GitHub](https://github.com){:target="\_blank"} and sign up for an account.
 
-It is also possible to use `venv` to create your virtual environment.
+## Python and Pipenv
 
-```shell
-$ python3.6 -m venv venv
-$ source venv/bin/activate
+### Installing Python
+
+Here are some helpful links for setting up Python on your computer:
+
+- [Codecademy: Set-up Python](https://www.codecademy.com/articles/setup-python)
+- [Get started using Python on Windows for beginners](https://docs.microsoft.com/en-us/windows/python/beginners){:target="\_blank"}
+
+### Installing and using Pipenv
+
+[Pipenv](https://pipenv.readthedocs.io/en/latest/) is package management tool for Python which combines managing dependencies and virtual environments. It's also designed to be compatible with Windows. Other tools like `virtualenv` and `virtualenv-wrapper` can be used, but our documentation will only refer to Pipenv since it's quickly being adopted as the standard for Python dependency management.
+
+You can see installation instructions for Pipenv in the [Installing Pipenv](https://pipenv.kennethreitz.org/en/latest/install/#installing-pipenv) section of the documentation.
+
+### Configuring your code editor
+
+Most text editors can be configured to fix code style issues for you based off of the configuration settings in `setup.cfg`. Here's an example for VSCode using the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} (which can be modified/added at `.vscode/settings.json` in your project directory):
+
+```json
+{
+  "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.envFile": "${workspaceRoot}/.env",
+  "python.linting.flake8Args": ["--config", "${workspaceRoot}/setup.cfg"],
+  "python.formatting.provider": "yapf",
+  "python.formatting.yapfArgs": ["--style", "${workspaceRoot}/setup.cfg"],
+  "python.sortImports.path": "${workspaceRoot}/setup.cfg",
+  "editor.formatOnSave": true,
+  "editor.rulers": [100]
+}
 ```
 
-Here we are naming the virtual environment `venv`, which has been added to the project's `.gitignore` file.
+This configuration will run linting and style checks for you, and also make necessary changes automatically any time you save. Packages are available for [Atom](https://atom.io/packages/linter-flake8){:target="\_blank"} and [Sublime Text](https://fosstack.com/setup-sublime-python/){:target="\_blank"} as well.
