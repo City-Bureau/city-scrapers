@@ -20,7 +20,7 @@ For a primer on Git for first-time users, see the [try.github.io](https://try.gi
 
 Once you have forked the code and have begun contribution, [syncing your fork](https://help.github.com/articles/syncing-a-fork/){:target="\_blank"} periodically with the main City Bureau repository will be useful in staying up-to-date with the project.
 
-1. You must first [add a remote link](https://help.github.com/articles/configuring-a-remote-for-a-fork/){:target="\_blank"} from which Git can track the main City Bureau project. The remote URL is `<https://github.com/City-Bureau/city-scrapers.git>`. Conventionally we name this remote source `upstream`. The remote source for your original cloned repository is usually named `origin`.
+\1. You must first [add a remote link](https://help.github.com/articles/configuring-a-remote-for-a-fork/){:target="\_blank"} from which Git can track the main City Bureau project. The remote URL is `<https://github.com/City-Bureau/city-scrapers.git>`. Conventionally we name this remote source `upstream`. The remote source for your original cloned repository is usually named `origin`.
 
 ```shell
 $ git remote add upstream https://github.com/City-Bureau/city-scrapers.git
@@ -28,20 +28,20 @@ $ git remote add upstream https://github.com/City-Bureau/city-scrapers.git
 
 You can see your existing remotes as well by running `git remote -v`.
 
-2. Once you've added the City Bureau remote, fetch the changes from upstream
+\2. Once you've added the City Bureau remote, fetch the changes from upstream
 
 ```shell
 $ git fetch upstream
 ```
 
-3. Make sure you are in the branch you hope to merge changes into (typically your `master` branch), then merge the changes in from the `upstream/master` branch.
+\3. Make sure you are in the branch you hope to merge changes into (typically your `master` branch), then merge the changes in from the `upstream/master` branch.
 
 ```shell
 $ git checkout master
 $ git merge upstream/master
 ```
 
-4. The final step is to update your fork on Github with the changes from the original repository by running `git push`.
+\4. The final step is to update your fork on Github with the changes from the original repository by running `git push`.
 
 ### Creating a GitHub account
 
