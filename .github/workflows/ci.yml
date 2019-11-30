@@ -1,4 +1,4 @@
-name: CI Checks
+name: CI
 
 on: [push, pull_request]
 
@@ -43,12 +43,10 @@ jobs:
         PIPENV_DEFAULT_PYTHON_VERSION: ${{ matrix.python-version }}
 
     - name: Check imports with isort
-      run: |
-        pipenv run isort --check-only --diff || exit 1
+      run: pipenv run isort --check-only --diff || exit 1
 
     - name: Check style with yapf
-      run: |
-        pipenv run yapf --diff --recursive ./city_scrapers/ ./tests/ || exit 1
+      run: pipenv run yapf --diff --recursive ./city_scrapers/ ./tests/ || exit 1
 
     - name: Lint with flake8
       run: pipenv run flake8

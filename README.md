@@ -1,6 +1,6 @@
 # City Scrapers
 
-[![Build status](https://github.com/City-Bureau/city-scrapers/workflows/CI%20Checks/badge.svg)](https://github.com/City-Bureau/city-scrapers/actions)
+[![Build status](https://github.com/City-Bureau/city-scrapers/workflows/CI/badge.svg)](https://github.com/City-Bureau/city-scrapers/actions)
 
 ## Who are the City Bureau Documenters, and why do they want to scrape websites?
 
@@ -30,7 +30,7 @@ From building a scraper, you'll gain experience with:
 
 ## How can I set up City Scrapers for my area?
 
-This repo is focused on Chicago and Detroit, but you can set up City Scrapers for your area by following the instructions in the [City-Bureau/city-scrapers-template](https://github.com/city-bureau/city-scrapers-template) repo.
+This repo is focused on Chicago, but you can set up City Scrapers for your area by following the instructions in the [City-Bureau/city-scrapers-template](https://github.com/city-bureau/city-scrapers-template) repo.
 
 ## Community Mission
 
