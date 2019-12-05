@@ -6,7 +6,6 @@ scrapy
 scrapy-sentry
 git+https://github.com/opencivicdata/python-legistar-scraper@854a3725f2325f866f897fbc0a6682f8ab372dc7#egg=legistar
 scrapy-wayback-middleware
-azure-storage-blob<=2.2
 city-scrapers-core[azure]
 pypdf2
 freezegun
