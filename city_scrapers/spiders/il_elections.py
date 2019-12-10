@@ -22,8 +22,6 @@ class IlElectionsSpider(CityScrapersSpider):
         """
         meetings = response.css(".SearchListTable").xpath("./tr")[1:-1]
 
-        # dates = response.css(".SearchListTable").xpath("//tr/td[1]").re(r"[A-Z][a-z]{2}, .*20\d\d")
-
         for item in meetings:
             meeting = Meeting(
                 title=self._parse_title(item),
@@ -61,7 +59,8 @@ class IlElectionsSpider(CityScrapersSpider):
         date = item.xpath("./td[1]").re(r"[A-Z][a-z]{2}, .*20\d\d")[0]
         time = item.xpath("./td[2]").re(r"\d{2}:\d{2} [a|p].m")[0].replace(".", "")
         dt = date + " " + time
-        return datetime.strptime(dt, "%a, %B %d, %Y %I:%M %p")
+        parsed_dt = datetime.strptime(dt, "%a, %B %d, %Y %I:%M %p")
+        return parsed_dt
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
