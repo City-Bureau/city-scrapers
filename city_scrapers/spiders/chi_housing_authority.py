@@ -14,6 +14,10 @@ class ChiHousingAuthoritySpider(CityScrapersSpider):
     start_urls = [
         'http://www.thecha.org/about/board-meetings-agendas-and-resolutions/board-information-and-meetings',  # noqa
     ]
+    location = {
+        "name": "CHA Corporate Offices",
+        "address": "60 E Van Buren St, 7th Floor, Chicago, IL 60605",
+    }
 
     def parse(self, response):
         """
@@ -22,8 +26,8 @@ class ChiHousingAuthoritySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        if re.search(r'4859 S\.? Wabash', response.text) is None:
-            raise ValueError('Meeting address has changed')
+        if "60 East Van Buren" not in response.text:
+            raise ValueError("Meeting address has changed")
 
         self.upcoming_meetings = self._parse_upcoming(response)
         yield scrapy.Request(
@@ -111,10 +115,7 @@ class ChiHousingAuthoritySpider(CityScrapersSpider):
                 end=datetime.combine(item['start'].date(), time(13)),
                 time_notes='Times may change based on notice',
                 all_day=False,
-                location={
-                    'address': '4859 S Wabash Chicago, IL 60615',
-                    'name': 'Charles A. Hayes FIC',
-                },
+                location=self._parse_location(item["start"]),
                 links=item['links'],
                 source=item.get('source', response.url),
             )
@@ -142,3 +143,12 @@ class ChiHousingAuthoritySpider(CityScrapersSpider):
                 'title': doc.css('*::text').extract_first(),
             })
         return doc_list
+
+    def _parse_location(self, start):
+        """Meeting locations changed in 2020, return old address if before that"""
+        if start.year < 2020:
+            return {
+                "name": "Charles A. Hayes FIC",
+                "address": "4859 S Wabash Chicago, IL 60615",
+            }
+        return self.location

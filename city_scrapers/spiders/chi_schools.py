@@ -120,7 +120,7 @@ class ChiSchoolsSpider(CityScrapersSpider):
 
     def _parse_status(self, meeting, description):
         reschedule_date_match = re.search(
-            r"(?<=rescheduled to )([a-z]{6}day,? )?[a-z]{3,10} [0-9]{1,2}([a-z]{2})?,? \d{4}",
+            r"((?<=rescheduled to )|(?<=held on ))([a-z]{6}day,? )?[a-z]{3,10} [0-9]{1,2}([a-z]{2})?,? \d{4}", # noqa
             description,
             flags=re.I,
         )
@@ -175,8 +175,8 @@ class ChiSchoolsSpider(CityScrapersSpider):
         if "42 W" in loc_addr:
             return self.location
         return {
-            "name": loc_name,
-            "address": loc_addr,
+            "name": loc_name.strip(),
+            "address": loc_addr.strip(),
         }
 
     def _parse_links(self, response):
