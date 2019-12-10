@@ -62,7 +62,8 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [{
         "href":
-            "https://www.elections.il.gov/DocDisplay.aspx?Doc=/Downloads/AboutTheBoard/PDF/07_01_19Agenda.pdf",
+            "https://www.elections.il.gov/" +
+            "DocDisplay.aspx?Doc=/Downloads/AboutTheBoard/PDF/07_01_19Agenda.pdf",
         "title": ""
     }]
 
