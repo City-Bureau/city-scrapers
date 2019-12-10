@@ -75,7 +75,15 @@ Most text editors can be configured to fix code style issues for you based off o
   "python.linting.flake8Args": ["--config", "${workspaceRoot}/setup.cfg"],
   "python.formatting.provider": "yapf",
   "python.formatting.yapfArgs": ["--style", "${workspaceRoot}/setup.cfg"],
-  "python.sortImports.path": "${workspaceRoot}/setup.cfg",
+  "python.sortImports.path": "${workspaceRoot}/.venv/bin/isort",
+  "python.sortImports.args": [
+    "--settings-path=${workspaceFolder}/setup.cfg"
+  ],
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
   "editor.formatOnSave": true,
   "editor.rulers": [100]
 }
