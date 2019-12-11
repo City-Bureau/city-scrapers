@@ -1,4 +1,5 @@
 from datetime import datetime
+from urllib.parse import parse_qs, urlparse
 
 import scrapy
 from city_scrapers_core.constants import BOARD
@@ -25,9 +26,8 @@ class IlElectionsSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        # parse meeting minutes and addresses first to associate them with the agenda
+        # parse meeting minutes first to associate them with the agenda
         self._parse_minutes(response)
-        self._parse_addresses(response)
 
         # parse the agenda
         yield scrapy.Request(
@@ -41,21 +41,25 @@ class IlElectionsSpider(CityScrapersSpider):
         minutes = response.css("#ContentPlaceHolder1_gvMeetingMinutes td > a")
         for minute in minutes:
             date = minute.css("::text").extract_first().strip()
-            parsed_date = datetime.strptime(date, "%a, %B %d, %Y")
+            parsed_date = datetime.strptime(date, "%a, %B %d, %Y").date()
             link = minute.css("::attr(href)").extract_first()
-            self.meeting_minutes[parsed_date] = link
+            qs = parse_qs(urlparse(link).query)
+            self.meeting_minutes[parsed_date] = qs["Doc"][0]
 
     def _parse_addresses(self, response):
         addr_divs = response.css(".footer-address > div")
         for addr_div in addr_divs:
-            addr_name = addr_div.css("p::text").extract_first()
-            address_lines = addr_div.css("div > div::text").extract()
-            address = " ".join([line.strip() for line in address_lines if line.strip() != ""])
             # remove "Office" from addr_name, e.g. "Springfield Office"
-            self.addresses[addr_name.split()[0]] = address
+            addr_name = addr_div.css("p::text").extract_first().split()[0]
+            address_lines = addr_div.css("div > div::text").extract()
+            # skip last two lines where phone and fax is written
+            address = " ".join([line.strip() for line in address_lines[:-2] if line.strip() != ""])
+            self.addresses[addr_name] = address
 
     def _parse_agenda(self, response):
         """Parse board agenda."""
+        self._parse_addresses(response)
+
         meetings = response.css("#ContentPlaceHolder1_gvAgenda > tr")[1:-1]
         for item in meetings:
             start = self._parse_start(item)
@@ -115,32 +119,23 @@ class IlElectionsSpider(CityScrapersSpider):
         """Parse or generate location."""
         name = item.css("td")[2].css("::text").extract_first().strip()
         address = self.addresses.get(name, "")
-
-        return {
-            "address": address,
-            "name": name,
-        }
+        location = {"address": address, "name": ""}
+        return location
 
     def _parse_links(self, item, response, start):
         """Parse or generate links."""
         links = []
         href = item.css("td")[0].css("::attr(href)").extract_first()
         if href:
-            href = response.urljoin(href)
-            title = "Agenda"
-        else:
-            href = ""
-            title = ""
-        links.append({"href": href, "title": title})
+            qs = parse_qs(urlparse(href).query)
+            links.append({"href": response.urljoin(qs["Doc"][0]), "title": "Agenda"})
 
-        if start.date() in [i.date() for i in self.meeting_minutes]:
+        if start.date() in self.meeting_minutes:
             links.append({
-                "href":
-                    response.urljoin(
-                        self.meeting_minutes[datetime.combine(start.date(), datetime.min.time())]
-                    ),
+                "href": response.urljoin(self.meeting_minutes[start.date()]),
                 "title": "Minutes"
             })
+
         return links
 
     def _parse_source(self, response):

@@ -5,28 +5,25 @@ import pytest
 from city_scrapers_core.constants import BOARD, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from scrapy.http import HtmlResponse
 
 from city_scrapers.spiders.il_elections import IlElectionsSpider
 
 freezer = freeze_time("2019-12-04")
 freezer.start()
 
-test_response = file_response(
+test_minutes_response = file_response(
     join(dirname(__file__), "files", "il_elections_minutes.html"),
     url="https://www.elections.il.gov/AboutTheBoard/MeetingMinutesAll.aspx",
 )
 
-with open(join(dirname(__file__), "files", "il_elections_agenda.html"), "r") as f:
-    file_content = f.read()
-
-feed_url = "https://www.elections.il.gov/AboutTheBoard/Agenda.aspx"
-test_feed_response = HtmlResponse(url=feed_url, body=str.encode(file_content))
+test_agenda_response = file_response(
+    join(dirname(__file__), "files", "il_elections_agenda.html"),
+    url="https://www.elections.il.gov/AboutTheBoard/Agenda.aspx",
+)
 
 spider = IlElectionsSpider()
-spider._parse_minutes(test_response)
-spider._parse_addresses(test_response)
-parsed_items = [item for item in spider._parse_agenda(test_feed_response)]
+spider._parse_minutes(test_minutes_response)
+parsed_items = [item for item in spider._parse_agenda(test_agenda_response)]
 
 freezer.stop()
 
@@ -68,14 +65,12 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": "Springfield",
-        "address":
-            "2329 S. MacArthur Blvd. Springfield, IL 62704 Phone: 217-782-4141 Fax: 217-782-5959"
+        "name": "",
+        "address": "2329 S. MacArthur Blvd. Springfield, IL 62704"
     }
     assert parsed_items[5]["location"] == {
-        "address":
-            "100 W. Randolph, Suite 14-100 Chicago, IL 60601 Phone: 312-814-6440 Fax: 312-814-6485",
-        "name": "Chicago"
+        "address": "100 W. Randolph, Suite 14-100 Chicago, IL 60601",
+        "name": ""
     }
 
 
@@ -85,17 +80,15 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == [{
-        "href":
-            "https://www.elections.il.gov/DocDisplay.aspx" +
-            "?Doc=/Downloads/AboutTheBoard/PDF/07_01_19Agenda.pdf",
+        "href": "https://www.elections.il.gov/Downloads/AboutTheBoard/PDF/07_01_19Agenda.pdf",
         "title": "Agenda"
     }, {
         "href":
-            "https://www.elections.il.gov/DocDisplay.aspx" +
-            "?Doc=/Downloads/AboutTheBoard/PDF/July 1-19 regular meeting minutes.pdf",
+            "https://www.elections.il.gov/" +
+            "Downloads/AboutTheBoard/PDF/July 1-19 regular meeting minutes.pdf",
         "title": "Minutes"
     }]
-    assert parsed_items[7]["links"] == [{"href": "", "title": ""}]
+    assert parsed_items[7]["links"] == []
 
 
 def test_classification():
