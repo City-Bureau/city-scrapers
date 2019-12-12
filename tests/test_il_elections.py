@@ -29,8 +29,8 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Illinois State Board of Elections"
-    assert parsed_items[1]["title"] == "Illinois State Board of Elections"
+    assert parsed_items[0]["title"] == "Board of Elections"
+    assert parsed_items[1]["title"] == "Board of Elections"
 
 
 def test_description():
@@ -55,7 +55,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_elections/201907011030/x/illinois_state_board_of_elections"
+    assert parsed_items[0]["id"] == "il_elections/201907011030/x/board_of_elections"
 
 
 def test_status():

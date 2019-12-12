@@ -16,7 +16,6 @@ class IlElectionsSpider(CityScrapersSpider):
 
     def __init__(self):
         self.meeting_minutes = dict()
-        self.addresses = dict()
         super().__init__()
 
     def parse(self, response):
@@ -47,6 +46,7 @@ class IlElectionsSpider(CityScrapersSpider):
             self.meeting_minutes[parsed_date] = qs["Doc"][0]
 
     def _parse_addresses(self, response):
+        addresses = dict()
         addr_divs = response.css(".footer-address > div")
         for addr_div in addr_divs:
             # remove "Office" from addr_name, e.g. "Springfield Office"
@@ -54,16 +54,18 @@ class IlElectionsSpider(CityScrapersSpider):
             address_lines = addr_div.css("div > div::text").extract()
             # skip last two lines where phone and fax is written
             address = " ".join([line.strip() for line in address_lines[:-2] if line.strip() != ""])
-            self.addresses[addr_name] = address
+            addresses[addr_name] = address
+
+        return addresses
 
     def _parse_agenda(self, response):
         """Parse board agenda."""
-        self._parse_addresses(response)
+        addresses = self._parse_addresses(response)
 
         meetings = response.css("#ContentPlaceHolder1_gvAgenda > tr")[1:-1]
         for item in meetings:
             start = self._parse_start(item)
-            location = self._parse_location(item)
+            location = self._parse_location(item, addresses)
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -84,12 +86,11 @@ class IlElectionsSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return "Illinois State Board of Elections"
+        return "Board of Elections"
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        desc = item.css("td")[3].css("::text").extract_first().strip()
-        return desc
+        return item.css("td")[3].css("::text").extract_first().strip()
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
@@ -99,9 +100,7 @@ class IlElectionsSpider(CityScrapersSpider):
         """Parse start datetime as a naive datetime object."""
         date = item.css("td")[0].css("::text").extract_first().strip()
         time = item.css("td")[1].css("::text").extract_first().strip().replace(".", "")
-        dt = date + " " + time
-        parsed_dt = datetime.strptime(dt, "%a, %B %d, %Y %I:%M %p")
-        return parsed_dt
+        return datetime.strptime(date + " " + time, "%a, %B %d, %Y %I:%M %p")
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -115,10 +114,10 @@ class IlElectionsSpider(CityScrapersSpider):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    def _parse_location(self, item):
+    def _parse_location(self, item, addresses):
         """Parse or generate location."""
         name = item.css("td")[2].css("::text").extract_first().strip()
-        address = self.addresses.get(name, "")
+        address = addresses.get(name, "")
         location = {"address": address, "name": ""}
         return location
 
