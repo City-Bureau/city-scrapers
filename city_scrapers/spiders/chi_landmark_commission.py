@@ -43,11 +43,14 @@ class ChiLandmarkCommissionSpider(CityScrapersSpider):
                     column_str = " ".join(column_str)
                 for item_str in re.split(r"\<br[\s\/]*?\>", column_str):
                     item = Selector(text=re.sub(r"\s+", " ", item_str).strip())
+                    start = self._parse_start(item, year_str)
+                    if not start:
+                        continue
                     meeting = Meeting(
                         title="Commission",
                         description="",
                         classification=COMMISSION,
-                        start=self._parse_start(item, year_str),
+                        start=start,
                         end=None,
                         time_notes="See details to confirm time",
                         all_day=False,
