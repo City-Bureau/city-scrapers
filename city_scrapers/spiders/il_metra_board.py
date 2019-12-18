@@ -18,8 +18,11 @@ class IlMetraBoardSpider(CityScrapersSpider):
     }
 
     def parse(self, response):
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for item in response.css('.listingTable .listingRow'):
             start = self._parse_start(item)
+            if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                continue
             meeting = Meeting(
                 title=self._parse_title(item),
                 description='',

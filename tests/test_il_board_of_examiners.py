@@ -4,6 +4,7 @@ from os.path import dirname, join
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.il_board_of_examiners import IlBoardOfExaminersSpider
 
@@ -12,6 +13,7 @@ test_response = file_response(
     url="https://www.ilboe.org/board-information/board-meetings/",
 )
 spider = IlBoardOfExaminersSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
 freezer = freeze_time("2019-09-13")
 freezer.start()
@@ -19,6 +21,10 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
+
+
+def test_count():
+    assert len(parsed_items) == 4
 
 
 def test_title():

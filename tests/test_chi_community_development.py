@@ -4,6 +4,8 @@ from os.path import dirname, join
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED
 from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_community_development import ChiCommunityDevelopmentSpider
 
@@ -12,16 +14,22 @@ test_response = file_response(
     url='https://www.chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html'
 )
 spider = ChiCommunityDevelopmentSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
+freezer = freeze_time("2018-05-01")
+freezer.start()
+
 parsed_items = [item for item in spider.parse(test_response)]
+
+freezer.stop()
 
 
 def test_meeting_count():
-    # 12 mtgs / yr * 10 yrs + 3 extra (2016)
-    assert len(parsed_items) == 123
+    assert len(parsed_items) == 20
 
 
 def test_unique_id_count():
-    assert len(set([item['id'] for item in parsed_items])) == 123
+    assert len(set([item['id'] for item in parsed_items])) == 20
 
 
 def test_title():

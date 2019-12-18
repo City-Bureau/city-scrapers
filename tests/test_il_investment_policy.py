@@ -5,6 +5,7 @@ import pytest
 from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.il_investment_policy import IlInvestmentPolicySpider
 
@@ -13,6 +14,7 @@ test_response = file_response(
     url="https://www2.illinois.gov/sites/iipb/Pages/MeetingInformation.aspx",
 )
 spider = IlInvestmentPolicySpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
 freezer = freeze_time("2019-10-02")
 freezer.start()
@@ -23,14 +25,13 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 47
+    assert len(parsed_items) == 14
 
 
 def test_title():
     assert parsed_items[0]["title"] == "Investment Policy Board"
     assert parsed_items[1]["title"] == "Committee on Sudan and Iran Restrictions"
     assert parsed_items[2]["title"] == "Investment Policy Board"
-    assert parsed_items[14]["title"] == "Committee on Sudan and Iran Restrictions"
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -80,17 +81,6 @@ def test_links():
             "https://www2.illinois.gov/sites/iipb/Documents/"
             "ISE-CommitteeRevisedAgenda91119.pdf",
         "title": "Committee Agenda 9.11.19"
-    }]
-    assert parsed_items[11]["links"] == [{
-        "href":
-            "https://www2.illinois.gov/sites/iipb/Documents/"
-            "January-18-2018-Iran-Commitee-Meeting-Agenda.pdf",
-        "title": "Committee Agenda 1.18.18"
-    }, {
-        "href":
-            "https://www2.illinois.gov/sites/iipb/Documents/"
-            "Sudan-Iran-Committee-Minutes-01-18-2018%20.pdf",
-        "title": "Sudan Iran Forbidden Entities Committee - Minutes January 18, 2018"
     }]
 
 
