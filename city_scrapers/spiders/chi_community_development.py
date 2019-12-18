@@ -23,17 +23,21 @@ class ChiCommunityDevelopmentSpider(CityScrapersSpider):
         needs.
         """
         columns = self.parse_meetings(response)
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for column in columns:
             year = column.xpath('preceding::h3[1]/text()').re_first(r'(\d{4})(.*)')
             meeting_date_xpath = ('text()[normalize-space()]|p/text()[normalize-space()]')
             items = column.xpath(meeting_date_xpath).extract()
             items = self.format_meetings(items)
             for item in items:
+                start = self._parse_start(item, year)
+                if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                    continue
                 meeting = Meeting(
                     title='Commission',
                     description='',
                     classification=COMMISSION,
-                    start=self._parse_start(item, year),
+                    start=start,
                     end=None,
                     time_notes='',
                     all_day=False,

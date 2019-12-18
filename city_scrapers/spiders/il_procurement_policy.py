@@ -116,7 +116,10 @@ class IlProcurementPolicySpider(CityScrapersSpider):
 
     def _prev_meetings(self, response):
         meets = self._link_date_map(response)
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for item in meets:
+            if item < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                continue
             meeting = Meeting(
                 title="Procurement Policy Board",
                 description='',

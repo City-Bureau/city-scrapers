@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
@@ -74,6 +74,7 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
 
         items = response.xpath('//a|//span/text()').extract()
         prev_start = None
+        six_months_ago = datetime.now() - timedelta(days=180)
         for item in items:
             next_idx = items.index(item) + 1
             item = item.replace('\xa0', ' ')  # Gets rid of non-breaking space character
@@ -83,6 +84,8 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
                     item_date = re.search(r'(–|- |-)(.+[0-9]{4})', item_date).group(2)
                 item_date.lstrip()
                 start = self._parse_start(item_date, item)
+                if start < six_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                    continue
                 if prev_start != start:  # To acount for duplicates
                     meeting = Meeting(
                         title='Electoral Board',

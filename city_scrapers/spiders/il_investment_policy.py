@@ -27,16 +27,20 @@ class IlInvestmentPolicySpider(CityScrapersSpider):
         for meeting in self._parse_upcoming_meetings(response, links_map):
             yield meeting
 
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for item in response.xpath(
             "//h2[text()='Agendas']/following-sibling::ul"
             "[not(preceding-sibling::h2[text()='Minutes'])]"
             "/li/p"
         ):
+            start = self._parse_start(item)
+            if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                continue
             meeting = Meeting(
                 title=self._parse_title(item),
                 description="",
                 classification=self._parse_classification(item),
-                start=self._parse_start(item),
+                start=start,
                 end=None,
                 all_day=False,
                 time_notes="Confirm start time with agency.",

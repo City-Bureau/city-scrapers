@@ -19,12 +19,16 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for item in response.css(".minutes"):
+            start = self._parse_start(item)
+            if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                continue
             meeting = Meeting(
                 title="Illinois Board of Examiners",
                 description=self._parse_description(item),
                 classification=self._parse_classification(item),
-                start=self._parse_start(item),
+                start=start,
                 end=None,
                 all_day=False,
                 time_notes="",

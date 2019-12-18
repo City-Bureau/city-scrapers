@@ -2,13 +2,15 @@ from datetime import datetime, time
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, CANCELLED, PASSED
+from city_scrapers_core.constants import BOARD, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_housing_authority import ChiHousingAuthoritySpider
 
 spider = ChiHousingAuthoritySpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
 freezer = freeze_time('2018-12-14')
 freezer.start()
@@ -56,7 +58,6 @@ def test_id():
 
 def test_status():
     assert parsed_items[0]['status'] == PASSED
-    assert parsed_items[-3]['status'] == CANCELLED
 
 
 def test_source():

@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 import scrapy
 from city_scrapers_core.constants import BOARD
@@ -106,7 +106,13 @@ class ChiHousingAuthoritySpider(CityScrapersSpider):
             if meeting['start'] not in meeting_dates:
                 meetings.append(meeting)
 
+        six_months_ago = datetime.now() - timedelta(days=180)
         for item in meetings:
+            if (
+                item["start"] < six_months_ago
+                and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
+                continue
             meeting = Meeting(
                 title='Board of Commissioners',
                 description='',

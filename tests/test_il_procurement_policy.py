@@ -6,6 +6,7 @@ import pytest
 from city_scrapers_core.constants import BOARD, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.il_procurement_policy import IlProcurementPolicySpider
 
@@ -14,6 +15,7 @@ test_response = file_response(
     url="https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx",
 )
 spider = IlProcurementPolicySpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
 freezer = freeze_time("2019-10-07")
 freezer.start()
@@ -21,7 +23,7 @@ freezer.start()
 parsed_items = [item for item in spider._upcoming_meetings(test_response)]
 
 
-def test_len():
+def test_count():
     assert len(parsed_items) == 1
 
 
@@ -88,6 +90,10 @@ parsed_items_prev = sorted([item for item in spider._prev_meetings(test_response
 freezer.stop()
 
 
+def test_count_prev():
+    assert len(parsed_items_prev) == 3
+
+
 def test_title_prev():
     assert parsed_items_prev[0]["title"] == "Procurement Policy Board"
 
@@ -97,7 +103,7 @@ def test_description_prev():
 
 
 def test_start_prev():
-    assert parsed_items_prev[0]["start"] == datetime(2008, 1, 15, 10, 0)
+    assert parsed_items_prev[0]["start"] == datetime(2018, 10, 16, 10, 0)
 
 
 def test_time_notes_prev():
@@ -106,7 +112,7 @@ def test_time_notes_prev():
 
 def test_id_prev():
     assert parsed_items_prev[0]["id"
-                                ] == "il_procurement_policy/200801151000/x/procurement_policy_board"
+                                ] == "il_procurement_policy/201810161000/x/procurement_policy_board"
 
 
 def test_status_prev():
@@ -127,8 +133,8 @@ def test_source_prev():
 
 def test_links_prev():
     assert parsed_items_prev[0]["links"] == [{
-        'href': 'https://www2.illinois.gov/sites/ppb/Documents/080115m.pdf',
-        'title': 'January 15, 2008'
+        'href': 'https://www2.illinois.gov/sites/ppb/Documents/181016%20Minutes.pdf',
+        'title': 'October 16, 2018'
     }]
 
 

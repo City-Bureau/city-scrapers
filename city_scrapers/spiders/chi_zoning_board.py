@@ -21,6 +21,7 @@ class ChiZoningBoardSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         columns = self.parse_meetings(response)
         for column in columns:
             year = column.xpath('preceding::strong[1]/text()').re_first(r'(\d{4})(.*)')
@@ -28,11 +29,14 @@ class ChiZoningBoardSpider(CityScrapersSpider):
             for item in meetings:
                 if not item.strip():
                     continue
+                start = self._parse_start(item, year)
+                if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                    continue
                 meeting = Meeting(
                     title='Board of Appeals',
                     description='',
                     classification=COMMISSION,
-                    start=self._parse_start(item, year),
+                    start=start,
                     end=None,
                     time_notes='',
                     all_day=False,
