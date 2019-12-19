@@ -5,6 +5,7 @@ import pytest
 from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.cook_hospitals import CookHospitalsSpider
 
@@ -15,8 +16,9 @@ test_response = file_response(
     )
 )
 spider = CookHospitalsSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
-freezer = freeze_time("2019-05-15")
+freezer = freeze_time("2019-10-15")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -25,7 +27,7 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 51
+    assert len(parsed_items) == 37
 
 
 def test_title():
@@ -37,7 +39,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == datetime(2019, 1, 25, 9)
+    assert parsed_items[0]['start'] == datetime(2019, 4, 26, 9, 0)
 
 
 def test_end():
@@ -51,46 +53,44 @@ def test_time_notes():
 def test_links():
     assert parsed_items[0]['links'] == [
         {
-            'href': 'https://cookcountyhealth.org/wp-content/uploads/01-25-19-Board-Agenda.pdf',
+            'href': 'https://cookcountyhealth.org/wp-content/uploads/04-26-19-Board-Agenda-1.pdf',
             'title': 'Agenda'
         },
         {
-            'href': 'https://cookcountyhealth.org/wp-content/uploads/Metrics-Finance-01-25-19.pdf',
-            'title': 'Metrics Finance Committee'
-        },
-        {
-            'href': 'https://cookcountyhealth.org/wp-content/uploads/Metrics-HR-01-25-19.pdf',
-            'title': 'Metrics Human Resources Committee'
+            'href':
+                'https://cookcountyhealth.org/wp-content/uploads/Committee-Metrics-combined-04-26-19-1.pdf',  # noqa
+            'title': 'Committee Metrics'
         },
         {
             'href':
-                'https://cookcountyhealth.org/wp-content/uploads/Metrics-Managed-Care-01-25-19.pdf',
-            'title': 'Metrics Managed Care Committee'
-        },
-        {
-            'href': 'https://cookcountyhealth.org/wp-content/uploads/Metrics-QPS-01-25-19.pdf',
-            'title': 'Metrics QPS Committee'
+                'https://cookcountyhealth.org/wp-content/uploads/Item-VA-Contract-and-Procurement-Item-04-26-19-1.pdf',  # noqa
+            'title': 'Item V(A) Contract and Procurement Item'
         },
         {
             'href':
-                'https://cookcountyhealth.org/wp-content/uploads/Item-VIII-Report-from-the-CEO-01-25-19.pdf',  # noqa
-            'title': 'Item VIII Report from CEO'
+                'https://cookcountyhealth.org/wp-content/uploads/Item-VII-Report-from-the-CEO-04-26-19-1.pdf',  # noqa
+            'title': 'Item VII Report from the CEO'
         },
         {
             'href':
-                'https://cookcountyhealth.org/wp-content/uploads/Item-IXA-SP-Discussion-Federal-State-Landscape-01-25-19.pdf',  # noqa
-            'title': 'Item IV(A) SP discussion State and Federal Issues'
+                'https://cookcountyhealth.org/wp-content/uploads/Item-VIIIA-SP-discussion-Marketing-04-26-19-4.pdf',  # noqa
+            'title': 'Item VIII(A) SP discussion Marketing'
         },
         {
             'href':
-                'https://cookcountyhealth.org/wp-content/uploads/01-25-19-Board-scan-Minutes.pdf',
-            'title': '01-25-19 Board of Directors Meeting Minutes'
-        }
+                'https://cookcountyhealth.org/wp-content/uploads/Item-VIIIA-SP-discussion-Marketing-04-26-19-5.pdf',  # noqa
+            'title': 'Item VIII(A) SP Discussion CCDPH'
+        },
+        {
+            'href':
+                'https://cookcountyhealth.org/wp-content/uploads/Item-VIIIB-CCDPH-2nd-Quarterly-Report-04-26-19-1.pdf',  # noqa
+            'title': 'Item VIII(B) Q2 Report from CCDPH'
+        },
     ]
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'cook_hospitals/201901250900/x/board_of_directors'
+    assert parsed_items[0]['id'] == 'cook_hospitals/201904260900/x/board_of_directors'
 
 
 def test_status():

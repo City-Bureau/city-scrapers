@@ -35,12 +35,15 @@ class ChiSsa42Spider(CityScrapersSpider):
     def _parse_meetings(self, response, upcoming=False):
         """Parse meetings on upcoming and minutes pages"""
         today = datetime.now().replace(hour=0, minute=0)
+        last_year = today.replace(year=today.year - 1)
         for item in response.css('article.entry p'):
             text = item.xpath('./text()').extract_first()
             if not re.match(r'.*day, .*\d{4}', text):
                 continue
             start = self._parse_start(text)
-            if not start or (upcoming and start < today):
+            if not start or (upcoming and start < today) or (
+                start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 continue
             meeting = Meeting(
                 title=self._parse_title(text),

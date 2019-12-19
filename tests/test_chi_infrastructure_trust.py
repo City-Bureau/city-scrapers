@@ -5,6 +5,7 @@ import pytest
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_infrastructure_trust import ChiInfrastructureTrustSpider
 
@@ -13,6 +14,7 @@ test_response = file_response(
     url="http://chicagoinfrastructure.org/public-records/meeting-records-2/",
 )
 spider = ChiInfrastructureTrustSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
 freezer = freeze_time("2019-04-18")
 freezer.start()
@@ -20,6 +22,10 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
+
+
+def test_count():
+    assert len(parsed_items) == 2
 
 
 def test_title():

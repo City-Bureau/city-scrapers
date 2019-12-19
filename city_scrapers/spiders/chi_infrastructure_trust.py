@@ -22,12 +22,15 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for item in response.css(".entry p"):
             if item.xpath(".//span"):
                 continue
 
             start = self._parse_start(item, response)
-            if not start:
+            if not start or (
+                start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 return
 
             meeting = Meeting(

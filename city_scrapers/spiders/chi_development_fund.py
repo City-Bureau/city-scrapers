@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 import dateutil.parser
 from city_scrapers_core.constants import COMMISSION
@@ -22,6 +23,7 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
         needs.
         """
         columns = self.parse_meetings(response)
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for column in columns:
             meeting_date_xpath = """text()[normalize-space()]|
                                     p/text()[normalize-space()]|
@@ -30,7 +32,9 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
             meetings = self.format_meetings(meetings)
             for item in meetings:
                 start = self._parse_start(item)
-                if start is None:
+                if start is None or (
+                    start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+                ):
                     continue
                 meeting = Meeting(
                     title=self._parse_title(item),
