@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from city_scrapers_core.constants import CITY_COUNCIL
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import LegistarSpider
@@ -9,6 +11,10 @@ class ChiCityCouncilSpider(LegistarSpider):
     timezone = 'America/Chicago'
     start_urls = ['https://chicago.legistar.com/Calendar.aspx']
     link_types = ["Notice"]
+
+    def parse(self):
+        events = self._call_legistar(since=datetime.today() - timedelta(days=120))
+        return self.parse_legistar(events)
 
     def parse_legistar(self, events):
         """

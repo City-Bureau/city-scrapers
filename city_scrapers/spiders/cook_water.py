@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from city_scrapers_core.constants import BOARD, COMMITTEE, FORUM
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import LegistarSpider
@@ -9,6 +11,10 @@ class CookWaterSpider(LegistarSpider):
     event_timezone = 'America/Chicago'
     start_urls = ['https://mwrd.legistar.com']
     address = '100 East Erie Street Chicago, IL 60611'
+
+    def parse(self):
+        events = self._call_legistar(since=datetime.today() - timedelta(days=120))
+        return self.parse_legistar(events)
 
     def parse_legistar(self, events):
         for event, _ in events:

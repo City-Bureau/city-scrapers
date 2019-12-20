@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timedelta
 
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
@@ -10,6 +11,10 @@ class CookForestPreservesSpider(LegistarSpider):
     agency = 'Cook County Forest Preserves District'
     timezone = 'America/Chicago'
     start_urls = ['https://fpdcc.legistar.com/Calendar.aspx']
+
+    def parse(self):
+        events = self._call_legistar(since=datetime.today() - timedelta(days=120))
+        return self.parse_legistar(events)
 
     def parse_legistar(self, events):
         for event, _ in events:
