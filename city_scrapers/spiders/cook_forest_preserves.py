@@ -12,7 +12,7 @@ class CookForestPreservesSpider(LegistarSpider):
     timezone = 'America/Chicago'
     start_urls = ['https://fpdcc.legistar.com/Calendar.aspx']
 
-    def parse(self):
+    def parse(self, response):
         events = self._call_legistar(since=datetime.today() - timedelta(days=120))
         return self.parse_legistar(events)
 

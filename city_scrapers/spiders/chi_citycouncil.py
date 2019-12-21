@@ -12,7 +12,7 @@ class ChiCityCouncilSpider(LegistarSpider):
     start_urls = ['https://chicago.legistar.com/Calendar.aspx']
     link_types = ["Notice"]
 
-    def parse(self):
+    def parse(self, response):
         events = self._call_legistar(since=datetime.today() - timedelta(days=120))
         return self.parse_legistar(events)
 
