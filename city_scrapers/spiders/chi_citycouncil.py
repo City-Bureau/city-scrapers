@@ -12,10 +12,6 @@ class ChiCityCouncilSpider(LegistarSpider):
     start_urls = ['https://chicago.legistar.com/Calendar.aspx']
     link_types = ["Notice"]
 
-    def parse(self, response):
-        events = self._call_legistar(since=datetime.today() - timedelta(days=120))
-        return self.parse_legistar(events)
-
     def parse_legistar(self, events):
         """
         `parse_legistar` should always `yield` Meeting items.
@@ -23,9 +19,12 @@ class ChiCityCouncilSpider(LegistarSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        three_months_ago = datetime.today() - timedelta(days=90)
         for event, _ in events:
             start = self.legistar_start(event)
-            if not start:
+            if not start or (
+                start < three_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 continue
             meeting = Meeting(
                 title=event['Name']['label'],

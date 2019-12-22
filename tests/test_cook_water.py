@@ -4,14 +4,23 @@ from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, PASSED
+from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.cook_water import CookWaterSpider
+
+freezer = freeze_time('2018-01-01')
+freezer.start()
 
 with open(join(dirname(__file__), "files", "cook_water.json"), "r") as f:
     test_response = json.load(f)
 
 spider = CookWaterSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
 parsed_items = [item for item in spider.parse_legistar(test_response)]
+
+freezer.stop()
 
 
 def test_title():
@@ -52,17 +61,12 @@ def test_links():
     assert parsed_items[-2]['links'] == [
         {
             'href':
-                'https://mwrd.legistar.com/View.ashx?M=A&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
-            'title': 'Agenda'
-        },
-        {
-            'href':
-                'https://mwrd.legistar.com/View.ashx?M=M&ID=437015&GUID=639F6AB7-6E76-4429-B6F5-FCEB3DC609C5',  # noqa
+                'https://mwrd.legistar.com/View.ashx?M=M&ID=568714&GUID=86687153-30DD-4187-BFA9-8EB20EE3A570',  # noqa
             'title': 'Minutes'
         },
         {
-            'title': 'Video',
-            'href': 'https://mwrd.legistar.com/Video.aspx?Mode=Granicus&ID1=356&Mode2=Video'
+            'href': 'https://mwrd.legistar.com/Video.aspx?Mode=Granicus&ID1=445&Mode2=Video',
+            'title': 'Video'
         },
     ]
 

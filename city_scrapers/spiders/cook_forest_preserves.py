@@ -12,14 +12,13 @@ class CookForestPreservesSpider(LegistarSpider):
     timezone = 'America/Chicago'
     start_urls = ['https://fpdcc.legistar.com/Calendar.aspx']
 
-    def parse(self, response):
-        events = self._call_legistar(since=datetime.today() - timedelta(days=120))
-        return self.parse_legistar(events)
-
     def parse_legistar(self, events):
+        three_months_ago = datetime.today() - timedelta(days=90)
         for event, _ in events:
             start = self.legistar_start(event)
-            if not start:
+            if not start or (
+                start < three_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 continue
             meeting = Meeting(
                 title=event['Name']['label'],

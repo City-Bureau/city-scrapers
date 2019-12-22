@@ -5,6 +5,7 @@ from os.path import dirname, join
 import pytest
 from city_scrapers_core.constants import CITY_COUNCIL, PASSED, TENTATIVE
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_citycouncil import ChiCityCouncilSpider
 
@@ -13,6 +14,8 @@ freezer.start()
 with open(join(dirname(__file__), "files", "chi_citycouncil.json"), 'r') as f:
     test_response = json.load(f)
 spider = ChiCityCouncilSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
 parsed_items = [item for item in spider.parse_legistar(test_response)]
 freezer.stop()
 
