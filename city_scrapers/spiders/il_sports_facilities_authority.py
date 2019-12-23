@@ -25,10 +25,10 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         """
         for item in response.css('div.wpb_text_column div.wpb_wrapper div.inner-text h2'):
             meeting = Meeting(
-                title=self._parse_h2_title(item),
+                title=self._parse_title(item),
                 description='',
                 classification=BOARD,
-                start=self._parse_h2_start(item),
+                start=self._parse_start(item),
                 end=None,
                 all_day=False,
                 time_notes='',
@@ -51,7 +51,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
                 start=self._parse_start(item),
                 end=None,
                 all_day=False,
-                time_notes='',
+                time_notes='See agenda for meeting time',
                 location=self.location,
                 links=self._parse_links(item),
                 source=response.url,
@@ -65,11 +65,11 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse meeting title."""
-        return item.css('::text').re_first(r'.*[a-zA-Z] Meeting')
+        title = item.css('::text').re_first(r'.*[a-zA-Z]').replace('Next ', '')
+        if 'Board' in title:
+            return "Board of Directors"
+        return title
 
-    def _parse_h2_title(self, item):
-        """Parse meeting title from the h2 tag."""
-        return item.css('::text').re_first(r'.*[a-zA-Z] Meeting').replace('Next ', '')
 
     def _parse_location(self, item):
         """Parse the location of the meeting."""
@@ -81,20 +81,21 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        parsed = item.css('::text').re_first(r'[0-9]*[.][0-9]*[.][0-9]*')
+        parsed = item.css('::text').re_first(
+            r'[0-9]*[.][0-9]*[.][0-9]*'
+        )
+        with_time = item.css('::text').re_first(
+            r'[a-zA-Z]* [0-9]*, [0-9]* at [0-9]*[:][0-9]* [APM.]*'
+        )
         if parsed:
             try:
                 val = datetime.strptime(parsed, '%m.%d.%Y') + timedelta(hours=10)
             except ValueError:
                 val = datetime.strptime(parsed, '%m.%d.%y') + timedelta(hours=10)
+            if with_time:
+                return datetime.strptime(parsed, '%B %d, %Y at %I:%M %p')
             return val
 
-    def _parse_h2_start(self, item):
-        """Parse start datetime from h2 tag."""
-        parsed = item.css('::text').re_first(
-            r'[a-zA-Z]* [0-9]*, [0-9]* at [0-9]*[:][0-9]* [APM.]*'
-        ).replace('.', '')
-        return datetime.strptime(parsed, '%B %d, %Y at %I:%M %p')
 
     def _parse_links(self, item):
         """Parse or generate links."""
