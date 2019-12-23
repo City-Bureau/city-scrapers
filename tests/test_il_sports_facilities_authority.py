@@ -22,15 +22,21 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]['title'] == 'Audit, Finance and Investment Committee Meeting'
+    assert parsed_items[0]['title'] == 'Next Meeting'
+    assert parsed_items[1]['title'] == 'Audit, Finance and Investment Committee Meeting'
 
 
 def test_start():
-    assert parsed_items[0]['start'] == datetime(2019, 11, 25, 10, 0)
+    assert parsed_items[0]['start'] == datetime(2019, 12, 4, 10, 0)
+    assert parsed_items[1]['start'] == datetime(2019, 11, 25, 10, 0)
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
+    # assert parsed_items[0]['location'] == {
+    #     'name': '',
+    #     'address': '333 West Wacker Drive, 5th Floor, Chicago IL 60606'
+    # }
+    assert parsed_items[1]['location'] == {
         'name': 'Authority offices',
         'address': 'Guaranteed Rate Field, 333 West 35th Street, Chicago, IL'
     }
@@ -43,7 +49,8 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]['links'] == [{
+    assert parsed_items[0]['links'] == []
+    assert parsed_items[1]['links'] == [{
         'href': (
             'https://236c3m49r38mg7ixa39zqru1-wpengine.netdna-ssl.com/'
             'wp-content/uploads/2019/11/AFI-Committee-Mtg-AGENDA-11-25-19.pdf'

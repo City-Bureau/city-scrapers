@@ -51,8 +51,8 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse meeting title."""
-        title = item.css('::text').re_first(r'.*[a-zA-Z]').replace('Next ', '')
-        if 'Board' in title:
+        title = item.css('::text').re_first(r'.*[a-zA-Z] Meeting')
+        if title and 'Board' in title:
             return "Board of Directors"
         return title
 
@@ -78,9 +78,10 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
                 val = datetime.strptime(parsed, '%m.%d.%Y') + timedelta(hours=10)
             except ValueError:
                 val = datetime.strptime(parsed, '%m.%d.%y') + timedelta(hours=10)
-            if with_time:
-                return datetime.strptime(parsed, '%B %d, %Y at %I:%M %p')
             return val
+        if with_time:
+            return datetime.strptime(with_time.replace('.', ''), '%B %d, %Y at %I:%M %p')
+
 
 
     def _parse_links(self, item):
