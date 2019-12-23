@@ -23,27 +23,13 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        items = []
         for item in response.css('div.wpb_text_column div.wpb_wrapper div.inner-text h2'):
-            meeting = Meeting(
-                title=self._parse_title(item),
-                description='',
-                classification=BOARD,
-                start=self._parse_start(item),
-                end=None,
-                all_day=False,
-                time_notes='',
-                location=self._parse_location(item),
-                links=self._parse_links(item),
-                source=response.url,
-            )
-            try:
-                meeting['status'] = self._get_status(meeting)
-                meeting['id'] = self._get_id(meeting)
-            except TypeError:
-                continue
-            yield meeting
-
+            items.append(item)
         for item in response.css('div.wpb_text_column div.wpb_wrapper p'):
+            items.append(item)
+
+        for item in items:
             meeting = Meeting(
                 title=self._parse_title(item),
                 description='',
