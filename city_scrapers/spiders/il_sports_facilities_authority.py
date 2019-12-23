@@ -56,7 +56,6 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
             return "Board of Directors"
         return title
 
-
     def _parse_location(self, item):
         """Parse the location of the meeting."""
         return {
@@ -81,8 +80,6 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
             return val
         if with_time:
             return datetime.strptime(with_time.replace('.', ''), '%B %d, %Y at %I:%M %p')
-
-
 
     def _parse_links(self, item):
         """Parse or generate links."""
