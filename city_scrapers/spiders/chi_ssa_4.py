@@ -17,6 +17,36 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def parse(self, response):
         """
+        For some reason when we go to the start_url only the first five
+        meetings are displayed. If you click the "Next Events" link from
+        the first page, a few events actually get skipped, events that
+        would have fallen after the last event on page 1 and before the
+        first event on page 2. It seems like those events are supposed
+        to be rendered on page 1 but they just aren't for some reason.
+
+        If you hit "Next Events" and then hit "Previous Events" to go back,
+        it seems to render those missing events. So in parse we click
+        "Next Events", then in _setup we click "Previous Events", then in
+        _parse_meetings we should theoretically be at the complete first page.
+        
+        If this problem with the website gets fixed, in theory this ritual
+        won't be necessary but it won't break the crawler either.
+        """
+        next_page = response.css(
+            "#tribe-events-footer .tribe-events-nav-pagination "
+            ".tribe-events-sub-nav .tribe-events-nav-next a::attr(href)"
+        ).extract_first()
+        yield scrapy.Request(next_page, callback=self._setup)
+
+    def _setup(self, response):
+        prev_page = response.css(
+            "#tribe-events-footer .tribe-events-nav-pagination "
+            ".tribe-events-sub-nav .tribe-events-nav-previous a::attr(href)"
+        ).extract_first()
+        yield scrapy.Request(prev_page, callback=self._parse_meetings)
+
+    def _parse_meetings(self, response):
+        """
         `parse` should always `yield` Meeting items.
 
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
@@ -75,13 +105,16 @@ class ChiSsa4Spider(CityScrapersSpider):
             ".tribe-events-event-meta .location .tribe-event-schedule-details"
             " .tribe-event-time::text"
         ).extract_first()
+        if "2020" not in dtstart and "2018" not in dtstart:
+            raise ValueError(dtstart + "@@@" + tend);
         dtstart = dtstart.split("@")
         try:
             dayof = datetime.strptime(dtstart[0].strip(), "%B %d, %Y").date()
         except ValueError:
             # If year is omitted then they mean the current year
             dayof = datetime.strptime(dtstart[0].strip(), "%B %d").date()
-            dayof.replace(year=datetime.today().year)
+            dayof = dayof.replace(year=datetime.today().year)
+            raise ValueError(dayof);
         start_time = datetime.strptime(dtstart[1].strip(), "%H:%M %p").time()
         end_time = datetime.strptime(tend.strip(), "%H:%M %p").time()
 
