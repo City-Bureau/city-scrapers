@@ -91,16 +91,12 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
         """Parse or generate links."""
         agenda_link = item.css('.minuteAgenda').css('a::attr(href)').get()
         mom_link = item.css('.minuteMinutes').css('a::attr(href)').get()
-        if (mom_link):
-            return [{
-                "href": agenda_link,
-                "title": "Agenda"
-            }, {
-                "href": mom_link,
-                "title": "Minutes"
-            }]
-        else:
-            return [{"href": agenda_link, "title": "Agenda"}]
+        links = []
+        if agenda_link:
+            links.append({"href": agenda_link, "title": "Agenda"})
+        if mom_link:
+            links.append({"href": mom_link, "title": "Minutes"})
+        return links
 
     def _parse_source(self, response):
         """Parse or generate source."""
