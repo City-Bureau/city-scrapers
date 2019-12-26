@@ -14,15 +14,8 @@ class ChiSsa4Spider(CityScrapersSpider):
     timezone = "America/Chicago"
     start_urls = [
         "https://95thstreetba.org/events/category/board-meeting/?"
-        "tribe_paged=1&tribe_event_display=list&tribe-bar-date=2017-10-01"
+        "tribe_paged=1&tribe_event_display=list&tribe-bar-date=2018-10-01"
     ]
-    # TODO remove before merging
-    configure_logging(install_root_handler=False)
-    logging.basicConfig(
-            filename='log.txt',
-            format='%(levelname)s: %(message)s',
-            level=logging.DEBUG
-    )
 
     def parse(self, response):
         """
@@ -33,13 +26,8 @@ class ChiSsa4Spider(CityScrapersSpider):
         first event on page 2. It seems like those events are supposed
         to be rendered on page 1 but they just aren't for some reason.
 
-        If you hit "Next Events" and then hit "Previous Events" to go back,
-        it seems to render those missing events. So in parse we click
-        "Next Events", then in _setup we click "Previous Events", then in
-        _parse_meetings we should theoretically be at the complete first page.
-        
-        If this problem with the website gets fixed, in theory this ritual
-        won't be necessary but it won't break the crawler either.
+        To get around this problem we can do POST requests to 
+        /wp-admin/admin-ajax.php to get the HTML of just the events list.
         """
         next_page = response.css(
             "#tribe-events-footer .tribe-events-nav-pagination "
@@ -53,7 +41,10 @@ class ChiSsa4Spider(CityScrapersSpider):
             "tribe_event_category" : "board-meeting",
             "tribe-bar-date": "2018-01-01"
         }
-        yield scrapy.FormRequest("https://95thstreetba.org/wp-admin/admin-ajax.php", method="POST", callback=self._parse_meetings, meta={"tribe_paged": 1}, formdata=frmdata)
+        yield scrapy.FormRequest(
+                "https://95thstreetba.org/wp-admin/admin-ajax.php", 
+                method="POST", callback=self._parse_meetings, 
+                meta={"tribe_paged": 1}, formdata=frmdata)
 
     def _parse_meetings(self, response):
         """
@@ -62,9 +53,9 @@ class ChiSsa4Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        # raise ValueError(response.body)
         body = response.body.decode("utf-8")
         body = json.loads(body)
+        hashi = body['hash']
         rsel = scrapy.Selector(text=body['html'])
         obj = rsel.css(".tribe-events-loop .tribe-events-category-board-meeting")
         for item in obj:
@@ -88,11 +79,8 @@ class ChiSsa4Spider(CityScrapersSpider):
 
             yield meeting
 
-        next_page = response.css(
-            "#tribe-events-footer .tribe-events-nav-pagination "
-            ".tribe-events-sub-nav .tribe-events-nav-next a::attr(href)"
-        ).extract_first()
-        if next_page:
+        # If we couldnt find events, this is some 404 page, nothing left to yield
+        if len(obj) > 0:
             trpage = str(int(response.meta.get("tribe_paged"))+1)
             frmdata = {
                 "action": "tribe_list",
@@ -100,9 +88,10 @@ class ChiSsa4Spider(CityScrapersSpider):
                 "tribe_event_display": "list",
                 "featured" : "false",
                 "tribe_event_category" : "board-meeting",
-                "tribe-bar-date": "2018-01-01"
+                "tribe-bar-date": "2018-01-01",
+                "hash" : hashi
             }
-            yield scrapy.FormRequest(next_page, callback=self._parse_meetings, method="POST", meta={"tribe_paged": trpage}, formdata=frmdata)
+            yield scrapy.FormRequest("https://95thstreetba.org/wp-admin/admin-ajax.php", callback=self._parse_meetings, method="POST", meta={"tribe_paged": trpage}, formdata=frmdata)
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -135,7 +124,6 @@ class ChiSsa4Spider(CityScrapersSpider):
             # If year is omitted then they mean the current year
             dayof = datetime.strptime(dtstart[0].strip(), "%B %d").date()
             dayof = dayof.replace(year=datetime.today().year)
-        #    raise ValueError(dayof);
         start_time = datetime.strptime(dtstart[1].strip(), "%H:%M %p").time()
         end_time = datetime.strptime(tend.strip(), "%H:%M %p").time()
 
@@ -172,10 +160,9 @@ class ChiSsa4Spider(CityScrapersSpider):
     def _parse_links(self, item):
         """Parse or generate links."""
         link = item.css(".tribe-events-list-event-description a::attr(href)").get()
-        # title = item.css(".tribe-events-list-event-description a::text").extract_first()
         title = "meeting page"
         return [{"href": link, "title": title}]
 
     def _parse_source(self, response):
         """Parse or generate source."""
-        return response.request.url
+        return self.start_urls[0]
