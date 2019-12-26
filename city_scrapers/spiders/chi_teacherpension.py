@@ -105,6 +105,11 @@ class ChiTeacherPensionSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         desc = item.xpath('description/text()').extract_first()
+        if desc and "425 S" in desc:
+            return {
+                "name": "",
+                "address": "425 S Financial Place, Suite 1500, Chicago, IL 60605",
+            }
         if desc and not re.search(r'203 N[\.orth]*? LaSalle', desc):
             raise ValueError('Meeting location has changed')
         return self.location
