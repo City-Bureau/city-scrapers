@@ -1,7 +1,6 @@
-from datetime import datetime
-from scrapy.utils.log import configure_logging
-import logging
 import json
+from datetime import datetime
+
 import scrapy
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
@@ -26,25 +25,24 @@ class ChiSsa4Spider(CityScrapersSpider):
         first event on page 2. It seems like those events are supposed
         to be rendered on page 1 but they just aren't for some reason.
 
-        To get around this problem we can do POST requests to 
+        To get around this problem we can do POST requests to
         /wp-admin/admin-ajax.php to get the HTML of just the events list.
         """
-        next_page = response.css(
-            "#tribe-events-footer .tribe-events-nav-pagination "
-            ".tribe-events-sub-nav .tribe-events-nav-next a::attr(href)"
-        ).extract_first()
         frmdata = {
             "action": "tribe_list",
-            "tribe_paged" : "1",
+            "tribe_paged": "1",
             "tribe_event_display": "list",
-            "featured" : "false",
-            "tribe_event_category" : "board-meeting",
+            "featured": "false",
+            "tribe_event_category": "board-meeting",
             "tribe-bar-date": "2018-01-01"
         }
         yield scrapy.FormRequest(
-                "https://95thstreetba.org/wp-admin/admin-ajax.php", 
-                method="POST", callback=self._parse_meetings, 
-                meta={"tribe_paged": 1}, formdata=frmdata)
+            "https://95thstreetba.org/wp-admin/admin-ajax.php",
+            method="POST",
+            callback=self._parse_meetings,
+            meta={"tribe_paged": 1},
+            formdata=frmdata
+        )
 
     def _parse_meetings(self, response):
         """
@@ -81,17 +79,23 @@ class ChiSsa4Spider(CityScrapersSpider):
 
         # If we couldnt find events, this is some 404 page, nothing left to yield
         if len(obj) > 0:
-            trpage = str(int(response.meta.get("tribe_paged"))+1)
+            trpage = str(int(response.meta.get("tribe_paged")) + 1)
             frmdata = {
                 "action": "tribe_list",
-                "tribe_paged" : trpage,
+                "tribe_paged": trpage,
                 "tribe_event_display": "list",
-                "featured" : "false",
-                "tribe_event_category" : "board-meeting",
+                "featured": "false",
+                "tribe_event_category": "board-meeting",
                 "tribe-bar-date": "2018-01-01",
-                "hash" : hashi
+                "hash": hashi
             }
-            yield scrapy.FormRequest("https://95thstreetba.org/wp-admin/admin-ajax.php", callback=self._parse_meetings, method="POST", meta={"tribe_paged": trpage}, formdata=frmdata)
+            yield scrapy.FormRequest(
+                "https://95thstreetba.org/wp-admin/admin-ajax.php",
+                callback=self._parse_meetings,
+                method="POST",
+                meta={"tribe_paged": trpage},
+                formdata=frmdata
+            )
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""

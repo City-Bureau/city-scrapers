@@ -1,36 +1,57 @@
-from datetime import datetime
-from os.path import dirname, join
+import http.client
 
-import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED, PASSED, TENTATIVE
-from city_scrapers_core.utils import file_response
-from freezegun import freeze_time
+import pytest  #noqa
+
+from scrapy import FormRequest
+from scrapy.http import Request, TextResponse
 
 from city_scrapers.spiders.chi_ssa_4 import ChiSsa4Spider
+"""
+ChiSsa4Spider can't be tested in the typical way because it does POST
+responses to get meeting data.  I'm unsure what would be best practice
+to make it testable. IMO the ideal solution would be to test the scraper
+with a live response from the server, as it is actually formulated by Scrapy,
+instead of an offline file response. I don't know the most natural way to do
+that though. Another potential solution would be to mock the POST response.
+"""
 
-test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_4.html"),
-    url=
-    "https://95thstreetba.org/events/category/board-meeting/list/?tribe_paged=1&tribe_event_display=list&tribe-bar-date=2017-10-01",
+conx = http.client.HTTPSConnection("95thstreetba.org")
+url = "https://95thstreetba.org/events/category/board-meeting/list/?tribe_pag"\
+        "ed=1&tribe_event_display=list&tribe-bar-date=2018-10-01"
+conx.request(
+    "GET", "/events/category/board-meeting/list/?tribe_paged=1&"
+    "tribe_event_display=list&tribe-bar-date=2018-01-01"
 )
+resp = conx.getresponse().read()
+request = Request(url=url)
+test_response = TextResponse(url=url, body=resp, encoding="utf-8")
+
 spider = ChiSsa4Spider()
 
-freezer = freeze_time("2019-12-17")
-freezer.start()
+parsed_items = []
 
-parsed_items = [item for item in spider.parse(test_response)]
 
-freezer.stop()
+def recur_parse(items):
+    for item in items:
+        if type(item) == FormRequest:
+            # TODO Actually send the POST request and get a response
+            response = None
+            recur_parse(spider.parse(response))
+        elif type(item) == Request:
+            # TODO Actually send the POST request and get a response
+            response = None
+            recur_parse(spider.parse(response))
+        else:
+            parsed_items.append(item)
+
+
+# recur_parse(spider.parse(test_response))
+
 
 def test_stub():
     assert True
 
 
-# ChiSsa4Spider can't be tested in the typical way because it does POST
-# responses to get meeting data.  I'm unsure what would be best practice
-# to make it testable. IMO the ideal solution would be to test the scraper
-# with a live response from the server, instead of an offline file response.
-# Another potential solution would be to mock the POST requests somehow. 
 """
 def test_length():
     assert len(parsed_items) == 18
