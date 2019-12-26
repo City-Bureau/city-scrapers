@@ -1,5 +1,7 @@
 from datetime import datetime
-
+from scrapy.utils.log import configure_logging
+import logging
+import json
 import scrapy
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
@@ -14,6 +16,13 @@ class ChiSsa4Spider(CityScrapersSpider):
         "https://95thstreetba.org/events/category/board-meeting/?"
         "tribe_paged=1&tribe_event_display=list&tribe-bar-date=2017-10-01"
     ]
+    # TODO remove before merging
+    configure_logging(install_root_handler=False)
+    logging.basicConfig(
+            filename='log.txt',
+            format='%(levelname)s: %(message)s',
+            level=logging.DEBUG
+    )
 
     def parse(self, response):
         """
@@ -36,14 +45,15 @@ class ChiSsa4Spider(CityScrapersSpider):
             "#tribe-events-footer .tribe-events-nav-pagination "
             ".tribe-events-sub-nav .tribe-events-nav-next a::attr(href)"
         ).extract_first()
-        yield scrapy.Request(next_page, callback=self._setup)
-
-    def _setup(self, response):
-        prev_page = response.css(
-            "#tribe-events-footer .tribe-events-nav-pagination "
-            ".tribe-events-sub-nav .tribe-events-nav-previous a::attr(href)"
-        ).extract_first()
-        yield scrapy.Request(prev_page, callback=self._parse_meetings)
+        frmdata = {
+            "action": "tribe_list",
+            "tribe_paged" : "1",
+            "tribe_event_display": "list",
+            "featured" : "false",
+            "tribe_event_category" : "board-meeting",
+            "tribe-bar-date": "2018-01-01"
+        }
+        yield scrapy.FormRequest("https://95thstreetba.org/wp-admin/admin-ajax.php", method="POST", callback=self._parse_meetings, meta={"tribe_paged": 1}, formdata=frmdata)
 
     def _parse_meetings(self, response):
         """
@@ -52,7 +62,11 @@ class ChiSsa4Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        obj = response.css(".tribe-events-loop .tribe-events-category-board-meeting")
+        # raise ValueError(response.body)
+        body = response.body.decode("utf-8")
+        body = json.loads(body)
+        rsel = scrapy.Selector(text=body['html'])
+        obj = rsel.css(".tribe-events-loop .tribe-events-category-board-meeting")
         for item in obj:
             # Only grab things of class tribe-events-category-board-meeting
             start, end = self._parse_time(item)
@@ -79,7 +93,16 @@ class ChiSsa4Spider(CityScrapersSpider):
             ".tribe-events-sub-nav .tribe-events-nav-next a::attr(href)"
         ).extract_first()
         if next_page:
-            yield scrapy.Request(next_page, callback=self.parse)
+            trpage = str(int(response.meta.get("tribe_paged"))+1)
+            frmdata = {
+                "action": "tribe_list",
+                "tribe_paged" : trpage,
+                "tribe_event_display": "list",
+                "featured" : "false",
+                "tribe_event_category" : "board-meeting",
+                "tribe-bar-date": "2018-01-01"
+            }
+            yield scrapy.FormRequest(next_page, callback=self._parse_meetings, method="POST", meta={"tribe_paged": trpage}, formdata=frmdata)
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -105,8 +128,6 @@ class ChiSsa4Spider(CityScrapersSpider):
             ".tribe-events-event-meta .location .tribe-event-schedule-details"
             " .tribe-event-time::text"
         ).extract_first()
-        if "2020" not in dtstart and "2018" not in dtstart:
-            raise ValueError(dtstart + "@@@" + tend);
         dtstart = dtstart.split("@")
         try:
             dayof = datetime.strptime(dtstart[0].strip(), "%B %d, %Y").date()
@@ -114,7 +135,7 @@ class ChiSsa4Spider(CityScrapersSpider):
             # If year is omitted then they mean the current year
             dayof = datetime.strptime(dtstart[0].strip(), "%B %d").date()
             dayof = dayof.replace(year=datetime.today().year)
-            raise ValueError(dayof);
+        #    raise ValueError(dayof);
         start_time = datetime.strptime(dtstart[1].strip(), "%H:%M %p").time()
         end_time = datetime.strptime(tend.strip(), "%H:%M %p").time()
 
