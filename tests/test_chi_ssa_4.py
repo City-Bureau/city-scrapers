@@ -1,11 +1,11 @@
 import http.client
 
-import pytest  #noqa
-
+import pytest  # noqa
 from scrapy import FormRequest
 from scrapy.http import Request, TextResponse
 
 from city_scrapers.spiders.chi_ssa_4 import ChiSsa4Spider
+
 """
 ChiSsa4Spider can't be tested in the typical way because it does POST
 responses to get meeting data.  I'm unsure what would be best practice
