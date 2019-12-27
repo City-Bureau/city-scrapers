@@ -10,7 +10,6 @@ from city_scrapers_core.spiders import CityScrapersSpider
 class ChiCityCollegeSpider(CityScrapersSpider):
     name = 'chi_city_college'
     agency = 'City Colleges of Chicago'
-    allowed_domains = ['www.ccc.edu']
     start_urls = [
         'http://www.ccc.edu/events/Pages/default.aspx?dept=Office%20of%20the%20Board%20of%20Trustees',  # noqa
     ]

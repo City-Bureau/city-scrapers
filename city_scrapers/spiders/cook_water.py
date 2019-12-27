@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from city_scrapers_core.constants import BOARD, COMMITTEE, FORUM
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import LegistarSpider
@@ -6,18 +8,19 @@ from city_scrapers_core.spiders import LegistarSpider
 class CookWaterSpider(LegistarSpider):
     name = 'cook_water'
     agency = 'Metropolitan Water Reclamation District of Greater Chicago'
-    allowed_domains = ['mwrd.legistar.com']
     event_timezone = 'America/Chicago'
     start_urls = ['https://mwrd.legistar.com']
     address = '100 East Erie Street Chicago, IL 60611'
 
     def parse_legistar(self, events):
+        three_months_ago = datetime.today() - timedelta(days=90)
         for event, _ in events:
             title = self._parse_title(event)
             start = self.legistar_start(event)
-            if title == 'Study Session' or not start:
+            if title == 'Study Session' or not start or (
+                start < three_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 continue
-
             meeting = Meeting(
                 title=title,
                 description='',

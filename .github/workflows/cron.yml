@@ -1,0 +1,69 @@
+name: Cron Build
+
+on:
+  schedule:
+    - cron: '12 6 * * *'
+
+env:
+  CI: true
+  PIPENV_VENV_IN_PROJECT: true
+  SCRAPY_SETTINGS_MODULE: city_scrapers.settings.prod
+  WAYBACK_ENABLED: true
+  AUTOTHROTTLE_MAX_DELAY: 30.0
+  AUTOTHROTTLE_START_DELAY: 1.5
+  AUTOTHROTTLE_TARGET_CONCURRENCY: 3.0
+  AZURE_ACCOUNT_KEY: ${{ secrets.AZURE_ACCOUNT_KEY }}
+  AZURE_ACCOUNT_NAME: ${{ secrets.AZURE_ACCOUNT_NAME }}
+  AZURE_CONTAINER: ${{ secrets.AZURE_CONTAINER }}
+  AZURE_STATUS_CONTAINER: ${{ secrets.AZURE_STATUS_CONTAINER }}
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  OPENVPN_USER: ${{ secrets.OPENVPN_USER }}
+  OPENVPN_PASS: ${{ secrets.OPENVPN_PASS }}
+  OPENVPN_CONFIG: ${{ secrets.OPENVPN_CONFIG }}
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Connect to OpenVPN
+      run: |
+        sudo apt-get install -y openvpn
+        echo "$OPENVPN_USER" | sudo tee -a /etc/openvpn/client/auth
+        echo "$OPENVPN_PASS" | sudo tee -a /etc/openvpn/client/auth
+        echo "$OPENVPN_CONFIG" | sudo tee -a /etc/openvpn/ovpn.conf
+        sudo openvpn --config /etc/openvpn/ovpn.conf --daemon
+        sleep 120
+
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - name: Install Pipenv
+      uses: dschep/install-pipenv-action@v1
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v1
+      with:
+        path: .venv
+        key: pip-3.7-${{ hashFiles('**/Pipfile.lock') }}
+        restore-keys: |
+          pip-3.7-
+          pip-
+
+    - name: Install dependencies
+      run: pipenv sync
+      env:
+        PIPENV_DEFAULT_PYTHON_VERSION: 3.7
+
+    - name: Run scrapers
+      run: |
+        export PYTHONPATH=$(pwd):$PYTHONPATH
+        ./.deploy.sh
+
+    - name: Combine output feeds
+      run: |
+        export PYTHONPATH=$(pwd):$PYTHONPATH
+        pipenv run scrapy combinefeeds -s LOG_ENABLED=False

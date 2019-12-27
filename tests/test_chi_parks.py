@@ -1,19 +1,23 @@
 import json
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import BOARD, PASSED
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_parks import ChiParksSpider
 
 freezer = freeze_time('2018-01-01')
 freezer.start()
-test_response = []
-with open('tests/files/chi_parks.txt') as f:
-    for line in f:
-        test_response.append(json.loads(line))
+
+with open(join(dirname(__file__), "files", "chi_parks.json")) as f:
+    test_response = json.load(f)
+
 spider = ChiParksSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
 parsed_items = [item for item in spider.parse_legistar(test_response)]
 freezer.stop()
 

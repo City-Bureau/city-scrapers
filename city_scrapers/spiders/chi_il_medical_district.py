@@ -11,7 +11,6 @@ class ChiIlMedicalDistrictSpider(CityScrapersSpider):
     name = "chi_il_medical_district"
     agency = "Illinois Medical District Commission"
     timezone = "America/Chicago"
-    allowed_domains = ["medicaldistrict.org"]
     start_urls = ["http://medicaldistrict.org/commission/"]
     location = {
         "name": "Illinois Medical District Commission",
@@ -124,7 +123,7 @@ class ChiIlMedicalDistrictSpider(CityScrapersSpider):
             for section_link in section.css("p > a"):
                 link_str = section_link.xpath("./text()").extract_first()
                 link_dt = self._parse_start(link_str, year=year_str)
-                if link_str:
+                if link_dt:
                     link_date_map[link_dt.date()].append({
                         "title": re.sub(r"\s+", " ",
                                         link_str.split(" – ")[-1]).strip(),

@@ -1,14 +1,16 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_ssa_25 import ChiSsa25Spider
 
 test_response = file_response(
-    'files/chi_ssa_25.html', 'http://littlevillagechamber.org/2019-meetings-minutes/'
+    join(dirname(__file__), "files", "chi_ssa_25.html"),
+    url='http://littlevillagechamber.org/2019-meetings-minutes/'
 )
 spider = ChiSsa25Spider()
 

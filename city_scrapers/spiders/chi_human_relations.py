@@ -14,7 +14,6 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
     name = "chi_human_relations"
     agency = "Chicago Commission on Human Relations"
     timezone = "America/Chicago"
-    allowed_domains = ["www.chicago.gov"]
     start_urls = ["https://www.chicago.gov/city/en/depts/cchr.html"]
     location = {
         "name": "",
@@ -57,11 +56,9 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
     def _parse_schedule_pdf(self, response):
         """Parse dates and details from schedule PDF"""
         pdf_obj = PdfFileReader(BytesIO(response.body))
-        pdf_text = pdf_obj.getPage(0).extractText()
-        # Remove duplicate characters split onto separate lines
-        clean_text = re.sub(r"([A-Z0-9:\n ]{2})\1", r"\1", pdf_text, flags=re.M)
-        # Join lines where there's only a single character, then remove newlines
-        clean_text = re.sub(r"(?<=[A-Z0-9:])\n", "", clean_text, flags=re.M).replace("\n", " ")
+        pdf_text = pdf_obj.getPage(0).extractText().replace("\n", "")
+        # Remove duplicate characters not followed by lowercase (as in 5:00pm)
+        clean_text = re.sub(r"([A-Z0-9:])\1(?![a-z])", r"\1", pdf_text, flags=re.M)
         # Remove duplicate spaces
         clean_text = re.sub(r"\s+", " ", clean_text)
         year_str = re.search(r"\d{4}", clean_text).group()

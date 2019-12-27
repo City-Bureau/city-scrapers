@@ -12,9 +12,9 @@ class ChiTeacherPensionSpider(CityScrapersSpider):
     name = 'chi_teacherpension'
     agency = 'Chicago Teachers Pension Fund'
     timezone = 'America/Chicago'
-    allowed_domains = ['boarddocs.org', 'ctpf.org']
     start_urls = ['https://www.ctpf.org/board-trustees-meeting-minutes']
     location = {'name': 'CTPF Office', 'address': '203 N LaSalle St, Suite 2600 Chicago, IL 60601'}
+    custom_settings = {"ROBOTSTXT_OBEY": False}
 
     def __init__(self, *args, **kwargs):
         self.month_year_minutes = defaultdict(list)
@@ -105,6 +105,11 @@ class ChiTeacherPensionSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         desc = item.xpath('description/text()').extract_first()
+        if desc and "425 S" in desc:
+            return {
+                "name": "",
+                "address": "425 S Financial Place, Suite 1500, Chicago, IL 60605",
+            }
         if desc and not re.search(r'203 N[\.orth]*? LaSalle', desc):
             raise ValueError('Meeting location has changed')
         return self.location

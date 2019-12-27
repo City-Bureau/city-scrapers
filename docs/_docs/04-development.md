@@ -1,24 +1,24 @@
 ---
 title: "Development"
 permalink: /docs/development/
-excerpt: "Intro to City Scrapers"
+excerpt: "City Scrapers development documentation"
 last_modified_at: 2018-10-04T20:15:56-04:00
 toc: true
 ---
 
-## Installation
+## Setup
 
 Follow the following directions for cloning the repository and installing requirements.
 
-### Prerequisites
+### What you'll need
 
-- Git installed
-- GitHub account
+- [Git](https://git-scm.com/)
+- [GitHub](https://github.com/) account
 - Working internet connection
-- Python 3.5, 3.6, or 3.7 installed
-- Virtual environment manager (`pipenv`, `virtualenv`, `virtualenv-wrapper`, etc.)
+- [Python](https://www.python.org/) 3.5, 3.6, or 3.7 installed
+- [Pipenv](https://pipenv.readthedocs.io/en/latest/) for managing dependencies and virtual environments
 
-If in doubt, please also refer to the [Setup Help](/docs/setup-help/), which should be useful for common first-time setup issues.
+You can find more details on setting up these tools and other common issues in [Setup Help](/docs/setup-help/).
 
 ### Clone the Repository
 
@@ -26,37 +26,33 @@ If in doubt, please also refer to the [Setup Help](/docs/setup-help/), which sho
 
 These steps are the same, regardless of which option below you choose.
 
-1. Fork the repository (either from the repo for the local City Scrapers project you're working on or [City-Bureau/city-scrapers](https://github.com/City-Bureau/city-scrapers))
+#### 1. Fork the repository
 
-2. Clone the fork to your local machine:
+This can be from the repo for the local City Scrapers project you're working on or [City-Bureau/city-scrapers](https://github.com/City-Bureau/city-scrapers).
+
+#### 2. Clone the fork to your local machine
 
 ```bash
 $ git clone https://github.com/YOUR-USERNAME/city-scrapers.git
 ```
 
-3. Change directories into the main project folder:
+#### 3. Change directories into the main project folder
 
 ```bash
 $ cd city-scrapers
 ```
 
-**If you do not plan on doing any development, you can skip creating a fork and just clone the repo**
+### Install dependencies
 
-## Local Python3 and Virtualenv
+[Pipenv](https://pipenv.readthedocs.io/en/latest/) is package management tool for Python which combines managing dependencies and virtual environments. It's also designed to be compatible with Windows. Other tools like `virtualenv` and `virtualenv-wrapper` can be used, but our documentation will only refer to Pipenv since it's quickly being adopted as the standard for Python dependency management.
 
-You'll need a fairly standard Python development stack. If you're on OS X, the [NPR Visuals Guide](http://blog.apps.npr.org/2013/06/06/how-to-setup-a-developers-environment.html){:target="\_blank"} is a good place to start, though you'll also need Python 3.x (which can be installed with `brew install python3` for Mac users).
-
-### `pipenv` installation
-
-[`pipenv`](https://pipenv.readthedocs.io/en/latest/) is package management tool for Python which combines managing dependencies and virtual environments. It's also designed to be compatible with Windows.
-
-To setup an environment with `pipenv`, run:
+To setup an environment with Pipenv, run:
 
 ```bash
-$ pipenv install --dev --ignore-pipfile --three
+$ pipenv sync --dev --three
 ```
 
-Then, you can either activate the virtual environment similarly to tools like `virtualenv-wrapper` by running
+Then, you can activate the virtual environment by running:
 
 ```bash
 $ pipenv shell
@@ -70,65 +66,23 @@ Alternatively, you can prefix commands with `pipenv run`. Here's an example that
 $ pipenv run scrapy crawl chi_library
 ```
 
-### `virtualenv-wrapper` installation
-
-**SKIP THIS section if `pipenv install` was successful**
-
-The following assumes you have `virtualenv` and `virtualenv-wrapper` installed.
-If you are using a different virtual environment manager, please refer to its
-documentation (steps 1-3 should be the same).
-
-1. Create a virtual environment (also called `city-scrapers`) for the project:
-
-```bash
-$ mkvirtualenv -p `which python3` city-scrapers
-```
-
-The virtual environment should now be activated.
-
-2. Install the required packages into the virtual environment:
-
-```bash
-(city-scrapers)$ pip install -r requirements.txt
-```
-
-You should now have a working environment for running the project or making changes to it. Remember to always activate the virtual environment before working with it:
-
-```bash
-$ workon city-scrapers
-```
-
-Should you need to deactivate the virtual environment, it is as simple as:
-
-```bash
-(city-scrapers)$ deactivate
-```
-
-### Windows Dependencies
-
-If you're setting up the project in a Windows environment, you'll also need to install `pypiwin32`.
-
-You can do this by running `pipenv install pypiwin32` for `pipenv` or installing normally with `pip install pypiwin32` in a virtual environment.
-
 ## Contribute
 
 ### Ways to contribute
 
-There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [Slack](https://citybureau.slack.com/){:target="\_blank"} about code and design choices.
+There are many ways to contribute to this project: coding a spider (webscraper), building infrastructure, improving documentation, hosting in-person code evenings, and participating in technical discussions in [Slack](https://citybureau.slack.com/){:target="\_blank"} about code and design choices. Request an invite to our Slack by filling out [this form](https://airtable.com/shrRv027NLgToRFd6){:target="\_blank"}.
 
-The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on Slack for support--we can meet up in person to troubleshoot some headaches like virtual environment issues.
+The best way to familiarize yourself with the code base is to build a spider. Follow the installation and contributing-a-spider sections below to get started. Reach out on Slack for support.
 
-To contribute infrastructure and utilities, see the [help-wanted GitHub issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="\_blank"}.
+### Familiarize yourself with how we work
 
-### Familiarize yourself with how we work!
-
-**Please read the project's [`CONTRIBUTING.md`](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} file to learn about how we use GitHub to manage the project and our pull request policy.**
+Please read the project's [`CONTRIBUTING.md`](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} file to learn about how we use GitHub to manage the project and our pull request policy.
 
 ### Spider Setup
 
-#### 1. Find a site to scrape and create an issue
+#### 1. Find an open issue to work on
 
-First, find an unclaimed event source within the project's [issues](https://github.com/City-Bureau/city-scrapers/issues){:target="\_blank"}. Any unassigned issue is fair game. Add a comment indicating that you're interested in the work.
+First, find an issue labeled "help wanted" within the project's [issue tracker](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22){:target="\_blank"}. Any issue without the "claimed" label is fair game. Add a comment indicating that you're interested in the work, and once a maintainer has replied and marked the issue "claimed" you're good to go.
 
 Save and note the issue number.
 
@@ -209,29 +163,12 @@ That's OK.
 We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isort`](https://isort.readthedocs.io/en/stable/){:target="\_blank"}, and [`yapf`](https://github.com/google/yapf){:target="\_blank"} to check that all code is written in the proper style. To run these tools individually, you can run the following commands:
 
 ```bash
-$ flake8
-$ isort
-$ yapf --in-place --recursive ./city_scrapers/ ./tests/
+$ pipenv run flake8
+$ pipenv run isort
+$ pipenv run style
 ```
 
-Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. Here's an example for VSCode using the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} (which can be modified/added at `.vscode/settings.json` in your project directory):
-
-```json
-{
-  "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
-  "python.linting.pylintEnabled": false,
-  "python.linting.flake8Enabled": true,
-  "python.envFile": "${workspaceRoot}/.env",
-  "python.linting.flake8Args": ["--config", "${workspaceRoot}/setup.cfg"],
-  "python.formatting.provider": "yapf",
-  "python.formatting.yapfArgs": ["--style", "${workspaceRoot}/setup.cfg"],
-  "python.sortImports.path": "${workspaceRoot}/setup.cfg",
-  "editor.formatOnSave": true,
-  "editor.rulers": [100]
-}
-```
-
-This configuration will run linting and style checks for you, and also make necessary changes automatically any time you save. Packages are available for [Atom](https://atom.io/packages/linter-flake8){:target="\_blank"} and [Sublime Text](https://fosstack.com/setup-sublime-python/){:target="\_blank"} as well.
+Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. See an example of this for VSCode in [Setup Help](/docs/setup-help/).
 
 ### Building a spider
 
@@ -242,7 +179,6 @@ Open `city_scrapers/spiders/chi_housing.py` to work on your spider. A simple str
 The spider should look something like this:
 
 ```python
-# -*- coding: utf-8 -*-
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -252,7 +188,6 @@ class ChiHousingSpider(CityScrapersSpider):
     name = 'chi_housing'
     agency = 'Chicago Housing Authority'
     timezone = 'America/Chicago'
-    allowed_domains = ['thecha.org']
     start_urls = ['http://thecha.org']
 
     def parse(self, response):
@@ -319,7 +254,7 @@ class ChiHousingSpider(Spider):
 
 Often a value for meetings returned by a spider will be the same regardless of meeting content (an example is that most meetings will always have `False` for the `all_day` value). For fields like `classification`, `all_day`, and `title` (sometimes), feel free to remove the `_parse_*` method for that field, and simply include the value in each dictionary (so `'all_day': False` in this example rather than `'all_day': self._parse_all_day(item)`).
 
-However, scheduling details like time and location should be pulled from the page, even if the value is always the same.
+However, scheduling details like time and location should be pulled from the page, even if the value is always the same. In some cases it can be easier to make sure that an expected value is there and raise an error if not than to parse it every time. An example of raising an error if information has changed can be found in [`chi_license_appeal`](https://github.com/City-Bureau/city-scrapers/blob/bb127e3c4243bf7bf9aa59cf7a7b4b43d1d48c0a/city_scrapers/spiders/chi_license_appeal.py#L67-L70)
 
 #### B. Write tests
 
@@ -329,14 +264,18 @@ Here is the test setup and an example test:
 
 ```python
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_housing import ChiHousingSpider
 
-test_response = file_response("files/chi_housing.html")
+test_response = file_response(
+    join(dirname(__file__), "files", "chi_housing.html"),
+    url="https://www.thecha.org/"
+)
 spider = ChiHousingSpider()
 
 freezer = freeze_time("2018-10-12")
@@ -373,9 +312,9 @@ You generally want to verify that a spider:
 
 #### C. Create a Pull Request
 
-If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project. In this case, please mark your pull request as a [draft pull request](https://github.blog/2019-02-14-introducing-draft-pull-requests/){:target="\_blank"} when you create it. You can update this status when it is ready for review.
+If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project.
 
-Additionally, please use the pull request description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
+When you go to open a pull request, you'll see a template with details pre-populated including a checklist of tasks to complete. Fill out the information as best you can (it's alright if you can't check everything off yet). It's designed to provide some reminders for tasks to complete as well as making review easier. You can use the rest of the description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
 
 ### `Meeting` Items
 
@@ -391,20 +330,66 @@ meeting = Meeting(
 meeting['source'] = 'https://example.com'  # This sets a value on the Meeting
 ```
 
-`Meeting` objects accept the following values:
+Each of the values in `Meeting` should adhere to some guidelines.
 
-- `id`: `string` Unique identifier for the meeting based on its details, should be populated by `_get_id` method
-- `title`: `string` Title of the individual meeting
-- `description`: `string` Description of the specific meeting (not the overall agency) if available, otherwise empty string
-- `classification`: `string` One of the [allowed classifications](#classifications) defined in `city_scrapers_core.constants` (`ADVISORY_COMMITTEE`, `BOARD`, `CITY_COUNCIL`, `COMMISSION`, `COMMITTEE`, `FORUM`, `POLICE_BEAT`, `NOT_CLASSIFIED`)
-- `status`: `string` One of the [allowed statuses](#statuses) defined in `city_scrapers_core.constants`, should be populated by `_get_status` method (`CANCELLED`, `TENTATIVE`, `CONFIRMED`, `PASSED`)
-- `start`: `datetime` Naive datetime object indicating the date and time when the meeting starts
-- `end`: `datetime` Naive datetime object indicating the date and time the meeting ends
-- `all_day`: `boolean` Whether the meeting takes place for an entire day
-- `time_notes`: `string` Any additional notes on the timing of the meeting (i.e. if the start or end is estimated or subject to change)
-- `location`: `dict` Dictionary with the keys `name` and `address` containing a location name (if available, otherwise an empty string) and the full address
-- `links`: `list` List of dictionaries with the keys `title` (title/description of the link) and `href` (link URL) for all relevant links on the page, most importantly agenda and minutes if available
-- `source`: `string` URL for meeting, typically a detail page if available otherwise the page it was scraped from
+#### `id`
+
+Unique identifier for a meeting created from the scraped its scraped details. This should almost always be populated by the `_get_id` method inherited from `CityScrapersSpider` and not set directly.
+
+#### `title`
+
+The title of an individual instance of a meeting. Because most of the meetings we're scraping occur on a regular basis, sometimes this is alright to set statically if we can be reasonably certain that it won't change. Some common examples are "Board of Directors" or "Finance Committee".
+
+#### `description`
+
+A string describing the specific meeting (not the overall agency). This usually isn't available, and in that case it should default to an empty string.
+
+#### `classification`
+
+One of the [allowed classification constants](#classifications) describing the type of the meeting.
+
+#### `status`
+
+One of the [allowed status constants](#statuses) describing the meeting's current status. Generally you shouldn't edit this other than to set it with the `_get_status` method which checks the meeting title and description for any indication of a cancellation. If there is relevant text in a meeting's description (like "CANCELLED" displaying next to the meeting name outside of the title) you can pass it to the `_get_status` method as a keyword argument like this:
+
+```python
+meeting["status"] = self._get_status(item, text="Meeting is cancelled")
+```
+
+#### `start`
+
+Naive `datetime` object indicating the date and time a meeting will start. The agency's timezone (from the spider's `timezone` property) will be applied in the pipelines, so that doesn't need to be managed in the spider. All spiders should have a value for `start`, and if a time is unavailable and there are no sensible defaults it should be listed as 12:00 am.
+
+#### `end`
+
+Naive `datetime` or `None` indicating the date and time a meeting will end. This is most often not available, but otherwise the same rules apply to it as `start`.
+
+#### `all_day`
+
+Boolean indicating whether or not the meeting occurs all day. It's mostly a carryover from the [Open Civic Data event specification](https://opencivicdata.readthedocs.io/en/latest/data/event.html), and is almost always set to `False`.
+
+#### `time_notes`
+
+String indicating anything people should know about the meeting's time. This can be anything from indicating that a meeting will start immediately following the previous one (so the time might not be accurate) or a general indication to double-check the time if the agency suggests that attendees should confirm in advance.
+
+#### `location`
+
+Dictionary with required `name` and `address` strings indicating where the meeting will take place. Either or both values can be empty strings, but if no location is available either a default should be found (most meetings have usual locations) or `TBD` should be listed as the `name`. If a meeting has a standing location that is listed separate from individual meetings, creating a [`_validate_location`](https://github.com/City-Bureau/city-scrapers/blob/20a12ba5d76186cba65b45f7f764f02393d4a991/city_scrapers/spiders/chi_ssa_34.py#L57-L59) that checks whether the meeting location has changed (and returns an error if it has) can be sometimes be more straightforward than trying to parse the same location each time.
+
+```python
+{
+    "name": "City Hall",
+    "address": "1234 Fake St, Chicago, IL 60601"
+}
+```
+
+#### `links`
+
+A list of dictionaries including values `title` and `href` for any relevant links like agendas, minutes or other materials. The `href` property should always return the full URL and not relative paths like `/doc.pdf`.
+
+#### `source`
+
+The URL the meeting was scraped from, which will almost always be `response.url` with the exception of scraping some lists with detail pages.
 
 Since we're aggregating a wide variety of different types of meetings and information into a single schema, there are bound to be cases where the categories are unclear or don't seem to fit. Don't hesitate to reach out in a GitHub issue or on Slack if you aren't sure where certain information should go.
 
@@ -455,4 +440,4 @@ Legistar is a software platform provided by Granicus that many governments use t
 
 ### ASP.NET Sites
 
-ASP.NET sites can be a challenge because they're often inconsistent and require maintaining a level of state across requests. You can see an example of handling this behavior in the `cook_electoral` spider.
+ASP.NET sites can be a challenge because they're often inconsistent and require maintaining a level of state across requests. You can see an example of handling this behavior in the [`cuya_administrative_rules`](https://github.com/City-Bureau/city-scrapers-cle/blob/master/city_scrapers/spiders/cuya_administrative_rules.py) spider.

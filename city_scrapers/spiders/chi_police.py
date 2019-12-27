@@ -11,7 +11,6 @@ class ChiPoliceSpider(CityScrapersSpider):
     name = 'chi_police'
     agency = 'Chicago Police Department'
     timezone = 'America/Chicago'
-    allowed_domains = ['home.chicagopolice.org']
     start_urls = [
         'https://home.chicagopolice.org/wp-content/themes/cpd-bootstrap/proxy/miniProxy.php?https://home.chicagopolice.org/get-involved-with-caps/all-community-event-calendars/district-1/'  # noqa
     ]
@@ -32,12 +31,15 @@ class ChiPoliceSpider(CityScrapersSpider):
         except json.decoder.JSONDecodeError:
             return
 
+        ninety_days_ago = datetime.now() - timedelta(days=90)
         for item in data:
             # Drop events that aren't Beat meetings or DAC meetings
             classification = self._parse_classification(item)
             if not classification:
                 continue
             start = self._parse_start(item)
+            if start < ninety_days_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                continue
             end, has_end = self._parse_end(start, item)
             meeting = Meeting(
                 title=self._parse_title(classification, item),

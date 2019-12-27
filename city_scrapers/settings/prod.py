@@ -15,6 +15,8 @@ if os.getenv("WAYBACK_ENABLED"):
         "city_scrapers.middleware.CityScrapersWaybackMiddleware": 500,
     }
 
+SENTRY_DSN = os.getenv("SENTRY_DSN")
+
 EXTENSIONS = {
     "scrapy_sentry.extensions.Errors": 10,
     "city_scrapers_core.extensions.AzureBlobStatusExtension": 100,

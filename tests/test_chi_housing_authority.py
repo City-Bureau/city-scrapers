@@ -1,13 +1,16 @@
 from datetime import datetime, time
+from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, CANCELLED, PASSED
+from city_scrapers_core.constants import BOARD, PASSED
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_housing_authority import ChiHousingAuthoritySpider
 
 spider = ChiHousingAuthoritySpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
 freezer = freeze_time('2018-12-14')
 freezer.start()
@@ -16,13 +19,20 @@ UPCOMING_URL = 'http://www.thecha.org/about/board-meetings-agendas-and-resolutio
 NOTICE_URL = 'http://www.thecha.org/about/board-meetings-agendas-and-resolutions/board-meeting-notices'  # noqa
 MINUTES_URL = 'http://www.thecha.org/doing-business/contracting-opportunities/view-all/Board%20Meeting'  # noqa
 
-spider.upcoming_meetings = spider._parse_upcoming(
-    file_response('files/chi_housing_authority_upcoming.html', UPCOMING_URL)
+upcoming_response = file_response(
+    join(dirname(__file__), "files", "chi_housing_authority.html"),
+    url=UPCOMING_URL,
 )
-spider.upcoming_meetings = spider._parse_notice(
-    file_response('files/chi_housing_authority_notice.html', NOTICE_URL)
+notice_response = file_response(
+    join(dirname(__file__), "files", "chi_housing_authority_notice.html"),
+    url=NOTICE_URL,
 )
-minutes_req = file_response('files/chi_housing_authority_minutes.html', MINUTES_URL)
+
+spider.upcoming_meetings = spider._parse_upcoming(upcoming_response)
+spider.upcoming_meetings = spider._parse_notice(notice_response)
+minutes_req = file_response(
+    join(dirname(__file__), "files", "chi_housing_authority_minutes.html"), url=MINUTES_URL
+)
 
 parsed_items = [item for item in spider._parse_combined_meetings(minutes_req)]
 
@@ -48,7 +58,6 @@ def test_id():
 
 def test_status():
     assert parsed_items[0]['status'] == PASSED
-    assert parsed_items[-3]['status'] == CANCELLED
 
 
 def test_source():

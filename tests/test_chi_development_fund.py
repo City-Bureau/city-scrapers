@@ -1,25 +1,33 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_development_fund import ChiDevelopmentFundSpider
 
 test_response = file_response(
-    'files/chi_development_fund_chicago_developmentfund.html',
-    'https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_developmentfund.html'
+    join(dirname(__file__), "files", "chi_development_fund.html"),
+    url='https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_developmentfund.html'
 )
 spider = ChiDevelopmentFundSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
+freezer = freeze_time("2018-05-01")
+freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
+freezer.stop()
 
 
 def test_meeting_count():
-    assert len(parsed_items) == 42
+    assert len(parsed_items) == 6
 
 
 def test_unique_id_count():
-    assert len(set([item['id'] for item in parsed_items])) == 42
+    assert len(set([item['id'] for item in parsed_items])) == 6
 
 
 def test_title():
@@ -69,7 +77,6 @@ def test_links():
             'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDF_Advisor_Board_Agenda_April_2018.pdf',  # noqa
         'title': 'Agenda'
     }]
-    assert parsed_items[-1]['links'] == []
 
 
 @pytest.mark.parametrize('item', parsed_items)

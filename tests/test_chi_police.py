@@ -1,13 +1,27 @@
 from datetime import datetime
+from os.path import dirname, join
 
 from city_scrapers_core.constants import PASSED, POLICE_BEAT
-from tests.utils import file_response
+from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_police import ChiPoliceSpider
 
-test_response = file_response('files/chi_police.json')
+test_response = file_response(join(dirname(__file__), "files", "chi_police.json"))
 spider = ChiPoliceSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
+freezer = freeze_time("2018-01-01")
+freezer.start()
+
 parsed_items = [item for item in spider.parse(test_response)]
+
+freezer.stop()
+
+
+def test_count():
+    assert len(parsed_items) == 234
 
 
 def test_title():

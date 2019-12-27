@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from city_scrapers_core.constants import CITY_COUNCIL
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import LegistarSpider
@@ -7,7 +9,6 @@ class ChiCityCouncilSpider(LegistarSpider):
     name = 'chi_citycouncil'
     agency = 'Chicago City Council'
     timezone = 'America/Chicago'
-    allowed_domains = ['chicago.legistar.com']
     start_urls = ['https://chicago.legistar.com/Calendar.aspx']
     link_types = ["Notice"]
 
@@ -18,9 +19,12 @@ class ChiCityCouncilSpider(LegistarSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        three_months_ago = datetime.today() - timedelta(days=90)
         for event, _ in events:
             start = self.legistar_start(event)
-            if not start:
+            if not start or (
+                start < three_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 continue
             meeting = Meeting(
                 title=event['Name']['label'],

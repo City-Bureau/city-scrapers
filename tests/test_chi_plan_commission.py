@@ -1,26 +1,35 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMISSION, PASSED
-from tests.utils import file_response
+from city_scrapers_core.constants import COMMISSION, TENTATIVE
+from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_plan_commission import ChiPlanCommissionSpider
 
 test_response = file_response(
-    'files/chi_plan_commission_chicago_plan_commission.html',
-    'https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html'
+    join(dirname(__file__), "files", "chi_plan_commission.html"),
+    url='https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html'
 )
 spider = ChiPlanCommissionSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
+freezer = freeze_time("2018-01-01")
+freezer.start()
+
 parsed_items = [item for item in spider.parse(test_response)]
+
+freezer.stop()
 
 
 def test_meeting_count():
-    # 12 mtgs / yr * 10 yrs + 1 extra (March 2015)
-    assert len(parsed_items) == 121
+    assert len(parsed_items) == 24
 
 
 def test_unique_id():
-    assert len(set([item['id'] for item in parsed_items])) == 121
+    assert len(set([item['id'] for item in parsed_items])) == 24
 
 
 def test_title():
@@ -44,7 +53,7 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == PASSED
+    assert parsed_items[0]['status'] == TENTATIVE
 
 
 def test_location():

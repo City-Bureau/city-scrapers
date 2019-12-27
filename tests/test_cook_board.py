@@ -1,21 +1,30 @@
 import json
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, PASSED
+from city_scrapers_core.constants import BOARD, TENTATIVE
+from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.cook_board import CookBoardSpider
 
-test_response = []
-with open('tests/files/cook_board.txt') as f:
-    for line in f:
-        test_response.append(json.loads(line))
+freezer = freeze_time("2017-09-01")
+freezer.start()
+
+with open(join(dirname(__file__), "files", "cook_board.json"), "r") as f:
+    test_response = json.load(f)
+
 spider = CookBoardSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
 parsed_items = [item for item in spider.parse_legistar(test_response)]
+
+freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 167
+    assert len(parsed_items) == 82
 
 
 def test_title():
@@ -43,7 +52,7 @@ def test_classification():
 
 
 def test_status():
-    assert parsed_items[25]['status'] == PASSED
+    assert parsed_items[25]['status'] == TENTATIVE
 
 
 def test_location():

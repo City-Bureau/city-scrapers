@@ -12,66 +12,67 @@ test_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_54.html"),
     url="https://rpba.org/ssa-54/",
 )
+test_detail_response = file_response(
+    join(dirname(__file__), "files", "chi_ssa_54_detail.html"),
+    url="https://business.rpba.org/events/details/sheridan-road-ssa-54-commissioners-meeting-7970",
+)
 spider = ChiSsa54Spider()
 
-freezer = freeze_time("2019-07-01")
+freezer = freeze_time("2019-12-10")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+spider.link_date_map = spider._parse_links(test_response)
+parsed_item = [item for item in spider._parse_detail(test_detail_response)][0]
 
 freezer.stop()
 
 
-def test_count():
-    assert len(parsed_items) == 33
-
-
 def test_title():
-    assert parsed_items[0]["title"] == "Commission"
+    assert parsed_item["title"] == "Commission"
 
 
 def test_description():
-    assert parsed_items[0]["description"] == ""
+    assert parsed_item["description"] == ""
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 2, 14, 8, 30)
+    assert parsed_item["start"] == datetime(2019, 11, 14, 8, 30)
 
 
 def test_end():
-    assert parsed_items[0]["end"] is None
+    assert parsed_item["end"] == datetime(2019, 11, 14, 9, 30)
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == "See agenda to confirm time"
+    assert parsed_item["time_notes"] == ""
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_54/201902140830/x/commission"
+    assert parsed_item["id"] == "chi_ssa_54/201911140830/x/commission"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == PASSED
+    assert parsed_item["status"] == PASSED
 
 
 def test_location():
-    assert parsed_items[0]["location"] == spider.location
+    assert parsed_item["location"] == {
+        'address': '6740 N. Sheridan Rd. chicago, IL 60626',
+        'name': ''
+    }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://rpba.org/ssa-54/"
+    assert parsed_item["source"] == test_detail_response.url
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "https://rpba.org/wp-content/uploads/2019/04/54-2.14.19-Agenda.pdf",
-        "title": "Agenda"
-    }]
+    assert parsed_item["links"] == []
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == COMMISSION
+    assert parsed_item["classification"] == COMMISSION
 
 
 def test_all_day():
-    assert parsed_items[0]["all_day"] is False
+    assert parsed_item["all_day"] is False

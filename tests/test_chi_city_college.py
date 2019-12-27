@@ -1,16 +1,17 @@
 from datetime import datetime
+from os.path import dirname, join
 
 from city_scrapers_core.constants import BOARD, COMMITTEE, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_city_college import ChiCityCollegeSpider
 
 freezer = freeze_time('2018-01-12')
 freezer.start()
 test_response = file_response(
-    'files/chi_city_college.html',
-    'http://www.ccc.edu/events/Pages/March-2019-Board-and-Committee-Meetings.aspx'
+    join(dirname(__file__), "files", "chi_city_college.html"),
+    url='http://www.ccc.edu/events/Pages/March-2019-Board-and-Committee-Meetings.aspx'
 )
 spider = ChiCityCollegeSpider()
 parsed_items = [item for item in spider.parse_event_page(test_response)]

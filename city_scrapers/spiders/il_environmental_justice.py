@@ -10,7 +10,6 @@ class IlEnvironmentalJusticeSpider(CityScrapersSpider):
     name = "il_environmental_justice"
     agency = "Illinois Commission on Environmental Justice"
     timezone = "America/Chicago"
-    allowed_domains = ["www2.illinois.gov"]
     start_urls = [
         "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Pages/meetings.aspx"
     ]

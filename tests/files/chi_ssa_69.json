@@ -1,0 +1,96 @@
+{
+ "kind": "calendar#events",
+ "etag": "\"p32g8lslfpf9u80g\"",
+ "summary": "gagdcchicago@gmail.com",
+ "updated": "2019-09-15T19:44:09.332Z",
+ "timeZone": "America/Chicago",
+ "accessRole": "reader",
+ "defaultReminders": [],
+ "nextSyncToken": "CKCK8q_L0-QCEAAYAQ==",
+ "items": [
+  {
+   "kind": "calendar#event",
+   "etag": "\"3120384317614000\"",
+   "id": "1d1056p8ffecf0f7bjdtn2kgp1",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=MWQxMDU2cDhmZmVjZjBmN2JqZHRuMmtncDEgZ2FnZGNjaGljYWdvQG0&ctz=GMT-05:00",
+   "created": "2019-06-10T18:42:38.000Z",
+   "updated": "2019-06-10T18:42:38.807Z",
+   "summary": "SSA #69 Commissioners Meeting ",
+   "description": " SSA #69 Commissioners Meeting:\n Corresponding Dates: \nFebruary 12, 2019; July 23, 2019; and  November 12, 2019\n Location: 7901 S. Racine, Chicago, IL 60620\n Time: 8:30 am to 10:00 am",
+   "location": "7901 S Racine Ave, Chicago, IL 60620, USA",
+   "creator": {
+    "email": "gagdcchicago@gmail.com",
+    "self": true
+   },
+   "organizer": {
+    "email": "gagdcchicago@gmail.com",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2019-11-12T09:30:00-05:00"
+   },
+   "end": {
+    "dateTime": "2019-11-12T11:00:00-05:00"
+   },
+   "iCalUID": "1d1056p8ffecf0f7bjdtn2kgp1@google.com",
+   "sequence": 0
+  },
+  {
+   "kind": "calendar#event",
+   "etag": "\"3120385437964000\"",
+   "id": "2c87pvujpode52s1mb3me6lut3",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=MmM4N3B2dWpwb2RlNTJzMW1iM21lNmx1dDMgZ2FnZGNjaGljYWdvQG0&ctz=GMT-05:00",
+   "created": "2019-06-10T18:51:58.000Z",
+   "updated": "2019-06-10T18:51:58.982Z",
+   "summary": "CPD 006th District C.A.P.S Business Subcommittee Meetings ",
+   "description": "CPD 006th District C.A.P.S, Business Subcommittee Meetings\nDates: 2nd Tuesday of each month\nLocation: 006th District Police Station Community Room\n7808 S. Halsted , Chicago, IL 60620",
+   "location": "006th district police station",
+   "creator": {
+    "email": "gagdcchicago@gmail.com",
+    "self": true
+   },
+   "organizer": {
+    "email": "gagdcchicago@gmail.com",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2019-10-08T18:00:00-05:00"
+   },
+   "end": {
+    "dateTime": "2019-10-08T19:00:00-05:00"
+   },
+   "iCalUID": "2c87pvujpode52s1mb3me6lut3@google.com",
+   "sequence": 0
+  },
+  {
+   "kind": "calendar#event",
+   "etag": "\"3120385484522000\"",
+   "id": "6nhuimq6g7otuukvekgv9hok61",
+   "status": "confirmed",
+   "htmlLink": "https://www.google.com/calendar/event?eid=Nm5odWltcTZnN290dXVrdmVrZ3Y5aG9rNjEgZ2FnZGNjaGljYWdvQG0&ctz=GMT-05:00",
+   "created": "2019-06-10T18:52:22.000Z",
+   "updated": "2019-06-10T18:52:22.261Z",
+   "summary": "CPD 006th District C.A.P.S Business Subcommittee Meetings ",
+   "description": "CPD 006th District C.A.P.S, Business Subcommittee Meetings\nDates: 2nd Tuesday of each month\nLocation: 006th District Police Station Community Room\n7808 S. Halsted , Chicago, IL 60620",
+   "location": "006th district police station",
+   "creator": {
+    "email": "gagdcchicago@gmail.com",
+    "self": true
+   },
+   "organizer": {
+    "email": "gagdcchicago@gmail.com",
+    "self": true
+   },
+   "start": {
+    "dateTime": "2019-11-12T19:00:00-05:00"
+   },
+   "end": {
+    "dateTime": "2019-11-12T20:00:00-05:00"
+   },
+   "iCalUID": "6nhuimq6g7otuukvekgv9hok61@google.com",
+   "sequence": 0
+  }
+ ]
+}

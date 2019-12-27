@@ -11,7 +11,6 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
     name = 'chi_plan_commission'
     agency = 'Chicago Plan Commission'
     timezone = 'America/Chicago'
-    allowed_domains = ['chicago.gov']
     start_urls = ['https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html']
 
     def parse(self, response):
@@ -22,6 +21,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
         needs.
         """
         columns = self.parse_meetings(response)
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for column in columns:
             year = column.xpath('preceding::strong[1]/text()').re_first(r'(\d{4})(.*)')
             meetings = column.xpath('text()[normalize-space()]|p/text()[normalize-space()]'
@@ -29,7 +29,9 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
             meetings = self.format_meetings(meetings)
             for meeting in meetings:
                 start = self._parse_start(meeting, year)
-                if start is None:
+                if start is None or (
+                    start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+                ):
                     continue
                 meeting = Meeting(
                     title='Commission',

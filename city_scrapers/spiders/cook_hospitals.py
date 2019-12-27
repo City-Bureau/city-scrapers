@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
@@ -10,7 +10,6 @@ class CookHospitalsSpider(CityScrapersSpider):
     name = 'cook_hospitals'
     agency = 'Cook County Health and Hospitals System'
     timezone = 'America/Chicago'
-    allowed_domains = ['cookcountyhealth.org']
     start_urls = [
         'https://cookcountyhealth.org/about/board-of-directors/board-committee-meetings-agendas-minutes/'  # noqa
     ]
@@ -27,10 +26,13 @@ class CookHospitalsSpider(CityScrapersSpider):
         needs.
         """
         # Only pull from first two year sections because it goes back pretty far
+        six_months_ago = datetime.today() - timedelta(days=180)
         for group in response.css(".panel"):
             title = self._parse_title(group)
             for item in group.css("tbody > tr"):
                 start = self._parse_start(item)
+                if start < six_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                    continue
                 meeting = Meeting(
                     title=title,
                     description="",

@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timedelta
 
 from city_scrapers_core.constants import BOARD, FORUM
 from city_scrapers_core.items import Meeting
@@ -9,13 +10,15 @@ class ChiParksSpider(LegistarSpider):
     name = 'chi_parks'
     agency = 'Chicago Park District'
     timezone = 'America/Chicago'
-    allowed_domains = ['chicagoparkdistrict.legistar.com']
     start_urls = ['https://chicagoparkdistrict.legistar.com/Calendar.aspx']
 
     def parse_legistar(self, events):
+        three_months_ago = datetime.today() - timedelta(days=90)
         for event, _ in events:
             start = self.legistar_start(event)
-            if not start:
+            if not start or (
+                start < three_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 continue
             meeting = Meeting(
                 title=self._parse_title(event),

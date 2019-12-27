@@ -13,7 +13,6 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
     name = "il_criminal_justice_information"
     agency = "Illinois Criminal Justice Information Authority"
     timezone = "America/Chicago"
-    allowed_domains = ["www.icjia.state.il.us"]
     start_urls = ["http://www.icjia.state.il.us/about/overview"]
     location = {
         "name": "Illinois Criminal Justice Information Authority",
@@ -27,6 +26,7 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for item in response.css(".panel"):
             desc = self._parse_description(item)
             title = self._parse_title(item)
@@ -51,6 +51,8 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
                     start = self._parse_start_exception(exception, row_start_str or start_str)
                     row_loc = self._parse_location(exception, default=location)
 
+                if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                    continue
                 links = self._parse_links(row, response)
                 meeting = Meeting(
                     title=title,

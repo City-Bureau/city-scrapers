@@ -11,7 +11,6 @@ class ChiLibrarySpider(CityScrapersSpider):
     name = 'chi_library'
     agency = 'Chicago Public Library'
     timezone = 'America/Chicago'
-    allowed_domains = ['https://www.chipublib.org/']
     start_urls = ['https://www.chipublib.org/board-of-directors/board-meeting-schedule/']
 
     def __init__(self, *args, session=requests.Session(), **kwargs):

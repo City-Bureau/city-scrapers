@@ -12,7 +12,6 @@ class ChiSsa33Spider(CityScrapersSpider):
     name = "chi_ssa_33"
     agency = "Chicago Special Service Area #33 Wicker Park/Bucktown"
     timezone = "America/Chicago"
-    allowed_domains = ["www.wickerparkbucktown.com"]
     start_urls = ["http://www.wickerparkbucktown.com/ssa/commission-meetings/"]
     location = {
         "address": "1414 N Ashland Ave Chicago, IL 60622",
@@ -38,13 +37,14 @@ class ChiSsa33Spider(CityScrapersSpider):
 
     def parse_docs_page(self, response):
         start_month_str = self._parse_docs(response)
-        yield scrapy.Request(
-            (
-                "http://www.wickerparkbucktown.com/index.php?src=events"
-                "&srctype=events_lister_SSA&m={}&y={}"
-            ).format(start_month_str[4:], start_month_str[:4]),
-            callback=self.parse_events,
-        )
+        if start_month_str:
+            yield scrapy.Request(
+                (
+                    "http://www.wickerparkbucktown.com/index.php?src=events"
+                    "&srctype=events_lister_SSA&m={}&y={}"
+                ).format(start_month_str[4:], start_month_str[:4]),
+                callback=self.parse_events,
+            )
 
     def _parse_docs(self, response):
         start_date_match = re.search(

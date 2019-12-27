@@ -10,7 +10,6 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
     name = "il_police_professionalism"
     agency = "Illinois Commission on Police Professionalism"
     timezone = "America/Chicago"
-    allowed_domains = ["www.isp.state.il.us"]
     start_urls = ["https://www.isp.state.il.us/media/openmtgs.cfm"]
 
     def parse(self, response):

@@ -1,17 +1,19 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.constants import COMMITTEE, TENTATIVE
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from tests.utils import file_response
 
 from city_scrapers.spiders.chi_transit import ChiTransitSpider
 
-freezer = freeze_time('2018-01-01 12:00:00')
+freezer = freeze_time('2018-01-01')
 freezer.start()
 
 test_response = file_response(
-    'files/chi_transit.html', url='https://www.transitchicago.com/board/notices-agendas-minutes/'
+    join(dirname(__file__), "files", "chi_transit.html"),
+    url='https://www.transitchicago.com/board/notices-agendas-minutes/'
 )
 spider = ChiTransitSpider()
 parsed_items = [item for item in spider.parse(test_response)]

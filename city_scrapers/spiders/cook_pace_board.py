@@ -10,7 +10,6 @@ class CookPaceBoardSpider(CityScrapersSpider):
     name = "cook_pace_board"
     agency = "Pace Suburban Bus Services"
     timezone = "America/Chicago"
-    allowed_domains = ["www.pacebus.com"]
     start_urls = ["http://www.pacebus.com/sub/news_events/calendar_of_events.asp"]
 
     def parse(self, response):

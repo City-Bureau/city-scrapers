@@ -10,7 +10,6 @@ class CookZoningSpider(CityScrapersSpider):
     name = "cook_zoning"
     agency = "Cook County Zoning Board of Appeals"
     timezone = "America/Chicago"
-    allowed_domains = ["www.cookcountyil.gov"]
     start_urls = ["https://www.cookcountyil.gov/agency/zoning-board-appeals-0"]
     location = {
         "name": "County Administration Building",

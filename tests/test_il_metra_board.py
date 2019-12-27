@@ -1,16 +1,27 @@
 from datetime import datetime
+from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, PASSED
-from tests.utils import file_response
+from city_scrapers_core.constants import BOARD, TENTATIVE
+from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.il_metra_board import IlMetraBoardSpider
 
 test_response = file_response(
-    'files/il_metra_board.html', url='https://metrarr.granicus.com/ViewPublisher.php?view_id=5'
+    join(dirname(__file__), "files", "il_metra_board.html"),
+    url='https://metrarr.granicus.com/ViewPublisher.php?view_id=5'
 )
 spider = IlMetraBoardSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
+freezer = freeze_time("2018-01-01")
+freezer.start()
+
 parsed_items = [item for item in spider.parse(test_response)]
+
+freezer.stop()
 
 
 def test_title():
@@ -40,7 +51,7 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[0]['status'] == PASSED
+    assert parsed_items[0]['status'] == TENTATIVE
 
 
 def test_links():

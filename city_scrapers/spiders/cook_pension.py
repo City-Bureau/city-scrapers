@@ -10,7 +10,6 @@ class CookPensionSpider(CityScrapersSpider):
     name = "cook_pension"
     agency = "Cook County Pension Fund"
     timezone = "America/Chicago"
-    allowed_domains = ["www.cookcountypension.com"]
     start_urls = ["https://www.cookcountypension.com/agendaminutes/"]
     location = {
         "name": "Cook County Pension Fund Office",

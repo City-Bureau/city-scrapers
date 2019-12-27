@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
@@ -9,7 +10,6 @@ class IlLiquorControlSpider(CityScrapersSpider):
     name = "il_liquor_control"
     agency = "Illinois Liquor Control Commission"
     timezone = "America/Chicago"
-    allowed_domains = ["www2.illinois.gov"]
     start_urls = [
         "https://www2.illinois.gov/ilcc/Divisions/Pages/Legal/"
         "Hearing-Schedule-for-Chicago-IL-and-Springfield-IL.aspx",
@@ -35,8 +35,9 @@ class IlLiquorControlSpider(CityScrapersSpider):
         if response.url == self.start_urls[1]:
             for past_meeting in response.css("div.link-item a"):
                 past_meeting_text = past_meeting.css("*::text").extract_first()
+                past_meeting_date_str = re.sub(r"[Mm]inute.*", "", past_meeting_text).strip()
                 minutes_href = past_meeting.attrib["href"]
-                dt_object = datetime.datetime.strptime(past_meeting_text, "%B %d, %Y Minutes")
+                dt_object = datetime.datetime.strptime(past_meeting_date_str, "%B %d, %Y")
                 meeting_url = (
                     "https://www2.illinois.gov/ilcc/Events/Pages/Board-"
                     "Meeting-{0}-{1}-{2:%y}.aspx".format(dt_object.month, dt_object.day, dt_object)

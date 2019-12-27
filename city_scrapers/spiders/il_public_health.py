@@ -13,7 +13,6 @@ class IlPublicHealthSpider(CityScrapersSpider):
     name = "il_public_health"
     agency = "Illinois Department of Public Health"
     timezone = "America/Chicago"
-    allowed_domains = ["www.dph.illinois.gov"]
 
     @property
     def start_urls(self):
@@ -38,17 +37,21 @@ class IlPublicHealthSpider(CityScrapersSpider):
         data = json.loads(response.text)
         body = "".join([d.get("data", "") for d in data])
         res = HtmlResponse(url=response.url, body=body, encoding="utf-8")
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for item in res.css("tr.eventspage"):
             title = self._parse_title(item)
             description = self._parse_description(item)
             # Skip meetings in certain categories
             if self.should_ignore_meeting(title, description):
                 continue
+            start = self._parse_start(item)
+            if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                continue
             meeting = Meeting(
                 title=title,
                 description=description,
                 classification=self._parse_classification(item),
-                start=self._parse_start(item),
+                start=start,
                 end=self._parse_end(item),
                 all_day=False,
                 time_notes="",
