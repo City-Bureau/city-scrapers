@@ -19,17 +19,12 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
         """
-        items = []
-        for item in response.css('div.wpb_text_column div.wpb_wrapper div.inner-text h2'):
-            items.append(item)
-        for item in response.css('div.wpb_text_column div.wpb_wrapper p'):
-            items.append(item)
-
-        for item in items:
+        self._validate_location(response)
+        for item in response.css(
+            'div.wpb_text_column div.wpb_wrapper div.inner-text h2, '
+            'div.wpb_text_column div.wpb_wrapper p'
+        ):
             meeting = Meeting(
                 title=self._parse_title(item),
                 description='',
@@ -56,22 +51,11 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
             return "Board of Directors"
         return title
 
-    def _parse_location(self, item):
-        """Parse the location of the meeting."""
-        return {
-            'name': '',
-            'address':
-                item.css('::text').re_first(r'\b \d* [a-zA-Z].*, [0-9][a-zA-Z].*').lstrip(' ')
-        }
-
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        parsed = item.css('::text').re_first(
-            r'[0-9]*[.][0-9]*[.][0-9]*'
-        )
-        with_time = item.css('::text').re_first(
-            r'[a-zA-Z]* [0-9]*, [0-9]* at [0-9]*[:][0-9]* [APM.]*'
-        )
+        parsed = item.css('::text').re_first(r'[0-9]*[.][0-9]*[.][0-9]*')
+        with_time = item.css('::text'
+                             ).re_first(r'[a-zA-Z]* [0-9]*, [0-9]* at [0-9]*[:][0-9]* [APM.]*')
         if parsed:
             try:
                 val = datetime.strptime(parsed, '%m.%d.%Y') + timedelta(hours=10)
@@ -87,3 +71,9 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
             "href": parsed.xpath('@href').get(),
             "title": parsed.css('::text').get()
         } for parsed in item.css('a')]
+
+    def _validate_location(self, response):
+        if "333 West 35th Street" not in " ".join(
+            response.css('div.wpb_text_column * ::text').extract()
+        ):
+            raise ValueError("Meeting location has changed")
