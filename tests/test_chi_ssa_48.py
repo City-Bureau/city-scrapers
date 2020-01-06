@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.constants import COMMISSION, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Special Service Area 48 Meeting"
+    assert parsed_items[0]["title"] == "Commission"
 
 
 def test_description():
@@ -43,11 +43,11 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_48/201901091730/x/special_service_area_48_meeting"
+    assert parsed_items[0]["id"] == "chi_ssa_48/201901091730/x/commission"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "passed"
+    assert parsed_items[0]["status"] == PASSED
 
 
 def test_location():
@@ -62,7 +62,11 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == []
+    assert parsed_items[0]["links"] == [{
+        "title": "Final Minutes 1/09/19",
+        "href": "https://oldtownchicago.org/wp-content/uploads/2019/07/2019"
+                "-SSA-48-Commission-Minutes-01-09-2019.docx"
+    }]
 
 
 def test_classification():

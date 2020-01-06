@@ -21,27 +21,35 @@ class ChiSsa48Spider(CityScrapersSpider):
         meeting_year = response.xpath("//div[@class='meeting-dates-block']/h2")
         meeting_date = response.xpath("//div[@class='meeting-dates-block']/h5")
         meeting_info = response.xpath("//div[@class='meeting-dates-block']/p")
+        meeting_links = response.xpath("//div[@class='meeting-minutes-block']")
 
         for item_date, item_info in zip(meeting_date, meeting_info):
+
+            start_time, end_time, parsed_meeting_date = self._parse_start_end(
+                item_date, item_info, meeting_year
+            )
+
             meeting = Meeting(
-                title="Special Service Area 48 Meeting",
+                title="Commission",
                 description="",
                 classification=COMMISSION,
-                start=self._parse_start(item_date, item_info, meeting_year),
-                end=self._parse_end(item_date, item_info, meeting_year),
+                start=start_time,
+                end=end_time,
                 all_day=False,
                 time_notes="",
                 location=self._parse_location(item_info),
-                links=[],
+                links=self._parse_links(parsed_meeting_date, meeting_links),
                 source=self._parse_source(response),
             )
 
-            meeting["status"] = self._get_status(meeting, meeting_info.xpath(".//text()").get())
+            meeting["status"] = self._get_status(
+                meeting, text=meeting_info.xpath(".//text()").get()
+            )
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
 
-    def _parse_start(self, date, info, year):
+    def _parse_start_end(self, date, info, year):
         meeting_year = year.xpath("//div[@class='meeting-dates-block']/h2/text()").get()
         parse_year = meeting_year.split(" ")
         year = parse_year[0]
@@ -55,23 +63,13 @@ class ChiSsa48Spider(CityScrapersSpider):
             "%Y %A %B %d %I:%M %p"
         )
 
-        return start_time
-
-    def _parse_end(self, date, info, year):
-        meeting_year = year.xpath("//div[@class='meeting-dates-block']/h2/text()").get()
-        parse_year = meeting_year.split(" ")
-        year = parse_year[0]
-
-        meeting_date = date.xpath(".//text()").get()
-        meeting_time = info.xpath(".//text()").get()
-        parse_time = meeting_time.split("-")
-        print(parse_time[1])
-
         end_time = datetime.strptime(
             year + " " + meeting_date + " " + parse_time[1], "%Y %A %B %d %I:%M%p"
         )
 
-        return end_time
+        parsed_meeting_date = datetime.strptime(year + " " + meeting_date, "%Y %A %B %d")
+
+        return start_time, end_time, parsed_meeting_date
 
     def _parse_location(self, info):
         """Parse or generate location."""
@@ -86,6 +84,25 @@ class ChiSsa48Spider(CityScrapersSpider):
             "address": address,
             "name": name,
         }
+
+    def _parse_links(self, date, meeting_links):
+        """Parse or generate links."""
+        links = []
+        for href in meeting_links.xpath('.//a'):
+            title = href.xpath('text()').get().strip()
+            minutes_date = title.split(" ")
+            """Verification, that selected link is link to meeting minutes"""
+            if minutes_date[1] != "Minutes":
+                continue
+            """Date format for the last meeting minutes is using 2019 instead of 19 format"""
+            if minutes_date[2][-4:-2] == "20":
+                meeting_minutes_date = datetime.strptime(minutes_date[2], "%m/%d/%Y")
+            else:
+                meeting_minutes_date = datetime.strptime(minutes_date[2], "%m/%d/%y")
+
+            if meeting_minutes_date == date:
+                links.append({"title": title, "href": href.xpath('@href').get().strip()})
+        return links
 
     def _parse_source(self, response):
         """Parse or generate source."""
