@@ -64,8 +64,8 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [{
         "title": "Final Minutes 1/09/19",
-        "href": "https://oldtownchicago.org/wp-content/uploads/2019/07/2019"
-                "-SSA-48-Commission-Minutes-01-09-2019.docx"
+        "href":
+            "https://oldtownchicago.org/wp-content/uploads/2019/07/2019-SSA-48-Commission-Minutes-01-09-2019.docx"  # noqa
     }]
 
 
