@@ -53,7 +53,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Wintrust Bank Old Town",
-        "address": "(100 W North Avenue)"
+        "address": "100 W North Avenue Chicago, IL"
     }
 
 

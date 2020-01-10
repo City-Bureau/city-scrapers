@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import COMMISSION
@@ -71,12 +72,14 @@ class ChiSsa48Spider(CityScrapersSpider):
         """Parse or generate location."""
         element = info.xpath(".//text()").getall()
 
-        name = element[1].replace("\r", "").replace("\t", "").strip()
+        name = re.sub(r"\s+", " ", element[1]).strip()
         """If the location is not known, the element contains only two strings """
         if len(element) > 2:
-            address = element[2].replace("\r", "").replace("\n", "").strip()
+            address = re.sub(r"[\(\)]", "", re.sub(r"\s+", " ", element[2]).strip())
         else:
             address = name
+        if "TBD" not in address and "Chicago" not in address:
+            address += " Chicago, IL"
 
         return {
             "address": address,
