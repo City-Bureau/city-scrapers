@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED, ADVISORY_COMMITTEE
+from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -34,7 +34,7 @@ def test_title():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 2, 25, 0, 0)
+    assert parsed_items[0]["start"] == datetime(2019, 2, 25, 13, 0)
 
 
 def test_time_notes():
