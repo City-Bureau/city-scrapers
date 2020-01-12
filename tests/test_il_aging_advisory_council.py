@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import NOT_CLASSIFIED, ADVISORY_COMMITTEE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -21,64 +21,47 @@ parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
 
-
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
-
-
+# def test_tests():
+#     print("Please write some tests for this spider or at least disable this one.")
+#     assert False
 """
 Uncomment below
 """
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+
+def test_title():
+    assert parsed_items[0]["title"] == "Illinois Department on Aging Advisory Committee Meetings"
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_start():
+    assert parsed_items[0]["start"] == datetime(2019, 2, 25, 0, 0)
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_time_notes():
+    assert "Committee meetings are held from 1 p.m. - 3 p.m" in parsed_items[0]["time_notes"]
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_source():
+    assert parsed_items[
+        0]["source"
+           ] == "https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Pages/acmeetings.aspx"
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_location():
+    assert parsed_items[0]["location"][0] == {
+        'address': {
+            'Springfield': 'One Natural Resources Way #100',
+            'Chicago': '160 N. LaSalle Street, 7th Floor'
+        },
+        'name': {
+            'Springfield': 'Illinois Department on Aging',
+            'Chicago': 'Michael A. Bilandic Building'
+        }
+    }
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
-
-
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
-
-
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
-
-
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
-
-
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
-
-
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+def test_classification():
+    assert parsed_items[0]["classification"] == ADVISORY_COMMITTEE
 
 
 # @pytest.mark.parametrize("item", parsed_items)
