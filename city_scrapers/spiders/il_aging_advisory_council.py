@@ -1,7 +1,7 @@
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-
+from datetime import datetime
 
 class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
     name = "il_aging_advisory_council"
@@ -16,7 +16,15 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".meetings"):
+        for item in response.css('div.ms-rtestate-field strong::text').getall():
+            try:
+                datetime.strptime(item, "%B %d, %Y")
+            except ValueError:
+                try:
+                    datetime.strptime(item[0:12], "%b %d, %Y")
+                except ValueError:
+                    continue
+
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -37,7 +45,7 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return ""
+        return "Illinois Department on Aging Advisory Committee Meetings"
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -45,11 +53,15 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
+        return ADVISORY_COMMITTEE
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        return None
+        try:
+            start_time = datetime.strptime(item, "%B %d, %Y")
+        except ValueError:
+            start_time = datetime.strptime(item[0:12], "%b %d, %Y")  
+        return start_time
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -57,7 +69,7 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
-        return ""
+        return "Committee meetings are held from 1 p.m. - 3 p.m. by video conference."
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
@@ -65,9 +77,15 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        return {
-            "address": "",
-            "name": "",
+        return { 
+            'Springfield': {
+                "address": 'One Natural Resources Way #100',  
+                "name": "Illinois Department on Aging",
+            },
+            'Chicago':{
+                'address': '160 N. LaSalle Street, 7th Floor',
+                'name': 'Michael A. Bilandic Building',
+            }
         }
 
     def _parse_links(self, item):
@@ -77,3 +95,6 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
+
+
+
