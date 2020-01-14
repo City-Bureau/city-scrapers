@@ -1,8 +1,9 @@
+import re
+from datetime import datetime
+
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from datetime import datetime
-import re
 
 
 class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
