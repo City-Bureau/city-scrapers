@@ -1,8 +1,10 @@
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from scrapy import Selector
 
 
 class ChiSsa28Spider(CityScrapersSpider):
@@ -20,26 +22,35 @@ class ChiSsa28Spider(CityScrapersSpider):
         them outside of the main parsing loop, and use the list index to iterate through
         xpath for things like links.
         """
-        dates = response.xpath('//div[@class="col sqs-col-3 span-3"]/div/div/p[2]/text()').getall()
-        dates = [d.strip(', ')[:-2] for d in dates]
-        dates = [d for d in dates if d]
         self._validate_location(response)
-        for date in dates:
-            item = response.xpath('//div[@class="col sqs-col-3 span-3"]/div/div/p[2]')
+        block_item = response.css(".sqs-layout > div > .sqs-col-3")[:1].css(".sqs-block-content")[0]
+        block_text = "".join(block_item.extract())
+        year_match = re.search(r"\d{4}", " ".join(block_item.css("strong::text").extract()))
+        if year_match:
+            year_str = year_match.group()
+        else:
+            year_str = str(datetime.today().year)
+
+        for block_str in re.split(r"\<br *\/?\>", block_text):
+            item = Selector(text=block_str)
+            start = self._parse_start(item, year_str)
+            if not start:
+                continue
+
             meeting = Meeting(
                 title="Six Corners Commission",
                 description="",
-                classification=self._parse_classification(date),
-                start=self._parse_start(item, date),
+                classification=COMMISSION,
+                start=start,
                 end=None,
-                all_day=self._parse_all_day(date),
+                all_day=False,
                 time_notes="",
                 location=self.location,
-                links=self._parse_links(item, date, dates, response),
-                source=self._parse_source(response),
+                links=self._parse_links(item, response),
+                source=response.url,
             )
 
-            meeting["status"] = self._get_status(meeting, text=date)
+            meeting["status"] = self._get_status(meeting, text=block_str)
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
@@ -50,41 +61,25 @@ class ChiSsa28Spider(CityScrapersSpider):
         ).get():
             raise ValueError("Meeting location has changed")
 
-    def _parse_classification(self, date):
-        """Parse or generate classification from allowed options."""
-        return COMMISSION
-
-    def _parse_start(self, item, date):
+    def _parse_start(self, item, year_str):
         """Parse start datetime as a naive datetime object."""
-        start_year = item.xpath('.//strong/text()').get()
-        start_date = date
-        start_time = "1:30 PM"
-        start = datetime.strptime(start_date + start_year + start_time, "%B %d%Y%I:%M %p")
-        return start
+        date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2}", " ".join(item.css("*::text").extract()))
+        if not date_match:
+            return
+        return datetime.strptime(
+            " ".join([
+                date_match.group(),
+                "1:30pm",
+                year_str,
+            ]), "%B %d %I:%M%p %Y"
+        )
 
-    def _parse_all_day(self, date):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
-
-    def _parse_links(self, item, date, dates, response):
+    def _parse_links(self, item, response):
         """Parse or generate links. Uses the index from the dates list."""
         links = []
-        if dates.index(date) == 0:
-            start_node = 1 + dates.index(date)
-            stop_node = 2 + dates.index(date)
-        else:
-            start_node = 1 + dates.index(date) + dates.index(date)
-            stop_node = 2 + dates.index(date) + dates.index(date)
-        selector_path = './/a[$i]'
-        hrefs = [item.xpath(selector_path, i=start_node), item.xpath(selector_path, i=stop_node)]
-        for href in hrefs:
-            if href:
-                links.append({
-                    "title": href.xpath('.//text()').get(),
-                    "href": response.urljoin(href.xpath('.//@href').get())
-                })
+        for link in item.css("a"):
+            links.append({
+                "title": " ".join(link.css("*::text").extract()).strip(),
+                "href": response.urljoin(link.attrib["href"]),
+            })
         return links
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
