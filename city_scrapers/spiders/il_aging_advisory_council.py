@@ -1,4 +1,3 @@
-import re
 from datetime import datetime
 
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
@@ -14,15 +13,9 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
         "https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Pages/acmeetings.aspx"
     ]
     location = {
-        'address': {
-            'Springfield': 'One Natural Resources Way #100',
-            'Chicago': '160 N. LaSalle Street, 7th Floor'
-        },
-        'name': {
-            'Springfield': 'Illinois Department on Aging',
-            'Chicago': 'Michael A. Bilandic Building'
-        }
-    },
+        'address': '160 N. LaSalle Street, 7th Floor, Chicago',
+        'name': 'Michael A. Bilandic Building'
+    }
 
     def parse(self, response):
         """
@@ -35,55 +28,64 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
 
         self._validate_meeting_times(response)
 
-        valid_date_list = self._create_valid_date_list(response)
+        table = response.xpath(
+            '//*[@id="ctl00_PlaceHolderMain_ctl01__ControlWrapper_RichHtmlField"]\
+            /table'
+        )
 
-        if valid_date_list:
-            for item in valid_date_list:
-                meeting = Meeting(
-                    title='Illinois Department on Aging Advisory Committee Meetings',
-                    description='Meetings are open to the public',
-                    classification=ADVISORY_COMMITTEE,
-                    start=self._parse_start(item),
-                    end=self._parse_end(item),
-                    all_day=self._parse_all_day(item),
-                    time_notes=self._parse_time_notes(response),
-                    location=self.location,
-                    links=self._parse_links(item),
-                    source=self._parse_source(response),
-                )
+        for table_row in table.xpath('.//tr'):
+            row_date = table_row.xpath('.//strong/\
+            text()').re(r'([A-Z]\w+)\s*(\d\d?),*\s*(\d\d\d\d)')
+            if not row_date:
+                continue
+            else:
+                converted_date = self._convert_date(row_date)
 
-                meeting["status"] = self._get_status(meeting)
-                meeting["id"] = self._get_id(meeting)
+            row_urls = table_row.xpath('.//a')
 
-                yield meeting
+            meeting = Meeting(
+                title='Illinois Department on Aging Advisory Committee Meetings',
+                description='',
+                classification=ADVISORY_COMMITTEE,
+                start=self._parse_start(converted_date),
+                end=self._parse_end(converted_date),
+                all_day=self._parse_all_day(table_row),
+                time_notes='',
+                location=self.location,
+                links=self._parse_links(row_urls),
+                source=self._parse_source(response),
+            )
+
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
+
+            yield meeting
 
     def _validate_location(self, response):
-        location_test = response.css('div.ms-rtestate-field ul li::text').getall()
-        if 'One Natural Resources Way, #100' not in location_test[0]:
-            raise ValueError("Meeting location has changed")
-        elif '7th Floor, 160 N. LaSalle Street' not in location_test[1]:
+        location_test = response.xpath(
+            '//*[@id="ctl00_PlaceHolderMain_ctl01__ControlWrapper_RichHtmlField"]\
+        /ul/li[2]/text()'
+        ).get()
+        if '7th Floor, 160 N. LaSalle Street' not in location_test:
             raise ValueError("Meeting location has changed")
         else:
             pass
 
     def _validate_meeting_times(self, response):
-        meeting_time = response.css('div.ms-rtestate-field p::text').get()
+        meeting_time = response.xpath(
+            '//*[@id="ctl00_PlaceHolderMain_ctl01__ControlWrapper_RichHtmlField"]\
+        /p[1]/text()'
+        ).get()
         if '1 p.m. - 3 p.m' not in meeting_time:
             raise ValueError("Meeting times have changed")
 
-    def _create_valid_date_list(self, response):
-
-        valid_date_list = []
-
-        initial_list = response.css('div.ms-rtestate-field strong::text').getall()
-        for item in initial_list:
-            valid_date_match = re.search(r'([A-Z]\w+)\s*(\d\d?),*\s*(\d\d\d\d)', item)
-            if valid_date_match:
-                month, day, year = valid_date_match.group(1, 2, 3)
-                date_item = datetime.strptime(month[0:3] + day + year, '%b%d%Y')
-                valid_date_list.append(date_item)
-
-        return valid_date_list
+    def _convert_date(self, item):
+        """Parse start datetime as a naive datetime object."""
+        month = item[0]
+        day = item[1]
+        year = item[2]
+        converted_date = datetime.strptime(month[0:3] + day + year, '%b%d%Y')
+        return converted_date
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
@@ -92,21 +94,25 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        end_time = item.replace(hour=16)
+        end_time = item.replace(hour=15)
         return end_time
 
-    def _parse_time_notes(self, response):
-        """Parse any additional notes on the timing of the meeting"""
-        time_notes = response.css('div.ms-rtestate-field p::text').get()
-        return time_notes
+    def _parse_links(self, item):
+        """Parse or generate links."""
+        links = []
+        for i in item:
+            href = i.xpath('@href').get()
+            full_href = 'https://www2.illinois.gov' + href
+            text = i.xpath('text()').get()
+            links.append({
+                "href": full_href,
+                "title": text,
+            })
+        return links
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
         return False
-
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
 
     def _parse_source(self, response):
         """Parse or generate source."""
