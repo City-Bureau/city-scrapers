@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Illinois Department on Aging Advisory Committee Meetings"
+    assert parsed_items[0]["title"] == "Advisory Committee"
 
 
 def test_description():
@@ -62,7 +62,7 @@ def test_links():
         {
             'href':
                 'https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Documents/Full_OASAC_Minutes_2.25.2019.pdf',  # noqa
-            'title': '\u200bMinutes'
+            'title': 'Minutes'
         },
         {
             'href':
@@ -81,6 +81,3 @@ def test_source():
     assert parsed_items[
         0]["source"
            ] == "https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Pages/acmeetings.aspx"
-
-
-# @pytest.mark.parametrize("item", parsed_items)

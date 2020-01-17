@@ -38,13 +38,12 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
             text()').re(r'([A-Z]\w+)\s*(\d\d?),*\s*(\d\d\d\d)')
             if not row_date:
                 continue
-            else:
-                converted_date = self._convert_date(row_date)
+            converted_date = self._convert_date(row_date)
 
             row_urls = table_row.xpath('.//a')
 
             meeting = Meeting(
-                title='Illinois Department on Aging Advisory Committee Meetings',
+                title='Advisory Committee',
                 description='',
                 classification=ADVISORY_COMMITTEE,
                 start=self._parse_start(converted_date),
@@ -68,8 +67,6 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
         ).get()
         if '7th Floor, 160 N. LaSalle Street' not in location_test:
             raise ValueError("Meeting location has changed")
-        else:
-            pass
 
     def _validate_meeting_times(self, response):
         meeting_time = response.xpath(
@@ -89,24 +86,27 @@ class IlAgingAdvisoryCouncilSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        start_time = item.replace(hour=13)
-        return start_time
+        return item.replace(hour=13)
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        end_time = item.replace(hour=15)
-        return end_time
+        return item.replace(hour=15)
 
     def _parse_links(self, item):
         """Parse or generate links."""
         links = []
         for i in item:
             href = i.xpath('@href').get()
+            if not href:
+                continue
             full_href = 'https://www2.illinois.gov' + href
             text = i.xpath('text()').get()
+            if not text:
+                continue
+            stripped_text = text.replace('\u200b', '').replace('\xa0', '')
             links.append({
                 "href": full_href,
-                "title": text,
+                "title": stripped_text,
             })
         return links
 
