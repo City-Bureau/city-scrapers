@@ -29,19 +29,10 @@ parsed_items = [item for item in spider._parse_detail(test_response)]
 
 freezer.stop()
 
-# def test_tests():
-#    print("Please write some tests for this spider or at least disable this one.")
-#    assert False
-"""
-Uncomment below
-"""
-
 
 def test_title():
-    assert parsed_items[
-        0]["title"
-           ] == "Rescheduled (was previously scheduled for January 17)  Academic/Student Affairs \
-and Enrollment Management Committee"
+    assert parsed_items[0]["title"
+                           ] == 'Academic/Student Affairs and Enrollment Management Committee'
 
 
 def test_description():
@@ -53,7 +44,7 @@ def test_start():
 
 
 def test_end():
-    assert parsed_items[0]["end"] is None
+    assert parsed_items[0]["end"] == datetime(2019, 1, 16, 15, 0)
 
 
 def test_time_notes():
@@ -62,13 +53,12 @@ def test_time_notes():
 
 def test_id():
     assert parsed_items[0][
-        "id"
-    ] == "chi_northern_il_university/201901161300/x/_was_previously_scheduled_for_january_17_\
-academic_student_affairs_and_enrollment_management_committee"
+        "id"] == "chi_northern_il_university/201901161300/x/academic_student_affairs_and_\
+enrollment_management_committee"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "cancelled"
+    assert parsed_items[0]["status"] == "Rescheduled"
 
 
 def test_location():

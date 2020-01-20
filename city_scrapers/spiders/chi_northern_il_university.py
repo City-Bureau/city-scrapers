@@ -15,25 +15,20 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
 
     def parse(self, response):
         self.link_date_map = defaultdict(list)
-        link_list = response.xpath(
-            '//div[@class="field field--name-field-generic-body field--type-text-long \
-field--label-hidden field--item"]/h3'
-        )
-        for title in link_list:
+        for title in response.css(".field--name-field-generic-body h3"):
             full_str = title.xpath(".//text()").extract()[0]
-            date = full_str.split("-")[0].split("(")[0]
-
-            date_obj = datetime.strptime(date.strip(" "), '%B %d, %Y')
+            date_match = re.search(r"[a-z]{3,9} \d{1,2},? \d{4}", full_str, flags=re.I)[0]
+            date_obj = datetime.strptime(re.sub(',', '', date_match), '%B %d %Y')
             new_date_obj = datetime(date_obj.year, date_obj.month, date_obj.day, 13, 00)
             for one_day_links in title.xpath('.//following-sibling::ul[1]/li'):
                 href = one_day_links.xpath('.//@href').get()
                 name = one_day_links.xpath('.//text()').extract()
                 if href is None:
-                    link = ''
+                    continue
                 else:
                     link = response.urljoin(href)
                 self.link_date_map.setdefault(new_date_obj, []).append({
-                    "title": ''.join(name),
+                    "title": "".join(name),
                     "href": link
                 })
         yield response.follow(
@@ -53,13 +48,13 @@ field--label-hidden field--item"]/h3'
 field--label-hidden field--item"]'
         )
         year_list = items_list.xpath('.//h2')
-        for years in year_list.extract():
-            year = re.findall(r'\d{4}', years)[0]
-            items = year_list.xpath('.//following-sibling::ul[1]/li').extract()
-            for item in items:
-                start = self._parse_start(item, year)
+        for years in year_list:
+            year = re.search(r'\d{4}', years.extract()).group(0)
+            for items in years.xpath('.//following-sibling::ul[1]/li'):
+                item = items.extract()
+                start = self._parse_start(items, year)
                 meeting = Meeting(
-                    title=self._parse_title(item),
+                    title=self._parse_title(items),
                     description='',
                     classification=self._parse_classification(item),
                     start=start,
@@ -67,21 +62,23 @@ field--label-hidden field--item"]'
                     all_day=False,
                     time_notes="See agenda for meeting time",
                     location=self._parse_location(item),
-                    links=self.link_date_map[start],
-                    source=self._parse_source(response),
+                    links=self.link_date_map.get(start, []),
+                    source=response.url,
                 )
-                meeting["status"] = self._get_status(meeting)
+                if "Rescheduled" in meeting["title"]:
+                    meeting["status"] = "Rescheduled"
+                    meeting["title"] = re.sub(r"Rescheduled", "", meeting["title"]).strip()
+                else:
+                    meeting["status"] = self._get_status(meeting)
                 meeting["id"] = self._get_id(meeting)
                 yield meeting
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        title_obj = item.split('-')
-        title = str()
-        for i in range(1, len(title_obj)):
-            title = title + title_obj[i]
-        title = re.sub(r'<strong>|</strong>|<li>|</li>|\xa0', ' ', title)
-        return title.strip(" ")
+        title_obj = item.xpath(".//text()").extract()
+        title = re.sub(r'\(.+\)', '', "".join(title_obj))
+        title = title.split("-")[-1].strip(" ")
+        return title
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
@@ -93,18 +90,11 @@ field--label-hidden field--item"]'
 
     def _parse_start(self, item, year):
         """Parse start datetime as a naive datetime object."""
-        date = re.sub(r'<li>|,|\xa0|\*|\*\*|<strong>|</strong>', '', item.split("-")[0]).strip(" ")
+        item = item.xpath(".//text()").extract()[0].split("-")[0].strip()
+        date = re.sub(r',|\xa0|\*|\*\*', '', item).strip(" ")
         date_obj = datetime.strptime(date, '%A %B %d')
         new_date_obj = datetime(int(year), date_obj.month, date_obj.day, 13, 00)
         return new_date_obj
-
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
-
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
 
     def _parse_location(self, item):
         """Parse or generate location."""
@@ -119,11 +109,3 @@ field--label-hidden field--item"]'
             "address": "5500 North St. Louis Avenue, Chicago, Ill., 60625",
             "name": 'Northeastern Illinois University'
         }
-
-    def _parse_links(self):
-        """Parse or generate links."""
-        return ''
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
