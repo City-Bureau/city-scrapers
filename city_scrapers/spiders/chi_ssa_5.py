@@ -35,31 +35,29 @@ class ChiSsa5Spider(CityScrapersSpider):
         )
 
     def _parse_current_year(self, response):
-        meetings = response.css('.page-post-content h2:nth-of-type(2)')[0]
+        description = " ".join(response.css(".page-post-content *::text").extract())
+        self._validate_location(description)
+
         items = []
-        for item in meetings.xpath('child::node()'):
-            if isinstance(item.root, str):
-                items.append({'text': item.root})
-            elif item.root.tag == 'a':
-                text_items = item.css('* ::text').extract()
-                for item_text in text_items:
-                    if item_text and 'agenda' in item_text.lower():
-                        items[-1]['agenda'] = item.root.get('href')
-                    elif item_text:
-                        items.append({'text': item_text})
+        for item in response.css('.page-post-content > *'):
+            items.extend([scrapy.Selector(text=s) for s in item.extract().split('<br>')])
 
         meetings = []
         for item in items:
+            item_text = " ".join(item.css("* ::text").extract())
+            start = self._parse_start(item_text)
+            if not start:
+                continue
             meeting = Meeting(
-                title=self._parse_title(item['text']),
+                title=self._parse_title(item_text),
                 description='',
                 classification=COMMISSION,
-                start=self._parse_start(item['text']),
+                start=start,
                 end=None,
                 time_notes='',
                 all_day=False,
                 location=self.location,
-                links=self._parse_links(item.get('agenda')),
+                links=self._parse_links(item),
                 source=response.url,
             )
             meeting['status'] = self._get_status(meeting)
@@ -125,10 +123,19 @@ class ChiSsa5Spider(CityScrapersSpider):
         if parsed_date:
             return datetime.combine(parsed_date.date(), time(14))
 
-    def _parse_links(self, agenda):
+    def _parse_links(self, item):
         """
         Parse or generate documents.
         """
-        if agenda:
-            return [{'href': agenda, 'title': 'Agenda'}]
-        return []
+        links = []
+        for link in item.css("a"):
+            links.append({
+                "title": " ".join(link.css("*::text").extract()),
+                "href": link.attrib["href"],
+            })
+        return links
+
+    def _validate_location(self, description):
+        """Check that location hasn't changed or raise an exception"""
+        if "3030 E" not in description:
+            raise ValueError("Meeting location has changed")

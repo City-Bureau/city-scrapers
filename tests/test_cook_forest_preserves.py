@@ -5,6 +5,7 @@ from os.path import dirname, join
 import pytest
 from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED, TENTATIVE
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.cook_forest_preserves import CookForestPreservesSpider
 
@@ -15,6 +16,8 @@ with open(join(dirname(__file__), "files", "cook_forest_preserve.json"), "r") as
     test_response = json.load(f)
 
 spider = CookForestPreservesSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
 parsed_items = [item for item in spider.parse_legistar(test_response)]
 freezer.stop()
 

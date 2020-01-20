@@ -51,7 +51,7 @@ class IlEnvironmentalJusticeSpider(CityScrapersSpider):
                 continue
 
             for date_item in list_item.xpath("./li"):
-                date_str = date_item.xpath("./text()").extract_first().strip()
+                date_str = (date_item.xpath("./text()").extract_first() or "").strip()
                 if not date_str:
                     continue
                 meeting = Meeting(

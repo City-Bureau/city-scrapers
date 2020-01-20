@@ -5,6 +5,7 @@ import pytest
 from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.il_regional_transit import IlRegionalTransitSpider
 
@@ -20,6 +21,8 @@ past_response = file_response(
 )
 
 spider = IlRegionalTransitSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
 parsed_items = ([item for item in spider.parse(upcoming_response)] +
                 [item for item in spider.parse(past_response)])
 freezer.stop()

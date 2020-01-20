@@ -5,12 +5,15 @@ import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_ssa_42 import ChiSsa42Spider
 
 freezer = freeze_time('2018-11-07')
 freezer.start()
 spider = ChiSsa42Spider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+
 res = file_response(
     join(dirname(__file__), "files", "chi_ssa_42.html"),
     url='https://ssa42.org/ssa-42-meeting-dates/'
@@ -22,6 +25,10 @@ minutes_res = file_response(
 parsed_items = [item for item in spider._parse_meetings(res, upcoming=True)
                 ] + [item for item in spider._parse_meetings(minutes_res)]
 freezer.stop()
+
+
+def test_count():
+    assert len(parsed_items) == 12
 
 
 def test_start():

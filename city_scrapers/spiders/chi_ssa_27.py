@@ -71,7 +71,7 @@ class ChiSsa27Spider(CityScrapersSpider):
         for p in paragraphs:
             href = p.css('a::attr(href)').get()
             tmp_list = p.css('*::text').getall()
-            datetime_date = datetime.strptime(tmp_list[0], '%B %d, %Y')
+            datetime_date = datetime.strptime(tmp_list[0].strip(), '%B %d, %Y')
             date_date = datetime_date.date()
             min_list.append(Paragraph(link=href, date_date=date_date))
         return min_list

@@ -46,7 +46,7 @@ class ChiSchoolsSpider(CityScrapersSpider):
             for link in response.css(".past-meetings")[:2].css("th a"):
                 yield response.follow(link.attrib["href"], callback=self._parse_detail)
         else:
-            for link in response.css(".meetings dl a"):
+            for link in response.css(".meetings dl a:not(.action)"):
                 yield response.follow(link.attrib["href"], callback=self._parse_detail)
 
     def _parse_detail(self, response):
@@ -72,7 +72,7 @@ class ChiSchoolsSpider(CityScrapersSpider):
             links=self._parse_links(response),
             source=response.url,
         )
-        meeting["status"] = self._get_status(meeting)
+        meeting["status"] = self._parse_status(meeting, meeting["description"])
         meeting["id"] = self._get_id(meeting)
         yield meeting
 
@@ -95,8 +95,8 @@ class ChiSchoolsSpider(CityScrapersSpider):
                 links=[],
                 source=response.url,
             )
-            meeting["status"] = self._get_status(
-                meeting, text=" ".join(item.css("*::text").extract())
+            meeting["status"] = self._parse_status(
+                meeting, re.sub(r"\s+", " ", " ".join(item.css("*::text").extract()))
             )
             meeting["id"] = self._get_id(meeting)
             yield meeting
@@ -117,6 +117,29 @@ class ChiSchoolsSpider(CityScrapersSpider):
         ])
         cleaned_text = "\n".join([line.strip() for line in combined_lines.split("\n")]).strip()
         return re.sub(r"((?<=\n\n)\n+|(?<=[^\S\n])\s| (?=[\.,]))", "", cleaned_text)
+
+    def _parse_status(self, meeting, description):
+        reschedule_date_match = re.search(
+            r"((?<=rescheduled to )|(?<=held on ))([a-z]{6}day,? )?[a-z]{3,10} [0-9]{1,2}([a-z]{2})?,? \d{4}", # noqa
+            description,
+            flags=re.I,
+        )
+        # If the text mentions a rescheduled date, check if it's the assigned meeting date
+        if reschedule_date_match:
+            reschedule_date_str = reschedule_date_match.group()
+            date_str = re.sub(
+                r"((?<=\d)[a-z]{2}|,)", "",
+                re.search(
+                    r"[A-Z][a-z]{2,9} [0-9]{1,2}([a-z]{2})?,? \d{4}",
+                    reschedule_date_str,
+                ).group()
+            )
+            date_obj = datetime.strptime(date_str, "%B %d %Y").date()
+            # If the parsed meeting date is the same as rescheduled,
+            # ignore description in cancellation
+            if meeting["start"].date() == date_obj:
+                return self._get_status({**meeting, "description": ""})
+        return self._get_status(meeting, text=description)
 
     def _parse_classification(self, title):
         if "Committee" in title:
@@ -152,8 +175,8 @@ class ChiSchoolsSpider(CityScrapersSpider):
         if "42 W" in loc_addr:
             return self.location
         return {
-            "name": loc_name,
-            "address": loc_addr,
+            "name": loc_name.strip(),
+            "address": loc_addr.strip(),
         }
 
     def _parse_links(self, response):

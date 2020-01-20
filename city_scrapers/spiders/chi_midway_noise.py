@@ -37,7 +37,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
                 candidates.extend(self._parse_malformed_row(item, response))
                 continue
             candidates.append({
-                'description': self._parse_description(item),
+                'title': self._parse_title(item),
                 'start': self._parse_start(item),
                 'links': self._parse_links(item, response)
             })
@@ -51,14 +51,16 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
             # Skip item if start date in the past, because the meeting has been captured above.
             if start < datetime.now():
                 continue
-            candidates.append({'description': 'Regular Meeting', 'start': start, 'links': []})
+            candidates.append({'title': 'Commission', 'start': start, 'links': []})
 
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         meeting_list = []
         for elem in candidates:
-            # Construct Meeting objects:
+            if elem["start"] < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                continue
             meeting = Meeting(
-                title=self.title,
-                description=elem['description'],
+                title=elem["title"],
+                description="",
                 classification=COMMISSION,
                 start=elem['start'],
                 end=None,
@@ -69,22 +71,22 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
                 source=self.source,
                 status=self._parse_status(elem['start']),
             )
-            meeting['id'] = self._get_id(meeting, identifier=meeting['description'])
+            meeting['id'] = self._get_id(meeting)
             meeting_list.append(meeting)
 
         yield from meeting_list
 
-    def _parse_description(self, item):
+    def _parse_title(self, item):
         if type(item) == Selector:
             item = item.get()
         text = self._clean_bad_chars(item)
         desc = ''
         if 'Regular' in text:
-            desc = 'Regular Meeting'
+            desc = 'Commission'
         elif 'Special' in text:
             desc = 'Special Meeting'
         elif 'Committee' in text:
-            desc = 'Committee Meeting'
+            desc = 'Committee'
             if 'Executive' in text:
                 desc = "Executive {}".format(desc)
             elif 'Residential' in text:
@@ -161,7 +163,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         candidates = list()
         for pair in zip(dates_and_types, links):
             candidates.append({
-                'description': self._parse_description(pair[0]),
+                'title': self._parse_title(pair[0]),
                 'start': self._parse_start(pair[0]),
                 'links': self._parse_links(pair[1], response)
             })

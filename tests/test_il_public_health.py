@@ -5,6 +5,7 @@ import pytest
 from city_scrapers_core.constants import ADVISORY_COMMITTEE, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.settings import Settings
 
 from city_scrapers.spiders.il_public_health import IlPublicHealthSpider
 
@@ -15,6 +16,7 @@ test_response = file_response(
     )
 )
 spider = IlPublicHealthSpider()
+spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
 freezer = freeze_time("2019-09-10")
 freezer.start()

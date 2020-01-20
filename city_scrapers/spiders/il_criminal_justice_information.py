@@ -26,6 +26,7 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
+        last_year = datetime.today().replace(year=datetime.today().year - 1)
         for item in response.css(".panel"):
             desc = self._parse_description(item)
             title = self._parse_title(item)
@@ -50,6 +51,8 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
                     start = self._parse_start_exception(exception, row_start_str or start_str)
                     row_loc = self._parse_location(exception, default=location)
 
+                if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                    continue
                 links = self._parse_links(row, response)
                 meeting = Meeting(
                     title=title,

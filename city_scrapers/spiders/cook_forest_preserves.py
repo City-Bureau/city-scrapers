@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timedelta
 
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
@@ -12,9 +13,12 @@ class CookForestPreservesSpider(LegistarSpider):
     start_urls = ['https://fpdcc.legistar.com/Calendar.aspx']
 
     def parse_legistar(self, events):
+        three_months_ago = datetime.today() - timedelta(days=90)
         for event, _ in events:
             start = self.legistar_start(event)
-            if not start:
+            if not start or (
+                start < three_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 continue
             meeting = Meeting(
                 title=event['Name']['label'],
