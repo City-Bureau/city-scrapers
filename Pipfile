@@ -17,6 +17,6 @@ pypdf2 = "*"
 [dev-packages]
 freezegun = "*"
 pytest = "*"
-"flake8" = "*"
+flake8" = "*"
 isort = "*"
 yapf = "*"
