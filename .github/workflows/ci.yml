@@ -28,15 +28,6 @@ jobs:
     - name: Install Pipenv
       uses: dschep/install-pipenv-action@v1
 
-    - name: Cache Python dependencies
-      uses: actions/cache@v1
-      with:
-        path: .venv
-        key: pip-${{ matrix.python-version }}-${{ hashFiles('**/Pipfile.lock') }}
-        restore-keys: |
-          pip-${{ matrix.python-version }}-
-          pip-
-
     - name: Install dependencies
       run: pipenv sync --dev
       env:
