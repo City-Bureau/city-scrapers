@@ -30,14 +30,14 @@ class ChiSsa17Spider(CityScrapersSpider):
         meeting_list = meetings_header.xpath('following-sibling::ul')[0].css('li')
 
         for item in meeting_list:
-            start = self._parse_start(item)
+            start = self._parse_start(item, " ".join(meetings_header.css("*::text").extract()))
             meeting = Meeting(
                 title='SSA #17 Commission',
                 description='',
                 classification=COMMISSION,
                 start=start,
                 end=None,
-                time_notes='Estimated 2 hour duration',
+                time_notes='See agenda to confirm details',
                 all_day=False,
                 location=self.location,
                 links=minutes.get(start.date(), []),
@@ -49,14 +49,23 @@ class ChiSsa17Spider(CityScrapersSpider):
             meeting['id'] = self._get_id(meeting)
             yield meeting
 
-    def _parse_start(self, item):
+    def _parse_start(self, item, header):
         """Parse start datetime"""
-        date_str = re.sub(r'[\.\*]', '', item.xpath('./text()').extract_first()).strip()
-        date_str = re.sub(r'\s(?=[apm]{2}$)', '', date_str)
-        return datetime.strptime(
-            ', '.join(date_str.split(', ')[-2:]).strip(),
-            '%B %d, %Y at %I:%M%p',
-        )
+        dt_str = re.sub(r'([\.\*,]|\s(?=[apm]{2}$))', '',
+                        item.xpath('./text()').extract_first()).strip()
+        date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2}( \d{4})?", dt_str)
+        if not date_match:
+            return
+        date_str = date_match.group()
+        if not re.search(r"\d{1,2} \d{4}", date_str):
+            year_str = re.search(r"\d{4}", header).group()
+            date_str += " " + year_str
+        time_match = re.search(r"\d{1,2}\:\d{2}[apm]{2}", dt_str)
+        if not time_match:
+            time_str = "10:00am"
+        else:
+            time_str = time_match.group()
+        return datetime.strptime(" ".join([date_str, time_str]), '%B %d %Y %I:%M%p')
 
     def _parse_minutes(self, response):
         """Parse minutes from separate list"""
