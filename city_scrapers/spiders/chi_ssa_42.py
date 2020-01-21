@@ -38,7 +38,7 @@ class ChiSsa42Spider(CityScrapersSpider):
         last_year = today.replace(year=today.year - 1)
         for item in response.css('article.entry p'):
             text = item.xpath('./text()').extract_first()
-            if not re.match(r'.*day, .*\d{4}', text):
+            if not re.match(r'.*day, .*\d{4}', text or ""):
                 continue
             start = self._parse_start(text)
             if not start or (upcoming and start < today) or (
