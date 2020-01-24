@@ -62,8 +62,8 @@ class ChiCityCollegeSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate event title."""
-        title = item.css('th:nth-child(2) ::text, td:nth-child(2) ::text').extract_first()
-        if 'regular board meeting' in title.lower():
+        title = " ".join(item.css('th:nth-child(2) *::text, td:nth-child(2) *::text').extract())
+        if 'board' in title.lower():
             return 'Board of Trustees'
         return title.replace('\u200b', '').strip()
 
