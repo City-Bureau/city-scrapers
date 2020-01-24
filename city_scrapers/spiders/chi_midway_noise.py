@@ -56,7 +56,9 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         last_year = datetime.today().replace(year=datetime.today().year - 1)
         meeting_list = []
         for elem in candidates:
-            if elem["start"] < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+            if not elem["start"] or (
+                elem["start"] < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+            ):
                 continue
             meeting = Meeting(
                 title=elem["title"],
