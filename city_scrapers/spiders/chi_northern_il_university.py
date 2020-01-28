@@ -17,7 +17,7 @@ class ChiNorthernIlUniversitySpider(CityScrapersSpider):
         self.link_date_map = defaultdict(list)
         for title in response.css(".field--name-field-generic-body h3"):
             full_str = title.xpath(".//text()").extract()[0]
-            date_match = re.search(r"[a-z]{3,9} \d{1,2},? \d{4}", full_str, flags=re.I)[0]
+            date_match = re.search(r"[a-z]{3,9} \d{1,2},? \d{4}", full_str, flags=re.I).group(0)
             date_obj = datetime.strptime(re.sub(',', '', date_match), '%B %d %Y')
             new_date_obj = datetime(date_obj.year, date_obj.month, date_obj.day, 13, 00)
             for one_day_links in title.xpath('.//following-sibling::ul[1]/li'):
