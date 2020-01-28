@@ -44,7 +44,7 @@ def test_start():
 
 
 def test_end():
-    assert parsed_items[0]["end"] == None
+    assert parsed_items[0]["end"] is None
 
 
 def test_time_notes():
