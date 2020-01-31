@@ -22,12 +22,15 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
         for date_item in date_items:
             if 'table border' in date_item or 'NONE' in date_item:
                 continue
+            start = self._parse_start(date_item, year)
+            if not start:
+                continue
 
             meeting = Meeting(
                 title=self._parse_title(date_item),
                 description='',
                 classification=self._parse_classification(date_item),
-                start=self._parse_start(date_item, year),
+                start=start,
                 end=None,
                 time_notes="",
                 all_day=False,
@@ -57,7 +60,10 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
 
     def _parse_start(self, date_item, year):
         start = self._get_date_string(date_item, year)
-        return datetime.strptime(start, '%B %d %Y %I%p')
+        try:
+            return datetime.strptime(start, '%B %d %Y %I%p')
+        except ValueError:
+            return
 
     # see here for address: http://www.chipabf.org/ChicagoPolicePension/aboutus.html
     def _parse_location(self):
