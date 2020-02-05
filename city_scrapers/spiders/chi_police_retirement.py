@@ -59,10 +59,10 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
             return COMMITTEE
 
     def _parse_start(self, date_item, year):
-        start = self._get_date_string(date_item, year)
         try:
+            start = self._get_date_string(date_item, year)
             return datetime.strptime(start, '%B %d %Y %I%p')
-        except ValueError:
+        except (IndexError, ValueError):
             return
 
     # see here for address: http://www.chipabf.org/ChicagoPolicePension/aboutus.html
