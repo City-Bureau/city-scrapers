@@ -35,10 +35,14 @@ class ChiSsa60Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        json_text = response.xpath("//script[@type='application/ld+json']/text()").get()
+        json_text = response.xpath("//script[@type='application/ld+json']/text()").extract()
         if not json_text:
             return
-        event_list = json.loads(self._clean(json_text))
+        event_list = []
+        for json_str in json_text:
+            json_items = json.loads(self._clean(json_str))
+            if isinstance(json_items, list):
+                event_list.extend(json_items)
 
         for item in event_list:
             title = self._parse_title(item)
