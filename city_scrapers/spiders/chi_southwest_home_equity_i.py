@@ -1,6 +1,15 @@
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from datetime import datetime
+import sys 
+
+from city_scrapers_core.constants import PASSED, COMMISSION, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
+
+
+def print_node(node):
+    print(node.xpath('string(.)').get())
+
 
 
 class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
@@ -9,6 +18,10 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
     timezone = "America/Chicago"
     allowed_domains = ["swhomeequity.com"]
     start_urls = ["https://swhomeequity.com/agenda-%26-minutes"]
+    location = {
+        "name": "Southwest Home Equity Assurance office",
+        "address": "5334 W. 65th Street in Chicago, Illinois"
+    }
 
     def parse(self, response):
         """
@@ -19,18 +32,24 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
         """
 
         # Need to filter
+        table = response.xpath('body/div/div/div/div[2]/div[3]/div/div/section/div/div[2]')
 
-        for item in response.css('div[data-ux="Container"] div[data-ux="GridCell"]'):
+        for agenda_node in table.xpath('div[@data-ux="GridCell"][contains(., \'Agenda\')]'):
+            minutes_node = agenda_node.xpath('following-sibling::div[@data-ux="GridCell"][contains(., \'Minutes\')]')
+            
+            agenda_contents = None
+            minutes_contents = None
+
             meeting = Meeting(
-                title=self._parse_title(item),
-                description=self._parse_description(item),
-                classification=self._parse_classification(item),
-                start=self._parse_start(item),
-                end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
-                links=self._parse_links(item),
+                title=self._parse_title(agenda_contents),
+                description='',
+                classification=COMMISSION,
+                start=self._parse_start(agenda_contents),
+                end=None,
+                all_day=False,
+                time_notes=self._parse_time_notes(minutes_contents),
+                location=self.location,
+                links=self._parse_links([agenda_node, minutes_node]),
                 source=self._parse_source(response),
             )
 
@@ -44,41 +63,34 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
 
         return ""
 
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
-
-    def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        return None
-
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+        return datetime(2019, 4, 8, 6, 30)
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
         return ""
 
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
+    def _parse_links(self, nodes):
+        links = []
+        for node in nodes:
+            if node:
+                links.append({
+                        "title": self._get_name(node),
+                        "href": self._get_link(node)
+                    })
+        return links
 
-    def _parse_location(self, item):
-        """Parse or generate location."""
-        return {
-            "address": "",
-            "name": "",
-        }
+    def _get_name(self, node):
+        name = node.xpath('string(.)').get()
+        return name.replace('Download','')
 
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
-
+    def _get_link(self, node):
+        return node.xpath('a/@href').get()
+    
     def _parse_source(self, response):
         """Parse or generate source."""
         return response.url
+
+
