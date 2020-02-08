@@ -79,24 +79,15 @@ def test_source(item):
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-      "href": "",
-      "title": ""
-    }]
+    assert parsed_items[0]["links"] == [{"href": "", "title": ""}]
 
     href11 = "https://5taz8eljj63owlf43qy49n1e-wpengine.netdna-ssl.com"\
         "/wp-content/uploads/2019/06/SSA-16-January-24-2019-Meeting-Minutes.pdf"
-    assert parsed_items[11]["links"] == [{
-      "href": href11,
-      "title": "Minutes"
-    }]
+    assert parsed_items[11]["links"] == [{"href": href11, "title": "Minutes"}]
 
     href12 = "https://5taz8eljj63owlf43qy49n1e-wpengine.netdna-ssl.com"\
         "/wp-content/uploads/2019/06/SSA-16-February-28-2019-Meeting-Minutes.pdf"
-    assert parsed_items[12]["links"] == [{
-      "href": href12,
-      "title": "Minutes"
-    }]
+    assert parsed_items[12]["links"] == [{"href": href12, "title": "Minutes"}]
 
 
 @pytest.mark.parametrize("item", parsed_items)
