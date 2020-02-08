@@ -4,6 +4,7 @@ from datetime import datetime
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from scrapy import Selector
 
 
 class ChiSsa18Spider(CityScrapersSpider):
@@ -13,9 +14,8 @@ class ChiSsa18Spider(CityScrapersSpider):
     start_urls = ["https://northalsted.com/community/"]
     location = {
         'name': 'Center on Halsted',
-        'address': '3656 N Halsted St, Chicago IL 60613, Conference Room 200 on the 2nd Floor'
+        'address': '3656 N Halsted St, Conference Room 200, Chicago IL 60613'
     }
-    meeting_year = ''  # This is used to track year in header elements & append to meetings
 
     def parse(self, response):
         """
@@ -31,25 +31,25 @@ class ChiSsa18Spider(CityScrapersSpider):
 
         for item in table.xpath('.//h3 | .//p'):
             if 'h3' in item.get():
-                ChiSsa18Spider.meeting_year = item.xpath('descendant-or-self::text()')\
-                    .re_first(r'\d\d\d\d')
+                meeting_year = None
+                meeting_year = item.xpath('descendant-or-self::text()')\
+                    .re_first(r'\d{4}')
                 continue
             if '<p>' in item.get():
-                split_test = item.get().split("<br>")
-                for split_string in split_test:
-                    meeting_date_match = re.search(r'([A-Z]\w{2,}\s\d\d?)', split_string)
-                    if meeting_date_match and ChiSsa18Spider.meeting_year:
+                split_items = [Selector(text=section) for section in re.split(r'<br>', item.get())]
+                for split_string in split_items:
+                    meeting_date_match = split_string.re_first(r'([A-Z]\w{2,}\s\d\d?)')
+                    if meeting_date_match and meeting_year:
                         try:
                             converted_date = \
                                 self._convert_date(
-                                    meeting_date_match.group(), ChiSsa18Spider.meeting_year
+                                    meeting_date_match, meeting_year
                                     )
                         except ValueError:
                             continue
-                        links = re.findall(r'href="(.*?)">(.*?)</a>', split_string)
 
                         meeting = Meeting(
-                            title='SSA #18 Commission',
+                            title='Commission',
                             description='',
                             classification=COMMISSION,
                             start=self._parse_start(converted_date),
@@ -57,7 +57,7 @@ class ChiSsa18Spider(CityScrapersSpider):
                             all_day=self._parse_all_day(item),
                             time_notes='',
                             location=self.location,
-                            links=self._parse_links(links),
+                            links=self._parse_links(split_string),
                             source=self._parse_source(response),
                         )
 
@@ -105,10 +105,10 @@ class ChiSsa18Spider(CityScrapersSpider):
     def _parse_links(self, item):
         """Parse or generate links."""
         parsed_links = []
-        for links in item:
+        for links in item.xpath('.//a'):
             parsed_links.append({
-                "href": links[0],
-                "title": links[1],
+                "href": links.xpath('@href').get(),
+                "title": links.xpath('text()').get(),
             })
         return parsed_links
 

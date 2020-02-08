@@ -2,6 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest  # noqa
+from city_scrapers_core.constants import COMMISSION, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -19,13 +20,10 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
-"""
-Uncomment below
-"""
 
 
 def test_title():
-    assert parsed_items[0]["title"] == 'SSA #18 Commission'
+    assert parsed_items[0]["title"] == 'Commission'
 
 
 def test_description():
@@ -45,18 +43,17 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == 'chi_ssa_18/202002050900/x/ssa_18_commission'
+    assert parsed_items[0]["id"] == 'chi_ssa_18/202002050900/x/commission'
 
 
 def test_status():
-    assert parsed_items[0]["status"] == 'tentative'
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": 'Center on Halsted',
-        "address": '3656 N Halsted St, Chicago IL 60613, Conference Room '
-                   '200 on the 2nd Floor'
+        "address": '3656 N Halsted St, Conference Room 200, Chicago IL 60613'
     }
 
 
@@ -69,7 +66,7 @@ def test_links():
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == 'Commission'
+    assert parsed_items[0]["classification"] == COMMISSION
 
 
 def test_all_date():
