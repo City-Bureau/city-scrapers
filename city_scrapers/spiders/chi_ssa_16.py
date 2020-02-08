@@ -1,8 +1,10 @@
+import datetime
+import re
+
 from city_scrapers_core.constants import *
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-import re
-import datetime
+
 
 class ChiSsa16Spider(CityScrapersSpider):
     name = "chi_ssa_16"
