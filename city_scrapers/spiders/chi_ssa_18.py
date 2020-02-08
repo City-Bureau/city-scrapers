@@ -39,32 +39,30 @@ class ChiSsa18Spider(CityScrapersSpider):
                 split_items = [Selector(text=section) for section in re.split(r'<br>', item.get())]
                 for split_string in split_items:
                     meeting_date_match = split_string.re_first(r'([A-Z]\w{2,}\s\d\d?)')
-                    if meeting_date_match and meeting_year:
-                        try:
-                            converted_date = \
-                                self._convert_date(
-                                    meeting_date_match, meeting_year
-                                    )
-                        except ValueError:
-                            continue
+                    if not (meeting_date_match and meeting_year):
+                        continue
+                    converted_date = \
+                        self._convert_date(
+                            meeting_date_match, meeting_year
+                            )
 
-                        meeting = Meeting(
-                            title='Commission',
-                            description='',
-                            classification=COMMISSION,
-                            start=self._parse_start(converted_date),
-                            end=self._parse_end(converted_date),
-                            all_day=self._parse_all_day(item),
-                            time_notes='',
-                            location=self.location,
-                            links=self._parse_links(split_string),
-                            source=self._parse_source(response),
-                        )
+                    meeting = Meeting(
+                        title='Commission',
+                        description='',
+                        classification=COMMISSION,
+                        start=self._parse_start(converted_date),
+                        end=self._parse_end(converted_date),
+                        all_day=self._parse_all_day(item),
+                        time_notes='',
+                        location=self.location,
+                        links=self._parse_links(split_string),
+                        source=self._parse_source(response),
+                    )
 
-                        meeting["status"] = self._get_status(meeting)
-                        meeting["id"] = self._get_id(meeting)
+                    meeting["status"] = self._get_status(meeting)
+                    meeting["id"] = self._get_id(meeting)
 
-                        yield meeting
+                    yield meeting
 
     def _validate_location(self, item):
         location_test = item.get()
