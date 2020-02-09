@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -29,13 +29,12 @@ def test_num():
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_title(item):
-    assert item["title"] == "Greektown Special Service Area Tax Commission #16 Public Meeting"
+    assert item["title"] == "Greektown SSA #16"
 
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_description(item):
-    descriptionStart = "Special Service Areas (SSA), known as Business Improvement Districts"
-    assert item["description"].startswith(descriptionStart)
+    assert item["description"] == ""
 
 
 def test_start():
@@ -52,24 +51,24 @@ def test_time_notes():
 
 def test_id():
     str0 = "chi_ssa_16/202001231400/x/"\
-        "greektown_special_service_area_tax_commission_16_public_meeting"
+        "greektown_ssa_16"
     assert parsed_items[0]["id"] == str0
     str1 = "chi_ssa_16/202002271400/x/"\
-        "greektown_special_service_area_tax_commission_16_public_meeting"
+        "greektown_ssa_16"
     assert parsed_items[1]["id"] == str1
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "passed"
-    assert parsed_items[1]["status"] == "tentative"
-    assert parsed_items[-1]["status"] == "passed"
+    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[1]["status"] == TENTATIVE
+    assert parsed_items[-1]["status"] == PASSED
 
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_location(item):
     assert item["location"] == {
         "name": "SSA #16 Office",
-        "address": "306 S. Halsted St, 2nd Floor, Chicago, ILL 60661"
+        "address": "306 S. Halsted St, 2nd Floor, Chicago, IL 60661"
     }
 
 
@@ -79,7 +78,7 @@ def test_source(item):
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{"href": "", "title": ""}]
+    assert parsed_items[0]["links"] == []
 
     href11 = "https://5taz8eljj63owlf43qy49n1e-wpengine.netdna-ssl.com"\
         "/wp-content/uploads/2019/06/SSA-16-January-24-2019-Meeting-Minutes.pdf"

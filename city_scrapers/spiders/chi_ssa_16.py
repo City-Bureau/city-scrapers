@@ -18,7 +18,6 @@ class ChiSsa16Spider(CityScrapersSpider):
         # (every meeting li has this in the present text from the year listed),
         # which indicates the meeting occurred or is scheduled to occur
         # and therefore contains relevant information to document.
-
         for item in response.xpath('//li[contains(text(), ", 20")]'):
             meeting = Meeting(
                 title=self._parse_title(item),
@@ -32,7 +31,6 @@ class ChiSsa16Spider(CityScrapersSpider):
                 links=self._parse_links(item),
                 source=self._parse_source(response),
             )
-
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
 
@@ -40,14 +38,11 @@ class ChiSsa16Spider(CityScrapersSpider):
 
     def _parse_title(self, item):
         # There was no variation in types of meetings, so this was applicable for all.
-        return "Greektown Special Service Area Tax Commission #16 Public Meeting"
+        return "Greektown SSA #16"
 
     def _parse_description(self, item):
         # This extracts the useful text provide to describe the services provided by the SSA.
-        return " ".join(
-            item.xpath('//span[text()="Improving the Community"]/parent::h4/parent::div/p/text()'
-                       ).extract()
-        )
+        return ""
 
     def _parse_classification(self, item):
         return COMMISSION
@@ -67,11 +62,18 @@ class ChiSsa16Spider(CityScrapersSpider):
         day = int(re.sub(r"[^0-9]+", " ", date[1]))
         year = int(re.sub(r"[^0-9]+", " ", date[2]))
 
-        # According to accompying information, all meetings in 2016 occurred at 3:00 PM
-        # All other years occurred at 2:00 PM.
-        if (year == 2016):
-            return datetime.datetime(year, month, day, 15, 0)
-        return datetime.datetime(year, month, day, 14, 0)
+        # Extracts accompanying meeting information to extract meeting time
+        time = item.xpath(
+            'ancestor::div[@class="gdc_row"]'
+            '/descendant::p[contains(text(), "60661")]/text()'
+        ).get()
+        time = re.sub(r"[^a-zA-Z0-9:]+", "", time)
+        time = re.findall(r'\d{1,2}:\d{2}(?:AM|PM|am|pm)', time)[0].upper()
+
+        hour = datetime.datetime.strptime(time, '%I:%M%p').hour
+        minute = datetime.datetime.strptime(time, '%I:%M%p').minute
+
+        return datetime.datetime(year, month, day, hour, minute)
 
     def _parse_end(self, item):
         # Meeting adjournment information contained in files present in Minutes documents
@@ -88,7 +90,7 @@ class ChiSsa16Spider(CityScrapersSpider):
     def _parse_location(self, item):
         # Meetings occurred at same location for all years documented
         return {
-            "address": "306 S. Halsted St, 2nd Floor, Chicago, ILL 60661",
+            "address": "306 S. Halsted St, 2nd Floor, Chicago, IL 60661",
             "name": "SSA #16 Office",
         }
 
@@ -97,7 +99,7 @@ class ChiSsa16Spider(CityScrapersSpider):
         # or otherwise have not occurred.
         # When no anchor tag found, returns empty JSON element.
         if (item.xpath("a/@href").get() is None):
-            return [{"href": "", "title": ""}]
+            return []
 
         return [{"href": item.xpath("a/@href").get(), "title": item.xpath("a/text()").get()}]
 
