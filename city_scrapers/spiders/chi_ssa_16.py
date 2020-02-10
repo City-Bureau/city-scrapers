@@ -38,7 +38,7 @@ class ChiSsa16Spider(CityScrapersSpider):
 
     def _parse_title(self, item):
         # There was no variation in types of meetings, so this was applicable for all.
-        return "Greektown SSA #16"
+        return "Tax Commission"
 
     def _parse_description(self, item):
         return ""
