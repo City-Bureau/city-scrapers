@@ -29,7 +29,7 @@ def test_num():
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_title(item):
-    assert item["title"] == "Greektown SSA #16"
+    assert item["title"] == "Tax Commission"
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -50,11 +50,9 @@ def test_time_notes():
 
 
 def test_id():
-    str0 = "chi_ssa_16/202001231400/x/"\
-        "greektown_ssa_16"
+    str0 = "chi_ssa_16/202001231400/x/tax_commission"
     assert parsed_items[0]["id"] == str0
-    str1 = "chi_ssa_16/202002271400/x/"\
-        "greektown_ssa_16"
+    str1 = "chi_ssa_16/202002271400/x/tax_commission"
     assert parsed_items[1]["id"] == str1
 
 
