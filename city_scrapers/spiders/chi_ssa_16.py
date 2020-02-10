@@ -41,7 +41,6 @@ class ChiSsa16Spider(CityScrapersSpider):
         return "Greektown SSA #16"
 
     def _parse_description(self, item):
-        # This extracts the useful text provide to describe the services provided by the SSA.
         return ""
 
     def _parse_classification(self, item):
