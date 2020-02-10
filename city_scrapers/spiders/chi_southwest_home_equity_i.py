@@ -1,10 +1,18 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from io import BytesIO
+import re
+import requests
 import sys 
+
+import scrapy
+from PyPDF2 import PdfFileReader
 
 from city_scrapers_core.constants import PASSED, COMMISSION, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
+
+MONTH_REGEX = r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
 
 
 def print_node(node):
@@ -37,14 +45,17 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
         for agenda_node in table.xpath('div[@data-ux="GridCell"][contains(., \'Agenda\')]'):
             minutes_node = agenda_node.xpath('following-sibling::div[@data-ux="GridCell"][contains(., \'Minutes\')]')
             
-            agenda_contents = None
-            minutes_contents = None
+            if self._get_link(minutes_node):
+                minutes_contents = self.parse_pdf(self._get_link(minutes_node))
+
+            if self._get_link(agenda_node):
+                agenda_contents = self.parse_pdf(self._get_link(agenda_node))
 
             meeting = Meeting(
                 title=self._parse_title(agenda_contents),
                 description='',
                 classification=COMMISSION,
-                start=self._parse_start(agenda_contents),
+                start=self._parse_start(agenda_node),
                 end=None,
                 all_day=False,
                 time_notes=self._parse_time_notes(minutes_contents),
@@ -52,24 +63,27 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
                 links=self._parse_links([agenda_node, minutes_node]),
                 source=self._parse_source(response),
             )
-
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
 
     def _parse_title(self, item):
-        """Parse or generate meeting title."""
-
         return ""
 
 
-    def _parse_start(self, item):
-        """Parse start datetime as a naive datetime object."""
-        return datetime(2019, 4, 8, 6, 30)
+    def parse_pdf(self, url):
+        response = requests.get(url)
+        pdf_obj = PdfFileReader(BytesIO(response.content))
+        pdf_text = pdf_obj.getPage(0).extractText().strip()
+        return pdf_text
+
+    def _parse_start(self, node):
+        date_str = self.find_date(node)
+        date_object = datetime.strptime(date_str, "%B %d %Y")
+        return date_object + timedelta(hours=18, minutes=30)
 
     def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
         return ""
 
     def _parse_links(self, nodes):
@@ -84,13 +98,29 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
 
     def _get_name(self, node):
         name = node.xpath('string(.)').get()
-        return name.replace('Download','')
+        return name
 
     def _get_link(self, node):
-        return node.xpath('a/@href').get()
+        url = node.xpath('a/@href').get()
+        if url:
+            return 'https:' + url
+        else:
+            return None
     
     def _parse_source(self, response):
-        """Parse or generate source."""
         return response.url
+
+
+    def find_date(self, node):
+        text = self._get_name(node)
+        text_block = text.replace("\n","")
+        return self._use_date_regex(text_block)
+
+    def _use_date_regex(self, text):
+        month_ind = re.search(MONTH_REGEX, text, flags=re.I)
+        year_ind = re.search(r"\d{4}", text[month_ind.start():]) # We need the year to come after the 
+        date_str = text[month_ind.start():(month_ind.start()+year_ind.end())].replace(",","")
+        return date_str
+
 
 
