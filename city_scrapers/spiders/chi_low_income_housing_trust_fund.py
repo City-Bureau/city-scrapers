@@ -83,7 +83,7 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
     def _parse_description(self, item):
         """Parse or generate event description"""
         return item.xpath('.//span[@class="event-content-break"]/following-sibling::text()'
-                          ).extract_first()
+                          ).extract_first() or ""
 
     def _parse_classification(self, title):
         """Parse or generate classification (e.g. board, committee, etc)"""
