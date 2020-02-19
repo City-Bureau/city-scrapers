@@ -46,13 +46,13 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
             minutes_node = agenda_node.xpath('following-sibling::div[@data-ux="GridCell"][contains(., \'Minutes\')]')
             
             if self._get_link(minutes_node):
-                minutes_contents = self.parse_pdf(self._get_link(minutes_node))
-
+                minutes_contents = self.parse_pdf(self._get_link(minutes_node))   
+                          
             if self._get_link(agenda_node):
                 agenda_contents = self.parse_pdf(self._get_link(agenda_node))
 
             meeting = Meeting(
-                title=self._parse_title(agenda_contents),
+                title=self._parse_title(minutes_contents),
                 description='',
                 classification=COMMISSION,
                 start=self._parse_start(agenda_node),
@@ -68,9 +68,14 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
 
             yield meeting
 
-    def _parse_title(self, item):
-        return ""
-
+    def _parse_title(self, text):
+        name = re.search(r"Southwest Home Equity Assurance Program",text, flags=re.I)
+        minutes = re.search(r"MINUTES", text, flags=re.I)
+        if name and minutes:
+            title = text[name.end():minutes.start()] 
+            return title.replace('\n','').title()
+        else:
+            return 'Board Meeting'
 
     def parse_pdf(self, url):
         response = requests.get(url)
@@ -121,6 +126,11 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
         year_ind = re.search(r"\d{4}", text[month_ind.start():]) # We need the year to come after the 
         date_str = text[month_ind.start():(month_ind.start()+year_ind.end())].replace(",","")
         return date_str
+
+    def _parse_time_notes(self, text):
+        c_t_o = re.search(r"CALL TO ORDER", text)
+        commissioners = re.search(r"COMMISSIONER(S)? IN ATTENDANCE", text)
+        return text[c_t_o.end(): commissioners.start()].replace('\n','')
 
 
 
