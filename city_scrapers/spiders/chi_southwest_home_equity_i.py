@@ -1,23 +1,17 @@
+import re
 from datetime import datetime, timedelta
 from io import BytesIO
-import re
+
 import requests
-import sys 
-
-import scrapy
-from PyPDF2 import PdfFileReader
-
-from city_scrapers_core.constants import PASSED, COMMISSION, NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from PyPDF2 import PdfFileReader
+from PyPDF2.utils import PdfReadError
 
-
-MONTH_REGEX = r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
-
-
-def print_node(node):
-    print(node.xpath('string(.)').get())
-
+MONTH_REGEX = (r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)",
+               r"?|May|June?|July?|Aug(?:ust)?|Sep(?:tember)",
+               r"?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)")
 
 
 class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
@@ -32,33 +26,25 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
     }
 
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
-        """
-
-        # Need to filter
         table = response.xpath('body/div/div/div/div[2]/div[3]/div/div/section/div/div[2]')
 
         for agenda_node in table.xpath('div[@data-ux="GridCell"][contains(., \'Agenda\')]'):
             minutes_node = agenda_node.xpath('following-sibling::div[@data-ux="GridCell"][contains(., \'Minutes\')]')
-            
+
             if self._get_link(minutes_node):
-                minutes_contents = self.parse_pdf(self._get_link(minutes_node))   
-                          
-            if self._get_link(agenda_node):
-                agenda_contents = self.parse_pdf(self._get_link(agenda_node))
+                minutes_contents = self.parse_pdf(self._get_link(minutes_node))
+            else:
+                minutes_contents = None 
+
 
             meeting = Meeting(
-                title=self._parse_title(minutes_contents),
+                title=(self._parse_title(minutes_contents) if minutes_contents else 'Board Meeting'),
                 description='',
                 classification=COMMISSION,
                 start=self._parse_start(agenda_node),
                 end=None,
                 all_day=False,
-                time_notes=self._parse_time_notes(minutes_contents),
+                time_notes=(self._parse_time_notes(minutes_contents) if minutes_contents else None),
                 location=self.location,
                 links=self._parse_links([agenda_node, minutes_node]),
                 source=self._parse_source(response),
@@ -73,23 +59,23 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
         minutes = re.search(r"MINUTES", text, flags=re.I)
         if name and minutes:
             title = text[name.end():minutes.start()] 
-            return title.replace('\n','').title()
+            return title.replace('\n','').title().strip()
         else:
             return 'Board Meeting'
 
     def parse_pdf(self, url):
         response = requests.get(url)
-        pdf_obj = PdfFileReader(BytesIO(response.content))
-        pdf_text = pdf_obj.getPage(0).extractText().strip()
+        try:
+            pdf_obj = PdfFileReader(BytesIO(response.content))
+            pdf_text = pdf_obj.getPage(0).extractText().strip()
+        except PdfReadError:
+            pdf_text = ''
         return pdf_text
 
     def _parse_start(self, node):
         date_str = self.find_date(node)
         date_object = datetime.strptime(date_str, "%B %d %Y")
         return date_object + timedelta(hours=18, minutes=30)
-
-    def _parse_time_notes(self, item):
-        return ""
 
     def _parse_links(self, nodes):
         links = []
@@ -115,7 +101,6 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
     def _parse_source(self, response):
         return response.url
 
-
     def find_date(self, node):
         text = self._get_name(node)
         text_block = text.replace("\n","")
@@ -124,13 +109,10 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
     def _use_date_regex(self, text):
         month_ind = re.search(MONTH_REGEX, text, flags=re.I)
         year_ind = re.search(r"\d{4}", text[month_ind.start():]) # We need the year to come after the 
-        date_str = text[month_ind.start():(month_ind.start()+year_ind.end())].replace(",","")
+        date_str = text[month_ind.start():(month_ind.start()+year_ind.end())].replace(",", "")
         return date_str
 
     def _parse_time_notes(self, text):
         c_t_o = re.search(r"CALL TO ORDER", text)
         commissioners = re.search(r"COMMISSIONER(S)? IN ATTENDANCE", text)
-        return text[c_t_o.end(): commissioners.start()].replace('\n','')
-
-
-
+        return text[c_t_o.end():commissioners.start()].replace('\n', '').strip()
