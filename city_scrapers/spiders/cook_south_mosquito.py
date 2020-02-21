@@ -38,7 +38,7 @@ class CookSouthMosquitoSpider(CityScrapersSpider):
                     all_day=False,
                     time_notes="See agenda to confirm time",
                     location=self.location,
-                    links=self._parse_links(item),
+                    links=self._parse_links(item, response),
                     source=response.url,
                 )
 
@@ -53,12 +53,12 @@ class CookSouthMosquitoSpider(CityScrapersSpider):
         date_obj = datetime.strptime("{} {}".format(date_str, year_str), "%B %d %Y")
         return datetime.combine(date_obj.date(), time(16))
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
         links = []
         for link in item.css("a"):
             links.append({
                 "title": link.css("*::text").extract_first(),
-                "href": link.attrib["href"],
+                "href": response.urljoin(link.attrib["href"]),
             })
         return links
