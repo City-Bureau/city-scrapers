@@ -56,6 +56,8 @@ class ChiTeacherPensionSpider(CityScrapersSpider):
             start = self._parse_start(item)
             classification = self._parse_classification(title)
             source = self._parse_source(item)
+            if "historical" in (item.xpath('description/text()').extract_first() or "").lower():
+                continue
             meeting = Meeting(
                 title=title,
                 description='',
