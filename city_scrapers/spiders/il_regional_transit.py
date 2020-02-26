@@ -39,7 +39,7 @@ class IlRegionalTransitSpider(CityScrapersSpider):
                 all_day=False,
                 location=self.location,
                 links=self._parse_links(item),
-                source=response.url,
+                source="https://rtachicago.org/about-us/board-meetings/meetings-archive",
             )
             meeting['id'] = self._get_id(meeting)
             meeting['status'] = self._get_status(meeting)

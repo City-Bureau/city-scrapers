@@ -91,4 +91,4 @@ def test_location(item):
 
 @pytest.mark.parametrize('item', parsed_items)
 def test_sources(item):
-    assert item['source'].startswith('http://rtachicago.granicus.com/ViewPublisher.php?view_id=')
+    assert item['source'] == "https://rtachicago.org/about-us/board-meetings/meetings-archive"
