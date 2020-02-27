@@ -87,6 +87,8 @@ class ChiSsa27Spider(CityScrapersSpider):
 
         try:
             matched_meets = list(filter(lambda d: d['date_date'] == date_needed, self.minutes_list))
+            if len(matched_meets) == 0 or not matched_meets[0]["link"]:
+                return []
             matched_meeting = [{
                 "title": title,
                 "href": matched_meets[0]['link'],
