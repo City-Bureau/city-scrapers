@@ -43,8 +43,7 @@ class IlPortDistrictSpider(CityScrapersSpider):
         raise scrapy.exceptions.DontCloseSpider
 
     def parse_schedules(self, response):
-
-        year = response.xpath("//em/text()").extract_first()[:4]
+        year = response.css(".rtecenter em::text").extract_first()[:4]
 
         rows = response.xpath("//tr")
         meeting_types = rows[0].xpath(".//strong/text()").extract()
