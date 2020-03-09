@@ -1,4 +1,3 @@
-# Just debugging
 import logging
 import re
 import unicodedata
@@ -23,12 +22,14 @@ class ChiSsa23Spider(CityScrapersSpider):
     time = '4 pm'
 
     def parse(self, response):
-
+        # Due to the current lack of documents for the meetings of 2020
+        # no assumption is made regarding the expected HTML page format
+        # once these are uploaded. 
         h4s = response.xpath('//h4')
         meeting_years = list()
 
         for entry in h4s.xpath('./text()').getall():
-            # do not allow duplicates
+            # Do not allow duplicates
             if entry[0:4] not in meeting_years:
                 meeting_years.append(entry[0:4])
 
@@ -58,7 +59,7 @@ class ChiSsa23Spider(CityScrapersSpider):
                         'links': None
                     })
 
-            # always multiply the counter with two as each year has usually two links
+            # Always multiply the counter with two as each year has usually two links
             else:
                 logging.log(logging.DEBUG, link_collection[year_counter])
                 for item_counter, item in enumerate(link_collection[2 * (year_counter - 1)]):
@@ -111,7 +112,7 @@ class ChiSsa23Spider(CityScrapersSpider):
         # Split the month day string and make sure to drop the year before that
         dm_str = item.split(',')[0].split()
 
-        # adding a 0 as padding for single-digit days
+        # Adding a 0 as padding for single-digit days
         if len(dm_str[1]) < 2:
             dm_str[1] = '0' + dm_str[1]
         dt_str = dm_str[0] + ' ' + dm_str[1]
@@ -125,7 +126,6 @@ class ChiSsa23Spider(CityScrapersSpider):
         return start, end
 
     def _parse_links(self, items):
-        # Based on implementation of chi_midway_noise
         documents = []
         logging.log(logging.DEBUG, items)
         for url in items:
@@ -135,7 +135,6 @@ class ChiSsa23Spider(CityScrapersSpider):
         return documents
 
     def _build_link_dict(self, url):
-        # Based on implementation of chi_midway_noise
         if 'agenda' in url.lower():
             return {'href': url, 'title': 'Agenda'}
         elif 'minutes' in url.lower():
