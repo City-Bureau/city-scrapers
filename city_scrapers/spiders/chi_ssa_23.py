@@ -24,7 +24,7 @@ class ChiSsa23Spider(CityScrapersSpider):
     def parse(self, response):
         # Due to the current lack of documents for the meetings of 2020
         # no assumption is made regarding the expected HTML page format
-        # once these are uploaded. 
+        # once these are uploaded.
         h4s = response.xpath('//h4')
         meeting_years = list()
 
