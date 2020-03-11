@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
@@ -21,11 +21,11 @@ class IlRegionalTransitSpider(CityScrapersSpider):
     }
 
     def parse(self, response):
-        last_year = datetime.today().replace(year=datetime.today().year - 1)
+        three_months_ago = datetime.now() - timedelta(days=90)
         for item in response.css('.row:not(#search):not(.keywords)'):
             start = self._parse_start(item)
             if start is None or (
-                start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+                start < three_months_ago and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
             ):
                 continue
             title = self._parse_title(item)
@@ -35,7 +35,7 @@ class IlRegionalTransitSpider(CityScrapersSpider):
                 classification=self._parse_classification(title),
                 start=start,
                 end=None,
-                time_notes='Initial meetings begin at 8:30am, with other daily meetings following',
+                time_notes='Initial meetings begin at 9:00am, with other daily meetings following',
                 all_day=False,
                 location=self.location,
                 links=self._parse_links(item),
@@ -66,11 +66,17 @@ class IlRegionalTransitSpider(CityScrapersSpider):
     @staticmethod
     def _parse_start(item):
         """
-        Retrieve the event date, always using 8:30am as the time.
+        Retrieve the event date, defaulting to 9:00am
         """
         date_str = ' '.join(item.css('div:first-child::text').extract()).strip()
+        title_str = item.css('.committee::text').extract_first()
+        time_obj = time(9, 0)
+        time_match = re.search(r"\d{1,2}(:\d{2})? ?[apm\.]{2,4}", title_str)
+        if time_match:
+            time_str = re.sub(r"[\s\.]", "", time_match.group()).lower()
+            time_obj = datetime.strptime(time_str, "%I:%M%p").time()
         date_obj = datetime.strptime(date_str, '%b %d, %Y').date()
-        return datetime.combine(date_obj, time(8, 30))
+        return datetime.combine(date_obj, time_obj)
 
     @staticmethod
     def _parse_links(item):
