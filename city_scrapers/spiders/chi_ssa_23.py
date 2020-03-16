@@ -24,7 +24,7 @@ class ChiSsa23Spider(CityScrapersSpider):
     def parse(self, response):
         # Due to the current lack of documents for the meetings of 2020
         # no assumption is made regarding the expected HTML page format
-        # once these are uploaded. 
+        # once these are uploaded.
         h4s = response.xpath('//h4')
         meeting_years = list()
 
@@ -56,7 +56,7 @@ class ChiSsa23Spider(CityScrapersSpider):
                         'start': start,
                         'end': end,
                         # Currently no meetings from 2020 have links
-                        'links': None
+                        'links': []
                     })
 
             # Always multiply the counter with two as each year has usually two links
@@ -78,7 +78,8 @@ class ChiSsa23Spider(CityScrapersSpider):
                     except IndexError:
                         # No problem, this means that this is an older entry and
                         # there is no second link to this element
-                        links.append(None)
+                        # links.append(None)
+                        pass
                     # check for old entries
                     if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
                         continue
