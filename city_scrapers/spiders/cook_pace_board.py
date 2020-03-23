@@ -55,7 +55,9 @@ class CookPaceBoardSpider(CityScrapersSpider):
             # Figure out meeting documents from title and date
             meeting['links'] = self._parse_links(title=meeting['title'], date=meeting['start'])
 
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(
+                meeting, text=" ".join(item.css("*::text").extract())
+            )
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
@@ -76,6 +78,8 @@ class CookPaceBoardSpider(CityScrapersSpider):
         """Parse start datetime as a naive datetime object."""
         date = item.xpath("./td[2]/text()").get().strip()
         time = item.xpath("./td[3]/text()").get().strip()
+        if time == "N/A":
+            time = "9:30am"
         # "January 16 2019 4:30pm"
         dt_string = "{date} {year} {time}".format(date=date, year=year, time=time)
         dt_format = "%B %d %Y %I:%M%p"
@@ -84,17 +88,14 @@ class CookPaceBoardSpider(CityScrapersSpider):
 
     def _parse_location(self, item, hq_address):
         """Parse or generate location."""
-        location_name = item.xpath("./td/a/text()").get().strip()
+        location_name = " ".join(item.css("td")[-1].css("*::text").extract()).strip()
 
         # We know Pace Headquarters address, and it seems to be the only place
         # they hold these meetings
-        if "pace headquarters" in location_name.lower():
+        if "pace headquarters" in location_name.lower() or "cancel" in location_name.lower():
             location_address = hq_address
         else:
-            raise ValueError(
-                'Meeting not at location with known address. \
-            Please update spider.'
-            )
+            raise ValueError('Meeting not at location with known address. Please update spider.')
 
         return {
             "address": location_address,
