@@ -78,7 +78,7 @@ class ChiSsa62Spider(CityScrapersSpider):
         if time_str is None:
             return None, None
         times = time_str.strip().replace('.', '')
-        if not ('a' in times or 'p' in times):
+        if not ('a' in times or 'p' in times) or "cancel" in times.lower():
             return datetime.combine(ddate, time()), None
         ttimes = times.split("-")
         ampm = ttimes[0].split(' ')[1]
