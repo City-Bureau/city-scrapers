@@ -45,7 +45,9 @@ class CookHospitalsSpider(CityScrapersSpider):
                     links=self._parse_links(item, response),
                     source=response.url,
                 )
-                meeting['status'] = self._get_status(meeting)
+                meeting['status'] = self._get_status(
+                    meeting, text=" ".join(item.css("td:first-child::text").extract())
+                )
                 meeting['id'] = self._get_id(meeting)
                 yield meeting
 
@@ -60,7 +62,10 @@ class CookHospitalsSpider(CityScrapersSpider):
     def _parse_start(item):
         """Get start datetime from item's text"""
         date_str = item.css("td:first-child::text").extract_first().strip().replace(" - ", " ")
-        return datetime.strptime(date_str, "%B %d, %Y %I:%M %p")
+        try:
+            return datetime.strptime(date_str, "%B %d, %Y %I:%M %p")
+        except ValueError:
+            return datetime.strptime(date_str, "%B %d, %Y")
 
     @staticmethod
     def _parse_classification(title):
