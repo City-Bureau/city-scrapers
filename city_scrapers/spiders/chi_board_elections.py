@@ -123,7 +123,7 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
             date_str = ', '.join(date_str.split(', ')[1:])
         time_str = '9:30 AM'
         if '7 ' in meeting_text:
-            time_str = re.search(r'7.+\S[m,.]', meeting_text).group(0)
+            time_str = re.search(r'7\s+[apmAPM\.]{2,4}', meeting_text).group(0)
             time_str = time_str.replace('7 ', '7:00 ')
         if ':' not in date_str or meeting_text:
             dt_str = '{} on {}'.format(time_str, date_str)
