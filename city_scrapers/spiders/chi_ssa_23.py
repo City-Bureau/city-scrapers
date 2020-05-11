@@ -1,4 +1,3 @@
-import logging
 import re
 import unicodedata
 from datetime import datetime, timedelta
@@ -24,7 +23,6 @@ class ChiSsa23Spider(CityScrapersSpider):
     def parse(self, response):
 
         address_text = response.xpath('//div[@class = "address"][1]/text()').extract()[1]
-        #logging.log(logging.DEBUG, address_text)
         self._validate_location(address_text)
 
         h4s = response.xpath('//h4')
