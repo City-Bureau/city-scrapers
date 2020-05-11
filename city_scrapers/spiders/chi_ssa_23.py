@@ -1,3 +1,4 @@
+import logging
 import re
 import unicodedata
 from datetime import datetime, timedelta
@@ -21,8 +22,11 @@ class ChiSsa23Spider(CityScrapersSpider):
     time = '4:00 pm'
 
     def parse(self, response):
-        # Due to the current lack of documents for the meetings of 2020
-        # no assumption is made regarding the expected HTML page format
+
+        address_text = response.xpath('//div[@class = "address"][1]/text()').extract()[1]
+        #logging.log(logging.DEBUG, address_text)
+        self._validate_location(address_text)
+
         h4s = response.xpath('//h4')
 
         # General meeting description is mentioned just after the H4 for the current year
@@ -145,3 +149,8 @@ class ChiSsa23Spider(CityScrapersSpider):
             return {'href': url, 'title': 'Minutes'}
         else:
             return {'href': url, 'title': 'Link'}
+
+    def _validate_location(self, text):
+        """Parse or generate location."""
+        if "2468" not in text:
+            raise ValueError("Meeting location has changed")
