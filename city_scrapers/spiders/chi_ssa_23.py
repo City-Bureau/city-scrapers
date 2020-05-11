@@ -1,4 +1,3 @@
-import logging
 import re
 import unicodedata
 from datetime import datetime, timedelta
@@ -19,74 +18,72 @@ class ChiSsa23Spider(CityScrapersSpider):
     }
     # Each meeting takes place on Wednesday 4 PM
     meeting_day = 'Wednesday'
-    time = '4 pm'
+    time = '4:00 pm'
 
     def parse(self, response):
         # Due to the current lack of documents for the meetings of 2020
         # no assumption is made regarding the expected HTML page format
-        # once these are uploaded.
         h4s = response.xpath('//h4')
-        meeting_years = list()
-
-        for entry in h4s.xpath('./text()').getall():
-            # Do not allow duplicates
-            if entry[0:4] not in meeting_years:
-                meeting_years.append(entry[0:4])
 
         # General meeting description is mentioned just after the H4 for the current year
         general_desc = h4s.xpath('following-sibling::p[1]//em//text()').extract_first()
 
-        # List containing all meeting dictionaries
-        meetings = list()
-
-        link_collection = []
-        for h4 in h4s[1:]:
-            # Get the links for each meeting
-            link_collection.append(h4.xpath('following-sibling::p[1]//a'))
+        # Dictionary containing all meeting dictionaries
+        # The dates will be the keys
+        meetings = dict()
 
         last_year = datetime.today().replace(year=datetime.today().year - 1)
 
-        for year_counter, year in enumerate(meeting_years):
+        for entry_cnt, entry in enumerate(h4s, start=1):
+            entry_str = entry.xpath('./text()').extract_first()
+            test_year = entry_str[0:4]
 
-            if year_counter == 0:
-                for item in h4s.xpath('following-sibling::ol[1]//li//text()').extract():
-                    start, end = self._parse_start_end(item, meeting_years[0])
+            if 'Schedule' in entry_str:
 
-                    meetings.append({
+                for item in entry.xpath('following-sibling::ol[1]//li//text()').getall():
+                    date, start, end = self._parse_date_start_end(item, test_year)
+
+                    meetings[date] = {
                         'start': start,
                         'end': end,
-                        # Currently no meetings from 2020 have links
+                        # Scheduled appointments have no links
                         'links': []
-                    })
+                    }
 
-            # Always multiply the counter with two as each year has usually two links
-            else:
-                logging.log(logging.DEBUG, link_collection[year_counter])
-                for item_counter, item in enumerate(link_collection[2 * (year_counter - 1)]):
-                    # Get the text part
-                    item_str = item.xpath('./text()').extract_first()
-                    logging.log(logging.DEBUG, item_str)
-                    start, end = self._parse_start_end(item_str, year)
+            elif 'Agendas' in entry_str or 'Minutes' in entry_str:
 
-                    links = [item.xpath('@href').extract_first()]
-                    # Try to see if we have a second link
-                    try:
-                        links.append(
-                            link_collection[2 * (year_counter - 1) +
-                                            1][item_counter].xpath('@href').extract_first()
-                        )
-                    except IndexError:
-                        # No problem, this means that this is an older entry and
-                        # there is no second link to this element
-                        # links.append(None)
-                        pass
-                    # check for old entries
-                    if start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
-                        continue
-                    meetings.append({'start': start, 'end': end, 'links': self._parse_links(links)})
+                # Only consider ps between two h4s
+                for p in entry.xpath(
+                    'following-sibling::p[count(preceding-sibling::h4)='
+                    '$entry_cnt]',
+                    entry_cnt=entry_cnt
+                ):
+
+                    # The  non-breaking space signals the end of the meeting lists
+                    if p.xpath('./text()') and u'\xa0' in p.xpath('./text()').extract_first():
+                        break
+
+                    for item in p.xpath('./a'):
+
+                        item_str = item.xpath('./text()').extract_first()
+                        date, start, end = self._parse_date_start_end(item_str, test_year)
+
+                        item_links = item.xpath('@href').extract()
+                        links = self._parse_links(item_links, entry_str)
+
+                        if date in meetings:
+
+                            meetings[date]['links'].extend(links)
+
+                        else:
+
+                            meetings[date] = {'start': start, 'end': end, 'links': links}
 
         # Create the meeting objects
-        for item in meetings:
+        for key, item in meetings.items():
+
+            if item['start'] < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+                continue
 
             meeting = Meeting(
                 title='Commission',
@@ -105,10 +102,16 @@ class ChiSsa23Spider(CityScrapersSpider):
             meeting['id'] = self._get_id(meeting)
             yield meeting
 
-    def _parse_start_end(self, item, year):
+    def _parse_date_start_end(self, item, year):
         """
         Parse start date and time.
         """
+        # Check for explicit start times in the string
+        try:
+            start_time = re.search(r'\((.*?)\)', item).group(1)
+
+        except AttributeError:
+            start_time = self.time
 
         # Split the month day string and make sure to drop the year before that
         dm_str = item.split(',')[0].split()
@@ -119,26 +122,26 @@ class ChiSsa23Spider(CityScrapersSpider):
         dt_str = dm_str[0] + ' ' + dm_str[1]
 
         start = datetime.strptime(
-            '{} {} {} {}'.format(self.meeting_day, re.sub(r'[,\.]', '', dt_str), self.time, year),
-            '%A %B %d %I %p %Y'
+            '{} {} {} {}'.format(self.meeting_day, re.sub(r'[,\.]', '', dt_str), start_time, year),
+            '%A %B %d %I:%M %p %Y'
         )
+        date = start.date()
         end = start + timedelta(minutes=90)
 
-        return start, end
+        return date, start, end
 
-    def _parse_links(self, items):
+    def _parse_links(self, items, entry_str):
         documents = []
-        logging.log(logging.DEBUG, items)
         for url in items:
             if url:
-                documents.append(self._build_link_dict(url))
+                documents.append(self._build_link_dict(url, entry_str))
 
         return documents
 
-    def _build_link_dict(self, url):
-        if 'agenda' in url.lower():
+    def _build_link_dict(self, url, entry_str):
+        if 'agenda' in entry_str.lower():
             return {'href': url, 'title': 'Agenda'}
-        elif 'minutes' in url.lower():
+        elif 'minutes' in entry_str.lower():
             return {'href': url, 'title': 'Minutes'}
         else:
             return {'href': url, 'title': 'Link'}

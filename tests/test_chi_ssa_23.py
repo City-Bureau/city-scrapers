@@ -17,7 +17,7 @@ test_response = file_response(
 spider = ChiSsa23Spider()
 spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
-freezer = freeze_time("2020-03-09")
+freezer = freeze_time("2020-05-11")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -26,7 +26,7 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 11
+    assert len(parsed_items) == 12
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -45,12 +45,13 @@ def test_description(item):
 def test_start():
     expected_starts = [
         datetime(2020, 2, 5, 16, 0),
+        datetime(2020, 3, 24, 9, 37),
+        datetime(2020, 4, 3, 10, 30),
         datetime(2020, 4, 22, 16, 0),
         datetime(2020, 5, 27, 16, 0),
         datetime(2020, 7, 8, 16, 0),
         datetime(2020, 9, 9, 16, 0),
         datetime(2020, 11, 18, 16, 0),
-        datetime(2019, 4, 24, 16, 0),
         datetime(2019, 5, 15, 16, 0),
         datetime(2019, 7, 10, 16, 0),
         datetime(2019, 9, 4, 16, 0),
@@ -63,12 +64,13 @@ def test_start():
 def test_end():
     expected_ends = [
         datetime(2020, 2, 5, 17, 30),
+        datetime(2020, 3, 24, 11, 7),
+        datetime(2020, 4, 3, 12, 00),
         datetime(2020, 4, 22, 17, 30),
         datetime(2020, 5, 27, 17, 30),
         datetime(2020, 7, 8, 17, 30),
         datetime(2020, 9, 9, 17, 30),
         datetime(2020, 11, 18, 17, 30),
-        datetime(2019, 4, 24, 17, 30),
         datetime(2019, 5, 15, 17, 30),
         datetime(2019, 7, 10, 17, 30),
         datetime(2019, 9, 4, 17, 30),
@@ -85,12 +87,12 @@ def test_time_notes(item):
 
 def test_id():
     expected_ids = [
-        'chi_ssa_23/202002051600/x/commission', 'chi_ssa_23/202004221600/x/commission',
+        'chi_ssa_23/202002051600/x/commission', 'chi_ssa_23/202003240937/x/commission',
+        'chi_ssa_23/202004031030/x/commission', 'chi_ssa_23/202004221600/x/commission',
         'chi_ssa_23/202005271600/x/commission', 'chi_ssa_23/202007081600/x/commission',
         'chi_ssa_23/202009091600/x/commission', 'chi_ssa_23/202011181600/x/commission',
-        'chi_ssa_23/201904241600/x/commission', 'chi_ssa_23/201905151600/x/commission',
-        'chi_ssa_23/201907101600/x/commission', 'chi_ssa_23/201909041600/x/commission',
-        'chi_ssa_23/201911131600/x/commission'
+        'chi_ssa_23/201905151600/x/commission', 'chi_ssa_23/201907101600/x/commission',
+        'chi_ssa_23/201909041600/x/commission', 'chi_ssa_23/201911131600/x/commission'
     ]
     for i in range(len(parsed_items)):
         assert parsed_items[i]["id"] == expected_ids[i]
@@ -98,7 +100,7 @@ def test_id():
 
 def test_status():
     expected_status = [
-        PASSED, TENTATIVE, TENTATIVE, TENTATIVE, TENTATIVE, TENTATIVE, PASSED, PASSED, PASSED,
+        PASSED, PASSED, PASSED, PASSED, TENTATIVE, TENTATIVE, TENTATIVE, TENTATIVE, PASSED, PASSED,
         PASSED, PASSED
     ]
     for i in range(len(parsed_items)):
