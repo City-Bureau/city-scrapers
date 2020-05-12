@@ -55,9 +55,7 @@ class IlArtsCouncilSpider(CityScrapersSpider):
 
     def _parse_start(self, item, year):
         """Parse start datetime as a naive datetime object."""
-        item_text = item.xpath('./td/text()').get()
-        if not item_text:
-            item_text = item.xpath('./td/a/text()').get()
+        item_text = " ".join(item.css('td:first-child *::text').extract())
         text_clean = unicodedata.normalize("NFKD", item_text).strip()
 
         if text_clean[-4::] == year:

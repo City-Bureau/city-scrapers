@@ -47,16 +47,17 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
             raise ValueError('The meeting address may have changed')
 
         for date_str in date_strs:
+            start = self._parse_start(date_str, "")
             meeting = Meeting(
                 title='Electoral Board',
                 description='',
                 classification=COMMISSION,
-                start=self._parse_start(date_str, ''),
+                start=start,
                 end=None,
                 time_notes='Meeting end time is estimated',
                 all_day=False,
                 location=self.location,
-                links=self._parse_links(response),
+                links=self._parse_links(response, start=start),
                 source=response.url,
             )
 
@@ -123,7 +124,7 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
             date_str = ', '.join(date_str.split(', ')[1:])
         time_str = '9:30 AM'
         if '7 ' in meeting_text:
-            time_str = re.search(r'7.+\S[m,.]', meeting_text).group(0)
+            time_str = re.search(r'7\s+[apmAPM\.]{2,4}', meeting_text).group(0)
             time_str = time_str.replace('7 ', '7:00 ')
         if ':' not in date_str or meeting_text:
             dt_str = '{} on {}'.format(time_str, date_str)
@@ -138,12 +139,15 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
             dt = datetime.strptime(dt_str, '%I:%M %p on %B %d, %Y')
         return dt
 
-    def _parse_links(self, response, meeting=None):
+    def _parse_links(self, response, meeting=None, start=None):
         """Parse agendas and minutes"""
         if meeting is None:
             for link in response.css("a"):
                 if "genda" in link.css("*::text").extract_first():
-                    return [{"href": response.urljoin(link.attrib["href"]), "title": "Agenda"}]
+                    agenda_href = response.urljoin(link.attrib["href"])
+                    if start:
+                        agenda_href = "{}?date={}".format(agenda_href, start.strftime("%Y%m%d"))
+                    return [{"href": agenda_href, "title": "Agenda"}]
         elif 'href' not in meeting:
             return []
         if 'minutes' in response.url:

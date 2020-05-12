@@ -66,9 +66,7 @@ class ChiSchoolsSpider(CityScrapersSpider):
             end=None,
             time_notes="",
             all_day=False,
-            location=self._parse_location(
-                response.css("h2.datetime + p")[:1].css("*::text").extract()
-            ),
+            location=self._parse_location(response),
             links=self._parse_links(response),
             source=response.url,
         )
@@ -91,7 +89,7 @@ class ChiSchoolsSpider(CityScrapersSpider):
                 end=None,
                 time_notes="",
                 all_day=False,
-                location=self._parse_location(response.css("td:last-child *::text").extract()),
+                location=self._parse_location(response),
                 links=[],
                 source=response.url,
             )
@@ -162,22 +160,42 @@ class ChiSchoolsSpider(CityScrapersSpider):
             dt_fmt = "%B %d %Y %I%p"
         return datetime.strptime(" ".join([date_str, time_str]), dt_fmt)
 
-    def _parse_location(self, loc_lines):
-        loc_list = [line.strip() for line in loc_lines if "calendar" not in line]
-        loc_name = ""
-        loc_addr = ""
-        # If the first character of the location string is a number, assume it's the address
-        if loc_list[0][0].isdigit():
-            loc_addr = " ".join(loc_list)
-        else:
-            loc_name = loc_list[0]
-            loc_addr = " ".join(loc_list[1:])
-        if "42 W" in loc_addr:
-            return self.location
-        return {
-            "name": loc_name.strip(),
-            "address": loc_addr.strip(),
-        }
+    def _parse_location(self, response):
+        addr_input = " ".join(response.css("#mapAddress::attr(value)").extract())
+        loc_lines = response.css("h2.datetime + p")[:1].css("*::text").extract()
+        if len(loc_lines) == 0:
+            loc_lines = response.css("td:last-child *::text").extract()
+        if addr_input:
+            addr_split = [p.strip() for p in addr_input.split("|") if p.strip()]
+            loc_name = ""
+            if len(addr_split) > 2:
+                loc_name = addr_split[0]
+                loc_addr = " ".join(addr_split[1:])
+            else:
+                loc_addr = " ".join(addr_split)
+            if "42 W" in loc_addr:
+                return self.location
+            return {
+                "name": loc_name,
+                "addr": loc_addr,
+            }
+        elif len(loc_lines) > 0:
+            loc_list = [line.strip() for line in loc_lines if "calendar" not in line]
+            loc_name = ""
+            loc_addr = ""
+            # If the first character of the location string is a number, assume it's the address
+            if loc_list[0][0].isdigit():
+                loc_addr = " ".join(loc_list)
+            else:
+                loc_name = loc_list[0]
+                loc_addr = " ".join(loc_list[1:])
+            if "42 W" in loc_addr:
+                return self.location
+            return {
+                "name": loc_name.strip(),
+                "address": loc_addr.strip(),
+            }
+        return self.location
 
     def _parse_links(self, response):
         links = []

@@ -91,7 +91,10 @@ class ChiPoliceRetirementSpider(CityScrapersSpider):
         if len(raw_links) > 2:
             raw_minutes = raw_links[2]
             file_path = re.search(r'\"(.+?)\"', raw_minutes).group(1)
-            title = re.search(r'\>(.+?)\<', raw_minutes).group(1).strip()
+            title = "Minutes"
+            title_match = re.search(r'\>(.+?)\<', raw_minutes)
+            if title_match:
+                title = title_match.group(1).strip()
             minutes = {"href": response.urljoin(file_path), "title": title}
             links.append(minutes)
         return links

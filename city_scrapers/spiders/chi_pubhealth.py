@@ -75,7 +75,9 @@ class ChiPubHealthSpider(CityScrapersSpider):
                 source=response.url,
             )
             meeting['id'] = self._get_id(meeting)
-            meeting['status'] = self._get_status(meeting)
+            meeting['status'] = self._get_status(
+                meeting, text=" ".join(item.css("*::text").extract())
+            )
             yield meeting
 
     def _parse_date(self, item):
@@ -83,11 +85,14 @@ class ChiPubHealthSpider(CityScrapersSpider):
         Parse the meeting date.
         """
         # Future meetings are plain text
-        date_text = item.xpath('text()').extract_first()
+        date_text = (item.xpath('text()').extract_first() or "").strip()
 
         if not date_text:
             # Past meetings are links to the agenda
             date_text = item.xpath('a/text()').extract_first()
+
+        # Remove extra whitespace characters
+        date_text = re.sub(r"\s+", " ", date_text).strip()
 
         # Handle typos like "December18"
         if re.match(r'[a-zA-Z]+\d+', date_text):

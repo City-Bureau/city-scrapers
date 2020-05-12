@@ -31,7 +31,9 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
                 source=self._parse_source(response),
             )
 
-            meeting["status"] = self._get_status(meeting, text=item.xpath('.//td/text()').get())
+            meeting["status"] = self._get_status(
+                meeting, text=" ".join(item.css('td *::text').extract())
+            )
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
@@ -57,7 +59,7 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
 
     def _validate_location(self, item):
         """Validate if location has changed"""
-        if "Chicago" not in item.xpath('.//td/text()').get():
+        if "Chicago" not in " ".join(item.css('td *::text').extract()):
             raise ValueError("Meeting location has changed")
 
     def _parse_links(self, item):

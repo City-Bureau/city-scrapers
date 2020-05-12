@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import (
@@ -28,6 +29,10 @@ class ChiSsa27Spider(CityScrapersSpider):
         for item in response.css(commission_path)[1:]:  # main
             title = self._parse_title(item)
             start = self._parse_start(item)
+
+            if not start:
+                continue
+
             links = self._parse_links(item)
 
             meeting = Meeting(
@@ -69,11 +74,18 @@ class ChiSsa27Spider(CityScrapersSpider):
             paragraphs = paragraphs[1:]
 
         for p in paragraphs:
+
             href = p.css('a::attr(href)').get()
             tmp_list = p.css('*::text').getall()
-            datetime_date = datetime.strptime(tmp_list[0].strip(), '%B %d, %Y')
-            date_date = datetime_date.date()
-            min_list.append(Paragraph(link=href, date_date=date_date))
+            if len(tmp_list) == 0 or not tmp_list[0].strip():
+                continue
+            date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2},? \d{4}", tmp_list[0].strip())
+            if not date_match:
+                continue
+            date_str = date_match.group().replace(",", "")
+            min_list.append(
+                Paragraph(link=href, date_date=datetime.strptime(date_str, '%B %d %Y').date())
+            )
         return min_list
 
     def _parse_links(self, item):
@@ -116,7 +128,10 @@ class ChiSsa27Spider(CityScrapersSpider):
             item_txt = item_txt.replace(k, v)
         p_idx = max(item_txt.find('AM'), item_txt.find('PM'), 0) + 2  # so we can slice
         time_str = item_txt[:p_idx]  # strip rest of the string
-        return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
+        try:
+            return datetime.strptime(time_str, '%b %d, %Y, %H:%M %p')
+        except ValueError:
+            return
 
     def _validate_locations(self, response):
         commission_path = "#content-232764 div.panel-body > p:nth-child(1) > strong::text"

@@ -73,7 +73,10 @@ class ChiCityCollegeSpider(CityScrapersSpider):
         date_str = re.search(r'[\d/]{8,10}', date_str).group()
         time_str = item.css('th::text, td::text').extract_first().replace('.', '')
         time_str = time_str.replace('noon', 'pm').replace('\u200b', '').strip()
-        return datetime.strptime('{} {}'.format(date_str, time_str), '%m/%d/%Y %I:%M %p')
+        if time_str:
+            return datetime.strptime('{} {}'.format(date_str, time_str), '%m/%d/%Y %I:%M %p')
+        else:
+            return datetime.strptime(date_str, "%m/%d/%Y")
 
     def _parse_classification(self, title):
         if 'committee' in title.lower():

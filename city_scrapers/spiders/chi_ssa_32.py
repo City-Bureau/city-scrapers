@@ -35,6 +35,8 @@ class ChiSsa32Spider(CityScrapersSpider):
         data = json.loads(response.text)
 
         for item in data["items"]:
+            if "summary" not in item:
+                continue
             title = self._parse_title(item)
             location = self._parse_location(item)
             if not (location and title):

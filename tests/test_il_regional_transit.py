@@ -37,7 +37,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]['start'] == datetime(2018, 6, 21, 8, 30)
+    assert parsed_items[0]['start'] == datetime(2018, 6, 21, 9)
 
 
 def test_end_time():
@@ -46,11 +46,11 @@ def test_end_time():
 
 def test_time_notes():
     assert parsed_items[0][
-        'time_notes'] == 'Initial meetings begin at 8:30am, with other daily meetings following'
+        'time_notes'] == 'Initial meetings begin at 9:00am, with other daily meetings following'
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'il_regional_transit/201806210830/x/board_of_directors'
+    assert parsed_items[0]['id'] == 'il_regional_transit/201806210900/x/board_of_directors'
 
 
 def test_status():

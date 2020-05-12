@@ -64,7 +64,7 @@ def test_links():
     assert parsed_items[0]['links'] == [{
         'title': 'Agenda',
         'href':
-            'https://app.chicagoelections.com/documents/general/Standard-Board-Meeting-Agenda.pdf'
+            'https://app.chicagoelections.com/documents/general/Standard-Board-Meeting-Agenda.pdf?date=20181127'  # noqa
     }]
 
 

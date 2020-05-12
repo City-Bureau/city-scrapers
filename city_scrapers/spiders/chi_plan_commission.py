@@ -36,6 +36,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
                     links = self._parse_links(item, response)
                     detail_links = [
                         link["href"] for link in links if link["href"].endswith(".html")
+                        and "postpone" not in link["title"].lower()
                     ]
                     if len(detail_links) > 0:
                         for link in detail_links:
@@ -61,7 +62,8 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
 
     def _parse_detail(self, response, **kwargs):
         start = self._parse_detail_start(response, kwargs["start"])
-        if "121 N" not in " ".join(response.css(".col-xs-12 > p *::text").extract()):
+        detail_text = " ".join(response.css(".col-xs-12 > p *::text").extract())
+        if "121 N" not in detail_text and "virtual" not in detail_text.lower():
             raise ValueError("Meeting location has changed")
         meeting = Meeting(
             title='Commission',
