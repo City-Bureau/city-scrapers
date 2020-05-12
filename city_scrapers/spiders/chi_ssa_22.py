@@ -22,14 +22,12 @@ class ChiSsa22Spider(CityScrapersSpider):
 
     def parse(self, response):
 
-        #address_text = response.xpath('//div[@class = "address"][1]/text()').extract()[1]
-        #self._validate_location(address_text)
+        # the address is in a normal paragraph, so whole page is looked at
+        self._validate_location(response.body.decode('utf-8'))
 
         h2s = response.xpath('//h2')
 
-        # General meeting description is mentioned just after the H4 for the current year
-        #general_desc = h4s.xpath('following-sibling::p[1]//em//text()').extract_first()
-        general_desc= 'TODO'
+        general_desc = 'All meetings are held at the Andersonville Chamber of Commerce conference room'
 
         # Dictionary containing all meeting dictionaries
         # The dates will be the keys
@@ -45,13 +43,18 @@ class ChiSsa22Spider(CityScrapersSpider):
 
 
                 # Only consider ps between two h4s
+
+                ##
+                # ERROR - More ULs than needed are done per year
+                ##
                 for item in entry.xpath('following-sibling::ul').xpath('./li'):
 
                     # The  non-breaking space signals the end of the meeting lists
                     #if li.xpath('./text()') and u'\xa0' in p.xpath('./text()').extract_first():
                     #    break
 
-                    item_str = ' '.join(item.xpath('./text()').extract_first().split(' ')[0:1])
+                    item_str = ' '.join(item.xpath('./text()').extract_first().split(' ')[0:2])
+                    logging.debug(item_str)
                     start = self._parse_start(item_str, year)
                     date = start.date()
 
@@ -109,7 +112,7 @@ class ChiSsa22Spider(CityScrapersSpider):
     @staticmethod
     def _validate_location(text):
         """Parse or generate location."""
-        if "2468" not in text:
+        if "5153" not in text:
             raise ValueError("Meeting location has changed")
 
     @staticmethod
