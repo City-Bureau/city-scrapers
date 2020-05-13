@@ -15,7 +15,7 @@ Follow the following directions for cloning the repository and installing requir
 - [Git](https://git-scm.com/)
 - [GitHub](https://github.com/) account
 - Working internet connection
-- [Python](https://www.python.org/) 3.5, 3.6, or 3.7 installed
+- [Python](https://www.python.org/) 3.5, 3.6, 3.7, or 3.8 installed
 - [Pipenv](https://pipenv.readthedocs.io/en/latest/) for managing dependencies and virtual environments
 
 You can find more details on setting up these tools and other common issues in [Setup Help](/docs/setup-help/).
