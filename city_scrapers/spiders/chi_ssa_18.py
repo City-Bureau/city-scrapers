@@ -41,10 +41,7 @@ class ChiSsa18Spider(CityScrapersSpider):
                     meeting_date_match = split_string.re_first(r'([A-Z]\w{2,}\s\d\d?)')
                     if not (meeting_date_match and meeting_year):
                         continue
-                    converted_date = \
-                        self._convert_date(
-                            meeting_date_match, meeting_year
-                            )
+                    converted_date = self._convert_date(meeting_date_match, meeting_year)
 
                     meeting = Meeting(
                         title='Commission',
