@@ -1,9 +1,8 @@
-import re
-import logging
-import dateutil.parser
+# import logging
 import unicodedata
-from datetime import datetime, timedelta
+from datetime import datetime
 
+import dateutil.parser
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -21,13 +20,16 @@ class ChiSsa22Spider(CityScrapersSpider):
     time = '9:30am'
 
     def parse(self, response):
-
+        """
+        `parse` should always `yield` Meeting items.
+        """
         # the address is in a normal paragraph, so whole page is looked at
         self._validate_location(response.body.decode('utf-8'))
 
         h2s = response.xpath('//h2')
 
-        general_desc = 'All meetings are held at the Andersonville Chamber of Commerce conference room'
+        general_desc = 'All meetings are held at the Andersonville ' \
+                       'Chamber of Commerce conference room'
 
         # Dictionary containing all meeting dictionaries
         # The dates will be the keys
@@ -35,39 +37,33 @@ class ChiSsa22Spider(CityScrapersSpider):
 
         last_year = datetime.today().replace(year=datetime.today().year - 1)
 
-        for entry in h2s:
+        for entry_cnt, entry in enumerate(h2s, start=1):
             entry_str = entry.xpath('./text()').extract_first()
             if entry_str and ('Meeting Schedule' in entry_str or 'Meetings & Minutes' in entry_str):
                 year = entry_str[0:4]
-                logging.debug(year)
+                # logging.debug(year)
 
+                # Only consider ps between two h2s
+                for ul in entry.xpath(
+                    'following-sibling::ul[count(preceding-sibling::h2)='
+                    '$entry_cnt]',
+                    entry_cnt=entry_cnt
+                ):
+                    for item in ul.xpath('./li'):
 
-                # Only consider ps between two h4s
+                        item_str = ' '.join(item.xpath('./text()').extract_first().split(' ')[0:2])
+                        # logging.debug(item_str)
+                        start = self._parse_start(item_str, year)
+                        date = start.date()
 
-                ##
-                # ERROR - More ULs than needed are done per year
-                ##
-                for item in entry.xpath('following-sibling::ul').xpath('./li'):
+                        meetings[date] = {'start': start, 'end': None, 'links': []}
 
-                    # The  non-breaking space signals the end of the meeting lists
-                    #if li.xpath('./text()') and u'\xa0' in p.xpath('./text()').extract_first():
-                    #    break
+                        for a in item.xpath('./a'):
 
-                    item_str = ' '.join(item.xpath('./text()').extract_first().split(' ')[0:2])
-                    logging.debug(item_str)
-                    start = self._parse_start(item_str, year)
-                    date = start.date()
-
-                    meetings[date] = {'start': start, 'end': None, 'links': []}
-
-                    for a in item.xpath('./a'):
-
-                        item_links = a.xpath('@href').extract()
-                        logging.debug(item_links)
-                        meetings[date]['links'].extend(self._parse_links(item_links, entry_str))
-
-
-
+                            item_str = a.xpath('./text()').extract_first()
+                            item_links = a.xpath('@href').extract()
+                            # logging.debug(item_str)
+                            meetings[date]['links'].extend(self._parse_links(item_links, item_str))
 
         # Create the meeting objects
         for key, item in meetings.items():
@@ -81,7 +77,8 @@ class ChiSsa22Spider(CityScrapersSpider):
                 classification=COMMISSION,
                 start=item['start'],
                 end=item['end'],
-                time_notes='9:30am or 3:45pm (Please check our Monthly Newsletter for more information)',
+                time_notes='9:30am or 3:45pm (Please check our '
+                'Monthly Newsletter for more information)',
                 all_day=False,
                 location=self.location,
                 links=item['links'],
@@ -92,19 +89,21 @@ class ChiSsa22Spider(CityScrapersSpider):
             meeting['id'] = self._get_id(meeting)
             yield meeting
 
-    def _parse_links(self, items, entry_str):
+    def _parse_links(self, items, item_str):
+        """Parse documents if available on previous board meeting pages"""
         documents = []
         for url in items:
             if url:
-                documents.append(self._build_link_dict(url))
+                documents.append(self._build_link_dict(url, item_str))
 
         return documents
 
     @staticmethod
-    def _build_link_dict(url):
-        if 'agenda' in url.lower():
+    def _build_link_dict(url, item_str):
+        """Determine link type based on link text content"""
+        if 'agenda' in item_str.lower():
             return {'href': url, 'title': 'Agenda'}
-        elif 'minutes' in url.lower():
+        elif 'minutes' in item_str.lower():
             return {'href': url, 'title': 'Minutes'}
         else:
             return {'href': url, 'title': 'Link'}
@@ -117,6 +116,7 @@ class ChiSsa22Spider(CityScrapersSpider):
 
     @staticmethod
     def _parse_date(raw_date, year):
+        """Parse date."""
         if raw_date:
             return dateutil.parser.parse(year + ' ' + raw_date)
 
