@@ -20,9 +20,6 @@ class ChiSsa22Spider(CityScrapersSpider):
     time = '9:30am'
 
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
-        """
         # the address is in a normal paragraph, so whole page is looked at
         self._validate_location(response.body.decode('utf-8'))
 
