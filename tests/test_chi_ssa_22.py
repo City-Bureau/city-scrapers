@@ -44,56 +44,36 @@ def test_description(item):
 
 def test_start():
     expected_starts = [
-        datetime(2020, 11, 10, 9, 30),
-        datetime(2020, 9, 8, 9, 30),
-        datetime(2020, 7, 7, 9, 30),
-        datetime(2020, 5, 7, 9, 30),
-        datetime(2020, 4, 7, 9, 30),
-        datetime(2020, 3, 10, 9, 30),
-        datetime(2020, 1, 28, 9, 30),
-        datetime(2019, 11, 12, 9, 30),
-        datetime(2019, 9, 10, 9, 30),
-        datetime(2019, 7, 9, 9, 30),
-        datetime(2019, 5, 21, 9, 30)
+        datetime(2020, 11, 10, 0, 00),
+        datetime(2020, 9, 8, 0, 00),
+        datetime(2020, 7, 7, 0, 00),
+        datetime(2020, 5, 7, 0, 00),
+        datetime(2020, 4, 7, 0, 00),
+        datetime(2020, 3, 10, 0, 00),
+        datetime(2020, 1, 28, 0, 00),
+        datetime(2019, 11, 12, 0, 00),
+        datetime(2019, 9, 10, 0, 00),
+        datetime(2019, 7, 9, 0, 00),
+        datetime(2019, 5, 21, 0, 00)
     ]
     for i in range(len(parsed_items)):
         assert parsed_items[i]["start"] == expected_starts[i]
 
 
-"""
-def test_end():
-    expected_ends = [
-        datetime(2020, 11, 10, 11, 30),
-        datetime(2020, 9, 8, 11, 30),
-        datetime(2020, 7, 7, 11, 30),
-        datetime(2020, 5, 7, 11, 30),
-        datetime(2020, 4, 7, 11, 30),
-        datetime(2020, 3, 10, 11, 30),
-        datetime(2020, 1, 28, 11, 30),
-        datetime(2019, 11, 12, 11, 30),
-        datetime(2019, 9, 10, 11, 30),
-        datetime(2019, 7, 9, 11, 30),
-        datetime(2019, 5, 21, 11, 30)
-    ]
-    for i in range(len(parsed_items)):
-        assert parsed_items[i]["end"] == expected_ends[i]
-"""
-
-
 @pytest.mark.parametrize("item", parsed_items)
 def test_time_notes(item):
-    assert item["time_notes"] == '9:30am or 3:45pm ' \
-                                 '(Please check our Monthly Newsletter for more information)'
+    assert item["time_notes"] == '9:30am or 3:45pm, ' \
+                                 'please contact info@andersonville.org for more information'
 
 
 def test_id():
     expected_ids = [
-        'chi_ssa_22/202011100930/x/commission', 'chi_ssa_22/202009080930/x/commission',
-        'chi_ssa_22/202007070930/x/commission', 'chi_ssa_22/202005070930/x/commission',
-        'chi_ssa_22/202004070930/x/commission', 'chi_ssa_22/202003100930/x/commission',
-        'chi_ssa_22/202001280930/x/commission', 'chi_ssa_22/201911120930/x/commission',
-        'chi_ssa_22/201909100930/x/commission', 'chi_ssa_22/201907090930/x/commission',
-        'chi_ssa_22/201905210930/x/commission'
+        'chi_ssa_22/202011100000/x/commission', 'chi_ssa_22/202009080000/x/commission',
+        'chi_ssa_22/202007070000/x/commission', 'chi_ssa_22/202005070000/x/commission',
+        'chi_ssa_22/202004070000/x/commission', 'chi_ssa_22/202003100000/x/commission',
+        'chi_ssa_22/202001280000/x/commission', 'chi_ssa_22/201911120000/x/commission',
+        'chi_ssa_22/201909100000/x/commission', 'chi_ssa_22/201907090000/x/commission',
+        'chi_ssa_22/201905210000/x/commission'
     ]
     for i in range(len(parsed_items)):
         assert parsed_items[i]["id"] == expected_ids[i]
@@ -112,7 +92,7 @@ def test_status():
 def test_location(item):
     assert item["location"] == {
         "name": "Andersonville Chamber of Commerce",
-        "address": "5153 N. Clark St. #228 Chicago, Illinois 60640"
+        "address": "5153 N. Clark St. #228 Chicago, IL 60640"
     }
 
 

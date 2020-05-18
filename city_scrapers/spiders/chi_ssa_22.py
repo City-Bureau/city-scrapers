@@ -1,4 +1,3 @@
-# import logging
 import unicodedata
 from datetime import datetime
 
@@ -15,9 +14,8 @@ class ChiSsa22Spider(CityScrapersSpider):
     start_urls = ["http://www.andersonville.org/our-organizations/andersonville-ssa-22/"]
     location = {
         "name": "Andersonville Chamber of Commerce",
-        "address": "5153 N. Clark St. #228 Chicago, Illinois 60640"
+        "address": "5153 N. Clark St. #228 Chicago, IL 60640"
     }
-    time = '9:30am'
 
     def parse(self, response):
         # the address is in a normal paragraph, so whole page is looked at
@@ -38,7 +36,6 @@ class ChiSsa22Spider(CityScrapersSpider):
             entry_str = entry.xpath('./text()').extract_first()
             if entry_str and ('Meeting Schedule' in entry_str or 'Meetings & Minutes' in entry_str):
                 year = entry_str[0:4]
-                # logging.debug(year)
 
                 # Only consider ps between two h2s
                 for ul in entry.xpath(
@@ -49,17 +46,15 @@ class ChiSsa22Spider(CityScrapersSpider):
                     for item in ul.xpath('./li'):
 
                         item_str = ' '.join(item.xpath('./text()').extract_first().split(' ')[0:2])
-                        # logging.debug(item_str)
                         start = self._parse_start(item_str, year)
                         date = start.date()
 
-                        meetings[date] = {'start': start, 'end': None, 'links': []}
+                        meetings[date] = {'start': start, 'links': []}
 
                         for a in item.xpath('./a'):
 
                             item_str = a.xpath('./text()').extract_first()
                             item_links = a.xpath('@href').extract()
-                            # logging.debug(item_str)
                             meetings[date]['links'].extend(self._parse_links(item_links, item_str))
 
         # Create the meeting objects
@@ -73,9 +68,9 @@ class ChiSsa22Spider(CityScrapersSpider):
                 description=unicodedata.normalize("NFKD", general_desc),
                 classification=COMMISSION,
                 start=item['start'],
-                end=item['end'],
-                time_notes='9:30am or 3:45pm (Please check our '
-                'Monthly Newsletter for more information)',
+                end=None,
+                time_notes='9:30am or 3:45pm, please contact info@andersonville.org '
+                'for more information',
                 all_day=False,
                 location=self.location,
                 links=item['links'],
@@ -121,4 +116,4 @@ class ChiSsa22Spider(CityScrapersSpider):
         """Parse start datetime."""
         start = self._parse_date(item_str, year)
         if start:
-            return start.replace(hour=9, minute=30)
+            return start.replace(hour=0, minute=00)
