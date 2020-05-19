@@ -77,8 +77,9 @@ class IlPortDistrictSpider(CityScrapersSpider):
 
                 classification = self._parse_classification(i, meeting_types[i])
 
-                agendas_links = self.agendas_dict.get(
-                    (classification, datetime.strftime(start, '%B %Y')), []
+                agendas_links = (
+                    self.agendas_dict.get((classification, start.strftime('%B %Y')), []) +
+                    self.agendas_dict.get((classification, start.strftime('%-m-%y')), [])
                 )
 
                 minutes_links = []
@@ -111,16 +112,29 @@ class IlPortDistrictSpider(CityScrapersSpider):
             .extract()
         file_names = [x.strip("\n ") for x in file_names]
         file_links = response.xpath("//tr/td/a[@class='file-download']/@href").extract()
+        date_pattern = r"([\d\-]+).*?(?=.pdf)"
+        agenda_file_groups = []
+        for idx, file_link in enumerate(file_links):
+            clean_link = file_link.replace("%20", " ")
+            # Check two possible URL formats for agenda date patterns
+            agenda_date_match_1 = re.search(r"([\d\-]+).*?(?=.pdf)", clean_link)
+            agenda_date_match_2 = re.search(r"(?<=Agenda)(.*?)(?=.pdf)", clean_link)
+            if agenda_date_match_1:
+                agenda_file_groups.append(
+                    (file_link, file_names[idx], agenda_date_match_1.group(1))
+                )
+            if agenda_date_match_2:
+                agenda_file_groups.append(
+                    (file_link, file_names[idx], agenda_date_match_2.group().strip())
+                )
+        self.agendas_dict = defaultdict(list)
 
-        date_pattern = r"(?<=Agenda)(.*?)(?=.pdf)"
-        agenda_dates = [re.findall(date_pattern, x)[0].replace('%20', ' ') for x in file_links]
-
-        self.agendas_dict = defaultdict()
-
-        for link, name, date in list(zip(file_links, file_names, agenda_dates)):
+        for link, name, agenda_date in agenda_file_groups:
             classification = BOARD if BOARD in name else COMMITTEE
-            self.agendas_dict.setdefault((classification, date.strip()), [])\
-                .append({'title': name + date, 'href': link})
+            self.agendas_dict[(classification, agenda_date.strip())].append({
+                'title': " ".join([name, agenda_date]),
+                'href': link,
+            })
 
     def parse_minutes(self, response):
         rows = response.xpath("//tr")
