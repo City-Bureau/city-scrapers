@@ -112,7 +112,6 @@ class IlPortDistrictSpider(CityScrapersSpider):
             .extract()
         file_names = [x.strip("\n ") for x in file_names]
         file_links = response.xpath("//tr/td/a[@class='file-download']/@href").extract()
-        date_pattern = r"([\d\-]+).*?(?=.pdf)"
         agenda_file_groups = []
         for idx, file_link in enumerate(file_links):
             clean_link = file_link.replace("%20", " ")
