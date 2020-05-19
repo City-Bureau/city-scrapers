@@ -1,4 +1,3 @@
-import unicodedata
 from datetime import datetime
 
 import dateutil.parser
@@ -22,9 +21,6 @@ class ChiSsa22Spider(CityScrapersSpider):
         self._validate_location(response.body.decode('utf-8'))
 
         h2s = response.xpath('//h2')
-
-        general_desc = 'All meetings are held at the Andersonville ' \
-                       'Chamber of Commerce conference room'
 
         # Dictionary containing all meeting dictionaries
         # The dates will be the keys
@@ -65,7 +61,7 @@ class ChiSsa22Spider(CityScrapersSpider):
 
             meeting = Meeting(
                 title='Commission',
-                description=unicodedata.normalize("NFKD", general_desc),
+                description='',
                 classification=COMMISSION,
                 start=item['start'],
                 end=None,

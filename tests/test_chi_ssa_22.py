@@ -38,8 +38,7 @@ def test_title(item):
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_description(item):
-    assert item["description"] == 'All meetings are held at the Andersonville' \
-                                  ' Chamber of Commerce conference room'
+    assert item["description"] == ''
 
 
 def test_start():
