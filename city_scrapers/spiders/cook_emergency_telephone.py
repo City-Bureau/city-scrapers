@@ -1,9 +1,9 @@
 import re
-from datetime import datetime, timedelta
+from datetime import datetime
 from io import BytesIO
 
 import scrapy
-from city_scrapers_core.constants import FORUM
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from PyPDF2 import PdfFileReader
@@ -21,6 +21,7 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
 
     def __init__(self, *args, **kwargs):
         self.meeting_starts = []
+        self.schedule_pdf_link = '/wp-content/uploads/pdfs/schedule.pdf'
         self.docs_link = ""
         self.agenda_link = ""
         super().__init__(*args, **kwargs)
@@ -32,33 +33,27 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        schedule_link = ""
+
         for link in response.css(".sliding_box a"):
             link_text = link.css("*::text").get()
-
-            schedule_link = self.start_urls[0] + '/wp-content/uploads/pdfs/'
 
             if "Minutes" in link_text:
                 self.docs_link = link.attrib["href"]
             elif "Agenda" in link_text:
                 self.agenda_link = link.attrib["href"]
 
-        if schedule_link and self.docs_link:
+        if not (self.docs_link == "" and self.agenda_link == ""):
             yield scrapy.Request(
-                response.urljoin(schedule_link), callback=self._parse_schedule, dont_filter=True
+                response.urljoin(self.schedule_pdf_link),
+                callback=self._parse_schedule,
+                dont_filter=True
             )
         else:
             raise ValueError("Required links not found")
 
     def _parse_schedule(self, response):
         """Parse PDF and then yield to documents page"""
-        schedule_pdf_link = 'schedule.pdf'
-
-        yield scrapy.Request(
-            response.urljoin(schedule_pdf_link),
-            callback=self._parse_schedule_pdf,
-            dont_filter=True
-        )
+        self._parse_schedule_pdf(response)
 
         yield scrapy.Request(
             response.urljoin(self.docs_link), callback=self._parse_documents, dont_filter=True
@@ -87,15 +82,15 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
         """Parse agenda and minutes page"""
         for start in self.meeting_starts:
             meeting = Meeting(
-                title="Cook County Emergency Telephone System Board Public Meeting",
+                title="Cook County Emergency Telephone System Board",
                 description=self._parse_description(),
-                classification=FORUM,
+                classification=BOARD,
                 start=start,
                 end=self._parse_end(start),
                 all_day=False,
-                time_notes="",
+                time_notes="End time is estimated",
                 location=self.location,
-                links=self._parse_links(response),
+                links=self._parse_links(response, start),
                 source=self.start_urls[0],
             )
 
@@ -110,7 +105,7 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
 
     def _parse_classification(self):
         """Parse or generate classification from allowed options."""
-        return FORUM
+        return BOARD
 
     def _parse_start(self, date_str):
         """Parse start datetime as a naive datetime object."""
@@ -118,17 +113,33 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
 
     def _parse_end(self, start):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return start + timedelta(hours=1, minutes=30)
+        return None
 
-    def _parse_links(self, response):
-        """Parse or generate links."""
-        return [{
-            "title": "Minutes",
-            "href": response.urljoin(self.docs_link)
-        }, {
+    def _parse_links(self, response, start):
+        """Parse agendas and minutes."""
+
+        minutes_href = ""
+
+        for link in response.css(".minuteYearBlock a"):
+            link_text = link.css("*::text").get()
+
+            if link_text == start.strftime("%m-%Y"):
+                minutes_href = response.urljoin(link.attrib["href"])
+                break
+
+        links_map = []
+
+        if not minutes_href == "":
+            links_map.append({"title": "Minutes", "href": minutes_href})
+
+        agenda_href = response.urljoin(self.agenda_link)
+
+        links_map.append({
             "title": "Agenda",
-            "href": response.urljoin(self.agenda_link)
-        }]
+            "href": "{}?date={}".format(agenda_href, start.strftime("%Y%m%d"))
+        })
+
+        return links_map
 
     def _validate_location(self, text):
         if "Maywood" not in text:
