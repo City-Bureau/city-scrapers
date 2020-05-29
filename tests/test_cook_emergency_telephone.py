@@ -3,11 +3,16 @@ from operator import itemgetter
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import FORUM, PASSED
+from city_scrapers_core.constants import BOARD, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.cook_emergency_telephone import CookEmergencyTelephoneSpider
+
+test_response = file_response(
+    join(dirname(__file__), "files", "cook_emergency_telephone.html"),
+    url="https://cookcounty911.com",
+)
 
 test_pdf_response = file_response(
     join(dirname(__file__), "files", "cook_emergency_telephone_schedule.pdf"),
@@ -17,10 +22,13 @@ test_pdf_response = file_response(
     mode="rb",
 )
 
-test_response = file_response(
-    join(dirname(__file__), "files", "cook_emergency_telephone.html"),
-    url="https://cookcounty911.com",
+test_document_response = file_response(
+    join(dirname(__file__), "files", "cook_emergency_telephone_minutes.html"),
+    url=(
+        "https://cookcounty911.com/minutes/"  # noqa
+    ),
 )
+
 spider = CookEmergencyTelephoneSpider()
 
 freezer = freeze_time("2020-05-27")
@@ -33,7 +41,7 @@ for _ in spider.parse(test_response):
 spider._parse_schedule_pdf(test_pdf_response)
 
 parsed_items = sorted(
-    [item for item in spider._parse_documents(test_response)],
+    [item for item in spider._parse_documents(test_document_response)],
     key=itemgetter("start"),
 )
 
@@ -45,7 +53,7 @@ def test_count():
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Cook County Emergency Telephone System Board Public Meeting"
+    assert parsed_items[0]["title"] == "Cook County Emergency Telephone System Board"
 
 
 def test_description():
@@ -57,17 +65,17 @@ def test_start():
 
 
 def test_end():
-    assert parsed_items[0]["end"] == datetime(2020, 2, 28, 12, 0)
+    assert parsed_items[0]["end"] is None
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == ""
+    assert parsed_items[0]["time_notes"] == "End time is estimated"
 
 
 def test_id():
     assert parsed_items[0]["id"] == (
         "cook_emergency_telephone/202002281030/x/"
-        "cook_county_emergency_telephone_system_board_public_meeting"
+        "cook_county_emergency_telephone_system_board"
     )
 
 
@@ -88,16 +96,16 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == [{
-        'title': 'Minutes',
-        'href': 'https://cookcounty911.com/minutes'
+        'href': 'https://cookcounty911.com/wp-content/uploads/pdfs/minutes-2020-02.pdf',
+        'title': 'Minutes'
     }, {
-        'title': 'Agenda',
-        'href': 'https://cookcounty911.com/agenda'
+        'href': 'https://cookcounty911.com/agenda?date=20200228',
+        'title': 'Agenda'
     }]
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == FORUM
+    assert parsed_items[0]["classification"] == BOARD
 
 
 @pytest.mark.parametrize("item", parsed_items)
