@@ -85,7 +85,10 @@ class ChiSsa64Spider(CityScrapersSpider):
         )
         result = re.split('a.m.|p.m.', result)[1]
 
-        return {"address": result.split(",")[1].strip(), "name": result.split(",")[0].strip()}
+        return {
+            "address": ','.join(result.split(',')[1:]).strip(),
+            "name": result.split(",")[0].strip()
+        }
 
     def _parse_source(self, response):
         """Parse or generate source."""
