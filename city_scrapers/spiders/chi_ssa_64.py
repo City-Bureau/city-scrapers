@@ -9,7 +9,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 class ChiSsa64Spider(CityScrapersSpider):
     name = "chi_ssa_64"
-    agency = "Chicago Special Service Area #20 Walden Parkway"
+    agency = "Chicago Special Service Area #64 Walden Parkway"
     timezone = "America/Chicago"
     start_urls = ["https://www.mpbhba.org/business-resources/"]
 
@@ -17,7 +17,7 @@ class ChiSsa64Spider(CityScrapersSpider):
         meetings = self._parse_block(response)
         for item in meetings:
             meeting = Meeting(
-                title='Morgan Park Commission',
+                title='Commission',
                 description='',
                 classification=COMMISSION,
                 start=self._parse_start(item),
@@ -48,14 +48,14 @@ class ChiSsa64Spider(CityScrapersSpider):
         specific_block = general_block.xpath('.//*[@class="et_pb_text_inner"]'
                                              ).extract_first().split("<strong>")
         for line in specific_block:
-            if 'SSA 20:' in line:
+            if 'SSA 64:' in line:
                 result.append(line.split('</p><p>'))
 
         for meetings_list in result:
             year = years[count][0:4]
             for meeting in meetings_list:
-                meeting = meeting.replace("<br>", "").replace("SSA 20:</strong>", "").strip()
-                if meeting != "":
+                meeting = meeting.replace("<br>", "").replace("SSA 64:</strong>", "").strip()
+                if meeting != "" and "</p></div>" not in meeting:
                     aux.append(year)
                     aux.append(html.unescape(meeting))
             count += 1
@@ -68,7 +68,7 @@ class ChiSsa64Spider(CityScrapersSpider):
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
         time_zone = "AM" if ("a.m." in item[1]) else "PM"
-        result = re.split('a.m. |p.m. ', item[1])[0].split(',')
+        result = re.split('a.m.|p.m.', item[1])[0].split(',')
         date_string = (
             item[0] + result[1] + " " + time_zone + " " +
             item[1].split("a.m.")[0].split(",")[2].strip()
@@ -79,8 +79,11 @@ class ChiSsa64Spider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        result = item[1].strip()
-        result = re.split('a.m. |p.m. ', result)[1]
+        result = (
+            item[1].strip() + " Chicago, IL" if
+            ("Chicago, IL" not in item[1].strip()) else item[1].strip()
+        )
+        result = re.split('a.m.|p.m.', result)[1]
 
         return {"address": result.split(",")[1].strip(), "name": result.split(",")[0].strip()}
 
