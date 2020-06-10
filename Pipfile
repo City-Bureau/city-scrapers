@@ -14,6 +14,7 @@ scrapy-wayback-middleware = "*"
 city-scrapers-core = {extras = ["azure"],version = "*"}
 pypdf2 = "*"
 pypiwin32 = {version = "*",sys_platform = "== 'win32'"}
+zipp = "*"
 
 [dev-packages]
 freezegun = "*"
