@@ -10,7 +10,7 @@ from city_scrapers.spiders.chi_standards_tests import ChiStandardsTestsSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_standards_tests.html"),
-    url="https://www.chicago.gov/city/en/depts/bldgs/supp_info/committee_on_standardsandtests.html",
+    url="https://www.chicago.gov/city/en/depts/bldgs/supp_info/committee_on_standardsandtests.html",  # noqa
 )
 spider = ChiStandardsTestsSpider()
 
@@ -47,23 +47,25 @@ def test_time_notes():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "City Hall",
-        "address": "121 North LaSalle Street, Room 906, Chicago, IL 60602"
+        "address": "121 North LaSalle Street, Room 906, Chicago, IL 60602",
     }
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"
-    ] == "https://www.chicago.gov/city/en/depts/bldgs/supp_info/committee_on_standardsandtests.html"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.chicago.gov/city/en/depts/bldgs/supp_info/committee_on_standardsandtests.html"  # noqa
+    )
 
 
 def test_links():
     assert parsed_items[0]["links"] == []
-    assert parsed_items[1]["links"] == [{
-        "href":
-            "https://www.chicago.gov/content/dam/city/depts/bldgs/general/Standards_Tests/S&T%20Decisions%20April%202019.pdf",  # noqa
-        "title": "Decisions"
-    }]
+    assert parsed_items[1]["links"] == [
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/bldgs/general/Standards_Tests/S&T%20Decisions%20April%202019.pdf",  # noqa
+            "title": "Decisions",
+        }
+    ]
 
 
 def test_classification():

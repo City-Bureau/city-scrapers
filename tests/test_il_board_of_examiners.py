@@ -44,8 +44,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"
-                           ] == "il_board_of_examiners/201907241000/x/illinois_board_of_examiners"
+    assert (
+        parsed_items[0]["id"]
+        == "il_board_of_examiners/201907241000/x/illinois_board_of_examiners"
+    )
 
 
 def test_status():
@@ -55,19 +57,24 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "",
-        "address": "1120 E. Diehl Road, Suite 165, Naperville, IL 60563"
+        "address": "1120 E. Diehl Road, Suite 165, Naperville, IL 60563",
     }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.ilboe.org/board-information/board-meetings/"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.ilboe.org/board-information/board-meetings/"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "https://www.ilboe.org/wp-content/uploads/2019/07/July-24-2019-Agenda.pdf",
-        "title": "Agenda"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.ilboe.org/wp-content/uploads/2019/07/July-24-2019-Agenda.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_classification():

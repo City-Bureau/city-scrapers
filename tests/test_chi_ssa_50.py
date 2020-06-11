@@ -31,12 +31,12 @@ expected = {
     "time_notes": "",
     "location": {
         "address": "8334 S Stony Island Ave, Chicago, IL 60617",
-        "name": "Southeast Chicago Chamber"
+        "name": "Southeast Chicago Chamber",
     },
     "links": [],
     "source": "http://southeastchgochamber.org/special-service-area-50/",
     "status": "passed",
-    "id": "chi_ssa_50/201904170000/x/commission"
+    "id": "chi_ssa_50/201904170000/x/commission",
 }
 
 

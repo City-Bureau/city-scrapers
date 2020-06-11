@@ -34,11 +34,12 @@ def test_status():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href":
-            "http://belmontcentral.org/wp-content/uploads/2018/12/October-2-2018-SSA-Minutes.pdf",
-        "title": "Minutes"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "http://belmontcentral.org/wp-content/uploads/2018/12/October-2-2018-SSA-Minutes.pdf",  # noqa
+            "title": "Minutes",
+        }
+    ]
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -73,7 +74,10 @@ def test_location(item):
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_source(item):
-    assert item["source"] == "http://belmontcentral.org/about-ssa-2/ssa2-meeting-minutes-audit/"
+    assert (
+        item["source"]
+        == "http://belmontcentral.org/about-ssa-2/ssa2-meeting-minutes-audit/"
+    )
 
 
 @pytest.mark.parametrize("item", parsed_items)

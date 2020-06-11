@@ -18,7 +18,9 @@ spider = ChiIlMedicalDistrictSpider()
 freezer = freeze_time("2019-05-20")
 freezer.start()
 
-parsed_items = sorted([item for item in spider.parse(test_response)], key=itemgetter("start"))
+parsed_items = sorted(
+    [item for item in spider.parse(test_response)], key=itemgetter("start")
+)
 
 freezer.stop()
 
@@ -48,8 +50,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0][
-        "id"] == "chi_il_medical_district/201605170000/x/illinois_medical_district_commission"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_il_medical_district/201605170000/x/illinois_medical_district_commission"
+    )
 
 
 def test_status():
@@ -69,25 +73,23 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            'href':
-                'http://medicaldistrict.org/wp-content/uploads/pdf/CommissionMeetingMinutesMay172016.pdf',  # noqa
-            'title': 'Commission Meeting Minutes'
+            "href": "http://medicaldistrict.org/wp-content/uploads/pdf/CommissionMeetingMinutesMay172016.pdf",  # noqa
+            "title": "Commission Meeting Minutes",
         },
         {
-            'href': 'http://medicaldistrict.org/wp-content/uploads/pdf/AgendaRevised-051716.pdf',
-            'title': 'Meeting Agenda'
+            "href": "http://medicaldistrict.org/wp-content/uploads/pdf/AgendaRevised-051716.pdf",  # noqa
+            "title": "Meeting Agenda",
         },
     ]
     assert parsed_items[-4]["links"] == [
         {
-            'href': 'http://medicaldistrict.org/wp-content/uploads/2019/05/agenda_052119.pdf',
-            'title': 'Commission Meeting Agenda'
+            "href": "http://medicaldistrict.org/wp-content/uploads/2019/05/agenda_052119.pdf",  # noqa
+            "title": "Commission Meeting Agenda",
         },
         {
-            'href':
-                'http://medicaldistrict.org/wp-content/uploads/2019/05/notice-of-commission-meeting_05212019.pdf',  # noqa
-            'title': 'Commission Meeting Notice'
-        }
+            "href": "http://medicaldistrict.org/wp-content/uploads/2019/05/notice-of-commission-meeting_05212019.pdf",  # noqa
+            "title": "Commission Meeting Notice",
+        },
     ]
     assert parsed_items[-1]["links"] == []
 

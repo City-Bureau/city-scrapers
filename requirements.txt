@@ -12,4 +12,4 @@ freezegun
 pytest
 flake8
 isort
-yapf
+black==19.10b0

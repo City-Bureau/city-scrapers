@@ -43,8 +43,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"
-                           ] == "il_capital_development/201907091100/x/capital_development_board"
+    assert (
+        parsed_items[0]["id"]
+        == "il_capital_development/201907091100/x/capital_development_board"
+    )
 
 
 def test_status():
@@ -54,32 +56,31 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "James R. Thompson Center",
-        "address": "100 West Randolph Street, 14th Floor, Chicago, IL 60601"
+        "address": "100 West Randolph Street, 14th Floor, Chicago, IL 60601",
     }
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"] == "https://www2.illinois.gov/cdb/about/boardmeetings/Pages/20192020Meetings.aspx"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www2.illinois.gov/cdb/about/boardmeetings/Pages/20192020Meetings.aspx"  # noqa
+    )
 
 
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            'href':
-                'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/TableOfContentsWEB-July.pdf',  # noqa
-            'title': 'Agenda'
+            "href": "https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/TableOfContentsWEB-July.pdf",  # noqa
+            "title": "Agenda",
         },
         {
-            'href':
-                'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/July%20Board%20Book%20-%20Public.pdf',  # noqa
-            'title': 'Board Book'
+            "href": "https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/July%20Board%20Book%20-%20Public.pdf",  # noqa
+            "title": "Board Book",
         },
         {
-            'href':
-                'https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/07.09.19%20Meeting%20Minutes.docx',  # noqa
-            'title': 'Meeting Minutes'
-        }
+            "href": "https://www2.illinois.gov/cdb/about/boardmeetings/Documents/2019-2020/07.09.19%20Meeting%20Minutes.docx",  # noqa
+            "title": "Meeting Minutes",
+        },
     ]
 
 

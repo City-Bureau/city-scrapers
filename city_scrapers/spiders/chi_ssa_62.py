@@ -1,6 +1,11 @@
 from datetime import datetime, time, timedelta
 
-from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, FORUM, NOT_CLASSIFIED
+from city_scrapers_core.constants import (
+    ADVISORY_COMMITTEE,
+    BOARD,
+    FORUM,
+    NOT_CLASSIFIED,
+)
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -45,13 +50,15 @@ class ChiSsa62Spider(CityScrapersSpider):
         """Parse or generate meeting title."""
         title = item.xpath(".//div[@class='event-title']/h3/a/text()").get()
         if title:
-            title = title.replace('SSA #62', '').strip()
+            title = title.replace("SSA #62", "").strip()
         return title
 
     @staticmethod
     def _parse_description(item):
         """Parse or generate meeting description."""
-        return item.xpath("string(.//div[@class='event-content']/p[not(descendant::a)])").get()
+        return item.xpath(
+            "string(.//div[@class='event-content']/p[not(descendant::a)])"
+        ).get()
 
     @staticmethod
     def _parse_classification(item):
@@ -77,15 +84,15 @@ class ChiSsa62Spider(CityScrapersSpider):
         time_str = item.xpath('.//span[@class="event-time"]/text()').get()
         if time_str is None:
             return None, None
-        times = time_str.strip().replace('.', '')
-        if not ('a' in times or 'p' in times) or "cancel" in times.lower():
+        times = time_str.strip().replace(".", "")
+        if not ("a" in times or "p" in times) or "cancel" in times.lower():
             return datetime.combine(ddate, time()), None
         ttimes = times.split("-")
-        ampm = ttimes[0].split(' ')[1]
+        ampm = ttimes[0].split(" ")[1]
         starttime = datetime.strptime(ttimes[0].strip(), "%I:%M %p").time()
         start = datetime.combine(ddate, starttime)
         if len(ttimes) > 1:
-            if not ('a' in ttimes[1] or 'p' in ttimes[1]):
+            if not ("a" in ttimes[1] or "p" in ttimes[1]):
                 ttimes[1] = ttimes[1] + " " + ampm
             endtime = datetime.strptime(ttimes[1].strip(), "%I:%M %p").time()
             end = datetime.combine(ddate, endtime)
@@ -98,14 +105,14 @@ class ChiSsa62Spider(CityScrapersSpider):
     def _parse_location(item):
         """Parse or generate location."""
         location = item.xpath('.//span[@class="event-location"]/text()').get().strip()
-        location_split = location.split(',')
+        location_split = location.split(",")
         if len(location_split) == 1 or any(char.isdigit() for char in location[0]):
             name = ""
             address = location.strip()
         else:
             name = location_split[0].strip()
-            address = ', '.join(x.strip() for x in location_split[1:])
-        address += ', Chicago, IL'
+            address = ", ".join(x.strip() for x in location_split[1:])
+        address += ", Chicago, IL"
         return {"name": name, "address": address}
 
     @staticmethod

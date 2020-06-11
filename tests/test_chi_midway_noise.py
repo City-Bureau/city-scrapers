@@ -65,7 +65,7 @@ def test_id():
         "chi_midway_noise/201901241830/x/commission",  # noqa
         "chi_midway_noise/201904251830/x/commission",  # noqa
         "chi_midway_noise/201907251830/x/commission",  # noqa
-        "chi_midway_noise/201910241830/x/commission"  # noqa
+        "chi_midway_noise/201910241830/x/commission",  # noqa
     ]
 
     for i in range(len(parsed_items)):
@@ -81,53 +81,61 @@ def test_status():
 def test_location(item):
     assert item["location"] == {
         "name": "The Mayfield",
-        "address": "6072 S. Archer Ave., Chicago, IL 60638"
+        "address": "6072 S. Archer Ave., Chicago, IL 60638",
     }
 
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_source(item):
-    assert item[
-        "source"
-    ] == "https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"
+    assert (
+        item["source"]
+        == "https://www.flychicago.com/community/MDWnoise/AdditionalResources/pages/default.aspx"  # noqa
+    )
 
 
 def test_links():
     expected_links = list()
-    expected_links.append([{  # October 25, 2018
-        'href':
-            'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2018.10_Meeting_Agenda.pdf',  # noqa
-        'title': 'Agenda'
-    }])
-
-    expected_links.append([  # January 24, 2019
-        {
-            'href':
-                'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.01_Meeting_Agenda.pdf',  # noqa
-            'title': 'Agenda'
-        },
-        {
-            'href':
-                'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/Meeting_Minutes_2019.01.24_FINAL.pdf',  # noqa
-            'title': 'Minutes'
-        }
-    ])
-
-    expected_links.append([{  # April 25, 2019
-        'href':
-            'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.04_Meeting_Agenda.pdf',  # noqa
-        'title': 'Agenda'
-    }])
-
-    expected_links.append([{  # July 25, 2019
-        'href':
-            'https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.07_Meeting_Agenda.pdf',  # noqa
-        'title': 'Agenda'
-    }])
-
-    expected_links.append(  # October 24, 2019 - this one is in the future and has no documents yet.
-        []
+    expected_links.append(
+        [
+            {  # October 25, 2018
+                "href": "https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2018.10_Meeting_Agenda.pdf",  # noqa
+                "title": "Agenda",
+            }
+        ]
     )
+
+    expected_links.append(
+        [  # January 24, 2019
+            {
+                "href": "https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.01_Meeting_Agenda.pdf",  # noqa
+                "title": "Agenda",
+            },
+            {
+                "href": "https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/Meeting_Minutes_2019.01.24_FINAL.pdf",  # noqa
+                "title": "Minutes",
+            },
+        ]
+    )
+
+    expected_links.append(
+        [
+            {  # April 25, 2019
+                "href": "https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.04_Meeting_Agenda.pdf",  # noqa
+                "title": "Agenda",
+            }
+        ]
+    )
+
+    expected_links.append(
+        [
+            {  # July 25, 2019
+                "href": "https://www.flychicago.com/SiteCollectionDocuments/Community/Noise/Midway/AR/2019.07_Meeting_Agenda.pdf",  # noqa
+                "title": "Agenda",
+            }
+        ]
+    )
+
+    expected_links.append([])  # October 24, 2019 - has no documents
 
     for i in range(len(parsed_items)):
         assert parsed_items[i]["links"] == expected_links[i]

@@ -10,7 +10,7 @@ from city_scrapers.spiders.chi_boardofethics import ChiBoardOfEthicsSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_boardofethics.html"),
-    url="https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html"
+    url="https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html",
 )
 
 freezer = freeze_time("2020-01-06")
@@ -31,9 +31,10 @@ def test_title():
 
 
 def test_description():
-    assert parsed_items[-1][
-        "description"
-    ] == "All 2020 Meetings will be held at 3:00 PM and typically last about 2 hours. Meetings are held at the City of Chicago Board of Ethics, 740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488"  # noqa
+    assert (
+        parsed_items[-1]["description"]
+        == "All 2020 Meetings will be held at 3:00 PM and typically last about 2 hours. Meetings are held at the City of Chicago Board of Ethics, 740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488"  # noqa
+    )
 
 
 def test_start():
@@ -45,7 +46,9 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_boardofethics/201911151200/x/board_of_directors"
+    assert (
+        parsed_items[0]["id"] == "chi_boardofethics/201911151200/x/board_of_directors"
+    )
 
 
 def test_location():
@@ -56,8 +59,10 @@ def test_location():
 
 
 def test_sources():
-    assert parsed_items[0][
-        "source"] == "https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.chicago.gov/city/en/depts/ethics/supp_info/minutes.html"
+    )
 
 
 @pytest.mark.parametrize("item", parsed_items)

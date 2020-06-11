@@ -13,7 +13,7 @@ test_response = file_response(
     join(dirname(__file__), "files", "il_public_health.json"),
     url=(
         "http://www.dph.illinois.gov/views/ajax?view_name=events&view_display_id=page&view_args=2019/03&page=0"  # noqa
-    )
+    ),
 )
 spider = IlPublicHealthSpider()
 spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
@@ -35,7 +35,9 @@ def test_title():
 
 
 def test_description():
-    assert parsed_items[1]["description"] == """Downers Grove
+    assert (
+        parsed_items[1]["description"]
+        == """Downers Grove
 VIA VIDEOCONFERENCE AT:
 Illinois College of Emergency Physicians, 3000 Woodcreek Dr., Suite #200, Downers Grove, IL
 IDPH Bell Building Conference Room, 422 S. 5
@@ -52,8 +54,11 @@ Floor, Rock Island, IL
 Memorial Hospital – Belleville, 4550 Memorial Drive, Belleville, IL
 Interested persons may contact the Division of EMS and Highway Safety at
 217-785-2080
-."""
-    assert parsed_items[-1]["description"] == """Rescheduled from February 19, 2019
+."""  # noqa
+    )
+    assert (
+        parsed_items[-1]["description"]
+        == """Rescheduled from February 19, 2019
 Meeting has been
 
 CANCELLED
@@ -70,6 +75,7 @@ Marion Regional Office, 2309 W. Main St., Marion
 I
 nterested persons may contact Elaine Huddleston in the Office of Health Care Regulations, Division of Health Care Facilities and Programs at
 217-782-0483."""  # noqa
+    )
 
 
 def test_start():
@@ -85,7 +91,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_public_health/201903071100/x/trauma_advisory_council"
+    assert (
+        parsed_items[0]["id"]
+        == "il_public_health/201903071100/x/trauma_advisory_council"
+    )
 
 
 def test_status():
@@ -95,7 +104,7 @@ def test_status():
 def test_location():
     assert parsed_items[-1]["location"] == {
         "name": "",
-        "address": "69 W. Washington, 35\nth\nFloor, Director Conf Rm, Chicago, IL"
+        "address": "69 W. Washington, 35\nth\nFloor, Director Conf Rm, Chicago, IL",
     }
 
 
@@ -104,11 +113,12 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        'href':
-            'http://www.dph.illinois.gov/sites/default/files/events/meeting-agenda/trauma-advisory-council/trauma-advisory-council-agenda-3719.pdf',  # noqa
-        "title": "Meeting Agenda"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "http://www.dph.illinois.gov/sites/default/files/events/meeting-agenda/trauma-advisory-council/trauma-advisory-council-agenda-3719.pdf",  # noqa
+            "title": "Meeting Agenda",
+        }
+    ]
 
 
 def test_classification():

@@ -40,9 +40,10 @@ def test_title():
 
 
 def test_description():
-    assert parsed_items[0][
-        "description"
-    ] == "1st Monday of the month @ 9am. The committee is tasked with improving the cleanliness/appearance of WPB’s streetscapes and other green sustainability initiatives."  # noqa
+    assert (
+        parsed_items[0]["description"]
+        == "1st Monday of the month @ 9am. The committee is tasked with improving the cleanliness/appearance of WPB’s streetscapes and other green sustainability initiatives."  # noqa
+    )
 
 
 def test_start():
@@ -73,47 +74,43 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"
-    ] == "http://www.wickerparkbucktown.com/events/2019/06/03/ssa/clean-green-committee-ssa-33/21429/"  # noqa
+    assert (
+        parsed_items[0]["source"]
+        == "http://www.wickerparkbucktown.com/events/2019/06/03/ssa/clean-green-committee-ssa-33/21429/"  # noqa
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href":
-            "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/2019_JUNE_-_MINUTES_-_Clean_&_Green.pdf",  # noqa
-        "title": "Clean and Green Committee Report"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/2019_JUNE_-_MINUTES_-_Clean_&_Green.pdf",  # noqa
+            "title": "Clean and Green Committee Report",
+        }
+    ]
     assert parsed_items[5]["links"] == [
         {
-            "href":
-                "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/SSA_Commission_-_JUNE_-_Agenda.pdf",  # noqa
-            "title": "Agenda"
+            "href": "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/SSA_Commission_-_JUNE_-_Agenda.pdf",  # noqa
+            "title": "Agenda",
         },
         {
-            "href":
-                "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/SSA_Commission_-_JUNE_-_Minutes.pdf",  # noqa
-            "title": "Minutes"
+            "href": "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/SSA_Commission_-_JUNE_-_Minutes.pdf",  # noqa
+            "title": "Minutes",
         },
         {
-            "href":
-                "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/Monthly_Accountants_Report__05-31-19.pdf",  # noqa
-            "title": "Bookkeeper’s Report Overview"
+            "href": "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/Monthly_Accountants_Report__05-31-19.pdf",  # noqa
+            "title": "Bookkeeper’s Report Overview",
         },
         {
-            "href":
-                "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/Financials/Stmt_of_Fin_Activity-Month_of_May_31_19.pdf",  # noqa
-            "title": "Statement of Financial Activities"
+            "href": "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/Financials/Stmt_of_Fin_Activity-Month_of_May_31_19.pdf",  # noqa
+            "title": "Statement of Financial Activities",
         },
         {
-            "href":
-                "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/Financials/Stmt_of_Fin_Position_-_May_31_2019.pdf",  # noqa
-            "title": "Statement of Financial Position"
+            "href": "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/Financials/Stmt_of_Fin_Position_-_May_31_2019.pdf",  # noqa
+            "title": "Statement of Financial Position",
         },
         {
-            "href":
-                "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/Financials/Budget_v_Actual-May_31_2019.pdf",  # noqa
-            "title": "Budget vs. Actual"
+            "href": "http://www.wickerparkbucktown.com/clientuploads/SSA/Agendas_&_Minutes/6_18_19/Financials/Budget_v_Actual-May_31_2019.pdf",  # noqa
+            "title": "Budget vs. Actual",
         },
     ]
 

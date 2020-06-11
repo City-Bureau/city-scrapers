@@ -50,9 +50,9 @@ def test_source():
 
 
 def test_description():
-    assert parsed_item[
-        "description"
-    ] == """For the November 20, 2019 Board Meeting, advance registration to speak and observe will be available beginning Monday, November 18th at 10:30 a.m. and close Tuesday, November 19th at 5:00 p.m., or until all slots are filled. You can advance register during the registration period by the following methods:
+    assert (
+        parsed_item["description"]
+        == """For the November 20, 2019 Board Meeting, advance registration to speak and observe will be available beginning Monday, November 18th at 10:30 a.m. and close Tuesday, November 19th at 5:00 p.m., or until all slots are filled. You can advance register during the registration period by the following methods:
 Online: www.cpsboe.org (recommended)
 Phone: (773) 553-1600
 In Person: 1 North Dearborn Street, Suite 950
@@ -65,6 +65,7 @@ Registration Time: Opens at 10:15 AM and will remain open for the duration of th
 
 Same Day, In-Person Observer Registrations are taken on a first come, first serve basis as seats become available.
 The Public Participation segment of the meeting will begin as indicated in the meeting agenda and proceed for no more than 60 registered speakers for the two hours."""  # noqa
+    )
     assert parsed_items[0]["description"] == ""
 
 

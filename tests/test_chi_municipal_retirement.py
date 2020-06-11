@@ -48,7 +48,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_municipal_retirement/201904180900/x/retirement_board"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_municipal_retirement/201904180900/x/retirement_board"
+    )
 
 
 def test_status():
@@ -65,11 +68,12 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href":
-            "https://www.meabf.org/assets/pdfs/meetings/agenda/Posted_Agenda_2019-04_REVISED2.pdf",
-        "title": "Agenda"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.meabf.org/assets/pdfs/meetings/agenda/Posted_Agenda_2019-04_REVISED2.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_classification():

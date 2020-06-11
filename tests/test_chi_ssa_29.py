@@ -18,7 +18,9 @@ spider = ChiSsa29Spider()
 freezer = freeze_time("2019-07-02")
 freezer.start()
 
-parsed_items = sorted([item for item in spider.parse(test_response)], key=itemgetter("start"))
+parsed_items = sorted(
+    [item for item in spider.parse(test_response)], key=itemgetter("start")
+)
 
 freezer.stop()
 
@@ -66,11 +68,12 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "title": "Minutes",
-        "href":
-            "http://www.westtownssa.org/content/directory/attachments/events/e/elsrmc/1.4.18 Minutes.pdf"  # noqa
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "title": "Minutes",
+            "href": "http://www.westtownssa.org/content/directory/attachments/events/e/elsrmc/1.4.18 Minutes.pdf",  # noqa
+        }
+    ]
     assert parsed_items[-1]["links"] == []
 
 

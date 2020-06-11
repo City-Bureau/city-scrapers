@@ -7,10 +7,10 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 
 class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
-    name = 'chi_school_community_action_council'
-    agency = 'Chicago Public Schools'
-    timezone = 'America/Chicago'
-    start_urls = ['http://cps.edu/FACE/Pages/CAC.aspx']
+    name = "chi_school_community_action_council"
+    agency = "Chicago Public Schools"
+    timezone = "America/Chicago"
+    start_urls = ["http://cps.edu/FACE/Pages/CAC.aspx"]
 
     def parse(self, response):
         """
@@ -26,11 +26,13 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
             if month_counter > 12:
                 break
             else:
-                response_list = response.css('.ms-WPBody ul:last-of-type')
-                for item in response_list.css('li'):
-                    name_link = item.css('strong').css('a::attr(href)')
+                response_list = response.css(".ms-WPBody ul:last-of-type")
+                for item in response_list.css("li"):
+                    name_link = item.css("strong").css("a::attr(href)")
                     try:
-                        if name_link.extract()[0] == ('http://www.humboldtparkportal.org/'):
+                        if name_link.extract()[0] == (
+                            "http://www.humboldtparkportal.org/"
+                        ):
                             continue
                     except Exception:
                         pass
@@ -39,19 +41,19 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
                         continue
                     meeting = Meeting(
                         title=self._parse_title(item),
-                        description='',
+                        description="",
                         classification=COMMITTEE,
                         start=start,
                         end=None,
-                        time_notes='',
+                        time_notes="",
                         all_day=False,
                         location=self._parse_location(item),
                         links=[],
                         source=self._parse_source(response, item),
                     )
 
-                    meeting['id'] = self._get_id(meeting)
-                    meeting['status'] = self._get_status(meeting)
+                    meeting["id"] = self._get_id(meeting)
+                    meeting["status"] = self._get_status(meeting)
                     yield meeting
             month_counter += 1
 
@@ -59,19 +61,19 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         """
         Parse or generate community area.
         """
-        if len(item.css('li').css('strong::text').extract()) == 1:
-            community_name = item.css('li').css('strong::text').extract()
+        if len(item.css("li").css("strong::text").extract()) == 1:
+            community_name = item.css("li").css("strong::text").extract()
         else:
-            community_name = item.css('li').css('strong').css('a::text').extract()
+            community_name = item.css("li").css("strong").css("a::text").extract()
         if len(community_name) > 0:
             return community_name[0]
 
     def _parse_title(self, item):
         """Parse or generate event title."""
-        CAC_NAME = 'Community Action Council'
+        CAC_NAME = "Community Action Council"
         community_area = self._parse_community_area(item)
         if community_area:
-            return '{} {}'.format(community_area, CAC_NAME)
+            return "{} {}".format(community_area, CAC_NAME)
         return CAC_NAME
 
     @staticmethod
@@ -81,7 +83,7 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         the meeting occurs.
         """
         day_source = source[0]
-        day_regex = re.compile(r'[a-zA-Z]+day')
+        day_regex = re.compile(r"[a-zA-Z]+day")
         mo = day_regex.search(day_source)
         return mo.group().lower()
 
@@ -92,11 +94,11 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         occurs.
         """
         time_source = source[1]
-        time_regex = re.compile(r'(1[012]|[1-9]):([0-5][0-9])(am|pm)')
+        time_regex = re.compile(r"(1[012]|[1-9]):([0-5][0-9])(am|pm)")
         hour, minute, period = time_regex.search(time_source).groups()
         hour = int(hour)
         minute = int(minute)
-        if (period == 'pm') and (hour != 12):
+        if (period == "pm") and (hour != 12):
             hour += 12
         return time(hour, minute)
 
@@ -108,13 +110,13 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         """
         today = datetime.today()
         week_day = {
-            'monday': 0,
-            'tuesday': 1,
-            'wednesday': 2,
-            'thursday': 3,
-            'friday': 4,
-            'saturday': 5,
-            'sunday': 6,
+            "monday": 0,
+            "tuesday": 1,
+            "wednesday": 2,
+            "thursday": 3,
+            "friday": 4,
+            "saturday": 5,
+            "sunday": 6,
         }
         week_counter = 0
         for x in range(1, 31):
@@ -133,7 +135,7 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         Accepts month_counter as an argument from top level parse function
         to iterate through all months in the year.
         """
-        source = item.css('li::text').extract()
+        source = item.css("li::text").extract()
         day = self.parse_day(source)
         # Selects first character in the source, usually the week count
         week_count = source[0].strip()[0]
@@ -146,11 +148,13 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         Parse or generate location. Latitude and longitude can be
         left blank and will be geocoded later.
         """
-        source = item.css('li::text').extract()[1]
-        address = source[source.find("(") + 1:source.find(")")]
+        source = item.css("li::text").extract()[1]
+        address = source[source.find("(") + 1 : source.find(")")]
         return {
-            'name': source[source.find('at') + 2:source.find('(')].replace('the', '').strip(),
-            'address': '{} Chicago, IL'.format(address),
+            "name": source[source.find("at") + 2 : source.find("(")]
+            .replace("the", "")
+            .strip(),
+            "address": "{} Chicago, IL".format(address),
         }
 
     def _parse_source(self, response, item):
@@ -159,7 +163,9 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         * CAC Meetings Website
         * Neighborhood Website (if available)
         """
-        neighborhood_url = item.css('li').css('strong').css('a::attr(href)').extract_first()
+        neighborhood_url = (
+            item.css("li").css("strong").css("a::attr(href)").extract_first()
+        )
         if neighborhood_url:
             return neighborhood_url
         return response.url

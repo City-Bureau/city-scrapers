@@ -17,9 +17,11 @@ spider = CookPensionSpider()
 freezer = freeze_time("2019-04-17")
 freezer.start()
 
-parsed_items = sorted([item for item in spider.parse(test_response)],
-                      key=lambda i: i["start"],
-                      reverse=True)
+parsed_items = sorted(
+    [item for item in spider.parse(test_response)],
+    key=lambda i: i["start"],
+    reverse=True,
+)
 
 freezer.stop()
 
@@ -62,17 +64,22 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.cookcountypension.com/agendaminutes/"
+    assert (
+        parsed_items[0]["source"] == "https://www.cookcountypension.com/agendaminutes/"
+    )
 
 
 def test_links():
-    assert parsed_items[3]["links"] == [{
-        'href': 'https://www.cookcountypension.com/assets/1/6/030719_Board_Agenda.pdf',
-        'title': 'Agenda'
-    }, {
-        'href': 'https://www.cookcountypension.com/assets/1/6/Board_Minutes_030719.pdf',
-        'title': 'Minutes'
-    }]
+    assert parsed_items[3]["links"] == [
+        {
+            "href": "https://www.cookcountypension.com/assets/1/6/030719_Board_Agenda.pdf",  # noqa
+            "title": "Agenda",
+        },
+        {
+            "href": "https://www.cookcountypension.com/assets/1/6/Board_Minutes_030719.pdf",  # noqa
+            "title": "Minutes",
+        },
+    ]
 
 
 def test_classification():

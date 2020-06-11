@@ -29,22 +29,22 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
 
     def _parse_item(self, response):
         """`_parse_item` should always `yield` Meeting items"""
-        paragraphs = response.xpath('//p')
-        title = response.xpath('//h3/text()').get()
+        paragraphs = response.xpath("//p")
+        title = response.xpath("//h3/text()").get()
         meeting = Meeting(
             title=self._parse_title(response),
             description=self._parse_description(response, paragraphs),
             classification=self._parse_classification(title),
             start=self._parse_start(response, paragraphs),
             end=None,
-            time_notes='',
+            time_notes="",
             all_day=False,
             location=self._parse_location(response),
             links=self._parse_links(response),
             source=response.url,
         )
-        meeting['id'] = self._get_id(meeting)
-        meeting['status'] = self._get_status(meeting, title)
+        meeting["id"] = self._get_id(meeting)
+        meeting["status"] = self._get_status(meeting, title)
         return meeting
 
     def _parse_title(self, item):
@@ -54,9 +54,9 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
     def _parse_description(self, item, paragraphs):
         return_list = []
         for i in paragraphs:
-            xpath_selector = i.xpath('text()').get()
+            xpath_selector = i.xpath("text()").get()
             if xpath_selector is not None:
-                return_list.append(xpath_selector.strip().replace(u'\xa0', u''))
+                return_list.append(xpath_selector.strip().replace("\xa0", ""))
         """Parse or generate meeting description."""
         return " ".join(return_list)
 
@@ -74,8 +74,8 @@ class IlPoliceProfessionalismSpider(CityScrapersSpider):
             if date_match:
                 final_date = date_match.group(0)
             if time_match:
-                final_time = time_match.group(0).replace('.', '').upper()
-        final_datetime = final_date + ' ' + final_time
+                final_time = time_match.group(0).replace(".", "").upper()
+        final_datetime = final_date + " " + final_time
         final_datetime = datetime.strptime(final_datetime, "%B %d, %Y %I:%M %p")
         return final_datetime
 

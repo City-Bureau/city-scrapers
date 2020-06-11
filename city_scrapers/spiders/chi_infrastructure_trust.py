@@ -12,7 +12,7 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     start_urls = [
         "http://chicagoinfrastructure.org/public-records/meeting-records-2/",
-        "http://chicagoinfrastructure.org/public-records/scheduled-meetings/"
+        "http://chicagoinfrastructure.org/public-records/scheduled-meetings/",
     ]
 
     def parse(self, response):
@@ -59,7 +59,9 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
             date_str = date_match.group().replace(",", "")
             return datetime.strptime(date_str, "%B %d %Y")
         else:
-            header_str = " ".join(response.css(".entry strong")[0].css("*::text").extract()).strip()
+            header_str = " ".join(
+                response.css(".entry strong")[0].css("*::text").extract()
+            ).strip()
             year_match = re.search(r"\d{4}", header_str)
             if not year_match:
                 return
@@ -68,7 +70,9 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
             if not date_match:
                 return
 
-            return datetime.strptime(" ".join([date_match.group(), year_match.group()]), "%B %d %Y")
+            return datetime.strptime(
+                " ".join([date_match.group(), year_match.group()]), "%B %d %Y"
+            )
 
     def _parse_location(self, start):
         """Parse or generate location."""
@@ -88,8 +92,10 @@ class ChiInfrastructureTrustSpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         for link in item.xpath("./following-sibling::ul[1]/li/a"):
-            links.append({
-                "href": link.attrib["href"],
-                "title": " ".join(link.css("*::text").extract()),
-            })
+            links.append(
+                {
+                    "href": link.attrib["href"],
+                    "title": " ".join(link.css("*::text").extract()),
+                }
+            )
         return links

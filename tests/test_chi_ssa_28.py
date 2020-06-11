@@ -49,7 +49,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Portage Arts Lofts",
-        "address": "4041 N. Milwaukee Ave. #302, Chicago, IL 60641"
+        "address": "4041 N. Milwaukee Ave. #302, Chicago, IL 60641",
     }
 
 
@@ -60,14 +60,13 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            'href':
-                'https://docs.google.com/document/d/1m6IIG0el8bJt1Bn8ebgDHAmAfCFdyI-YRd1e7Ycim8Y/edit?usp=sharing',  # noqa
-            'title': 'agenda'
+            "href": "https://docs.google.com/document/d/1m6IIG0el8bJt1Bn8ebgDHAmAfCFdyI-YRd1e7Ycim8Y/edit?usp=sharing",  # noqa
+            "title": "agenda",
         },
         {
-            'href': 'https://sixcorners.com/s/1_17_19-SSA-Minutes-reformatted.pdf',
-            'title': 'minutes'
-        }
+            "href": "https://sixcorners.com/s/1_17_19-SSA-Minutes-reformatted.pdf",
+            "title": "minutes",
+        },
     ]
 
 

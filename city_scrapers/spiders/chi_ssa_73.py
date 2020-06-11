@@ -29,13 +29,13 @@ class ChiSsa73Spider(CityScrapersSpider):
             if not start:
                 continue
             meeting = Meeting(
-                title='SSA #73 Chinatown Board',
-                description='',
+                title="SSA #73 Chinatown Board",
+                description="",
                 classification=BOARD,
                 start=start,
                 end=None,
                 all_day=False,
-                time_notes='',
+                time_notes="",
                 location=location,
                 links=self._parse_links(item, start, linksList),
                 source=response.url,
@@ -54,20 +54,20 @@ class ChiSsa73Spider(CityScrapersSpider):
         """
         Parse start date and time.
         """
-        date_str = item.css('*::text').extract_first()
-        date_match = re.search(r'\w{3,9} \d{1,2}, \d{4}', date_str)
+        date_str = item.css("*::text").extract_first()
+        date_match = re.search(r"\w{3,9} \d{1,2}, \d{4}", date_str)
         if date_match:
-            parsed_date = datetime.strptime(date_match.group(), '%B %d, %Y')
+            parsed_date = datetime.strptime(date_match.group(), "%B %d, %Y")
             return datetime.combine(parsed_date.date(), startTime.time())
 
     def _parse_time(self, response):
         firstLine = response.css("article p").extract_first()
-        time_match = re.search(r'\d{1,2}:\d{2} [ap]\.m', firstLine)
+        time_match = re.search(r"\d{1,2}:\d{2} [ap]\.m", firstLine)
         if time_match:
             tempStr = time_match.group()
-            tempStr = tempStr.replace('.', '')
+            tempStr = tempStr.replace(".", "")
             tempStr = tempStr.upper()
-            return datetime.strptime(tempStr, '%I:%M %p')
+            return datetime.strptime(tempStr, "%I:%M %p")
         else:
             return time(18, 30)
 
@@ -75,39 +75,39 @@ class ChiSsa73Spider(CityScrapersSpider):
         """
         Parse or generate location.
         """
-        if '1700 S. Wentworth' in response.text:
+        if "1700 S. Wentworth" in response.text:
             return {
-                'address': '1700 S. Wentworth Avenue, Chicago, Illinois',
-                'name': 'Leonard M. Louie Fieldhouse',
+                "address": "1700 S. Wentworth Avenue, Chicago, Illinois",
+                "name": "Leonard M. Louie Fieldhouse",
             }
         else:
-            raise ValueError('Meeting address has changed')
+            raise ValueError("Meeting address has changed")
 
     def _get_links(self, response):
         linksList = []
-        for item in response.css('a'):
+        for item in response.css("a"):
             newDict = {}
             addLink = False
-            if 'Agenda' in item.extract():
-                newDict['title'] = "Agenda"
+            if "Agenda" in item.extract():
+                newDict["title"] = "Agenda"
                 addLink = True
-            elif 'Minutes' in item.extract():
-                newDict['title'] = "Minutes"
+            elif "Minutes" in item.extract():
+                newDict["title"] = "Minutes"
                 addLink = True
             if addLink:
-                newDict['href'] = item.attrib['href']
-                rawRef = item.css('*::text').extract_first()
-                newDict['date'] = rawRef.split()[1]
+                newDict["href"] = item.attrib["href"]
+                rawRef = item.css("*::text").extract_first()
+                newDict["date"] = rawRef.split()[1]
                 linksList.append(newDict)
         return linksList
 
     def _parse_links(self, item, start, linksList):
         """Parse or generate links."""
         resultList = []
-        targetStr1 = start.strftime('%m-%d-%Y').replace(' 0', ' ')
-        targetStr2 = start.strftime('%m-%d-%y').replace(' 0', ' ')
+        targetStr1 = start.strftime("%m-%d-%Y").replace(" 0", " ")
+        targetStr2 = start.strftime("%m-%d-%y").replace(" 0", " ")
         for item in linksList:
-            if item['date'] in targetStr1 or item['date'] in targetStr2:
+            if item["date"] in targetStr1 or item["date"] in targetStr2:
                 newDict = {}
                 newDict["href"] = item["href"]
                 newDict["title"] = item["title"]

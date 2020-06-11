@@ -50,7 +50,7 @@ def test_12_board_meetings(parsed_items):
 
 # Test all items have a start time
 def test_start_exists(parsed_items):
-    assert all(isinstance(item['start'], datetime) for item in parsed_items)
+    assert all(isinstance(item["start"], datetime) for item in parsed_items)
 
 
 def test_title(parsed_items):
@@ -78,19 +78,23 @@ def test_time_notes(parsed_items):
 
 
 def test_id(parsed_items):
-    assert isinstance(parsed_items[NOVEMBER_IDX]["id"],
-                      str) and parsed_items[NOVEMBER_IDX]["id"] != ""
+    assert (
+        isinstance(parsed_items[NOVEMBER_IDX]["id"], str)
+        and parsed_items[NOVEMBER_IDX]["id"] != ""
+    )
 
 
 def test_status(parsed_items):
-    assert isinstance(parsed_items[NOVEMBER_IDX]["status"],
-                      str) and parsed_items[NOVEMBER_IDX]["id"] != ""
+    assert (
+        isinstance(parsed_items[NOVEMBER_IDX]["status"], str)
+        and parsed_items[NOVEMBER_IDX]["id"] != ""
+    )
 
 
 def test_location(parsed_items):
     assert parsed_items[NOVEMBER_IDX]["location"] == {
         "name": "Pace Headquarters",
-        "address": "550 W. Algonquin Rd., Arlington Heights, IL 60005"
+        "address": "550 W. Algonquin Rd., Arlington Heights, IL 60005",
     }
 
 
@@ -119,13 +123,13 @@ def test_links_january(january_item):
                 "https://www.pacebus.com/pdf/Board_Minutes/"
                 "Pace_Board_Meeting_Agenda_January_16_2019.pdf"
             ),
-            "title": "Agenda"
+            "title": "Agenda",
         },
         {
             "href": (
                 "https://www.pacebus.com/pdf/Board_Minutes/"
                 "Pace_Board_Meeting_Minutes_Jan_2019.pdf"
             ),
-            "title": "Minutes"
+            "title": "Minutes",
         },
     ]

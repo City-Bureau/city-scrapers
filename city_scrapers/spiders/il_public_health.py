@@ -21,10 +21,14 @@ class IlPublicHealthSpider(CityScrapersSpider):
         url_list = []
         for months_diff in range(-12, 13):
             month_str = (today + relativedelta(months=months_diff)).strftime("%Y/%m")
-            url_list.extend([
-                "http://www.dph.illinois.gov/views/ajax?view_name=events&view_display_id=page&view_args={}&page={}"  # noqa
-                .format(month_str, i) for i in range(4)
-            ])
+            url_list.extend(
+                [
+                    "http://www.dph.illinois.gov/views/ajax?view_name=events&view_display_id=page&view_args={}&page={}".format(  # noqa
+                        month_str, i
+                    )
+                    for i in range(4)
+                ]
+            )
         return url_list
 
     def parse(self, response):
@@ -73,10 +77,12 @@ class IlPublicHealthSpider(CityScrapersSpider):
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
-        return "\n".join([
-            re.sub(r"\s+", " ", line).strip()
-            for line in item.css(".event_description > p *::text").extract()
-        ])
+        return "\n".join(
+            [
+                re.sub(r"\s+", " ", line).strip()
+                for line in item.css(".event_description > p *::text").extract()
+            ]
+        )
 
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
@@ -89,9 +95,13 @@ class IlPublicHealthSpider(CityScrapersSpider):
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        end_el = item.css(".start_end_time .date-display-single:not(:first-child):last-child")
+        end_el = item.css(
+            ".start_end_time .date-display-single:not(:first-child):last-child"
+        )
         if end_el:
-            end_date = datetime.strptime(end_el.attrib["content"][:19], "%Y-%m-%dT%H:%M:%S")
+            end_date = datetime.strptime(
+                end_el.attrib["content"][:19], "%Y-%m-%dT%H:%M:%S"
+            )
             end_time = datetime.strptime(
                 end_el.xpath("./text()").extract_first().strip(), "%I:%M%p"
             ).time()
@@ -106,12 +116,12 @@ class IlPublicHealthSpider(CityScrapersSpider):
         chi_match = re.search(
             r"(\d{1,5}\s+[^(IL)]{0,150}?Chicago(,\s+IL(\s+\d{5})?)?)",
             description,
-            flags=re.DOTALL | re.M
+            flags=re.DOTALL | re.M,
         )
         springfield_match = re.search(
             r"(\d{1,5}\s+[^(IL)]{0,150}?Springfield(,\s+IL(\s+\d{5})?)?)",
             description,
-            flags=re.DOTALL | re.M
+            flags=re.DOTALL | re.M,
         )
         il_match = re.search(
             r"(\d{1,5}\s+.{0,150}?IL(\s+\d{5})?)", description, flags=re.DOTALL | re.M
@@ -133,10 +143,12 @@ class IlPublicHealthSpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         for link in item.css(".addl_materials a, .meeting_minutes_agenda a"):
-            links.append({
-                "title": link.xpath("./text()").extract_first(),
-                "href": link.attrib["href"],
-            })
+            links.append(
+                {
+                    "title": link.xpath("./text()").extract_first(),
+                    "href": link.attrib["href"],
+                }
+            )
         return links
 
     def should_ignore_meeting(self, title, description):

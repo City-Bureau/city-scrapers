@@ -60,8 +60,10 @@ class CookLocalRecordsSpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         for link in item.css("a"):
-            links.append({
-                "title": link.xpath("./text()").extract_first().strip(),
-                "href": response.urljoin(link.xpath("@href").extract_first()),
-            })
+            links.append(
+                {
+                    "title": link.xpath("./text()").extract_first().strip(),
+                    "href": response.urljoin(link.xpath("@href").extract_first()),
+                }
+            )
         return links

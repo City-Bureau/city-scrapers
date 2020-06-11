@@ -11,14 +11,16 @@ from city_scrapers.spiders.chi_land_trust import ChiLandTrustSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_land_trust.html"),
-    url="https://www.chicago.gov/city/en/depts/doh/supp_info/chicago_communitylandtrust0.html",
+    url="https://www.chicago.gov/city/en/depts/doh/supp_info/chicago_communitylandtrust0.html",  # noqa
 )
 spider = ChiLandTrustSpider()
 
 freezer = freeze_time("2019-07-11")
 freezer.start()
 
-parsed_items = sorted([item for item in spider.parse(test_response)], key=itemgetter("start"))
+parsed_items = sorted(
+    [item for item in spider.parse(test_response)], key=itemgetter("start")
+)
 
 freezer.stop()
 
@@ -60,17 +62,19 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[-6][
-        "source"
-    ] == "https://www.chicago.gov/city/en/depts/doh/supp_info/chicago_communitylandtrust0.html"
+    assert (
+        parsed_items[-6]["source"]
+        == "https://www.chicago.gov/city/en/depts/doh/supp_info/chicago_communitylandtrust0.html"  # noqa
+    )
 
 
 def test_links():
-    assert parsed_items[-6]["links"] == [{
-        "href":
-            "https://www.chicago.gov/content/dam/city/depts/doh/general/CCLT_February_2019_Agernda.pdf",  # noqa
-        "title": "Agenda"
-    }]
+    assert parsed_items[-6]["links"] == [
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/doh/general/CCLT_February_2019_Agernda.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_classification():

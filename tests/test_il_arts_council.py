@@ -51,20 +51,23 @@ def test_status():
 
 
 def test_location():
-    assert parsed_items[0]["location"] == {'address': 'TBA', 'name': 'TBA'}
+    assert parsed_items[0]["location"] == {"address": "TBA", "name": "TBA"}
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"] == "http://www.arts.illinois.gov/about-iac/governance/council-meetings"  # noqa
+    assert (
+        parsed_items[0]["source"]
+        == "http://www.arts.illinois.gov/about-iac/governance/council-meetings"
+    )  # noqa
 
 
 def test_links():
-    assert parsed_items[8]["links"] == [{
-        'href':
-            'http://www.arts.illinois.gov/sites/default/files/content/11-16-18%20COUNCILMINUTES.pdf',  # noqa
-        'title': '11-16-18 COUNCILMINUTES.pdf'
-    }]
+    assert parsed_items[8]["links"] == [
+        {
+            "href": "http://www.arts.illinois.gov/sites/default/files/content/11-16-18%20COUNCILMINUTES.pdf",  # noqa
+            "title": "11-16-18 COUNCILMINUTES.pdf",
+        }
+    ]
 
 
 def test_classification():

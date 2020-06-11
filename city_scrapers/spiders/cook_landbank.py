@@ -10,16 +10,16 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 
 class CookLandbankSpider(CityScrapersSpider):
-    name = 'cook_landbank'
-    agency = 'Cook County Land Bank Authority'
-    timezone = 'America/Chicago'
+    name = "cook_landbank"
+    agency = "Cook County Land Bank Authority"
+    timezone = "America/Chicago"
     start_urls = [
         "http://www.cookcountylandbank.org/",
         "http://www.cookcountylandbank.org/agendas-minutes/",
     ]
     location = {
         "name": "Cook County Administration Building",
-        "address": "69 W Washington St Chicago, IL 60602"
+        "address": "69 W Washington St Chicago, IL 60602",
     }
 
     def __init__(self, *args, **kwargs):
@@ -58,17 +58,23 @@ class CookLandbankSpider(CityScrapersSpider):
             for meeting_section in sections_split[:3]:
                 item = scrapy.Selector(text=meeting_section)
                 date_str = re.sub(
-                    r"((?<=\d)[a-z]+|,)", "", " ".join(item.css("h2 *::text").extract()).strip()
+                    r"((?<=\d)[a-z]+|,)",
+                    "",
+                    " ".join(item.css("h2 *::text").extract()).strip(),
                 )
                 if not date_str:
                     continue
                 date_obj = datetime.strptime(date_str, "%B %d %Y").date()
                 for doc_link in item.css("a"):
-                    doc_title = " ".join(doc_link.css("*::text").extract()).strip().title()
-                    self.documents_map[(title_key, date_obj)].append({
-                        "title": doc_title,
-                        "href": response.urljoin(doc_link.attrib["href"])
-                    })
+                    doc_title = (
+                        " ".join(doc_link.css("*::text").extract()).strip().title()
+                    )
+                    self.documents_map[(title_key, date_obj)].append(
+                        {
+                            "title": doc_title,
+                            "href": response.urljoin(doc_link.attrib["href"]),
+                        }
+                    )
 
     def _parse_form_response(self, response):
         """Parse detail links for parsing from form response"""
@@ -76,7 +82,9 @@ class CookLandbankSpider(CityScrapersSpider):
         content = scrapy.Selector(text=data["content"])
         for meeting_link in content.css("a[itemprop='url']"):
             yield response.follow(
-                meeting_link.attrib["href"], callback=self._parse_detail, dont_filter=True
+                meeting_link.attrib["href"],
+                callback=self._parse_detail,
+                dont_filter=True,
             )
 
     def _parse_detail(self, sel):
@@ -99,8 +107,8 @@ class CookLandbankSpider(CityScrapersSpider):
             source=self._parse_source(sel),
         )
 
-        meeting['status'] = self._get_status(meeting, text=title_str)
-        meeting['id'] = self._get_id(meeting)
+        meeting["status"] = self._get_status(meeting, text=title_str)
+        meeting["id"] = self._get_id(meeting)
 
         yield meeting
 
@@ -142,7 +150,10 @@ class CookLandbankSpider(CityScrapersSpider):
         links = self.documents_map[(title_key, start.date())]
         for doc_link in item.css(".eventon_full_description a"):
             doc_title = " ".join(doc_link.css("*::text").extract()).strip()
-            if "pdf" in doc_title.lower() or "agenda" in doc_link.attrib["href"].lower():
+            if (
+                "pdf" in doc_title.lower()
+                or "agenda" in doc_link.attrib["href"].lower()
+            ):
                 # Only use agenda scraped from page
                 links = [l for l in links if "agen" not in l["title"].lower()]
                 links.append({"title": "Agenda", "href": doc_link.attrib["href"]})

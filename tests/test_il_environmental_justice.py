@@ -11,14 +11,16 @@ from city_scrapers.spiders.il_environmental_justice import IlEnvironmentalJustic
 
 test_response = file_response(
     join(dirname(__file__), "files", "il_environmental_justice.html"),
-    url="https://www2.illinois.gov/epa/topics/environmental-justice/commission/Pages/meetings.aspx",
+    url="https://www2.illinois.gov/epa/topics/environmental-justice/commission/Pages/meetings.aspx",  # noqa
 )
 spider = IlEnvironmentalJusticeSpider()
 
 freezer = freeze_time("2019-07-19")
 freezer.start()
 
-parsed_items = sorted([item for item in spider.parse(test_response)], key=itemgetter("start"))
+parsed_items = sorted(
+    [item for item in spider.parse(test_response)], key=itemgetter("start")
+)
 
 freezer.stop()
 
@@ -49,7 +51,9 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[-1]["id"] == "il_environmental_justice/201906040930/x/commission"
+    assert (
+        parsed_items[-1]["id"] == "il_environmental_justice/201906040930/x/commission"
+    )
 
 
 def test_status():
@@ -61,39 +65,35 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"
-    ] == "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Pages/meetings.aspx"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Pages/meetings.aspx"  # noqa
+    )
 
 
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href":
-                "https://www2.illinois.gov/epa/Documents/iepa/environmental-justice/agenda/2013/agenda-08142013.pdf",  # noqa
-            "title": "Agenda"
+            "href": "https://www2.illinois.gov/epa/Documents/iepa/environmental-justice/agenda/2013/agenda-08142013.pdf",  # noqa
+            "title": "Agenda",
         },
         {
-            "href":
-                "https://www2.illinois.gov/epa/Documents/iepa/environmental-justice/minutes/2013/minutes-08142013.pdf",  # noqa
-            "title": "Minutes"
+            "href": "https://www2.illinois.gov/epa/Documents/iepa/environmental-justice/minutes/2013/minutes-08142013.pdf",  # noqa
+            "title": "Minutes",
         },
     ]
     assert parsed_items[-1]["links"] == [
         {
-            "href":
-                "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Documents/EJ_Commission_Invite_2nd_2019.pdf",  # noqa
-            "title": "Meeting Notice"
+            "href": "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Documents/EJ_Commission_Invite_2nd_2019.pdf",  # noqa
+            "title": "Meeting Notice",
         },
         {
-            "href":
-                "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Documents/Agenda_for_June_4_2019_Commission_on_Environmental_Justice.pdf",  # noqa
-            "title": "Agenda"
+            "href": "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Documents/Agenda_for_June_4_2019_Commission_on_Environmental_Justice.pdf",  # noqa
+            "title": "Agenda",
         },
         {
-            "href":
-                "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Documents/EJ%20Commission%20meeting%20-%202nd%20Quarter-20190604%201451-1.mp4",  # noqa
-            "title": "Audio Minutes"
+            "href": "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Documents/EJ%20Commission%20meeting%20-%202nd%20Quarter-20190604%201451-1.mp4",  # noqa
+            "title": "Audio Minutes",
         },
     ]
 

@@ -160,12 +160,12 @@ That's OK.
 
 #### 6. Run linting and style-checking tools
 
-We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isort`](https://isort.readthedocs.io/en/stable/){:target="\_blank"}, and [`yapf`](https://github.com/google/yapf){:target="\_blank"} to check that all code is written in the proper style. To run these tools individually, you can run the following commands:
+We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isort`](https://isort.readthedocs.io/en/stable/){:target="\_blank"}, and [`black`](https://github.com/psf/black){:target="\_blank"} to check that all code is written in the proper style. To run these tools individually, you can run the following commands:
 
 ```bash
 $ pipenv run flake8
 $ pipenv run isort
-$ pipenv run style
+$ pipenv run black city_scrapers tests
 ```
 
 Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. See an example of this for VSCode in [Setup Help](/docs/setup-help/).

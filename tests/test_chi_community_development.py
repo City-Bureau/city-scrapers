@@ -7,11 +7,13 @@ from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 from scrapy.settings import Settings
 
-from city_scrapers.spiders.chi_community_development import ChiCommunityDevelopmentSpider
+from city_scrapers.spiders.chi_community_development import (
+    ChiCommunityDevelopmentSpider,
+)
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_community_development.html"),
-    url='https://www.chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html'
+    url="https://www.chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html",  # noqa
 )
 spider = ChiCommunityDevelopmentSpider()
 spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
@@ -29,69 +31,75 @@ def test_meeting_count():
 
 
 def test_unique_id_count():
-    assert len(set([item['id'] for item in parsed_items])) == 20
+    assert len(set([item["id"] for item in parsed_items])) == 20
 
 
 def test_title():
-    assert parsed_items[0]['title'] == 'Commission'
+    assert parsed_items[0]["title"] == "Commission"
 
 
 def test_description():
-    assert parsed_items[0]['description'] == ''
+    assert parsed_items[0]["description"] == ""
 
 
 def test_start():
-    assert parsed_items[0]['start'] == datetime(2018, 1, 16, 13)
+    assert parsed_items[0]["start"] == datetime(2018, 1, 16, 13)
 
 
 def test_end():
-    assert parsed_items[0]['end'] is None
+    assert parsed_items[0]["end"] is None
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_community_development/201801161300/x/commission'
+    assert (
+        parsed_items[0]["id"] == "chi_community_development/201801161300/x/commission"
+    )
 
 
 def test_status():
-    assert parsed_items[0]['status'] == PASSED
+    assert parsed_items[0]["status"] == PASSED
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
-        'name': 'City Hall',
-        'address': '121 N LaSalle St, Room 201A, Chicago, IL 60602'
+    assert parsed_items[0]["location"] == {
+        "name": "City Hall",
+        "address": "121 N LaSalle St, Room 201A, Chicago, IL 60602",
     }
 
 
 def test_source():
-    assert parsed_items[0][
-        'source'
-    ] == 'https://www.chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html'  # noqa
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.chicago.gov/city/en/depts/dcd/supp_info/community_developmentcommission.html"  # noqa
+    )
 
 
 def test_links():
-    assert parsed_items[0]['links'] == [{
-        'href':
-            'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_Minutes_Jan_2018.pdf',  # noqa
-        'title': 'Minutes'
-    }]
-    assert parsed_items[1]['links'] == [{
-        'href':
-            'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_Minutes_Feb_2018.pdf',  # noqa
-        'title': 'Minutes'
-    }]
-    assert parsed_items[2]['links'] == [{
-        'href':
-            'https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_March_2018_Minutes.pdf',  # noqa
-        'title': 'Minutes'
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_Minutes_Jan_2018.pdf",  # noqa
+            "title": "Minutes",
+        }
+    ]
+    assert parsed_items[1]["links"] == [
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_Minutes_Feb_2018.pdf",  # noqa
+            "title": "Minutes",
+        }
+    ]
+    assert parsed_items[2]["links"] == [
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDC_March_2018_Minutes.pdf",  # noqa
+            "title": "Minutes",
+        }
+    ]
 
 
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_all_day(item):
-    assert item['all_day'] is False
+    assert item["all_day"] is False
 
 
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_classification(item):
-    assert item['classification'] == COMMISSION
+    assert item["classification"] == COMMISSION

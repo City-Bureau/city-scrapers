@@ -53,7 +53,9 @@ class IlElectionsSpider(CityScrapersSpider):
             addr_name = addr_div.css("p::text").extract_first().split()[0]
             address_lines = addr_div.css("div > div::text").extract()
             # skip last two lines where phone and fax is written
-            address = " ".join([line.strip() for line in address_lines[:-2] if line.strip() != ""])
+            address = " ".join(
+                [line.strip() for line in address_lines[:-2] if line.strip() != ""]
+            )
             addresses[addr_name] = address
 
         return addresses
@@ -130,10 +132,12 @@ class IlElectionsSpider(CityScrapersSpider):
             links.append({"href": response.urljoin(qs["Doc"][0]), "title": "Agenda"})
 
         if start.date() in self.meeting_minutes:
-            links.append({
-                "href": response.urljoin(self.meeting_minutes[start.date()]),
-                "title": "Minutes"
-            })
+            links.append(
+                {
+                    "href": response.urljoin(self.meeting_minutes[start.date()]),
+                    "title": "Minutes",
+                }
+            )
 
         return links
 

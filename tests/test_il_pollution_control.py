@@ -19,11 +19,14 @@ freezer.start()
 
 parsed_items = [item for item in spider._parse_json(test_response)]
 spider.minutes_map = {
-    datetime(2019, 1, 17).date():
-        "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
+    datetime(
+        2019, 1, 17
+    ).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"  # noqa
 }
 spider.agenda_map = {
-    datetime(2019, 10, 3).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-53692/"
+    datetime(
+        2019, 10, 3
+    ).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-53692/"
 }
 
 for item in parsed_items:
@@ -51,14 +54,16 @@ def test_end(item):
 
 
 def test_id():
-    assert parsed_items[0]["id"] == 'il_pollution_control/201905231100/x/board_meeting'
+    assert parsed_items[0]["id"] == "il_pollution_control/201905231100/x/board_meeting"
 
 
 def test_status():
     expected_counts = {CANCELLED: 2, PASSED: 22, TENTATIVE: 6}
     actual_counts = {}
     for key in expected_counts:
-        actual_counts[key] = len([item for item in parsed_items if item['status'] == key])
+        actual_counts[key] = len(
+            [item for item in parsed_items if item["status"] == key]
+        )
         assert actual_counts[key] == expected_counts[key]
 
 
@@ -73,7 +78,7 @@ def test_source(item):
 
 
 def test_links():
-    minutes_url = "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"
+    minutes_url = "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"  # noqa
     assert parsed_items[2]["links"][0]["href"] == minutes_url
 
     agenda_url = "https://pcb.illinois.gov/documents/dsweb/Get/Document-53692/"

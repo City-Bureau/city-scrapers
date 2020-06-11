@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == 'Commission'
+    assert parsed_items[0]["title"] == "Commission"
 
 
 def test_description():
@@ -43,7 +43,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == 'chi_ssa_18/202002050900/x/commission'
+    assert parsed_items[0]["id"] == "chi_ssa_18/202002050900/x/commission"
 
 
 def test_status():
@@ -52,13 +52,13 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": 'Center on Halsted',
-        "address": '3656 N Halsted St, Conference Room 200, Chicago IL 60613'
+        "name": "Center on Halsted",
+        "address": "3656 N Halsted St, Conference Room 200, Chicago IL 60613",
     }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == 'https://northalsted.com/community/'
+    assert parsed_items[0]["source"] == "https://northalsted.com/community/"
 
 
 def test_links():

@@ -64,7 +64,7 @@ def test_status():
 def test_location(item):
     assert item["location"] == {
         "name": "James R. Thompson Center",
-        "address": "100 W. Randolph St., Room 16-503, Chicago, Illinois"
+        "address": "100 W. Randolph St., Room 16-503, Chicago, Illinois",
     }
 
 
@@ -76,12 +76,13 @@ def test_source(item):
 
 def test_links():
     assert parsed_items[0]["links"] == []
-    assert parsed_items[1]["links"] == [{
-        "href":
-            "https://www2.illinois.gov/sites/iipb/Documents/"
+    assert parsed_items[1]["links"] == [
+        {
+            "href": "https://www2.illinois.gov/sites/iipb/Documents/"
             "ISE-CommitteeRevisedAgenda91119.pdf",
-        "title": "Committee Agenda 9.11.19"
-    }]
+            "title": "Committee Agenda 9.11.19",
+        }
+    ]
 
 
 def test_classification():

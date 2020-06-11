@@ -44,10 +44,12 @@ def test_id():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "https://www.illinois.gov/ilrb/Documents/LPAgenda.pdf",
-        "title": "Agenda",
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.illinois.gov/ilrb/Documents/LPAgenda.pdf",
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_all_day():
@@ -67,4 +69,7 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.illinois.gov/ilrb/meetings/Pages/default.aspx"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.illinois.gov/ilrb/meetings/Pages/default.aspx"
+    )

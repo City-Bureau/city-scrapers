@@ -20,51 +20,54 @@ freezer.stop()
 
 
 def test_title():
-    assert item['title'] == 'Board of Ethics'
+    assert item["title"] == "Board of Ethics"
 
 
 def test_start():
-    assert item['start'] == datetime(2019, 8, 29, 14)
+    assert item["start"] == datetime(2019, 8, 29, 14)
 
 
 def test_end():
-    assert item['end'] == datetime(2019, 8, 29, 16)
+    assert item["end"] == datetime(2019, 8, 29, 16)
 
 
 def test_time_notes():
-    assert item['time_notes'] == ''
+    assert item["time_notes"] == ""
 
 
 def test_id():
-    assert item['id'] == 'cook_board_ethics/201908291400/x/board_of_ethics'
+    assert item["id"] == "cook_board_ethics/201908291400/x/board_of_ethics"
 
 
 def test_all_day():
-    assert item['all_day'] is False
+    assert item["all_day"] is False
 
 
 def test_classification():
-    assert item['classification'] == BOARD
+    assert item["classification"] == BOARD
 
 
 def test_status():
-    assert item['status'] == PASSED
+    assert item["status"] == PASSED
 
 
 def test_location():
-    assert item['location'] == {
-        'name': '',
-        'address': '69 W. Washington Street, Suite 3040 Chicago IL 60602',
+    assert item["location"] == {
+        "name": "",
+        "address": "69 W. Washington Street, Suite 3040 Chicago IL 60602",
     }
 
 
 def test_sources():
-    assert item['source'] == 'https://www.cookcountyil.gov/event/cook-county-board-ethics-meeting-3'
+    assert (
+        item["source"]
+        == "https://www.cookcountyil.gov/event/cook-county-board-ethics-meeting-3"
+    )
 
 
 def test_description():
-    assert item['description'] == ''
+    assert item["description"] == ""
 
 
 def test_links():
-    assert item['links'] == []
+    assert item["links"] == []
