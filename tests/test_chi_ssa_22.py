@@ -20,9 +20,11 @@ spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 freezer = freeze_time("2020-05-12")
 freezer.start()
 
-parsed_items = sorted([item for item in spider.parse(test_response)],
-                      key=lambda i: i["start"],
-                      reverse=True)
+parsed_items = sorted(
+    [item for item in spider.parse(test_response)],
+    key=lambda i: i["start"],
+    reverse=True,
+)
 
 freezer.stop()
 
@@ -38,7 +40,7 @@ def test_title(item):
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_description(item):
-    assert item["description"] == ''
+    assert item["description"] == ""
 
 
 def test_start():
@@ -53,7 +55,7 @@ def test_start():
         datetime(2019, 11, 12, 0, 00),
         datetime(2019, 9, 10, 0, 00),
         datetime(2019, 7, 9, 0, 00),
-        datetime(2019, 5, 21, 0, 00)
+        datetime(2019, 5, 21, 0, 00),
     ]
     for i in range(len(parsed_items)):
         assert parsed_items[i]["start"] == expected_starts[i]
@@ -61,18 +63,25 @@ def test_start():
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_time_notes(item):
-    assert item["time_notes"] == '9:30am or 3:45pm, ' \
-                                 'please contact info@andersonville.org for more information'
+    assert (
+        item["time_notes"] == "9:30am or 3:45pm, "
+        "please contact info@andersonville.org for more information"
+    )
 
 
 def test_id():
     expected_ids = [
-        'chi_ssa_22/202011100000/x/commission', 'chi_ssa_22/202009080000/x/commission',
-        'chi_ssa_22/202007070000/x/commission', 'chi_ssa_22/202005070000/x/commission',
-        'chi_ssa_22/202004070000/x/commission', 'chi_ssa_22/202003100000/x/commission',
-        'chi_ssa_22/202001280000/x/commission', 'chi_ssa_22/201911120000/x/commission',
-        'chi_ssa_22/201909100000/x/commission', 'chi_ssa_22/201907090000/x/commission',
-        'chi_ssa_22/201905210000/x/commission'
+        "chi_ssa_22/202011100000/x/commission",
+        "chi_ssa_22/202009080000/x/commission",
+        "chi_ssa_22/202007070000/x/commission",
+        "chi_ssa_22/202005070000/x/commission",
+        "chi_ssa_22/202004070000/x/commission",
+        "chi_ssa_22/202003100000/x/commission",
+        "chi_ssa_22/202001280000/x/commission",
+        "chi_ssa_22/201911120000/x/commission",
+        "chi_ssa_22/201909100000/x/commission",
+        "chi_ssa_22/201907090000/x/commission",
+        "chi_ssa_22/201905210000/x/commission",
     ]
     for i in range(len(parsed_items)):
         assert parsed_items[i]["id"] == expected_ids[i]
@@ -80,8 +89,18 @@ def test_id():
 
 def test_status():
     expected_status = [
-        TENTATIVE, TENTATIVE, TENTATIVE, PASSED, PASSED, PASSED, PASSED, PASSED, PASSED, PASSED,
-        PASSED, PASSED
+        TENTATIVE,
+        TENTATIVE,
+        TENTATIVE,
+        PASSED,
+        PASSED,
+        PASSED,
+        PASSED,
+        PASSED,
+        PASSED,
+        PASSED,
+        PASSED,
+        PASSED,
     ]
     for i in range(len(parsed_items)):
         assert parsed_items[i]["status"] == expected_status[i]
@@ -91,7 +110,7 @@ def test_status():
 def test_location(item):
     assert item["location"] == {
         "name": "Andersonville Chamber of Commerce",
-        "address": "5153 N. Clark St. #228 Chicago, IL 60640"
+        "address": "5153 N. Clark St. #228 Chicago, IL 60640",
     }
 
 

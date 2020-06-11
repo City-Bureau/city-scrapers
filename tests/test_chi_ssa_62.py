@@ -70,39 +70,51 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "",
-        "address": "4747 W. Peterson, 2d Floor Conference Room, Chicago, IL"
+        "address": "4747 W. Peterson, 2d Floor Conference Room, Chicago, IL",
     }
     assert parsed_items[1]["location"] == {
         "name": "Wintrust Bank",
-        "address": "4343 W. Peterson, Chicago, IL"
+        "address": "4343 W. Peterson, Chicago, IL",
     }
     assert parsed_items[2]["location"] == {
         "name": "",
-        "address": "4747 W. Peterson, 2d Floor Conference Room, Chicago, IL"
+        "address": "4747 W. Peterson, 2d Floor Conference Room, Chicago, IL",
     }
     assert parsed_items[3]["location"] == {
         "name": "Wintrust Bank",
-        "address": "4343 W. Peterson, Chicago, IL"
+        "address": "4343 W. Peterson, Chicago, IL",
     }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "http://escc60646.com/our_events/?event_id1=118981"
-    assert parsed_items[1]["source"] == "http://escc60646.com/our_events/?event_id1=119034"
-    assert parsed_items[2]["source"] == "http://escc60646.com/our_events/?event_id1=118983"
-    assert parsed_items[3]["source"] == "http://escc60646.com/our_events/?event_id1=119036"
+    assert (
+        parsed_items[0]["source"] == "http://escc60646.com/our_events/?event_id1=118981"
+    )
+    assert (
+        parsed_items[1]["source"] == "http://escc60646.com/our_events/?event_id1=119034"
+    )
+    assert (
+        parsed_items[2]["source"] == "http://escc60646.com/our_events/?event_id1=118983"
+    )
+    assert (
+        parsed_items[3]["source"] == "http://escc60646.com/our_events/?event_id1=119036"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "http://escc60646.com/wp-content/uploads/SSA-Commission-Agenda-16jul2019.pdf",
-        "title": "Agenda"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "http://escc60646.com/wp-content/uploads/SSA-Commission-Agenda-16jul2019.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
     assert parsed_items[1]["links"] == []
-    assert parsed_items[2]["links"] == [{
-        "href": "http://escc60646.com/wp-content/uploads/SSA-Commission-Agenda-17sep2019.pdf",
-        "title": "Agenda"
-    }]
+    assert parsed_items[2]["links"] == [
+        {
+            "href": "http://escc60646.com/wp-content/uploads/SSA-Commission-Agenda-17sep2019.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
     assert parsed_items[3]["links"] == []
 
 

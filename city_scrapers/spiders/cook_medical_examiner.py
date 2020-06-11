@@ -10,7 +10,9 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
     name = "cook_medical_examiner"
     agency = "Cook County Medical Examiner's Advisory Committee"
     timezone = "America/Chicago"
-    start_urls = ["https://www.cookcountyil.gov/service/medical-examiners-advisory-committee"]
+    start_urls = [
+        "https://www.cookcountyil.gov/service/medical-examiners-advisory-committee"
+    ]
     location = {
         "name": "Office of the Medical Examiner",
         "address": "2121 W Harrison St, Chicago, IL 60612",
@@ -52,7 +54,9 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
                 links=[],
                 source=response.url,
             )
-            meeting["status"] = self._parse_status(meeting, date_str, date_obj, cancel_date)
+            meeting["status"] = self._parse_status(
+                meeting, date_str, date_obj, cancel_date
+            )
             meeting["id"] = self._get_id(meeting)
             yield meeting
 
@@ -70,12 +74,16 @@ class CookMedicalExaminerSpider(CityScrapersSpider):
         if len(time_strs) > 0:
             start_time_str = re.sub(r"[\s\.]", "", time_strs[0][0])
             if ":" not in start_time_str:
-                start_time_str = re.sub(r"(\d+)([apm\.])", r"\1:00\2", start_time_str, flags=re.I)
+                start_time_str = re.sub(
+                    r"(\d+)([apm\.])", r"\1:00\2", start_time_str, flags=re.I
+                )
             start_time = datetime.strptime(start_time_str, "%I:%M%p").time()
         if len(time_strs) > 1:
             end_time_str = re.sub(r"[\s\.]", "", time_strs[1][0])
             if ":" not in end_time_str:
-                end_time_str = re.sub(r"(\d+)([apm\.])", r"\1:00\2", end_time_str, flags=re.I)
+                end_time_str = re.sub(
+                    r"(\d+)([apm\.])", r"\1:00\2", end_time_str, flags=re.I
+                )
             end_time = datetime.strptime(end_time_str, "%I:%M%p").time()
         return start_time or time(11), end_time
 

@@ -53,7 +53,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Markland Hubbard",
-        "address": "1739 W. 99th St. Chicago, IL"
+        "address": "1739 W. 99th St. Chicago, IL",
     }
 
 

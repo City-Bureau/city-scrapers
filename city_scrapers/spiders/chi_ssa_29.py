@@ -36,7 +36,7 @@ class ChiSsa29Spider(CityScrapersSpider):
                 "start": start,
                 "title": title,
             }
-        # Iterate through minutes, adding links to existing meetings or creating new ones
+        # Iterate through minutes, adding links to existing meetings or create new ones
         for item in response.css(".content_attachments a"):
             meeting_str = item.css(".pdf_icon::text").extract_first() or ""
             start = self._parse_start(meeting_str)
@@ -80,12 +80,16 @@ class ChiSsa29Spider(CityScrapersSpider):
 
     def _parse_start(self, meeting_str):
         """Parse start datetime as a naive datetime object."""
-        date_match = re.search(r"[a-zA-Z]{3,10} \d{1,2}([a-z]{2})?,? \d{4}", meeting_str)
+        date_match = re.search(
+            r"[a-zA-Z]{3,10} \d{1,2}([a-z]{2})?,? \d{4}", meeting_str
+        )
         if date_match:
             date_str = re.sub(r"(,|(?<=\d)[a-z]{2}(?=[, ]))", "", date_match.group())
             date_obj = datetime.strptime(date_str, "%B %d %Y").date()
         else:
-            date_match = re.search(r"^\d{2}\.\d{2}\.\d{2,4}(?= Minutes$)", meeting_str.strip())
+            date_match = re.search(
+                r"^\d{2}\.\d{2}\.\d{2,4}(?= Minutes$)", meeting_str.strip()
+            )
             # Return early if match not found here
             if not date_match:
                 return
@@ -103,5 +107,8 @@ class ChiSsa29Spider(CityScrapersSpider):
 
     def _validate_location(self, response):
         """Verify that location hasn't changed"""
-        if "1819 w" not in " ".join(response.css(".events_block div::text").extract()).lower():
+        if (
+            "1819 w"
+            not in " ".join(response.css(".events_block div::text").extract()).lower()
+        ):
             raise ValueError("Meeting location has changed")

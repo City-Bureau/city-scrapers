@@ -9,14 +9,13 @@ from freezegun import freeze_time
 from city_scrapers.spiders.chi_ssa_43 import ChiSsa43Spider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_43.html"),
-    url="https://rpba.org/ssa-43/",
+    join(dirname(__file__), "files", "chi_ssa_43.html"), url="https://rpba.org/ssa-43/",
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_43_detail.html"),
     url=(
         "https://business.rpba.org/events/details/devon-avenues-ssa-43-commissioners-meeting-09-16-2019-6429"  # noqa
-    )
+    ),
 )
 spider = ChiSsa43Spider()
 
@@ -59,8 +58,8 @@ def test_status():
 
 def test_location():
     assert parsed_item["location"] == {
-        'address': '2949 W. Devon Ave. Chicago, IL',
-        'name': "Alderman Silverstein's office"
+        "address": "2949 W. Devon Ave. Chicago, IL",
+        "name": "Alderman Silverstein's office",
     }
 
 
@@ -71,12 +70,12 @@ def test_source():
 def test_links():
     assert parsed_item["links"] == [
         {
-            'href': 'https://rpba.org/wp-content/uploads/2019/10/43-9.16.19-Agenda.pdf',
-            'title': 'Agenda'
+            "href": "https://rpba.org/wp-content/uploads/2019/10/43-9.16.19-Agenda.pdf",
+            "title": "Agenda",
         },
         {
-            'href': 'https://rpba.org/wp-content/uploads/2019/11/43-9.16.19-Minutes.pdf',
-            'title': 'Minutes'
+            "href": "https://rpba.org/wp-content/uploads/2019/11/43-9.16.19-Minutes.pdf",  # noqa
+            "title": "Minutes",
         },
     ]
 

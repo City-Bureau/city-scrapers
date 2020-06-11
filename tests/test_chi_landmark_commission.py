@@ -59,16 +59,18 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href":
-            "https://www.chicago.gov/content/dam/city/depts/zlup/Historic_Preservation/Minutes/CCL_Jan2019_Minutes.pdf",  # noqa
-        "title": "Minutes"
-    }]
-    assert parsed_items[13]["links"] == [{
-        "title": "Public Hearing Notice",
-        "href":
-            "https://www.chicago.gov/content/dam/city/depts/zlup/Historic_Preservation/Agendas/Nuveen_House_Public_Hearing_Legal_Notice_16OCT_2019.pdf",  # noqa
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Historic_Preservation/Minutes/CCL_Jan2019_Minutes.pdf",  # noqa
+            "title": "Minutes",
+        }
+    ]
+    assert parsed_items[13]["links"] == [
+        {
+            "title": "Public Hearing Notice",
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Historic_Preservation/Agendas/Nuveen_House_Public_Hearing_Legal_Notice_16OCT_2019.pdf",  # noqa
+        }
+    ]
 
 
 def test_all_day():

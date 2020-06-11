@@ -13,7 +13,7 @@ class ChiSsa26Spider(CityScrapersSpider):
     start_urls = ["https://www.edgewater.org/ssa-26/commissionmeetings/"]
     location = {
         "name": "Edgewater Chamber of Commerce",
-        "address": "1210 W Rosedale Ave Chicago, IL 60660"
+        "address": "1210 W Rosedale Ave Chicago, IL 60660",
     }
 
     def parse(self, response):
@@ -52,7 +52,9 @@ class ChiSsa26Spider(CityScrapersSpider):
             # Standardize whitespace characters
             link_text = re.sub(r"[\s\t\r]+", " ", link.css("*::text").extract_first())
             dt_match = re.search(
-                r"[a-z]+ \d{1,2}, \d{4},? at [\d:o]{4,5} ?[apm\.]{2,4}", link_text, flags=re.I
+                r"[a-z]+ \d{1,2}, \d{4},? at [\d:o]{4,5} ?[apm\.]{2,4}",
+                link_text,
+                flags=re.I,
             )
             if not dt_match:
                 continue
@@ -60,12 +62,9 @@ class ChiSsa26Spider(CityScrapersSpider):
             # Cleanup formatting, removing inconsistent punctuation
             dt = datetime.strptime(
                 re.sub(r"([\.,]| (?=[pa][\.m]))", "", dt_str.replace("oo", "00")),
-                "%B %d %Y at %I:%M%p"
+                "%B %d %Y at %I:%M%p",
             )
-            self.link_map[dt] = [{
-                "title": "Minutes",
-                "href": link.attrib["href"],
-            }]
+            self.link_map[dt] = [{"title": "Minutes", "href": link.attrib["href"]}]
 
     def _parse_upcoming(self, response):
         """Parse upcoming meetings"""

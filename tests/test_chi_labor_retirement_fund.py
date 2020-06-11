@@ -48,7 +48,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_labor_retirement_fund/201912170900/x/retirement_board"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_labor_retirement_fund/201912170900/x/retirement_board"
+    )
 
 
 def test_status():
@@ -66,11 +69,12 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == []
-    assert parsed_items[13]["links"] == [{
-        "href":
-            "http://www.labfchicago.org/assets/1/33/Special_Meeting_Agenda_2019.02.06_to_post.pdf",
-        "title": "Agenda"
-    }]
+    assert parsed_items[13]["links"] == [
+        {
+            "href": "http://www.labfchicago.org/assets/1/33/Special_Meeting_Agenda_2019.02.06_to_post.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_classification():

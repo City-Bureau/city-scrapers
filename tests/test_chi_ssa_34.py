@@ -65,15 +65,13 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href":
-                "https://exploreuptown.org/wp-content/uploads/2019/03/2019-0122-SSA-34-Commission-Minutes.pdf",  # noqa
-            "title": "Minutes"
+            "href": "https://exploreuptown.org/wp-content/uploads/2019/03/2019-0122-SSA-34-Commission-Minutes.pdf",  # noqa
+            "title": "Minutes",
         },
         {
-            "href":
-                "https://exploreuptown.org/wp-content/uploads/2019/01/2019-0122-Advisory-Commission-Meeting-Agenda.pdf",  # noqa
-            "title": "Agenda"
-        }
+            "href": "https://exploreuptown.org/wp-content/uploads/2019/01/2019-0122-Advisory-Commission-Meeting-Agenda.pdf",  # noqa
+            "title": "Agenda",
+        },
     ]
 
 

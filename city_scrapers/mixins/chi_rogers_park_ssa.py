@@ -24,7 +24,9 @@ class ChiRogersParkSsaMixin:
         link_dict = defaultdict(list)
         for section in response.css(".et_pb_tab_1 p, .et_pb_tab_2 p"):
             label_str = section.css("*::text").extract_first()
-            if not label_str or ("Minutes" not in label_str and "Agenda" not in label_str):
+            if not label_str or (
+                "Minutes" not in label_str and "Agenda" not in label_str
+            ):
                 continue
             year_str = label_str[:4]
             link_title = "Agenda" if "Agenda" in label_str else "Minutes"
@@ -33,8 +35,12 @@ class ChiRogersParkSsaMixin:
                 if not re.match(r"^[a-zA-Z]{3,10} \d{1,2}$", link_text):
                     continue
                 date_str = re.search(r"[a-zA-Z]{3,10} \d{1,2}", link_text).group()
-                start = datetime.strptime("{} {}".format(date_str, year_str), "%B %d %Y").date()
-                link_dict[start].append({"href": link.attrib["href"], "title": link_title})
+                start = datetime.strptime(
+                    "{} {}".format(date_str, year_str), "%B %d %Y"
+                ).date()
+                link_dict[start].append(
+                    {"href": link.attrib["href"], "title": link_title}
+                )
         return link_dict
 
     def _parse_calendar(self, response):
@@ -82,7 +88,8 @@ class ChiRogersParkSsaMixin:
 
     def _parse_location(self, response):
         loc_name = (
-            response.css('.mn-event-content [itemprop="name"]::text').extract_first() or ""
+            response.css('.mn-event-content [itemprop="name"]::text').extract_first()
+            or ""
         ).strip()
         map_link = response.css(".mn-event-maplink")
         if len(map_link) == 0:
@@ -95,10 +102,17 @@ class ChiRogersParkSsaMixin:
                 "name": loc_name,
                 "address": loc_addr_str + " Chicago, IL",
             }
-        loc_street = map_link.css('[itemprop="streetAddress"]::attr(content)').extract_first() or ""
-        loc_city = map_link.css('[itemprop="addressLocality"]::attr(content)'
-                                ).extract_first() or "Chicago"
-        loc_zip = map_link.css('[itemprop="postalCode"]::attr(content)').extract_first() or ""
+        loc_street = (
+            map_link.css('[itemprop="streetAddress"]::attr(content)').extract_first()
+            or ""
+        )
+        loc_city = (
+            map_link.css('[itemprop="addressLocality"]::attr(content)').extract_first()
+            or "Chicago"
+        )
+        loc_zip = (
+            map_link.css('[itemprop="postalCode"]::attr(content)').extract_first() or ""
+        )
         if loc_name in loc_street:
             loc_name = ""
         return {

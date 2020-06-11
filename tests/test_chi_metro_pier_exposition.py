@@ -48,7 +48,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_metro_pier_exposition/201801230900/x/board_of_directors"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_metro_pier_exposition/201801230900/x/board_of_directors"
+    )
 
 
 def test_status():
@@ -68,28 +71,24 @@ def test_links():
     assert parsed_items[0]["links"] == [
         {
             "href": "http://www.mpea.com/wp-content/uploads/2017/12/January_2018_Board_Notice-1.pdf",  # noqa
-            "title": "Notice"
+            "title": "Notice",
         },
         {
-            "href":
-                "http://www.mpea.com/wp-content/uploads/2018/01/MPEA_-Board_Agenda_January_23_2018.pdf",  # noqa
-            "title": "Agenda"
+            "href": "http://www.mpea.com/wp-content/uploads/2018/01/MPEA_-Board_Agenda_January_23_2018.pdf",  # noqa
+            "title": "Agenda",
         },
         {
-            "href":
-                "http://www.mpea.com/wp-content/uploads/2018/03/MPEA_Board_Minutes_Regular_Session_January_23_2018_Final.pdf",  # noqa
-            "title": "Minutes"
+            "href": "http://www.mpea.com/wp-content/uploads/2018/03/MPEA_Board_Minutes_Regular_Session_January_23_2018_Final.pdf",  # noqa
+            "title": "Minutes",
         },
         {
-            "href":
-                "http://www.mpea.com/wp-content/uploads/2018/02/January-2018-Financials-Combined-Operating-Results.pdf",  # noqa
-            "title": "Financial Results"
+            "href": "http://www.mpea.com/wp-content/uploads/2018/02/January-2018-Financials-Combined-Operating-Results.pdf",  # noqa
+            "title": "Financial Results",
         },
         {
-            "href":
-                "http://www.mpea.com/wp-content/uploads/2018/02/January-2018-Tax-Collections.pdf",
-            "title": "Tax Collections"
-        }
+            "href": "http://www.mpea.com/wp-content/uploads/2018/02/January-2018-Tax-Collections.pdf",  # noqa
+            "title": "Tax Collections",
+        },
     ]
 
 

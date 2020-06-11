@@ -11,7 +11,7 @@ class ChiLandTrustSpider(CityScrapersSpider):
     agency = "Chicago Community Land Trust"
     timezone = "America/Chicago"
     start_urls = [
-        "https://www.chicago.gov/city/en/depts/doh/supp_info/chicago_communitylandtrust0.html"
+        "https://www.chicago.gov/city/en/depts/doh/supp_info/chicago_communitylandtrust0.html"  # noqa
     ]
     location = {
         "name": "City Hall",
@@ -28,7 +28,9 @@ class ChiLandTrustSpider(CityScrapersSpider):
         # TODO: Committees
         for item in response.css(".page-full-description .col-xs-12 > *"):
             if item.css("strong"):
-                year_match = re.search(r"\d{4}", item.css("strong::text").extract_first())
+                year_match = re.search(
+                    r"\d{4}", item.css("strong::text").extract_first()
+                )
                 if year_match:
                     year_str = year_match.group()
             date_map = {}
@@ -65,15 +67,19 @@ class ChiLandTrustSpider(CityScrapersSpider):
 
     def _parse_start(self, date_str, year_str):
         """Parse start datetime as a naive datetime object."""
-        return datetime.strptime("{} {} 9AM".format(date_str.strip(), year_str), "%B %d %Y %I%p")
+        return datetime.strptime(
+            "{} {} 9AM".format(date_str.strip(), year_str), "%B %d %Y %I%p"
+        )
 
     def _parse_links(self, link_items, response):
         """Parse or generate links."""
         links = []
         for link_item in link_items:
             if hasattr(link_item, "attrib") and link_item.attrib.get("href"):
-                links.append({
-                    "href": response.urljoin(link_item.attrib["href"]),
-                    "title": link_item.css("::text").extract_first(),
-                })
+                links.append(
+                    {
+                        "href": response.urljoin(link_item.attrib["href"]),
+                        "title": link_item.css("::text").extract_first(),
+                    }
+                )
         return links

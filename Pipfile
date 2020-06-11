@@ -20,7 +20,4 @@ freezegun = "*"
 pytest = "*"
 "flake8" = "*"
 isort = "*"
-yapf = "*"
-
-[scripts]
-style = "yapf --in-place --recursive ./city_scrapers/ ./tests/"
+black = "==19.10b0"

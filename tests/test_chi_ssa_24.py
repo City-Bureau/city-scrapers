@@ -9,14 +9,13 @@ from freezegun import freeze_time
 from city_scrapers.spiders.chi_ssa_24 import ChiSsa24Spider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_24.html"),
-    url="https://rpba.org/ssa-24/",
+    join(dirname(__file__), "files", "chi_ssa_24.html"), url="https://rpba.org/ssa-24/",
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_24_detail.html"),
     url=(
         "https://business.rpba.org/events/details/clark-morse-glenwood-ssa-24-commissioners-meeting-6355"  # noqa
-    )
+    ),
 )
 spider = ChiSsa24Spider()
 
@@ -59,8 +58,8 @@ def test_status():
 
 def test_location():
     assert parsed_item["location"] == {
-        'address': '1448 W. Morse Ave. Chicago, IL 60626',
-        'name': 'Rogers Park Business Alliance'
+        "address": "1448 W. Morse Ave. Chicago, IL 60626",
+        "name": "Rogers Park Business Alliance",
     }
 
 
@@ -69,13 +68,16 @@ def test_source():
 
 
 def test_links():
-    assert parsed_item["links"] == [{
-        'href': 'https://rpba.org/wp-content/uploads/2019/09/24-9.4.19-Agenda.pdf',
-        'title': 'Agenda'
-    }, {
-        'href': 'https://rpba.org/wp-content/uploads/2019/11/24-9.4.19-Minutes.pdf',
-        'title': 'Minutes'
-    }]
+    assert parsed_item["links"] == [
+        {
+            "href": "https://rpba.org/wp-content/uploads/2019/09/24-9.4.19-Agenda.pdf",
+            "title": "Agenda",
+        },
+        {
+            "href": "https://rpba.org/wp-content/uploads/2019/11/24-9.4.19-Minutes.pdf",
+            "title": "Minutes",
+        },
+    ]
 
 
 def test_classification():

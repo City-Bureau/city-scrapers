@@ -22,23 +22,23 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_title(item):
     assert item["title"] == "SSA #73 Chinatown Board"
 
 
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_description(item):
-    assert item["description"] == ''
+    assert item["description"] == ""
 
 
 def test_start():
     assert parsed_items[1]["start"] == datetime(2019, 2, 26, 18, 30)
 
 
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_end(item):
-    assert item['end'] is None
+    assert item["end"] is None
 
 
 def test_id():
@@ -54,7 +54,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Leonard M. Louie Fieldhouse",
-        "address": "1700 S. Wentworth Avenue, Chicago, Illinois"
+        "address": "1700 S. Wentworth Avenue, Chicago, Illinois",
     }
 
 
@@ -64,17 +64,20 @@ def test_source(item):
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        'href': 'https://chinatownssa73.org/wp-content/uploads/2019/01/Agenda-1-22-19.pdf',
-        'title': 'Agenda'
-    }, {
-        'href': 'https://chinatownssa73.org/wp-content/uploads/2019/02/Minutes-1-22-2019.pdf',
-        'title': 'Minutes'
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://chinatownssa73.org/wp-content/uploads/2019/01/Agenda-1-22-19.pdf",  # noqa
+            "title": "Agenda",
+        },
+        {
+            "href": "https://chinatownssa73.org/wp-content/uploads/2019/02/Minutes-1-22-2019.pdf",  # noqa
+            "title": "Minutes",
+        },
+    ]
     assert parsed_items[5]["links"] == []
 
 
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_classification(item):
     assert item["classification"] == BOARD
 

@@ -20,8 +20,8 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         needs.
         """
 
-        for item in response.xpath('//p//a'):
-            if 'Agenda' not in item.xpath('text()').get():
+        for item in response.xpath("//p//a"):
+            if "Agenda" not in item.xpath("text()").get():
                 break
 
             meeting = Meeting(
@@ -58,7 +58,7 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         """Parse start datetime as a naive datetime object."""
         date_match = self._get_date(item)
         if date_match:
-            start_date = datetime.strptime(date_match.group(0), '%m.%d.%y')
+            start_date = datetime.strptime(date_match.group(0), "%m.%d.%y")
             return datetime.combine(start_date, time(13))
         else:
             return None
@@ -67,7 +67,7 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         date_match = self._get_date(item)
         if date_match:
-            end_date = datetime.strptime(date_match.group(0), '%m.%d.%y')
+            end_date = datetime.strptime(date_match.group(0), "%m.%d.%y")
             return datetime.combine(end_date, time(15))
         else:
             return None
@@ -83,9 +83,8 @@ class IlOpioidResponseSpider(CityScrapersSpider):
     def _parse_location(self, item):
         """Parse or generate location."""
         return {
-            "address":
-                "401 S. Clinton Street, 7th Floor Executive Conference Room,"
-                " Chicago, IL 60607",
+            "address": "401 S. Clinton Street, 7th Floor Executive Conference Room,"
+            " Chicago, IL 60607",
             "name": "Illinois Department of Human Services Clinton Building",
         }
 
@@ -93,8 +92,8 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         """Parse or generate links for meeting agenda and minutes."""
         links = []
         agenda = {
-            "href": response.urljoin(item.xpath('@href').get()),
-            "title": item.xpath('text()').get()
+            "href": response.urljoin(item.xpath("@href").get()),
+            "title": item.xpath("text()").get(),
         }
 
         links.append(agenda)
@@ -105,18 +104,20 @@ class IlOpioidResponseSpider(CityScrapersSpider):
 
             datestr = date_match.group(0)
             date_indices = [
-                i for i, x in enumerate(response.xpath('//p//a/text()').getall()) if datestr in x
+                i
+                for i, x in enumerate(response.xpath("//p//a/text()").getall())
+                if datestr in x
             ]
 
             if len(date_indices) > 1:
                 minutes_idx = date_indices[1]
-                minutes = response.xpath('//p//a')[minutes_idx]
+                minutes = response.xpath("//p//a")[minutes_idx]
 
                 if datestr in minutes.get():
 
                     minutes = {
-                        "href": response.urljoin(minutes.xpath('@href').get()),
-                        "title": minutes.xpath('text()').get(),
+                        "href": response.urljoin(minutes.xpath("@href").get()),
+                        "title": minutes.xpath("text()").get(),
                     }
 
                     links.append(minutes)
@@ -128,6 +129,6 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         return response.url
 
     def _get_date(self, item):
-        text_str = item.xpath('text()').get()
-        date_match = re.search(r'\d*\.\d*\.\d*', text_str)
+        text_str = item.xpath("text()").get()
+        date_match = re.search(r"\d*\.\d*\.\d*", text_str)
         return date_match

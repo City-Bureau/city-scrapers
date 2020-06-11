@@ -54,8 +54,9 @@ class IlGamingBoardSpider(CityScrapersSpider):
     def _parse_start(self, text):
         """Parse start datetime as a naive datetime object."""
         date_str = re.sub(
-            r"\s+", " ",
-            re.search(r"[a-z]{3,10}\s+\d{1,2},?\s+\d{4}", text, flags=re.I).group()
+            r"\s+",
+            " ",
+            re.search(r"[a-z]{3,10}\s+\d{1,2},?\s+\d{4}", text, flags=re.I).group(),
         ).replace(",", "")
         date_obj = datetime.strptime(date_str, "%B %d %Y").date()
         return datetime.combine(date_obj, time(9))
@@ -69,14 +70,21 @@ class IlGamingBoardSpider(CityScrapersSpider):
     def _parse_links(self, item, response):
         """Parse or generate links."""
         links = []
-        for link_item in item.css("* + .line > .nestedlist > div:not(.clear):not(.hide)"):
-            item_type = link_item.css(".meetingLabel::text").extract_first().replace(":", "")
+        for link_item in item.css(
+            "* + .line > .nestedlist > div:not(.clear):not(.hide)"
+        ):
+            item_type = (
+                link_item.css(".meetingLabel::text").extract_first().replace(":", "")
+            )
             if "minutes" in item_type.lower():
                 item_type = "Minutes"
             for link in link_item.css("a"):
-                links.append({
-                    "title": "{}: {}".format(item_type,
-                                             link.css("*::text").extract_first()),
-                    "href": response.urljoin(link.attrib["href"]),
-                })
+                links.append(
+                    {
+                        "title": "{}: {}".format(
+                            item_type, link.css("*::text").extract_first()
+                        ),
+                        "href": response.urljoin(link.attrib["href"]),
+                    }
+                )
         return links

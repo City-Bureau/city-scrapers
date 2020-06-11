@@ -47,7 +47,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_license_appeal/201901161100/x/license_appeal_commission"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_license_appeal/201901161100/x/license_appeal_commission"
+    )
 
 
 def test_status():
@@ -59,8 +62,10 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"] == "https://www.chicago.gov/city/en/depts/lac/supp_info/2009hearings.html"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.chicago.gov/city/en/depts/lac/supp_info/2009hearings.html"
+    )
 
 
 def test_links():

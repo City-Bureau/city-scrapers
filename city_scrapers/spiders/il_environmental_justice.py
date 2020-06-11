@@ -11,7 +11,7 @@ class IlEnvironmentalJusticeSpider(CityScrapersSpider):
     agency = "Illinois Commission on Environmental Justice"
     timezone = "America/Chicago"
     start_urls = [
-        "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Pages/meetings.aspx"
+        "https://www2.illinois.gov/epa/topics/environmental-justice/commission/Pages/meetings.aspx"  # noqa
     ]
     location = {
         "name": "James R Thompson Center",
@@ -90,8 +90,8 @@ class IlEnvironmentalJusticeSpider(CityScrapersSpider):
 
     def _parse_links(self, item, date_item, response):
         """
-        Parse or generate links. Checks combinations of elements and selectors, return the first
-        that's successful
+        Parse or generate links. Checks combinations of elements and selectors, return
+        the first that's successful
         """
         links = []
         for el, sel in [
@@ -103,10 +103,12 @@ class IlEnvironmentalJusticeSpider(CityScrapersSpider):
             (item, "./following-sibling::li[1]/ul/li/a"),
         ]:
             for link in el.xpath(sel):
-                links.append({
-                    "title": link.css("*::text").extract_first().strip(),
-                    "href": response.urljoin(link.attrib["href"]),
-                })
+                links.append(
+                    {
+                        "title": link.css("*::text").extract_first().strip(),
+                        "href": response.urljoin(link.attrib["href"]),
+                    }
+                )
             if len(links) > 0:
                 return links
         return links

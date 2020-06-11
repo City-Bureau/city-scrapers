@@ -13,7 +13,7 @@ class ChiSsa2Spider(CityScrapersSpider):
     start_urls = ["http://belmontcentral.org/about-ssa-2/ssa2-meeting-minutes-audit/"]
     location = {
         "address": "5534 W. Belmont Avenue Chicago, IL 60641",
-        "name": "Belmont-Central Chamber of Commerce"
+        "name": "Belmont-Central Chamber of Commerce",
     }
 
     def parse(self, response):
@@ -49,13 +49,13 @@ class ChiSsa2Spider(CityScrapersSpider):
         """
         Parse start date and time.
         """
-        text = item.css('*::text').extract_first()
-        date = re.search(r'\d{1,2}-\d{1,2}-\d{4}', text)
+        text = item.css("*::text").extract_first()
+        date = re.search(r"\d{1,2}-\d{1,2}-\d{4}", text)
         if date:
-            parsed_date = datetime.strptime(date.group(), '%m-%d-%Y')
+            parsed_date = datetime.strptime(date.group(), "%m-%d-%Y")
             return datetime.combine(parsed_date.date(), time(14))
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        link = item.css('*::attr(href)').extract_first()
+        link = item.css("*::attr(href)").extract_first()
         return [{"href": link, "title": "Minutes"}]

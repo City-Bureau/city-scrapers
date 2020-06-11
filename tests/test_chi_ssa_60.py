@@ -27,7 +27,9 @@ def test_title():
 
 
 def test_description():
-    test_str = "You are invited to join North River Commission and the Albany Park Chamber of"
+    test_str = (
+        "You are invited to join North River Commission and the Albany Park Chamber of"
+    )
     assert parsed_items[0]["description"].startswith(test_str)
 
 
@@ -44,7 +46,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_60/201910011900/x/economic_development_meeting"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_ssa_60/201910011900/x/economic_development_meeting"
+    )
 
 
 def test_status():
@@ -54,13 +59,15 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Oso Apartments",
-        "address": "3445 W. Montrose Ave. Chicago, IL 60625"
+        "address": "3445 W. Montrose Ave. Chicago, IL 60625",
     }
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"] == "https://northrivercommission.org/event/economic-development-meeting/"
+    assert (
+        parsed_items[0]["source"]
+        == "https://northrivercommission.org/event/economic-development-meeting/"
+    )
 
 
 def test_links():

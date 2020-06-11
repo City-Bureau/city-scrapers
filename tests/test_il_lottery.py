@@ -53,25 +53,25 @@ def test_status():
 @pytest.mark.parametrize("item", parsed_items)
 def test_location(item):
     assert item["location"] == {
-        'name': 'Chicago Lottery Office',
-        'address': '122 South Michigan Avenue, 19th Floor, Chicago, IL 60603'
+        "name": "Chicago Lottery Office",
+        "address": "122 South Michigan Avenue, 19th Floor, Chicago, IL 60603",
     }
 
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_source(item):
-    source = 'https://www.illinoislottery.com/illinois-lottery/lottery-control-board'
+    source = "https://www.illinoislottery.com/illinois-lottery/lottery-control-board"
     assert item["source"] == source
 
 
 def test_links():
     assert len(parsed_items[0]["links"]) == 0
-    assert parsed_items[3]["links"] == [{
-        "href":
-            'https://www.illinoislottery.com/content/dam/il/pdfs/' +
-            'lottery-control-board/May%202019%20Lottery%20Control%20Board%20Meeting%20Agenda.pdf',
-        "title": 'Illinois Lottery Control Board Meeting Agenda - May 15, 2019'
-    }]
+    assert parsed_items[3]["links"] == [
+        {
+            "href": "https://www.illinoislottery.com/content/dam/il/pdfs/lottery-control-board/May%202019%20Lottery%20Control%20Board%20Meeting%20Agenda.pdf",  # noqa
+            "title": "Illinois Lottery Control Board Meeting Agenda - May 15, 2019",
+        }
+    ]
 
 
 @pytest.mark.parametrize("item", parsed_items)

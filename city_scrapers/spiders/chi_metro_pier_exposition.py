@@ -12,7 +12,7 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
     start_urls = ["http://www.mpea.com/mpea-board-members/"]
     location = {
         "name": "MPEA Corporate Center",
-        "address": "301 E Cermak Rd, Corporate Boardroom, 5th Floor, Chicago, IL 60616"
+        "address": "301 E Cermak Rd, Corporate Boardroom, 5th Floor, Chicago, IL 60616",
     }
 
     def parse(self, response):
@@ -22,8 +22,11 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        description = " ".join(response.css(".vc_col-sm-6 .wpb_wrapper p *::text").extract())
-        # Cancelled meetings don't show the address, but otherwise it should be in the description
+        description = " ".join(
+            response.css(".vc_col-sm-6 .wpb_wrapper p *::text").extract()
+        )
+        # Cancelled meetings don't show the address,
+        # but otherwise should be in the description
         if "cancel" not in description.lower() and "301 East Cermak" not in description:
             raise ValueError("Meeting location has changed")
         for item in response.css(".supsystic-table tr")[3:]:
@@ -75,8 +78,10 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         for link in item.css("a"):
-            links.append({
-                "href": link.attrib["href"],
-                "title": link.xpath("./text()").extract_first(),
-            })
+            links.append(
+                {
+                    "href": link.attrib["href"],
+                    "title": link.xpath("./text()").extract_first(),
+                }
+            )
         return links

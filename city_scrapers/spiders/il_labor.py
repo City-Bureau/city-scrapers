@@ -27,7 +27,9 @@ class IlLaborSpider(CityScrapersSpider):
     def parse(self, response):
         agenda_map = self._parse_links(response)
         content_lines = response.css(".soi-article-content * *::text").extract()
-        clean_lines = [re.sub(r"\s+", " ", l).strip() for l in content_lines if l.strip()]
+        clean_lines = [
+            re.sub(r"\s+", " ", l).strip() for l in content_lines if l.strip()
+        ]
         content = "\n".join(clean_lines)
         meeting_split = re.split(r"^([A-Z ]+)$", content, flags=re.M)
         if not re.match(r"^[A-Z ]+$", meeting_split[0]):
@@ -50,7 +52,9 @@ class IlLaborSpider(CityScrapersSpider):
                 links=agenda_map[title],
                 source=response.url,
             )
-            meeting["status"] = self._get_status(meeting, text=" ".join([title_str, item]))
+            meeting["status"] = self._get_status(
+                meeting, text=" ".join([title_str, item])
+            )
             meeting["id"] = self._get_id(meeting)
             yield meeting
 
@@ -94,8 +98,7 @@ class IlLaborSpider(CityScrapersSpider):
         for link in response.css(".soi-article-content a"):
             link_title = " ".join(link.css("*::text").extract()).strip()
             meeting_title = self._parse_title(link_title)
-            agenda_map[meeting_title].append({
-                "title": "Agenda",
-                "href": response.urljoin(link.attrib["href"]),
-            })
+            agenda_map[meeting_title].append(
+                {"title": "Agenda", "href": response.urljoin(link.attrib["href"])}
+            )
         return agenda_map

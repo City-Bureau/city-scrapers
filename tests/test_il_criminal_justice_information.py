@@ -3,13 +3,20 @@ from os.path import dirname, join
 
 import pytest  # noqa
 from city_scrapers_core.constants import (
-    ADVISORY_COMMITTEE, BOARD, CANCELLED, COMMITTEE, PASSED, TENTATIVE
+    ADVISORY_COMMITTEE,
+    BOARD,
+    CANCELLED,
+    COMMITTEE,
+    PASSED,
+    TENTATIVE,
 )
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 from scrapy.settings import Settings
 
-from city_scrapers.spiders.il_criminal_justice_information import IlCriminalJusticeInformationSpider
+from city_scrapers.spiders.il_criminal_justice_information import (
+    IlCriminalJusticeInformationSpider,
+)
 
 test_response = file_response(
     join(dirname(__file__), "files", "il_criminal_justice_information.html"),
@@ -56,7 +63,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_criminal_justice_information/201912191000/x/authority_board"
+    assert (
+        parsed_items[0]["id"]
+        == "il_criminal_justice_information/201912191000/x/authority_board"
+    )
 
 
 def test_status():
@@ -68,7 +78,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Illinois Criminal Justice Information Authority",
-        "address": "300 W Adams St, Suite 200,Chicago, IL 60606, 2nd Floor Building Conference Room"
+        "address": "300 W Adams St, Suite 200,Chicago, IL 60606, 2nd Floor Building Conference Room",  # noqa
     }
     assert parsed_items[6]["location"] == {
         "address": "3000 South Dirksen Parkway, Springfield, IL 62703",
@@ -84,14 +94,12 @@ def test_links():
     assert parsed_items[0]["links"] == []
     assert parsed_items[5]["links"] == [
         {
-            "href":
-                "http://www.icjia.state.il.us/assets/pdf/Meetings/12-11-18/Authority_Board_Meeting_Agenda_Memo_Materials_121118.pdf",  # noqa
-            "title": "Materials"
+            "href": "http://www.icjia.state.il.us/assets/pdf/Meetings/12-11-18/Authority_Board_Meeting_Agenda_Memo_Materials_121118.pdf",  # noqa
+            "title": "Materials",
         },
         {
-            "href":
-                "http://www.icjia.org/assets/pdf/Meetings/2019-04-24/AuthorityBoardMeeting%20Materials4.24.19.pdf",  # noqa
-            "title": "Minutes"
+            "href": "http://www.icjia.org/assets/pdf/Meetings/2019-04-24/AuthorityBoardMeeting%20Materials4.24.19.pdf",  # noqa
+            "title": "Minutes",
         },
     ]
 

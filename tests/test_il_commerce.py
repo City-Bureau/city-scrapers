@@ -62,7 +62,7 @@ def test_status():
 def test_location():
     assert parsed_item["location"] == {
         "name": "Eighth Floor, State of Illinois Building",
-        "address": "160 North LaSalle Street Chicago, Illinois 60601"
+        "address": "160 North LaSalle Street Chicago, Illinois 60601",
     }
 
 
@@ -74,19 +74,19 @@ def test_links():
     assert parsed_item["links"] == [
         {
             "href": "https://www.icc.illinois.gov/downloads/public/letter/21625.pdf",
-            "title": "Public Utility Cover Letter"
+            "title": "Public Utility Cover Letter",
         },
         {
             "href": "https://www.icc.illinois.gov/downloads/public/agenda/21625.pdf",
-            "title": "Regular Open Meeting Agenda"
+            "title": "Regular Open Meeting Agenda",
         },
         {
             "href": "https://www.icc.illinois.gov/downloads/public/letter/21651.pdf",
-            "title": "Transportation Cover Letter"
+            "title": "Transportation Cover Letter",
         },
         {
             "href": "https://www.icc.illinois.gov/downloads/public/agenda/21651.pdf",
-            "title": "Bench Agenda"
+            "title": "Bench Agenda",
         },
     ]
 

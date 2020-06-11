@@ -53,7 +53,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Wintrust Bank Old Town",
-        "address": "100 W North Avenue Chicago, IL"
+        "address": "100 W North Avenue Chicago, IL",
     }
 
 
@@ -62,11 +62,12 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "title": "Final Minutes 1/09/19",
-        "href":
-            "https://oldtownchicago.org/wp-content/uploads/2019/07/2019-SSA-48-Commission-Minutes-01-09-2019.docx"  # noqa
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "title": "Final Minutes 1/09/19",
+            "href": "https://oldtownchicago.org/wp-content/uploads/2019/07/2019-SSA-48-Commission-Minutes-01-09-2019.docx",  # noqa
+        }
+    ]
 
 
 def test_classification():

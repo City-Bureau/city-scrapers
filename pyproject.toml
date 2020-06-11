@@ -1,0 +1,15 @@
+[tool.black]
+line-length = 88
+target-version = ['py37']
+exclude = '''
+/(
+    \.git
+  | \.pytest_cache
+  | \.venv
+  | __pycache__
+  | build
+  | docs
+  | coverage
+  | tests/files
+)/
+'''

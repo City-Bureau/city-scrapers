@@ -66,7 +66,7 @@ def test_status():
 def test_location(item):
     assert item["location"] == {
         "name": "SSA #16 Office",
-        "address": "306 S. Halsted St, 2nd Floor, Chicago, IL 60661"
+        "address": "306 S. Halsted St, 2nd Floor, Chicago, IL 60661",
     }
 
 
@@ -78,12 +78,16 @@ def test_source(item):
 def test_links():
     assert parsed_items[0]["links"] == []
 
-    href11 = "https://5taz8eljj63owlf43qy49n1e-wpengine.netdna-ssl.com"\
+    href11 = (
+        "https://5taz8eljj63owlf43qy49n1e-wpengine.netdna-ssl.com"
         "/wp-content/uploads/2019/06/SSA-16-January-24-2019-Meeting-Minutes.pdf"
+    )
     assert parsed_items[11]["links"] == [{"href": href11, "title": "Minutes"}]
 
-    href12 = "https://5taz8eljj63owlf43qy49n1e-wpengine.netdna-ssl.com"\
+    href12 = (
+        "https://5taz8eljj63owlf43qy49n1e-wpengine.netdna-ssl.com"
         "/wp-content/uploads/2019/06/SSA-16-February-28-2019-Meeting-Minutes.pdf"
+    )
     assert parsed_items[12]["links"] == [{"href": href12, "title": "Minutes"}]
 
 

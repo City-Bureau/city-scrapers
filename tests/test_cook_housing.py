@@ -14,7 +14,7 @@ test_links_response = file_response(
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "cook_housing_detail.html"),
-    url="http://thehacc.org/event/housing-authority-of-cook-county-board-meeting-2-2-2-2-4/",
+    url="http://thehacc.org/event/housing-authority-of-cook-county-board-meeting-2-2-2-2-4/",  # noqa
 )
 test_response = file_response(
     join(dirname(__file__), "files", "cook_housing.html"),
@@ -66,16 +66,19 @@ def test_location():
 
 
 def test_source():
-    assert parsed_item[
-        "source"
-    ] == "http://thehacc.org/event/housing-authority-of-cook-county-board-meeting-2-2-2-2-4/"
+    assert (
+        parsed_item["source"]
+        == "http://thehacc.org/event/housing-authority-of-cook-county-board-meeting-2-2-2-2-4/"  # noqa
+    )
 
 
 def test_links():
-    assert parsed_item["links"] == [{
-        "title": "Agenda",
-        "href": "http://thehacc.org/wp-content/uploads/2019/10/3-OCTOBER-17-2019-BOARD-AGENDA.pdf"
-    }]
+    assert parsed_item["links"] == [
+        {
+            "title": "Agenda",
+            "href": "http://thehacc.org/wp-content/uploads/2019/10/3-OCTOBER-17-2019-BOARD-AGENDA.pdf",  # noqa
+        }
+    ]
 
 
 def test_classification():

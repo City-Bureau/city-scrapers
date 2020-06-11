@@ -49,7 +49,9 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_fire_benefit_fund/201901250000/x/retirement_board"
+    assert (
+        parsed_items[0]["id"] == "chi_fire_benefit_fund/201901250000/x/retirement_board"
+    )
 
 
 def test_status():
@@ -65,13 +67,16 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[-3]["links"] == [{
-        "href": "http://www.fabf.org/PDF/Agendas/02-19-19INVST.pdf",
-        "title": "Investment Agenda"
-    }, {
-        "href": "http://www.fabf.org/PDF/Minutes/02-19-2019INVST.pdf",
-        "title": "Investment Minutes"
-    }]
+    assert parsed_items[-3]["links"] == [
+        {
+            "href": "http://www.fabf.org/PDF/Agendas/02-19-19INVST.pdf",
+            "title": "Investment Agenda",
+        },
+        {
+            "href": "http://www.fabf.org/PDF/Minutes/02-19-2019INVST.pdf",
+            "title": "Investment Minutes",
+        },
+    ]
 
 
 def test_classification():

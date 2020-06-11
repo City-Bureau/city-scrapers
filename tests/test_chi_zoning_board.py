@@ -11,7 +11,7 @@ from city_scrapers.spiders.chi_zoning_board import ChiZoningBoardSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_zoning_board.html"),
-    url='https://www.chicago.gov/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html'
+    url="https://www.chicago.gov/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html",  # noqa
 )
 spider = ChiZoningBoardSpider()
 spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
@@ -29,66 +29,65 @@ def test_meeting_count():
 
 
 def test_unique_id_count():
-    assert len(set([item['id'] for item in parsed_items])) == 24
+    assert len(set([item["id"] for item in parsed_items])) == 24
 
 
 def test_title():
-    assert parsed_items[0]['title'] == 'Board of Appeals'
+    assert parsed_items[0]["title"] == "Board of Appeals"
 
 
 def test_description():
-    assert parsed_items[0]['description'] == ''
+    assert parsed_items[0]["description"] == ""
 
 
 def test_start():
-    assert parsed_items[0]['start'] == datetime(2018, 1, 19, 9)
+    assert parsed_items[0]["start"] == datetime(2018, 1, 19, 9)
 
 
 def test_end():
-    assert parsed_items[0]['end'] is None
+    assert parsed_items[0]["end"] is None
 
 
 def test_id():
-    assert parsed_items[0]['id'] == 'chi_zoning_board/201801190900/x/board_of_appeals'
+    assert parsed_items[0]["id"] == "chi_zoning_board/201801190900/x/board_of_appeals"
 
 
 def test_status():
-    assert parsed_items[0]['status'] == TENTATIVE
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
 def test_location():
-    assert parsed_items[0]['location'] == {
-        'name': 'City Hall',
-        'address': '121 N LaSalle St Chicago, IL 60602'
+    assert parsed_items[0]["location"] == {
+        "name": "City Hall",
+        "address": "121 N LaSalle St Chicago, IL 60602",
     }
 
 
 def test_source():
-    assert parsed_items[
-        0]['source'
-           ] == 'https://www.chicago.gov/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html'
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.chicago.gov/city/en/depts/dcd/supp_info/zoning_board_of_appeals.html"  # noqa
+    )
 
 
 def test_links():
-    assert parsed_items[0]['links'] == [
+    assert parsed_items[0]["links"] == [
         {
-            'href':
-                'https://www.chicago.gov/content/dam/city/depts/zlup/Administrative_Reviews_and_Approvals/Agendas/ZBA_Jan_2018_Minutes_rev.pdf',  # noqa
-            'title': 'Minutes'
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Administrative_Reviews_and_Approvals/Agendas/ZBA_Jan_2018_Minutes_rev.pdf",  # noqa
+            "title": "Minutes",
         },
         {
-            'href':
-                'https://www.chicago.gov/content/dam/city/depts/zlup/Administrative_Reviews_and_Approvals/Agendas/ZBA_Jan_2018_Map.pdf',  # noqa
-            'title': 'Map'
-        }
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Administrative_Reviews_and_Approvals/Agendas/ZBA_Jan_2018_Map.pdf",  # noqa
+            "title": "Map",
+        },
     ]
 
 
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_all_day(item):
-    assert item['all_day'] is False
+    assert item["all_day"] is False
 
 
-@pytest.mark.parametrize('item', parsed_items)
+@pytest.mark.parametrize("item", parsed_items)
 def test_classification(item):
-    assert item['classification'] == COMMISSION
+    assert item["classification"] == COMMISSION

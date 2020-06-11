@@ -64,8 +64,5 @@ class CookZoningSpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         for link in item.css("a"):
-            links.append({
-                "title": "Agenda",
-                "href": link.attrib["href"],
-            })
+            links.append({"title": "Agenda", "href": link.attrib["href"]})
         return links

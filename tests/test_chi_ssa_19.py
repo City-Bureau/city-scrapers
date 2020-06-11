@@ -9,14 +9,13 @@ from freezegun import freeze_time
 from city_scrapers.spiders.chi_ssa_19 import ChiSsa19Spider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_19.html"),
-    url="https://rpba.org/ssa-19/",
+    join(dirname(__file__), "files", "chi_ssa_19.html"), url="https://rpba.org/ssa-19/",
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_19_detail.html"),
     url=(
-        "https://business.rpba.org/events/details/howard-street-ssa-19-commissioners-meeting-11-20-2019-6350"  # noqa 
-    )
+        "https://business.rpba.org/events/details/howard-street-ssa-19-commissioners-meeting-11-20-2019-6350"  # noqa
+    ),
 )
 spider = ChiSsa19Spider()
 
@@ -59,8 +58,8 @@ def test_status():
 
 def test_location():
     assert parsed_item["location"] == {
-        'address': '1623 W. Howard St. Chicago, IL',
-        'name': 'The Factory Theater'
+        "address": "1623 W. Howard St. Chicago, IL",
+        "name": "The Factory Theater",
     }
 
 
@@ -69,10 +68,12 @@ def test_source():
 
 
 def test_links():
-    assert parsed_item["links"] == [{
-        'href': 'https://rpba.org/wp-content/uploads/2019/11/19-11.20.19-Agenda.pdf',
-        'title': 'Agenda'
-    }]
+    assert parsed_item["links"] == [
+        {
+            "href": "https://rpba.org/wp-content/uploads/2019/11/19-11.20.19-Agenda.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_classification():

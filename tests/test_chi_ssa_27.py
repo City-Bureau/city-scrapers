@@ -27,7 +27,7 @@ def test_count():
 
 
 def test_title():
-    assert parsed_items[0]["title"] == 'Commission'
+    assert parsed_items[0]["title"] == "Commission"
 
 
 def test_description():
@@ -47,7 +47,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == 'chi_ssa_27/201901170830/x/commission'
+    assert parsed_items[0]["id"] == "chi_ssa_27/201901170830/x/commission"
 
 
 def test_status():
@@ -58,7 +58,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Sheil Park",
-        "address": "3505 N. Southport Ave., Chicago, IL 60657"
+        "address": "3505 N. Southport Ave., Chicago, IL 60657",
     }
 
 
@@ -67,15 +67,14 @@ def test_source():
 
 
 def test_links():
-    url = 'https://chambermaster.blob.core.windows.net/' \
-          'userfiles/UserFiles/chambers/1819/CMS/SSA/Minutes/01-17-2019-SSA-Meeting-Minutes.pdf'
-    test_str = parsed_items[0]['links'][0]
-    assert test_str.get('title') == "Minutes"
-    assert test_str.get('href') == url
+    url = "https://chambermaster.blob.core.windows.net/userfiles/UserFiles/chambers/1819/CMS/SSA/Minutes/01-17-2019-SSA-Meeting-Minutes.pdf"  # noqa
+    test_str = parsed_items[0]["links"][0]
+    assert test_str.get("title") == "Minutes"
+    assert test_str.get("href") == url
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == 'Commission'
+    assert parsed_items[0]["classification"] == "Commission"
 
 
 @pytest.mark.parametrize("item", parsed_items)

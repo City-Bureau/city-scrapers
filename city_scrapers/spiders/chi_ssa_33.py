@@ -50,7 +50,7 @@ class ChiSsa33Spider(CityScrapersSpider):
         start_date_match = re.search(
             r"[a-z]{3,10} \d{1,2},? \d{4}",
             response.css("#mainContent h1::text").extract_first(),
-            flags=re.I
+            flags=re.I,
         )
         if not start_date_match:
             return
@@ -59,15 +59,19 @@ class ChiSsa33Spider(CityScrapersSpider):
         start_month_str = start_date.strftime("%Y%m")
         for link in response.css("#mainContent h1 + p a"):
             link_text = link.css("*::text").extract_first()
-            self.links_map[start_month_str].append({
-                "href": response.urljoin(link.attrib["href"]),
-                "title": "Agenda" if "agenda" in link_text.lower() else "Minutes",
-            })
+            self.links_map[start_month_str].append(
+                {
+                    "href": response.urljoin(link.attrib["href"]),
+                    "title": "Agenda" if "agenda" in link_text.lower() else "Minutes",
+                }
+            )
         for link in response.css("#mainContent h3 + p a"):
-            self.links_map[start_month_str].append({
-                "href": response.urljoin(link.attrib["href"]),
-                "title": link.css("*::text").extract_first(),
-            })
+            self.links_map[start_month_str].append(
+                {
+                    "href": response.urljoin(link.attrib["href"]),
+                    "title": link.css("*::text").extract_first(),
+                }
+            )
         return start_month_str
 
     def parse_events(self, response):
@@ -148,11 +152,16 @@ class ChiSsa33Spider(CityScrapersSpider):
         start_month_str = start.strftime("%Y%m")
         if "committee" not in title.lower():
             return [
-                link for link in self.links_map[start_month_str]
+                link
+                for link in self.links_map[start_month_str]
                 if "committee" not in link["title"].lower()
             ]
         committee_name = re.search(r"[a-zA-Z ]+(?= Committee)", title).group().strip()
-        return [link for link in self.links_map[start_month_str] if committee_name in link["title"]]
+        return [
+            link
+            for link in self.links_map[start_month_str]
+            if committee_name in link["title"]
+        ]
 
     def _parse_source(self, item, response):
         """Parse or generate source."""

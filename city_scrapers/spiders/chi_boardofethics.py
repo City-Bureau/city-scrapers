@@ -19,11 +19,15 @@ class ChiBoardOfEthicsSpider(CityScrapersSpider):
         needs.
         """
         for date_table in response.css(".page-full-description-above .col-xs-12 table"):
-            header = date_table.xpath("./preceding-sibling::*").css("h2::text, h3::text"
-                                                                    )[-1].extract()
+            header = (
+                date_table.xpath("./preceding-sibling::*")
+                .css("h2::text, h3::text")[-1]
+                .extract()
+            )
             description = re.sub(
-                r"\s+", " ",
-                date_table.xpath("./preceding-sibling::p/text()")[-1].extract() or ""
+                r"\s+",
+                " ",
+                date_table.xpath("./preceding-sibling::p/text()")[-1].extract() or "",
             )
             location = self._parse_location(description)
             for meeting_date in date_table.css("tbody tr td::text").extract():
@@ -69,10 +73,16 @@ class ChiBoardOfEthicsSpider(CityScrapersSpider):
 
     def _parse_links(self, start, response):
         links = []
-        for link_el in response.css(".page-full-description a[title$='{}']".format(start.year)):
+        for link_el in response.css(
+            ".page-full-description a[title$='{}']".format(start.year)
+        ):
             if start.strftime("%B") in link_el.xpath("./text()").extract_first():
-                links.append({
-                    "title": "Minutes",
-                    "href": response.urljoin(link_el.xpath("@href").extract_first())
-                })
+                links.append(
+                    {
+                        "title": "Minutes",
+                        "href": response.urljoin(
+                            link_el.xpath("@href").extract_first()
+                        ),
+                    }
+                )
         return links

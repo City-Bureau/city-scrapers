@@ -18,7 +18,9 @@ spider = ChiSsa26Spider()
 freezer = freeze_time("2019-07-01")
 freezer.start()
 
-parsed_items = sorted([item for item in spider.parse(test_response)], key=itemgetter("start"))
+parsed_items = sorted(
+    [item for item in spider.parse(test_response)], key=itemgetter("start")
+)
 
 freezer.stop()
 
@@ -60,14 +62,19 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.edgewater.org/ssa-26/commissionmeetings/"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.edgewater.org/ssa-26/commissionmeetings/"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "http://edgewaterchmb.wpengine.com/wp-content/uploads/2014/03/Agenda-Feb-2015.doc",
-        "title": "Minutes",
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "http://edgewaterchmb.wpengine.com/wp-content/uploads/2014/03/Agenda-Feb-2015.doc",  # noqa
+            "title": "Minutes",
+        }
+    ]
 
 
 def test_classification():
