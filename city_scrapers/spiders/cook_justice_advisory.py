@@ -18,7 +18,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def start_requests(self):
         toay = datetime.now()
-        url = 'https://www.cookcountyil.gov/service/justice-advisory-council-meetings'
+        url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
         yield scrapy.Request(url=url, method='GET', callback=self.parse)
         
 
@@ -52,8 +52,13 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _get_event_urls(self, response):
         """
-        Get urls for all board of ethics meetings on the page
+        Get urls for all justice advisory council (JAC in calendar) meetings on the page
         """
+        return [
+            response.urljoin(href)
+            for href in response.xpath('//a[contains(text(), "JAC")]'
+                                       ).css('a::attr(href)').extract()
+        ]
         
     def _parse_location(self, response):
         """
