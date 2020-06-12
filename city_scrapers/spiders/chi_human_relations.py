@@ -115,10 +115,16 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
         link_map = defaultdict(list)
         for link in response.css(".page-full-description-above a"):
             link_text = " ".join(link.css("*::text").extract()).strip()
-            link_start = datetime.strptime(link_text, "%B %Y")
+            link_date_match = re.search(r"[A-Z][a-z]{2,9} \d{4}", link_text)
+            if not link_date_match:
+                continue
+            link_date_str = link_date_match.group()
+            link_start = datetime.strptime(link_date_str, "%B %Y")
             link_map[(link_start.month, link_start.year)].append(
                 {
-                    "title": "Agenda" if "Agenda" in link.attrib["href"] else "Minutes",
+                    "title": "Agenda"
+                    if "Agenda" in link.attrib["href"]
+                    else "Minutes",
                     "href": response.urljoin(link.attrib["href"]),
                 }
             )
