@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from urllib.parse import parse_qs, urlparse
 
@@ -100,9 +101,10 @@ class IlElectionsSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        date = item.css("td")[0].css("::text").extract_first().strip()
-        time = item.css("td")[1].css("::text").extract_first().strip().replace(".", "")
-        return datetime.strptime(date + " " + time, "%a, %B %d, %Y %I:%M %p")
+        date_str = item.css("td")[0].css("::text").extract_first().strip()
+        raw_time_str = item.css("td")[1].css("::text").extract_first().strip()
+        time_str = re.sub(r"(?<=\d)\.(?=\d)", ":", raw_time_str).replace(".", "")
+        return datetime.strptime(f"{date_str} {time_str}", "%a, %B %d, %Y %I:%M %p")
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
