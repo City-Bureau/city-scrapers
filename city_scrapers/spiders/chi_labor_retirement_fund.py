@@ -1,4 +1,3 @@
-import re
 from datetime import datetime
 
 from city_scrapers_core.constants import BOARD
@@ -26,19 +25,12 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
         description = " ".join(
             response.css(".mainRail .block p:nth-child(1) *::text").extract()
         )
-        dial_in_desc = re.sub(
-            r"\s+",
-            " ",
-            " ".join(
-                response.css(".mainRail .block p:nth-child(1) strong *::text").extract()
-            ),
-        ).strip()
-        if "321 N" not in description and "Dial" not in dial_in_desc:
+        if "321 N" not in description and "teleconference" not in description:
             raise ValueError("Meeting location has changed")
         for item in response.css(".days"):
             meeting = Meeting(
                 title=self._parse_title(item),
-                description=re.sub(r"\s+(?=,)", "", dial_in_desc),
+                description="",
                 classification=BOARD,
                 start=self._parse_start(item),
                 end=None,
