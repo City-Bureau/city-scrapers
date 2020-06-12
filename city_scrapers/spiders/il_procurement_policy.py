@@ -37,8 +37,11 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         time_object = time(10, 0)
         date_str = " ".join(item.css("*::text").extract()).strip()
         date_str = re.sub("Agenda.pdf", "", date_str).strip()
-        date_object = datetime.strptime(date_str, "%B %d, %Y").date()
-        return datetime.combine(date_object, time_object)
+        try:
+            date_object = datetime.strptime(date_str, "%B %d, %Y").date()
+            return datetime.combine(date_object, time_object)
+        except ValueError:
+            return
 
     def _parse_links(self, item, response):
         """Parse or generate links."""
@@ -93,11 +96,14 @@ class IlProcurementPolicySpider(CityScrapersSpider):
 
     def _upcoming_meetings(self, response):
         for item in response.css(".ms-rtestate-field p strong a"):
+            start = self._parse_start(item)
+            if not start:
+                continue
             meeting = Meeting(
                 title="Procurement Policy Board",
                 description="",
                 classification=self._parse_classification(item),
-                start=self._parse_start(item),
+                start=start,
                 all_day=False,
                 time_notes="",
                 location={
