@@ -122,9 +122,7 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
             link_start = datetime.strptime(link_date_str, "%B %Y")
             link_map[(link_start.month, link_start.year)].append(
                 {
-                    "title": "Agenda"
-                    if "Agenda" in link.attrib["href"]
-                    else "Minutes",
+                    "title": "Agenda" if "Agenda" in link.attrib["href"] else "Minutes",
                     "href": response.urljoin(link.attrib["href"]),
                 }
             )
