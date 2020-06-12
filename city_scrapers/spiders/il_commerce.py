@@ -57,7 +57,9 @@ class IlCommerceSpider(CityScrapersSpider):
 
     def _parse_title(self, response):
         """Parse or generate meeting title."""
-        title_str = " ".join(response.css(".soi-container h2 *::text").extract())
+        title_str = re.sub(
+            r"\s+", " ", " ".join(response.css(".soi-container h2 *::text").extract())
+        ).strip()
         return re.sub(
             r"(Illinois Commerce Commission|(?=Committee )Committee Meeting$)",
             "",
@@ -80,7 +82,7 @@ class IlCommerceSpider(CityScrapersSpider):
 
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
-        start_str = " ".join(response.css(".icc-meeting-title *::text").extract())
+        start_str = " ".join(response.css("h3.mt-4 *::text").extract())
         dt_str = re.search(
             r"[A-Z][a-z]{2,8} \d{1,2}, \d{4} \d{1,2}:\d{2} [APM]{2}", start_str
         ).group()
@@ -88,7 +90,8 @@ class IlCommerceSpider(CityScrapersSpider):
 
     def _parse_location(self, response):
         """Parse or generate location."""
-        location_items = response.css(".address p::text").extract()
+        location_block = response.css(".row.mt-4 > .col-12")[0]
+        location_items = location_block.css("p *::text").extract()
         addr_items = [
             i.strip() for i in location_items if "Building" not in i and i.strip()
         ]
@@ -103,7 +106,7 @@ class IlCommerceSpider(CityScrapersSpider):
     def _parse_links(self, response):
         """Parse or generate links."""
         links = []
-        for link in response.css(".icc-panel-meeting-documents a"):
+        for link in response.css(".row.mt-4 .list-unstyled a"):
             links.append(
                 {
                     "title": " ".join(link.css("*::text").extract()).strip(),

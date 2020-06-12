@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest  # noqa
-from city_scrapers_core.constants import CANCELLED, COMMISSION
+from city_scrapers_core.constants import COMMISSION, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -14,7 +14,7 @@ test_response = file_response(
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "il_commerce_detail.html"),
-    url="https://www.icc.illinois.gov/meetings/detail.aspx?t=1&id=21316",
+    url="https://www.icc.illinois.gov/meetings/policy-session/meeting/21353",
 )
 spider = IlCommerceSpider()
 
@@ -32,7 +32,7 @@ def test_count():
 
 
 def test_title():
-    assert parsed_item["title"] == "Regular Open Meeting"
+    assert parsed_item["title"] == "Policy Session Summer Preparedness Policy Session"
 
 
 def test_description():
@@ -40,7 +40,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_item["start"] == datetime(2020, 3, 4, 10, 30)
+    assert parsed_item["start"] == datetime(2020, 5, 27, 11, 30)
 
 
 def test_end():
@@ -52,11 +52,14 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_item["id"] == "il_commerce/202003041030/x/regular_open_meeting"
+    assert (
+        parsed_item["id"]
+        == "il_commerce/202005271130/x/policy_session_summer_preparedness_policy_session"  # noqa
+    )
 
 
 def test_status():
-    assert parsed_item["status"] == CANCELLED
+    assert parsed_item["status"] == TENTATIVE
 
 
 def test_location():
@@ -73,20 +76,45 @@ def test_source():
 def test_links():
     assert parsed_item["links"] == [
         {
-            "href": "https://www.icc.illinois.gov/downloads/public/letter/21625.pdf",
+            "href": "https://www.icc.illinois.gov/downloads/public/letter/21690.pdf",
             "title": "Public Utility Cover Letter",
         },
         {
-            "href": "https://www.icc.illinois.gov/downloads/public/agenda/21625.pdf",
-            "title": "Regular Open Meeting Agenda",
+            "href": "https://www.icc.illinois.gov/downloads/public/agenda/21690.pdf",
+            "title": "Policy Agenda",
         },
         {
-            "href": "https://www.icc.illinois.gov/downloads/public/letter/21651.pdf",
-            "title": "Transportation Cover Letter",
+            "href": "https://www.icc.illinois.gov/downloads/public/Ameren-Summer2020.pdf",  # noqa
+            "title": "Ameren",
         },
         {
-            "href": "https://www.icc.illinois.gov/downloads/public/agenda/21651.pdf",
-            "title": "Bench Agenda",
+            "href": "https://www.icc.illinois.gov/downloads/public/ComEd_summer2020.pdf",  # noqa
+            "title": "ComEd",
+        },
+        {
+            "href": "https://www.icc.illinois.gov/downloads/public/CUB_summer2020.pdf",
+            "title": "CUB",
+        },
+        {
+            "href": "https://www.icc.illinois.gov/downloads/public/AG.pdf",
+            "title": "Illinois Attorney General",
+        },
+        {
+            "href": "https://www.icc.illinois.gov/downloads/public/Mid "
+            "American_summer2020.pdf",
+            "title": "Mid-American",
+        },
+        {
+            "href": "https://www.icc.illinois.gov/downloads/public/MISO_summer2020.pdf",
+            "title": "MISO",
+        },
+        {
+            "href": "https://www.icc.illinois.gov/downloads/public/NCLC_summer2020.pdf",
+            "title": "NCLC",
+        },
+        {
+            "href": "https://www.icc.illinois.gov/downloads/public/PJM_summer2020.pdf",
+            "title": "PJM",
         },
     ]
 
