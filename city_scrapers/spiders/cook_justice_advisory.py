@@ -1,3 +1,14 @@
+'''
+NOTES:
+
+* The cook_board_ethics spider uses XPath, but I used python regex
+* added return '' to each method just so the spider can run without complaining
+
+Methods done:
+start_requests, parse, _parse_event, _get_event_urls
+
+'''
+
 import json
 import re
 import scrapy
@@ -18,12 +29,13 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def start_requests(self):
         toay = datetime.now()
-        url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
+        url = 'https://www.cookcountyil.gov/service/justice-advisory-council-meetings'
+        # url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
         yield scrapy.Request(url=url, method='GET', callback=self.parse)
         
 
     def parse(self, response):
-       """
+        """
         `parse` should always `yield` Meeting items.
 
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
@@ -31,6 +43,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         for url in self._get_event_urls(response):
             yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
+        
 
     def _parse_event(self, response):
         """Parse the event page."""
@@ -54,33 +67,46 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         Get urls for all justice advisory council (JAC in calendar) meetings on the page
         """
+        relative_event_urls = response.css('div.region-block-2 a::attr(href)').re(r'/event.+')
         return [
             response.urljoin(href)
-            for href in response.xpath('//a[contains(text(), "JAC")]'
-                                       ).css('a::attr(href)').extract()
+            for href in relative_event_urls
         ]
         
     def _parse_location(self, response):
         """
         Parse or generate location. Url, latitude and longitude are all optional and may e more trouble than they're worth to collect.
         """
+        return ''
     
     def _parse_all_day(self, response):
         """
         Parse or generate all-day status. Defaults to false.
         """
+        return ''
 
     def _parse_title(self, reponse):
         """Parse or generate event"""
+        return ''
 
     def _parse_description(self, response):
         """Parse or generate event description."""
+        return ''
 
     def _parse_start(self, response):
         """Parse start date and time"""
+        # start = response.xpath('//[@class="date-display-single"]/descendant-or-self::*text()').extract()
+        # start = ''.join(start).upper()
+        # start = start.split(' TO ')[0].strip()
+        # start = start.replace('(ALL DAY)', '12:00AM')
+
+        # return datetime.strptime(start, '%B %d, %Y %I:%M%p')
+        return ''
 
     def _parse_end(self, response):
         """Parse end date and time"""
+        return ''
         
     def _parse_links(self, response):
+        return ''
         
