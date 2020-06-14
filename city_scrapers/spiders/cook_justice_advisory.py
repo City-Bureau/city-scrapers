@@ -2,10 +2,6 @@
 NOTES:
 
 * The cook_board_ethics spider uses XPath, but I used python regex
-* added return '' to each method just so the spider can run without complaining
-
-Methods done:
-start_requests, parse, _parse_event, _get_event_urls
 
 '''
 
@@ -28,7 +24,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     allowed_domains = ['www.cookcountyil.gov']
 
     def start_requests(self):
-        toay = datetime.now()
+        # today = datetime.now() # not used anywhere
         url = 'https://www.cookcountyil.gov/service/justice-advisory-council-meetings'
         # url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
         yield scrapy.Request(url=url, method='GET', callback=self.parse)
@@ -49,7 +45,8 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """Parse the event page."""
         title = self._parse_title(response)
         meeting = Meeting(
-            description = self._parse_description(response),
+            title=title,
+            description=self._parse_description(response),
             classification=ADVISORY_COMMITTEE, 
             start=self._parse_start(response),
             end=self._parse_end(response),
@@ -67,7 +64,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         Get urls for all justice advisory council (JAC in calendar) meetings on the page
         """
-        relative_event_urls = response.css('div.region-block-2 a::attr(href)').re(r'/event.+')
+        relative_event_urls = response.css('div.region-block-2 a::attr(href)').re(r'/event.+') # might have to add .get() at the end?
         return [
             response.urljoin(href)
             for href in relative_event_urls
@@ -77,36 +74,89 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         Parse or generate location. Url, latitude and longitude are all optional and may e more trouble than they're worth to collect.
         """
-        return ''
+        # this method is copied direcly from board ethics spider
+        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()'
+                                 ).extract()
+        for word in ['Location:', ', ', ' ']:
+            address.remove(word)
+        address = ' '.join(address)
+        return {
+            'address': address,
+            'name': '',
+        }
     
     def _parse_all_day(self, response):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        return ''
+        # Direcly coped from board ethics spider
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
+        date = ''.join(date).upper()
+        return 'ALL DAY' in date
 
-    def _parse_title(self, reponse):
+    def _parse_title(self, response):
         """Parse or generate event"""
-        return ''
+        # this method is inspired by board ethics spider
+        title = response.css('h1::text').extract()
+        if "Special" in title:
+            return "Special JAC Council Meeting"
+        elif "JAC Council Meeting" in title:
+            return "JAC Council Meeting"
+        else:
+            return title
 
     def _parse_description(self, response):
         """Parse or generate event description."""
-        return ''
+        # stuff Leda wrote that is probably insufficient
+        #return ' '.join(response.css('div.field-name-field-event-description p::text').extract())
+
+        # copied from board ethics spider
+        category_field = response.xpath(
+            "//div[contains(., 'Category:') and contains(@class, 'field-label')]"
+        )
+        field_items = category_field.xpath("./following::div[contains(@class, 'field-items')]")
+        return ' '.join(
+            field_items.xpath('.//p/text()').extract() +
+            field_items.xpath('.//strong/text()').extract()
+        ).strip()
 
     def _parse_start(self, response):
         """Parse start date and time"""
-        # start = response.xpath('//[@class="date-display-single"]/descendant-or-self::*text()').extract()
-        # start = ''.join(start).upper()
-        # start = start.split(' TO ')[0].strip()
-        # start = start.replace('(ALL DAY)', '12:00AM')
+        # copied from board ethics spider
+        start = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                               ).extract()
+        start = ''.join(start).upper()
+        start = start.split(' TO ')[0].strip()
+        start = start.replace('(ALL DAY)', '12:00AM')
 
-        # return datetime.strptime(start, '%B %d, %Y %I:%M%p')
-        return ''
+        return datetime.strptime(start, '%B %d, %Y %I:%M%p')
+
 
     def _parse_end(self, response):
         """Parse end date and time"""
-        return ''
+
+        # copied from board ethics spider
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
+        date = ''.join(date).upper()
+        date.replace('(ALL DAY)', 'TO 11:59PM')
+        start_end = date.split(' TO ')
+
+        if len(start_end) < 2:
+            return
+
+        end_time = start_end[1]
+        date = start_end[0][:start_end[0].rindex(' ')]
+        return datetime.strptime('{} {}'.format(date, end_time), '%B %d, %Y %I:%M%p')
+
         
     def _parse_links(self, response):
-        return ''
+        # not sure what this is supposed to do
+        # copied from board ethics spider
+        files = response.css('span.file a')
+        return [{
+            'href': f.xpath('./@href').extract_first(),
+            'title': f.xpath('./text()').extract_first()
+        } for f in files]
         
