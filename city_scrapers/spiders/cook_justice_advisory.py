@@ -76,7 +76,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        # Direcly coped from board ethics spider
         date = response.xpath(
             '//span[@class="date-display-single"]/descendant-or-self::*/text()'
         ).extract()
