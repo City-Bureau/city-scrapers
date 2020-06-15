@@ -192,7 +192,7 @@ class ChiSchoolsSpider(CityScrapersSpider):
                 return self.location
             return {
                 "name": loc_name,
-                "addr": loc_addr,
+                "address": loc_addr,
             }
         elif len(loc_lines) > 0:
             loc_list = [line.strip() for line in loc_lines if "calendar" not in line]
