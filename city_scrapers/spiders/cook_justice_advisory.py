@@ -4,6 +4,7 @@ import scrapy
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from dateutil.relativedelta import relativedelta
 
 
 class CookJusticeAdvisorySpider(CityScrapersSpider):
@@ -13,8 +14,16 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     allowed_domains = ["www.cookcountyil.gov"]
 
     def start_requests(self):
-        url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
-        yield scrapy.Request(url=url, method="GET", callback=self.parse)
+        # old stuff:
+        # url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
+        # yield scrapy.Request(url=url, method="GET", callback=self.parse)
+
+        today = datetime.now()
+        for month_delta in range(-3, 0):
+            mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
+            url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
+            print(url)
+            yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
     def parse(self, response):
         """
@@ -41,7 +50,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             links=self._parse_links(response),
             source=response.url,
         )
-        meeting["id"] = self._get_id(meeting)
+        meeting["id"] = self._get_id(meeting) # need a get_id and get_status method? these lines cause
         meeting["status"] = self._get_status(meeting)
         return meeting
 
@@ -51,9 +60,10 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         return [
             response.urljoin(href)
-            for href in response.xpath('//a[contains(text(), "JAC Council")]')
+            for href in response.xpath('//a[contains(text(), "JAC")]|//a[contains(text(), "Justice Advisory")]')
             .css("a::attr(href)")
             .extract()
+            
         ]
 
     def _parse_location(self, response):
