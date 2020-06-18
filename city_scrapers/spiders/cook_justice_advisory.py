@@ -1,7 +1,7 @@
+import re
 from datetime import datetime
 
 import scrapy
-import re
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -17,7 +17,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     def start_requests(self):
 
         today = datetime.now()
-        for month_delta in range(-3, 0):
+        for month_delta in range(-3, 3):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
@@ -49,9 +49,13 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             source=response.url,
         )
 
-        meeting["id"] = self._get_id(meeting) # need a get_id and get_status method? these lines cause
+        meeting["id"] = self._get_id(meeting)
         meeting["status"] = self._get_status(meeting)
-        yield scrapy.Request(url="https://www.cookcountyil.gov/service/justice-advisory-council-meetings", callback=self._parse_links, meta={'meeting': meeting})
+        yield scrapy.Request(
+            url="https://www.cookcountyil.gov/service/justice-advisory-council-meetings",
+            callback=self._parse_links,
+            meta={'meeting': meeting}
+        )
         return meeting
 
     def _get_event_urls(self, response):
@@ -59,36 +63,37 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         Get urls for all justice advisory council (JAC in calendar) meetings on the page
         """
         return [
-            response.urljoin(href)
-            for href in response.xpath('//a[contains(text(), "JAC")]|//a[contains(text(), "Justice Advisory")]')
-            .css("a::attr(href)")
-            .extract()
-            
+            response.urljoin(href) for href in response.xpath(
+                '//a[contains(text(), "JAC")]|//a[contains(text(), "Justice Advisory")]'
+            ).css("a::attr(href)").extract()
         ]
 
     def _parse_location(self, response):
         """
-        Parse or generate location. Url, latitude and longitude are all
-        optional and may e more trouble than they're worth to collect.
+        Parse or generate location.
         """
-        address = response.xpath(
-            '//div[@class="field event-location"]/descendant::*/text()'
-        ).extract()
+        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()'
+                                 ).extract()
         for word in ["Location:", ", ", " "]:
             address.remove(word)
         address = " ".join(address)
-        return {
-            "address": address,
-            "name": "",
-        }
+        if "Microsoft Teams" in address:
+            return {
+                "address": "",
+                "name": "",
+            }
+        else:
+            return {
+                "address": address,
+                "name": "",
+            }
 
     def _parse_all_day(self, response):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        date = response.xpath(
-            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
-        ).extract()
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
         date = "".join(date).upper()
         return "ALL DAY" in date
 
@@ -106,19 +111,16 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         category_field = response.xpath(
             "//div[contains(., 'Category:') and contains(@class, 'field-label')]"
         )
-        field_items = category_field.xpath(
-            "./following::div[contains(@class, 'field-items')]"
-        )
+        field_items = category_field.xpath("./following::div[contains(@class, 'field-items')]")
         return " ".join(
-            field_items.xpath(".//p/text()").extract()
-            + field_items.xpath(".//strong/text()").extract()
+            field_items.xpath(".//p/text()").extract() +
+            field_items.xpath(".//strong/text()").extract()
         ).strip()
 
     def _parse_start(self, response):
         """Parse start date and time"""
-        start = response.xpath(
-            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
-        ).extract()
+        start = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                               ).extract()
         start = "".join(start).upper()
         start = start.split(" TO ")[0].strip()
         start = start.replace("(ALL DAY)", "12:00AM")
@@ -127,9 +129,8 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_end(self, response):
         """Parse end date and time"""
-        date = response.xpath(
-            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
-        ).extract()
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
         date = "".join(date).upper()
         date.replace("(ALL DAY)", "TO 11:59PM")
         start_end = date.split(" TO ")
@@ -138,14 +139,14 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             return
 
         end_time = start_end[1]
-        date = start_end[0][: start_end[0].rindex(" ")]
+        date = start_end[0][:start_end[0].rindex(" ")]
         return datetime.strptime("{} {}".format(date, end_time), "%B %d, %Y %I:%M%p")
 
     def _parse_links(self, response):
+        """Parse links"""
         files = response.css("span.file a")
         meeting = response.meta.get('meeting')
         meeting_date = meeting["start"]
-        
         meeting_year = int(meeting_date.strftime("%y"))
         meeting_month = int(meeting_date.strftime("%m"))
         meeting_day = int(meeting_date.strftime("%d"))
@@ -162,6 +163,9 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
                 year = int(regex.group("year")) % 2000
 
                 if meeting_year == year and meeting_month == month and meeting_day == day:
-                    meeting["links"] = [{ "href": link, "title": title, }]
+                    meeting["links"] = [{
+                        "href": link,
+                        "title": title,
+                    }]
                     yield meeting
         yield meeting
