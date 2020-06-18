@@ -15,15 +15,11 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     allowed_domains = ["www.cookcountyil.gov"]
 
     def start_requests(self):
-        # old stuff:
-        # url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
-        # yield scrapy.Request(url=url, method="GET", callback=self.parse)
 
         today = datetime.now()
         for month_delta in range(-3, 0):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
-            # print(url)
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
     def parse(self, response):
@@ -39,23 +35,23 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     def _parse_event(self, response):
         """Parse the event page."""
         title = self._parse_title(response)
+        start = self._parse_start(response)
+
         meeting = Meeting(
             title=title,
             description=self._parse_description(response),
             classification=ADVISORY_COMMITTEE,
-            start=self._parse_start(response),
+            start=start,
             end=self._parse_end(response),
             time_notes="",
             all_day=self._parse_all_day(response),
             location=self._parse_location(response),
-            # links=self._parse_links(response),
             source=response.url,
         )
 
-        meeting["links"] = self._parse_links(meeting)
-
         meeting["id"] = self._get_id(meeting) # need a get_id and get_status method? these lines cause
         meeting["status"] = self._get_status(meeting)
+        yield scrapy.Request(url="https://www.cookcountyil.gov/service/justice-advisory-council-meetings", callback=self._parse_links, meta={'meeting': meeting})
         return meeting
 
     def _get_event_urls(self, response):
@@ -145,40 +141,27 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         date = start_end[0][: start_end[0].rindex(" ")]
         return datetime.strptime("{} {}".format(date, end_time), "%B %d, %Y %I:%M%p")
 
-    def _parse_links(self, meeting):
-        date = meeting['start']
-
-        url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
-
-        yield scrapy.Request(url=url, method='GET', callback=self._parse_agenda, meta={'meeting_date': date})
-
-
-        # links = link_response.css("span.file a::attr(href)").extract()
-        # files = response.css("span.file a")
-
-        # dates = link_response.css("span.file a::attr(href)").re(r"((?:\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?:\d{2,4}))")
-        # ((?:\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?:\d{2,4})) some regex fun :)
-
-        # return [
-        #     {
-        #         "href": f.xpath("./@href").extract_first(),
-        #         "title": f.xpath("./text()").extract_first(),
-        #     }
-        #     for f in files
-        # ]
-       
-        # date = meeting['start'].strftime("%m/%d/%Y")
-
-    def _parse_agenda(self, response):
-        files = response.css("span.file a").extract()
-        meeting_date = response.meta.get('meeting_date')
+    def _parse_links(self, response):
+        files = response.css("span.file a")
+        meeting = response.meta.get('meeting')
+        meeting_date = meeting["start"]
+        
+        meeting_year = int(meeting_date.strftime("%y"))
+        meeting_month = int(meeting_date.strftime("%m"))
+        meeting_day = int(meeting_date.strftime("%d"))
 
         for f in files:
             link = f.xpath("./@href").extract_first()
             title = f.xpath("./text()").extract_first()
-            date = datetime.strftime(link.re(r"((?:\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?:\d{2,4}))")) 
+            pattern = "(?P<month>\d{1,2})(?:\.|_|-)(?P<day>\d{1,2})(?:\.|_|-)(?P<year>\d{2,4})"
+            regex = re.search(pattern, link)
 
-            if (date == meeting_date.date()):
-                return [{ "href": link, "title": title, }]
-        return []
+            if regex is not None:
+                month = int(regex.group("month"))
+                day = int(regex.group("day"))
+                year = int(regex.group("year")) % 2000
 
+                if meeting_year == year and meeting_month == month and meeting_day == day:
+                    meeting["links"] = [{ "href": link, "title": title, }]
+                    yield meeting
+        yield meeting
