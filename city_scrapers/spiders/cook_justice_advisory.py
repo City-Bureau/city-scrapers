@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import scrapy
+import re
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -22,7 +23,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         for month_delta in range(-3, 0):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = 'https://www.cookcountyil.gov/calendar-node-field-date/month/{}'.format(mo_str)
-            print(url)
+            # print(url)
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
     def parse(self, response):
@@ -94,10 +95,9 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_title(self, response):
         """Parse or generate event"""
-        title = response.css("h1::text").extract()
-        if "Special" in title:
-            return "Special JAC Council Meeting"
-        elif "JAC Council Meeting" in title:
+        # title = response.css("h1::text").extract()
+        title = ''.join(response.css("h1::text").extract())
+        if "JAC Council Meeting" in title:
             return "JAC Council Meeting"
         else:
             return title
