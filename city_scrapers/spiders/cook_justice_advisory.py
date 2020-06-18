@@ -48,9 +48,12 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             time_notes="",
             all_day=self._parse_all_day(response),
             location=self._parse_location(response),
-            links=self._parse_links(response),
+            # links=self._parse_links(response),
             source=response.url,
         )
+
+        meeting["links"] = self._parse_links(meeting)
+
         meeting["id"] = self._get_id(meeting) # need a get_id and get_status method? these lines cause
         meeting["status"] = self._get_status(meeting)
         return meeting
@@ -142,20 +145,40 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         date = start_end[0][: start_end[0].rindex(" ")]
         return datetime.strptime("{} {}".format(date, end_time), "%B %d, %Y %I:%M%p")
 
-    def _parse_links(self, response):
+    def _parse_links(self, meeting):
+        date = meeting['start']
+
         url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
 
-        link_response = scrapy.Request(url=url, method='GET', callback=self.parse)
+        yield scrapy.Request(url=url, method='GET', callback=self._parse_agenda, meta={'meeting_date': date})
 
-        files = link_response.css("span.file a::attr(href)").extract()
+
+        # links = link_response.css("span.file a::attr(href)").extract()
         # files = response.css("span.file a")
 
+        # dates = link_response.css("span.file a::attr(href)").re(r"((?:\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?:\d{2,4}))")
         # ((?:\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?:\d{2,4})) some regex fun :)
 
-        return [
-            {
-                "href": f.xpath("./@href").extract_first(),
-                "title": f.xpath("./text()").extract_first(),
-            }
-            for f in files
-        ]
+        # return [
+        #     {
+        #         "href": f.xpath("./@href").extract_first(),
+        #         "title": f.xpath("./text()").extract_first(),
+        #     }
+        #     for f in files
+        # ]
+       
+        # date = meeting['start'].strftime("%m/%d/%Y")
+
+    def _parse_agenda(self, response):
+        files = response.css("span.file a").extract()
+        meeting_date = response.meta.get('meeting_date')
+
+        for f in files:
+            link = f.xpath("./@href").extract_first()
+            title = f.xpath("./text()").extract_first()
+            date = datetime.strftime(link.re(r"((?:\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?:\d{2,4}))")) 
+
+            if (date == meeting_date.date()):
+                return [{ "href": link, "title": title, }]
+        return []
+
