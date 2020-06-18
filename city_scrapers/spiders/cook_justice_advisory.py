@@ -143,7 +143,15 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         return datetime.strptime("{} {}".format(date, end_time), "%B %d, %Y %I:%M%p")
 
     def _parse_links(self, response):
-        files = response.css("span.file a")
+        url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
+
+        link_response = scrapy.Request(url=url, method='GET', callback=self.parse)
+
+        files = link_response.css("span.file a::attr(href)").extract()
+        # files = response.css("span.file a")
+
+        # ((?:\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?:\d{2,4})) some regex fun :)
+
         return [
             {
                 "href": f.xpath("./@href").extract_first(),
