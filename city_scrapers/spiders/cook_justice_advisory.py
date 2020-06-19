@@ -19,9 +19,8 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         today = datetime.now()
         for month_delta in range(-3, 6):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
-            url = "https://www.cookcountyil.gov/calendar-node-field-date/month/{}".format(
-                mo_str
-            )
+            url = "https://www.cookcountyil.gov/" \
+                "calendar-node-field-date/month/{}".format(mo_str)
             yield scrapy.Request(url=url, method="GET", callback=self.parse)
 
     def parse(self, response):
