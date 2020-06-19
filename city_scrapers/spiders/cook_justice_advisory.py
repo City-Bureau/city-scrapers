@@ -22,7 +22,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             url = "https://www.cookcountyil.gov/calendar-node-field-date/month/{}".format(
                 mo_str
             )
-            print(url)
             yield scrapy.Request(url=url, method="GET", callback=self.parse)
 
     def parse(self, response):
@@ -33,7 +32,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         needs.
         """
         for url in self._get_event_urls(response):
-            print(url)
             yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
     def _parse_event(self, response):
@@ -111,7 +109,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_title(self, response):
         """Parse or generate event"""
-        # title = response.css("h1::text").extract()
         title = "".join(response.css("h1::text").extract())
         if "JAC Council Meeting" in title:
             return "JAC Council Meeting"
@@ -166,7 +163,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         meeting_date = meeting["start"]
         meeting_year = int(meeting_date.strftime("%y"))
         meeting_month = int(meeting_date.strftime("%m"))
-        # meeting_day = int(meeting_date.strftime("%d"))
 
         for f in files:
             link = f.xpath("./@href").extract_first()
@@ -177,14 +173,9 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             if regex is not None:
                 year = int(regex.group("year")) % 2000
                 month = int(regex.group("month"))
-                # day = int(regex.group("day"))
 
-                if (
-                    meeting_year == year
-                    and meeting_month == month
-                    # and meeting_day == day
-                ):
-                    meeting["links"] = [{"href": link, "title": title, }]
+                if meeting_year == year and meeting_month == month:
+                    meeting["links"] = [{"href": link, "title": title,}]
                     return meeting
 
         return meeting
