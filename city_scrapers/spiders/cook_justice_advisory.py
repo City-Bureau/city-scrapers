@@ -17,11 +17,12 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     def start_requests(self):
 
         today = datetime.now()
-        for month_delta in range(2, 6):
+        for month_delta in range(-3, 3):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = "https://www.cookcountyil.gov/calendar-node-field-date/month/{}".format(
                 mo_str
             )
+            print(url)
             yield scrapy.Request(url=url, method="GET", callback=self.parse)
 
     def parse(self, response):
@@ -32,6 +33,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         needs.
         """
         for url in self._get_event_urls(response):
+            print(url)
             yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
     def _parse_event(self, response):
@@ -53,11 +55,14 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
         meeting["id"] = self._get_id(meeting)
         meeting["status"] = self._get_status(meeting)
+
         yield scrapy.Request(
             url="https://www.cookcountyil.gov/service/justice-advisory-council-meetings",
             callback=self._parse_links,
+            dont_filter=True,
             meta={"meeting": meeting},
         )
+
         return meeting
 
     def _get_event_urls(self, response):
@@ -156,11 +161,12 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     def _parse_links(self, response):
         """Parse links"""
         files = response.css("span.file a")
+        files = files[2:]
         meeting = response.meta.get("meeting")
         meeting_date = meeting["start"]
         meeting_year = int(meeting_date.strftime("%y"))
         meeting_month = int(meeting_date.strftime("%m"))
-        meeting_day = int(meeting_date.strftime("%d"))
+        # meeting_day = int(meeting_date.strftime("%d"))
 
         for f in files:
             link = f.xpath("./@href").extract_first()
@@ -169,15 +175,16 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             regex = re.search(pattern, link)
 
             if regex is not None:
-                month = int(regex.group("month"))
-                day = int(regex.group("day"))
                 year = int(regex.group("year")) % 2000
+                month = int(regex.group("month"))
+                # day = int(regex.group("day"))
 
                 if (
                     meeting_year == year
                     and meeting_month == month
-                    and meeting_day == day
+                    # and meeting_day == day
                 ):
                     meeting["links"] = [{"href": link, "title": title, }]
-                    yield meeting
-        yield meeting
+                    return meeting
+
+        return meeting
