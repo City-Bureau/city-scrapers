@@ -17,7 +17,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     def start_requests(self):
 
         today = datetime.now()
-        for month_delta in range(-3, 3):
+        for month_delta in range(-3, 6):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = "https://www.cookcountyil.gov/calendar-node-field-date/month/{}".format(
                 mo_str
@@ -53,9 +53,10 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
         meeting["id"] = self._get_id(meeting)
         meeting["status"] = self._get_status(meeting)
+        url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
 
         yield scrapy.Request(
-            url="https://www.cookcountyil.gov/service/justice-advisory-council-meetings",
+            url=url,
             callback=self._parse_links,
             dont_filter=True,
             meta={"meeting": meeting},
@@ -167,15 +168,16 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         for f in files:
             link = f.xpath("./@href").extract_first()
             title = f.xpath("./text()").extract_first()
-            pattern = r"(?P<month>\d{1,2})(?:\.|_|-)(?P<day>\d{1,2})(?:\.|_|-)(?P<year>\d{2,4})"
+
+            pattern = r"(?P<m>\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?P<y>\d{2,4})"
             regex = re.search(pattern, link)
 
             if regex is not None:
-                year = int(regex.group("year")) % 2000
-                month = int(regex.group("month"))
+                year = int(regex.group("y")) % 2000
+                month = int(regex.group("m"))
 
                 if meeting_year == year and meeting_month == month:
-                    meeting["links"] = [{"href": link, "title": title,}]
+                    meeting["links"] = [{"href": link, "title": title}]
                     return meeting
-
+        meeting["links"] = []
         return meeting
