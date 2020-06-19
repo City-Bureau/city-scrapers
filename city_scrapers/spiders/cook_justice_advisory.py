@@ -154,7 +154,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         for f in files:
             link = f.xpath("./@href").extract_first()
             title = f.xpath("./text()").extract_first()
-            pattern = "(?P<month>\d{1,2})(?:\.|_|-)(?P<day>\d{1,2})(?:\.|_|-)(?P<year>\d{2,4})"
+            pattern = r'(?P<month>\d{1,2})(?:\.|_|-)(?P<day>\d{1,2})(?:\.|_|-)(?P<year>\d{2,4})'
             regex = re.search(pattern, link)
 
             if regex is not None:
