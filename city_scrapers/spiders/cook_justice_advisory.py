@@ -19,9 +19,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     def start_requests(self):
         url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
         yield scrapy.Request(
-            url=url,
-            callback=self._parse_links,
-            dont_filter=True,
+            url=url, callback=self._parse_links, dont_filter=True,
         )
         today = datetime.now()
         for month_delta in range(-7, 6):
@@ -73,17 +71,21 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         Get urls for all justice advisory council (JAC in calendar) meetings on the page
         """
         return [
-            response.urljoin(href) for href in response.xpath(
+            response.urljoin(href)
+            for href in response.xpath(
                 '//a[contains(text(), "JAC")]|//a[contains(text(), "Justice Advisory")]'
-            ).css("a::attr(href)").extract()
+            )
+            .css("a::attr(href)")
+            .extract()
         ]
 
     def _parse_location(self, response):
         """
         Parse or generate location.
         """
-        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()'
-                                 ).extract()
+        address = response.xpath(
+            '//div[@class="field event-location"]/descendant::*/text()'
+        ).extract()
         for word in ["Location:", ", ", " "]:
             address.remove(word)
         address = " ".join(address)
@@ -102,8 +104,9 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
-                              ).extract()
+        date = response.xpath(
+            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
+        ).extract()
         date = "".join(date).upper()
         return "ALL DAY" in date
 
@@ -120,16 +123,19 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         category_field = response.xpath(
             "//div[contains(., 'Category:') and contains(@class, 'field-label')]"
         )
-        field_items = category_field.xpath("./following::div[contains(@class, 'field-items')]")
+        field_items = category_field.xpath(
+            "./following::div[contains(@class, 'field-items')]"
+        )
         return " ".join(
-            field_items.xpath(".//p/text()").extract() +
-            field_items.xpath(".//strong/text()").extract()
+            field_items.xpath(".//p/text()").extract()
+            + field_items.xpath(".//strong/text()").extract()
         ).strip()
 
     def _parse_start(self, response):
         """Parse start date and time"""
-        start = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
-                               ).extract()
+        start = response.xpath(
+            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
+        ).extract()
         start = "".join(start).upper()
         start = start.split(" TO ")[0].strip()
         start = start.replace("(ALL DAY)", "12:00AM")
@@ -138,8 +144,9 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_end(self, response):
         """Parse end date and time"""
-        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
-                              ).extract()
+        date = response.xpath(
+            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
+        ).extract()
         date = "".join(date).upper()
         date.replace("(ALL DAY)", "TO 11:59PM")
         start_end = date.split(" TO ")
@@ -148,7 +155,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             return
 
         end_time = start_end[1]
-        date = start_end[0][:start_end[0].rindex(" ")]
+        date = start_end[0][: start_end[0].rindex(" ")]
         return datetime.strptime("{} {}".format(date, end_time), "%B %d, %Y %I:%M%p")
 
     def _get_agenda(self):
