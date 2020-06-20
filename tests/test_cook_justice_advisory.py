@@ -11,10 +11,16 @@ test_response = file_response(
     join(dirname(__file__), "files", "cook_justice_advisory.html"),
     url="https://www.cookcountyil.gov/event/jac-council-meeting-18",
 )
-spider = CookJusticeAdvisorySpider()
 
+test_detail_response = file_response(
+    join(dirname(__file__), "files", "cook_justice_advisory_details.html"),
+    url=("https://www.cookcountyil.gov/service/justice-advisory-council-meetings"),
+)
+
+spider = CookJusticeAdvisorySpider()
 freezer = freeze_time("2020-6-12")
 freezer.start()
+spider._parse_links(test_detail_response)
 item = spider._parse_event(test_response)
 freezer.stop()
 
@@ -67,4 +73,7 @@ def test_description():
 
 
 def test_links():
-    assert item["links"] == []
+    assert item["links"] == [{
+        "href": "https://www.cookcountyil.gov/sites/default/files/jac_council_agenda_1.9.2020_1.pdf",
+        "title": "Agenda",
+    }]

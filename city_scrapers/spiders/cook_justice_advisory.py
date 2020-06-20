@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 from datetime import datetime
 
 import scrapy
@@ -13,14 +14,22 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     agency = "Cook County Justice Advisory"
     timezone = "America/Chicago"
     allowed_domains = ["www.cookcountyil.gov"]
+    agenda_map = defaultdict(list)
 
     def start_requests(self):
-
+        url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
+        yield scrapy.Request(
+            url=url,
+            callback=self._parse_links,
+            dont_filter=True,
+        )
         today = datetime.now()
-        for month_delta in range(-3, 6):
+        for month_delta in range(-7, 6):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
-            url = "https://www.cookcountyil.gov/" \
+            url = (
+                "https://www.cookcountyil.gov/"
                 "calendar-node-field-date/month/{}".format(mo_str)
+            )
             yield scrapy.Request(url=url, method="GET", callback=self.parse)
 
     def parse(self, response):
@@ -35,8 +44,11 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_event(self, response):
         """Parse the event page."""
+        agenda_map = self._get_agenda()
         title = self._parse_title(response)
         start = self._parse_start(response)
+        meeting_year = int(start.strftime("%y"))
+        meeting_month = int(start.strftime("%m"))
 
         meeting = Meeting(
             title=title,
@@ -47,19 +59,12 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             time_notes="",
             all_day=self._parse_all_day(response),
             location=self._parse_location(response),
+            links=agenda_map[str(meeting_year) + "-" + str(meeting_month)],
             source=response.url,
         )
 
         meeting["id"] = self._get_id(meeting)
         meeting["status"] = self._get_status(meeting)
-        url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
-
-        yield scrapy.Request(
-            url=url,
-            callback=self._parse_links,
-            dont_filter=True,
-            meta={"meeting": meeting},
-        )
 
         return meeting
 
@@ -68,21 +73,17 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         Get urls for all justice advisory council (JAC in calendar) meetings on the page
         """
         return [
-            response.urljoin(href)
-            for href in response.xpath(
+            response.urljoin(href) for href in response.xpath(
                 '//a[contains(text(), "JAC")]|//a[contains(text(), "Justice Advisory")]'
-            )
-            .css("a::attr(href)")
-            .extract()
+            ).css("a::attr(href)").extract()
         ]
 
     def _parse_location(self, response):
         """
         Parse or generate location.
         """
-        address = response.xpath(
-            '//div[@class="field event-location"]/descendant::*/text()'
-        ).extract()
+        address = response.xpath('//div[@class="field event-location"]/descendant::*/text()'
+                                 ).extract()
         for word in ["Location:", ", ", " "]:
             address.remove(word)
         address = " ".join(address)
@@ -101,9 +102,8 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         Parse or generate all-day status. Defaults to false.
         """
-        date = response.xpath(
-            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
-        ).extract()
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
         date = "".join(date).upper()
         return "ALL DAY" in date
 
@@ -120,19 +120,16 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         category_field = response.xpath(
             "//div[contains(., 'Category:') and contains(@class, 'field-label')]"
         )
-        field_items = category_field.xpath(
-            "./following::div[contains(@class, 'field-items')]"
-        )
+        field_items = category_field.xpath("./following::div[contains(@class, 'field-items')]")
         return " ".join(
-            field_items.xpath(".//p/text()").extract()
-            + field_items.xpath(".//strong/text()").extract()
+            field_items.xpath(".//p/text()").extract() +
+            field_items.xpath(".//strong/text()").extract()
         ).strip()
 
     def _parse_start(self, response):
         """Parse start date and time"""
-        start = response.xpath(
-            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
-        ).extract()
+        start = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                               ).extract()
         start = "".join(start).upper()
         start = start.split(" TO ")[0].strip()
         start = start.replace("(ALL DAY)", "12:00AM")
@@ -141,9 +138,8 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_end(self, response):
         """Parse end date and time"""
-        date = response.xpath(
-            '//span[@class="date-display-single"]/descendant-or-self::*/text()'
-        ).extract()
+        date = response.xpath('//span[@class="date-display-single"]/descendant-or-self::*/text()'
+                              ).extract()
         date = "".join(date).upper()
         date.replace("(ALL DAY)", "TO 11:59PM")
         start_end = date.split(" TO ")
@@ -152,31 +148,24 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             return
 
         end_time = start_end[1]
-        date = start_end[0][: start_end[0].rindex(" ")]
+        date = start_end[0][:start_end[0].rindex(" ")]
         return datetime.strptime("{} {}".format(date, end_time), "%B %d, %Y %I:%M%p")
+
+    def _get_agenda(self):
+        return CookJusticeAdvisorySpider.agenda_map
 
     def _parse_links(self, response):
         """Parse links"""
+        agenda_map = self._get_agenda()
         files = response.css("span.file a")
         files = files[2:]
-        meeting = response.meta.get("meeting")
-        meeting_date = meeting["start"]
-        meeting_year = int(meeting_date.strftime("%y"))
-        meeting_month = int(meeting_date.strftime("%m"))
-
         for f in files:
             link = f.xpath("./@href").extract_first()
-            title = f.xpath("./text()").extract_first()
 
             pattern = r"(?P<m>\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?P<y>\d{2,4})"
             regex = re.search(pattern, link)
 
             if regex is not None:
-                year = int(regex.group("y")) % 2000
-                month = int(regex.group("m"))
-
-                if meeting_year == year and meeting_month == month:
-                    meeting["links"] = [{"href": link, "title": title}]
-                    return meeting
-        meeting["links"] = []
-        return meeting
+                y = int(regex.group("y")) % 2000
+                m = int(regex.group("m"))
+                agenda_map[str(y) + "-" + str(m)] = [{"href": link, "title": "Agenda"}]
