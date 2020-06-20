@@ -75,7 +75,8 @@ def test_description():
 def test_links():
     assert item["links"] == [
         {
-            "href": "https://www.cookcountyil.gov/sites/default/files/jac_council_agenda_1.9.2020_1.pdf",
+            "href": "https://www.cookcountyil.gov/sites/default/"
+            "files/jac_council_agenda_1.9.2020_1.pdf",
             "title": "Agenda",
         }
     ]
