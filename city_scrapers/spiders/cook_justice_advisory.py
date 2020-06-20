@@ -22,7 +22,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             url=url, callback=self._parse_links, dont_filter=True,
         )
         today = datetime.now()
-        for month_delta in range(-7, 6):
+        for month_delta in range(-3, 6):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = (
                 "https://www.cookcountyil.gov/"
