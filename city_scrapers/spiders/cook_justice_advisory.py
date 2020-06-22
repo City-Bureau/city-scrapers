@@ -15,8 +15,9 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     timezone = "America/Chicago"
     allowed_domains = ["www.cookcountyil.gov"]
     
-    def __init__(self, agenda_map=None):
+    def __init__(self, *args, **kwargs):
         self.agenda_map = defaultdict(list)
+        super().__init__(*args, **kwargs)
         
     def start_requests(self):
         url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
@@ -44,11 +45,9 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_event(self, response):
         """Parse the event page."""
-        agenda_map = self.agenda_map
         title = self._parse_title(response)
         start = self._parse_start(response)
-        meeting_year = int(start.strftime("%y"))
-        meeting_month = int(start.strftime("%m"))
+        links_key = start.strftime("%y-%m")
 
         meeting = Meeting(
             title=title,
@@ -59,7 +58,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             time_notes="",
             all_day=self._parse_all_day(response),
             location=self._parse_location(response),
-            links=agenda_map[str(meeting_year) + "-" + str(meeting_month)],
+            links=self.agenda_map[links_key],
             source=response.url,
         )
 
@@ -162,8 +161,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_links(self, response):
         """Parse links"""
-        agenda_map = self.agenda_map
-
         links = response.css('span.file a')
         links = links[2:]
         for link in links:
@@ -179,18 +176,4 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
                 else:
                     date_obj = datetime.strptime(raw_monthyear, "%B %Y")
                 formatted_date = datetime.strftime(date_obj, "%y-%m")
-                agenda_map[formatted_date] = [{"href": link_path, "title": "Agenda"}]
-        """
-        files = response.css("span.file a")
-        files = files[2:]
-        for f in files:
-            link = f.xpath("./@href").extract_first()
-
-            pattern = r"(?P<m>\d{1,2})(?:\.|_|-)(?:\d{1,2})(?:\.|_|-)(?P<y>\d{2,4})"
-            regex = re.search(pattern, link)
-
-            if regex is not None:
-                y = int(regex.group("y")) % 2000
-                m = int(regex.group("m"))
-                agenda_map[str(y) + "-" + str(m)] = [{"href": link, "title": "Agenda"}]
-        """
+                self.agenda_map[formatted_date] = [{"href": link_path, "title": "Agenda"}]
