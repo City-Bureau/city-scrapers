@@ -170,8 +170,16 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             link_name = link.xpath('text()').extract_first()
             link_name = link_name.replace('\xa0', ' ')
             link_path = link.xpath('./@href').extract_first()
-            
-
+            pattern = r"(?P<m>[a-zA-Z]+)( *)(?P<y>\d{4})"
+            regex = re.search(pattern, link_name)
+            if regex is not None:
+                raw_monthyear = regex.group("m") + " " + regex.group("y")
+                if len(regex.group("m")) < 4:
+                    date_obj = datetime.strptime(raw_monthyear, "%b %Y")
+                else:
+                    date_obj = datetime.strptime(raw_monthyear, "%B %Y")
+                formatted_date = datetime.strftime(date_obj, "%y-%m")
+                agenda_map[formatted_date] = [{"href": link_path, "title": "Agenda"}]
         """
         files = response.css("span.file a")
         files = files[2:]
