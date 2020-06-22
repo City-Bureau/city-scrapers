@@ -166,7 +166,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
         links = response.css('span.file a')
         links = links[2:]
-        for index, link in enumerate(links):
+        for link in links:
             link_name = link.xpath('text()').extract_first()
             link_name = link_name.replace('\xa0', ' ')
             link_path = link.xpath('./@href').extract_first()
