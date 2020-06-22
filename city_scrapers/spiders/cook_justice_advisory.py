@@ -14,8 +14,10 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     agency = "Cook County Justice Advisory"
     timezone = "America/Chicago"
     allowed_domains = ["www.cookcountyil.gov"]
-    agenda_map = defaultdict(list)
-
+    
+    def __init__(self, agenda_map=None):
+        self.agenda_map = defaultdict(list)
+        
     def start_requests(self):
         url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
         yield scrapy.Request(
@@ -42,7 +44,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_event(self, response):
         """Parse the event page."""
-        agenda_map = self._get_agenda()
+        agenda_map = self.agenda_map
         title = self._parse_title(response)
         start = self._parse_start(response)
         meeting_year = int(start.strftime("%y"))
@@ -158,12 +160,9 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         date = start_end[0][: start_end[0].rindex(" ")]
         return datetime.strptime("{} {}".format(date, end_time), "%B %d, %Y %I:%M%p")
 
-    def _get_agenda(self):
-        return CookJusticeAdvisorySpider.agenda_map
-
     def _parse_links(self, response):
         """Parse links"""
-        agenda_map = self._get_agenda()
+        agenda_map = self.agenda_map
         files = response.css("span.file a")
         files = files[2:]
         for f in files:
