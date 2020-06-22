@@ -163,6 +163,16 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     def _parse_links(self, response):
         """Parse links"""
         agenda_map = self.agenda_map
+
+        links = response.css('span.file a')
+        links = links[2:]
+        for index, link in enumerate(links):
+            link_name = link.xpath('text()').extract_first()
+            link_name = link_name.replace('\xa0', ' ')
+            link_path = link.xpath('./@href').extract_first()
+            
+
+        """
         files = response.css("span.file a")
         files = files[2:]
         for f in files:
@@ -175,3 +185,4 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
                 y = int(regex.group("y")) % 2000
                 m = int(regex.group("m"))
                 agenda_map[str(y) + "-" + str(m)] = [{"href": link, "title": "Agenda"}]
+        """
