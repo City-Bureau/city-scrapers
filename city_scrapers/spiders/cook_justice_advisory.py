@@ -71,6 +71,20 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """
         Get urls for all justice advisory council (JAC in calendar) meetings on the page
         """
+        responses = []
+        events = response.xpath("//a[contains(@href, 'event')]")
+        for event in events:
+            event_title = event.xpath("text()").extract_first().lower()
+            if (
+                "jac" in event_title
+                or "justice advisory" in event_title
+                or ("justice" in event_title and "advisory" in event_title)
+            ):
+                href = event.xpath("./@href").extract_first()
+                responses.append(response.urljoin(href))
+        return responses
+
+        """
         return [
             response.urljoin(href)
             for href in response.xpath(
@@ -79,6 +93,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             .css("a::attr(href)")
             .extract()
         ]
+        """
 
     def _parse_location(self, response):
         """
