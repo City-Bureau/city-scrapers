@@ -14,11 +14,11 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
     agency = "Cook County Justice Advisory"
     timezone = "America/Chicago"
     allowed_domains = ["www.cookcountyil.gov"]
-    
+
     def __init__(self, *args, **kwargs):
         self.agenda_map = defaultdict(list)
         super().__init__(*args, **kwargs)
-        
+
     def start_requests(self):
         url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
         yield scrapy.Request(
@@ -161,12 +161,12 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
 
     def _parse_links(self, response):
         """Parse links"""
-        links = response.css('span.file a')
+        links = response.css("span.file a")
         links = links[2:]
         for link in links:
-            link_name = link.xpath('text()').extract_first()
-            link_name = link_name.replace('\xa0', ' ')
-            link_path = link.xpath('./@href').extract_first()
+            link_name = link.xpath("text()").extract_first()
+            link_name = link_name.replace("\xa0", " ")
+            link_path = link.xpath("./@href").extract_first()
             pattern = r"(?P<m>[a-zA-Z]+)( *)(?P<y>\d{4})"
             regex = re.search(pattern, link_name)
             if regex is not None:
@@ -176,4 +176,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
                 else:
                     date_obj = datetime.strptime(raw_monthyear, "%B %Y")
                 formatted_date = datetime.strftime(date_obj, "%y-%m")
-                self.agenda_map[formatted_date] = [{"href": link_path, "title": "Agenda"}]
+                self.agenda_map[formatted_date] = [
+                    {"href": link_path, "title": "Agenda"}
+                ]
