@@ -96,11 +96,11 @@ Define a process for lead staff/volunteers at each meeting. Our Coding Session S
 
 ### Developing a Code of Conduct
 
-This step is often overlooked but often critical to success. Define a Code of Conduct that all coding community agree to abide by throughout their time on the project. The [Contributor Covenant](https://www.contributor-covenant.org/){:target="\_blank"} inspired an early mission for the open-membership, open-source City Scrapers project, outlined in the project [README file](https://github.com/City-Bureau/city-scrapers/blob/master/README.md){:target="\_blank"} located on GitHub. In addition to the Covenant, this document states that "The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
+This step is often overlooked but often critical to success. Define a Code of Conduct that all coding community agree to abide by throughout their time on the project. The [Contributor Covenant](https://www.contributor-covenant.org/){:target="\_blank"} inspired an early mission for the open-membership, open-source City Scrapers project, outlined in the project [README file](https://github.com/City-Bureau/city-scrapers/blob/main/README.md){:target="\_blank"} located on GitHub. In addition to the Covenant, this document states that "The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
 
 We hope that working with us will fill experience gaps (like using git/github, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both our community and Chicago's tech and media scenes at large."
 
-Here's the [Chicago City Scrapers Code of Conduct](https://github.com/City-Bureau/city-scrapers/blob/master/CODE_OF_CONDUCT.md){:target="\_blank"} as an example (feel free to adapt as needed).
+Here's the [Chicago City Scrapers Code of Conduct](https://github.com/City-Bureau/city-scrapers/blob/main/CODE_OF_CONDUCT.md){:target="\_blank"} as an example (feel free to adapt as needed).
 
 ### Reward your team
 
