@@ -1,5 +1,5 @@
-from datetime import datetime
 import re
+from datetime import datetime
 
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
@@ -60,7 +60,7 @@ class ChiSsa38Spider(CityScrapersSpider):
         date_words = date_str.split()
         month_name = date_words[0]
         datetime_obj = datetime.strptime(month_name, "%B")
-        meeting_day = int(re.findall('[0-9]+', date_words[1])[0])
+        meeting_day = int(re.findall("[0-9]+", date_words[1])[0])
 
         # Meeting time defaults to 12:00 AM
         meeting_hour = 0
@@ -69,18 +69,21 @@ class ChiSsa38Spider(CityScrapersSpider):
 
         # Handle irregularly formatted parts of date
         for i in range(len(date_words)):
-            # Meeting time appears in different formats, but always one index before "a.m." or "p.m."
+            # Meeting time appears in different formats, but always one
+            # index before "a.m." or "p.m."
             if "a.m." in date_words[i]:
                 meeting_hour = int(date_words[i - 1])
             elif "p.m." in date_words[i]:
                 meeting_hour = int(date_words[i - 1]) + 12
 
             # Validate reasonable year exists if it starts with "20"
-            if date_words[i][0:2] is "20":
-                meeting_year = int(date_words[i])
+            if date_words[i][0:2] == "20":
+                meeting_year = int(re.findall("[0-9]+", date_words[i])[0])
 
         # Put time, day, and year into datetime object
-        start_time = datetime_obj.replace(hour = meeting_hour, day = meeting_day, year = meeting_year)
+        start_time = datetime_obj.replace(
+            hour=meeting_hour, day=meeting_day, year=meeting_year
+        )
 
         return start_time
 

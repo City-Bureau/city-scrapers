@@ -30,6 +30,8 @@ freezer.stop()
 """
 Uncomment below
 """
+
+
 @pytest.mark.parametrize("item", parsed_items)
 def test_title(item):
     assert item["title"] == "Chamber of Commerce"
@@ -48,7 +50,7 @@ def test_start():
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_end(item):
-    assert item["end"] == None
+    assert item["end"] is None
 
 
 # def test_time_notes():
@@ -67,7 +69,7 @@ def test_end(item):
 def test_location(item):
     assert item["location"] == {
         "name": "Northcenter Chamber of Commerce",
-        "address": "4054 N Lincoln Ave, Chicago, IL 60618"
+        "address": "4054 N Lincoln Ave, Chicago, IL 60618",
     }
 
 
@@ -82,8 +84,9 @@ def test_location(item):
 #     }]
 
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+@pytest.mark.parametrize("item", parsed_items)
+def test_classification(item):
+    assert item["classification"] == NOT_CLASSIFIED
 
 
 # @pytest.mark.parametrize("item", parsed_items)
