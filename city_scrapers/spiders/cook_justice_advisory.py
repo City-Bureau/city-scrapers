@@ -22,9 +22,8 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         super().__init__(*args, **kwargs)
 
     def _parse_meetings_page(self, response):
-        # self._parse_links(response)
         today = datetime.now()
-        for month_delta in range(-10, -3):
+        for month_delta in range(-3, 6):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = (
                 "https://www.cookcountyil.gov/"

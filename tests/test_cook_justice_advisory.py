@@ -26,7 +26,7 @@ freezer.stop()
 
 
 def test_title():
-    assert item["title"] == "JAC Council Meeting"
+    assert item["title"] == "Justice Advisory Council"
 
 
 def test_start():
@@ -42,7 +42,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert item["id"] == "cook_justice_advisory/202001090830/x/jac_council_meeting"
+    assert item["id"] == "cook_justice_advisory/202001090830/x/justice_advisory_council"
 
 
 def test_all_day():
