@@ -11,27 +11,32 @@ from dateutil.relativedelta import relativedelta
 
 class CookJusticeAdvisorySpider(CityScrapersSpider):
     name = "cook_justice_advisory"
-    agency = "Cook County Justice Advisory"
+    agency = "Cook County Justice Advisory Council"
     timezone = "America/Chicago"
-    allowed_domains = ["www.cookcountyil.gov"]
+    start_urls = [
+        "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
+    ]
 
     def __init__(self, *args, **kwargs):
         self.agenda_map = defaultdict(list)
         super().__init__(*args, **kwargs)
 
-    def start_requests(self):
-        url = "https://www.cookcountyil.gov/service/justice-advisory-council-meetings"
-        yield scrapy.Request(
-            url=url, callback=self._parse_links, dont_filter=True,
-        )
+    def _parse_meetings_page(self, response):
+        # self._parse_links(response)
         today = datetime.now()
-        for month_delta in range(-3, 6):
+        for month_delta in range(-10, -3):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = (
                 "https://www.cookcountyil.gov/"
                 "calendar-node-field-date/month/{}".format(mo_str)
             )
-            yield scrapy.Request(url=url, method="GET", callback=self.parse)
+            yield scrapy.Request(
+                url=url, method="GET", callback=self._parse_events_page
+            )
+
+    def _parse_events_page(self, response):
+        for url in self._get_event_urls(response):
+            yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 
     def parse(self, response):
         """
@@ -40,8 +45,8 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for url in self._get_event_urls(response):
-            yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
+        self._parse_links(response)
+        self._parse_meetings_page(response)
 
     def _parse_event(self, response):
         """Parse the event page."""
@@ -84,17 +89,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
                 responses.append(response.urljoin(href))
         return responses
 
-        """
-        return [
-            response.urljoin(href)
-            for href in response.xpath(
-                '//a[contains(text(), "JAC")]|//a[contains(text(), "Justice Advisory")]'
-            )
-            .css("a::attr(href)")
-            .extract()
-        ]
-        """
-
     def _parse_location(self, response):
         """
         Parse or generate location.
@@ -130,7 +124,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         """Parse or generate event"""
         title = "".join(response.css("h1::text").extract())
         if "JAC Council Meeting" in title:
-            return "JAC Council Meeting"
+            return "Justice Advisory Council"
         else:
             return title
 
@@ -182,7 +176,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
             link_name = link.xpath("text()").extract_first()
             link_name = link_name.replace("\xa0", " ")
             link_path = link.xpath("./@href").extract_first()
-            pattern = r"(?P<m>[a-zA-Z]+)( *)(?P<y>\d{4})"
+            pattern = r"(?P<type>[a-zA-Z]+)( *)(?P<m>[a-zA-Z]+)( *)(?P<y>\d{4})"
             regex = re.search(pattern, link_name)
             if regex is not None:
                 raw_monthyear = regex.group("m") + " " + regex.group("y")
@@ -191,6 +185,6 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
                 else:
                     date_obj = datetime.strptime(raw_monthyear, "%B %Y")
                 formatted_date = datetime.strftime(date_obj, "%y-%m")
-                self.agenda_map[formatted_date] = [
-                    {"href": link_path, "title": "Agenda"}
-                ]
+                self.agenda_map[formatted_date].append(
+                    {"href": link_path, "title": regex.group("type")}
+                )
