@@ -72,11 +72,38 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
-        return None
+        dt_start = response.css(
+            "abbr.tribe-events-abbr.tribe-events-start-date.published.dtstart::text"
+        ).get()
+        time_start = response.css(
+            "div.tribe-events-abbr.tribe-events-start-time.published.dtstart::text"
+        ).get().split("-")
+        
+        try:
+            date = datetime.strptime(dt_start.strip(), "%B %d, %Y")
+        except ValueError:
+            # If year is omitted then they mean the current year
+            date = datetime.strptime(dt_start.strip(), "%B %d")
+            date = date.replace(year=datetime.today().year)
+        start = datetime.strptime(time_start[0].strip(), "%H:%M %p").time()
+        return datetime.combine(date, start)
 
     def _parse_end(self, response):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+        dt_start = response.css(
+            "abbr.tribe-events-abbr.tribe-events-start-date.published.dtstart::text"
+        ).get()
+        time_start = response.css(
+            "div.tribe-events-abbr.tribe-events-start-time.published.dtstart::text"
+        ).get().split("-")
+        
+        try:
+            date = datetime.strptime(dt_start.strip(), "%B %d, %Y")
+        except ValueError:
+            date = datetime.strptime(dt_start.strip(), "%B %d")
+            date = date.replace(year=datetime.today().year)
+        end = datetime.strptime(time_start[1].strip(), "%H:%M %p").time()
+        return datetime.combine(date, end)
 
     def _parse_time_notes(self, response):
         """Parse any additional notes on the timing of the meeting"""
@@ -92,14 +119,14 @@ class ChiSsa4Spider(CityScrapersSpider):
         event_address = response.css('span.tribe-address')
         street = event_address.css('span.tribe-street-address::text').get()
         locality = event_address.css('span.tribe-locality::text').get() + ","
-        region = event_address.css('span.tribe-region::text').get()
+        region = event_address.css('dd.tribe-region::text').get()
         postal_code = event_address.css('span.tribe-postal-code::text').get()
         country = event_address.css('span.tribe-country-name::text').get()
         # address = response.css('span.tribe-address *::text').getall()
-        address = " ".join([street, locality, region, postal_code, country])
+        #address = "".join([street, locality, region, postal_code, country])
 
         return {
-            "address": address,
+            "address": "",
             "name": name,
         }
 
