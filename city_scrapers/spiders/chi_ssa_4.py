@@ -73,16 +73,15 @@ class ChiSsa4Spider(CityScrapersSpider):
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
         dt_start = response.css(
-            "abbr.tribe-events-abbr.tribe-events-start-date.published.dtstart::text"
+            "abbr.dtstart::text"
         ).get()
         time_start = response.css(
-            "div.tribe-events-abbr.tribe-events-start-time.published.dtstart::text"
+            "div.dtstart::text"
         ).get().split("-")
         
         try:
             date = datetime.strptime(dt_start.strip(), "%B %d, %Y")
         except ValueError:
-            # If year is omitted then they mean the current year
             date = datetime.strptime(dt_start.strip(), "%B %d")
             date = date.replace(year=datetime.today().year)
         start = datetime.strptime(time_start[0].strip(), "%H:%M %p").time()
@@ -91,10 +90,10 @@ class ChiSsa4Spider(CityScrapersSpider):
     def _parse_end(self, response):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         dt_start = response.css(
-            "abbr.tribe-events-abbr.tribe-events-start-date.published.dtstart::text"
+            "abbr.dtstart::text"
         ).get()
         time_start = response.css(
-            "div.tribe-events-abbr.tribe-events-start-time.published.dtstart::text"
+            "div.dtstart::text"
         ).get().split("-")
         
         try:
@@ -116,22 +115,22 @@ class ChiSsa4Spider(CityScrapersSpider):
     def _parse_location(self, response):
         """Parse or generate location."""
         name = response.css('dd.tribe-venue::text').get()
-        event_address = response.css('span.tribe-address')
-        street = event_address.css('span.tribe-street-address::text').get()
-        locality = event_address.css('span.tribe-locality::text').get() + ","
-        region = event_address.css('dd.tribe-region::text').get()
-        postal_code = event_address.css('span.tribe-postal-code::text').get()
-        country = event_address.css('span.tribe-country-name::text').get()
-        # address = response.css('span.tribe-address *::text').getall()
-        #address = "".join([street, locality, region, postal_code, country])
+        street = response.css('span.tribe-street-address::text').get() + " "
+        locality = response.css('span.tribe-locality::text').get() + ", "
+        region = response.css('abbr.tribe-region::text').get() + " "
+        postal_code = response.css('span.tribe-postal-code::text').get() + " "
+        country = response.css('span.tribe-country-name::text').get()
+        address = "".join([street, locality, region, postal_code, country])
 
         return {
-            "address": "",
+            "address": address,
             "name": name,
         }
 
     def _parse_links(self, response):
         """Parse or generate links."""
+        #link = response.css(".tribe-events-list-event-description a::attr(href)").get()
+        #title = "meeting page"
         return [{"href": "", "title": ""}]
 
     def _parse_source(self, response):
