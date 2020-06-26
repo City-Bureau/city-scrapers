@@ -10,77 +10,66 @@ from city_scrapers.spiders.chi_ssa_4 import ChiSsa4Spider
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_4.html"),
-    url="https://95thstreetba.org/events/category/board-meeting/",
+    url="https://95thstreetba.org/events/95th-street-business-association-meeting-4/",
 )
 spider = ChiSsa4Spider()
 
 freezer = freeze_time("2020-06-25")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+item = spider._parse_event(test_response)
 
 freezer.stop()
 
-
-# def test_tests():
-#     print("Please write some tests for this spider or at least disable this one.")
-#     assert False
-
-
-"""
-Uncomment below
-"""
-
 def test_title():
-    assert parsed_items[0]["title"] == "95th Street Business Association Meeting"
+    assert item["title"] == "95th Street Business Association Meeting"
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
-
+def test_description():
+    desc = "All business association members are invited to attend monthly Board Meetings on the fourth Tuesday of the month at 8 am. at the Original Pancake House, 10437 South Western Avenue. These meetings are an excellent opportunity for business owners and managers to share experiences and collaborate with one another. (Please note: there are no Board Meetings in August or December.)"
+    assert item["description"].replace(u'\xa0', u' ') == desc
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2020, 1, 28, 8, 0)
+    assert item["start"] == datetime(2018, 9, 25, 8, 0)
 
 
 def test_end():
-    assert parsed_items[0]["end"] == datetime(2019, 1, 28, 9, 0)
+    assert item["end"] == datetime(2018, 9, 25, 9, 0)
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == ""
+    assert item["time_notes"] == ""
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_4/202001280800/x/95th_street_business_association_meeting"
+    assert item["id"] == "chi_ssa_4/201809250800/x/95th_street_business_association_meeting"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == PASSED
+    assert item["status"] == PASSED
 
 
 def test_location():
-    assert parsed_items[0]["location"] == {
-        "name": "Original Pancake House",
+    assert item["location"] == {
+        "name": " Original Pancake House",
         "address": "10437 S. Western Ave. Chicago, IL 60643 United States"
     }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://95thstreetba.org/events/95th-street-business-association-meeting-9/"
+    assert item["source"] == "https://95thstreetba.org/events/95th-street-business-association-meeting-4/"
 
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+def test_links():
+     assert item["links"] == [{
+       "href": "https://95thstreetba.org/wp-content/uploads/SEP18minutes.pdf",
+       "title": "Minutes"
+     }]
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == COMMISSION
+    assert item["classification"] == COMMISSION
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_all_day(item):
+def test_all_day():
     assert item["all_day"] is False
