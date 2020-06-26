@@ -14,7 +14,7 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def start_requests(self):
         today = datetime.now()
-        for month_delta in range(-22, -20):
+        for month_delta in range(-7, -6):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = 'http://95thstreetba.org/events/category/board-meeting/{}/'.format(mo_str)
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
@@ -53,10 +53,15 @@ class ChiSsa4Spider(CityScrapersSpider):
         """
         Get urls for all meetings on the calendar page
         """
-        return [
-            href
-            for href in response.css('table td.tribe-events-thismonth h3 a::attr(href)').extract()
-        ]
+        urls = []
+        links = response.css('table td.tribe-events-thismonth h3 a::attr(href)').extract()
+        descriptions = response.css('table td.tribe-events-thismonth h3 a::text').extract()
+
+        for link, description in zip(links, descriptions):
+            if "meeting" in description.lower():
+                urls.append(link)
+
+        return urls
 
     def _parse_title(self, response):
         """Parse or generate meeting title."""
@@ -65,10 +70,6 @@ class ChiSsa4Spider(CityScrapersSpider):
     def _parse_description(self, response):
         """Parse or generate meeting description."""
         return "".join(response.css('div.tribe-events-single-event-description p::text').getall())
-
-    # def _parse_classification(self, response):
-    #     """Parse or generate classification from allowed options."""
-    #     return COMMISSION
 
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
@@ -106,10 +107,6 @@ class ChiSsa4Spider(CityScrapersSpider):
         """Parse any additional notes on the timing of the meeting"""
         return ""
 
-    # def _parse_all_day(self, response):
-    #     """Parse or generate all-day status. Defaults to False."""
-    #     return False
-
     def _parse_location(self, response):
         """Parse or generate location."""
         name = response.css('dd.tribe-venue::text').get()
@@ -134,6 +131,8 @@ class ChiSsa4Spider(CityScrapersSpider):
         for link, text in zip(links, links_text):
             if "minutes" in text.lower():
                 title = "Minutes"
+            elif "agenda" in text.lower():
+                title = "Agenda"
             else:
                 title = text
             files.append({"href": link, "title": title})
