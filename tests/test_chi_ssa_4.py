@@ -27,13 +27,12 @@ def test_title():
 
 def test_description():
     desc = (
-        "All business association members are invited to attend"
-        "monthly Board Meetings on the fourth Tuesday of the month"
-        " at 8 am. at the Original Pancake House, 10437 South Western"
-        " Avenue. These meetings are an excellent opportunity for"
-        " business owners and managers to share experiences and "
-        "collaborate with one another. (Please note: there are no "
-        "Board Meetings in August or December.)"
+        "All business association members are invited to attend monthly Board "
+        "Meetings on the fourth Tuesday of the month at 8 am. at the "
+        "Original Pancake House, 10437 South Western Avenue. These "
+        "meetings are an excellent opportunity for business owners "
+        "and managers to share experiences and collaborate with one "
+        "another. (Please note: there are no Board Meetings in August or December.)"
     )
     assert item["description"].replace(u"\xa0", u" ") == desc
 
