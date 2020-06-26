@@ -129,11 +129,16 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def _parse_links(self, response):
         """Parse or generate links."""
-        #link = response.css(".tribe-events-list-event-description a::attr(href)").get()
-        #title = "meeting page"
-        links = response.css(".tribe-events-list-event-description a::attr(href)").getall
         
-        return [{"href": "", "title": ""}]
+        link_title = "meeting page"
+        link_to_title = []
+        links = response.css(".tribe-event-url")
+        for link in links:
+            link_href = link.css("::attr(href)").get()
+            link_title = "meeting page"
+            link_to_title.add({"href": link_href, "title": link_title})
+
+        return link_to_title
 
     def _parse_source(self, response):
         """Parse or generate source."""
