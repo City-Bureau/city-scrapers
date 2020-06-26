@@ -132,7 +132,6 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def _parse_links(self, response):
         """Parse or generate links."""
-        
         link_title = "meeting page"
         link_to_title = []
         links = response.css(".tribe-event-url")
