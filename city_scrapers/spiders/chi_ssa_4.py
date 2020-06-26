@@ -14,7 +14,7 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def start_requests(self):
         today = datetime.now()
-        for month_delta in range(-7, -6):
+        for month_delta in range(-6, 3):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = "http://95thstreetba.org/events/category/board-meeting/{}/".format(mo_str)
             yield scrapy.Request(url=url, method="GET", callback=self.parse)
@@ -67,7 +67,8 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def _parse_description(self, response):
         """Parse or generate meeting description."""
-        return "".join(response.css("div.tribe-events-single-event-description p::text").getall())
+        selector = "div.tribe-events-single-event-description p::text"
+        return "".join(response.css(selector).getall())
 
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
