@@ -16,7 +16,7 @@ class ChiSsa4Spider(CityScrapersSpider):
         today = datetime.now()
         for month_delta in range(-2, 3):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
-            url = 'https://95thstreetba.org/events/category/board-meeting/month/?{}'.format(mo_str)
+            url = 'https://9https://95thstreetba.org/events/category/board-meeting/?tribe_paged=1&tribe_event_display=list&tribe-bar-date=2020-06-265thstreetba.org/events/category/board-meeting/month/?{}'.format(mo_str)
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
     def parse(self, response):
@@ -34,7 +34,7 @@ class ChiSsa4Spider(CityScrapersSpider):
         meeting = Meeting(
             title=self._parse_title(response),
             description=self._parse_description(response),
-            classification=self._parse_classification(response),
+            classification=self.https://95thstreetba.org/events/category/board-meeting/?tribe_paged=1&tribe_event_display=list&tribe-bar-date=2020-06-26_parse_classification(response),
             start=self._parse_start(response),
             end=self._parse_end(response),
             all_day=self._parse_all_day(response),
@@ -131,6 +131,8 @@ class ChiSsa4Spider(CityScrapersSpider):
         """Parse or generate links."""
         #link = response.css(".tribe-events-list-event-description a::attr(href)").get()
         #title = "meeting page"
+        links = response.css(".tribe-events-list-event-description a::attr(href)").getall
+        
         return [{"href": "", "title": ""}]
 
     def _parse_source(self, response):
