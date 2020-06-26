@@ -16,7 +16,10 @@ class ChiSsa4Spider(CityScrapersSpider):
         today = datetime.now()
         for month_delta in range(-2, 3):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
-            url = 'https://9https://95thstreetba.org/events/category/board-meeting/?tribe_paged=1&tribe_event_display=list&tribe-bar-date=2020-06-265thstreetba.org/events/category/board-meeting/month/?{}'.format(mo_str)
+            print(mo_str)
+            url = 'http://95thstreetba.org/events/category/board-meeting/{}/'.format(mo_str)
+            print(url)
+
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
     def parse(self, response):
@@ -34,14 +37,14 @@ class ChiSsa4Spider(CityScrapersSpider):
         meeting = Meeting(
             title=self._parse_title(response),
             description=self._parse_description(response),
-            classification=self.https://95thstreetba.org/events/category/board-meeting/?tribe_paged=1&tribe_event_display=list&tribe-bar-date=2020-06-26_parse_classification(response),
+            classification='COMMISSION',
             start=self._parse_start(response),
             end=self._parse_end(response),
-            all_day=self._parse_all_day(response),
+            all_day=False,
             time_notes=self._parse_time_notes(response),
             location=self._parse_location(response),
             links=self._parse_links(response),
-            source=self._parse_source(response),
+            source=response.url,
         )
 
         meeting["status"] = self._get_status(meeting)
@@ -55,7 +58,7 @@ class ChiSsa4Spider(CityScrapersSpider):
         """
         return [
             href
-            for href in response.css('table h3 a::attr(href)').getall()
+            for href in response.css('table td.tribe-events-thismonth h3 a::attr(href)').extract()
         ]
 
     def _parse_title(self, response):
@@ -66,9 +69,9 @@ class ChiSsa4Spider(CityScrapersSpider):
         """Parse or generate meeting description."""
         return "".join(response.css('div.tribe-events-single-event-description p::text').getall())
 
-    def _parse_classification(self, response):
-        """Parse or generate classification from allowed options."""
-        return COMMISSION
+    # def _parse_classification(self, response):
+    #     """Parse or generate classification from allowed options."""
+    #     return COMMISSION
 
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
@@ -108,9 +111,9 @@ class ChiSsa4Spider(CityScrapersSpider):
         """Parse any additional notes on the timing of the meeting"""
         return ""
 
-    def _parse_all_day(self, response):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
+    # def _parse_all_day(self, response):
+    #     """Parse or generate all-day status. Defaults to False."""
+    #     return False
 
     def _parse_location(self, response):
         """Parse or generate location."""
@@ -135,6 +138,6 @@ class ChiSsa4Spider(CityScrapersSpider):
         
         return [{"href": "", "title": ""}]
 
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
+    # def _parse_source(self, response):
+    #     """Parse or generate source."""
+    #     return response.url
