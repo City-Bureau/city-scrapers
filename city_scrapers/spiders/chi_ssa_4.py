@@ -16,10 +16,7 @@ class ChiSsa4Spider(CityScrapersSpider):
         today = datetime.now()
         for month_delta in range(-2, 3):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
-            print(mo_str)
             url = 'http://95thstreetba.org/events/category/board-meeting/{}/'.format(mo_str)
-            print(url)
-
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
 
     def parse(self, response):
@@ -37,7 +34,7 @@ class ChiSsa4Spider(CityScrapersSpider):
         meeting = Meeting(
             title=self._parse_title(response),
             description=self._parse_description(response),
-            classification='COMMISSION',
+            classification=COMMISSION,
             start=self._parse_start(response),
             end=self._parse_end(response),
             all_day=False,
@@ -81,7 +78,6 @@ class ChiSsa4Spider(CityScrapersSpider):
         time_start = response.css(
             "div.dtstart::text"
         ).get().split("-")
-        
         try:
             date = datetime.strptime(dt_start.strip(), "%B %d, %Y")
         except ValueError:
@@ -98,7 +94,6 @@ class ChiSsa4Spider(CityScrapersSpider):
         time_start = response.css(
             "div.dtstart::text"
         ).get().split("-")
-        
         try:
             date = datetime.strptime(dt_start.strip(), "%B %d, %Y")
         except ValueError:
