@@ -14,7 +14,7 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def start_requests(self):
         today = datetime.now()
-        for month_delta in range(-2, 3):
+        for month_delta in range(-22, -20):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = 'http://95thstreetba.org/events/category/board-meeting/{}/'.format(mo_str)
             yield scrapy.Request(url=url, method='GET', callback=self.parse)
@@ -127,15 +127,18 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def _parse_links(self, response):
         """Parse or generate links."""
-        link_title = "meeting page"
-        link_to_title = []
-        links = response.css(".tribe-event-url")
-        for link in links:
-            link_href = link.css("::attr(href)").get()
-            link_title = "meeting page"
-            link_to_title.add({"href": link_href, "title": link_title})
+        links = response.css('div.tribe-events-content a::attr(href)').getall()
+        links_text = response.css('div.tribe-events-content a::text').getall()
+        files = []
 
-        return link_to_title
+        for link, text in zip(links, links_text):
+            if "minutes" in text.lower():
+                title = "Minutes"
+            else:
+                title = text
+            files.append({"href": link, "title": title})
+
+        return files
 
     # def _parse_source(self, response):
     #     """Parse or generate source."""
