@@ -18,7 +18,7 @@ test_pdf_response = file_response(
 )
 test_response = file_response(
     join(dirname(__file__), "files", "chi_human_relations.html"),
-    url="https://www.chicago.gov/city/en/depts/cchr/supp_info/BoardMeetingInformation.html",
+    url="https://www.chicago.gov/city/en/depts/cchr/supp_info/BoardMeetingInformation.html",  # noqa
 )
 spider = ChiHumanRelationsSpider()
 
@@ -27,8 +27,7 @@ freezer.start()
 
 spider._parse_schedule_pdf(test_pdf_response)
 parsed_items = sorted(
-    [item for item in spider._parse_documents(test_response)],
-    key=itemgetter("start"),
+    [item for item in spider._parse_documents(test_response)], key=itemgetter("start"),
 )
 
 freezer.stop()
@@ -59,7 +58,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_human_relations/201901101530/x/board_of_commissioners"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_human_relations/201901101530/x/board_of_commissioners"
+    )
 
 
 def test_status():
@@ -71,21 +73,21 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.chicago.gov/city/en/depts/cchr.html"
+    assert (
+        parsed_items[0]["source"] == "https://www.chicago.gov/city/en/depts/cchr.html"
+    )
 
 
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href":
-                "https://www.chicago.gov/content/dam/city/depts/cchr/BoardMeetings/BoardAgenda/2019JanuaryBoardAgenda.pdf",  # noqa
-            "title": "Agenda"
+            "href": "https://www.chicago.gov/content/dam/city/depts/cchr/BoardMeetings/BoardAgenda/2019JanuaryBoardAgenda.pdf",  # noqa
+            "title": "Agenda",
         },
         {
-            "href":
-                "https://www.chicago.gov/content/dam/city/depts/cchr/BoardMeetings/BoardMinutes/2019JanuaryMinutesCCHR%20Board.pdf",  # noqa
-            "title": "Minutes"
-        }
+            "href": "https://www.chicago.gov/content/dam/city/depts/cchr/BoardMeetings/BoardMinutes/2019JanuaryMinutesCCHR%20Board.pdf",  # noqa
+            "title": "Minutes",
+        },
     ]
     assert parsed_items[-1]["links"] == []
 

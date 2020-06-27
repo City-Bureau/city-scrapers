@@ -40,19 +40,25 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
                 source=response.url,
             )
 
-            meeting["status"] = self._get_status(meeting, text=item.css("::text").extract_first())
+            meeting["status"] = self._get_status(
+                meeting, text=item.css("::text").extract_first()
+            )
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
 
     def _parse_start(self, item, year_str):
         """Parse start datetime as a naive datetime object."""
-        date_str = re.search(r"[A-Za-z]{3,10} \d{1,2}", item.css("::text").extract_first()).group()
+        date_str = re.search(
+            r"[A-Za-z]{3,10} \d{1,2}", item.css("::text").extract_first()
+        ).group()
         return datetime.strptime(" ".join([date_str, year_str, "7pm"]), "%B %d %Y %I%p")
 
     def _validate_location(self, response):
         """Parse or generate location."""
-        if "117 North" not in " ".join(response.css(".entry-content p::text").extract()):
+        if "117 North" not in " ".join(
+            response.css(".entry-content p::text").extract()
+        ):
             raise ValueError("Meeting location has changed")
 
     def _parse_links(self, item):
@@ -60,8 +66,10 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
         links = []
         for link in item.css("a"):
             link_title = link.css("::text").extract_first()
-            links.append({
-                "title": "Minutes" if "Minutes" in link_title else "Agenda",
-                "href": link.attrib["href"],
-            })
+            links.append(
+                {
+                    "title": "Minutes" if "Minutes" in link_title else "Agenda",
+                    "href": link.attrib["href"],
+                }
+            )
         return links

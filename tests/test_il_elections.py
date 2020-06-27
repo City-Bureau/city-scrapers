@@ -34,11 +34,15 @@ def test_title():
 
 
 def test_description():
-    assert parsed_items[0]["description"
-                           ] == "Statutory meeting for election of Chairman and Vice Chairman."
+    assert (
+        parsed_items[0]["description"]
+        == "Statutory meeting for election of Chairman and Vice Chairman."
+    )
     assert parsed_items[1]["description"] == ""
-    assert parsed_items[6][
-        "description"] == "Statutory date to certify the ballot for the March Primary Election."
+    assert (
+        parsed_items[6]["description"]
+        == "Statutory date to certify the ballot for the March Primary Election."
+    )
 
 
 def test_start():
@@ -66,28 +70,33 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "",
-        "address": "2329 S. MacArthur Blvd. Springfield, IL 62704"
+        "address": "2329 S. MacArthur Blvd. Springfield, IL 62704",
     }
     assert parsed_items[5]["location"] == {
         "address": "100 W. Randolph, Suite 14-100 Chicago, IL 60601",
-        "name": ""
+        "name": "",
     }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.elections.il.gov/AboutTheBoard/Agenda.aspx"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.elections.il.gov/AboutTheBoard/Agenda.aspx"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "https://www.elections.il.gov/Downloads/AboutTheBoard/PDF/07_01_19Agenda.pdf",
-        "title": "Agenda"
-    }, {
-        "href":
-            "https://www.elections.il.gov/" +
-            "Downloads/AboutTheBoard/PDF/July 1-19 regular meeting minutes.pdf",
-        "title": "Minutes"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.elections.il.gov/Downloads/AboutTheBoard/PDF/07_01_19Agenda.pdf",  # noqa
+            "title": "Agenda",
+        },
+        {
+            "href": "https://www.elections.il.gov/"
+            + "Downloads/AboutTheBoard/PDF/July 1-19 regular meeting minutes.pdf",
+            "title": "Minutes",
+        },
+    ]
     assert parsed_items[7]["links"] == []
 
 

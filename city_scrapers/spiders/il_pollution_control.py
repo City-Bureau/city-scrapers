@@ -16,7 +16,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     start_urls = [
         "https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
-        "https://pcb.illinois.gov/CurrentAgendas"
+        "https://pcb.illinois.gov/CurrentAgendas",
     ]
     json_url = "https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents"
     calendar_url = "https://pcb.illinois.gov/ClerksOffice/Calendar"
@@ -25,8 +25,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
         self.minutes_map = dict()  # Populated by self._parse_minutes()
         self.agenda_map = dict()  # Populated by self._parse_agenda()
         self.relevant_years = [
-            str(y) for y in range(datetime.now().year - 1,
-                                  datetime.now().year + 1)
+            str(y) for y in range(datetime.now().year - 1, datetime.now().year + 1)
         ]
         super().__init__(*args, **kwargs)
 
@@ -38,9 +37,15 @@ class IlPollutionControlSpider(CityScrapersSpider):
         return spider
 
     def spider_idle(self):
-        """ React to `spider_idle` signal by starting JSON parsing after _parse_minutes."""
-        self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
-        self.crawler.engine.crawl(scrapy.Request(self.json_url, callback=self._parse_json), self)
+        """
+        React to `spider_idle` signal by starting JSON parsing after _parse_minutes.
+        """
+        self.crawler.signals.disconnect(
+            self.spider_idle, signal=scrapy.signals.spider_idle
+        )
+        self.crawler.engine.crawl(
+            scrapy.Request(self.json_url, callback=self._parse_json), self
+        )
         raise scrapy.exceptions.DontCloseSpider
 
     def parse(self, response):
@@ -84,7 +89,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
                     else:
                         break  # Found a format_str that matches - stop looking
                 if dt is None:
-                    continue  # Could not find a matching format_str - can't process link.
+                    continue  # Could not find matching format_str - can't process link.
 
                 self.minutes_map[dt] = url
 
@@ -101,13 +106,13 @@ class IlPollutionControlSpider(CityScrapersSpider):
         pdf_text = pdf_obj.getPage(0).extractText().replace("\n", "")
 
         # Find and extract strings for month/day/year:
-        regex = re.compile(r'(?P<month>[a-zA-Z]+) (?P<day>[0-9]+), (?P<year>[0-9]{4})')
+        regex = re.compile(r"(?P<month>[a-zA-Z]+) (?P<day>[0-9]+), (?P<year>[0-9]{4})")
         m = regex.search(pdf_text)
 
         try:
-            month = datetime.strptime(m.group('month'), '%B').month
-            day = int(m.group('day'))
-            year = int(m.group('year'))
+            month = datetime.strptime(m.group("month"), "%B").month
+            day = int(m.group("day"))
+            year = int(m.group("year"))
             self.agenda_map[datetime(year, month, day).date()] = response.url
         except AttributeError:  # Regex failed to match.
             return None
@@ -115,12 +120,15 @@ class IlPollutionControlSpider(CityScrapersSpider):
         return None
 
     def _parse_json(self, response):
-        """ Parse JSON from https://pcb.illinois.gov/ClerksOffice/GetCalendarEvents -> Meetings """
+        """
+        Parse JSON from /ClerksOffice/GetCalendarEvents -> Meetings
+        """
         data = json.loads(response.body_as_unicode())
 
         for item in data:
             if any(
-                s in item["CalendarTypeDesc"].lower() for s in ("holiday", "seminar", "hearing")
+                s in item["CalendarTypeDesc"].lower()
+                for s in ("holiday", "seminar", "hearing")
             ):
                 continue  # Not interested in this event type
 
@@ -140,7 +148,8 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
             meeting["links"] = self._parse_links(meeting)
             meeting["status"] = self._get_status(
-                meeting, text=" ".join([item['CalendarTypeDesc'], item['Description']]).lower()
+                meeting,
+                text=" ".join([item["CalendarTypeDesc"], item["Description"]]).lower(),
             )
             meeting["id"] = self._get_id(meeting)
 
@@ -154,15 +163,14 @@ class IlPollutionControlSpider(CityScrapersSpider):
             return NOT_CLASSIFIED
 
     def _parse_start(self, item):
-        return datetime.strptime(item["StartDateTime"], '%m/%d/%Y %I:%M:%S %p')
+        return datetime.strptime(item["StartDateTime"], "%m/%d/%Y %I:%M:%S %p")
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        text = " ".join([item['Description'], item['Location']]).lower()
+        text = " ".join([item["Description"], item["Location"]]).lower()
         if "thompson" in text:
             return {
-                "address":
-                    "James R. Thompson Center - 100 W. Randolph St. Suite 11-500, Chicago, IL 60601",  # noqa
+                "address": "James R. Thompson Center - 100 W. Randolph St. Suite 11-500, Chicago, IL 60601",  # noqa
                 "name": "Chicago IPCB Office",
             }
         elif "springfield" in text or "llinois pollution control board" in text:
@@ -172,7 +180,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             }
         elif "sangamo room" in text:
             return {
-                "address": "1021 N. Grand Ave. E. - Sangamo Room, Springfield, IL 62702",
+                "address": "1021 N. Grand Ave. E. - Sangamo Room, Springfield, IL 62702",  # noqa
                 "name": "Illinois EPA",
             }
         else:
@@ -184,7 +192,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
     def _parse_links(self, meeting):
         """ Associate Meeting objects with previously-scraped links """
         links = list()
-        key = meeting['start'].date()
+        key = meeting["start"].date()
         if key in self.minutes_map:
             links.append({"href": self.minutes_map[key], "title": "Minutes"})
         if key in self.agenda_map:

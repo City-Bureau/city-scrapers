@@ -11,7 +11,9 @@ class IlLotterySpider(CityScrapersSpider):
     name = "il_lottery"
     agency = "Illinois Lottery Control Board"
     timezone = "America/Chicago"
-    start_urls = ["https://www.illinoislottery.com/illinois-lottery/lottery-control-board/"]
+    start_urls = [
+        "https://www.illinoislottery.com/illinois-lottery/lottery-control-board/"
+    ]
 
     def parse(self, response):
         """
@@ -21,8 +23,8 @@ class IlLotterySpider(CityScrapersSpider):
         needs.
         """
 
-        if '122 South Michigan Avenue, 19th Floor' not in response.text:
-            raise ValueError('Meeting address has changed')
+        if "122 South Michigan Avenue, 19th Floor" not in response.text:
+            raise ValueError("Meeting address has changed")
 
         upcoming_meetings = self._parse_upcoming_meetings(response)
         past_meetings = self._parse_past_meetings(response)
@@ -32,9 +34,7 @@ class IlLotterySpider(CityScrapersSpider):
         reconciled_meetings = upcoming_meetings
         only_past_dates = set(past_meetings.keys()).difference(upcoming_meetings.keys())
         only_past_meetings = {
-            key: value
-            for key, value in past_meetings.items()
-            if key in only_past_dates
+            key: value for key, value in past_meetings.items() if key in only_past_dates
         }
         reconciled_meetings.update(only_past_meetings)
 
@@ -42,41 +42,41 @@ class IlLotterySpider(CityScrapersSpider):
             item = reconciled_meetings[key]
             meeting = Meeting(
                 title=self._parse_title(item),
-                description='',
+                description="",
                 classification=BOARD,
                 start=self._parse_start(item),
                 end=None,
                 all_day=False,
-                time_notes='',
+                time_notes="",
                 location={
-                    'name': 'Chicago Lottery Office',
-                    'address': '122 South Michigan Avenue, 19th Floor, Chicago, IL 60603'
+                    "name": "Chicago Lottery Office",
+                    "address": "122 South Michigan Avenue, 19th Floor, Chicago, IL 60603",  # noqa
                 },
                 source=response.url,
             )
-            meeting['id'] = self._get_id(meeting)
-            meeting['status'] = self._get_status(meeting, text=item)
-            meeting['links'] = links.get(meeting['start'].date(), [])
+            meeting["id"] = self._get_id(meeting)
+            meeting["status"] = self._get_status(meeting, text=item)
+            meeting["links"] = links.get(meeting["start"].date(), [])
 
             yield meeting
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        suffix = ''
-        if 'QTR' in item:
+        suffix = ""
+        if "QTR" in item:
             suffix = "Quarterly "
-        elif 'Special' in item:
-            suffix = 'Special '
+        elif "Special" in item:
+            suffix = "Special "
         return "Lottery Control Board {}Meeting".format(suffix)
 
     @staticmethod
     def parse_time(source):
         """Returns times given string with format h:mm am|pm"""
-        time_regex = re.compile(r'([1-9]:[0-5][0-9]\s?[a|p]m)')
+        time_regex = re.compile(r"([1-9]:[0-5][0-9]\s?[a|p]m)")
 
         try:
             time_match = time_regex.search(source).group().replace(" ", "")
-            return datetime.strptime(time_match, '%I:%M%p').time()
+            return datetime.strptime(time_match, "%I:%M%p").time()
         except AttributeError:
             default_hour = 13
             default_minute = 30
@@ -87,7 +87,7 @@ class IlLotterySpider(CityScrapersSpider):
         """Returns date"""
         # search for dates with '/' (ex: 08/16/19)
         if "/" in source:
-            date_match = re.search(r'(\d{2}\/\d{2}\/\d{2})', source).group()
+            date_match = re.search(r"(\d{2}\/\d{2}\/\d{2})", source).group()
             dt = datetime.strptime(date_match, "%m/%d/%y").date()
         # search for date in format "[month] [dd], [yyyy]" (ex: 'May 15, 2019')
         else:
@@ -100,8 +100,8 @@ class IlLotterySpider(CityScrapersSpider):
         """Parse start date and time."""
         return datetime.combine(self.parse_day(item), self.parse_time(item))
 
-    def _parse_links(self, response, link_text_substrings=['Agenda', 'Minutes']):
-        '''
+    def _parse_links(self, response, link_text_substrings=["Agenda", "Minutes"]):
+        """
         Extracts link to agenda for a specific meeting date
         Args:
             date: A datetime object with the date of the desired agenda
@@ -110,39 +110,56 @@ class IlLotterySpider(CityScrapersSpider):
         Return:
             List of dictionaries with the keys title (title/description of the link)
             and href (link URL) for the agenda for the meeting on the requested date
-        '''
+        """
         link_date_map = defaultdict(list)
-        for link in response.xpath('//p//a'):
-            link_text_selector = link.xpath('text()')
+        for link in response.xpath("//p//a"):
+            link_text_selector = link.xpath("text()")
             if link_text_selector:
                 link_text = link_text_selector.get()
                 if any(
-                    link_text_substring in link_text for link_text_substring in link_text_substrings
+                    link_text_substring in link_text
+                    for link_text_substring in link_text_substrings
                 ):
                     link_date = self.parse_day(link_text)
-                    link_href = link.xpath('@href').get()
-                    link_date_map[link_date].append({
-                        "href": response.urljoin(link_href),
-                        "title": link_text.replace(u'\xa0', u' ')
-                    })
+                    link_href = link.xpath("@href").get()
+                    link_date_map[link_date].append(
+                        {
+                            "href": response.urljoin(link_href),
+                            "title": link_text.replace("\xa0", " "),
+                        }
+                    )
 
         return link_date_map
 
     def _parse_upcoming_meetings(self, response):
-        """Returns a list of lines with dates following the string 'Upcoming Meeting Dates' """
+        """
+        Returns a list of lines with dates following the string 'Upcoming Meeting Dates'
+        """
 
         meeting_xpath = '//p[contains(., "Upcoming meeting dates")]'
 
         # future meetings are separated by <br> tags
-        meeting_lines = response.xpath(meeting_xpath).css('p *::text').extract()
+        meeting_lines = response.xpath(meeting_xpath).css("p *::text").extract()
 
         special_meeting_xpath = '//p[contains(., "Special meeting of")]'
-        special_meeting_lines = response.xpath(special_meeting_xpath).css("p *::text").extract()
+        special_meeting_lines = (
+            response.xpath(special_meeting_xpath).css("p *::text").extract()
+        )
         # only keep lines that include a weekday
-        weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        meeting_lines = [x for x in meeting_lines if any(weekday in x for weekday in weekdays)]
+        weekdays = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+        ]
+        meeting_lines = [
+            x for x in meeting_lines if any(weekday in x for weekday in weekdays)
+        ]
         special_meeting_lines = [
-            'Special ' + line
+            "Special " + line
             for line in special_meeting_lines
             if any(weekday in line for weekday in weekdays)
         ]
@@ -157,29 +174,31 @@ class IlLotterySpider(CityScrapersSpider):
     def _parse_past_meetings(self, response):
         """Returns a list of start date and documents from meeting minutes page"""
         meetings = {}
-        for item in response.css('a'):
-            meeting_text = item.xpath('text()').get()
+        for item in response.css("a"):
+            meeting_text = item.xpath("text()").get()
             if meeting_text is not None:
-                if 'Agenda' in meeting_text or 'Minutes' in meeting_text:
+                if "Agenda" in meeting_text or "Minutes" in meeting_text:
                     meeting_date = self.parse_day(meeting_text)
-                    meetings = self._update_meeting_value(meetings, meeting_date, meeting_text)
+                    meetings = self._update_meeting_value(
+                        meetings, meeting_date, meeting_text
+                    )
         return meetings
 
     def _update_meeting_value(self, meetings, meeting_date, meeting_text):
-        '''
+        """
         Updates the meetings dictionary
         If date does not yet exist in dictionary, adds to dictionary
         If date already exists, updates value with additional text found for the meeting
 
         Args:
-            meetings: A dictionary where key = date and value = text associated with the meeting
+            meetings: Dict where key = date and value = text associated with the meeting
             meeting_date: A datetime object representing a meeting date
             meeting_text: A string with information about a meeting
         Return:
             An updated version of the meetings dictionary
-        '''
+        """
         if meetings.get(meeting_date) is None:
             meetings[meeting_date] = meeting_text
         else:
-            meetings[meeting_date] = meetings[meeting_date] + ' ' + meeting_text
+            meetings[meeting_date] = meetings[meeting_date] + " " + meeting_text
         return meetings

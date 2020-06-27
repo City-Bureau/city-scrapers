@@ -11,7 +11,10 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
     agency = "Chicago Firemen's Annuity and Benefit Fund"
     timezone = "America/Chicago"
     start_urls = ["http://www.fabf.org/Meetings.html"]
-    location = {"name": "Fund Office", "address": "20 S Clark St, Suite 300, Chicago, IL 60602"}
+    location = {
+        "name": "Fund Office",
+        "address": "20 S Clark St, Suite 300, Chicago, IL 60602",
+    }
 
     def parse(self, response):
         """
@@ -23,8 +26,10 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
         link_list = self._parse_link_list(response)
         active_tab = response.css(".tab-pane.active .row")
 
-        for idx, col in enumerate(active_tab.css(".col-sm-2:nth-child(2), .col-sm-2:nth-child(3)")):
-            # Board meetings are in the first column, committee meetings are in the second
+        for idx, col in enumerate(
+            active_tab.css(".col-sm-2:nth-child(2), .col-sm-2:nth-child(3)")
+        ):
+            # Board meetings are in the first column, committee meetings in the second
             is_board = idx == 0
             for date_str in col.css("*::text").extract():
                 # Ignore strings that don't have a year in them
@@ -56,7 +61,7 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
         """Parse or generate meeting title."""
         if is_board:
             return "Retirement Board"
-        # Link titles can have committee names in them, return the first time there's a match
+        # Link titles can have committee names in them, return the first match
         for link in links:
             if "invest" in link["title"].lower():
                 return "Investment Committee"
@@ -85,17 +90,22 @@ class ChiFireBenefitFundSpider(CityScrapersSpider):
         links = []
         for link in response.css(".tab-pane.active a"):
             # Remove "(Month)" at end of link title
-            link_text = re.sub(r"\(.*\)", "", " ".join(link.css("*::text").extract())).strip()
-            links.append({
-                "title": link_text,
-                "href": response.urljoin(link.attrib["href"]),
-            })
+            link_text = re.sub(
+                r"\(.*\)", "", " ".join(link.css("*::text").extract())
+            ).strip()
+            links.append(
+                {"title": link_text, "href": response.urljoin(link.attrib["href"])}
+            )
         return links
 
     def _parse_links(self, start, link_list):
-        """Parse links from link list. All links for meetings have the formatted date in the URL"""
+        """
+        Parse links from link list. All links for meetings have the formatted date in
+        the URL
+        """
         start_fmts = [start.strftime("%m-%d-%Y"), start.strftime("%m-%d-%y")]
         return [
-            link for link in link_list
+            link
+            for link in link_list
             if any(start_fmt in link["href"] for start_fmt in start_fmts)
         ]

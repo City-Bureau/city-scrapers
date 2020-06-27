@@ -26,7 +26,9 @@ class ChiSsa48Spider(CityScrapersSpider):
 
         for item_date, item_info in zip(meeting_date, meeting_info):
 
-            start_time, end_time = self._parse_start_end(item_date, item_info, meeting_year)
+            start_time, end_time = self._parse_start_end(
+                item_date, item_info, meeting_year
+            )
 
             meeting = Meeting(
                 title="Commission",
@@ -59,7 +61,7 @@ class ChiSsa48Spider(CityScrapersSpider):
 
         start_time = datetime.strptime(
             year + " " + meeting_date + " " + parse_time[0] + " " + parse_time[1][-2:],
-            "%Y %A %B %d %I:%M %p"
+            "%Y %A %B %d %I:%M %p",
         )
 
         end_time = datetime.strptime(
@@ -89,20 +91,22 @@ class ChiSsa48Spider(CityScrapersSpider):
     def _parse_links(self, start_time, meeting_links):
         """Parse or generate links."""
         links = []
-        for href in meeting_links.xpath('.//a'):
-            title = href.xpath('text()').get().strip()
+        for href in meeting_links.xpath(".//a"):
+            title = href.xpath("text()").get().strip()
             minutes_date = title.split(" ")
-            """Verification, that selected link is a link to meeting minutes"""
+            # Verification, that selected link is a link to meeting minutes
             if len(minutes_date) >= 2 and minutes_date[1] != "Minutes":
                 continue
-            """Date format for the last meeting minutes is using 2019 instead of 19 format"""
+            # Date format for the last meeting minutes uses 2019 instead of 19 format
             if minutes_date[2][-3] != "/":
                 meeting_minutes_date = datetime.strptime(minutes_date[2], "%m/%d/%Y")
             else:
                 meeting_minutes_date = datetime.strptime(minutes_date[2], "%m/%d/%y")
 
             if meeting_minutes_date.date() == start_time.date():
-                links.append({"title": title, "href": href.xpath('@href').get().strip()})
+                links.append(
+                    {"title": title, "href": href.xpath("@href").get().strip()}
+                )
 
         return links
 

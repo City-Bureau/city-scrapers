@@ -45,7 +45,7 @@ class CookJusticeAdvisorySpider(CityScrapersSpider):
         needs.
         """
         self._parse_links(response)
-        self._parse_meetings_page(response)
+        yield from self._parse_meetings_page(response)
 
     def _parse_event(self, response):
         """Parse the event page."""

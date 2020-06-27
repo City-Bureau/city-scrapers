@@ -15,7 +15,7 @@ Follow the following directions for cloning the repository and installing requir
 - [Git](https://git-scm.com/)
 - [GitHub](https://github.com/) account
 - Working internet connection
-- [Python](https://www.python.org/) 3.5, 3.6, 3.7, or 3.8 installed
+- [Python](https://www.python.org/) 3.6, 3.7, or 3.8 installed
 - [Pipenv](https://pipenv.readthedocs.io/en/latest/) for managing dependencies and virtual environments
 
 You can find more details on setting up these tools and other common issues in [Setup Help](/docs/setup-help/).
@@ -76,7 +76,7 @@ The best way to familiarize yourself with the code base is to build a spider. Fo
 
 ### Familiarize yourself with how we work
 
-Please read the project's [`CONTRIBUTING.md`](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} file to learn about how we use GitHub to manage the project and our pull request policy.
+Please read the project's [`CONTRIBUTING.md`](https://github.com/City-Bureau/city-scrapers/blob/main/CONTRIBUTING.md){:target="\_blank"} file to learn about how we use GitHub to manage the project and our pull request policy.
 
 ### Spider Setup
 
@@ -160,12 +160,12 @@ That's OK.
 
 #### 6. Run linting and style-checking tools
 
-We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isort`](https://isort.readthedocs.io/en/stable/){:target="\_blank"}, and [`yapf`](https://github.com/google/yapf){:target="\_blank"} to check that all code is written in the proper style. To run these tools individually, you can run the following commands:
+We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isort`](https://isort.readthedocs.io/en/stable/){:target="\_blank"}, and [`black`](https://github.com/psf/black){:target="\_blank"} to check that all code is written in the proper style. To run these tools individually, you can run the following commands:
 
 ```bash
 $ pipenv run flake8
 $ pipenv run isort
-$ pipenv run style
+$ pipenv run black city_scrapers tests
 ```
 
 Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. See an example of this for VSCode in [Setup Help](/docs/setup-help/).
@@ -314,11 +314,11 @@ You generally want to verify that a spider:
 
 If your ready to submit your code to the project, you should create a pull request on GitHub. You can do this as early as you would like in order to get feedback from others working on the project.
 
-When you go to open a pull request, you'll see a template with details pre-populated including a checklist of tasks to complete. Fill out the information as best you can (it's alright if you can't check everything off yet). It's designed to provide some reminders for tasks to complete as well as making review easier. You can use the rest of the description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/master/CONTRIBUTING.md){:target="\_blank"} for more details.
+When you go to open a pull request, you'll see a template with details pre-populated including a checklist of tasks to complete. Fill out the information as best you can (it's alright if you can't check everything off yet). It's designed to provide some reminders for tasks to complete as well as making review easier. You can use the rest of the description to explain anything you'd like a reviewer to know about the code. See [CONTRIBUTING.md](https://github.com/City-Bureau/city-scrapers/blob/main/CONTRIBUTING.md){:target="\_blank"} for more details.
 
 ### `Meeting` Items
 
-The `Meeting` items you need to return are derived from Scrapy's [`Item` classes](https://docs.scrapy.org/en/latest/topics/items.html). The original source can be found in the [`city_scrapers_core` package](https://github.com/City-Bureau/city-scrapers-core/blob/master/city_scrapers_core/items.py).
+The `Meeting` items you need to return are derived from Scrapy's [`Item` classes](https://docs.scrapy.org/en/latest/topics/items.html). The original source can be found in the [`city_scrapers_core` package](https://github.com/City-Bureau/city-scrapers-core/blob/main/city_scrapers_core/items.py).
 
 A Scrapy `Item` mostly functions like a normal Python `dict`. You can create a `Meeting` Item with Python keyword arguments and also set values after it's created with Python's general `dict` syntax:
 
@@ -440,4 +440,4 @@ Legistar is a software platform provided by Granicus that many governments use t
 
 ### ASP.NET Sites
 
-ASP.NET sites can be a challenge because they're often inconsistent and require maintaining a level of state across requests. You can see an example of handling this behavior in the [`cuya_administrative_rules`](https://github.com/City-Bureau/city-scrapers-cle/blob/master/city_scrapers/spiders/cuya_administrative_rules.py) spider.
+ASP.NET sites can be a challenge because they're often inconsistent and require maintaining a level of state across requests. You can see an example of handling this behavior in the [`cuya_administrative_rules`](https://github.com/City-Bureau/city-scrapers-cle/blob/main/city_scrapers/spiders/cuya_administrative_rules.py) spider.

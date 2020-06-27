@@ -58,18 +58,23 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "http://www.av72chicago.com/commissioners--meetings.html"
+    assert (
+        parsed_items[0]["source"]
+        == "http://www.av72chicago.com/commissioners--meetings.html"
+    )
 
 
 def test_links():
-    assert parsed_items[1]["links"] == [{
-        'href': 'http://www.av72chicago.com/uploads/9/7/3/6/97363464/av72_may_1_2019_minutes.pdf',
-        'title': 'Meeting Minutes'
-    }, {
-        'href':
-            'http://www.av72chicago.com/uploads/9/7/3/6/97363464/may_1_2019_agenda_av72chicago.pdf',
-        'title': 'Agenda'
-    }]
+    assert parsed_items[1]["links"] == [
+        {
+            "href": "http://www.av72chicago.com/uploads/9/7/3/6/97363464/av72_may_1_2019_minutes.pdf",  # noqa
+            "title": "Meeting Minutes",
+        },
+        {
+            "href": "http://www.av72chicago.com/uploads/9/7/3/6/97363464/may_1_2019_agenda_av72chicago.pdf",  # noqa
+            "title": "Agenda",
+        },
+    ]
 
 
 def test_classification():

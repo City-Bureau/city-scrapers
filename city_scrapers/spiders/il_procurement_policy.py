@@ -12,8 +12,8 @@ class IlProcurementPolicySpider(CityScrapersSpider):
     agency = "Illinois Procurement Policy Board"
     timezone = "America/Chicago"
     start_urls = [
-        'https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx',
-        'https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx'
+        "https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx",
+        "https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx",
     ]
 
     def parse(self, response):
@@ -23,7 +23,7 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        if 'future' in response.url:
+        if "future" in response.url:
             yield from self._upcoming_meetings(response)
         else:
             yield from self._prev_meetings(response)
@@ -37,45 +37,45 @@ class IlProcurementPolicySpider(CityScrapersSpider):
         time_object = time(10, 0)
         date_str = " ".join(item.css("*::text").extract()).strip()
         date_str = re.sub("Agenda.pdf", "", date_str).strip()
-        date_object = datetime.strptime(date_str, "%B %d, %Y").date()
-        return datetime.combine(date_object, time_object)
+        try:
+            date_object = datetime.strptime(date_str, "%B %d, %Y").date()
+            return datetime.combine(date_object, time_object)
+        except ValueError:
+            return
 
     def _parse_links(self, item, response):
         """Parse or generate links."""
         links = []
         title_str = " ".join(item.css("*::text").extract()).strip()
-        if 'pdf' in title_str:
+        if "pdf" in title_str:
             title_str = re.sub("Agenda.pdf", "", title_str).strip()
             title_str += " Agenda"
-        links.append({
-            'title': title_str,
-            'href': response.urljoin(item.attrib['href']),
-        })
+        links.append(
+            {"title": title_str, "href": response.urljoin(item.attrib["href"])}
+        )
         return links
 
     def _link_date_map(self, response):
         link_map = defaultdict(list)
         for item in response.css(".ms-rtestate-field p a"):
             date = self._past_start(item)
-            title_str = date.strftime('%B %d, %Y')
-            link_map[date].append({
-                'title': title_str,
-                'href': response.urljoin(item.attrib['href'])
-            })
+            title_str = date.strftime("%B %d, %Y")
+            link_map[date].append(
+                {"title": title_str, "href": response.urljoin(item.attrib["href"])}
+            )
         for item in response.css(".ms-rtestate-field .list-unstyled li a"):
             date = self._past_start(item)
             if date is None:
                 continue
-            title_str = date.strftime('%B %d, %Y')
-            link_map[date].append({
-                'title': title_str,
-                'href': response.urljoin(item.attrib['href'])
-            })
+            title_str = date.strftime("%B %d, %Y")
+            link_map[date].append(
+                {"title": title_str, "href": response.urljoin(item.attrib["href"])}
+            )
         return link_map
 
     def _past_start(self, item):
         """parse or generate links from past meetings"""
-        str_list = ['.docx', '.pdf', '-', '[']
+        str_list = [".docx", ".pdf", "-", "["]
         time_object = time(10, 0)
         date_str = " ".join(item.css("*::text").extract()).strip()
         if len(date_str) == 0:
@@ -96,16 +96,19 @@ class IlProcurementPolicySpider(CityScrapersSpider):
 
     def _upcoming_meetings(self, response):
         for item in response.css(".ms-rtestate-field p strong a"):
+            start = self._parse_start(item)
+            if not start:
+                continue
             meeting = Meeting(
-                title='Procurement Policy Board',
-                description='',
+                title="Procurement Policy Board",
+                description="",
                 classification=self._parse_classification(item),
-                start=self._parse_start(item),
+                start=start,
                 all_day=False,
-                time_notes='',
+                time_notes="",
                 location={
-                    'name': 'Stratton Office Building',
-                    'address': '401 S Spring St, Springfield, IL 62704',
+                    "name": "Stratton Office Building",
+                    "address": "401 S Spring St, Springfield, IL 62704",
                 },
                 links=self._parse_links(item, response),
                 source=response.url,
@@ -122,14 +125,14 @@ class IlProcurementPolicySpider(CityScrapersSpider):
                 continue
             meeting = Meeting(
                 title="Procurement Policy Board",
-                description='',
+                description="",
                 classification=BOARD,
                 start=item,
                 all_day=False,
-                time_notes='',
+                time_notes="",
                 location={
-                    'name': 'Stratton Office Building',
-                    'address': '401 S Spring St, Springfield, IL 62704',
+                    "name": "Stratton Office Building",
+                    "address": "401 S Spring St, Springfield, IL 62704",
                 },
                 links=meets[item],
                 source=response.url,

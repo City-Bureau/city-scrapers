@@ -12,7 +12,7 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
     start_urls = ["https://www2.illinois.gov/cdb/about/boardmeetings"]
     location = {
         "name": "James R. Thompson Center",
-        "address": "100 West Randolph Street, 14th Floor, Chicago, IL 60601"
+        "address": "100 West Randolph Street, 14th Floor, Chicago, IL 60601",
     }
 
     def parse(self, response):
@@ -32,7 +32,7 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
             )
 
             meeting["status"] = self._get_status(
-                meeting, text=" ".join(item.css('td *::text').extract())
+                meeting, text=" ".join(item.css("td *::text").extract())
             )
             meeting["id"] = self._get_id(meeting)
 
@@ -40,14 +40,14 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        start_date = item.xpath('.//th/text()').get()
-        start_time = item.xpath('.//th/text()[preceding-sibling::br]').get()
+        start_date = item.xpath(".//th/text()").get()
+        start_time = item.xpath(".//th/text()[preceding-sibling::br]").get()
         start = datetime.strptime(start_date + start_time, "%B %d, %Y %H:%M %p")
         return start
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        end_date = item.xpath('.//th/text()').get()
+        end_date = item.xpath(".//th/text()").get()
         end_time = "12:00 AM"
         end = datetime.strptime(end_date + end_time, "%B %d, %Y %H:%M %p")
         end += timedelta(days=1)
@@ -59,17 +59,19 @@ class IlCapitalDevelopmentSpider(CityScrapersSpider):
 
     def _validate_location(self, item):
         """Validate if location has changed"""
-        if "Chicago" not in " ".join(item.css('td *::text').extract()):
+        if "Chicago" not in " ".join(item.css("td *::text").extract()):
             raise ValueError("Meeting location has changed")
 
     def _parse_links(self, item):
         """Parse or generate links."""
         links = []
-        for href in item.xpath('.//ul/li/a'):
-            links.append({
-                "title": href.xpath('text()').get().strip(),
-                "href": href.xpath('@href').get().strip()
-            })
+        for href in item.xpath(".//ul/li/a"):
+            links.append(
+                {
+                    "title": href.xpath("text()").get().strip(),
+                    "href": href.xpath("@href").get().strip(),
+                }
+            )
         return links
 
     def _parse_source(self, response):

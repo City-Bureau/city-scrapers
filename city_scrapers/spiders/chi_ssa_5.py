@@ -8,13 +8,13 @@ from city_scrapers_core.spiders import CityScrapersSpider
 
 
 class ChiSsa5Spider(CityScrapersSpider):
-    name = 'chi_ssa_5'
-    agency = 'Chicago Special Service Area #5 Commercial Ave'
-    timezone = 'America/Chicago'
-    start_urls = ['http://scpf-inc.org/ssa5/meeting-calendar/']
+    name = "chi_ssa_5"
+    agency = "Chicago Special Service Area #5 Commercial Ave"
+    timezone = "America/Chicago"
+    start_urls = ["http://scpf-inc.org/ssa5/meeting-calendar/"]
     location = {
-        'address': '3030 E 92nd St Chicago, IL 60617',
-        'name': 'MB Financial Bank',
+        "address": "3030 E 92nd St Chicago, IL 60617",
+        "name": "MB Financial Bank",
     }
 
     def parse(self, response):
@@ -24,14 +24,14 @@ class ChiSsa5Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        if '3030' not in response.text:
-            raise ValueError('Meeting address has changed')
+        if "3030" not in response.text:
+            raise ValueError("Meeting address has changed")
 
         self.meetings = self._parse_current_year(response)
         yield scrapy.Request(
-            'http://scpf-inc.org/ssa5/meeting-minutes/',
+            "http://scpf-inc.org/ssa5/meeting-minutes/",
             callback=self._parse_minutes,
-            dont_filter=True
+            dont_filter=True,
         )
 
     def _parse_current_year(self, response):
@@ -39,8 +39,10 @@ class ChiSsa5Spider(CityScrapersSpider):
         self._validate_location(description)
 
         items = []
-        for item in response.css('.page-post-content > *'):
-            items.extend([scrapy.Selector(text=s) for s in item.extract().split('<br>')])
+        for item in response.css(".page-post-content > *"):
+            items.extend(
+                [scrapy.Selector(text=s) for s in item.extract().split("<br>")]
+            )
 
         meetings = []
         for item in items:
@@ -50,18 +52,18 @@ class ChiSsa5Spider(CityScrapersSpider):
                 continue
             meeting = Meeting(
                 title=self._parse_title(item_text),
-                description='',
+                description="",
                 classification=COMMISSION,
                 start=start,
                 end=None,
-                time_notes='',
+                time_notes="",
                 all_day=False,
                 location=self.location,
                 links=self._parse_links(item),
                 source=response.url,
             )
-            meeting['status'] = self._get_status(meeting)
-            meeting['id'] = self._get_id(meeting)
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
             meetings.append(meeting)
         return meetings
 
@@ -69,57 +71,56 @@ class ChiSsa5Spider(CityScrapersSpider):
         """
         Parse the minutes page, matching with existing events if found
         """
-        for item in response.css('.page-post-content a'):
-            text = item.xpath('text()').extract_first()
+        for item in response.css(".page-post-content a"):
+            text = item.xpath("text()").extract_first()
             if not text:
                 continue
             start = self._parse_start(text, minutes=True)
 
-            links = [{
-                'href': item.attrib['href'],
-                'title': 'Minutes',
-            }]
+            links = [{"href": item.attrib["href"], "title": "Minutes"}]
             date_match = [
-                idx for idx, i in enumerate(self.meetings) if i['start'].date() == start.date()
+                idx
+                for idx, i in enumerate(self.meetings)
+                if i["start"].date() == start.date()
             ]
             if len(date_match):
-                self.meetings[date_match[0]]['links'].extend(links)
+                self.meetings[date_match[0]]["links"].extend(links)
             else:
                 meeting = Meeting(
                     title=self._parse_title(text),
-                    description='',
+                    description="",
                     classification=COMMISSION,
                     start=start,
                     end=None,
-                    time_notes='',
+                    time_notes="",
                     all_day=False,
                     location=self.location,
                     links=links,
                     source=response.url,
                 )
-                meeting['status'] = self._get_status(meeting)
-                meeting['id'] = self._get_id(meeting)
+                meeting["status"] = self._get_status(meeting)
+                meeting["id"] = self._get_id(meeting)
                 self.meetings.append(meeting)
         for meeting in self.meetings:
             yield meeting
 
     def _parse_title(self, text):
         """Parse or generate meeting title."""
-        if 'special' in text.lower():
-            return 'Special Commission'
-        return 'Regular Commission'
+        if "special" in text.lower():
+            return "Special Commission"
+        return "Regular Commission"
 
     def _parse_start(self, text, minutes=False):
         """Parse start datetime."""
         parsed_date = None
         if minutes:
-            date_match = re.search(r'\d{2}/\d{2}/\d{4}', text)
+            date_match = re.search(r"\d{2}/\d{2}/\d{4}", text)
             if date_match:
-                parsed_date = datetime.strptime(date_match.group(), '%m/%d/%Y')
+                parsed_date = datetime.strptime(date_match.group(), "%m/%d/%Y")
         else:
-            date_match = re.search(r'\w{3,9} \d{1,2}, \d{4}', text)
+            date_match = re.search(r"\w{3,9} \d{1,2}, \d{4}", text)
             if date_match:
-                parsed_date = datetime.strptime(date_match.group(), '%B %d, %Y')
+                parsed_date = datetime.strptime(date_match.group(), "%B %d, %Y")
         if parsed_date:
             return datetime.combine(parsed_date.date(), time(14))
 
@@ -129,10 +130,12 @@ class ChiSsa5Spider(CityScrapersSpider):
         """
         links = []
         for link in item.css("a"):
-            links.append({
-                "title": " ".join(link.css("*::text").extract()),
-                "href": link.attrib["href"],
-            })
+            links.append(
+                {
+                    "title": " ".join(link.css("*::text").extract()),
+                    "href": link.attrib["href"],
+                }
+            )
         return links
 
     def _validate_location(self, description):

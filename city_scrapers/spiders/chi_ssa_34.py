@@ -11,10 +11,10 @@ class ChiSsa34Spider(CityScrapersSpider):
     agency = "Chicago Special Service Area #34 Uptown"
     timezone = "America/Chicago"
     start_urls = ["https://exploreuptown.org/ssa/"]
-    custom_settings = {'ROBOTSTXT_OBEY': False}
+    custom_settings = {"ROBOTSTXT_OBEY": False}
     location = {
         "name": "Bridgeview Bank",
-        "address": "4753 N Broadway, First Floor Conference Room, Chicago, Illinois 60640",
+        "address": "4753 N Broadway, First Floor Conference Room, Chicago, Illinois 60640",  # noqa
     }
 
     def parse(self, response):
@@ -26,7 +26,9 @@ class ChiSsa34Spider(CityScrapersSpider):
         """
         self._validate_location(response)
         meeting_dt_list = []
-        for item in response.css(".entry-content li::text, .entry-content h5 + p::text").extract():
+        for item in response.css(
+            ".entry-content li::text, .entry-content h5 + p::text"
+        ).extract():
             start = self._parse_start(item)
             if not start or start in meeting_dt_list:
                 continue
@@ -52,7 +54,9 @@ class ChiSsa34Spider(CityScrapersSpider):
         if not item or not re.search(r"\d{4}", item):
             return
         dt_str = re.sub(r"(.*day, |(?<=\d)[a-l-n-z]{2}|[,–])", "", item.strip()).strip()
-        return datetime.strptime(re.sub(r"\s+", " ", dt_str).strip(), "%B %d %Y %I:%M%p")
+        return datetime.strptime(
+            re.sub(r"\s+", " ", dt_str).strip(), "%B %d %Y %I:%M%p"
+        )
 
     def _validate_location(self, response):
         if "4753 N" not in " ".join(response.css(".entry-content *::text").extract()):
@@ -63,8 +67,12 @@ class ChiSsa34Spider(CityScrapersSpider):
         links = []
         # Links follow a uniform structure, so search for this pattern by date
         for link in response.css("a[href*='{}']".format(start.strftime("%Y-%m%d"))):
-            links.append({
-                "title": "Agenda" if "agenda" in link.attrib["href"].lower() else "Minutes",
-                "href": link.attrib["href"],
-            })
+            links.append(
+                {
+                    "title": "Agenda"
+                    if "agenda" in link.attrib["href"].lower()
+                    else "Minutes",
+                    "href": link.attrib["href"],
+                }
+            )
         return links

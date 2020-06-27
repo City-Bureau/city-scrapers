@@ -22,8 +22,12 @@ class CookHousingSpider(CityScrapersSpider):
     def parse(self, response):
         self.link_date_map = defaultdict(list)
         for link in response.css(".additional-resources li a"):
-            link_title = re.sub(r"\s+", " ", " ".join(link.css("*::text").extract()).strip())
-            date_match = re.search(r"[a-zA-Z]{3,10} \d{1,2}([a-z]{2})?,? \d{4}", link_title)
+            link_title = re.sub(
+                r"\s+", " ", " ".join(link.css("*::text").extract()).strip()
+            )
+            date_match = re.search(
+                r"[a-zA-Z]{3,10} \d{1,2}([a-z]{2})?,? \d{4}", link_title
+            )
             if not date_match:
                 continue
             date_str = re.sub(r"((?<=\d)[a-z]+|,)", "", date_match.group())
@@ -32,15 +36,16 @@ class CookHousingSpider(CityScrapersSpider):
                 link_title = "Agenda"
             elif "minutes" in link_title.lower():
                 link_title = "Minutes"
-            self.link_date_map[link_date].append({
-                "title": link_title,
-                "href": response.urljoin(link.attrib["href"]),
-            })
+            self.link_date_map[link_date].append(
+                {"title": link_title, "href": response.urljoin(link.attrib["href"])}
+            )
 
         now = datetime.now()
         for months_delta in range(-2, 3):
             month_str = (now + relativedelta(months=months_delta)).strftime("%Y-%m")
-            yield response.follow("/events/{}/".format(month_str), callback=self._parse_events)
+            yield response.follow(
+                "/events/{}/".format(month_str), callback=self._parse_events
+            )
 
     def _parse_events(self, response):
         for link in response.css(".item-wrapper .info a"):
@@ -49,7 +54,9 @@ class CookHousingSpider(CityScrapersSpider):
                 yield response.follow(link.attrib["href"], callback=self._parse_detail)
 
     def _parse_detail(self, response):
-        schema_text = response.css("script[type='application/ld+json']::text").extract()[-1]
+        schema_text = response.css(
+            "script[type='application/ld+json']::text"
+        ).extract()[-1]
         schema_json = json.loads(schema_text)
         if isinstance(schema_json, list):
             item = schema_json[0]
@@ -108,11 +115,18 @@ class CookHousingSpider(CityScrapersSpider):
             "address": "",
         }
         if item["location"].get("address"):
-            loc_obj["address"] = " ".join([
-                item["location"]["address"].get(p)
-                for p in ["streetAddress", "addressLocality", "addressRegion", "postalCode"]
-                if item["location"]["address"].get(p)
-            ])
+            loc_obj["address"] = " ".join(
+                [
+                    item["location"]["address"].get(p)
+                    for p in [
+                        "streetAddress",
+                        "addressLocality",
+                        "addressRegion",
+                        "postalCode",
+                    ]
+                    if item["location"]["address"].get(p)
+                ]
+            )
         if "175 W" in loc_obj["address"]:
             return self.location
         return loc_obj

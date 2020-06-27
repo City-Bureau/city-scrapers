@@ -62,7 +62,7 @@ def test_time_notes(item):
 def test_location(item):
     assert item["location"] == {
         "address": "806 East 78th Street, Chicago IL 60619",
-        "name": "QBG Foundation"
+        "name": "QBG Foundation",
     }
 
 

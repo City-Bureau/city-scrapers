@@ -9,7 +9,9 @@ class CityScrapersWaybackMiddleware(WaybackMiddleware):
             links = []
             if "legistar" in item["source"] and "Calendar.aspx" not in item["source"]:
                 links = [item["source"]]
-            links.extend([link.get("href") for link in item.get("links", [])][:MAX_LINKS])
+            links.extend(
+                [link.get("href") for link in item.get("links", [])][:MAX_LINKS]
+            )
             return links
         if isinstance(item, dict):
             return [doc.get("url") for doc in item.get("documents", [])][:MAX_LINKS]

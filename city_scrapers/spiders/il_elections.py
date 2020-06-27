@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from urllib.parse import parse_qs, urlparse
 
@@ -53,7 +54,9 @@ class IlElectionsSpider(CityScrapersSpider):
             addr_name = addr_div.css("p::text").extract_first().split()[0]
             address_lines = addr_div.css("div > div::text").extract()
             # skip last two lines where phone and fax is written
-            address = " ".join([line.strip() for line in address_lines[:-2] if line.strip() != ""])
+            address = " ".join(
+                [line.strip() for line in address_lines[:-2] if line.strip() != ""]
+            )
             addresses[addr_name] = address
 
         return addresses
@@ -98,9 +101,10 @@ class IlElectionsSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        date = item.css("td")[0].css("::text").extract_first().strip()
-        time = item.css("td")[1].css("::text").extract_first().strip().replace(".", "")
-        return datetime.strptime(date + " " + time, "%a, %B %d, %Y %I:%M %p")
+        date_str = item.css("td")[0].css("::text").extract_first().strip()
+        raw_time_str = item.css("td")[1].css("::text").extract_first().strip()
+        time_str = re.sub(r"(?<=\d)\.(?=\d)", ":", raw_time_str).replace(".", "")
+        return datetime.strptime(f"{date_str} {time_str}", "%a, %B %d, %Y %I:%M %p")
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -130,10 +134,12 @@ class IlElectionsSpider(CityScrapersSpider):
             links.append({"href": response.urljoin(qs["Doc"][0]), "title": "Agenda"})
 
         if start.date() in self.meeting_minutes:
-            links.append({
-                "href": response.urljoin(self.meeting_minutes[start.date()]),
-                "title": "Minutes"
-            })
+            links.append(
+                {
+                    "href": response.urljoin(self.meeting_minutes[start.date()]),
+                    "title": "Minutes",
+                }
+            )
 
         return links
 

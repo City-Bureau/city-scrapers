@@ -18,7 +18,9 @@ spider = CookSouthMosquitoSpider()
 freezer = freeze_time("2019-07-10")
 freezer.start()
 
-parsed_items = sorted([item for item in spider.parse(test_response)], key=itemgetter("start"))
+parsed_items = sorted(
+    [item for item in spider.parse(test_response)], key=itemgetter("start")
+)
 
 freezer.stop()
 
@@ -48,7 +50,9 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "cook_south_mosquito/201904081600/x/board_of_trustees"
+    assert (
+        parsed_items[0]["id"] == "cook_south_mosquito/201904081600/x/board_of_trustees"
+    )
 
 
 def test_status():
@@ -64,14 +68,18 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "title": "Minutes",
-        "href": "https://sccmad.org/images/minutes/april-8-2019-minutes.pdf"
-    }]
-    assert parsed_items[4]["links"] == [{
-        "title": "Agenda",
-        "href": "https://sccmad.org/images/agenda/July-2019-agenda.pdf",
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "title": "Minutes",
+            "href": "https://sccmad.org/images/minutes/april-8-2019-minutes.pdf",
+        }
+    ]
+    assert parsed_items[4]["links"] == [
+        {
+            "title": "Agenda",
+            "href": "https://sccmad.org/images/agenda/July-2019-agenda.pdf",
+        }
+    ]
     assert parsed_items[-1]["links"] == []
 
 

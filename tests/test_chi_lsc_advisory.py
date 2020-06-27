@@ -64,11 +64,12 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href":
-            "https://cps.edu/About_CPS/Departments/Documents/LSC/LSCAB-Meeting-091619-orientation.pdf",  # noqa
-        "title": "Agenda"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://cps.edu/About_CPS/Departments/Documents/LSC/LSCAB-Meeting-091619-orientation.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_classification():

@@ -31,7 +31,10 @@ def test_start():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "cook_north_shore_mosquito/201901101900/x/board_of_trustees"
+    assert (
+        parsed_items[0]["id"]
+        == "cook_north_shore_mosquito/201901101900/x/board_of_trustees"
+    )
 
 
 def test_status():
@@ -41,19 +44,23 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "NSMAD Office",
-        "address": "117 Northfield Road, Northfield, IL 60093"
+        "address": "117 Northfield Road, Northfield, IL 60093",
     }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.nsmad.com/news-events/board-meetings/"
+    assert (
+        parsed_items[0]["source"] == "https://www.nsmad.com/news-events/board-meetings/"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "https://www.nsmad.com/wp-content/uploads/2019/02/2-Jan1019-minutes.pdf",
-        "title": "Minutes"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.nsmad.com/wp-content/uploads/2019/02/2-Jan1019-minutes.pdf",  # noqa
+            "title": "Minutes",
+        }
+    ]
 
 
 def test_classification():

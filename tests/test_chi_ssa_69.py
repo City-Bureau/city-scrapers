@@ -22,16 +22,16 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == 'SSA #69 Commissioners'
+    assert parsed_items[0]["title"] == "SSA #69 Commissioners"
 
 
 def test_description():
     assert parsed_items[0]["description"] == (
-        ' SSA #69 Commissioners Meeting:\n'
-        ' Corresponding Dates: \n'
-        'February 12, 2019; July 23, 2019; and  November 12, 2019\n'
-        ' Location: 7901 S. Racine, Chicago, IL 60620\n'
-        ' Time: 8:30 am to 10:00 am'
+        " SSA #69 Commissioners Meeting:\n"
+        " Corresponding Dates: \n"
+        "February 12, 2019; July 23, 2019; and  November 12, 2019\n"
+        " Location: 7901 S. Racine, Chicago, IL 60620\n"
+        " Time: 8:30 am to 10:00 am"
     )
 
 
@@ -44,11 +44,11 @@ def test_end():
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == ''
+    assert parsed_items[0]["time_notes"] == ""
 
 
 def test_id():
-    assert parsed_items[0]["id"] == 'chi_ssa_69/201911120930/x/ssa_69_commissioners'
+    assert parsed_items[0]["id"] == "chi_ssa_69/201911120930/x/ssa_69_commissioners"
 
 
 def test_status():
@@ -57,14 +57,14 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": '',
-        "address": '7901 S Racine Ave, Chicago, IL 60620, USA'
+        "name": "",
+        "address": "7901 S Racine Ave, Chicago, IL 60620, USA",
     }
 
 
 def test_source():
-    url_p = 'https://www.google.com/calendar/event?eid='
-    url_s1 = 'MWQxMDU2cDhmZmVjZjBmN2JqZHRuMmtncDEgZ2FnZGNjaGljYWdvQG0&ctz=GMT-05:00'
+    url_p = "https://www.google.com/calendar/event?eid="
+    url_s1 = "MWQxMDU2cDhmZmVjZjBmN2JqZHRuMmtncDEgZ2FnZGNjaGljYWdvQG0&ctz=GMT-05:00"
     assert parsed_items[0]["source"] == url_p + url_s1
 
 

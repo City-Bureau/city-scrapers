@@ -10,7 +10,7 @@ from city_scrapers.spiders.il_aging_advisory_council import IlAgingAdvisoryCounc
 
 test_response = file_response(
     join(dirname(__file__), "files", "il_aging_advisory_council.html"),
-    url="https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Pages/acmeetings.aspx",
+    url="https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Pages/acmeetings.aspx",  # noqa
 )
 spider = IlAgingAdvisoryCouncilSpider()
 
@@ -27,7 +27,7 @@ def test_title():
 
 
 def test_description():
-    assert parsed_items[0]["description"] == ''
+    assert parsed_items[0]["description"] == ""
 
 
 def test_classification():
@@ -47,37 +47,35 @@ def test_all_day():
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == ''
+    assert parsed_items[0]["time_notes"] == ""
 
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        'address': '160 N. LaSalle Street, 7th Floor, Chicago',
-        'name': 'Michael A. Bilandic Building'
+        "address": "160 N. LaSalle Street, 7th Floor, Chicago",
+        "name": "Michael A. Bilandic Building",
     }
 
 
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            'href':
-                'https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Documents/Full_OASAC_Minutes_2.25.2019.pdf',  # noqa
-            'title': 'Minutes'
+            "href": "https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Documents/Full_OASAC_Minutes_2.25.2019.pdf",  # noqa
+            "title": "Minutes",
         },
         {
-            'href':
-                'https://www2.illinois.gov/aging/PartnersProviders/Documents/NutritionInnovations_Grant%20Presentation_OASAC.pdf',  # noqa
-            'title': 'Nutrition Innovations Presentation'
+            "href": "https://www2.illinois.gov/aging/PartnersProviders/Documents/NutritionInnovations_Grant%20Presentation_OASAC.pdf",  # noqa
+            "title": "Nutrition Innovations Presentation",
         },
         {
-            'href':
-                'https://www2.illinois.gov/aging/PartnersProviders/Documents/HCA_WorkforceSurveyResultsSummary_OASAC.pdf',  # noqa
-            'title': 'HCA Survey Findings Presentation'
-        }
+            "href": "https://www2.illinois.gov/aging/PartnersProviders/Documents/HCA_WorkforceSurveyResultsSummary_OASAC.pdf",  # noqa
+            "title": "HCA Survey Findings Presentation",
+        },
     ]
 
 
 def test_source():
-    assert parsed_items[
-        0]["source"
-           ] == "https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Pages/acmeetings.aspx"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www2.illinois.gov/aging/PartnersProviders/OlderAdult/Pages/acmeetings.aspx"  # noqa
+    )

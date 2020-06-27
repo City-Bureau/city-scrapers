@@ -23,7 +23,7 @@ class CookPensionSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        # Create a mapping of IDs to meetings to only return unique meetings and group links
+        # Create a mapping of IDs to meetings to only return unique meeting, group links
         meeting_id_map = {}
         for item in response.css(".datatbl tr")[1:]:
             title = self._parse_title(item)
@@ -76,8 +76,10 @@ class CookPensionSpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         for link in item.css("a"):
-            links.append({
-                "href": response.urljoin(link.attrib["href"]),
-                "title": " ".join(link.css("*::text").extract()).strip(),
-            })
+            links.append(
+                {
+                    "href": response.urljoin(link.attrib["href"]),
+                    "title": " ".join(link.css("*::text").extract()).strip(),
+                }
+            )
         return links

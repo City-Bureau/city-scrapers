@@ -1,4 +1,3 @@
-import re
 from datetime import datetime
 
 from city_scrapers_core.constants import BOARD
@@ -23,17 +22,15 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
         Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
         needs.
         """
-        description = " ".join(response.css(".mainRail .block p:nth-child(1) *::text").extract())
-        dial_in_desc = re.sub(
-            r"\s+", " ",
-            " ".join(response.css(".mainRail .block p:nth-child(1) strong *::text").extract())
-        ).strip()
-        if "321 N" not in description and "Dial" not in dial_in_desc:
+        description = " ".join(
+            response.css(".mainRail .block p:nth-child(1) *::text").extract()
+        )
+        if "321 N" not in description and "teleconference" not in description:
             raise ValueError("Meeting location has changed")
         for item in response.css(".days"):
             meeting = Meeting(
                 title=self._parse_title(item),
-                description=re.sub(r"\s+(?=,)", "", dial_in_desc),
+                description="",
                 classification=BOARD,
                 start=self._parse_start(item),
                 end=None,
@@ -45,7 +42,7 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
             )
 
             meeting["status"] = self._get_status(
-                meeting, text=item.css('li:nth-child(3) td::text').extract_first() or ""
+                meeting, text=item.css("li:nth-child(3) td::text").extract_first() or ""
             )
             meeting["id"] = self._get_id(meeting)
 
@@ -53,23 +50,27 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        title = item.css('li:nth-child(3) td::text').extract_first()
+        title = item.css("li:nth-child(3) td::text").extract_first()
         if "special" in title.lower():
             return "Special Meeting"
         return "Retirement Board"
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        cal_date = item.css('.calendar-day::text').extract_first()
-        start_time = item.css('li:nth-child(2)::text').extract_first()
-        return datetime.strptime("{} {}".format(cal_date, start_time.upper()), "%m/%d/%Y %I:%M %p")
+        cal_date = item.css(".calendar-day::text").extract_first()
+        start_time = item.css("li:nth-child(2)::text").extract_first()
+        return datetime.strptime(
+            "{} {}".format(cal_date, start_time.upper()), "%m/%d/%Y %I:%M %p"
+        )
 
     def _parse_links(self, item, response):
         """Parse or generate links."""
         links = []
         for link in item.css("li:last-child a"):
-            links.append({
-                "href": response.urljoin(link.attrib["href"]),
-                "title": link.xpath("./text()").extract_first(),
-            })
+            links.append(
+                {
+                    "href": response.urljoin(link.attrib["href"]),
+                    "title": link.xpath("./text()").extract_first(),
+                }
+            )
         return links

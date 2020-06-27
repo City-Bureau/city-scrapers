@@ -25,7 +25,8 @@ class IlPortDistrictSpider(CityScrapersSpider):
             url="https://www.iipd.com/calendar/agendas", callback=self.parse_agendas
         )
         yield scrapy.Request(
-            url="https://www.iipd.com/about/board-meeting-minutes", callback=self.parse_minutes
+            url="https://www.iipd.com/about/board-meeting-minutes",
+            callback=self.parse_minutes,
         )
 
     @classmethod
@@ -35,8 +36,12 @@ class IlPortDistrictSpider(CityScrapersSpider):
         return spider
 
     def spider_idle(self):
-        """Call parse_schedules if spider is idle (finished parsing minutes and agendas)"""
-        self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
+        """
+        Call parse_schedules if spider is idle (finished parsing minutes and agendas)
+        """
+        self.crawler.signals.disconnect(
+            self.spider_idle, signal=scrapy.signals.spider_idle
+        )
         self.crawler.engine.crawl(
             scrapy.Request(self.schedules_url, callback=self.parse_schedules), self
         )
@@ -49,9 +54,9 @@ class IlPortDistrictSpider(CityScrapersSpider):
         meeting_types = rows[0].xpath(".//strong/text()").extract()
         meeting_types = [x.strip(" :s") for x in meeting_types]
 
-        strong_meetings = rows.xpath(".//strong/text()")[len(meeting_types):].extract()
+        strong_meetings = rows.xpath(".//strong/text()")[len(meeting_types) :].extract()
         if len(strong_meetings) % 2 != 0:
-            strong_meetings.append('')
+            strong_meetings.append("")
         strong_meetings = list(zip(strong_meetings[0::2], strong_meetings[1::2]))
 
         additional_info = response.xpath("//p[contains(text(), '*')]/text()").extract()
@@ -77,9 +82,10 @@ class IlPortDistrictSpider(CityScrapersSpider):
 
                 classification = self._parse_classification(i, meeting_types[i])
 
-                agendas_links = (
-                    self.agendas_dict.get((classification, start.strftime('%B %Y')), []) +
-                    self.agendas_dict.get((classification, start.strftime('%-m-%y')), [])
+                agendas_links = self.agendas_dict.get(
+                    (classification, start.strftime("%B %Y")), []
+                ) + self.agendas_dict.get(
+                    (classification, start.strftime("%-m-%y")), []
                 )
 
                 minutes_links = []
@@ -99,7 +105,7 @@ class IlPortDistrictSpider(CityScrapersSpider):
                     time_notes="",
                     location=self.location,
                     links=links,
-                    source=response.url
+                    source=response.url,
                 )
 
                 meeting["status"] = self._get_status(meeting)
@@ -108,8 +114,9 @@ class IlPortDistrictSpider(CityScrapersSpider):
                 yield meeting
 
     def parse_agendas(self, response):
-        file_names = response.xpath("//tr/td[@class='views-field views-field-title']/text()")\
-            .extract()
+        file_names = response.xpath(
+            "//tr/td[@class='views-field views-field-title']/text()"
+        ).extract()
         file_names = [x.strip("\n ") for x in file_names]
         file_links = response.xpath("//tr/td/a[@class='file-download']/@href").extract()
         agenda_file_groups = []
@@ -130,17 +137,17 @@ class IlPortDistrictSpider(CityScrapersSpider):
 
         for link, name, agenda_date in agenda_file_groups:
             classification = BOARD if BOARD in name else COMMITTEE
-            self.agendas_dict[(classification, agenda_date.strip())].append({
-                'title': " ".join([name, agenda_date]),
-                'href': link,
-            })
+            self.agendas_dict[(classification, agenda_date.strip())].append(
+                {"title": " ".join([name, agenda_date]), "href": link}
+            )
 
     def parse_minutes(self, response):
         rows = response.xpath("//tr")
         self.minutes_dict = {}
         for row in rows:
-            file_name = row.xpath(".//td[@class='views-field views-field-title']/text()")\
-                .extract_first()
+            file_name = row.xpath(
+                ".//td[@class='views-field views-field-title']/text()"
+            ).extract_first()
             if not file_name:
                 continue
 
@@ -148,14 +155,13 @@ class IlPortDistrictSpider(CityScrapersSpider):
             file_name_dt = re.findall(r"(?:.*?)(?:\d{4})", file_name)[0]
             file_name_dt = datetime.strptime(file_name_dt, "%B %d, %Y")
 
-            file_link = row.xpath(".//td[@class='views-field views-field-field-file']/a/@href")\
-                .extract_first()
+            file_link = row.xpath(
+                ".//td[@class='views-field views-field-field-file']/a/@href"
+            ).extract_first()
 
             self.minutes_dict.setdefault(
-                file_name_dt.date(), [{
-                    'title': 'Board Meeting Minutes',
-                    'href': file_link
-                }]
+                file_name_dt.date(),
+                [{"title": "Board Meeting Minutes", "href": file_link}],
             )
 
     def _parse_classification(self, i, meeting_types):
@@ -182,8 +188,9 @@ class IlPortDistrictSpider(CityScrapersSpider):
         return dt
 
     def _parse_title(self, date, meeting_type):
-        if (date.startswith("**") or date.endswith("**")) and\
-                not (date.startswith("***") or date.endswith("***")):
+        if (date.startswith("**") or date.endswith("**")) and not (
+            date.startswith("***") or date.endswith("***")
+        ):
             return "Special " + meeting_type
         else:
             return meeting_type
@@ -192,5 +199,5 @@ class IlPortDistrictSpider(CityScrapersSpider):
         loc = response.xpath("//strong")[-1].xpath(".//text()").extract()
         loc = [x.strip("\n ") for x in loc]
         loc = " ".join(loc[-2:])
-        if '3600' not in loc:
+        if "3600" not in loc:
             raise ValueError("Meeting location has changed")

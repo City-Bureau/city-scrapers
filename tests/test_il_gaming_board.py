@@ -47,7 +47,9 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_gaming_board/201901300900/x/riverboat_video_gaming"
+    assert (
+        parsed_items[0]["id"] == "il_gaming_board/201901300900/x/riverboat_video_gaming"
+    )
 
 
 def test_status():
@@ -59,23 +61,30 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "http://www.igb.illinois.gov/MeetingsMinutes.aspx"
+    assert (
+        parsed_items[0]["source"] == "http://www.igb.illinois.gov/MeetingsMinutes.aspx"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatAgenda.pdf",
-        "title": "Agenda: Riverboat"
-    }, {
-        "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatMinutes.pdf",
-        "title": "Minutes: Riverboat"
-    }, {
-        "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatAudio.mp3",
-        "title": "Audio: Riverboat"
-    }, {
-        "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130VideoAudio.mp3",
-        "title": "Audio: Video Gaming"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatAgenda.pdf",  # noqa
+            "title": "Agenda: Riverboat",
+        },
+        {
+            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatMinutes.pdf",  # noqa
+            "title": "Minutes: Riverboat",
+        },
+        {
+            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatAudio.mp3",  # noqa
+            "title": "Audio: Riverboat",
+        },
+        {
+            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130VideoAudio.mp3",  # noqa
+            "title": "Audio: Video Gaming",
+        },
+    ]
 
 
 def test_classification():

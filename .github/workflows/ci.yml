@@ -13,9 +13,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 3
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v1
@@ -27,8 +27,6 @@ jobs:
 
     - name: Install Pipenv
       uses: dschep/install-pipenv-action@v1
-      with:
-        version: 2018.11.26
 
     - name: Install dependencies
       run: pipenv sync --dev
@@ -38,8 +36,8 @@ jobs:
     - name: Check imports with isort
       run: pipenv run isort --check-only --diff || exit 1
 
-    - name: Check style with yapf
-      run: pipenv run yapf --diff --recursive ./city_scrapers/ ./tests/ || exit 1
+    - name: Check style with black
+      run: pipenv run black ./city_scrapers/ ./tests/ --check
 
     - name: Lint with flake8
       run: pipenv run flake8

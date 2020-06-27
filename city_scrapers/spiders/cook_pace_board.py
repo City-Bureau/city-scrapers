@@ -25,8 +25,9 @@ class CookPaceBoardSpider(CityScrapersSpider):
 
         # Current year of meetings listed
         year = (
-            response.xpath("//th[@class='rowheader']/em/strong/text()").re(r'(\d\d\d\d) Meetings')
-            [0].strip()
+            response.xpath("//th[@class='rowheader']/em/strong/text()")
+            .re(r"(\d\d\d\d) Meetings")[0]
+            .strip()
         )
 
         # Get rows of meeting table
@@ -50,10 +51,14 @@ class CookPaceBoardSpider(CityScrapersSpider):
             )
 
             # Figure out classification from meeting title
-            meeting['classification'] = self._parse_classification(title=meeting['title'])
+            meeting["classification"] = self._parse_classification(
+                title=meeting["title"]
+            )
 
             # Figure out meeting documents from title and date
-            meeting['links'] = self._parse_links(title=meeting['title'], date=meeting['start'])
+            meeting["links"] = self._parse_links(
+                title=meeting["title"], date=meeting["start"]
+            )
 
             meeting["status"] = self._get_status(
                 meeting, text=" ".join(item.css("*::text").extract())
@@ -92,10 +97,15 @@ class CookPaceBoardSpider(CityScrapersSpider):
 
         # We know Pace Headquarters address, and it seems to be the only place
         # they hold these meetings
-        if "pace headquarters" in location_name.lower() or "cancel" in location_name.lower():
+        if (
+            "pace headquarters" in location_name.lower()
+            or "cancel" in location_name.lower()
+        ):
             location_address = hq_address
         else:
-            raise ValueError('Meeting not at location with known address. Please update spider.')
+            raise ValueError(
+                "Meeting not at location with known address. Please update spider."
+            )
 
         return {
             "address": location_address,

@@ -22,7 +22,7 @@ test_docs_response = file_response(
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "cook_landbank_detail.html"),
-    url="http://www.cookcountylandbank.org/events/cclba-land-transactions-committee-20190913/",
+    url="http://www.cookcountylandbank.org/events/cclba-land-transactions-committee-20190913/",  # noqa
 )
 spider = CookLandbankSpider()
 
@@ -73,20 +73,23 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        **spider.location, "name": "Cook County Admin Building, 22nd Floor, Conference Room 'B'"
+        **spider.location,
+        "name": "Cook County Admin Building, 22nd Floor, Conference Room 'B'",
     }
 
 
 def test_sources():
-    assert parsed_items[
-        0]["source"
-           ] == "http://www.cookcountylandbank.org/events/cclba-data-marketing-committee-20190918/"
+    assert (
+        parsed_items[0]["source"]
+        == "http://www.cookcountylandbank.org/events/cclba-data-marketing-committee-20190918/"  # noqa
+    )
 
 
 def test_links():
     assert parsed_items[0]["links"] == []
-    assert parsed_detail["links"] == [{
-        "title": "Agenda",
-        "href":
-            "http://www.cookcountylandbank.org/wp-content/uploads/2019/09/CCLBA-Land-Transactions-9-13-2019-Agenda.pdf"  # noqa
-    }]
+    assert parsed_detail["links"] == [
+        {
+            "title": "Agenda",
+            "href": "http://www.cookcountylandbank.org/wp-content/uploads/2019/09/CCLBA-Land-Transactions-9-13-2019-Agenda.pdf",  # noqa
+        }
+    ]

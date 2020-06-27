@@ -9,12 +9,11 @@ from freezegun import freeze_time
 from city_scrapers.spiders.chi_ssa_54 import ChiSsa54Spider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_54.html"),
-    url="https://rpba.org/ssa-54/",
+    join(dirname(__file__), "files", "chi_ssa_54.html"), url="https://rpba.org/ssa-54/",
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_54_detail.html"),
-    url="https://business.rpba.org/events/details/sheridan-road-ssa-54-commissioners-meeting-7970",
+    url="https://business.rpba.org/events/details/sheridan-road-ssa-54-commissioners-meeting-7970",  # noqa
 )
 spider = ChiSsa54Spider()
 
@@ -57,8 +56,8 @@ def test_status():
 
 def test_location():
     assert parsed_item["location"] == {
-        'address': '6740 N. Sheridan Rd. chicago, IL 60626',
-        'name': ''
+        "address": "6740 N. Sheridan Rd. chicago, IL 60626",
+        "name": "",
     }
 
 

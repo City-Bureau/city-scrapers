@@ -52,10 +52,10 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        date_str = re.sub(r"(?<=\d)[a-z]+", "", item.css('.minuteDate::text').get())
-        time_str = item.css('.minuteTime::text').get()
-        datetimeObj = ''
-        datetimeObj = datetime.strptime(date_str + ':' + time_str, "%B %d, %Y:%I:%M %p")
+        date_str = re.sub(r"(?<=\d)[a-z]+", "", item.css(".minuteDate::text").get())
+        time_str = item.css(".minuteTime::text").get()
+        datetimeObj = ""
+        datetimeObj = datetime.strptime(date_str + ":" + time_str, "%B %d, %Y:%I:%M %p")
         return datetimeObj
 
     def _parse_end(self, item):
@@ -73,9 +73,9 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
     def _parse_location(self, item):
         """Parse or generate location."""
         temp_address = item.css(".minuteLocation p::text").extract()
-        [name, address] = ['', '']
-        if (temp_address):
-            if (temp_address[0][0].isdigit()):
+        [name, address] = ["", ""]
+        if temp_address:
+            if temp_address[0][0].isdigit():
                 name = ""
                 address = self.remove_special_chars("".join(temp_address))
             else:
@@ -89,8 +89,8 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        agenda_link = item.css('.minuteAgenda').css('a::attr(href)').get()
-        mom_link = item.css('.minuteMinutes').css('a::attr(href)').get()
+        agenda_link = item.css(".minuteAgenda").css("a::attr(href)").get()
+        mom_link = item.css(".minuteMinutes").css("a::attr(href)").get()
         links = []
         if agenda_link:
             links.append({"href": agenda_link, "title": "Agenda"})
@@ -104,4 +104,4 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def remove_special_chars(self, string_val):
         """Remove all special chars from string"""
-        return re.sub(r'\s+', ' ', string_val.replace("\n", ", ")).strip()
+        return re.sub(r"\s+", " ", string_val.replace("\n", ", ")).strip()

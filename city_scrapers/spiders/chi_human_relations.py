@@ -41,7 +41,9 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
                 self.docs_link = link.attrib["href"]
         if schedule_link and self.docs_link:
             yield scrapy.Request(
-                response.urljoin(schedule_link), callback=self._parse_schedule, dont_filter=True
+                response.urljoin(schedule_link),
+                callback=self._parse_schedule,
+                dont_filter=True,
             )
         else:
             raise ValueError("Required links not found")
@@ -50,7 +52,9 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
         """Parse PDF and then yield to documents page"""
         self._parse_schedule_pdf(response)
         yield scrapy.Request(
-            response.urljoin(self.docs_link), callback=self._parse_documents, dont_filter=True
+            response.urljoin(self.docs_link),
+            callback=self._parse_documents,
+            dont_filter=True,
         )
 
     def _parse_schedule_pdf(self, response):
@@ -95,22 +99,33 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
 
     def _parse_start(self, date_str, year_str):
         """Parse start datetime as a naive datetime object."""
-        return datetime.strptime("{} {} 15:30".format(date_str, year_str), "%B %d %Y %H:%M")
+        return datetime.strptime(
+            "{} {} 15:30".format(date_str, year_str), "%B %d %Y %H:%M"
+        )
 
     def _parse_end(self, start):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return start + timedelta(hours=1, minutes=30)
 
     def _parse_link_map(self, response):
-        """Parse or generate links. Returns a dictionary of month, year tuples and link lists"""
+        """
+        Parse or generate links. Returns a dictionary of month, year tuples and link
+        lists
+        """
         link_map = defaultdict(list)
         for link in response.css(".page-full-description-above a"):
             link_text = " ".join(link.css("*::text").extract()).strip()
-            link_start = datetime.strptime(link_text, "%B %Y")
-            link_map[(link_start.month, link_start.year)].append({
-                "title": "Agenda" if "Agenda" in link.attrib["href"] else "Minutes",
-                "href": response.urljoin(link.attrib["href"])
-            })
+            link_date_match = re.search(r"[A-Z][a-z]{2,9} \d{4}", link_text)
+            if not link_date_match:
+                continue
+            link_date_str = link_date_match.group()
+            link_start = datetime.strptime(link_date_str, "%B %Y")
+            link_map[(link_start.month, link_start.year)].append(
+                {
+                    "title": "Agenda" if "Agenda" in link.attrib["href"] else "Minutes",
+                    "href": response.urljoin(link.attrib["href"]),
+                }
+            )
         return link_map
 
     def _validate_location(self, text):

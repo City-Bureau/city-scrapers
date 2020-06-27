@@ -19,14 +19,18 @@ class ChiSsa69Spider(CityScrapersSpider):
         in_two_months = today + timedelta(days=60)
         chicago_time_zone = "America/Chicago"
 
-        return [(
-            "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"
-            "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone={}&"
-            "sanitizeHtml=true&timeMin={}T00:00:00-05:00&timeMax={}T00:00:00-05:00&"
-            "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
-        ).format(
-            chicago_time_zone, last_week.strftime("%Y-%m-%d"), in_two_months.strftime("%Y-%m-%d")
-        )]
+        return [
+            (
+                "https://www.googleapis.com/calendar/v3/calendars/gagdcchicago%40gmail.com/events"  # noqa
+                "?calendarId=gagdcchicago@gmail.com&singleEvents=true&timeZone={}&"
+                "sanitizeHtml=true&timeMin={}T00:00:00-05:00&timeMax={}T00:00:00-05:00&"
+                "key=AIzaSyC-KzxSLmmZitsCVv2DeueeUxoVwP0raVk"
+            ).format(
+                chicago_time_zone,
+                last_week.strftime("%Y-%m-%d"),
+                in_two_months.strftime("%Y-%m-%d"),
+            )
+        ]
 
     def parse(self, response):
         data = json.loads(response.text)
@@ -50,8 +54,8 @@ class ChiSsa69Spider(CityScrapersSpider):
                 links=[],
                 source=item["htmlLink"],
             )
-            meeting['status'] = self._get_status(meeting, text=item["status"])
-            meeting['id'] = self._get_id(meeting)
+            meeting["status"] = self._get_status(meeting, text=item["status"])
+            meeting["id"] = self._get_id(meeting)
             yield meeting
 
     def _parse_title(self, item):

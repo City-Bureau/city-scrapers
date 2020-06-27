@@ -30,7 +30,9 @@ class ChiSchoolsSpider(CityScrapersSpider):
 
     def spider_idle(self):
         """Parse planning calendar after all detail pages scraped"""
-        self.crawler.signals.disconnect(self.spider_idle, signal=scrapy.signals.spider_idle)
+        self.crawler.signals.disconnect(
+            self.spider_idle, signal=scrapy.signals.spider_idle
+        )
         self.crawler.engine.crawl(
             scrapy.Request(
                 "https://www.cpsboe.org/meetings/planning-calendar",
@@ -77,7 +79,9 @@ class ChiSchoolsSpider(CityScrapersSpider):
     def _parse_calendar(self, response):
         for item in response.css("#content-primary tr"):
             start = self._parse_start(
-                re.sub(r"\s+", " ", " ".join(item.css("td:first-child *::text").extract()))
+                re.sub(
+                    r"\s+", " ", " ".join(item.css("td:first-child *::text").extract())
+                )
             )
             if not start or start.date() in self.meeting_dates:
                 continue
@@ -100,7 +104,9 @@ class ChiSchoolsSpider(CityScrapersSpider):
             yield meeting
 
     def _parse_title(self, response):
-        title_str = " ".join(response.css("#content-primary h1::text").extract()).strip()
+        title_str = " ".join(
+            response.css("#content-primary h1::text").extract()
+        ).strip()
         if "Special" in title_str:
             return title_str
         if "Board" in title_str:
@@ -108,29 +114,38 @@ class ChiSchoolsSpider(CityScrapersSpider):
         return title_str.replace("Meeting", "").strip()
 
     def _parse_description(self, response):
-        split_lines = response.css("#content-primary > *:not(table):not(.box)"
-                                   )[3:-1].css("*::text").extract()
-        combined_lines = " ".join([
-            re.sub(r"\s+(?=\n)", "", re.sub(r"[^\S\n]+", " ", line)) for line in split_lines
-        ])
-        cleaned_text = "\n".join([line.strip() for line in combined_lines.split("\n")]).strip()
+        split_lines = (
+            response.css("#content-primary > *:not(table):not(.box)")[3:-1]
+            .css("*::text")
+            .extract()
+        )
+        combined_lines = " ".join(
+            [
+                re.sub(r"\s+(?=\n)", "", re.sub(r"[^\S\n]+", " ", line))
+                for line in split_lines
+            ]
+        )
+        cleaned_text = "\n".join(
+            [line.strip() for line in combined_lines.split("\n")]
+        ).strip()
         return re.sub(r"((?<=\n\n)\n+|(?<=[^\S\n])\s| (?=[\.,]))", "", cleaned_text)
 
     def _parse_status(self, meeting, description):
         reschedule_date_match = re.search(
-            r"((?<=rescheduled to )|(?<=held on ))([a-z]{6}day,? )?[a-z]{3,10} [0-9]{1,2}([a-z]{2})?,? \d{4}", # noqa
+            r"((?<=rescheduled to )|(?<=held on ))([a-z]{6}day,? )?[a-z]{3,10} [0-9]{1,2}([a-z]{2})?,? \d{4}",  # noqa
             description,
             flags=re.I,
         )
-        # If the text mentions a rescheduled date, check if it's the assigned meeting date
+        # If text mentions a rescheduled date, check if it's the assigned meeting date
         if reschedule_date_match:
             reschedule_date_str = reschedule_date_match.group()
             date_str = re.sub(
-                r"((?<=\d)[a-z]{2}|,)", "",
+                r"((?<=\d)[a-z]{2}|,)",
+                "",
                 re.search(
                     r"[A-Z][a-z]{2,9} [0-9]{1,2}([a-z]{2})?,? \d{4}",
                     reschedule_date_str,
-                ).group()
+                ).group(),
             )
             date_obj = datetime.strptime(date_str, "%B %d %Y").date()
             # If the parsed meeting date is the same as rescheduled,
@@ -177,13 +192,13 @@ class ChiSchoolsSpider(CityScrapersSpider):
                 return self.location
             return {
                 "name": loc_name,
-                "addr": loc_addr,
+                "address": loc_addr,
             }
         elif len(loc_lines) > 0:
             loc_list = [line.strip() for line in loc_lines if "calendar" not in line]
             loc_name = ""
             loc_addr = ""
-            # If the first character of the location string is a number, assume it's the address
+            # If the first char of the location str is a number, assume it's the address
             if loc_list[0][0].isdigit():
                 loc_addr = " ".join(loc_list)
             else:
@@ -202,12 +217,12 @@ class ChiSchoolsSpider(CityScrapersSpider):
         for link in response.css("#content-primary a"):
             title = " ".join(link.css("*::text").extract()).strip()
             if (
-                "calendar" in title.lower() or "back to meetings" in title.lower()
+                "calendar" in title.lower()
+                or "back to meetings" in title.lower()
                 or "past-meetings" in title.lower()
             ):
                 continue
-            links.append({
-                "title": title,
-                "href": response.urljoin(link.attrib["href"]),
-            })
+            links.append(
+                {"title": title, "href": response.urljoin(link.attrib["href"])}
+            )
         return links

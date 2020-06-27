@@ -44,30 +44,37 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_procurement_policy/201910151000/x/procurement_policy_board"
+    assert (
+        parsed_items[0]["id"]
+        == "il_procurement_policy/201910151000/x/procurement_policy_board"
+    )
 
 
 def test_status():
-    assert parsed_items[0]['status'] == TENTATIVE
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Stratton Office Building",
-        "address": "401 S Spring St, Springfield, IL 62704"
+        "address": "401 S Spring St, Springfield, IL 62704",
     }
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"] == 'https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx'
+    assert (
+        parsed_items[0]["source"]
+        == "https://www2.illinois.gov/sites/ppb/Pages/future_board_minutes.aspx"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        'href': 'https://www2.illinois.gov/sites/ppb/Documents/191015%20Agenda.pdf',
-        'title': 'October 15, 2019 Agenda'
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www2.illinois.gov/sites/ppb/Documents/191015%20Agenda.pdf",
+            "title": "October 15, 2019 Agenda",
+        }
+    ]
 
 
 def test_classification():
@@ -82,11 +89,11 @@ def test_all_day(item):
 # previous meeting minutes
 prev_url = "https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx"
 test_response2 = file_response(
-    join(dirname(__file__), "files", "il_procurement_policy_prev.html"),
-    url=prev_url,
+    join(dirname(__file__), "files", "il_procurement_policy_prev.html"), url=prev_url,
 )
-parsed_items_prev = sorted([item for item in spider._prev_meetings(test_response2)],
-                           key=itemgetter("start"))
+parsed_items_prev = sorted(
+    [item for item in spider._prev_meetings(test_response2)], key=itemgetter("start")
+)
 freezer.stop()
 
 
@@ -111,31 +118,37 @@ def test_time_notes_prev():
 
 
 def test_id_prev():
-    assert parsed_items_prev[0]["id"
-                                ] == "il_procurement_policy/201810161000/x/procurement_policy_board"
+    assert (
+        parsed_items_prev[0]["id"]
+        == "il_procurement_policy/201810161000/x/procurement_policy_board"
+    )
 
 
 def test_status_prev():
-    assert parsed_items_prev[2]['status'] == PASSED
+    assert parsed_items_prev[2]["status"] == PASSED
 
 
 def test_location_prev():
     assert parsed_items_prev[0]["location"] == {
         "name": "Stratton Office Building",
-        "address": "401 S Spring St, Springfield, IL 62704"
+        "address": "401 S Spring St, Springfield, IL 62704",
     }
 
 
 def test_source_prev():
-    assert parsed_items_prev[0]["source"
-                                ] == 'https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx'
+    assert (
+        parsed_items_prev[0]["source"]
+        == "https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx"
+    )
 
 
 def test_links_prev():
-    assert parsed_items_prev[0]["links"] == [{
-        'href': 'https://www2.illinois.gov/sites/ppb/Documents/181016%20Minutes.pdf',
-        'title': 'October 16, 2018'
-    }]
+    assert parsed_items_prev[0]["links"] == [
+        {
+            "href": "https://www2.illinois.gov/sites/ppb/Documents/181016%20Minutes.pdf",  # noqa
+            "title": "October 16, 2018",
+        }
+    ]
 
 
 def test_classification_prev():

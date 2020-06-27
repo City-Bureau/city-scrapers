@@ -13,11 +13,13 @@ class ChiSsa16Spider(CityScrapersSpider):
     start_urls = ["https://greektownchicago.org/about/ssa-16/"]
 
     def parse(self, response):
-        # Meeting entries are contained in a list item without any specific class or id designation.
-        # Because of this, I filtered the present list items on the page with the ", 20" string
-        # (every meeting li has this in the present text from the year listed),
-        # which indicates the meeting occurred or is scheduled to occur
-        # and therefore contains relevant information to document.
+        """
+        Meeting entries are contained in a list item without any specific class or id
+        designation. Because of this, I filtered the present list items on the page with
+        the ", 20" string (every meeting li has this in the present text from the year
+        listed), which indicates the meeting occurred or is scheduled to occur and
+        therefore contains relevant information to document.
+        """
         for item in response.xpath('//li[contains(text(), ", 20")]'):
             meeting = Meeting(
                 title=self._parse_title(item),
@@ -48,16 +50,17 @@ class ChiSsa16Spider(CityScrapersSpider):
 
     def _parse_start(self, item):
         # Extracted all alphanumeric characters from the text of each meeting,
-        # which contained the dates of the meeting, then split into list containing M, D, Y
+        # which contained the dates of the meeting, then split into list containing M,
+        # D, Y
         date = re.sub(r"[^a-zA-Z0-9]+", " ", item.xpath("text()").get()).split()
 
-        # Extracted just alphabetical characters from month, then used built-in strptime function
-        # in datetime to parse numeric month from string
+        # Extracted just alphabetical characters from month, then used built-in strptime
+        # function in datetime to parse numeric month from string
         month = re.sub(r"[^a-zA-Z]+", " ", date[0])
         month = datetime.datetime.strptime(month, "%B").month
 
-        # Extracted numbers from day and year entries of date list to remove any errant characters
-        # (i.e. one entry said January 28th where all others read January 28).
+        # Extracted numbers from day and year entries of date list to remove any errant
+        # characters (i.e. one entry said January 28th where all others read January 28)
         day = int(re.sub(r"[^0-9]+", " ", date[1]))
         year = int(re.sub(r"[^0-9]+", " ", date[2]))
 
@@ -67,16 +70,18 @@ class ChiSsa16Spider(CityScrapersSpider):
             '/descendant::p[contains(text(), "60661")]/text()'
         ).get()
         time = re.sub(r"[^a-zA-Z0-9:]+", "", time)
-        time = re.findall(r'\d{1,2}:\d{2}(?:AM|PM|am|pm)', time)[0].upper()
+        time = re.findall(r"\d{1,2}:\d{2}(?:AM|PM|am|pm)", time)[0].upper()
 
-        hour = datetime.datetime.strptime(time, '%I:%M%p').hour
-        minute = datetime.datetime.strptime(time, '%I:%M%p').minute
+        hour = datetime.datetime.strptime(time, "%I:%M%p").hour
+        minute = datetime.datetime.strptime(time, "%I:%M%p").minute
 
         return datetime.datetime(year, month, day, hour, minute)
 
     def _parse_end(self, item):
-        # Meeting adjournment information contained in files present in Minutes documents
-        # attached to each meeting that are un-optimized scanned docs.
+        """
+        Meeting adjournment information contained in files present in Minutes documents
+        attached to each meeting that are un-optimized scanned docs.
+        """
         return None
 
     def _parse_time_notes(self, item):
@@ -94,13 +99,16 @@ class ChiSsa16Spider(CityScrapersSpider):
         }
 
     def _parse_links(self, item):
-        # Most entries contained a Minutes document, but some not yet posted
-        # or otherwise have not occurred.
-        # When no anchor tag found, returns empty JSON element.
-        if (item.xpath("a/@href").get() is None):
+        """
+        Most entries contained a Minutes document, but some not yet posted or otherwise
+        have not occurred. When no anchor tag found, returns empty JSON element.
+        """
+        if item.xpath("a/@href").get() is None:
             return []
 
-        return [{"href": item.xpath("a/@href").get(), "title": item.xpath("a/text()").get()}]
+        return [
+            {"href": item.xpath("a/@href").get(), "title": item.xpath("a/text()").get()}
+        ]
 
     def _parse_source(self, response):
         return response.url

@@ -1,257 +1,287 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<head id="ctl00_Head1"><title>
-	ICC: Event Detail
-</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Session</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href=" ~/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link href="/Content/css/4.3.1?v=FPJ8l-6B6FUGKVk-YYPu_kXiirvL0j29lN37Y-tBSP41" rel="stylesheet"/>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
+    <style type="text/css">
+    .btn-circle.btn-xs { width: 20px; height: 20px; padding: 0px 0px; border-radius: 10px; text-align: center; position: relative;display: inline-block;vertical-align: middle;} 
+    .btn-circle:before,.btn-circle:after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;}
+    .btn-circle.plus:before,.btn-circle.plus:after {background:white;box-shadow: 1px 1px 1px #ffffff9e;}
+    .btn-circle.plus:before{width: 2px; margin: 3px auto; }
+    .btn-circle.plus:after{ margin: auto 3px; height: 2px; box-shadow: none;}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="/content/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    .btn-circle.plus:before,.btn-circle.plus:after {background:white;box-shadow: 1px 1px 1px #ffffff9e;}
+    .btn-circle.plus:before{width: 2px; margin: 3px auto; }
+    .btn-circle.plus:after{ margin: auto 3px; height: 2px; box-shadow: none;}
+
+
+    .btn-circle.exclamation:before,.btn-circle.exclamation:after {content:"!";/*background:white;*/box-shadow: 1px 1px 1px #ffffff9e;}
+    .btn-circle.exclamation:before{margin-top:-6px;/*width: 2px; margin: 3px auto;*/}
+    .btn-circle.exclamation:after{ /*margin: auto 3px; height: 2px;*/ box-shadow: none;}
+
+    /*.my-paragraph-style::before {
+  display: block;
+  position: absolute;
+  left: 20px;
+  top: 23px;
+  content: "!";
+  border-radius: 50%;
+  border: 1px solid yellow;
+  width: 20px;
+  height: 20px;
+  line-height: 22px;
+  text-align: center;
+  color: yellow;
+  font-weight: normal;
+}*/
+
+    </style>
+    <style>
+    .soi-icc-google-map-image a img {
+    border:2px solid blue;
+}
+
+.soi-icc-google-map-image a:hover img {
+    border:2px solid red;
+}
+    </style>
     
-    <script src="/content/stateofillinois/bootstrap/3.3.5/js/soi.js"></script>
-    <script src="/content/clipboardjs/clipboard.min.js"></script>
+    <script src="/bundles/modernizr"></script>
 
-    <link rel="stylesheet" href="/content/bootstrap/3.3.5/css/bootstrap.min.css" media="all" /><link href="/content/stateofillinois/bootstrap/3.3.5/css/soi.css" rel="stylesheet" /><link href="/content/icc/bootstrap/3.3.5/css/icc.css" rel="stylesheet" /><link href="/content/IcoMoon/style.css" rel="stylesheet" /><link rel="icon" href="/images/favicon.ico" />
-
-    <!--[if lt IE 9]><script src="https://code.google.com/p/html5shiv/html5shiv.js"></script><![endif]-->
-
-
-
-
-    
-
+    <!--[if lt IE 9]><script src="http://code.google.com/p/html5shiv/html5shiv.js"></script><![endif]-->
     <script>
         (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-            (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date(); a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
         })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
         ga('create', 'UA-36363678-1', 'auto');
         ga('send', 'pageview');
     </script>
 </head>
-<body id="ctl00_Body1">
-<div class="alert alert-info alert-dismissible" style="margin-bottom:0px;" role="alert">
-   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-   <p><span class="glyphicon glyphicon glyphicon-plus-sign" aria-hidden="true" style="color: red;"> </span> View up to date information on how Illinois is handling the Coronavirus Disease 2019 (COVID-19) from the <a href="http://www.dph.illinois.gov/topics-services/diseases-and-conditions/diseases-a-z-list/coronavirus">Illinois Department of Public Health</a></p>
-</div>
-<form method="post" action="./detail.aspx?t=1&amp;id=21316" id="aspnetForm">
-<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
-
-<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="4DAC5F9F" />
-<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
-<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="C9TcbembvmwHD3/xvR+o5FmWVMFRYLaILyhRr3dVgtolfl3mqC3iBcMEKVuiwZVYvcOws+csPR4TNd8EZI5n65qpfgKobmEe9R1Z7/6PXzIuJfYx3ij5+w3cFRbqYhFvtX/sJw==" />
-    <header class="navbar navbar-static-top soi-header" id="top" role="banner">
-        <nav class="navbar navbar-default" role="navigation" id="navbar">
-            <div class="container">
-                <div class="navbar-header"><button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img title="Home" class="img-responsive" id="img-logo" alt="logo" src="/images/logo-286-52x64.png"><h1>Illinois Commerce Commission</h1></a></div>
-                <div id="navbar-main" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav" id="nav-list">
-                        <li class="dropdown">
-                            <a href="/consumer/" style="display:inline-block;">Consumers </a><a style="display:inline-block;" href="/consumer/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="/complaints/" title="Ask a Utility Question or File a Complaint">Ask a Question or File a Complaint</a></li>
-                                <li><a href="/consumer/CommentOnACase.aspx" title="Make a Public Comment">Make a Public Comment</a></li>
-                                <li><a href="http://www.pluginillinois.org/" title="Electric Choice">Electric Choice</a></li>
-                                <li><a href="/ags/" title="Natural Gas Choice">Natural Gas Choice</a></li>
-                                <li><a href="/consumer/#financial" title="Financial Assistance Programs">Financial Assistance Programs</a></li>
-                                <li><a href="/consumer/#consumer-education" title="Consumer Education">Consumer Education</a></li>
-                                <li><a href="/consumer/#energy-efficiency" title="Energy Efficiency and Conservation">Energy Efficiency and Conservation</a></li>
-                                <li><a href="/Complaints/Home/Type" title="File a Complaint">File A Complaint</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="/publicutility/" style="display:inline-block;">Public Utility </a><a style="display:inline-block;" href="/publicutility/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="/home/chief-clerk-office" title="Chief Clerk's Office">Chief Clerk's Office</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="/cableandvideo/" title="Cable and Video">Cable and Video</a></li>
-                                <li><a href="/Electricity/" title="Electricity">Electricity</a></li>
-                                <li><a href="/naturalgas/">Natural Gas</a></li>
-                                <li><a href="/telecommunications/">Telecommunications</a></li>
-                                <li><a href="/waterandsewer/">Water and Sewer</a></li>
-                                <li role="separator" class="divider"></li>
-
-                                <li><a href="/home/cybersecurityandriskmanagement">Office of Cybersecurity and Risk Management</a></li>
-                                <li><a href="/home/diversity-and-community-affairs">Office of Diversity and Community Affairs</a></li>
-                                <li><a href="/ormd/">Office of Retail Market Development</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="/transportation/" style="display:inline-block;">Transportation </a><a style="display:inline-block;" href="/transportation/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a class="dropdown-item" href="/transportation">Processing Manager</a></li>
-                                <li><a class="dropdown-item" href="/home/icc-police">ICC Police</a></li>
-                                <li><a class="dropdown-item" href="/rail-safety" title="Rail Safety">Rail Safety</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a class="dropdown-item" href="/authority/brokers-license" title="Brokers">Broker's License</a></li>
-                                <li><a class="dropdown-item" href="/authority/certificate-of-exemption">Certificate of Exemption</a></li>
-                                <li><a class="dropdown-item" href="/authority/collateral-recovery" title="Collateral Recovery">Collateral Recovery</a></li>
-                                <li><a class="dropdown-item" href="/authority/household-goods-movers" title="Household Goods Movers">Household Goods Movers</a></li>
-                                <li><a class="dropdown-item" href="/authority/public-carrier-certificate">Public Carrier Certificate</a></li>
-                                <li><a class="dropdown-item" href="/authority/relocation-towing" title="Relocation Towing">Relocation Towing</a></li>
-                                <li><a class="dropdown-item" href="/authority/safety-relocator" title="Safety Relocator">Safety Relocator</a></li>
-                                <li><a class="dropdown-item" href="/authority/unified-carrier-registration" title="UCR Registration">UCR Registration</a></li>
-                                <li><a class="dropdown-item" href="/authority/warehousing" title="Warehousing">Warehousing</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a class="dropdown-item" href="/Complaints/Home/Type" title="File a Complaint">File A Complaint</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="/about" style="display:inline-block;">About </a><a style="display:inline-block;" href="/about.aspx" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="/about">Chairman and Commissioners</a></li>
-                                <li><a href="/about/diversity-statement">ICC Diversity Statement</a></li>
-                                <li><a href="/meetings/">Event Calendar</a></li>
-                                <li><a href="/icc-authority">ICC Legal Authority and Administrative Rules</a></li>
-                                <li><a href="/about/news">News</a></li>
-                                <li><a href="/about/offices">ICC Offices and Bureaus</a></li>
-                                <li><a href="/about/contracts">Contracts and Solicitations</a></li>
-                                <li><a href="/about/employment">Employment Opportunities</a></li>
+<body id="Body1">
+    <div class="alert alert-info alert-dismissible fade show mb-0" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="btn btn-xs btn-danger btn-circle plus"></button> View up to date information on how Illinois is handling the Coronavirus Disease 2019 (COVID-19) from the <a href="http://www.dph.illinois.gov/topics-services/diseases-and-conditions/diseases-a-z-list/coronavirus">Illinois Department of Public Health</a>
+        <div class="d-block"><button type="button" class="btn btn-xs btn-primary btn-circle exclamation"></button> View up to date information on how the <a href="/home/covid-19">Illinois Commerce Commission</a> is handling the Coronavirus Disease 2019 (COVID-19)</div>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light container soi-navbar soi-navbar-expand-lg soi-icc-navbar">
+            <a class="navbar-brand soi-navbar-brand soi-icc-navbar-brand d-md-none" href="/"><img src="/images/logo-286-52x64.png" class="d-inline-block align-top" alt=""></a>
+            <a class="navbar-brand soi-navbar-brand soi-icc-navbar-brand d-none d-md-flex" href="/"><img src="/images/logo-286-52x64.png" class="d-inline-block align-top" alt=""> Illinois Commerce Commission</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav soi-navbar-nav soi-icc-navbar-nav">
+                    <li class="nav-item">
+                        <div class="btn-group">
+                            <a href="/consumer/" class="btn soi-navbar-btn soi-icc-navbar-btn">Consumers</a>
+                            <button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/complaints/" title="File a Complaint">File a Complaint</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/consumer/CommentOnACase.aspx" title="Make a Public Comment">Make a Public Comment</a>
+                                <a class="dropdown-item" href="http://www.pluginillinois.org/" title="Electric Choice">Electric Choice</a>
+                                <a class="dropdown-item" href="/ags/" title="Natural Gas Choice">Natural Gas Choice</a>
+                                <a class="dropdown-item" href="/consumer/#financial" title="Financial Assistance Programs">Financial Assistance Programs</a>
+                                <a class="dropdown-item" href="/consumer/#consumer-education" title="Consumer Education">Consumer Education</a>
+                                <a class="dropdown-item" href="/consumer/#energy-efficiency" title="Energy Efficiency and Conservation">Energy Efficiency and Conservation</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="btn-group">
+                            <a href="/publicutility/" class="btn soi-navbar-btn soi-icc-navbar-btn">Public Utility</a>
+                            <button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/chiefclerk/" title="Chief Clerk's Office">Chief Clerk's Office</a>
+                                <a class="dropdown-item" href="/home/one-call-enforcement">One-Call Enforcement</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/cableandvideo/" title="Cable and Video">Cable and Video</a>
+                                <a class="dropdown-item" href="/home/Electricity/" title="Electricity">Electricity</a>
+                                <a class="dropdown-item" href="/home/naturalgas">Natural Gas</a>
+                                <a class="dropdown-item" href="/home/telecommunications/">Telecommunications</a>
+                                <a class="dropdown-item" href="/home/waterandsewer/">Water and Sewer</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/home/cybersecurityandriskmanagement">Office of Cybersecurity and Risk Management</a>
+                                <a class="dropdown-item" href="/home/diversity-and-community-affairs">Office of Diversity and Community Affairs</a>
+                                <a class="dropdown-item" href="/ormd/">Office of Retail Market Development</a>
                                 
-                                <li><a href="/about/sunshine-project">Sunshine Project</a></li>
-                                <li><a href="/icc-reports">ICC Reports</a></li>
-                                <li><a href="/about/FOIA">Freedom of Information Act</a></li>
-                                <li><a href="/about/contact-us">Contact Us</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="/complaints/" hreflang="es">Español</a></li>
-                    </ul>
-                    <div class="col-sm-1 col-md-1 col-lg-2 pull-right">
-                        <div id="ctl00_quickSearchPanel" class="input-group input-group-xs header-search text-right">
-	
-                            <h1 class="hidden">Search</h1>                       
-                            <script type="text/javascript">
-                                function QuickSearchTextBox_Click() {
-                                    return !document.getElementById("ctl00_QuickSearchTextBox").value.match(/.*<.*>/m);
-                                }
-                            </script>
-                            <input name="ctl00$QuickSearchTextBox" type="text" id="ctl00_QuickSearchTextBox" title="Enter search phrase" class="form-control input-sm" placeholder="Search" />
-                            <div class="input-group-btn">
-                                <button onclick="__doPostBack('ctl00$QuickSearchButton','')" id="ctl00_QuickSearchButton" onclientclick="return QuickSearchTextBox_Click();" class="btn btn-default btn-sm" title="Search"><i class="glyphicon glyphicon-search"></i></button>
-                                </div>
-                        
-</div>
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="btn-group">
+                            <a href="/transportation" class="btn soi-navbar-btn soi-icc-navbar-btn">Transportation</a>
+                            <button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/transportation">Processing Manager</a>
+                                <a class="dropdown-item" href="/home/icc-police">ICC Police</a>
+                                <a class="dropdown-item" href="/rail-safety" title="Rail Safety">Rail Safety</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/authority/brokers-license" title="Brokers">Broker's License</a>
+                                <a class="dropdown-item" href="/authority/certificate-of-exemption">Certificate of Exemption</a>
+                                <a class="dropdown-item" href="/authority/collateral-recovery" title="Collateral Recovery">Collateral Recovery</a>
+                                <a class="dropdown-item" href="/authority/household-goods-movers" title="Household Goods Movers">Household Goods Movers</a>
+                                <a class="dropdown-item" href="/authority/public-carrier-certificate">Public Carrier Certificate</a>
+                                <a class="dropdown-item" href="/authority/relocation-towing" title="Relocation Towing">Relocation Towing</a>
+                                <a class="dropdown-item" href="/authority/safety-relocator" title="Safety Relocator">Safety Relocator</a>
+                                <a class="dropdown-item" href="/authority/unified-carrier-registration" title="UCR Registration">UCR Registration</a>
+                                <a class="dropdown-item" href="/authority/warehousing" title="Warehousing">Warehousing</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/complaints/" title="File a Complaint">File A Complaint</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="btn-group">
+                            <a href="/about" class="btn soi-navbar-btn soi-icc-navbar-btn">About</a>
+                            <button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/about">Chairman and Commissioners</a>
+                                <a class="dropdown-item" href="/about/diversity-statement">ICC Diversity Statement</a>
+                                <a class="dropdown-item" href="/about/oversight">ICC Oversight</a>
+                                <a class="dropdown-item" href="/meetings/">Event Calendar</a>
+                                <a class="dropdown-item" href="/icc-authority">ICC Legal Authority and Administrative Rules</a>
+                                <a class="dropdown-item" href="/about/news">News</a>
+                                <a class="dropdown-item" href="/about/offices">ICC Offices and Bureaus</a>
+                                <a class="dropdown-item" href="/about/contracts">Contracts and Solicitations</a>
+                                <a class="dropdown-item" href="/about/employment">Employment Opportunities</a>
+                                
+                                <a class="dropdown-item" href="/about/sunshine-project">Sunshine Project</a>
+                                <a class="dropdown-item" href="/icc-reports">ICC Reports</a>
+                                <a class="dropdown-item" href="/about/FOIA">Freedom of Information Act</a>
+                                <a class="dropdown-item" href="/about/contact-us">Contact Us</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a class="btn soi-navbar-btn soi-icc-navbar-btn" href="/complaints/" hreflang="es">Español</a></li>
+                </ul>
+                <div style="padding:0px;" class="form-inline my-2 my-lg-0 col-md-3">
+<form action="/SiteQuickSearch" class="input-group input-group-sm" id="form0" method="post"><input name="__RequestVerificationToken" type="hidden" value="tYNe43Kwj3JK5oa8EGjoQ8h131Tq7xFpBkU3PMBs_U-2mBMmnzQdkLeMn-57gxMntnFnLEFl4_z98Vgo7yjgw_za5Sw1" /><input class="form-control" id="Text" name="Text" type="text" value="" />        <span class="input-group-append">
+            <button class="btn btn-light btn-outline-secondary" id="EntityQuickSearchButton" type="submit" title="Go">Go</button>
+        </span>
+</form><script type="text/javascript">
+//<![CDATA[
+if (!window.mvcClientValidationMetadata) { window.mvcClientValidationMetadata = []; }
+window.mvcClientValidationMetadata.push({"Fields":[],"FormId":"form0","ReplaceValidationSummary":false});
+//]]>
+</script></div>
             </div>
         </nav>
     </header>
     
-    
-    
-    
-    
-<div class="soi-page-header">
+
+<div class="soi-page-header soi-icc-page-header">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                <ol class="breadcrumb hidden-print">
+            <div class="col-12">
+                <ol class="breadcrumb">
                     <li><a href="/">Home</a></li>
                     <li><a href="/meetings/">Event Calendar</a></li>
                 </ol>
-                <h1>Event Detail</h1>
+                <h1>Policy Session</h1>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container soi-container" id="body-container">
-	<div class="row">
-		<div class="col-sm-12">
-        
-                <h2>Illinois Commerce Commission<br />Regular Open Meeting</h2>
-                <h3 class="icc-meeting-title">March 4, 2020 10:30 AM<span style="display:block;" class="text-danger">Cancelled</span></h3>
-                
-
-                
-                <div class="panel icc-panel-meeting-locations">
-                        <div class="panel icc-panel-location">
-                            <div class="address col-sm-4"><h4>Illinois Commerce Commission</h4><p>160 North LaSalle Street<br/>Eighth Floor, State of Illinois Building<br/>Chicago, Illinois 60601</p></div>
-                            <div class="icc-google-map-image col-sm-8"><a href='https://www.google.com/maps/place/160+North+LaSalle+Street,Chicago,Illinois+60601' target="_blank"><img alt='160 North LaSalle Street Street Map' src='https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=275x130&format=png32&mobile=true&markers=color:red|160+North+LaSalle+Street,Chicago,Illinois+60601&key=AIzaSyDI0nSPprZQ5wxjZi0m9tNI6ZhiucXveE4' /></a></div>
+<div class="container soi-container soi-icc-container">
+    <div class="row">
+        <div class="col-12">
+            <h2>Illinois Commerce Commission
+                <span class="d-block">Policy Session</span>
+<span class="d-block">Summer Preparedness Policy Session</span>            </h2>
+            <h3 class="mt-4">May 27, 2020<span class="d-block">11:30 AM</span>
+</h3>
+                                                    <div class="row mt-4">
+                        <div class="col-12 "><h4>Illinois Commerce Commission</h4>
+                            <p>
+160 North LaSalle Street<br />                                                                                                                                Eighth Floor, State of Illinois Building<br />                                Chicago, Illinois 60601</p>
                         </div>
+                </div>
+                            <div class="row mt-4">
+                    <div class="col-12  col-sm-5">
+                        <h3>Documents</h3><ul class="list-unstyled"><li><a href="/downloads/public/letter/21690.pdf" title="Cover Letter">Public Utility Cover Letter</a></li><li><a href="/downloads/public/agenda/21690.pdf" title="Policy Agenda">Policy Agenda</a></li><li><a href="/downloads/public/Ameren-Summer2020.pdf">Ameren</a></li><li><a href="/downloads/public/ComEd_summer2020.pdf">ComEd</a></li><li><a href="/downloads/public/CUB_summer2020.pdf">CUB</a></li><li><a href="/downloads/public/AG.pdf">Illinois Attorney General</a></li><li><a href="/downloads/public/Mid American_summer2020.pdf">Mid-American</a></li><li><a href="/downloads/public/MISO_summer2020.pdf">MISO</a></li><li><a href="/downloads/public/NCLC_summer2020.pdf">NCLC</a></li><li><a href="/downloads/public/PJM_summer2020.pdf">PJM</a></li></ul>
                     </div>
-                <div class="panel icc-panel-meeting-documents"><h3>Documents</h3><ul class="list-unstyled"><li><a href='/downloads/public/letter/21625.pdf' title='Cover Letter'>Public Utility Cover Letter</a></li><li><a href='/downloads/public/agenda/21625.pdf' title='Regular Open Meeting Agenda'>Regular Open Meeting Agenda</a></li><li><a href='/downloads/public/letter/21651.pdf' title='Cover Letter'>Transportation Cover Letter</a></li><li><a href='/downloads/public/agenda/21651.pdf' title='Bench Agenda'>Bench Agenda</a></li></ul></div>
-                <div class="panel icc-panel-meeting-tags text-muted"><div class="panel-heading">Tags:</div><div class="panel-body"><ul class="list-unstyled list-inline icc-list-tags"><li>Illinois Commerce Commission</li><li>Regular Open Meeting</li></ul></div></div>
-            
+
+                        <div class="col-sm-7">
+                                <div class="embed-responsive embed-responsive-16by9"><video controls class="embed-responsive-item" poster="/images/icclogo.png" style="background-color:black;"><source src="https://multimedia.illinois.gov/icc/icc-052720-2.mp4" type="video/mp4">Sorry, your browser doesn't support embedded videos.</video></div>
+                        </div> 
+                </div>
         </div>
     </div>
 </div>
-
-    <!-- Footer ================================================== -->
     <footer id="footer" role="contentinfo">
-        <div class="soi-footer">
+        <div class="soi-footer mt-4">
             <h2 class="sr-only">Footer</h2>
             <div class="soi-footer-agency">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <h5 class="subtitle ">Quick Links</h5>
-                            <a href="/sitemap.aspx"><i class="glyphicon glyphicon-list-alt"></i>A to Z Topic List</a>
-                            <a href="/privacy.htm"><i class="glyphicon glyphicon-lock"></i>Privacy</a>
-                            <a href="/rss/"><i class="glyphicon glyphicon-book"></i>RSS Feeds</a>
-                            <a href="/about/contact-us"><i class="glyphicon glyphicon-phone"></i>Contact Us</a>
-                            <a href="/about/FOIA"><i class="glyphicon glyphicon-phone"></i>Freedom of Information Act</a>
+                        <div class="col-md-3">
+                            <h3>Quick Links</h3>
+                            <a class="nav-link" href="/sitemap.aspx"><i class="glyphicon glyphicon-list-alt"></i>A to Z Topic List</a>
+                            <a class="nav-link" href="/privacy.htm"><i class="glyphicon glyphicon-lock"></i>Privacy</a>
+                            <a class="nav-link" href="/rss/"><i class="glyphicon glyphicon-book"></i>RSS Feeds</a>
+                            <a class="nav-link" href="/about/contact-us"><i class="glyphicon glyphicon-phone"></i>Contact Us</a>
+                            <a class="nav-link" href="/about/FOIA"><i class="glyphicon glyphicon-phone"></i>Freedom of Information Act</a>
                         </div>
-                        <div class="col-sm-3">
-                            <h5 class="subtitle">About</h5>
-                        
-                            <a href="/meetings/"><i class="icomoon-calendar"></i>Event Calendar</a>
-                            <a href="/icc-authority"><i class="icomoon-hammer"></i>ICC Legal Authority and Administrative Rules</a>
-                            <a href="/about/news"><i class="icomoon-newspaper"></i>News</a>
-                            <a href="/about/contracts"><i class="icomoon-file-text2"></i>Contracts and Solicitations</a>
-                            <a href="/about/employment"><i class="icomoon-user-tie"></i>Employment Opportunities</a>
-    
+                        <div class="col-md-3">
+                            <h3>About</h3>
+                            <a class="nav-link" href="/meetings/"><i class="icomoon-calendar"></i>Event Calendar</a>
+                            <a class="nav-link" href="/icc-authority"><i class="icomoon-hammer"></i>ICC Legal Authority and Administrative Rules</a>
+                            <a class="nav-link" href="/about/news"><i class="icomoon-newspaper"></i>News</a>
+                            <a class="nav-link" href="/about/contracts"><i class="icomoon-file-text2"></i>Contracts and Solicitations</a>
+                            <a class="nav-link" href="/about/employment"><i class="icomoon-user-tie"></i>Employment Opportunities</a>
                         </div>
-                        <div class="col-sm-6">
-                            <h5 class="subtitle">Offices</h5>
-                            <a href="https://www.google.com/maps/place/527+East+Capitol+Avenue,Springfield,IL"><i class="icomoon-office"></i>Leland Building<span class="noicon">527 East Capitol Avenue, Springfield, IL 62701</span></a>
-                            <a href="https://www.google.com/maps/place/160+North+LaSalle+Street,Chicago,IL"><i class="icomoon-office"></i>Michael A. Bilandic Building<span class="noicon">160 North LaSalle, Ste. C-800, Chicago, Illinois 60601</span></a>
-                            <a href="https://www.google.com/maps/place/9511+West+Harrison,Des+Plaines,IL"><i class="icomoon-office"></i>Compliance Office<span class="noicon">9511 West Harrison, Des Plaines, Illinois 60016</span></a>
+                        <div class="col-md-6">
+                            <h3>Offices</h3>
+                            <a class="nav-link" href="https://www.google.com/maps/place/527+East+Capitol+Avenue,Springfield,IL"><i class="icomoon-office"></i>Leland Building <span class="noicon">527 East Capitol Avenue, Springfield, IL 62701</span></a>
+                            <a class="nav-link" href="https://www.google.com/maps/place/160+North+LaSalle+Street,Chicago,IL"><i class="icomoon-office"></i>Michael A. Bilandic Building <span class="noicon">160 North LaSalle, Ste. C-800, Chicago, Illinois 60601</span></a>
+                            <a class="nav-link" href="https://www.google.com/maps/place/9511+West+Harrison,Des+Plaines,IL"><i class="icomoon-office"></i>Compliance Office <span class="noicon">9511 West Harrison, Des Plaines, Illinois 60016</span></a>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12">
-                            <div class="socialfollow">
-                                
-                                <a class="twitter" href="https://twitter.com/ILCommerceComm"><i class="icomoon-twitter"></i></a>
-                                
-                                
-                                <a class="youtube" href="https://www.youtube.com/channel/UCH8WDc1Dq0RUzqBzqUTMQFA"><i class="icomoon-youtube"></i></a>
-                                
-                                
-                                
-                                
-                                
-                                
+                        <div class="col text-right">
+                            <div class="soi-socialfollow">
+                                <a class="twitter" href="https://twitter.com/ILCommerceComm"><img src="/images/twitter.png" /></a>
+                                <a class="youtube" href="https://www.youtube.com/channel/UCH8WDc1Dq0RUzqBzqUTMQFA"><img src="/images/youtube.png" /></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="soi-footer-state"></div>
-            <script src="https://webservices.illinois.gov/CDN/SOI/soi_doit_template_footer_state.min.js"></script>
+            <div class="soi-footer-state py-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9 p-0"><a title="Illinois.gov" href="//www.illinois.gov/" target="_blank"><img alt="Illinois.gov" src="//webservices.illinois.gov/CDN/Content/images/IllinoisGov.png"></a><ul class="list-unstyled list-inline m-0"><li class="list-inline-item"><a class="nav-link" href="//www.dhs.state.il.us/page.aspx?item=32765" target="_blank">Web Accessibility</a></li><li class="list-inline-item"><a class="nav-link" href="//cmsapps.illinois.gov/TeleDirectory" target="_blank">State Phone Directory</a></li><li class="list-inline-item"><a class="nav-link" href="//www.illinois.gov/SitePages/Agencies.aspx" target="_blank">State Agencies</a></li><li class="list-inline-item"><a class="nav-link" href="//www.illinois.gov/Pages/Privacy.aspx">Illinois Privacy Info</a></li></ul></div>
+                        <div class="col-md-3 p-0 pt-2 text-center text-md-right soi-footer-governor-copyright"><a class="nav-link p-0 soi-footer-governor" href="//www.illinois.gov/GOV/" target="_blank">Governor JB Pritzker</a>&copy; 2019 <a class="nav-link d-inline-block p-0 soi-footer-copyright" href="//www.illinois.gov/" target="_blank">State of Illinois</a></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
-</form>
-<!-- Google Analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    <script src="/bundles/jquery/3.3.1?v=2u0aRenDpYxArEyILB59ETSCA2cfQkSMlxb6jbMBqf81"></script>
 
-  ga('create', 'UA-82810371-1', 'auto');
-  ga('send', 'pageview');
+    <script src="/bundles/popper/1.14.6?v=khx_YF3EjQXolL_GhV9sXbKH6DYpxdKu0YGHqFqV9Zs1"></script>
 
-</script>
+    <script src="/bundles/bootstrap/4.3.1?v=ESck_wvaWCiF5JsitLMh765lhMnw7BVBtZE-YUTa4Ns1"></script>
 
+    <script src="/bundles/clipboardjs?v=qxQpK7WptfsnHcDMKhG557lgeW4AOvV21Bizlhd6QC81"></script>
+
+    
+    
 </body>
 </html>
+
+

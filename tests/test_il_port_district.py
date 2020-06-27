@@ -61,8 +61,13 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_port_district/201903010900/x/special_committee_meeting"
-    assert parsed_items[1]["id"] == "il_port_district/201903010900/x/special_board_meeting"
+    assert (
+        parsed_items[0]["id"]
+        == "il_port_district/201903010900/x/special_committee_meeting"
+    )
+    assert (
+        parsed_items[1]["id"] == "il_port_district/201903010900/x/special_board_meeting"
+    )
     assert parsed_items[3]["id"] == "il_port_district/201901180900/x/board_meeting"
     assert parsed_items[7]["id"] == "il_port_district/201903190830/x/board_meeting"
     assert parsed_items[22]["id"] == "il_port_district/201911150900/x/committee_meeting"
@@ -78,28 +83,28 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        'address': '3600 E. 95th St. Chicago, IL 60617',
-        'name': 'Illinois International Port District '
+        "address": "3600 E. 95th St. Chicago, IL 60617",
+        "name": "Illinois International Port District ",
     }
 
     assert parsed_items[1]["location"] == {
-        'address': '3600 E. 95th St. Chicago, IL 60617',
-        'name': 'Illinois International Port District '
+        "address": "3600 E. 95th St. Chicago, IL 60617",
+        "name": "Illinois International Port District ",
     }
 
     assert parsed_items[3]["location"] == {
-        'address': '3600 E. 95th St. Chicago, IL 60617',
-        'name': 'Illinois International Port District '
+        "address": "3600 E. 95th St. Chicago, IL 60617",
+        "name": "Illinois International Port District ",
     }
 
     assert parsed_items[7]["location"] == {
-        'address': '3600 E. 95th St. Chicago, IL 60617',
-        'name': 'Illinois International Port District '
+        "address": "3600 E. 95th St. Chicago, IL 60617",
+        "name": "Illinois International Port District ",
     }
 
     assert parsed_items[22]["location"] == {
-        'address': '3600 E. 95th St. Chicago, IL 60617',
-        'name': 'Illinois International Port District '
+        "address": "3600 E. 95th St. Chicago, IL 60617",
+        "name": "Illinois International Port District ",
     }
 
 
@@ -116,38 +121,28 @@ def test_links():
     assert parsed_items[0]["links"] == []
 
     assert parsed_items[1]["links"][0] == {
-        "href":
-            "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes%20_"
-            "%20Special%20Bd%20Meeting_3-1-19.pdf",
-        "title": "Board Meeting Minutes"
+        "href": "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes%20_%20Special%20Bd%20Meeting_3-1-19.pdf",  # noqa
+        "title": "Board Meeting Minutes",
     }
 
     assert parsed_items[3]["links"][0] == {
-        "href":
-            "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes"
-            "%201-18-19.pdf",
-        "title": "Board Meeting Minutes"
+        "href": "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes%201-18-19.pdf",  # noqa
+        "title": "Board Meeting Minutes",
     }
 
     assert parsed_items[7]["links"][0] == {
-        "href":
-            "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes"
-            "%203-19-19.pdf",
-        "title": "Board Meeting Minutes"
+        "href": "http://www.iipd.com/sites/default/files/documents/Bd%20Meeting%20Minutes%203-19-19.pdf",  # noqa
+        "title": "Board Meeting Minutes",
     }
 
     assert parsed_items[22]["links"][0] == {
-        "href":
-            "http://www.iipd.com/sites/default/files/documents/L%26A%20Agenda%20November"
-            "%202019.pdf",
-        "title": "Leases and Agreement Committee Agenda November 2019"
+        "href": "http://www.iipd.com/sites/default/files/documents/L%26A%20Agenda%20November%202019.pdf",  # noqa
+        "title": "Leases and Agreement Committee Agenda November 2019",
     }
 
     assert parsed_items[22]["links"][1] == {
-        "href":
-            "http://www.iipd.com/sites/default/files/documents/F%26P%20Agenda%20November"
-            "%202019.pdf",
-        "title": "Finance and Personnel Committee Agenda November 2019"
+        "href": "http://www.iipd.com/sites/default/files/documents/F%26P%20Agenda%20November%202019.pdf",  # noqa
+        "title": "Finance and Personnel Committee Agenda November 2019",
     }
 
 

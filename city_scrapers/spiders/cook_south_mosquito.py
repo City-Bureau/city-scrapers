@@ -24,7 +24,7 @@ class CookSouthMosquitoSpider(CityScrapersSpider):
         needs.
         """
         for year_group in response.css(
-            ".s5_responsive_mobile_sidebar_sub:last-child > ul > li:first-child > ul > li"
+            ".s5_responsive_mobile_sidebar_sub:last-child > ul > li:first-child > ul > li"  # noqa
         ):
             year_str = year_group.css("span::text").extract_first().strip()
             for item in year_group.xpath("./ul/li"):
@@ -57,8 +57,10 @@ class CookSouthMosquitoSpider(CityScrapersSpider):
         """Parse or generate links."""
         links = []
         for link in item.css("a"):
-            links.append({
-                "title": link.css("*::text").extract_first(),
-                "href": response.urljoin(link.attrib["href"]),
-            })
+            links.append(
+                {
+                    "title": link.css("*::text").extract_first(),
+                    "href": response.urljoin(link.attrib["href"]),
+                }
+            )
         return links

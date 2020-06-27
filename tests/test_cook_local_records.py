@@ -12,7 +12,7 @@ test_response = file_response(
     join(dirname(__file__), "files", "cook_local_records.html"),
     url=(
         "https://cyberdriveillinois.com/departments/archives/records_management/lrc_cook_county_meeting_schedule.html"  # noqa
-    )
+    ),
 )
 spider = CookLocalRecordsSpider()
 
@@ -49,7 +49,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "cook_local_records/201901081100/x/local_records_commission"
+    assert (
+        parsed_items[0]["id"]
+        == "cook_local_records/201901081100/x/local_records_commission"
+    )
 
 
 def test_status():
@@ -62,17 +65,19 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0][
-        "source"
-    ] == "https://cyberdriveillinois.com/departments/archives/records_management/lrc_cook_county_meeting_schedule.html"  # noqa
+    assert (
+        parsed_items[0]["source"]
+        == "https://cyberdriveillinois.com/departments/archives/records_management/lrc_cook_county_meeting_schedule.html"  # noqa
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        'href':
-            'https://cyberdriveillinois.com/departments/archives/records_management/cclrcmeet/cclrc0119agenda.pdf',  # noqa
-        'title': 'Agenda'
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://cyberdriveillinois.com/departments/archives/records_management/cclrcmeet/cclrc0119agenda.pdf",  # noqa
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_classification():

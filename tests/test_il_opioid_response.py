@@ -52,20 +52,24 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "address": "401 S. Clinton Street, 7th Floor Executive Conference Room, Chicago, IL 60607",
+        "address": "401 S. Clinton Street, 7th Floor Executive Conference Room, Chicago, IL 60607",  # noqa
         "name": "Illinois Department of Human Services Clinton Building",
     }
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.dhs.state.il.us/page.aspx?item=97186"
+    assert (
+        parsed_items[0]["source"] == "https://www.dhs.state.il.us/page.aspx?item=97186"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        'href': 'https://www.dhs.state.il.us/OneNetLibrary/27896/documents/Agenda_04.15.19.pdf',
-        'title': 'Agenda 04.15.19 (pdf)'
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.dhs.state.il.us/OneNetLibrary/27896/documents/Agenda_04.15.19.pdf",  # noqa
+            "title": "Agenda 04.15.19 (pdf)",
+        }
+    ]
 
 
 def test_classification():

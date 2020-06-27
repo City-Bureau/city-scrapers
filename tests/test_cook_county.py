@@ -20,74 +20,92 @@ freezer.stop()
 
 
 def test_title():
-    assert item['title'] == 'Public Hearing - Zoning Board of Appeals'
+    assert item["title"] == "Public Hearing - Zoning Board of Appeals"
 
 
 def test_start():
-    assert item['start'] == datetime(2019, 10, 2, 13)
+    assert item["start"] == datetime(2019, 10, 2, 13)
 
 
 def test_end():
-    assert item['end'] == datetime(2019, 10, 2, 15)
+    assert item["end"] == datetime(2019, 10, 2, 15)
 
 
 def test_time_notes():
-    assert item['time_notes'] == ''
+    assert item["time_notes"] == ""
 
 
 def test_id():
-    assert item['id'] == 'cook_county/201910021300/x/public_hearing_zoning_board_of_appeals'
+    assert (
+        item["id"]
+        == "cook_county/201910021300/x/public_hearing_zoning_board_of_appeals"
+    )
 
 
 def test_all_day():
-    assert item['all_day'] is False
+    assert item["all_day"] is False
 
 
 def test_classification():
-    assert spider._parse_classification('Board of Commissioners') == BOARD
-    assert spider._parse_classification(
-        'Economic Development Advisory Committee'
-    ) == ADVISORY_COMMITTEE
-    assert spider._parse_classification('Finance Committee') == COMMITTEE
-    assert spider._parse_classification('Finance Subcommittee on Litigation') == COMMITTEE
-    assert spider._parse_classification('Finance Subcommittee on Workers Compensation') == COMMITTEE
-    assert spider._parse_classification(
-        'Committee of Suburban Cook County Commissioners - PACE'
-    ) == COMMITTEE
-    assert spider._parse_classification('Rules & Administration Committee') == COMMITTEE
-    assert spider._parse_classification('Roads & Bridges Committee') == COMMITTEE
-    assert spider._parse_classification('Zoning & Building Committee') == COMMITTEE
-    assert spider._parse_classification('Justice Advisory Council') == ADVISORY_COMMITTEE
-    assert spider._parse_classification('JAC Council Meeting') == ADVISORY_COMMITTEE
+    assert spider._parse_classification("Board of Commissioners") == BOARD
+    assert (
+        spider._parse_classification("Economic Development Advisory Committee")
+        == ADVISORY_COMMITTEE
+    )
+    assert spider._parse_classification("Finance Committee") == COMMITTEE
+    assert (
+        spider._parse_classification("Finance Subcommittee on Litigation") == COMMITTEE
+    )
+    assert (
+        spider._parse_classification("Finance Subcommittee on Workers Compensation")
+        == COMMITTEE
+    )
+    assert (
+        spider._parse_classification(
+            "Committee of Suburban Cook County Commissioners - PACE"
+        )
+        == COMMITTEE
+    )
+    assert spider._parse_classification("Rules & Administration Committee") == COMMITTEE
+    assert spider._parse_classification("Roads & Bridges Committee") == COMMITTEE
+    assert spider._parse_classification("Zoning & Building Committee") == COMMITTEE
+    assert (
+        spider._parse_classification("Justice Advisory Council") == ADVISORY_COMMITTEE
+    )
+    assert spider._parse_classification("JAC Council Meeting") == ADVISORY_COMMITTEE
 
 
 def test_status():
-    assert item['status'] == PASSED
+    assert item["status"] == PASSED
 
 
 def test_location():
-    assert item['location'] == {
-        'name': '',
-        'address': '69 W. Washington Street Chicago , IL  60602',
+    assert item["location"] == {
+        "name": "",
+        "address": "69 W. Washington Street Chicago , IL  60602",
     }
 
 
 def test_sources():
-    assert item['source'
-                ] == 'https://www.cookcountyil.gov/event/public-hearing-zoning-board-appeals-2'
+    assert (
+        item["source"]
+        == "https://www.cookcountyil.gov/event/public-hearing-zoning-board-appeals-2"
+    )
 
 
 def test_description():
-    assert item['description'] == (
-        'A Public Hearing has been scheduled for the Cook County Zoning Board of Appeals on '
-        '     Wednesday, October 2, 2019 at 1:00PM at '
-        '69 W. Washington - 22nd Floor Conference Room, Chicago, Illinois 60602 '
-        'Public Hearing'
+    assert item["description"] == (
+        "A Public Hearing has been scheduled for the Cook County Zoning Board of "
+        "Appeals on      Wednesday, October 2, 2019 at 1:00PM at "
+        "69 W. Washington - 22nd Floor Conference Room, Chicago, Illinois 60602 "
+        "Public Hearing"
     )
 
 
 def test_links():
-    assert item['links'] == [{
-        'href': 'https://www.cookcountyil.gov/sites/default/files/zba-agenda_10.2.19_-_final.pdf',
-        'title': 'ZBA 10-2-2019 Agenda'
-    }]
+    assert item["links"] == [
+        {
+            "href": "https://www.cookcountyil.gov/sites/default/files/zba-agenda_10.2.19_-_final.pdf",  # noqa
+            "title": "ZBA 10-2-2019 Agenda",
+        }
+    ]

@@ -20,10 +20,13 @@ class ChiSsa60Spider(CityScrapersSpider):
     def start_requests(self):
         requests = []
         for i in range(-self.months_backward, self.months_forward + 1):
-            dt = datetime.strftime(datetime.now().date() + relativedelta(months=i), "%Y-%m")
+            dt = datetime.strftime(
+                datetime.now().date() + relativedelta(months=i), "%Y-%m"
+            )
             requests.append(
                 Request(
-                    "https://northrivercommission.org/events/{}/".format(dt), callback=self.parse
+                    "https://northrivercommission.org/events/{}/".format(dt),
+                    callback=self.parse,
                 )
             )
         return requests
@@ -35,7 +38,9 @@ class ChiSsa60Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        json_text = response.xpath("//script[@type='application/ld+json']/text()").extract()
+        json_text = response.xpath(
+            "//script[@type='application/ld+json']/text()"
+        ).extract()
         if not json_text:
             return
         event_list = []
@@ -69,10 +74,12 @@ class ChiSsa60Spider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        allowed = ['meeting', 'committee', 'advisory council']
-        if not any([a in item['name'].lower() for a in allowed]):  # Not a meeting type we want
+        allowed = ["meeting", "committee", "advisory council"]
+        if not any(
+            [a in item["name"].lower() for a in allowed]
+        ):  # Not a meeting type we want
             return None
-        return item['name']
+        return item["name"]
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -84,9 +91,9 @@ class ChiSsa60Spider(CityScrapersSpider):
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
         title = title.lower()
-        if 'advisory' in title:
+        if "advisory" in title:
             return ADVISORY_COMMITTEE
-        elif 'committee' in title:
+        elif "committee" in title:
             return COMMITTEE
         else:
             return COMMISSION
@@ -110,5 +117,9 @@ class ChiSsa60Spider(CityScrapersSpider):
 
     def _clean(self, inp_str):
         """Replace certain HTML entities"""
-        # Couldn't use something like `html.unescape()` because it replaced quotes and broke JSON
-        return inp_str.replace("&#8211;", "-").replace("&#8217;", "'").replace("&#038;", "&")
+        # Couldn't use `html.unescape()` because it replaced quotes and broke JSON
+        return (
+            inp_str.replace("&#8211;", "-")
+            .replace("&#8217;", "'")
+            .replace("&#038;", "&")
+        )

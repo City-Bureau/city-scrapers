@@ -59,14 +59,19 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www.cookcountyil.gov/agency/zoning-board-appeals-0"
+    assert (
+        parsed_items[0]["source"]
+        == "https://www.cookcountyil.gov/agency/zoning-board-appeals-0"
+    )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "title": "Agenda",
-        "href": "https://www.cookcountyil.gov/sites/default/files/zba-agenda_1.9.19.pdf"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "title": "Agenda",
+            "href": "https://www.cookcountyil.gov/sites/default/files/zba-agenda_1.9.19.pdf",  # noqa
+        }
+    ]
     assert parsed_items[-1]["links"] == []
 
 

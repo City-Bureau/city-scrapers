@@ -11,7 +11,10 @@ class ChiSsa51Spider(CityScrapersSpider):
     agency = "Chicago Special Service Area #51 Chatham"
     timezone = "America/Chicago"
     start_urls = ["http://www.cbatechworks.org/"]
-    location = {"address": "806 East 78th Street, Chicago IL 60619", "name": "QBG Foundation"}
+    location = {
+        "address": "806 East 78th Street, Chicago IL 60619",
+        "name": "QBG Foundation",
+    }
 
     def parse(self, response):
         """
@@ -24,9 +27,9 @@ class ChiSsa51Spider(CityScrapersSpider):
         last_parsed_date = ""
         for item in response.css("div#element106 font"):
             """
-            The date and times are contained within sibling divs that are identicals, so we have to
-            continue the loop and only create the meeting until both date and times have been
-            parsed.
+            The date and times are contained within sibling divs that are identicals,
+            so we have to continue the loop and only create the meeting until both date
+            and times have been parsed.
             """
             if not last_parsed_date:
                 last_parsed_date = self._parse_date(item)
@@ -60,20 +63,20 @@ class ChiSsa51Spider(CityScrapersSpider):
             yield meeting
 
     def _parse_date(self, item):
-        text = item.css('*::text').extract_first()
+        text = item.css("*::text").extract_first()
         if text is None:
             return ""
-        date = re.search(r'\w{3,9} \d{1,2}, \d{4}', text)
+        date = re.search(r"\w{3,9} \d{1,2}, \d{4}", text)
         if date:
             return date.group()
         return ""
 
     def _parse_time(self, item):
         """Parse start datetime as a naive datetime object."""
-        text = item.css('*::text').extract_first()
-        times = re.search(r'\d{1,2}:\d{2}[ap]m - \d{1,2}:\d{2}[ap]m', text)
+        text = item.css("*::text").extract_first()
+        times = re.search(r"\d{1,2}:\d{2}[ap]m - \d{1,2}:\d{2}[ap]m", text)
         if times:
-            return times.group().split('-')
+            return times.group().split("-")
 
     def _validate_location(self, response):
         if "806 East" not in " ".join(response.css("div#element106 *::text").extract()):

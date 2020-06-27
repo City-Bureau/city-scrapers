@@ -49,7 +49,10 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_infrastructure_trust/201812110000/x/board_of_directors"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_infrastructure_trust/201812110000/x/board_of_directors"
+    )
 
 
 def test_status():
@@ -65,18 +68,18 @@ def test_location():
 
 def test_source():
     assert parsed_items[0]["source"] == (
-        "http://chicagoinfrastructure.org/"
-        "public-records/meeting-records-2/"
+        "http://chicagoinfrastructure.org/" "public-records/meeting-records-2/"
     )
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        "href":
-            "http://chicagoinfrastructure.org/wp-content/uploads/2018/12/"
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "http://chicagoinfrastructure.org/wp-content/uploads/2018/12/"
             "Board-Meeting-Agenda-20181211.pdf",
-        "title": "Meeting Agenda"
-    }]
+            "title": "Meeting Agenda",
+        }
+    ]
 
 
 def test_classification():
