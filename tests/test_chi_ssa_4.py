@@ -1,7 +1,6 @@
 from datetime import datetime
 from os.path import dirname, join
 
-import pytest
 from city_scrapers_core.constants import COMMISSION, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
@@ -27,7 +26,14 @@ def test_title():
 
 
 def test_description():
-    desc = "All business association members are invited to attend monthly Board Meetings on the fourth Tuesday of the month at 8 am. at the Original Pancake House, 10437 South Western Avenue. These meetings are an excellent opportunity for business owners and managers to share experiences and collaborate with one another. (Please note: there are no Board Meetings in August or December.)"
+    desc = (
+        "All business association members are invited to attend monthly Board "
+        "Meetings on the fourth Tuesday of the month at 8 am. at the "
+        "Original Pancake House, 10437 South Western Avenue. These "
+        "meetings are an excellent opportunity for business owners "
+        "and managers to share experiences and collaborate with one "
+        "another. (Please note: there are no Board Meetings in August or December.)"
+    )
     assert item["description"].replace("\xa0", " ") == desc
 
 
@@ -44,10 +50,8 @@ def test_time_notes():
 
 
 def test_id():
-    assert (
-        item["id"]
-        == "chi_ssa_4/201809250800/x/95th_street_business_association_meeting"
-    )
+    id = "chi_ssa_4/201809250800/x/95th_street_business_association_meeting"
+    assert item["id"] == id
 
 
 def test_status():
@@ -62,10 +66,8 @@ def test_location():
 
 
 def test_source():
-    assert (
-        item["source"]
-        == "https://95thstreetba.org/events/95th-street-business-association-meeting-4/"
-    )
+    src = "https://95thstreetba.org/events/95th-street-business-association-meeting-4/"
+    assert item["source"] == src
 
 
 def test_links():

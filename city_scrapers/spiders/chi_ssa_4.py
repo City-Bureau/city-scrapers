@@ -1,5 +1,6 @@
-import scrapy
 from datetime import datetime
+
+import scrapy
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -10,11 +11,10 @@ class ChiSsa4Spider(CityScrapersSpider):
     name = "chi_ssa_4"
     agency = "Chicago Special Service Area #4 South Western Avenue"
     timezone = "America/Chicago"
-    # start_urls = ["https://95thstreetba.org/events/category/board-meeting/"]
 
     def start_requests(self):
         today = datetime.now()
-        for month_delta in range(-7, -6):
+        for month_delta in range(-6, 3):
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = "http://95thstreetba.org/events/category/board-meeting/{}/".format(
                 mo_str
@@ -48,7 +48,6 @@ class ChiSsa4Spider(CityScrapersSpider):
 
         meeting["status"] = self._get_status(meeting)
         meeting["id"] = self._get_id(meeting)
-
         return meeting
 
     def _get_event_urls(self, response):
@@ -66,7 +65,6 @@ class ChiSsa4Spider(CityScrapersSpider):
         for link, description in zip(links, descriptions):
             if "meeting" in description.lower():
                 urls.append(link)
-
         return urls
 
     def _parse_title(self, response):
@@ -75,9 +73,8 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def _parse_description(self, response):
         """Parse or generate meeting description."""
-        return "".join(
-            response.css("div.tribe-events-single-event-description p::text").getall()
-        )
+        selector = "div.tribe-events-single-event-description p::text"
+        return "".join(response.css(selector).getall())
 
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
@@ -138,7 +135,3 @@ class ChiSsa4Spider(CityScrapersSpider):
             files.append({"href": link, "title": title})
 
         return files
-
-    # def _parse_source(self, response):
-    #     """Parse or generate source."""
-    #     return response.url
