@@ -21,7 +21,7 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
 
     def __init__(self, *args, **kwargs):
         self.meeting_starts = []
-        self.schedule_pdf_link = '/wp-content/uploads/pdfs/schedule.pdf'
+        self.schedule_pdf_link = "/wp-content/uploads/pdfs/schedule.pdf"
         self.docs_link = ""
         self.agenda_link = ""
         super().__init__(*args, **kwargs)
@@ -46,7 +46,7 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
             yield scrapy.Request(
                 response.urljoin(self.schedule_pdf_link),
                 callback=self._parse_schedule,
-                dont_filter=True
+                dont_filter=True,
             )
         else:
             raise ValueError("Required links not found")
@@ -56,7 +56,9 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
         self._parse_schedule_pdf(response)
 
         yield scrapy.Request(
-            response.urljoin(self.docs_link), callback=self._parse_documents, dont_filter=True
+            response.urljoin(self.docs_link),
+            callback=self._parse_documents,
+            dont_filter=True,
         )
 
     def _parse_schedule_pdf(self, response):
@@ -73,7 +75,9 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
         self._validate_location(clean_text)
 
         # Find dates in the format May 20, 2020 10:30 a.m
-        DATE_PATTERN = r"[a-zA-z]{3,9} [0-9]{2},\s[0-9]{4} [\d]{2}[:][\d]{2} (?:p[.]m|a[.]m)"
+        DATE_PATTERN = (
+            r"[a-zA-z]{3,9} [0-9]{2},\s[0-9]{4} [\d]{2}[:][\d]{2} (?:p[.]m|a[.]m)"
+        )
 
         for date_str in re.findall(DATE_PATTERN, clean_text):
             self.meeting_starts.append(self._parse_start(date_str))
@@ -109,7 +113,7 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
 
     def _parse_start(self, date_str):
         """Parse start datetime as a naive datetime object."""
-        return datetime.strptime(date_str.replace('.', ''), "%B %d, %Y %H:%M %p")
+        return datetime.strptime(date_str.replace(".", ""), "%B %d, %Y %H:%M %p")
 
     def _parse_end(self, start):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -134,10 +138,12 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
 
         agenda_href = response.urljoin(self.agenda_link)
 
-        links_map.append({
-            "title": "Agenda",
-            "href": "{}?date={}".format(agenda_href, start.strftime("%Y%m%d"))
-        })
+        links_map.append(
+            {
+                "title": "Agenda",
+                "href": "{}?date={}".format(agenda_href, start.strftime("%Y%m%d")),
+            }
+        )
 
         return links_map
 

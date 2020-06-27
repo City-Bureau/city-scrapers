@@ -16,17 +16,13 @@ test_response = file_response(
 
 test_pdf_response = file_response(
     join(dirname(__file__), "files", "cook_emergency_telephone_schedule.pdf"),
-    url=(
-        "https://cookcounty911.com/wp-content/uploads/pdfs/schedule.pdf"  # noqa
-    ),
+    url=("https://cookcounty911.com/wp-content/uploads/pdfs/schedule.pdf"),  # noqa
     mode="rb",
 )
 
 test_document_response = file_response(
     join(dirname(__file__), "files", "cook_emergency_telephone_minutes.html"),
-    url=(
-        "https://cookcounty911.com/minutes/"  # noqa
-    ),
+    url=("https://cookcounty911.com/minutes/"),  # noqa
 )
 
 spider = CookEmergencyTelephoneSpider()
@@ -86,7 +82,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Conference Room",
-        "address": "1401 S. Maybrook Drive, Maywood, IL 60153"
+        "address": "1401 S. Maybrook Drive, Maywood, IL 60153",
     }
 
 
@@ -95,13 +91,13 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-        'href': 'https://cookcounty911.com/wp-content/uploads/pdfs/minutes-2020-02.pdf',
-        'title': 'Minutes'
-    }, {
-        'href': 'https://cookcounty911.com/agenda?date=20200228',
-        'title': 'Agenda'
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://cookcounty911.com/wp-content/uploads/pdfs/minutes-2020-02.pdf",  # noqa
+            "title": "Minutes",
+        },
+        {"href": "https://cookcounty911.com/agenda?date=20200228", "title": "Agenda"},
+    ]
 
 
 def test_classification():
