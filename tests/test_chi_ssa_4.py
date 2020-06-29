@@ -22,18 +22,11 @@ freezer.stop()
 
 
 def test_title():
-    assert item["title"] == "95th Street Business Association Meeting"
+    assert item["title"] == "95th Street Business Association"
 
 
 def test_description():
-    desc = (
-        "All business association members are invited to attend monthly Board "
-        "Meetings on the fourth Tuesday of the month at 8 am. at the "
-        "Original Pancake House, 10437 South Western Avenue. These "
-        "meetings are an excellent opportunity for business owners "
-        "and managers to share experiences and collaborate with one "
-        "another. (Please note: there are no Board Meetings in August or December.)"
-    )
+    desc = ""
     assert item["description"].replace("\xa0", " ") == desc
 
 
@@ -50,7 +43,7 @@ def test_time_notes():
 
 
 def test_id():
-    id = "chi_ssa_4/201809250800/x/95th_street_business_association_meeting"
+    id = "chi_ssa_4/201809250800/x/95th_street_business_association"
     assert item["id"] == id
 
 

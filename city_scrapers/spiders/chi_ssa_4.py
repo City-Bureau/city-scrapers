@@ -35,7 +35,7 @@ class ChiSsa4Spider(CityScrapersSpider):
         """Parse the event page"""
         meeting = Meeting(
             title=self._parse_title(response),
-            description=self._parse_description(response),
+            description="",
             classification=COMMISSION,
             start=self._parse_start(response),
             end=self._parse_end(response),
@@ -69,12 +69,8 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def _parse_title(self, response):
         """Parse or generate meeting title."""
-        return "".join(response.css("div.tribe-events-single h1::text").get())
-
-    def _parse_description(self, response):
-        """Parse or generate meeting description."""
-        selector = "div.tribe-events-single-event-description p::text"
-        return "".join(response.css(selector).getall())
+        title = "".join(response.css("div.tribe-events-single h1::text").get())
+        return title.replace(" Meeting", "")
 
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
