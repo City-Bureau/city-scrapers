@@ -3,7 +3,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 import scrapy
-from city_scrapers_core.constants import COMMISSION, NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil.relativedelta import relativedelta
@@ -24,7 +24,8 @@ class CookHumanRightsSpider(CityScrapersSpider):
         `parse` should always `yield` Meeting items.
         """
         links = response.css(
-            "#block-fieldblock-node-agency-default-field-resources .content a")
+            "#block-fieldblock-node-agency-default-field-resources .content a"
+        )
         pattern = r"( *)(?P<m>[a-zA-Z]+)( *)(\d+),( *)(?P<y>\d{4})"
         for link in links:
             link_text = " ".join(link.css("*::text").extract()).strip()
@@ -42,28 +43,27 @@ class CookHumanRightsSpider(CityScrapersSpider):
                         date_obj = datetime.strptime(raw_monthyear, "%B %Y")
                     formatted_date = datetime.strftime(date_obj, "%y-%m")
                     yield response.follow(
-                        url=url, method="GET", callback=self._parse_meetings_page,
-                        meta={'formatted_date': formatted_date}
+                        url=url,
+                        method="GET",
+                        callback=self._parse_meetings_page,
+                        meta={"formatted_date": formatted_date},
                     )
 
     def _parse_links(self, response):
         """Parse file page to get minutes file link"""
-        formatted_date = response.meta.get('formatted_date')
+        formatted_date = response.meta.get("formatted_date")
         link = response.xpath("//a[contains(@href, 'default/files')]")
         link_path = link.xpath("./@href").extract_first()
-        self.link_map[formatted_date].append(
-            {"title": "Minutes", "href": link_path}
-        )
-        print(self.link_map)
+        self.link_map[formatted_date].append({"title": "Minutes", "href": link_path})
 
     def _parse_meetings_page(self, response):
-        """ 
-        Triger collecting Minutes' files 
+        """
+        Triger collecting Minutes' files
         Go to calendar page for extract mettings
         """
         self._parse_links(response)
         today = datetime.now()
-        for month_delta in range(-6, 6):  # Collect data from 6 month ago to next 6 month
+        for month_delta in range(-6, 6):  # Meetings from 6 month ago to next 6 month
             mo_str = (today + relativedelta(months=month_delta)).strftime("%Y-%m")
             url = (
                 "https://www.cookcountyil.gov/"
@@ -121,11 +121,9 @@ class CookHumanRightsSpider(CityScrapersSpider):
     def _parse_description(self, response):
         """Parse or generate meeting description."""
         block = response.xpath(
-            "//div[contains(@class,'field-name-field-event-description')]")
-        print(block)
-
+            "//div[contains(@class,'field-name-field-event-description')]"
+        )
         field_items = block.xpath(".//div[contains(@class, 'field-items')]")
-        print(field_items)
         return " ".join(
             field_items.xpath(".//p/text()").extract()
             + field_items.xpath(".//strong/text()").extract()
