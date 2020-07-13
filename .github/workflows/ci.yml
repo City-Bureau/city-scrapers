@@ -34,7 +34,7 @@ jobs:
           PIPENV_DEFAULT_PYTHON_VERSION: ${{ matrix.python-version }}
 
       - name: Check imports with isort
-        run: pipenv run isort . --check --diff || exit 1
+        run: pipenv run isort --check-only --diff || exit 1
 
       - name: Check style with black
         run: pipenv run black ./city_scrapers/ ./tests/ --check
