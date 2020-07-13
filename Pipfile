@@ -12,8 +12,8 @@ scrapy-sentry = "*"
 legistar = {git = "https://github.com/opencivicdata/python-legistar-scraper"}
 scrapy-wayback-middleware = "*"
 city-scrapers-core = {extras = ["azure"],version = "*"}
-pypdf2 = "*"
 pypiwin32 = {version = "*",sys_platform = "== 'win32'"}
+pdfminer-six = "*"
 
 [dev-packages]
 freezegun = "*"

@@ -1,12 +1,13 @@
 import re
 from datetime import datetime
-from io import BytesIO
+from io import BytesIO, StringIO
 
 import scrapy
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from PyPDF2 import PdfFileReader
+from pdfminer.high_level import extract_text_to_fp
+from pdfminer.layout import LAParams
 
 
 class CookEmergencyTelephoneSpider(CityScrapersSpider):
@@ -63,8 +64,10 @@ class CookEmergencyTelephoneSpider(CityScrapersSpider):
 
     def _parse_schedule_pdf(self, response):
         """Parse dates and details from schedule PDF"""
-        pdf_obj = PdfFileReader(BytesIO(response.body))
-        pdf_text = pdf_obj.getPage(0).extractText().replace("\n", "")
+        lp = LAParams(line_margin=0.5)
+        out_str = StringIO()
+        extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
+        pdf_text = out_str.getvalue().replace("\n", "")
 
         # Remove duplicate characters not followed by lowercase (as in 5:00pm)
         clean_text = re.sub(r"([A-Z0-9:])\1(?![a-z])", r"\1", pdf_text, flags=re.M)

@@ -1,13 +1,14 @@
 import json
 import re
 from datetime import datetime
-from io import BytesIO
+from io import BytesIO, StringIO
 
 import scrapy
 from city_scrapers_core.constants import BOARD, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from PyPDF2 import PdfFileReader
+from pdfminer.high_level import extract_text_to_fp
+from pdfminer.layout import LAParams
 
 
 class IlPollutionControlSpider(CityScrapersSpider):
@@ -102,8 +103,12 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
     def _parse_agenda(self, response):
         """Parse PDF with agenda for date and store link + date"""
-        pdf_obj = PdfFileReader(BytesIO(response.body))
-        pdf_text = pdf_obj.getPage(0).extractText().replace("\n", "")
+        # pdf_obj = PdfFileReader(BytesIO(response.body))
+        # pdf_text = pdf_obj.getPage(0).extractText().replace("\n", "")
+        lp = LAParams(line_margin=0.1)
+        out_str = StringIO()
+        extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
+        pdf_text = out_str.getvalue().replace("\n", "")
 
         # Find and extract strings for month/day/year:
         regex = re.compile(r"(?P<month>[a-zA-Z]+) (?P<day>[0-9]+), (?P<year>[0-9]{4})")
@@ -123,7 +128,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
         """
         Parse JSON from /ClerksOffice/GetCalendarEvents -> Meetings
         """
-        data = json.loads(response.body_as_unicode())
+        data = json.loads(response.text)
 
         for item in data:
             if any(

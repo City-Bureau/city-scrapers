@@ -164,7 +164,7 @@ We use [`flake8`](http://flake8.pycqa.org/en/latest/){:target="\_blank"}, [`isor
 
 ```bash
 $ pipenv run flake8
-$ pipenv run isort
+$ pipenv run isort .
 $ pipenv run black city_scrapers tests
 ```
 
