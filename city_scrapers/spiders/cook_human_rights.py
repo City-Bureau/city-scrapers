@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 class CookHumanRightsSpider(CityScrapersSpider):
     name = "cook_human_rights"
-    agency = "Cook County Human Rights"
+    agency = "Cook County Commission on Human Rights"
     timezone = "America/Chicago"
     start_urls = ["https://www.cookcountyil.gov/agency/commission-human-rights-0"]
 
