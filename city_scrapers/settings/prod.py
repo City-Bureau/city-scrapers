@@ -1,6 +1,8 @@
-from .base import *
+import os
 
-USER_AGENT = "City Scrapers [production mode]. Learn more and say hello at https://cityscrapers.org"
+from .base import *  # noqa
+
+USER_AGENT = "City Scrapers [production mode]. Learn more and say hello at https://cityscrapers.org"  # noqa
 
 # Configure item pipelines
 ITEM_PIPELINES = {
@@ -8,12 +10,6 @@ ITEM_PIPELINES = {
     "city_scrapers_core.pipelines.MeetingPipeline": 400,
     "city_scrapers_core.pipelines.OpenCivicDataPipeline": 500,
 }
-
-if os.getenv("WAYBACK_ENABLED"):
-    SPIDER_MIDDLEWARES = {
-        **SPIDER_MIDDLEWARES,
-        "city_scrapers.middleware.CityScrapersWaybackMiddleware": 500,
-    }
 
 SENTRY_DSN = os.getenv("SENTRY_DSN")
 

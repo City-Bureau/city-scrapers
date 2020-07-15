@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 
 # Scrapy settings for city_scrapers project
@@ -16,7 +15,7 @@ SPIDER_MODULES = ["city_scrapers.spiders"]
 NEWSPIDER_MODULE = "city_scrapers.spiders"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = "City Scrapers [development mode]. Learn more and say hello at https://cityscrapers.org/"
+USER_AGENT = "City Scrapers [development mode]. Learn more and say hello at https://cityscrapers.org/"  # noqa
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -41,12 +40,6 @@ ITEM_PIPELINES = {
 SPIDER_MIDDLEWARES = {}
 
 CITY_SCRAPERS_ARCHIVE = os.getenv("CITY_SCRAPERS_ARCHIVE") is not None
-
-if os.getenv("WAYBACK_ENABLED"):
-    SPIDER_MIDDLEWARES = {
-        **SPIDER_MIDDLEWARES,
-        "city_scrapers.middleware.CityScrapersWaybackMiddleware": 500,
-    }
 
 DOWNLOADER_MIDDLEWARES = {
     "scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware": 543,

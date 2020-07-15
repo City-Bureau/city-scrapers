@@ -1,6 +1,7 @@
 # City Scrapers
 
-[![Build status](https://github.com/City-Bureau/city-scrapers/workflows/CI/badge.svg)](https://github.com/City-Bureau/city-scrapers/actions)
+[![CI build status](https://github.com/City-Bureau/city-scrapers/workflows/CI/badge.svg)](https://github.com/City-Bureau/city-scrapers/actions?query=workflow%3ACI)
+[![Cron build status](https://github.com/City-Bureau/city-scrapers/workflows/Cron/badge.svg)](https://github.com/City-Bureau/city-scrapers/actions?query=workflow%3ACron)
 
 ## Who are the City Bureau Documenters, and why do they want to scrape websites?
 

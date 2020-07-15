@@ -1,21 +1,16 @@
-name: Cron
+name: Archive
 
 on:
   schedule:
-    - cron: "12 6 * * *"
+    - cron: "12 7 * * *"
 
 env:
   CI: true
   PIPENV_VENV_IN_PROJECT: true
-  SCRAPY_SETTINGS_MODULE: city_scrapers.settings.prod
+  SCRAPY_SETTINGS_MODULE: city_scrapers.settings.archive
   AUTOTHROTTLE_MAX_DELAY: 30.0
   AUTOTHROTTLE_START_DELAY: 1.5
   AUTOTHROTTLE_TARGET_CONCURRENCY: 3.0
-  AZURE_ACCOUNT_KEY: ${{ secrets.AZURE_ACCOUNT_KEY }}
-  AZURE_ACCOUNT_NAME: ${{ secrets.AZURE_ACCOUNT_NAME }}
-  AZURE_CONTAINER: ${{ secrets.AZURE_CONTAINER }}
-  AZURE_STATUS_CONTAINER: ${{ secrets.AZURE_STATUS_CONTAINER }}
-  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
   OPENVPN_USER: ${{ secrets.OPENVPN_USER }}
   OPENVPN_PASS: ${{ secrets.OPENVPN_PASS }}
   OPENVPN_CONFIG: ${{ secrets.OPENVPN_CONFIG }}
@@ -52,8 +47,3 @@ jobs:
         run: |
           export PYTHONPATH=$(pwd):$PYTHONPATH
           ./.deploy.sh
-
-      - name: Combine output feeds
-        run: |
-          export PYTHONPATH=$(pwd):$PYTHONPATH
-          pipenv run scrapy combinefeeds -s LOG_ENABLED=False
