@@ -34,13 +34,13 @@ jobs:
           PIPENV_DEFAULT_PYTHON_VERSION: ${{ matrix.python-version }}
 
       - name: Check imports with isort
-        run: pipenv run isort --check-only --diff || exit 1
+        run: pipenv run isort . --check-only
 
       - name: Check style with black
-        run: pipenv run black ./city_scrapers/ ./tests/ --check
+        run: pipenv run black . --check
 
       - name: Lint with flake8
-        run: pipenv run flake8
+        run: pipenv run flake8 .
 
       - name: Test with pytest
         run: pipenv run pytest
