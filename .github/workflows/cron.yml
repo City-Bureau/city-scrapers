@@ -3,6 +3,7 @@ name: Cron
 on:
   schedule:
     - cron: "12 6 * * *"
+  workflow_dispatch:
 
 env:
   CI: true

@@ -3,6 +3,7 @@ name: Archive
 on:
   schedule:
     - cron: "12 7 * * *"
+  workflow_dispatch:
 
 env:
   CI: true
