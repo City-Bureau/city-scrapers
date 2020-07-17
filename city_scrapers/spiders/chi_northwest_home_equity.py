@@ -29,9 +29,8 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
             "3234 N. Central Ave.": "Northwest Home Equity Assurance Program",
             "5363 W. Lawrence Ave": "Jefferson Park Library",
         }
-        # Before we begin, need to collect meeting minutes data -- which for some reason is housed
-        # on entirely different pages than the list of meetings itself. This list will be held
-        #  in variable article_all_pages
+        # Before we begin, need to collect meeting minutes data -- which is
+        #  contained on multiple iterative pages (/page/2 /page/3 etc)
         r = requests.get("https://nwheap.com/category/meet-minutes-and-agendas/")
         article_response = scrapy.http.HtmlResponse(r.url, body=r.content).xpath(
             "//article"
