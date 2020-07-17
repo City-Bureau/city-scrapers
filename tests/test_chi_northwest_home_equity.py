@@ -43,7 +43,6 @@ def test_time_notes():
     assert parsed_items[0]["time_notes"] == ""
 
 
-
 def test_location():
     assert parsed_items[0]["location"]["address"] in spider.location_dict.values()
 
