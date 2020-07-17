@@ -43,12 +43,12 @@ def test_time_notes():
     assert parsed_items[0]["time_notes"] == ""
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_id():
+    assert parsed_items[0]["id"] == "EXPECTED ID"
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_status():
+    assert parsed_items[0]["status"] == "EXPECTED STATUS"
 
 
 def test_location():
