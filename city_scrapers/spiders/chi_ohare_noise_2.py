@@ -3,11 +3,11 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
-class ChiOhareNoiseSpider(CityScrapersSpider):
-    name = "chi_ohare_noise"
+class ChiOhareNoise2Spider(CityScrapersSpider):
+    name = "chi_ohare_noise_2"
     agency = "Chicago O'Hare Noise Compatibility Commission"
     timezone = "America/Chicago"
-    start_urls = ["https://www.oharenoise.org/about-oncc/agendas-and-minutes"]
+    start_urls = ["https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/2019/02/03/-"]
 
     def parse(self, response):
         """
@@ -16,7 +16,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css("tr.cat-list-row0") + response.css("tr.cat-list-row1"):
+        for item in response.css(".meetings"):
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -30,14 +30,14 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
                 source=self._parse_source(response),
             )
 
-#            meeting["status"] = self._get_status(meeting)
-#            meeting["id"] = self._get_id(meeting)
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
 
-            #yield meeting
+            yield meeting
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return item.css(".djc_category span").xpath("text()").extract()
+        return ""
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
