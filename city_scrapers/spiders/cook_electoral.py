@@ -114,10 +114,6 @@ class CookElectoralSpider(CityScrapersSpider):
             yield self._build_request(response, selected_year, meeting_id)
 
     def _parse_meeting(self, response):
-        """
-        `_parse_detail` should always `yield` Meeting items.
-        """
-
         self._check_errors(response)
         meeting = Meeting(
             title=self._parse_title(response),
@@ -138,7 +134,6 @@ class CookElectoralSpider(CityScrapersSpider):
         yield meeting
 
     def _parse_title(self, response):
-        """Parse or generate meeting title."""
         title = "Board Of Commissioners Of Cook County Meeting"
         selected_meeting = response.xpath('//select[@id="ddlMeetingDate"]/option[@selected]/text()').get()
         if selected_meeting.startswith("*"):
@@ -146,13 +141,11 @@ class CookElectoralSpider(CityScrapersSpider):
         return title
 
     def _parse_start(self, item):
-        """Parse start datetime as a naive datetime object."""
         time = item.xpath('//span[@id="lblMeetingTime"]/text()').get()
         am_or_pm = item.xpath('//span[@id="lblDuration"]/text()').get()
         return datetime.strptime(f"{time} {am_or_pm}", "%A, %B %d, %Y %I:%M %p")
 
     def _parse_location(self, item):
-        """Parse or generate location."""
         name = item.xpath('//span[@id="lblLocation"]/text()').get()
         street = item.xpath('//span[@id="lblAddress"]/text()').get()
         city = item.xpath('//span[@id="lblCity"]/text()').get()
@@ -164,7 +157,6 @@ class CookElectoralSpider(CityScrapersSpider):
         }
 
     def _parse_links(self, item):
-        """Parse or generate links."""
         raw_links = item.css('#currentDocDisplay a')
         links = []
         for link in raw_links:
@@ -175,5 +167,4 @@ class CookElectoralSpider(CityScrapersSpider):
         return links
 
     def _parse_source(self, response):
-        """Parse or generate source."""
         return response.url
