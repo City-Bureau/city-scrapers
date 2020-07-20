@@ -7,6 +7,10 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.cook_electoral import CookElectoralSpider
 
+home_response = file_response(
+    join(dirname(__file__), "files", "cook_electoral_home.aspx.html"),
+    url="https://aba.cookcountyclerk.com/boardmeetingsearch.aspx",
+)
 standard_response = file_response(
     join(dirname(__file__), "files", "cook_electoral_standard.aspx.html"),
     url="https://aba.cookcountyclerk.com/boardmeetingsearch.aspx",
@@ -20,10 +24,17 @@ spider = CookElectoralSpider()
 freezer = freeze_time("2020-01-01")
 freezer.start()
 
-parsed_standard = next(spider._parse_detail(standard_response))
-parsed_special = next(spider._parse_detail(special_response))
+parsed_standard = next(spider._parse_meeting(standard_response))
+parsed_special = next(spider._parse_meeting(special_response))
 
 freezer.stop()
+
+
+def test_find_year_and_meetings():
+    year, meeting_ids = spider._find_year_and_meetings(home_response)
+    assert year == "2020"
+    assert meeting_ids == ['562', '544', '545', '546', '563', '547', '548', '549', '550', '551',
+                           '552', '553', '554', '555', '556', '557', '558', '559', '560', '561']
 
 
 def test_title():
@@ -40,7 +51,8 @@ def test_start():
 
 
 def test_id():
-    assert parsed_standard["id"] == "cook_electoral/202001151300/x/board_of_commissioners_of_cook_county_meeting"
+    assert parsed_standard["id"] == \
+           "cook_electoral/202001151300/x/board_of_commissioners_of_cook_county_meeting"
 
 
 def test_status():

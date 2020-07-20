@@ -15,67 +15,110 @@ class CookElectoralSpider(CityScrapersSpider):
     start_urls = ["https://aba.cookcountyclerk.com/boardmeetingsearch.aspx"]
 
     def parse(self, response):
-        # years = response.xpath('//select[@id="ddlMeetingYear"]/option/@value').getall()
-        self._parse_selected_year(response)
+        available_years = response.xpath('//select[@id="ddlMeetingYear"]/option/@value').getall()
 
-    def _parse_selected_year(self, response):
+        year, meeting_ids = self._find_year_and_meetings(response)
+        self.cookie_jar = CookieJar()
+        self.cookie_jar.extract_cookies(response, response.request)
+
+        # Parse the current year without re-fetching, since we already have it
+        for m in self._parse_meetings_in_year(response):
+            yield m
+
+        today = datetime.now().today()
+        next_year = str(today.year + 1)
+        last_year = str(today.year - 1)
+
+        # Fetch surrounding years if appropriate. We need a valid meeting ID from _any_ year for this to work
+        if next_year in available_years:
+            yield self._build_request(response, next_year, meeting_ids[0], parse_all=True)
+
+        # If we're still near the start of the year, fetch last year for any updates
+        if today.month < 2:
+            yield self._build_request(response, last_year, meeting_ids[0], parse_all=True)
+
+
+    def _find_year_and_meetings(self, response):
         selected_year = response.xpath(
             '//select[@id="ddlMeetingYear"]/option[@selected]/@value'
         ).get()
         meeting_ids_this_year = response.xpath(
             '//select[@id="ddlMeetingDate"]/option/@value'
         ).getall()
+        return selected_year, meeting_ids_this_year
 
-        jar = CookieJar()
-        jar.extract_cookies(response, response.request)
+    def _hidden_field_value(self, response, fieldname):
+        value_as_input = response.xpath(f"//input[@id='{fieldname}']/@value").get()
+        if value_as_input:
+            return value_as_input
+        # Beyond the initial response, hidden fields are returned in non-HTML format
+        exp = re.compile(f'hiddenField\|{fieldname}\|(.*?)\|')
+        regex_value = re.search(exp, response.text)
+        if regex_value:
+            return regex_value.group(1)
 
-        for meeting_id in meeting_ids_this_year:
-            print(f"Fetching: {selected_year} {meeting_id}")
-            payload = {
-                "ScriptManager1": "UpdatePanel1|btnGo",
-                "__EVENTTARGET": "",
-                "__EVENTARGUMENT": "",
-                "__LASTFOCUS": "",
-                "__VIEWSTATE": response.xpath(
-                    "//input[@id='__VIEWSTATE']/@value"
-                ).get(),
-                "__VIEWSTATEGENERATOR": response.xpath(
-                    "//input[@id='__VIEWSTATEGENERATOR']/@value"
-                ).get(),
-                "__EVENTVALIDATION": response.xpath(
-                    "//input[@id='__EVENTVALIDATION']/@value"
-                ).get(),
-                "__ASYNCPOST": "true",
-                "btnGo.x": "10",
-                "btnGo.y": "15",
+    def _build_request(self, response, year, meeting_id, parse_all=False):
+        payload = {
+            "__EVENTTARGET": "",
+            "__EVENTARGUMENT": "",
+            "__LASTFOCUS": "",
+            "__VIEWSTATE": self._hidden_field_value(response, "__VIEWSTATE"),
+            "__VIEWSTATEGENERATOR": self._hidden_field_value(response, "__VIEWSTATEGENERATOR"),
+            "__EVENTVALIDATION": self._hidden_field_value(response, "__EVENTVALIDATION"),
+            "__ASYNCPOST": "true",
+            "ScriptManager1": "UpdatePanel1|btnGo",
+            "btnGo.x": "10",
+            "btnGo.y": "15",
 
-                "ddlMeetingYear": selected_year,
-                "ddlMeetingDate": meeting_id,
-            }
-            req = FormRequest(
-                response.url,
-                formdata=payload,
-                # Add user-agent to avoid `RESPONSE 179|error|500|The page is performing
-                # an async postback but the ScriptManager.SupportsPartialRendering
-                # property is set to false. Ensure that the property is set to true during an async postback.`
-                headers={"User-Agent": "Mozilla/4.0",},
-                callback=self._parse_detail
-            )
-            # Add cookies to avoid `ERROR 306|error|500|Validation of viewstate MAC failed. If this application
-            # is hosted by a Web Farm or cluster, ensure that <machineKey> configuration specifies the
-            # same validationKey and validation algorithm. AutoGenerate cannot be used in a cluster`
-            jar.add_cookie_header(req)
-            yield req
+            "ddlMeetingYear": year,
+            "ddlMeetingDate": meeting_id,
+        }
+        callback = self._parse_meeting
+        if parse_all:
+            callback = self._parse_meetings_in_year
 
-    def _parse_detail(self, response):
+        req = FormRequest(
+            response.url,
+            formdata=payload,
+            # Add user-agent to avoid `RESPONSE 179|error|500|The page is performing
+            # an async postback but the ScriptManager.SupportsPartialRendering
+            # property is set to false. Ensure that the property is set to true during an async postback.`
+            headers={"User-Agent": "Mozilla/4.0"},
+            callback=callback
+        )
+
+        # Add cookies to avoid `ERROR 306|error|500|Validation of viewstate MAC failed. If this application
+        # is hosted by a Web Farm or cluster, ensure that <machineKey> configuration specifies the
+        # same validationKey and validation algorithm. AutoGenerate cannot be used in a cluster`
+        self.cookie_jar.add_cookie_header(req)
+        return req
+
+    def _check_errors(self, response):
+        if response.url.endswith('Error.aspx'):
+            response.status_code = 503
+            raise scrapelib.HTTPError(response)
+
+        if not response.text:
+            if response.request.method.lower() in {'get', 'post'}:
+                response.status_code = 520
+                raise scrapelib.HTTPError(response)
+
+        if re.search(r"\|error\|500\|", response.text):
+            response.status_code = 500
+            raise scrapelib.HTTPError(response)
+
+    def _parse_meetings_in_year(self, response):
+        selected_year, meeting_ids = self._find_year_and_meetings(response)
+
+        for meeting_id in meeting_ids:
+            yield self._build_request(response, selected_year, meeting_id)
+
+    def _parse_meeting(self, response):
         """
         `_parse_detail` should always `yield` Meeting items.
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
         """
 
         self._check_errors(response)
-        print(response.text)
         meeting = Meeting(
             title=self._parse_title(response),
             description="",
@@ -94,26 +137,12 @@ class CookElectoralSpider(CityScrapersSpider):
 
         yield meeting
 
-    def _check_errors(self, response):
-        if response.url.endswith('Error.aspx'):
-            response.status_code = 503
-            raise scrapelib.HTTPError(response)
-
-        if not response.text:
-            if response.request.method.lower() in {'get', 'post'}:
-                response.status_code = 520
-                raise scrapelib.HTTPError(response)
-
-        if re.search(r"\|error\|500\|", response.text):
-            response.status_code = 500
-            raise scrapelib.HTTPError(response)
-
     def _parse_title(self, response):
         """Parse or generate meeting title."""
         title = "Board Of Commissioners Of Cook County Meeting"
         selected_meeting = response.xpath('//select[@id="ddlMeetingDate"]/option[@selected]/text()').get()
         if selected_meeting.startswith("*"):
-           title = "Special " + title
+            title = "Special " + title
         return title
 
     def _parse_start(self, item):
