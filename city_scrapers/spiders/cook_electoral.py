@@ -29,21 +29,28 @@ class CookElectoralSpider(CityScrapersSpider):
             yield m
 
         today = datetime.now().today()
-        next_year = str(today.year + 1)
-        last_year = str(today.year - 1)
+        next_year_str = str(today.year + 1)
+        last_year_str = str(today.year - 1)
 
-        # Fetch surrounding years if appropriate.
-        # We need a valid meeting ID from _any_ year for this to work
-        if next_year in available_years:
-            yield self._build_request(
-                response, next_year, meeting_ids[0], parse_all=True
-            )
+        if self.settings.getbool("CITY_SCRAPERS_ARCHIVE"):
+            available_years.remove(str(today.year))
+            for year in available_years:
+                yield self._build_request(
+                    response, year, meeting_ids[0], parse_all=True
+                )
+        else:
+            # Fetch surrounding years if appropriate.
+            # We need a valid meeting ID from _any_ year for this to work
+            if next_year_str in available_years:
+                yield self._build_request(
+                    response, next_year_str, meeting_ids[0], parse_all=True
+                )
 
-        # If we're still near the start of the year, fetch last year for any updates
-        if today.month < 2:
-            yield self._build_request(
-                response, last_year, meeting_ids[0], parse_all=True
-            )
+            # If we're still near the start of the year, fetch last year for any updates
+            if today.month < 2:
+                yield self._build_request(
+                    response, last_year_str, meeting_ids[0], parse_all=True
+                )
 
     def _find_year_and_meetings(self, response):
         selected_year = response.xpath(

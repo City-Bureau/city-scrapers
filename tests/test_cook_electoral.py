@@ -102,17 +102,17 @@ def test_links():
     assert parsed_standard["links"] == [
         {
             "title": "January 15, 2020 Consent Agenda",
-            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Agenda_pdf_011520_562.pdf",
-        },  # noqa
+            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Agenda_pdf_011520_562.pdf",  # noqa
+        },
         {
             "title": "January 15, 2020 Resolutions",
-            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Resolution_pdf_011520_562.pdf",
-        },  # noqa
+            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Resolution_pdf_011520_562.pdf",  # noqa
+        },
         {
             "title": "January 15, 2020 Consent Journal",
-            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Journal_pdf_011520_562.pdf",
+            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Journal_pdf_011520_562.pdf",  # noqa
         },
-    ]  # noqa
+    ]
 
 
 def test_classification():
