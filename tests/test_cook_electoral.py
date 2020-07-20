@@ -33,13 +33,36 @@ freezer.stop()
 def test_find_year_and_meetings():
     year, meeting_ids = spider._find_year_and_meetings(home_response)
     assert year == "2020"
-    assert meeting_ids == ['562', '544', '545', '546', '563', '547', '548', '549', '550', '551',
-                           '552', '553', '554', '555', '556', '557', '558', '559', '560', '561']
+    assert meeting_ids == [
+        "562",
+        "544",
+        "545",
+        "546",
+        "563",
+        "547",
+        "548",
+        "549",
+        "550",
+        "551",
+        "552",
+        "553",
+        "554",
+        "555",
+        "556",
+        "557",
+        "558",
+        "559",
+        "560",
+        "561",
+    ]
 
 
 def test_title():
     assert parsed_standard["title"] == "Board Of Commissioners Of Cook County Meeting"
-    assert parsed_special["title"] == "Special Board Of Commissioners Of Cook County Meeting"
+    assert (
+        parsed_special["title"]
+        == "Special Board Of Commissioners Of Cook County Meeting"
+    )
 
 
 def test_description():
@@ -51,8 +74,10 @@ def test_start():
 
 
 def test_id():
-    assert parsed_standard["id"] == \
-           "cook_electoral/202001151300/x/board_of_commissioners_of_cook_county_meeting"
+    assert (
+        parsed_standard["id"]
+        == "cook_electoral/202001151300/x/board_of_commissioners_of_cook_county_meeting"
+    )
 
 
 def test_status():
@@ -62,22 +87,32 @@ def test_status():
 def test_location():
     assert parsed_standard["location"] == {
         "name": "County Board Room, County Building",
-        "address": "118 N. Clark Street, 5th Floor, Chicago IL"
+        "address": "118 N. Clark Street, 5th Floor, Chicago IL",
     }
 
 
 def test_source():
-    assert parsed_standard["source"] == "https://aba.cookcountyclerk.com/boardmeetingsearch.aspx"
+    assert (
+        parsed_standard["source"]
+        == "https://aba.cookcountyclerk.com/boardmeetingsearch.aspx"
+    )
 
 
 def test_links():
     assert parsed_standard["links"] == [
-        {'title': 'January 15, 2020 Consent Agenda',
-         'href': 'http://aba-clerk.s3-website-us-east-1.amazonaws.com/Agenda_pdf_011520_562.pdf'},
-        {'title': 'January 15, 2020 Resolutions',
-         'href': 'http://aba-clerk.s3-website-us-east-1.amazonaws.com/Resolution_pdf_011520_562.pdf'},
-        {'title': 'January 15, 2020 Consent Journal',
-         'href': 'http://aba-clerk.s3-website-us-east-1.amazonaws.com/Journal_pdf_011520_562.pdf'}]
+        {
+            "title": "January 15, 2020 Consent Agenda",
+            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Agenda_pdf_011520_562.pdf",
+        },  # noqa
+        {
+            "title": "January 15, 2020 Resolutions",
+            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Resolution_pdf_011520_562.pdf",
+        },  # noqa
+        {
+            "title": "January 15, 2020 Consent Journal",
+            "href": "http://aba-clerk.s3-website-us-east-1.amazonaws.com/Journal_pdf_011520_562.pdf",
+        },
+    ]  # noqa
 
 
 def test_classification():
