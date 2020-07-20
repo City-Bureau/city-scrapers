@@ -81,6 +81,8 @@ class IlLaborSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         addr_matches = re.findall(r"^\d+ .*$", item, flags=re.M | re.DOTALL)
+        if "dialing" in item:
+            return {"name": "", "address": ""}
         if "160 N" in item or len(addr_matches) == 0:
             return self.location
         chi_addrs = [a for a in addr_matches if "Chicago" in a]
@@ -90,7 +92,7 @@ class IlLaborSpider(CityScrapersSpider):
             addr_str = chi_addrs[0]
         return {
             "name": "",
-            "address": addr_str.replace(" and").strip(),
+            "address": addr_str.replace(" and", "").strip(),
         }
 
     def _parse_links(self, response):
