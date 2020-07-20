@@ -44,7 +44,11 @@ class IlElectionsSpider(CityScrapersSpider):
             parsed_date = datetime.strptime(date, "%a, %B %d, %Y").date()
             link = minute.css("::attr(href)").extract_first()
             qs = parse_qs(urlparse(link).query)
-            self.meeting_minutes[parsed_date] = qs["Doc"][0]
+            if "Doc" in qs:
+                doc_link = qs["Doc"][0]
+            else:
+                doc_link = link
+            self.meeting_minutes[parsed_date] = doc_link
 
     def _parse_addresses(self, response):
         addresses = dict()
@@ -131,7 +135,11 @@ class IlElectionsSpider(CityScrapersSpider):
         href = item.css("td")[0].css("::attr(href)").extract_first()
         if href:
             qs = parse_qs(urlparse(href).query)
-            links.append({"href": response.urljoin(qs["Doc"][0]), "title": "Agenda"})
+            if "Doc" in qs:
+                doc_link = qs["Doc"][0]
+            else:
+                doc_link = href
+            links.append({"href": response.urljoin(doc_link), "title": "Agenda"})
 
         if start.date() in self.meeting_minutes:
             links.append(
