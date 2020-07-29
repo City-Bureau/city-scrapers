@@ -1,7 +1,7 @@
-2020-07-23 16:12:35 [scrapy.utils.log] INFO: Scrapy 2.1.0 started (bot: city_scrapers)
-2020-07-23 16:12:35 [scrapy.utils.log] INFO: Versions: lxml 4.5.1.0, libxml2 2.9.10, cssselect 1.1.0, parsel 1.6.0, w3lib 1.22.0, Twisted 20.3.0, Python 3.8.4 (default, Jul 14 2020, 02:58:48) - [Clang 11.0.3 (clang-1103.0.32.62)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1g  21 Apr 2020), cryptography 2.9.2, Platform macOS-10.15.5-x86_64-i386-64bit
-2020-07-23 16:12:35 [scrapy.utils.log] DEBUG: Using reactor: twisted.internet.selectreactor.SelectReactor
-2020-07-23 16:12:35 [scrapy.crawler] INFO: Overridden settings:
+2020-07-28 22:48:10 [scrapy.utils.log] INFO: Scrapy 2.1.0 started (bot: city_scrapers)
+2020-07-28 22:48:10 [scrapy.utils.log] INFO: Versions: lxml 4.5.1.0, libxml2 2.9.10, cssselect 1.1.0, parsel 1.6.0, w3lib 1.22.0, Twisted 20.3.0, Python 3.8.5 (default, Jul 21 2020, 10:48:26) - [Clang 11.0.3 (clang-1103.0.32.62)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1g  21 Apr 2020), cryptography 2.9.2, Platform macOS-10.15.5-x86_64-i386-64bit
+2020-07-28 22:48:10 [scrapy.utils.log] DEBUG: Using reactor: twisted.internet.selectreactor.SelectReactor
+2020-07-28 22:48:10 [scrapy.crawler] INFO: Overridden settings:
 {'AUTOTHROTTLE_ENABLED': True,
  'AUTOTHROTTLE_MAX_DELAY': 30.0,
  'AUTOTHROTTLE_START_DELAY': 1.0,
@@ -14,14 +14,14 @@
  'SPIDER_MODULES': ['city_scrapers.spiders'],
  'USER_AGENT': 'City Scrapers [development mode]. Learn more and say hello at '
                'https://cityscrapers.org/'}
-2020-07-23 16:12:35 [scrapy.extensions.telnet] INFO: Telnet Password: c62403b0f1ae3302
-2020-07-23 16:12:35 [scrapy.middleware] INFO: Enabled extensions:
+2020-07-28 22:48:10 [scrapy.extensions.telnet] INFO: Telnet Password: df55a7553087ce04
+2020-07-28 22:48:10 [scrapy.middleware] INFO: Enabled extensions:
 ['scrapy.extensions.corestats.CoreStats',
  'scrapy.extensions.telnet.TelnetConsole',
  'scrapy.extensions.memusage.MemoryUsage',
  'scrapy.extensions.logstats.LogStats',
  'scrapy.extensions.throttle.AutoThrottle']
-2020-07-23 16:12:35 [scrapy.middleware] INFO: Enabled downloader middlewares:
+2020-07-28 22:48:10 [scrapy.middleware] INFO: Enabled downloader middlewares:
 ['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
  'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
  'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
@@ -33,575 +33,79 @@
  'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
  'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
  'scrapy.downloadermiddlewares.stats.DownloaderStats']
-2020-07-23 16:12:35 [scrapy.middleware] INFO: Enabled spider middlewares:
+2020-07-28 22:48:10 [scrapy.middleware] INFO: Enabled spider middlewares:
 ['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
  'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
  'scrapy.spidermiddlewares.referer.RefererMiddleware',
  'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
  'scrapy.spidermiddlewares.depth.DepthMiddleware']
-2020-07-23 16:12:35 [scrapy.middleware] INFO: Enabled item pipelines:
+2020-07-28 22:48:10 [scrapy.middleware] INFO: Enabled item pipelines:
 ['city_scrapers_core.pipelines.MeetingPipeline']
-2020-07-23 16:12:35 [scrapy.core.engine] INFO: Spider opened
-2020-07-23 16:12:35 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
-2020-07-23 16:12:35 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
-2020-07-23 16:12:36 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/robots.txt> (referer: None)
-2020-07-23 16:12:37 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-> (referer: None)
-2020-07-23 16:12:38 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/20/337/-/governance-committee-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:38 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/14/323/-/technical-committee-meeting-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:39 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:39 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/03/316/-/cancelled-o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:39 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/30/308/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:40 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/24/299/-/cancelled-fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:40 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:40 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/18/335/-/cancelled-governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:41 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:41 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/17/322/-/cancelled-technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:41 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:41 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/25/298/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:42 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/18/336/-/governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:42 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/14/296/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:42 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:42 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/10/307/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:43 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/29/294/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:44 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/28/293/-/fly-quiet-committee-note-change-of-location> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:44 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:45 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/21/295/-/cancelled-technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:45 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:45 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/16/334/-/governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:45 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/10/315/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:46 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/12/08/306/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:46 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:46 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/17/327/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:47 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:47 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/11/331/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:47 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:47 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/06/321/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:47 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/02/314/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:48 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:48 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/27/305/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:48 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/13/326/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:49 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/02/320/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:49 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:49 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/28/312/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:49 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:50 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/22/304/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:50 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:50 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/15/325/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:50 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/09/330/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:51 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/04/319/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:51 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:52 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/31/313/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:52 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:52 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/20/303/-/fly-quiet-committee-note-change-of-date> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:52 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:52 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/18/332/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:52 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:53 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/13/311/-/executive-committee-strategic-planning-session> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:53 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:53 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/23/302/-/fly-quiet-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:53 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/05/318/-/o-hare-noise-compatibility-commission-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:54 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:54 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/01/310/-/executive-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:54 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:55 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/26/301/-/fly-quiet-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:55 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:55 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/339/-/ad-hoc-governance-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:55 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:55 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/324/-/technical-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:55 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:56 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/13/329/-/residential-sound-insulation-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:56 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:56 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/12/338/-/ad-hoc-nominating-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:56 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:56 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/01/317/-/cancelled-o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:56 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/27/309/-/executive-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:57 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:57 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/21/300/-/fly-quiet-committee-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:57 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:58 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/06/297/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
-2020-07-23 16:12:58 [scrapy.core.scraper] ERROR: Error processing {'address': '', 'name': ''}
-Traceback (most recent call last):
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/twisted/internet/defer.py", line 654, in _runCallbacks
-    current.result = callback(current.result, *args, **kw)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/scrapy/utils/defer.py", line 154, in f
-    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/decorators.py", line 12, in wrapper
-    return func(*args, **kwargs)
-  File "/Users/donaloshea/.local/share/virtualenvs/city-scrapers-eUp1nLp2/lib/python3.8/site-packages/city_scrapers_core/pipelines/meeting.py", line 9, in process_item
-    item["title"] = spider._clean_title(item["title"])
-KeyError: 'title'
-2020-07-23 16:12:58 [scrapy.core.engine] INFO: Closing spider (finished)
-2020-07-23 16:12:58 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+2020-07-28 22:48:10 [scrapy.core.engine] INFO: Spider opened
+2020-07-28 22:48:10 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-07-28 22:48:10 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2020-07-28 22:48:11 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/robots.txt> (referer: None)
+2020-07-28 22:48:12 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-> (referer: None)
+2020-07-28 22:48:13 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/27/309/-/executive-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/21/300/-/fly-quiet-committee-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/20/337/-/governance-committee-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:15 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/14/323/-/technical-committee-meeting-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:15 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/03/316/-/cancelled-o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:16 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/30/308/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:16 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/24/299/-/cancelled-fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/17/322/-/cancelled-technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/18/335/-/cancelled-governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/25/298/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:18 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/18/336/-/governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:19 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/14/296/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:19 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/10/307/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:20 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/29/294/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:20 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/28/293/-/fly-quiet-committee-note-change-of-location> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:20 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/21/295/-/cancelled-technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:21 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/12/08/306/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:21 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/17/327/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/11/331/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/06/321/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/02/314/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:23 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/27/305/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:23 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/13/326/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:23 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/02/320/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:24 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/28/312/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:24 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/22/304/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/15/325/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/09/330/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/04/319/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/31/313/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/20/303/-/fly-quiet-committee-note-change-of-date> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:27 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/18/332/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:27 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/13/311/-/executive-committee-strategic-planning-session> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:27 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/23/302/-/fly-quiet-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:28 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/05/318/-/o-hare-noise-compatibility-commission-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:28 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/01/310/-/executive-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/26/301/-/fly-quiet-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/339/-/ad-hoc-governance-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/324/-/technical-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:30 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/13/329/-/residential-sound-insulation-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:30 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/12/338/-/ad-hoc-nominating-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:31 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/01/317/-/cancelled-o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:31 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/16/334/-/governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/10/315/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/06/297/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-07-28 22:48:32 [scrapy.core.engine] INFO: Closing spider (finished)
+2020-07-28 22:48:32 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
 {'downloader/request_bytes': 20268,
  'downloader/request_count': 47,
  'downloader/request_method_count/GET': 47,
- 'downloader/response_bytes': 331885,
+ 'downloader/response_bytes': 331892,
  'downloader/response_count': 47,
  'downloader/response_status_count/200': 47,
- 'elapsed_time_seconds': 22.252104,
+ 'elapsed_time_seconds': 21.846181,
  'finish_reason': 'finished',
- 'finish_time': datetime.datetime(2020, 7, 23, 15, 12, 58, 206726),
+ 'finish_time': datetime.datetime(2020, 7, 28, 21, 48, 32, 577090),
  'log_count/DEBUG': 47,
- 'log_count/ERROR': 45,
  'log_count/INFO': 10,
- 'memusage/max': 184721408,
- 'memusage/startup': 184721408,
+ 'memusage/max': 186003456,
+ 'memusage/startup': 186003456,
  'request_depth_max': 1,
  'response_received_count': 47,
  'robotstxt/request_count': 1,
@@ -611,5 +115,5 @@ KeyError: 'title'
  'scheduler/dequeued/memory': 46,
  'scheduler/enqueued': 46,
  'scheduler/enqueued/memory': 46,
- 'start_time': datetime.datetime(2020, 7, 23, 15, 12, 35, 954622)}
-2020-07-23 16:12:58 [scrapy.core.engine] INFO: Spider closed (finished)
+ 'start_time': datetime.datetime(2020, 7, 28, 21, 48, 10, 730909)}
+2020-07-28 22:48:32 [scrapy.core.engine] INFO: Spider closed (finished)

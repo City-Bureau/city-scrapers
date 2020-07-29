@@ -23,31 +23,33 @@ class ChiOhareNoise2Spider(CityScrapersSpider):
         """
         for item in response.css(".ev_td_li"):
             surl = self._parse_url(item)
-            yield Request(url=response.urljoin(surl), callback=self._parse_location)
-#            stime = self._parse_start(item)
-#            print(response.urljoin(surl))
-#            meeting = Meeting(
-#                title=self._parse_title(item),
-#                description=self._parse_description(item),
-#                classification=self._parse_classification(item),
-#                start=stime,
-#                end=stime+timedelta(hours=1),
-#                all_day=self._parse_all_day(item),
-#                time_notes=self._parse_time_notes(item),
-#                location= None,
-#                links=self._parse_links(item),
-#                source=self._parse_source(response),
-#            )
-#
+            yield Request(url=response.urljoin(surl), callback=self._parse_subpage)
 
             #meeting["status"] = self._get_status(meeting)
             #meeting["id"] = self._get_id(meeting)
 
             #yield meeting
 
-    def _parse_title(self, item):
+    def _parse_subpage(self, response):
+#        stime = self._parse_start(response)
+#        meeting = Meeting(
+#        self._parse_title(response),
+#            description=self._parse_description(response),
+#            classification=self._parse_classification(response),
+#            start=stime,
+#            end=stime+timedelta(hours=1),
+#            all_day=self._parse_all_day(response),
+#            time_notes=self._parse_time_notes(response),
+#            location= None,
+#            links=self._parse_links(response),
+#            source=self._parse_source(response),
+#        )
+#
+#        yield meeting
+
+    def _parse_title(self, response):
         """Parse or generate meeting title."""
-        return [i.strip() for i in item.xpath('p/a/text()').extract()][0]
+        return response.xpath("//div[@class='jev_evdt_header']/div/h2/text()").extract()[0]
 
     def _parse_url(self, item):
         """Parse or generate meeting title."""
@@ -77,10 +79,8 @@ class ChiOhareNoise2Spider(CityScrapersSpider):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    def _parse_location(self, response):
+    def _parse_location(self, item):
         """Parse or generate location."""
-        print('started')
-        print(response.text)
         return {
             "address": "",
             "name": "",
