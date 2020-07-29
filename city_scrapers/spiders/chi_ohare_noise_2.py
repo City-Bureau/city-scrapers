@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 from datetime import timedelta
 
 from scrapy import Request
@@ -31,7 +32,8 @@ class ChiOhareNoise2Spider(CityScrapersSpider):
             #yield meeting
 
     def _parse_subpage(self, response):
-#        stime = self._parse_start(response)
+        #stime = self._parse_start(response)
+        #print (stime)
 #        meeting = Meeting(
 #        self._parse_title(response),
 #            description=self._parse_description(response),
@@ -40,7 +42,8 @@ class ChiOhareNoise2Spider(CityScrapersSpider):
 #            end=stime+timedelta(hours=1),
 #            all_day=self._parse_all_day(response),
 #            time_notes=self._parse_time_notes(response),
-#            location= None,
+         location=self._parse_location(response),
+         print(location)
 #            links=self._parse_links(response),
 #            source=self._parse_source(response),
 #        )
@@ -63,9 +66,9 @@ class ChiOhareNoise2Spider(CityScrapersSpider):
         """Parse or generate classification from allowed options."""
         return NOT_CLASSIFIED
 
-    def _parse_start(self, item):
+    def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
-        return datetime.strptime(item.xpath('p/text()').extract()[1].strip(), '%A, %B %d, %Y %I:%M%p')
+        return datetime.strptime(' '.join([i.strip() for i in response.xpath("//div[@class='jev_evdt_header']/div/p/text()").extract()]), '%A, %B %d, %Y %I:%M%p')
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -79,11 +82,13 @@ class ChiOhareNoise2Spider(CityScrapersSpider):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    def _parse_location(self, item):
+    def _parse_location(self, response):
         """Parse or generate location."""
+        addr = re.split('-|,', response.xpath("//div[@class='jev_evdt_location']/text()").extract()[0].strip(), maxsplit=1)
         return {
-            "address": "",
-            "name": "",
+            # Using reverse indexing for the cases where there is no building name or no location
+            "address": addr[-1],
+            "name": addr[0],
         }
 
     def _parse_links(self, item):
