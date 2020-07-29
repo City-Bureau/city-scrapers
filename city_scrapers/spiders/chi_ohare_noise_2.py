@@ -32,23 +32,21 @@ class ChiOhareNoise2Spider(CityScrapersSpider):
             #yield meeting
 
     def _parse_subpage(self, response):
-        #stime = self._parse_start(response)
-        #print (stime)
-#        meeting = Meeting(
-#        self._parse_title(response),
-#            description=self._parse_description(response),
-#            classification=self._parse_classification(response),
-#            start=stime,
-#            end=stime+timedelta(hours=1),
-#            all_day=self._parse_all_day(response),
-#            time_notes=self._parse_time_notes(response),
-         location=self._parse_location(response),
-         print(location)
-#            links=self._parse_links(response),
-#            source=self._parse_source(response),
-#        )
-#
-#        yield meeting
+        stime = self._parse_start(response)
+        meeting = Meeting(
+            title=self._parse_title(response),
+            description=self._parse_description(response),
+            classification=self._parse_classification(response),
+            start=stime,
+            end=stime+timedelta(hours=1),
+            all_day=self._parse_all_day(response),
+            time_notes=self._parse_time_notes(response),
+            location=self._parse_location(response),
+            links=self._parse_links(response),
+            source=response.url,
+        )
+
+        yield meeting
 
     def _parse_title(self, response):
         """Parse or generate meeting title."""
