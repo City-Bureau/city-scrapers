@@ -1,11 +1,12 @@
+import datetime
+import re
+import unicodedata
+from calendar import day_name, month_name
+
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from calendar import month_name, day_name
 from w3lib.html import remove_tags
-import unicodedata
-import datetime
-import re
 
 
 class ChiSsa8Spider(CityScrapersSpider):
@@ -13,7 +14,6 @@ class ChiSsa8Spider(CityScrapersSpider):
     agency = "Chicago Special Service Area #8 Lakeview East"
     timezone = "America/Chicago"
     start_urls = ["https://lakevieweast.com/ssa-8/"]
-    # start_urls = ["http://localhost:8080/file.html"]
 
     months = {m.lower() for m in month_name[1:]}
     days = {d.lower() for d in day_name[1:]}
@@ -31,9 +31,9 @@ class ChiSsa8Spider(CityScrapersSpider):
                 year = self._parse_year(item)
                 if year is not None:
                     location = self._parse_location(item)
-                    for li in item.css('li'):
+                    for li in item.css("li"):
                         startDate = self._parse_start(li, year)
-                        if startDate is not None: 
+                        if startDate is not None:
                             meeting = Meeting(
                                 title=self._parse_title_desc(li),
                                 description=self._parse_title_desc(li),
@@ -61,11 +61,11 @@ class ChiSsa8Spider(CityScrapersSpider):
 
     def _parse_title_desc(self, item):
         raw = remove_tags(item.extract())
-        title = " ".join([s.replace(',', '') for s in raw.split(' ')][3:])
-        rmStrings = ['-', '(', ')']
+        title = " ".join([s.replace(",", "") for s in raw.split(" ")][3:])
+        rmStrings = ["-", "(", ")"]
         for x in rmStrings:
-            title = title.replace(x, '')
-        title = title.replace('–', '')
+            title = title.replace(x, "")
+        title = title.replace("–", "")
         return unicodedata.normalize("NFKD", title.strip())
 
     def _parse_classification(self, item):
@@ -74,10 +74,10 @@ class ChiSsa8Spider(CityScrapersSpider):
 
     def _parse_start(self, item, year):
         raw = remove_tags(item.extract())
-        dateString = [s.replace(',', '') for s in raw.split(' ')][:3]
+        dateString = [s.replace(",", "") for s in raw.split(" ")][:3]
         if dateString[0] in day_name and dateString[1] in month_name:
             dateString.append(year)
-            return datetime.datetime.strptime(" ".join(dateString[:4]), '%A %B %d %Y')
+            return datetime.datetime.strptime(" ".join(dateString[:4]), "%A %B %d %Y")
         return None
 
     def _parse_end(self, item):
@@ -93,11 +93,13 @@ class ChiSsa8Spider(CityScrapersSpider):
         return False
 
     def _parse_location(self, item):
-        locationString = item.xpath('//li[contains(text(), \'Location\')]').extract_first().strip()
+        locationString = (
+            item.xpath("//li[contains(text(), 'Location')]").extract_first().strip()
+        )
         locationString = remove_tags(locationString)
-        rmStrings = ['Location', ':']
+        rmStrings = ["Location", ":"]
         for x in rmStrings:
-            locationString = locationString.replace(x, '')
+            locationString = locationString.replace(x, "")
         return {
             "address": locationString.strip(),
             "name": "",

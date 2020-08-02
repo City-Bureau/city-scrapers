@@ -31,6 +31,7 @@ def test_tests():
 Uncomment below
 """
 
+
 def test_title():
     assert parsed_items[0]["title"] == "Special Meeting"
     assert parsed_items[3]["title"] == "2021 budget meeting"
@@ -67,7 +68,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "",
-        "address": "LVECC office, 3138 N. Broadway"
+        "address": "LVECC office, 3138 N. Broadway",
     }
 
 
@@ -76,10 +77,7 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-      "href": "",
-      "title": ""
-    }]
+    assert parsed_items[0]["links"] == [{"href": "", "title": ""}]
 
 
 def test_classification():
