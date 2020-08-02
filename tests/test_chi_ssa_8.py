@@ -38,8 +38,7 @@ def test_start():
 
 
 def test_end():
-    assert parsed_items[0]["end"] == datetime(2020, 2, 25, 2, 0)
-    assert parsed_items[3]["end"] == datetime(2020, 7, 23, 2, 0)
+    assert parsed_items[0]["end"] is None
 
 
 def test_time_notes():
