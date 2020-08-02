@@ -19,12 +19,6 @@ class ChiSsa8Spider(CityScrapersSpider):
     days = {d.lower() for d in day_name[1:]}
 
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
-        """
         for item in response.css(".post-content ul"):
             bodyText = item.extract()
             if "Location" in bodyText:
@@ -69,7 +63,6 @@ class ChiSsa8Spider(CityScrapersSpider):
         return unicodedata.normalize("NFKD", title.strip())
 
     def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
         return NOT_CLASSIFIED
 
     def _parse_start(self, item, year):
@@ -81,15 +74,12 @@ class ChiSsa8Spider(CityScrapersSpider):
         return None
 
     def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return None
 
     def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
         return ""
 
     def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
         return False
 
     def _parse_location(self, item):
@@ -106,9 +96,7 @@ class ChiSsa8Spider(CityScrapersSpider):
         }
 
     def _parse_links(self, item):
-        """Parse or generate links."""
         return [{"href": "", "title": ""}]
 
     def _parse_source(self, response):
-        """Parse or generate source."""
         return response.url
