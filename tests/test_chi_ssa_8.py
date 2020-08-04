@@ -56,8 +56,8 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": "",
-        "address": "LVECC office, 3138 N. Broadway",
+        "name": "LVECC office",
+        "address": "3138 N. Broadway, Chicago, IL",
     }
 
 
