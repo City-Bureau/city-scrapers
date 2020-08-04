@@ -14,7 +14,10 @@ class ChiSsa8Spider(CityScrapersSpider):
     agency = "Chicago Special Service Area #8 Lakeview East"
     timezone = "America/Chicago"
     start_urls = ["https://lakevieweast.com/ssa-8/"]
-    monthDateRegex = r"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2}"
+    monthDateRegex = (
+        r"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?"
+        "|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2}"
+    )
 
     months = {m.lower() for m in month_name[1:]}
     days = {d.lower() for d in day_name[1:]}
@@ -87,12 +90,12 @@ class ChiSsa8Spider(CityScrapersSpider):
         rmStrings = ["Location", ":"]
         for x in rmStrings:
             locationString = locationString.replace(x, "")
-            location = locationString.split(',')
+            location = locationString.split(",")
 
             name = location[0].strip()
             address = location[1].strip()
 
-            if not re.search('chicago', address, re.IGNORECASE):
+            if not re.search("chicago", address, re.IGNORECASE):
                 address += ", Chicago, IL"
 
         return {
