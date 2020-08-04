@@ -1,7 +1,6 @@
 import datetime
 import re
 import unicodedata
-from calendar import day_name, month_name
 
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
@@ -16,11 +15,8 @@ class ChiSsa8Spider(CityScrapersSpider):
     start_urls = ["https://lakevieweast.com/ssa-8/"]
     monthDateRegex = (
         r"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?"
-        "|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2}"
+        r"|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2}"
     )
-
-    months = {m.lower() for m in month_name[1:]}
-    days = {d.lower() for d in day_name[1:]}
 
     def parse(self, response):
         for item in response.css(".post-content ul"):
