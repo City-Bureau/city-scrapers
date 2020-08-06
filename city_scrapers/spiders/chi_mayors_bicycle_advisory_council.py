@@ -9,7 +9,7 @@ class ChiMayorsBicycleAdvisoryCouncilSpider(
     name = "chi_mayors_bicycle_advisory_council"
     agency = "Chicago Mayor's Bicycle Advisory Council"
     start_urls = [
-        "http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mbac-meeting-archives/"  # noqa
+        "https://chicagocompletestreets.org/sample-page-2/mayors-advisory-councils/mbac-meeting-archives/"  # noqa
     ]
     title = "Mayor's Bicycle Advisory Council"
     location = {

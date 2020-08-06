@@ -8,7 +8,9 @@ from lxml import etree
 
 class ChiMayorsAdvisoryCouncilsMixin:
     timezone = "America/Chicago"
-    BASE_URL = "http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/"
+    BASE_URL = (
+        "https://chicagocompletestreets.org/sample-page-2/mayors-advisory-councils/"
+    )
     title = ""
 
     def _parse_archive_documents(self, response):
@@ -35,11 +37,15 @@ class ChiMayorsAdvisoryCouncilsMixin:
         """
         Coerce HTML fragments from into parse-able blobs.
         """
-        return etree.HTML(fragment).xpath("//p")[0]
+        etree_fragment = etree.HTML(fragment)
+        if etree_fragment is not None:
+            return etree_fragment.xpath("//p")[0]
 
     def _parse_document_blob(self, blob):
         for line in blob[1:]:  # Omit header
             element = self._tree_from_fragment(line)
+            if element is None:
+                continue
 
             date = " ".join(element.text.split(" ")[:3])
 
