@@ -1,7 +1,7 @@
+import re
 from datetime import datetime
 
-import requests
-from city_scrapers_core.constants import BOARD, NOT_CLASSIFIED
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, BOARD, COMMITTEE, FORUM
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -10,141 +10,113 @@ class CookPaceBoardSpider(CityScrapersSpider):
     name = "cook_pace_board"
     agency = "Pace Suburban Bus Services"
     timezone = "America/Chicago"
-    start_urls = ["http://www.pacebus.com/sub/news_events/calendar_of_events.asp"]
+    start_urls = ["https://www.pacebus.com/public-meetings"]
+    location = {
+        "name": "Pace Headquarters",
+        "address": "550 W Algonquin Rd Arlington Heights, IL 60005",
+    }
 
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
+        yield from self._parse_meeting_list(response)
 
-        Change the `_parse_id`, `_parse_name`, etc methods to fit your scraping
-        needs.
-        """
+        for next_link in response.css("a[rel='next']"):
+            yield response.follow(next_link.attrib["href"], callback=self.parse)
 
-        # Address of Pace Headquarters. Where all meetings seem to be held
-        hq_address = "550 W. Algonquin Rd., Arlington Heights, IL 60005"
+    def _parse_meeting_list(self, response):
+        for detail_link in response.css("article .more-link"):
+            yield response.follow(
+                detail_link.attrib["href"], callback=self._parse_detail
+            )
 
-        # Current year of meetings listed
-        year = (
-            response.xpath("//th[@class='rowheader']/em/strong/text()")
-            .re(r"(\d\d\d\d) Meetings")[0]
-            .strip()
+    def _parse_detail(self, response):
+        classification = self._parse_classification(response)
+        meeting = Meeting(
+            title=self._parse_title(response, classification),
+            description=self._parse_description(response),
+            classification=classification,
+            start=self._parse_start(response),
+            end=self._parse_end(response),
+            all_day=False,
+            time_notes="",
+            location=self._parse_location(response),
+            links=self._parse_links(response),
+            source=response.url,
         )
+        meeting["id"] = self._get_id(meeting)
+        meeting["status"] = self._get_status(meeting)
 
-        # Get rows of meeting table
-        meeting_rows = response.xpath(
-            "//tr/td[@class='rowy2']/parent::* | \
-            //tr/td[@class='rowl2']/parent::*"
-        )
+        yield meeting
 
-        for item in meeting_rows:
-            meeting = Meeting(
-                title=self._parse_title(item),
-                description="",  # No description
-                # classification -- do after based on title
-                start=self._parse_start(item, year),
-                end=None,  # No end time
-                all_day=False,  # Probably not, usually starts in evening
-                time_notes=None,
-                location=self._parse_location(item, hq_address),
-                # links -- do this after based on title and date,
-                source=self.start_urls[0],
-            )
-
-            # Figure out classification from meeting title
-            meeting["classification"] = self._parse_classification(
-                title=meeting["title"]
-            )
-
-            # Figure out meeting documents from title and date
-            meeting["links"] = self._parse_links(
-                title=meeting["title"], date=meeting["start"]
-            )
-
-            meeting["status"] = self._get_status(
-                meeting, text=" ".join(item.css("*::text").extract())
-            )
-            meeting["id"] = self._get_id(meeting)
-
-            yield meeting
-
-    def _parse_title(self, item):
+    def _parse_title(self, response, classification):
         """Parse or generate meeting title."""
-        title = item.xpath("./td/strong/text()").get().strip()
-        return title
+        title_str = response.css("article h1 *::text").extract_first().strip()
+        agency_str = response.css(".bar h2 *::text").extract_first().strip()
+        if classification in [BOARD, COMMITTEE] or "Citizens" in title_str:
+            return agency_str
+        return title_str
 
-    def _parse_classification(self, title):
+    def _parse_description(self, response):
+        return "\n".join(
+            [
+                re.sub(r"\s+", " ", p).strip()
+                for p in response.css("article .field--name-body p::text").extract()
+            ]
+        )
+
+    def _parse_classification(self, response):
         """Parse or generate classification from allowed options."""
-        if "board" in title.lower():
-            return BOARD
-        else:
-            return NOT_CLASSIFIED
+        subagency_str = response.css(".bar h2::text").extract_first().strip().lower()
+        if "citizens" in subagency_str or "advisory" in subagency_str:
+            return ADVISORY_COMMITTEE
+        if "public" in subagency_str:
+            return FORUM
+        if "committee" in subagency_str:
+            return COMMITTEE
+        return BOARD
 
-    def _parse_start(self, item, year):
+    def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
-        date = item.xpath("./td[2]/text()").get().strip()
-        time = item.xpath("./td[3]/text()").get().strip()
-        if time == "N/A":
-            time = "9:30am"
-        # "January 16 2019 4:30pm"
-        dt_string = "{date} {year} {time}".format(date=date, year=year, time=time)
-        dt_format = "%B %d %Y %I:%M%p"
-        start_datetime = datetime.strptime(dt_string, dt_format)
-        return start_datetime
+        day_dt_str = response.css(
+            ".field--name-field-start-date time::text"
+        ).extract_first()
+        return self._parse_datetime(day_dt_str)
 
-    def _parse_location(self, item, hq_address):
+    def _parse_end(self, response):
+        day_dt_str = response.css(
+            ".field--name-field-end-date time::text"
+        ).extract_first()
+        if not day_dt_str:
+            return
+        return self._parse_datetime(day_dt_str)
+
+    def _parse_datetime(self, day_dt_str):
+        return datetime.strptime(
+            day_dt_str.split(", ")[-1].lower(), "%m/%d/%Y - %I:%M %p"
+        )
+
+    def _parse_location(self, response):
         """Parse or generate location."""
-        location_name = " ".join(item.css("td")[-1].css("*::text").extract()).strip()
+        location_name = ""
+        location_detail = ""
+        for detail in response.css(".bar .row-two .value *::text").extract():
+            if not location_name:
+                location_name = re.sub(r"\s+", " ", detail).strip()
+            else:
+                location_detail = re.sub(r"\s+", " ", detail).strip()
+        if location_detail:
+            location_name = " ".join([location_name, location_detail])
+        loc_addr = ""
+        if "Headquarters" in location_name:
+            loc_addr = self.location["address"]
 
-        # We know Pace Headquarters address, and it seems to be the only place
-        # they hold these meetings
-        if (
-            "pace headquarters" in location_name.lower()
-            or "cancel" in location_name.lower()
-        ):
-            location_address = hq_address
-        else:
-            raise ValueError(
-                "Meeting not at location with known address. Please update spider."
-            )
+        return {"name": location_name, "address": loc_addr}
 
-        return {
-            "address": location_address,
-            "name": location_name,
-        }
-
-    def _parse_links(self, title, date):
+    def _parse_links(self, response):
         """Parse or generate links."""
-        out = []
-
-        # We know how to guess the URL for board agenda and minutes
-        if "board" in title.lower():
-
-            # Agenda #
-            # Looks like:
-            # https://www.pacebus.com/pdf/Board_Minutes/
-            # Pace_Board_Meeting_Agenda_February_13_2019.pdf
-            agenda_base_url = "https://www.pacebus.com/pdf/Board_Minutes/"
-            agenda_filename = "Pace_{title}_Agenda_{date}.pdf".format(
-                title="Board_Meeting", date=date.strftime("%B_%d_%Y")
+        links = []
+        for link in response.css(".documents .list a, .field--type-link a"):
+            link_text = " ".join(link.css("*::text").extract()).strip()
+            links.append(
+                {"title": link_text, "href": response.urljoin(link.attrib["href"])}
             )
-            agenda_url = agenda_base_url + agenda_filename
-            # Check whether there is a file there and append if so
-            r_agenda = requests.get(agenda_url)
-            if r_agenda.status_code == 200:
-                out.append({"title": "Agenda", "href": agenda_url})
-
-            # Minutes #
-            # Looks like:
-            # https://www.pacebus.com/pdf/Board_Minutes/
-            # Pace_Board_Meeting_Minutes_Jan_2019.pdf
-            minutes_base_url = "https://www.pacebus.com/pdf/Board_Minutes/"
-            minutes_filename = "Pace_{title}_Minutes_{date}.pdf".format(
-                title="Board_Meeting", date=date.strftime("%b_%Y")
-            )
-            minutes_url = minutes_base_url + minutes_filename
-            # Check whether there is a file there and append if so
-            r_minutes = requests.get(minutes_url)
-            if r_minutes.status_code == 200:
-                out.append({"title": "Minutes", "href": minutes_url})
-
-        return out
+        return links
