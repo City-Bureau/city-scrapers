@@ -10,11 +10,11 @@ from city_scrapers.spiders.chi_school_community_action_council import (
     ChiSchoolCommunityActionCouncilSpider,
 )
 
-freezer = freeze_time("2018-06-01")
+freezer = freeze_time("2020-08-06")
 freezer.start()
 test_response = file_response(
     join(dirname(__file__), "files", "chi_school_community_action_council.html"),
-    url="http://cps.edu/FACE/Pages/CAC.aspx",
+    url="https://www.cps.edu/services-and-supports/parent-engagement/community-action-councils-cacs/",  # noqa
 )
 spider = ChiSchoolCommunityActionCouncilSpider()
 parsed_items = [item for item in spider.parse(test_response)]
@@ -31,7 +31,7 @@ def test_title():
 
 
 def test_start_time():
-    assert parsed_items[0]["start"] == datetime(2018, 6, 12, 17, 30)
+    assert parsed_items[0]["start"] == datetime(2020, 8, 10, 17, 30)
 
 
 def test_end_time():
@@ -41,19 +41,19 @@ def test_end_time():
 def test_id():
     assert (
         parsed_items[0]["id"]
-        == "chi_school_community_action_council/201806121730/x/austin_community_action_council"  # noqa
+        == "chi_school_community_action_council/202008101730/x/austin_community_action_council"  # noqa
     )
 
 
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Michele Clark HS",
-        "address": "5101 W Harrison St. Chicago, IL",
+        "address": "5101 W. Harrison St. Chicago, IL",
     }
 
 
 def test_source():
-    assert parsed_items[1]["source"] == "https://cacbronzeville.weebly.com/"
+    assert parsed_items[5]["source"] == "https://cacbronzeville.weebly.com/"
 
 
 @pytest.mark.parametrize("item", parsed_items)

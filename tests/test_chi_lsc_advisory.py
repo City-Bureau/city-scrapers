@@ -14,7 +14,7 @@ test_response = file_response(
 )
 spider = ChiLscAdvisorySpider()
 
-freezer = freeze_time("2019-12-10")
+freezer = freeze_time("2020-08-06")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -27,8 +27,7 @@ def test_count():
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Orientation"
-    assert parsed_items[1]["title"] == "Advisory Board"
+    assert parsed_items[0]["title"] == "Advisory Board"
 
 
 def test_description():
@@ -48,7 +47,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_lsc_advisory/201909161800/x/orientation"
+    assert parsed_items[0]["id"] == "chi_lsc_advisory/201909161800/x/advisory_board"
 
 
 def test_status():
@@ -66,9 +65,17 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href": "https://cps.edu/About_CPS/Departments/Documents/LSC/LSCAB-Meeting-091619-orientation.pdf",  # noqa
+            "href": "https://cps.edu/globalassets/cps/about/local-school-councils-lscs/local-school-council-advisory-board/lscab-meeting-091619-orientation.pdf",  # noqa
+            "title": "Orientation",
+        },
+        {
+            "href": "https://cps.edu/globalassets/cps/about/local-school-councils-lscs/local-school-council-advisory-board/lscab-meeting-091619-minutes.pdf",  # noqa
+            "title": "Minutes",
+        },
+        {
+            "href": "https://cps.edu/globalassets/cps/about/local-school-councils-lscs/local-school-council-advisory-board/lscab-meeting-091619.pdf",  # noqa
             "title": "Agenda",
-        }
+        },
     ]
 
 

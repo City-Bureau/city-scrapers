@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, time
+from datetime import datetime
 
 from city_scrapers_core.constants import COMMITTEE
 from city_scrapers_core.items import Meeting
@@ -10,7 +10,9 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
     name = "chi_school_community_action_council"
     agency = "Chicago Public Schools"
     timezone = "America/Chicago"
-    start_urls = ["http://cps.edu/FACE/Pages/CAC.aspx"]
+    start_urls = [
+        "https://www.cps.edu/services-and-supports/parent-engagement/community-action-councils-cacs/"  # noqa
+    ]
 
     def parse(self, response):
         """
@@ -20,111 +22,81 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         needs.
         """
         # Sets month counter to the current month, passed to parse_start
-        month_counter = datetime.today().month
+        # month_counter = datetime.today().month
+        month = datetime.today().month
         # Iterates through every month in the year after the current month
-        for x in range(12):
-            if month_counter > 12:
-                break
-            else:
-                response_list = response.css(".ms-WPBody ul:last-of-type")
-                for item in response_list.css("li"):
-                    name_link = item.css("strong").css("a::attr(href)")
-                    try:
-                        if name_link.extract()[0] == (
-                            "http://www.humboldtparkportal.org/"
-                        ):
-                            continue
-                    except Exception:
-                        pass
-                    start = self._parse_start(item, month_counter)
-                    if not start:
-                        continue
-                    meeting = Meeting(
-                        title=self._parse_title(item),
-                        description="",
-                        classification=COMMITTEE,
-                        start=start,
-                        end=None,
-                        time_notes="",
-                        all_day=False,
-                        location=self._parse_location(item),
-                        links=[],
-                        source=self._parse_source(response, item),
-                    )
+        for item in response.css(".smaller-headings .block"):
+            source = item.css("a").css("a::attr(href)").extract_first()
+            if source and "humboldparkportal.org" in source:
+                continue
+            if not source:
+                source = response.url
+            for month_counter in range(month, 13):
+                start = self._parse_start(item, month_counter)
+                if not start:
+                    continue
+                meeting = Meeting(
+                    title=self._parse_title(item),
+                    description="",
+                    classification=COMMITTEE,
+                    start=start,
+                    end=None,
+                    time_notes="",
+                    all_day=False,
+                    location=self._parse_location(item),
+                    links=[],
+                    source=source,
+                )
 
-                    meeting["id"] = self._get_id(meeting)
-                    meeting["status"] = self._get_status(meeting)
-                    yield meeting
-            month_counter += 1
-
-    def _parse_community_area(self, item):
-        """
-        Parse or generate community area.
-        """
-        if len(item.css("li").css("strong::text").extract()) == 1:
-            community_name = item.css("li").css("strong::text").extract()
-        else:
-            community_name = item.css("li").css("strong").css("a::text").extract()
-        if len(community_name) > 0:
-            return community_name[0]
+                meeting["id"] = self._get_id(meeting)
+                meeting["status"] = self._get_status(meeting)
+                yield meeting
 
     def _parse_title(self, item):
         """Parse or generate event title."""
-        CAC_NAME = "Community Action Council"
-        community_area = self._parse_community_area(item)
-        if community_area:
-            return "{} {}".format(community_area, CAC_NAME)
-        return CAC_NAME
+        comm_area = " ".join(item.css(".h4-style *::text").extract()).strip()
+        return f"{comm_area} Community Action Council"
 
     @staticmethod
-    def parse_day(source):
+    def parse_weekday(item_text):
         """
         Parses the source material and retrieves the day of the week that
         the meeting occurs.
         """
-        day_source = source[0]
-        day_regex = re.compile(r"[a-zA-Z]+day")
-        mo = day_regex.search(day_source)
-        return mo.group().lower()
+        day_match = re.search(r"[A-Z][a-z]+day", item_text)
+        if not day_match:
+            return
+        return datetime.strptime(day_match.group(), "%A").weekday()
 
     @staticmethod
-    def parse_time(source):
+    def parse_time(item_text):
         """
         Parses the source material and retrieves the time that the meeting
         occurs.
         """
-        time_source = source[1]
-        time_regex = re.compile(r"(1[012]|[1-9]):([0-5][0-9])(am|pm)")
-        hour, minute, period = time_regex.search(time_source).groups()
-        hour = int(hour)
-        minute = int(minute)
-        if (period == "pm") and (hour != 12):
-            hour += 12
-        return time(hour, minute)
+        time_match = re.search(r"\d{1,2}(:\d\d)? ?[APMapm\.]{2,4}", item_text)
+        if not time_match:
+            return
+        time_str = re.sub(r"[\s\.]", "", time_match.group().lower())
+        time_fmt = "%I%p"
+        if ":" in time_str:
+            time_fmt = "%I:%M%p"
+        return datetime.strptime(time_str, time_fmt).time()
 
     @staticmethod
-    def count_days(day, week_count, month_counter):
+    def count_days(weekday, week_count, month_counter):
         """
         Because the source material provides meeting dates on a reoccuring
         schedule, we must use the parsed day from the parse_day function
         """
         today = datetime.today()
-        week_day = {
-            "monday": 0,
-            "tuesday": 1,
-            "wednesday": 2,
-            "thursday": 3,
-            "friday": 4,
-            "saturday": 5,
-            "sunday": 6,
-        }
         week_counter = 0
         for x in range(1, 31):
             try:
                 current_date = datetime(today.year, month_counter, x)
-                if current_date.weekday() == week_day[day]:
+                if current_date.weekday() == weekday:
                     week_counter += 1
-                    if week_counter == int(week_count):
+                    if week_counter == week_count:
                         return current_date
             except ValueError:
                 break
@@ -135,37 +107,25 @@ class ChiSchoolCommunityActionCouncilSpider(CityScrapersSpider):
         Accepts month_counter as an argument from top level parse function
         to iterate through all months in the year.
         """
-        source = item.css("li::text").extract()
-        day = self.parse_day(source)
+        item_text = " ".join(item.css("*::text").extract())
+        weekday = self.parse_weekday(item_text)
         # Selects first character in the source, usually the week count
-        week_count = source[0].strip()[0]
-        if week_count.isdigit():
-            meeting_date = self.count_days(day, week_count, month_counter)
-            return datetime.combine(meeting_date.date(), self.parse_time(source))
+        week_num_match = re.search(r"\d[a-z]{2} [A-Z][a-z]+day", item_text)
+        if not week_num_match:
+            return
+        week_count = re.search(r"\d", week_num_match.group()).group()
+        meeting_date = self.count_days(weekday, int(week_count), month_counter)
+        if not meeting_date:
+            return
+        return datetime.combine(meeting_date.date(), self.parse_time(item_text))
 
     def _parse_location(self, item):
-        """
-        Parse or generate location. Latitude and longitude can be
-        left blank and will be geocoded later.
-        """
-        source = item.css("li::text").extract()[1]
-        address = source[source.find("(") + 1 : source.find(")")]
-        return {
-            "name": source[source.find("at") + 2 : source.find("(")]
-            .replace("the", "")
-            .strip(),
-            "address": "{} Chicago, IL".format(address),
-        }
-
-    def _parse_source(self, response, item):
-        """
-        Parse the sources:
-        * CAC Meetings Website
-        * Neighborhood Website (if available)
-        """
-        neighborhood_url = (
-            item.css("li").css("strong").css("a::attr(href)").extract_first()
-        )
-        if neighborhood_url:
-            return neighborhood_url
-        return response.url
+        """Parse or generate location."""
+        lines = item.css("p *::text").extract()
+        for idx, line in enumerate(lines):
+            if "Where" in line:
+                return {
+                    "name": lines[idx + 1].strip(),
+                    "address": f"{lines[idx+2].strip()} Chicago, IL",
+                }
+        return {"name": "", "address": ""}
