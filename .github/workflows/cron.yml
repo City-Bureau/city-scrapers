@@ -2,7 +2,7 @@ name: Cron
 
 on:
   schedule:
-    - cron: "12 10 * * *"
+    - cron: "12 8 * * *"
   workflow_dispatch:
 
 env:

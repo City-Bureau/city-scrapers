@@ -5,6 +5,7 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
+# TODO: Fix
 class ChiSsa50Spider(CityScrapersSpider):
     name = "chi_ssa_50"
     agency = "Chicago Special Service Area #50 Calumet Heights/Avalon"

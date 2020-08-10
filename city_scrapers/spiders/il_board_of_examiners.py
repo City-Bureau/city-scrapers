@@ -6,6 +6,7 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
+# TODO: Fix
 class IlBoardOfExaminersSpider(CityScrapersSpider):
     name = "il_board_of_examiners"
     agency = "Illinois Board of Examiners"

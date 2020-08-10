@@ -7,6 +7,7 @@ from city_scrapers_core.spiders import CityScrapersSpider
 HOUR_DICT = {"a": "am", "am": "am", "p": "pm", "pm": "pm"}
 
 
+# TODO: Fix
 class ChiSsa72Spider(CityScrapersSpider):
     name = "chi_ssa_72"
     agency = "Chicago Special Service Area #72 Austin"
