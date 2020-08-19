@@ -9,7 +9,7 @@ from freezegun import freeze_time
 from city_scrapers.spiders.chi_ohare_noise import ChiOhareNoiseSpider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ohare_noise.html"),
+    join(dirname(__file__), "files/chi_ohare_noise", "chi_ohare_noise.html"),
     url="https://www.oharenoise.org/about-oncc/agendas-and-minutes",
 )
 spider = ChiOhareNoiseSpider()
@@ -17,22 +17,22 @@ spider = ChiOhareNoiseSpider()
 freezer = freeze_time("2020-07-09")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+parsed_items = [item for item in spider.ChiOhareNoiseSubSpider1().parse(test_response)]
 
 freezer.stop()
 
 
 def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+    print("here")
+    assert len(parsed_items) == 45
 
 
 """
 Uncomment below
 """
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+#def test_title():
+    #assert parsed_items[0]["title"] == "EXPECTED TITLE"
 
 
 # def test_description():

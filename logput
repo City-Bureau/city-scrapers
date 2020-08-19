@@ -1,7 +1,7 @@
-2020-08-08 12:39:35 [scrapy.utils.log] INFO: Scrapy 2.1.0 started (bot: city_scrapers)
-2020-08-08 12:39:35 [scrapy.utils.log] INFO: Versions: lxml 4.5.1.0, libxml2 2.9.10, cssselect 1.1.0, parsel 1.6.0, w3lib 1.22.0, Twisted 20.3.0, Python 3.8.5 (default, Jul 21 2020, 10:48:26) - [Clang 11.0.3 (clang-1103.0.32.62)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1g  21 Apr 2020), cryptography 2.9.2, Platform macOS-10.15.5-x86_64-i386-64bit
-2020-08-08 12:39:35 [scrapy.utils.log] DEBUG: Using reactor: twisted.internet.selectreactor.SelectReactor
-2020-08-08 12:39:35 [scrapy.crawler] INFO: Overridden settings:
+2020-08-19 18:04:13 [scrapy.utils.log] INFO: Scrapy 2.1.0 started (bot: city_scrapers)
+2020-08-19 18:04:13 [scrapy.utils.log] INFO: Versions: lxml 4.5.1.0, libxml2 2.9.10, cssselect 1.1.0, parsel 1.6.0, w3lib 1.22.0, Twisted 20.3.0, Python 3.8.5 (default, Jul 21 2020, 10:48:26) - [Clang 11.0.3 (clang-1103.0.32.62)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1g  21 Apr 2020), cryptography 2.9.2, Platform macOS-10.15.5-x86_64-i386-64bit
+2020-08-19 18:04:13 [scrapy.utils.log] DEBUG: Using reactor: twisted.internet.selectreactor.SelectReactor
+2020-08-19 18:04:13 [scrapy.crawler] INFO: Overridden settings:
 {'AUTOTHROTTLE_ENABLED': True,
  'AUTOTHROTTLE_MAX_DELAY': 30.0,
  'AUTOTHROTTLE_START_DELAY': 1.0,
@@ -14,14 +14,14 @@
  'SPIDER_MODULES': ['city_scrapers.spiders'],
  'USER_AGENT': 'City Scrapers [development mode]. Learn more and say hello at '
                'https://cityscrapers.org/'}
-2020-08-08 12:39:35 [scrapy.extensions.telnet] INFO: Telnet Password: 36ae5455244a74bc
-2020-08-08 12:39:35 [scrapy.middleware] INFO: Enabled extensions:
+2020-08-19 18:04:13 [scrapy.extensions.telnet] INFO: Telnet Password: e22e2a6d53a960ec
+2020-08-19 18:04:13 [scrapy.middleware] INFO: Enabled extensions:
 ['scrapy.extensions.corestats.CoreStats',
  'scrapy.extensions.telnet.TelnetConsole',
  'scrapy.extensions.memusage.MemoryUsage',
  'scrapy.extensions.logstats.LogStats',
  'scrapy.extensions.throttle.AutoThrottle']
-2020-08-08 12:39:35 [scrapy.middleware] INFO: Enabled downloader middlewares:
+2020-08-19 18:04:13 [scrapy.middleware] INFO: Enabled downloader middlewares:
 ['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
  'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
  'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
@@ -33,41 +33,809 @@
  'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
  'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
  'scrapy.downloadermiddlewares.stats.DownloaderStats']
-2020-08-08 12:39:35 [scrapy.middleware] INFO: Enabled spider middlewares:
+2020-08-19 18:04:13 [scrapy.middleware] INFO: Enabled spider middlewares:
 ['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
  'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
  'scrapy.spidermiddlewares.referer.RefererMiddleware',
  'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
  'scrapy.spidermiddlewares.depth.DepthMiddleware']
-2020-08-08 12:39:35 [scrapy.middleware] INFO: Enabled item pipelines:
+2020-08-19 18:04:13 [scrapy.middleware] INFO: Enabled item pipelines:
 ['city_scrapers_core.pipelines.MeetingPipeline']
-2020-08-08 12:39:35 [scrapy.core.engine] INFO: Spider opened
-2020-08-08 12:39:35 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
-2020-08-08 12:39:35 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
-2020-08-08 12:39:36 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/robots.txt> (referer: None)
-2020-08-08 12:39:37 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/about-oncc/agendas-and-minutes> (referer: None)
-2020-08-08 12:39:37 [scrapy.core.engine] INFO: Closing spider (finished)
-2020-08-08 12:39:37 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
-{'downloader/request_bytes': 582,
- 'downloader/request_count': 2,
- 'downloader/request_method_count/GET': 2,
- 'downloader/response_bytes': 10405,
- 'downloader/response_count': 2,
- 'downloader/response_status_count/200': 2,
- 'elapsed_time_seconds': 2.01373,
+2020-08-19 18:04:13 [scrapy.core.engine] INFO: Spider opened
+2020-08-19 18:04:13 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-08-19 18:04:13 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2020-08-19 18:04:13 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/robots.txt> (referer: None)
+2020-08-19 18:04:14 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-> (referer: None)
+2020-08-19 18:04:15 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/about-oncc/agendas-and-minutes> (referer: None)
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 8, 21, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=645',
+            'title': 'Agenda'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 8, 21, 0, 0),
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 8, 13, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=643',
+            'title': 'Agenda'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 8, 13, 0, 0),
+ 'title': 'Strategic Planning'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 6, 5, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=631',
+            'title': 'Agenda'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 6, 5, 0, 0),
+ 'title': 'ONCC General Meeting'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 5, 26, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=627',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=642',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 5, 26, 0, 0),
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 5, 19, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=625',
+            'title': 'Agenda'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 5, 19, 0, 0),
+ 'title': 'Ad Hoc Governance Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 5, 12, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=621',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=641',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 5, 12, 0, 0),
+ 'title': 'Ad-Hoc Nominating Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 4, 21, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=611',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=630',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 4, 21, 0, 0),
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 4, 14, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=610',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=639',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 4, 14, 0, 0),
+ 'title': 'Technical Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 2, 25, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=605',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=615',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 2, 25, 0, 0),
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 2, 14, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=604',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=637',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 2, 14, 0, 0),
+ 'title': 'ONCC General Meeting'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 8, 18, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=644',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=647',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 8, 18, 0, 0),
+ 'title': 'Technical Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 6, 23, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=632',
+            'title': 'Agenda'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 6, 23, 0, 0),
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 6, 1, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=629',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=646',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 6, 1, 0, 0),
+ 'title': 'Executive Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 5, 19, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=624',
+            'title': 'Agenda'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 5, 19, 0, 0),
+ 'title': 'Technical Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 5, 13, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=623',
+            'title': 'Agenda'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 5, 13, 0, 0),
+ 'title': 'Residential Sound Insulation Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 4, 27, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=613',
+            'title': 'Agenda'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 4, 27, 0, 0),
+ 'title': 'Executive Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 4, 20, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=612',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=640',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 4, 20, 0, 0),
+ 'title': 'Ad Hoc Governance Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 3, 30, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=609',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=638',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 3, 30, 0, 0),
+ 'title': 'Executive Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 2, 18, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=603',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=618',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 2, 18, 0, 0),
+ 'title': 'Ad Hoc Governance Committee'}
+2020-08-19 18:04:15 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/about-oncc/agendas-and-minutes>
+{'end': datetime.datetime(2020, 2, 10, 2, 0),
+ 'links': [{'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=599',
+            'title': 'Agenda'},
+           {'href': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes?format=raw&task=download&fid=616',
+            'title': 'Minutes'}],
+ 'source': 'https://www.oharenoise.org/about-oncc/agendas-and-minutes',
+ 'start': datetime.datetime(2020, 2, 10, 0, 0),
+ 'title': 'Executive Committee'}
+2020-08-19 18:04:15 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/30/308/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:16 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/30/308/-/executive-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 3, 30, 12, 0),
+ 'links': [],
+ 'location': {'address': '', 'name': ''},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/30/308/-/executive-committee-meeting',
+ 'start': datetime.datetime(2020, 3, 30, 11, 0),
+ 'time_notes': '',
+ 'title': 'Executive Committee Meeting'}
+2020-08-19 18:04:16 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/24/299/-/cancelled-fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:16 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/24/299/-/cancelled-fly-quiet-committee>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 3, 24, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Road, Chicago, IL, Conference Room 1',
+              'name': 'Chicago Dept. of Aviation Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/24/299/-/cancelled-fly-quiet-committee',
+ 'start': datetime.datetime(2020, 3, 24, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:16 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/18/335/-/cancelled-governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:16 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/18/335/-/cancelled-governance-committee>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 3, 18, 10, 30),
+ 'links': [],
+ 'location': {'address': '', 'name': ''},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/18/335/-/cancelled-governance-committee',
+ 'start': datetime.datetime(2020, 3, 18, 9, 30),
+ 'time_notes': '',
+ 'title': 'Governance Committee'}
+2020-08-19 18:04:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/17/322/-/cancelled-technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:17 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/17/322/-/cancelled-technical-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 3, 17, 10, 0),
+ 'links': [],
+ 'location': {'address': ' 50 S. Emerson Street, Mount Prospect, IL',
+              'name': 'Mount Prospect Village Hall'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/03/17/322/-/cancelled-technical-committee-meeting',
+ 'start': datetime.datetime(2020, 3, 17, 9, 0),
+ 'time_notes': '',
+ 'title': 'Technical Committee Meeting'}
+2020-08-19 18:04:17 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/25/298/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:17 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/25/298/-/fly-quiet-committee>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 2, 25, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Road, Chicago, IL, Conference Room 1',
+              'name': 'Chicago Dept. of Aviation Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/25/298/-/fly-quiet-committee',
+ 'start': datetime.datetime(2020, 2, 25, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:18 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/18/336/-/governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:18 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/18/336/-/governance-committee>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 2, 18, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Road, Chicago, IL',
+              'name': 'Chicago Dept. of Aviation Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/18/336/-/governance-committee',
+ 'start': datetime.datetime(2020, 2, 18, 9, 30),
+ 'time_notes': '',
+ 'title': 'Governance Committee'}
+2020-08-19 18:04:18 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/14/296/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:18 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/14/296/-/o-hare-noise-compatibility-commission-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 2, 14, 9, 0),
+ 'links': [],
+ 'location': {'address': ' 2777 S. Mannheim Road, Des Plaines, IL',
+              'name': 'Cafe La Cave '},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/14/296/-/o-hare-noise-compatibility-commission-meeting',
+ 'start': datetime.datetime(2020, 2, 14, 8, 0),
+ 'time_notes': '',
+ 'title': "O'Hare Noise Compatibility Commission Meeting"}
+2020-08-19 18:04:18 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/10/307/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:18 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/10/307/-/executive-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 2, 10, 11, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Rd',
+              'name': 'Aviation Administration Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/02/10/307/-/executive-committee-meeting',
+ 'start': datetime.datetime(2020, 2, 10, 10, 30),
+ 'time_notes': '',
+ 'title': 'Executive Committee Meeting'}
+2020-08-19 18:04:19 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/29/294/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:19 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/29/294/-/residential-sound-insulation-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 1, 29, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 4000 N. Olcott, Norridge, IL',
+              'name': 'Norridge Village Hall'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/29/294/-/residential-sound-insulation-committee-meeting',
+ 'start': datetime.datetime(2020, 1, 29, 9, 30),
+ 'time_notes': '',
+ 'title': 'Residential Sound Insulation Committee Meeting'}
+2020-08-19 18:04:19 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/28/293/-/fly-quiet-committee-note-change-of-location> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:19 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/28/293/-/fly-quiet-committee-note-change-of-location>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 1, 28, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 2777 Mannheim Rd., Des Plaines, IL',
+              'name': 'Cafe la Cave'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/28/293/-/fly-quiet-committee-note-change-of-location',
+ 'start': datetime.datetime(2020, 1, 28, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee *NOTE CHANGE OF LOCATION*'}
+2020-08-19 18:04:19 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/21/295/-/cancelled-technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:19 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/21/295/-/cancelled-technical-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 1, 21, 10, 0),
+ 'links': [],
+ 'location': {'address': ' 50 S. Emerson Street, Mount Prospect, IL',
+              'name': 'Mount Prospect Village Hall'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/21/295/-/cancelled-technical-committee-meeting',
+ 'start': datetime.datetime(2020, 1, 21, 9, 0),
+ 'time_notes': '',
+ 'title': 'Technical Committee Meeting'}
+2020-08-19 18:04:20 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/16/334/-/governance-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:20 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/16/334/-/governance-committee>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 1, 16, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Road, Chicago, IL',
+              'name': 'Chicago Dept. of Aviation Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/16/334/-/governance-committee',
+ 'start': datetime.datetime(2020, 1, 16, 9, 30),
+ 'time_notes': '',
+ 'title': 'Governance Committee'}
+2020-08-19 18:04:20 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/10/315/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:20 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/10/315/-/o-hare-noise-compatibility-commission-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 1, 10, 9, 0),
+ 'links': [],
+ 'location': {'address': ' 2777 S. Mannheim Road, Des Plaines, IL',
+              'name': 'Cafe La Cave '},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/10/315/-/o-hare-noise-compatibility-commission-meeting',
+ 'start': datetime.datetime(2020, 1, 10, 8, 0),
+ 'time_notes': '',
+ 'title': "O'Hare Noise Compatibility Commission Meeting"}
+2020-08-19 18:04:21 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/06/297/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:21 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/06/297/-/executive-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 1, 6, 11, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Rd',
+              'name': 'Aviation Administration Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/01/06/297/-/executive-committee-meeting',
+ 'start': datetime.datetime(2020, 1, 6, 10, 30),
+ 'time_notes': '',
+ 'title': 'Executive Committee Meeting'}
+2020-08-19 18:04:21 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/12/08/306/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:21 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/12/08/306/-/fly-quiet-committee>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 12, 8, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Road, Chicago, IL, Conference Room 1',
+              'name': 'Chicago Dept. of Aviation Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/12/08/306/-/fly-quiet-committee',
+ 'start': datetime.datetime(2020, 12, 8, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:21 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/17/327/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:21 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/17/327/-/technical-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 11, 17, 10, 0),
+ 'links': [],
+ 'location': {'address': ' 50 S. Emerson Street, Mount Prospect, IL',
+              'name': 'Mount Prospect Village Hall'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/17/327/-/technical-committee-meeting',
+ 'start': datetime.datetime(2020, 11, 17, 9, 0),
+ 'time_notes': '',
+ 'title': 'Technical Committee Meeting'}
+2020-08-19 18:04:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/06/321/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:22 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/11/331/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:22 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/06/321/-/o-hare-noise-compatibility-commission-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 11, 6, 9, 0),
+ 'links': [],
+ 'location': {'address': ' 2777 S. Mannheim Road, Des Plaines, IL',
+              'name': 'Cafe La Cave '},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/06/321/-/o-hare-noise-compatibility-commission-meeting',
+ 'start': datetime.datetime(2020, 11, 6, 8, 0),
+ 'time_notes': '',
+ 'title': "O'Hare Noise Compatibility Commission Meeting"}
+2020-08-19 18:04:22 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/11/331/-/residential-sound-insulation-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 11, 11, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 4000 N. Olcott, Norridge, IL',
+              'name': 'Norridge Village Hall'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/11/331/-/residential-sound-insulation-committee-meeting',
+ 'start': datetime.datetime(2020, 11, 11, 9, 30),
+ 'time_notes': '',
+ 'title': 'Residential Sound Insulation Committee Meeting'}
+2020-08-19 18:04:23 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/02/314/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:23 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/02/314/-/executive-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 11, 2, 11, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Rd',
+              'name': 'Aviation Administration Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/11/02/314/-/executive-committee-meeting',
+ 'start': datetime.datetime(2020, 11, 2, 10, 30),
+ 'time_notes': '',
+ 'title': 'Executive Committee Meeting'}
+2020-08-19 18:04:23 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/27/305/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:24 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/27/305/-/fly-quiet-committee>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 10, 27, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Road, Chicago, IL, Conference Room 1',
+              'name': 'Chicago Dept. of Aviation Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/27/305/-/fly-quiet-committee',
+ 'start': datetime.datetime(2020, 10, 27, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:24 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/13/326/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:24 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/13/326/-/technical-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 10, 13, 10, 0),
+ 'links': [],
+ 'location': {'address': ' 50 S. Emerson Street, Mount Prospect, IL',
+              'name': 'Mount Prospect Village Hall'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/13/326/-/technical-committee-meeting',
+ 'start': datetime.datetime(2020, 10, 13, 9, 0),
+ 'time_notes': '',
+ 'title': 'Technical Committee Meeting'}
+2020-08-19 18:04:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/02/320/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:25 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/02/320/-/o-hare-noise-compatibility-commission-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 10, 2, 9, 0),
+ 'links': [],
+ 'location': {'address': ' 2777 S. Mannheim Road, Des Plaines, IL',
+              'name': 'Cafe La Cave '},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/10/02/320/-/o-hare-noise-compatibility-commission-meeting',
+ 'start': datetime.datetime(2020, 10, 2, 8, 0),
+ 'time_notes': '',
+ 'title': "O'Hare Noise Compatibility Commission Meeting"}
+2020-08-19 18:04:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/28/312/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:25 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/28/312/-/executive-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 9, 28, 11, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Rd',
+              'name': 'Aviation Administration Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/28/312/-/executive-committee-meeting',
+ 'start': datetime.datetime(2020, 9, 28, 10, 30),
+ 'time_notes': '',
+ 'title': 'Executive Committee Meeting'}
+2020-08-19 18:04:25 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/22/304/-/fly-quiet-committee> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:25 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/22/304/-/fly-quiet-committee>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 9, 22, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Road, Chicago, IL, Conference Room 1',
+              'name': 'Chicago Dept. of Aviation Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/22/304/-/fly-quiet-committee',
+ 'start': datetime.datetime(2020, 9, 22, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee'}
+2020-08-19 18:04:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/15/325/-/technical-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:26 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/15/325/-/technical-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 9, 15, 10, 0),
+ 'links': [],
+ 'location': {'address': ' 50 S. Emerson Street, Mount Prospect, IL',
+              'name': 'Mount Prospect Village Hall'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/15/325/-/technical-committee-meeting',
+ 'start': datetime.datetime(2020, 9, 15, 9, 0),
+ 'time_notes': '',
+ 'title': 'Technical Committee Meeting'}
+2020-08-19 18:04:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/09/330/-/residential-sound-insulation-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:26 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/09/330/-/residential-sound-insulation-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 9, 9, 10, 30),
+ 'links': [],
+ 'location': {'address': ' 4000 N. Olcott, Norridge, IL',
+              'name': 'Norridge Village Hall'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/09/330/-/residential-sound-insulation-committee-meeting',
+ 'start': datetime.datetime(2020, 9, 9, 9, 30),
+ 'time_notes': '',
+ 'title': 'Residential Sound Insulation Committee Meeting'}
+2020-08-19 18:04:26 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/04/319/-/o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:26 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/04/319/-/o-hare-noise-compatibility-commission-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 9, 4, 9, 0),
+ 'links': [],
+ 'location': {'address': ' 2777 S. Mannheim Road, Des Plaines, IL',
+              'name': 'Cafe La Cave '},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/09/04/319/-/o-hare-noise-compatibility-commission-meeting',
+ 'start': datetime.datetime(2020, 9, 4, 8, 0),
+ 'time_notes': '',
+ 'title': "O'Hare Noise Compatibility Commission Meeting"}
+2020-08-19 18:04:27 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/31/313/-/executive-committee-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:27 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/31/313/-/executive-committee-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 8, 31, 11, 30),
+ 'links': [],
+ 'location': {'address': ' 10510 W. Zemke Rd',
+              'name': 'Aviation Administration Building'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/31/313/-/executive-committee-meeting',
+ 'start': datetime.datetime(2020, 8, 31, 10, 30),
+ 'time_notes': '',
+ 'title': 'Executive Committee Meeting'}
+2020-08-19 18:04:27 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/20/303/-/fly-quiet-committee-note-change-of-date-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:27 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/20/303/-/fly-quiet-committee-note-change-of-date-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 8, 20, 10, 30),
+ 'links': [],
+ 'location': {'address': 'via video/teleconference',
+              'name': 'via video/teleconference'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/20/303/-/fly-quiet-committee-note-change-of-date-via-video-teleconference',
+ 'start': datetime.datetime(2020, 8, 20, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee *Note Change of Date* (via '
+          'video/teleconference)'}
+2020-08-19 18:04:27 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/18/332/-/technical-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:27 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/18/332/-/technical-committee-meeting-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 8, 18, 10, 0),
+ 'links': [{'href': 'https://us02web.zoom.us/j/86250992967?pwd=THZSZGk5TW1GeDdMYXpUSXpQaW1wZz09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': 'via video/teleconference',
+              'name': 'via video/teleconference'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/18/332/-/technical-committee-meeting-via-video-teleconference',
+ 'start': datetime.datetime(2020, 8, 18, 9, 0),
+ 'time_notes': '',
+ 'title': 'Technical Committee Meeting (via video/teleconference)'}
+2020-08-19 18:04:28 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/13/311/-/executive-committee-strategic-planning-session-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:28 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/13/311/-/executive-committee-strategic-planning-session-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 8, 13, 10, 0),
+ 'links': [{'href': 'https://us02web.zoom.us/j/88533718602?pwd=MUdhUGpNN0lSM2QwWng1NWpuTERQZz09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': 'via video or audio conference',
+              'name': 'via video or audio conference'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/08/13/311/-/executive-committee-strategic-planning-session-via-video-teleconference',
+ 'start': datetime.datetime(2020, 8, 13, 9, 0),
+ 'time_notes': '',
+ 'title': 'Executive Committee Strategic Planning Session (via '
+          'video/teleconference)'}
+2020-08-19 18:04:28 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/23/302/-/fly-quiet-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:28 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/23/302/-/fly-quiet-committee-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 6, 23, 10, 30),
+ 'links': [{'href': 'https://us02web.zoom.us/j/87533207181?pwd=NDRRaWJVYTJnZWUrbk1lcmFzQk5Edz09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video/teleconference)',
+              'name': '(via video/teleconference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/23/302/-/fly-quiet-committee-via-video-teleconference',
+ 'start': datetime.datetime(2020, 6, 23, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee (via video/teleconference)'}
+2020-08-19 18:04:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/05/318/-/o-hare-noise-compatibility-commission-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:29 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/05/318/-/o-hare-noise-compatibility-commission-meeting-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 6, 5, 9, 0),
+ 'links': [{'href': 'https://us02web.zoom.us/j/89330552020?pwd=VEFISXBlMm1nU0ROdndKMldrUFQyQT09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video/teleconference)',
+              'name': '(via video/teleconference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/05/318/-/o-hare-noise-compatibility-commission-meeting-via-video-teleconference',
+ 'start': datetime.datetime(2020, 6, 5, 8, 0),
+ 'time_notes': '',
+ 'title': "O'Hare Noise Compatibility Commission Meeting (via "
+          'video/teleconference)'}
+2020-08-19 18:04:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/01/310/-/executive-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:29 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/01/310/-/executive-committee-meeting-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 6, 1, 11, 30),
+ 'links': [{'href': 'https://us02web.zoom.us/j/83620545177?pwd=M0VaeU00UVJIc3AyeVg3SUNGUk5DZz09<br',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video/teleconference)',
+              'name': '(via video/teleconference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/06/01/310/-/executive-committee-meeting-via-video-teleconference',
+ 'start': datetime.datetime(2020, 6, 1, 10, 30),
+ 'time_notes': '',
+ 'title': 'Executive Committee Meeting (via video/teleconference)'}
+2020-08-19 18:04:29 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/26/301/-/fly-quiet-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:30 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/26/301/-/fly-quiet-committee-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 5, 26, 10, 30),
+ 'links': [{'href': 'https://us02web.zoom.us/j/88174956923?pwd=S0JuSXhmNmh4RXhCeXNncVBuYzY0QT09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video/teleconference)',
+              'name': '(via video/teleconference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/26/301/-/fly-quiet-committee-via-video-teleconference',
+ 'start': datetime.datetime(2020, 5, 26, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee (via video/teleconference)'}
+2020-08-19 18:04:30 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/339/-/ad-hoc-governance-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:30 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/339/-/ad-hoc-governance-committee-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 5, 19, 14, 0),
+ 'links': [{'href': 'https://us02web.zoom.us/j/84033580212?pwd=N0xiTzVFVlRnZmlEVHNWVW5KREthdz09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video/teleconference)',
+              'name': '(via video/teleconference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/339/-/ad-hoc-governance-committee-via-video-teleconference',
+ 'start': datetime.datetime(2020, 5, 19, 13, 0),
+ 'time_notes': '',
+ 'title': 'Ad Hoc Governance Committee (via video/teleconference)'}
+2020-08-19 18:04:30 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/324/-/technical-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:30 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/324/-/technical-committee-meeting-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 5, 19, 10, 0),
+ 'links': [{'href': 'https://us02web.zoom.us/j/87544693904?pwd=bzF0QzUrd0k0dFNTa0lVQ3FLOWFrUT09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video/teleconference)',
+              'name': '(via video/teleconference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/19/324/-/technical-committee-meeting-via-video-teleconference',
+ 'start': datetime.datetime(2020, 5, 19, 9, 0),
+ 'time_notes': '',
+ 'title': 'Technical Committee Meeting (via video/teleconference)'}
+2020-08-19 18:04:31 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/13/329/-/residential-sound-insulation-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:31 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/13/329/-/residential-sound-insulation-committee-meeting-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 5, 13, 10, 30),
+ 'links': [{'href': 'https://us02web.zoom.us/j/89710382957?pwd=SFcxczBqbDNiaXJGcS84SXY1bC9NUT09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video/teleconference) '
+                         'https://us02web.zoom.us/j/89710382957?pwd=SFcxczBqbDNiaXJGcS84SXY1bC9NUT09',
+              'name': '(via video/teleconference) '
+                      'https://us02web.zoom.us/j/89710382957?pwd=SFcxczBqbDNiaXJGcS84SXY1bC9NUT09'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/13/329/-/residential-sound-insulation-committee-meeting-via-video-teleconference',
+ 'start': datetime.datetime(2020, 5, 13, 9, 30),
+ 'time_notes': '',
+ 'title': 'Residential Sound Insulation Committee Meeting (via '
+          'video/teleconference)'}
+2020-08-19 18:04:31 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/12/338/-/ad-hoc-nominating-committee-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:31 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/12/338/-/ad-hoc-nominating-committee-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 5, 12, 12, 0),
+ 'links': [{'href': 'https://us02web.zoom.us/j/87193530291?pwd=Q2J1dE5lTk5hQVlLWDdNUGFCMmc4UT09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video/teleconference)',
+              'name': '(via video/teleconference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/12/338/-/ad-hoc-nominating-committee-via-video-teleconference',
+ 'start': datetime.datetime(2020, 5, 12, 11, 0),
+ 'time_notes': '',
+ 'title': 'Ad Hoc Nominating Committee (via video/teleconference)'}
+2020-08-19 18:04:31 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/01/317/-/cancelled-o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:31 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/01/317/-/cancelled-o-hare-noise-compatibility-commission-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 5, 1, 9, 0),
+ 'links': [],
+ 'location': {'address': '', 'name': ''},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/05/01/317/-/cancelled-o-hare-noise-compatibility-commission-meeting',
+ 'start': datetime.datetime(2020, 5, 1, 8, 0),
+ 'time_notes': '',
+ 'title': "O'Hare Noise Compatibility Commission Meeting"}
+2020-08-19 18:04:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/27/309/-/executive-committee-meeting-via-video-teleconference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:32 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/27/309/-/executive-committee-meeting-via-video-teleconference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 4, 27, 11, 30),
+ 'links': [],
+ 'location': {'address': '(via video/teleconference)',
+              'name': '(via video/teleconference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/27/309/-/executive-committee-meeting-via-video-teleconference',
+ 'start': datetime.datetime(2020, 4, 27, 10, 30),
+ 'time_notes': '',
+ 'title': 'Executive Committee Meeting (via video/teleconference)'}
+2020-08-19 18:04:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/21/300/-/fly-quiet-committee-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:32 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/21/300/-/fly-quiet-committee-via-video-or-audio-conference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 4, 21, 10, 30),
+ 'links': [{'href': 'https://zoom.us/j/95602787994?pwd=NUFJVkc0QUs0clhRNCs5OWdBS3l3UT09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': '(via video or audio conference)',
+              'name': '(via video or audio conference)'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/21/300/-/fly-quiet-committee-via-video-or-audio-conference',
+ 'start': datetime.datetime(2020, 4, 21, 9, 30),
+ 'time_notes': '',
+ 'title': 'Fly Quiet Committee (via video or audio conference)'}
+2020-08-19 18:04:32 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/20/337/-/governance-committee-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:32 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/20/337/-/governance-committee-via-video-or-audio-conference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 4, 20, 14, 0),
+ 'links': [{'href': 'https://zoom.us/j/91626694784?pwd=RG40Rk5qb2EyQnc1Q2FrOW5jVWcwdz09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': 'via video or audio conference',
+              'name': 'via video or audio conference'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/20/337/-/governance-committee-via-video-or-audio-conference',
+ 'start': datetime.datetime(2020, 4, 20, 13, 0),
+ 'time_notes': '',
+ 'title': 'Governance Committee (via video or audio conference)'}
+2020-08-19 18:04:33 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/14/323/-/technical-committee-meeting-via-video-or-audio-conference> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:33 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/14/323/-/technical-committee-meeting-via-video-or-audio-conference>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 4, 14, 10, 0),
+ 'links': [{'href': 'https://zoom.us/j/966036814?pwd=ZTV1ZFRMSVNOYlY1SkVDbDIzWnpaQT09',
+            'title': 'Zoom Link'}],
+ 'location': {'address': 'via video or audio conference',
+              'name': 'via video or audio conference'},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/14/323/-/technical-committee-meeting-via-video-or-audio-conference',
+ 'start': datetime.datetime(2020, 4, 14, 9, 0),
+ 'time_notes': '',
+ 'title': 'Technical Committee Meeting (via video or audio conference)'}
+2020-08-19 18:04:33 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/03/316/-/cancelled-o-hare-noise-compatibility-commission-meeting> (referer: https://www.oharenoise.org/meetings-all/year.listevents/2020/07/22/-)
+2020-08-19 18:04:33 [scrapy.core.scraper] DEBUG: Scraped from <200 https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/03/316/-/cancelled-o-hare-noise-compatibility-commission-meeting>
+{'all_day': False,
+ 'classification': 'Not classified',
+ 'description': '',
+ 'end': datetime.datetime(2020, 4, 3, 9, 0),
+ 'links': [],
+ 'location': {'address': ' 2777 S. Mannheim Road, Des Plaines, IL',
+              'name': 'Cafe La Cave '},
+ 'source': 'https://www.oharenoise.org/meetings-all/icalrepeat.detail/2020/04/03/316/-/cancelled-o-hare-noise-compatibility-commission-meeting',
+ 'start': datetime.datetime(2020, 4, 3, 8, 0),
+ 'time_notes': '',
+ 'title': "O'Hare Noise Compatibility Commission Meeting"}
+2020-08-19 18:04:33 [scrapy.core.engine] INFO: Closing spider (finished)
+2020-08-19 18:04:33 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 20644,
+ 'downloader/request_count': 48,
+ 'downloader/request_method_count/GET': 48,
+ 'downloader/response_bytes': 325210,
+ 'downloader/response_count': 48,
+ 'downloader/response_status_count/200': 48,
+ 'elapsed_time_seconds': 20.493964,
  'finish_reason': 'finished',
- 'finish_time': datetime.datetime(2020, 8, 8, 11, 39, 37, 663806),
- 'log_count/DEBUG': 2,
+ 'finish_time': datetime.datetime(2020, 8, 19, 17, 4, 33, 849465),
+ 'item_scraped_count': 65,
+ 'log_count/DEBUG': 113,
  'log_count/INFO': 10,
- 'memusage/max': 185888768,
- 'memusage/startup': 185888768,
- 'response_received_count': 2,
+ 'memusage/max': 185434112,
+ 'memusage/startup': 185434112,
+ 'request_depth_max': 1,
+ 'response_received_count': 48,
  'robotstxt/request_count': 1,
  'robotstxt/response_count': 1,
  'robotstxt/response_status_count/200': 1,
- 'scheduler/dequeued': 1,
- 'scheduler/dequeued/memory': 1,
- 'scheduler/enqueued': 1,
- 'scheduler/enqueued/memory': 1,
- 'start_time': datetime.datetime(2020, 8, 8, 11, 39, 35, 650076)}
-2020-08-08 12:39:37 [scrapy.core.engine] INFO: Spider closed (finished)
+ 'scheduler/dequeued': 47,
+ 'scheduler/dequeued/memory': 47,
+ 'scheduler/enqueued': 47,
+ 'scheduler/enqueued/memory': 47,
+ 'start_time': datetime.datetime(2020, 8, 19, 17, 4, 13, 355501)}
+2020-08-19 18:04:33 [scrapy.core.engine] INFO: Spider closed (finished)
