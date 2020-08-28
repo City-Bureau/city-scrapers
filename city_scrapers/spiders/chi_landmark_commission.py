@@ -133,7 +133,9 @@ class ChiLandmarkCommissionSpider(CityScrapersSpider):
 
     def _parse_hearing_start(self, item):
         dt_str = re.sub(
-            r"[\.,]", "", " ".join(item.css("strong::text").extract()).strip()
+            r"[\.,]",
+            "",
+            " ".join(item.css("strong::text").extract()).split("-")[0].strip(),
         )
         time_fmt = "%I %p"
         if ":" in dt_str:
