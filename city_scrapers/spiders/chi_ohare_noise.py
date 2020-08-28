@@ -26,7 +26,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
                 yield Request(url=response.urljoin(surl), callback=self._parse_details)
 
             next_page = response.xpath("//div[@class='previousmonth']/a/@href").get()
-            if next_page is None:
+            if next_page is not None:
                 yield response.follow(response.urljoin(next_page), callback=self.parse)
 
         def _parse_details(self, response):
@@ -100,8 +100,8 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
             return {
                 # Using reverse indexing for the cases
                 # where there is no building name or no location
-                "address": addr[-1],
-                "name": addr[0],
+                "address": addr[-1].strip(),
+                "name": addr[0].strip(),
             }
 
         def _parse_links(self, response):
@@ -149,7 +149,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
                 meeting = self._parse_classification(meeting)
                 yield meeting
             next_page = response.xpath("//li[@class='pagination-next']/a/@href").get()
-            if next_page is None:
+            if next_page is not None:
                 yield response.follow(response.urljoin(next_page), callback=self.parse)
 
         def _parse_title(self, item):

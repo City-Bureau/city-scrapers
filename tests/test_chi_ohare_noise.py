@@ -2,7 +2,8 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import NOT_CLASSIFIED, CANCELLED, PASSED
+from city_scrapers_core.constants import TENTATIVE, COMMITTEE, COMMISSION
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -24,10 +25,6 @@ freezer.stop()
 
 def test_tests():
     assert len(parsed_items) == 45
-
-"""
-Uncomment below
-"""
 
 parsed_sub_items = []
 for i in range(5): 
@@ -69,27 +66,43 @@ def test_end():
     assert parsed_sub_items[4]["end"] == datetime(2020, 12, 8, 10, 30)
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_status():
+    assert parsed_sub_items[0]["status"] == "passed"
+    assert parsed_sub_items[1]["status"] == "passed"
+    assert parsed_sub_items[2]["status"] == "passed"
+    assert parsed_sub_items[3]["status"] == "passed"
+    assert parsed_sub_items[4]["status"] == "tentative"
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_location():
+    assert parsed_sub_items[0]["location"] == {
+        "name": "(via video/teleconference)",
+        "address": "(via video/teleconference)"
+    }
+    assert parsed_sub_items[1]["location"] == {
+        "name": "(via video/teleconference)",
+        "address": "(via video/teleconference)"
+    }
+    assert parsed_sub_items[2]["location"] == {
+        "name": "Aviation Administration Building",
+        "address": "10510 W. Zemke Rd"
+    }
+    assert parsed_sub_items[3]["location"] == {
+        "name": "Aviation Administration Building",
+        "address": "10510 W. Zemke Rd"
+    }
+    assert parsed_sub_items[4]["location"] == {
+        "name": "Chicago Dept. of Aviation Building",
+        "address": "10510 W. Zemke Road, Chicago, IL, Conference Room 1"
+    }
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
-
-
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
-
-
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+def test_source():
+    assert parsed_sub_items[0]["source"] == "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/2019/02/03/-"
+    assert parsed_sub_items[1]["source"] == "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/2019/02/03/-"
+    assert parsed_sub_items[2]["source"] == "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/2019/02/03/-"
+    assert parsed_sub_items[3]["source"] == "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/2019/02/03/-"
+    assert parsed_sub_items[4]["source"] == "https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/2019/02/03/-"
 
 
 # def test_links():
@@ -99,10 +112,14 @@ def test_end():
 #     }]
 
 
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+def test_classification():
+    assert parsed_sub_items[0]["classification"] == COMMISSION
+    assert parsed_sub_items[1]["classification"] == COMMITTEE
+    assert parsed_sub_items[2]["classification"] == COMMITTEE
+    assert parsed_sub_items[3]["classification"] == COMMITTEE
+    assert parsed_sub_items[4]["classification"] == COMMITTEE
 
 
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+@pytest.mark.parametrize("item", parsed_sub_items)
+def test_all_day(item):
+    assert item["all_day"] is False
