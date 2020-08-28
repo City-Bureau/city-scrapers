@@ -37,15 +37,22 @@ def test_start():
 
 
 def test_end():
-    assert parsed_items[0]["end"] == None
+    assert parsed_items[0]["end"] is None
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == "Chairman Nice began the April 8th board meeting at 6:37 pm."
+    assert (
+        parsed_items[0]["time_notes"]
+        == "Chairman Nice began the April 8th board meeting at 6:37 pm."
+    )
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_southwest_home_equity_i/201904081830/x/board_meeting"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_southwest_home_equity_i/201904081830/x/board_meeting"
+    )
+
 
 def test_status():
     assert parsed_items[0]["status"] == PASSED
@@ -54,7 +61,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Southwest Home Equity Assurance office",
-        "address": "5334 W. 65th Street in Chicago, Illinois"
+        "address": "5334 W. 65th Street in Chicago, Illinois",
     }
 
 
@@ -63,13 +70,18 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-      "href": "https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/downloads/Minutes%20from%20April%208%202019.pdf?ver=1581453329487",
-      "title": "Minutes from April 8 2019"
-    },{
-      "href": "https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/downloads/Agenda-April%208%2C%202019.pdf?ver=1581453329487",
-      "title": "Agenda for April 8, 2019 (pdf)Download"
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": """https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/
+        downloads/Minutes%20from%20April%208%202019.pdf?ver=1581453329487""",
+            "title": "Minutes from April 8 2019",
+        },
+        {
+            "href": """https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/
+        downloads/Agenda-April%208%2C%202019.pdf?ver=1581453329487""",
+            "title": "Agenda for April 8, 2019 (pdf)Download",
+        },
+    ]
 
 
 def test_classification():
