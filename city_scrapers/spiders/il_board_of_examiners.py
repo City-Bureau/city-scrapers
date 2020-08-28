@@ -6,7 +6,6 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
-# TODO: Fix
 class IlBoardOfExaminersSpider(CityScrapersSpider):
     name = "il_board_of_examiners"
     agency = "Illinois Board of Examiners"
@@ -79,6 +78,8 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
             if temp_address[0][0].isdigit():
                 name = ""
                 address = self.remove_special_chars("".join(temp_address))
+            elif "zoom" in temp_address.lower():
+                return {"name": "Virtual meeting via Zoom", "address": ""}
             else:
                 [name, address] = "".join(temp_address).split("\n", 1)
                 name = self.remove_special_chars(name)
