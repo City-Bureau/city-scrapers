@@ -70,7 +70,7 @@ class ChiSsa25Spider(CityScrapersSpider):
 
     def _parse_location(self, item):
         location = item["location"]
-        if "conference call" in location["name"].lower():
+        if "conference call" in location["name"].lower() or "Zoom" in location["name"]:
             return {
                 "name": "Conference Call",
                 "address": "",
