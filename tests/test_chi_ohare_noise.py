@@ -8,43 +8,65 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_ohare_noise import ChiOhareNoiseSpider
 
-test_response = file_response(
-    join(dirname(__file__), "files/chi_ohare_noise", "chi_ohare_noise.html"),
-    url="https://www.oharenoise.org/about-oncc/agendas-and-minutes",
-)
 spider = ChiOhareNoiseSpider()
 
-freezer = freeze_time("2020-07-09")
+freezer = freeze_time("2020-08-22")
 freezer.start()
+
+test_response = file_response(
+    join(dirname(__file__), "files/chi_ohare_noise", "chi_ohare_noise.html"),
+    url="https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/2019/02/03/-",
+)
 
 parsed_items = [item for item in spider.ChiOhareNoiseSubSpider1().parse(test_response)]
 
 freezer.stop()
 
-
 def test_tests():
-    print("here")
     assert len(parsed_items) == 45
-
 
 """
 Uncomment below
 """
 
-#def test_title():
-    #assert parsed_items[0]["title"] == "EXPECTED TITLE"
+parsed_sub_items = []
+for i in range(5): 
+    test_response_2 = file_response(
+        join(dirname(__file__), "files/chi_ohare_noise", "chi_ohare_noise_meetings_sub_{0}.html".format(i+1)),
+        url="https://www.oharenoise.org/about-oncc/oncc-meetings/month.calendar/2019/02/03/-",
+    )
+    parsed_sub_items.append(spider.ChiOhareNoiseSubSpider1()._parse_details(test_response_2))
+
+def test_title():
+    assert parsed_sub_items[0]["title"] == "O'Hare Noise Compatibility Commission Meeting (via video/teleconference)"
+    assert parsed_sub_items[1]["title"] == "Fly Quiet Committee (via video/teleconference)"
+    assert parsed_sub_items[2]["title"] == "Executive Committee Meeting"
+    assert parsed_sub_items[3]["title"] == "Executive Committee Meeting"
+    assert parsed_sub_items[4]["title"] == "Fly Quiet Committee"
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_description():
+    assert parsed_sub_items[0]["description"] == "Join Zoom Meeting"
+    assert parsed_sub_items[1]["description"] == "Join Zoom Meeting"
+    assert parsed_sub_items[2]["description"] == ""
+    assert parsed_sub_items[3]["description"] == ""
+    assert parsed_sub_items[4]["description"] == ""
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_start():
+    assert parsed_sub_items[0]["start"] == datetime(2020, 6, 5, 8, 0)
+    assert parsed_sub_items[1]["start"] == datetime(2020, 5, 26, 9, 30)
+    assert parsed_sub_items[2]["start"] == datetime(2020, 2, 10, 10, 30)
+    assert parsed_sub_items[3]["start"] == datetime(2020, 1, 6, 10, 30)
+    assert parsed_sub_items[4]["start"] == datetime(2020, 12, 8, 9, 30)
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_end():
+    assert parsed_sub_items[0]["end"] == datetime(2020, 6, 5, 9, 0)
+    assert parsed_sub_items[1]["end"] == datetime(2020, 5, 26, 10, 30)
+    assert parsed_sub_items[2]["end"] == datetime(2020, 2, 10, 11, 30)
+    assert parsed_sub_items[3]["end"] == datetime(2020, 1, 6, 11, 30)
+    assert parsed_sub_items[4]["end"] == datetime(2020, 12, 8, 10, 30)
 
 
 # def test_time_notes():
