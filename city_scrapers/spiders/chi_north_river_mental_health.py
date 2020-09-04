@@ -27,42 +27,28 @@ class ChiNorthRiverMentalHealthSpider(CityScrapersSpider):
         """
 
         if response.url == self.start_urls[0]:
-            for item in response.xpath('.//div[@class="wsite-section-elements"]//a'):
+            yield from self._parse_minutes(response)
 
-                valid_start = self._minutes_parse_start(item)
-                if not valid_start:
-                    continue
-
-                meeting = Meeting(
-                    title="North River EMHSP governing commission",
-                    description="",
-                    classification=COMMISSION,
-                    start=valid_start,
-                    end=None,
-                    all_day=False,
-                    time_notes="",
-                    location=self._minutes_parse_location(item),
-                    links=self._minutes_parse_links(item, response),
-                    source=response.url,
-                )
-
-                meeting["status"] = self._get_status(meeting)
-                meeting["id"] = self._get_id(meeting)
-
-                yield meeting
         else:
+            yield from self._parse_index(response)
 
-            item = response.css("td:nth-child(2) div:nth-child(2)")
+    def _parse_minutes(self, response):
+        for item in response.xpath('.//div[@class="wsite-section-elements"]//a'):
+
+            valid_start = self._minutes_parse_start(item)
+            if not valid_start:
+                continue
+
             meeting = Meeting(
-                title="North River EMHSP governing commission",
+                title="Governing Commission",
                 description="",
                 classification=COMMISSION,
-                start=self._index_parse_start(item),
+                start=valid_start,
                 end=None,
                 all_day=False,
                 time_notes="",
-                location=self._index_parse_location(item),
-                links=self._index_parse_links(item, response),
+                location=self._minutes_parse_location(item),
+                links=self._minutes_parse_links(item, response),
                 source=response.url,
             )
 
@@ -70,6 +56,26 @@ class ChiNorthRiverMentalHealthSpider(CityScrapersSpider):
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
+
+    def _parse_index(self, response):
+        item = response.css("td:nth-child(2) div:nth-child(2)")
+        meeting = Meeting(
+            title="Governing Commission",
+            description="",
+            classification=COMMISSION,
+            start=self._index_parse_start(item),
+            end=None,
+            all_day=False,
+            time_notes="",
+            location=self._index_parse_location(item),
+            links=self._index_parse_links(item, response),
+            source=response.url,
+        )
+
+        meeting["status"] = self._get_status(meeting)
+        meeting["id"] = self._get_id(meeting)
+
+        yield meeting
 
     def _minutes_parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
@@ -107,32 +113,31 @@ class ChiNorthRiverMentalHealthSpider(CityScrapersSpider):
     def _minutes_parse_location(self, item):
         """Parse or generate location."""
         start = self._minutes_parse_start(item)
-        if start < datetime.datetime(2017, 3, 15, 0, 0):
+        if start < datetime.datetime(2017, 3, 15):
             return {
-                "address": "3857 N. Kostner Avenue Chicago, Il 60641",
+                "address": "3857 N. Kostner Avenue Chicago, IL 60641",
                 "name": "St. John Episcopal Church Parish Hall",
             }
         else:
             return {
-                "address": "3525 W. Peterson Ave, #306 Chicago, Il 60659",
+                "address": "3525 W. Peterson Ave, #306 Chicago, IL 60659",
                 "name": "North River EMHSP governing commission office",
             }
 
     def _index_parse_location(self, item):
-        place = item.re("<br>Place: (?P<location>.*)<br>Agenda")[0]
-        return {"name": "Place: ", "address": place}
+        place = item.re("<br>Place: (?P<location>[a-zA-Z0-9 ]+(?!\\\\<br\\\\>))")[0]
+        # Leaving "name" value empty for now..
+        return {"name": "", "address": place}
 
     def _minutes_parse_links(self, item, response):
         """Parse or generate links."""
-        return [
-            {
-                "href": response.urljoin(item.attrib["href"]),
-                "title": item.css("::text").get(),
-            }
-        ]
+        return [{"href": response.urljoin(item.attrib["href"]), "title": "Minutes"}]
 
     def _index_parse_links(self, item, response):
         return [
-            {"title": link.css("::text").get(), "href": link.attrib["href"]}
+            {
+                "title": link.css("::text").get(),
+                "href": response.urljoin(link.attrib["href"]),
+            }
             for link in item.css("a")
         ]
