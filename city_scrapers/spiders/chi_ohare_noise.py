@@ -1,8 +1,14 @@
 import re
 from datetime import datetime, timedelta
 
-from city_scrapers_core.constants import NOT_CLASSIFIED, CANCELLED, PASSED
-from city_scrapers_core.constants import TENTATIVE, COMMITTEE, COMMISSION
+from city_scrapers_core.constants import (
+    CANCELLED,
+    COMMISSION,
+    COMMITTEE,
+    NOT_CLASSIFIED,
+    PASSED,
+    TENTATIVE,
+)
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from scrapy import Request
@@ -32,7 +38,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
         def _parse_details(self, response):
             stime = self._parse_start(response)
             meeting = Meeting(
-                title=self._parse_title(response).replace('CANCELLED ', '').strip('- '),
+                title=self._parse_title(response).replace("CANCELLED ", "").strip("- "),
                 description=self._parse_description(response),
                 start=stime,
                 end=stime + timedelta(hours=1),
@@ -62,12 +68,12 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
 
         def _parse_classification(self, meeting):
             """Parse or generate classification from allowed options."""
-            if 'committee' in meeting['title'].lower():
-                meeting['classification'] = COMMITTEE
-            elif 'commission' in meeting['title'].lower():
-                meeting['classification'] = COMMISSION
+            if "committee" in meeting["title"].lower():
+                meeting["classification"] = COMMITTEE
+            elif "commission" in meeting["title"].lower():
+                meeting["classification"] = COMMISSION
             else:
-                meeting['classification'] = NOT_CLASSIFIED
+                meeting["classification"] = NOT_CLASSIFIED
             return meeting
 
         def _parse_start(self, response):
@@ -116,14 +122,14 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
         def _parse_source(self, response):
             """Parse or generate source."""
             return response.url
-        
+
         def _get_status(self, meeting):
-            if 'cancelled' in meeting['title'].lower():
-                meeting['status'] = CANCELLED
-            elif datetime.now() > meeting['end']:
-                meeting['status'] = PASSED
+            if "cancelled" in meeting["title"].lower():
+                meeting["status"] = CANCELLED
+            elif datetime.now() > meeting["end"]:
+                meeting["status"] = PASSED
             else:
-                meeting['status'] = TENTATIVE
+                meeting["status"] = TENTATIVE
 
             return meeting
 
@@ -135,9 +141,7 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
             Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
             needs.
             """
-            for item in response.css("tr.cat-list-row0") + response.css(
-                "tr.cat-list-row1"
-            ):
+            for item in response.css("tr.cat-list-row0, tr.cat-list-row1"):
                 meeting = Meeting(
                     title=self._parse_title(item),
                     start=self._parse_start(item),
@@ -180,23 +184,23 @@ class ChiOhareNoiseSpider(CityScrapersSpider):
             return response.url
 
         def _get_status(self, meeting):
-            if 'cancelled' in meeting['title'].lower():
-                meeting['status'] = CANCELLED
-            elif datetime.now() > meeting['start']:
-                meeting['status'] = PASSED
+            if "cancelled" in meeting["title"].lower():
+                meeting["status"] = CANCELLED
+            elif datetime.now() > meeting["start"]:
+                meeting["status"] = PASSED
             else:
-                meeting['status'] = TENTATIVE
+                meeting["status"] = TENTATIVE
 
             return meeting
 
         def _parse_classification(self, meeting):
             """Parse or generate classification from allowed options."""
-            if 'committee' in meeting['title'].lower():
-                meeting['classification'] = COMMITTEE
-            elif 'commission' in meeting['title'].lower():
-                meeting['classification'] = COMMISSION
+            if "committee" in meeting["title"].lower():
+                meeting["classification"] = COMMITTEE
+            elif "commission" in meeting["title"].lower():
+                meeting["classification"] = COMMISSION
             else:
-                meeting['classification'] = NOT_CLASSIFIED
+                meeting["classification"] = NOT_CLASSIFIED
             return meeting
 
     def start_requests(self):
