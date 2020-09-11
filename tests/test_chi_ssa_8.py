@@ -67,6 +67,13 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == []
+    assert parsed_items[1]["links"] == [
+        {
+            "href": "https://drive.google.com/file/d/1oon6sqjNtMHuR3kHaHE2LxHHaIOdrJg5/\
+            view?usp=sharing",
+            "title": "1st Quarter",
+        }
+    ]
 
 
 def test_classification():

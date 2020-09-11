@@ -13,6 +13,7 @@ class ChiSsa8Spider(CityScrapersSpider):
     agency = "Chicago Special Service Area #8 Lakeview East"
     timezone = "America/Chicago"
     start_urls = ["https://lakevieweast.com/ssa-8/"]
+    start_urls = ["http://localhost:8000/"]
     monthDateRegex = (
         r"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?"
         r"|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2}"
@@ -22,20 +23,22 @@ class ChiSsa8Spider(CityScrapersSpider):
         for item in response.css(".post-content ul"):
             year = self._parse_year(item)
             if year is not None:
+                linksByQuarter = self._parse_links_by_quarter(item, year)
                 location = self._parse_location(item)
                 for li in item.css("li"):
                     startDate = self._parse_start(li, year)
                     if startDate is not None:
+                        titleDesc = self._parse_title_desc(li)
                         meeting = Meeting(
-                            title=self._parse_title_desc(li),
-                            description=self._parse_title_desc(li),
+                            title=titleDesc,
+                            description=titleDesc,
                             classification=self._parse_classification(li),
                             start=startDate,
                             end=self._parse_end(li),
                             all_day=self._parse_all_day(li),
                             time_notes=self._parse_time_notes(li),
                             location=location,
-                            links=self._parse_links(li),
+                            links=self._parse_links(titleDesc, linksByQuarter),
                             source=self._parse_source(response),
                         )
                         meeting["status"] = self._get_status(meeting)
@@ -99,8 +102,42 @@ class ChiSsa8Spider(CityScrapersSpider):
             "name": name,
         }
 
-    def _parse_links(self, item):
-        return []
+    def _parse_links_by_quarter(self, item, year):
+        meetingList = item.xpath(
+            '//h3[contains(text(), "' + year + ' Minutes")]/following-sibling::ul[1]'
+        )
+        yearLinksList = meetingList.css("li a")
+        linksByQuarter = {}
+        if meetingList:
+            for quaterLinks in yearLinksList:
+                quarter = quaterLinks.css("a::text").extract()[0]
+                quarter = re.match("(.*?)quarter", quarter, re.IGNORECASE)
+                if not quarter:
+                    continue
+                quarter = quarter.group()
+
+                link = quaterLinks.css("a::attr(href)").extract()[0]
+                if not link:
+                    continue
+
+                if quarter not in linksByQuarter:
+                    linksByQuarter[quarter] = []
+
+                linksByQuarter[quarter].append(link)
+            return linksByQuarter
+
+    def _parse_links(self, quarter, linksByQuarter):
+        if quarter not in linksByQuarter:
+            return []
+        links = []
+        quarterLinks = linksByQuarter[quarter]
+        for quarterLink in quarterLinks:
+            quarterDict = {}
+            quarterDict["title"] = quarter
+            quarterDict["href"] = quarterLink
+
+            links.append(quarterDict)
+        return links
 
     def _parse_source(self, response):
         return response.url
