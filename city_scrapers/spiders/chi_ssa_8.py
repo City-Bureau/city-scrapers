@@ -13,7 +13,6 @@ class ChiSsa8Spider(CityScrapersSpider):
     agency = "Chicago Special Service Area #8 Lakeview East"
     timezone = "America/Chicago"
     start_urls = ["https://lakevieweast.com/ssa-8/"]
-    start_urls = ["http://localhost:8000/"]
     monthDateRegex = (
         r"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?"
         r"|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2}"
