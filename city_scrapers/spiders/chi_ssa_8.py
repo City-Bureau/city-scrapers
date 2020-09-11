@@ -126,7 +126,7 @@ class ChiSsa8Spider(CityScrapersSpider):
             return linksByQuarter
 
     def _parse_links(self, quarter, linksByQuarter):
-        if quarter not in linksByQuarter:
+        if not linksByQuarter or quarter not in linksByQuarter:
             return []
         links = []
         quarterLinks = linksByQuarter[quarter]
