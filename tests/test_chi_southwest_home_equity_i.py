@@ -17,7 +17,7 @@ test_response = file_response(
 
 spider = ChiSouthwestHomeEquityISpider()
 
-freezer = freeze_time("2020-01-23")
+freezer = freeze_time("2020-09-16")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -35,7 +35,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 4, 8, 6, 30)
+    assert parsed_items[0]["start"] == datetime(2020, 2, 10, 18, 30)
 
 
 def test_end():
@@ -45,14 +45,14 @@ def test_end():
 def test_time_notes():
     assert (
         parsed_items[0]["time_notes"]
-        == "Chairman Nice began the April 8th board meeting at 6:37 pm."
+        == ": Chairman Nice began the meeting at 6:34 pm. Commissioner Tully was absent and therefore Chairman Nice asked Vice Chairman Kurtovich to take roll call."
     )
 
 
 def test_id():
     assert (
         parsed_items[0]["id"]
-        == "chi_southwest_home_equity_i/201904081830/x/board_meeting"
+        == "chi_southwest_home_equity_i/202002101830/x/board_meeting"
     )
 
 
@@ -74,14 +74,12 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href": """https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/
-        downloads/Minutes%20from%20April%208%202019.pdf?ver=1581453329487""",
-            "title": "Minutes from April 8 2019",
+            "href": """https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/downloads/Agenda-February%2010%2C%202020.pdf?ver=1599857112448""",
+            "title": "Agenda-February 10, 2020 ",
         },
         {
-            "href": """https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/
-        downloads/Agenda-April%208%2C%202019.pdf?ver=1581453329487""",
-            "title": "Agenda for April 8, 2019 (pdf)Download",
+            "href": """https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/downloads/Minutes%20-%20Feb%2010%202020%20.pdf?ver=1599857112449""",
+            "title": "Minutes - Feb 10 2020  ",
         },
     ]
 
