@@ -150,7 +150,7 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
             raise RuntimeError("No month found")
         year_ind = re.search(
             r"\d{4}", text[month_ind.start() :]
-        )  # We need the year to come after the
+        )
         if year_ind is None:
             raise RuntimeError("No year found")
         date_str = text[
