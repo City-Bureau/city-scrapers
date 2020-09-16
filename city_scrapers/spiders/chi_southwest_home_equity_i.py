@@ -88,18 +88,18 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
         try:
             date_str = self.find_date_in_title(node)
             date_object = datetime.strptime(date_str, "%B %d %Y")
-        except (RuntimeError, ValueError) as title_error:
+        except (RuntimeError, ValueError):
             try:
                 date_str = self.find_date_in_content(node)
                 date_object = datetime.strptime(date_str, "%B %d %Y")
-            except (RuntimeError, ValueError) as content_error:
+            except (RuntimeError, ValueError):
                 return None
 
         try:
             start_time = self.find_time(node)
             return date_object + start_time
 
-        except (RuntimeError, ValueError) as time_error:
+        except (RuntimeError, ValueError):
             return date_object + timedelta(hours=18, minutes=30)
 
     def _parse_links(self, nodes):

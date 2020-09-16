@@ -43,9 +43,10 @@ def test_end():
 
 
 def test_time_notes():
-    assert (
-        parsed_items[0]["time_notes"]
-        == ": Chairman Nice began the meeting at 6:34 pm. Commissioner Tully was absent and therefore Chairman Nice asked Vice Chairman Kurtovich to take roll call."
+    assert parsed_items[0]["time_notes"] == (
+        ": Chairman Nice began the meeting at 6:34 pm. Commissioner Tully "
+        "was absent and therefore Chairman Nice asked Vice Chairman Kurtovich "
+        "to take roll call."
     )
 
 
@@ -74,11 +75,17 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href": """https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/downloads/Agenda-February%2010%2C%202020.pdf?ver=1599857112448""",
+            "href": (
+                "https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/"
+                "downloads/Agenda-February%2010%2C%202020.pdf?ver=1599857112448"
+            ),
             "title": "Agenda-February 10, 2020 ",
         },
         {
-            "href": """https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/downloads/Minutes%20-%20Feb%2010%202020%20.pdf?ver=1599857112449""",
+            "href": (
+                "https://img1.wsimg.com/blobby/go/ddf32f03-d1ca-4da2-ba70-a82cbae10fd5/"
+                "downloads/Minutes%20-%20Feb%2010%202020%20.pdf?ver=1599857112449"
+            ),
             "title": "Minutes - Feb 10 2020  ",
         },
     ]
