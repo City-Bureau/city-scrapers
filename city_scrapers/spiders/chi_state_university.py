@@ -1,7 +1,10 @@
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from datetime import datetime
+import re 
+from calendar import month_name
+
+from city_scrapers_core.constants import NOT_CLASSIFIED, BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-
 
 class ChiStateUniversitySpider(CityScrapersSpider):
     name = "chi_state_university"
@@ -16,65 +19,126 @@ class ChiStateUniversitySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".table tr td li"):
-            extracted = item.css("::text").extract()
-            meeting = Meeting(
-                title=self._parse_title(extracted),
-                description=self._parse_description(item),
-                classification=self._parse_classification(item),
-                start=self._parse_start(item),
-                end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
-                links=self._parse_links(item),
-                source=self._parse_source(response),
-            )
 
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
 
-            yield meeting
+        
+        for data in response.xpath("/html/body/div/div[4]/div/div[1]/div/div"):
+            titles = data.xpath(".//label/text()").extract()
 
-    def _parse_title(self, item):
-        title = item.css(".goldenTitle::text").extract_first()
-        return title
+            for i, tab in enumerate(data.xpath('.//div[@class = "itd-tab"]')):
+
+                for item in tab.xpath('.//li'):
+
+                    months = {m.lower() for m in month_name[1:]}
+                    text = item.xpath(".//text()").extract()[0]
+                    monthMatch = next((word for word in text.split() if word.lower() in months), None)
+                    if monthMatch == None:
+                        continue
+
+                    meeting = Meeting(   
+                        title=titles[i],
+                        description=self._parse_description(item),
+                        classification=self._parse_classification(i),
+                        start=self._parse_start(item),
+                        end= None,
+                        all_day= False,
+                        time_notes= self._parse_time_notes(item),
+                        location=self._parse_location(item),
+                        links=self._parse_links(item),
+                        source=self._parse_source(response),
+                    )
+                    meeting["status"] = self._get_status(meeting)
+                    meeting["id"] = self._get_id(meeting)
+
+                    yield meeting
+
 
     def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
+        parts = item.xpath(".//text()").extract()
+        description = ''.join([str(x) for x in parts])
+        description = description.replace("\xa0", ' ').replace('\n', ' ').replace(
+            "                                     ", ' ').replace("\t", ' ').strip()
+        return description
 
-    def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
+    def _parse_classification(self, i):
+        classifications = [BOARD, BOARD, COMMITTEE]
+        return classifications[i]
 
     def _parse_start(self, item):
-        """Parse start datetime as a naive datetime object."""
-        return None
+        text = item.xpath(".//text()").extract()[0]
+        text = text.replace("\xa0", '').strip()
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+        today = datetime.now()
+        yearMatch = today.year
+        monthMatch = today.month 
+        dayMatch = today.day 
+        hourMatch = 0
+        minuteMatch = 0
+
+        try:
+            yearMatch = int(re.search(r"\d{4}", text).group(0))
+        except:
+            pass 
+
+        try:
+            dayMatch = int(re.search(r"\d{1,2}", text).group(0))
+        except:
+            pass 
+
+        try:
+            months = {m.lower() for m in month_name[1:]}
+            monthMatch = next((word for word in text.split() if word.lower() in months), None)
+            monthMatch = datetime.strptime(monthMatch, "%B").month
+        except:
+            pass 
+
+        try:
+            minuteMatch = re.search(r":([0-5][0-9])", text).group(0)
+            minuteMatch = int(minuteMatch.replace(":",""))
+        except AttributeError:
+            pass 
+
+        try:
+            hourMatch = re.search(r"(1[0-2]|0?[1-9]):", text).group(0)
+            hourMatch = int(hourMatch.replace(":",""))
+        except AttributeError:
+            pass
+
+        if "p.m." in text:
+            hourMatch+=12
+
+        return datetime(yearMatch, monthMatch, dayMatch, hourMatch, minuteMatch)
 
     def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
+        text = ' '.join(item.xpath(".//text()").extract())
+        text = text.replace("\xa0", '').strip()
 
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
+        notes = ""
+        if "reschedule" in text.lower() or "postpone" in text.lower():
+            notes = text
+        if "tbd" in text.lower():
+            notes = "Meeting time TBD"
+        return notes
 
     def _parse_location(self, item):
-        """Parse or generate location."""
+
         return {
-            "address": "",
-            "name": "",
+            "address": "9501 S. King Drive Chicago, IL 60628",
+            "name": "Room 15, 4th Floor, Gwendolyn Brooks Library Auditorium",
         }
 
     def _parse_links(self, item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
+
+        try:
+            link = item.xpath(".//a").attrib['href']
+        except KeyError:
+            link = ""
+        title = ""
+        for search in ["webinar", "zoom", "meeting"]:
+            if search in link:
+                title = "Virtual meeting link"
+
+        return [{"href": link, "title": title}]
 
     def _parse_source(self, response):
-        """Parse or generate source."""
         return response.url
