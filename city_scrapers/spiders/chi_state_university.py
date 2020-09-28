@@ -1,10 +1,11 @@
 from datetime import datetime
-import re 
+import re
 from calendar import month_name
 
-from city_scrapers_core.constants import NOT_CLASSIFIED, BOARD, COMMITTEE
+from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
 
 class ChiStateUniversitySpider(CityScrapersSpider):
     name = "chi_state_university"
@@ -20,29 +21,29 @@ class ChiStateUniversitySpider(CityScrapersSpider):
         needs.
         """
 
-
-        
         for data in response.xpath("/html/body/div/div[4]/div/div[1]/div/div"):
             titles = data.xpath(".//label/text()").extract()
 
             for i, tab in enumerate(data.xpath('.//div[@class = "itd-tab"]')):
 
-                for item in tab.xpath('.//li'):
+                for item in tab.xpath(".//li"):
 
                     months = {m.lower() for m in month_name[1:]}
                     text = item.xpath(".//text()").extract()[0]
-                    monthMatch = next((word for word in text.split() if word.lower() in months), None)
+                    monthMatch = next(
+                        (word for word in text.split() if word.lower() in months), None
+                    )
                     if monthMatch == None:
                         continue
 
-                    meeting = Meeting(   
+                    meeting = Meeting(
                         title=titles[i],
                         description=self._parse_description(item),
                         classification=self._parse_classification(i),
                         start=self._parse_start(item),
-                        end= None,
-                        all_day= False,
-                        time_notes= self._parse_time_notes(item),
+                        end=None,
+                        all_day=False,
+                        time_notes=self._parse_time_notes(item),
                         location=self._parse_location(item),
                         links=self._parse_links(item),
                         source=self._parse_source(response),
@@ -52,12 +53,16 @@ class ChiStateUniversitySpider(CityScrapersSpider):
 
                     yield meeting
 
-
     def _parse_description(self, item):
         parts = item.xpath(".//text()").extract()
-        description = ''.join([str(x) for x in parts])
-        description = description.replace("\xa0", ' ').replace('\n', ' ').replace(
-            "                                     ", ' ').replace("\t", ' ').strip()
+        description = "".join([str(x) for x in parts])
+        description = (
+            description.replace("\xa0", " ")
+            .replace("\n", " ")
+            .replace("                                     ", " ")
+            .replace("\t", " ")
+            .strip()
+        )
         return description
 
     def _parse_classification(self, i):
@@ -66,52 +71,54 @@ class ChiStateUniversitySpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         text = item.xpath(".//text()").extract()[0]
-        text = text.replace("\xa0", '').strip()
+        text = text.replace("\xa0", "").strip()
 
         today = datetime.now()
         yearMatch = today.year
-        monthMatch = today.month 
-        dayMatch = today.day 
+        monthMatch = today.month
+        dayMatch = today.day
         hourMatch = 0
         minuteMatch = 0
 
         try:
             yearMatch = int(re.search(r"\d{4}", text).group(0))
         except:
-            pass 
+            pass
 
         try:
             dayMatch = int(re.search(r"\d{1,2}", text).group(0))
         except:
-            pass 
+            pass
 
         try:
             months = {m.lower() for m in month_name[1:]}
-            monthMatch = next((word for word in text.split() if word.lower() in months), None)
+            monthMatch = next(
+                (word for word in text.split() if word.lower() in months), None
+            )
             monthMatch = datetime.strptime(monthMatch, "%B").month
         except:
-            pass 
+            pass
 
         try:
             minuteMatch = re.search(r":([0-5][0-9])", text).group(0)
-            minuteMatch = int(minuteMatch.replace(":",""))
+            minuteMatch = int(minuteMatch.replace(":", ""))
         except AttributeError:
-            pass 
+            pass
 
         try:
             hourMatch = re.search(r"(1[0-2]|0?[1-9]):", text).group(0)
-            hourMatch = int(hourMatch.replace(":",""))
+            hourMatch = int(hourMatch.replace(":", ""))
         except AttributeError:
             pass
 
         if "p.m." in text:
-            hourMatch+=12
+            hourMatch += 12
 
         return datetime(yearMatch, monthMatch, dayMatch, hourMatch, minuteMatch)
 
     def _parse_time_notes(self, item):
-        text = ' '.join(item.xpath(".//text()").extract())
-        text = text.replace("\xa0", '').strip()
+        text = " ".join(item.xpath(".//text()").extract())
+        text = text.replace("\xa0", "").strip()
 
         notes = ""
         if "reschedule" in text.lower() or "postpone" in text.lower():
@@ -130,7 +137,7 @@ class ChiStateUniversitySpider(CityScrapersSpider):
     def _parse_links(self, item):
 
         try:
-            link = item.xpath(".//a").attrib['href']
+            link = item.xpath(".//a").attrib["href"]
         except KeyError:
             link = ""
         title = ""
