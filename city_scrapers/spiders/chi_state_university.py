@@ -33,7 +33,7 @@ class ChiStateUniversitySpider(CityScrapersSpider):
                     monthMatch = next(
                         (word for word in text.split() if word.lower() in months), None
                     )
-                    if monthMatch == None:
+                    if monthMatch is None:
                         continue
 
                     meeting = Meeting(
@@ -82,12 +82,12 @@ class ChiStateUniversitySpider(CityScrapersSpider):
 
         try:
             yearMatch = int(re.search(r"\d{4}", text).group(0))
-        except:
+        except AttributeError:
             pass
 
         try:
             dayMatch = int(re.search(r"\d{1,2}", text).group(0))
-        except:
+        except AttributeError:
             pass
 
         try:
@@ -96,7 +96,7 @@ class ChiStateUniversitySpider(CityScrapersSpider):
                 (word for word in text.split() if word.lower() in months), None
             )
             monthMatch = datetime.strptime(monthMatch, "%B").month
-        except:
+        except AttributeError:
             pass
 
         try:
