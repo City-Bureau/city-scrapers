@@ -1,6 +1,6 @@
-from datetime import datetime
 import re
 from calendar import month_name
+from datetime import datetime
 
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
