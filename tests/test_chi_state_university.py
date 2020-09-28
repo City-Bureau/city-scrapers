@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, COMMITTEE
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -21,7 +21,7 @@ freezer.stop()
 
 expected = {
     "title": "Special Board Meeting",
-    "classification": "Board",
+    "classification": BOARD,
     "start": datetime(2020, 7, 27, 15, 0),
     "end": None,
     "all_day": False,
@@ -39,7 +39,6 @@ expected = {
     "source": "https://www.csu.edu/boardoftrustees/dates.htm",
     "status": "passed",
     "id": "chi_state_university/202007271500/x/special_board_meeting",
-    "description": "Monday, July 27, 2020 @ 3:00 p.m. DUE TO THE COVID-19 PANDEMIC, The July 27, 2020 SPECIAL BOARD MEETING WILL BE HELD VIA GoToWebinar - Please register here",
 }
 
 
@@ -49,10 +48,6 @@ def test_items():
 
 def test_title():
     assert parsed_items[0]["title"] == expected["title"]
-
-
-def test_description():
-    assert parsed_items[0]["description"] == expected["description"]
 
 
 def test_start():
