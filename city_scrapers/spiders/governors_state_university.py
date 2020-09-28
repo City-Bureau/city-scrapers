@@ -13,6 +13,7 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
     start_urls = ["https://www.govst.edu/BOT-Meetings/"]
     # used in constructing the links
     base_url = "https://www.govst.edu"
+    time_re = r"(?i)([01]?\d)(:?\d*)\s*([ap]\.?m\.?)"
 
 
     def parse(self, response):
@@ -96,7 +97,7 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
         return f"{month} {day} {year}"
 
     def _normalize_time(self, time_str):
-        times = re.findall(r"(?i)([01]?\d)(:?\d*)\s*([ap]m)", time_str)
+        times = re.findall(self.time_re, time_str)
         if len(times) == 0:
             return None
         hour, minute, ampm = times[0]
@@ -104,6 +105,7 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
             minute = minute.strip(":")
         else:
             minute = "00"
+        ampm = ampm.replace(".", "")
         return f"{hour}:{minute} {ampm}"
 
     def _parse_start(self, item, default_year):
@@ -115,7 +117,7 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
         if not re.search(r"\d", day):
             day = " ".join(item[2].css("* ::text").getall())
         clean_day = self._normalize_date(day, default_year)
-        time = " ".join(item[1].css("* ::text").getall())
+        time = " ".join(item[1].css("* ::text").getall()).lower()
         if ("postponed" in time) or ("canceled" in time):
             return None
         clean_time = self._normalize_time(time)
@@ -140,9 +142,35 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
+        location = item[1].css("* ::text").getall()
+        # remove time if present
+        location[0] = re.sub(self.time_re, "", location[0])
+        location = [loc.strip() for loc in location if len(loc.strip()) > 0]
+        # no obvious way to differentiate location names from addresses other than
+        # presence of numbers. We'll assume that the first line is title-only if it
+        # contains no numbers, otherwise that it begins the address.
+        # If there is no name, just the address, we'll use the first line
+        # of the address as the name. If there is no address, use the Governors State
+        # University address as the address. If after removing the time there is no
+        # information at all, we'll use "Governors State University" as the name
+        name = "Governors State University"
+        address = "1 University Pkwy,\nUniversity Park, IL 60484"
+        if len(location) > 0:
+            name = location[0]
+        if re.search(r"\d", name):
+            address = "\n".join(location)
+        elif len(location) > 1:
+            address = "\n".join(location[1:])
+        # special case for covid -- make sure zoom meetings don't show the university
+        # address!
+        if ("zoom" in name.lower()) or ("zoom" in address.lower()):
+            address = "Zoom"
+            name = "Zoom"
+        elif "location" in name.lower():
+            address = name
         return {
-            "address": "",
-            "name": "",
+            "address": address,
+            "name": name,
         }
 
     def _parse_links(self, item):
