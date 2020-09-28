@@ -22,7 +22,7 @@ freezer.stop()
 expected = {
     "title": "Special Board Meeting",
     "classification": "Board",
-    "start": datetime(2020,7,27,15,0),
+    "start": datetime(2020, 7, 27, 15, 0),
     "end": None,
     "all_day": False,
     "time_notes": "",
@@ -30,19 +30,22 @@ expected = {
         "address": "9501 S. King Drive Chicago, IL 60628",
         "name": "Room 15, 4th Floor, Gwendolyn Brooks Library Auditorium",
     },
-    "links": [{
-        "href": "https://attendee.gotowebinar.com/register/1203282843839078926",
-        "title": "Virtual meeting link"
-    }],
+    "links": [
+        {
+            "href": "https://attendee.gotowebinar.com/register/1203282843839078926",
+            "title": "Virtual meeting link",
+        }
+    ],
     "source": "https://www.csu.edu/boardoftrustees/dates.htm",
     "status": "passed",
     "id": "chi_state_university/202007271500/x/special_board_meeting",
-    "description": "Monday, July 27, 2020 @ 3:00 p.m. DUE TO THE COVID-19 PANDEMIC, The July 27, 2020 SPECIAL BOARD MEETING WILL BE HELD VIA GoToWebinar - Please register here"
+    "description": "Monday, July 27, 2020 @ 3:00 p.m. DUE TO THE COVID-19 PANDEMIC, The July 27, 2020 SPECIAL BOARD MEETING WILL BE HELD VIA GoToWebinar - Please register here",
 }
 
 
 def test_items():
     assert len(parsed_items) == 12
+
 
 def test_title():
     assert parsed_items[0]["title"] == expected["title"]
@@ -54,7 +57,6 @@ def test_description():
 
 def test_start():
     assert parsed_items[0]["start"] == expected["start"]
-
 
 
 def test_end():
