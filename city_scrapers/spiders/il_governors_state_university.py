@@ -83,11 +83,24 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
         clean_date = date.replace(",", "").replace(".", "").lower().strip()
         # There was a stray "sept." in the data, although usually the month is
         # fully spelled out. Use first three chars of the date string to get the month.
-        months = ["january", "february", "march", "april", "may", "june", "july",
-                  "august", "september", "october", "november", "december"]
+        months = [
+            "january",
+            "february",
+            "march",
+            "april",
+            "may",
+            "june",
+            "july",
+            "august",
+            "september",
+            "october",
+            "november",
+            "december",
+        ]
         month_map = {m[:3]: m for m in months}
-        month, day, year = re.findall(r"([a-z]+)\.?\s+(\d\d?),?\s*(\d\d\d\d)?",
-                                      clean_date)[0]
+        month, day, year = re.findall(
+            r"([a-z]+)\.?\s+(\d\d?),?\s*(\d\d\d\d)?", clean_date
+        )[0]
         month = month_map[month[:3]]
         year = year if len(year) == 4 else default_year
         return f"{month} {day} {year}"
@@ -180,10 +193,7 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
                 if link_ext is not None:
                     link = self.base_url + link_ext
                     title = link_parent.xpath("text()").get()
-                    links.append({
-                        "href": link,
-                        "title": title
-                    })
+                    links.append({"href": link, "title": title})
         return links
 
     def _parse_source(self, response):
