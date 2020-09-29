@@ -117,7 +117,8 @@ def test_links():
                 "regarding march 16, 2020 executive committee meeting, "
                 "3-15-20 - FINAL.docx.pdf"
             ),
-            "title": "Notification Regarding March 16, 2020 Executive Committee Meeting",
+            "title": ("Notification Regarding March 16, 2020 Executive "
+                      "Committee Meeting"),
         },
     ]
 
