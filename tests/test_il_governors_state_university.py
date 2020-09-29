@@ -2,12 +2,13 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, COMMITTEE, CANCELLED, PASSED
+from city_scrapers_core.constants import BOARD, CANCELLED, COMMITTEE, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
-from city_scrapers.spiders.il_governors_state_university \
-    import IlGovernorsStateUniversitySpider
+from city_scrapers.spiders.il_governors_state_university import (
+    IlGovernorsStateUniversitySpider,
+)
 
 test_response = file_response(
     join(dirname(__file__), "files", "il_governors_state_university.html"),
