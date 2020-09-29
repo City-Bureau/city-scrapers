@@ -6,8 +6,8 @@ from city_scrapers_core.spiders import CityScrapersSpider
 from datetime import datetime
 
 
-class GovernorsStateUniversitySpider(CityScrapersSpider):
-    name = "governors_state_university"
+class IlGovernorsStateUniversitySpider(CityScrapersSpider):
+    name = "il_governors_state_university"
     agency = "Governors State University"
     timezone = "America/Chicago"
     start_urls = ["https://www.govst.edu/BOT-Meetings/"]

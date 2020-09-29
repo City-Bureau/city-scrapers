@@ -6,13 +6,13 @@ from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
-from city_scrapers.spiders.governors_state_university import GovernorsStateUniversitySpider
+from city_scrapers.spiders.il_governors_state_university import IlGovernorsStateUniversitySpider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "governors_state_university.html"),
+    join(dirname(__file__), "files", "il_governors_state_university.html"),
     url="https://www.govst.edu/BOT-Meetings/",
 )
-spider = GovernorsStateUniversitySpider()
+spider = IlGovernorsStateUniversitySpider()
 
 freezer = freeze_time("2020-09-26")
 freezer.start()
