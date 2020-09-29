@@ -11,7 +11,6 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
     agency = "Governors State University"
     timezone = "America/Chicago"
     start_urls = ["https://www.govst.edu/BOT-Meetings/"]
-    # used in constructing the links
     base_url = "https://www.govst.edu"
     time_re = r"(?i)([01]?\d)(:?\d*)\s*([ap]\.?m\.?)"
 
@@ -19,12 +18,11 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
         """
         for year_section in response.xpath('//div[@class="toggle-list"]/ul/li'):
             year_elt = year_section.xpath('div[@class="title"]/h3/text()')
+            # sometimes the year is not present in the table dates, so grab it from the
+            # section heading as backup
             year = year_elt.get().replace("Meeting Dates for ", "").strip()
             for row in year_section.xpath('div[@class="content"]/table/tbody/tr'):
                 item = row.xpath("td")
@@ -34,16 +32,11 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
                 title = self._parse_title(item)
                 if title is None:
                     continue
-                # if the meeting was postponed, parse_start will return None, and
-                # we shouldn't output a meeting.
-                start = self._parse_start(item, year)
-                if start is None:
-                    continue
                 meeting = Meeting(
                     title=title,
                     description=self._parse_description(item),
                     classification=self._parse_classification(title),
-                    start=start,
+                    start=self._parse_start(item, year),
                     end=self._parse_end(item),
                     all_day=self._parse_all_day(item),
                     time_notes=self._parse_time_notes(item),
@@ -63,10 +56,10 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
         line position. Sometimes the "title" is only a date, so if all else fails, return
         that.
         Returns None if the title is 'Date', which indicates we're in a header row, or
-        empty, which indicates we're in a blank row."""
+        if the title is empty, which indicates we're in a blank row."""
         cell_text = item[0].css("* ::text").getall()
         clean_cell_text = [elt.strip() for elt in cell_text if len(elt.strip()) > 0]
-        if (len(clean_cell_text) == 0) or ("date" in clean_cell_text[0].lower()):
+        if (len(clean_cell_text) == 0) or ("date" == clean_cell_text[0].lower().strip()):
             return None
         if len(clean_cell_text) == 1:
             # then we either have no title or no date - just return whatever we have
@@ -100,6 +93,7 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
         return f"{month} {day} {year}"
 
     def _normalize_time(self, time_str):
+        """Normalize time format. Sometimes it comes with colons or periods, sometimes not"""
         times = re.findall(self.time_re, time_str)
         if len(times) == 0:
             return None
