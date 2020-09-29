@@ -26,9 +26,6 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
             year = year_elt.get().replace("Meeting Dates for ", "").strip()
             for row in year_section.xpath('div[@class="content"]/table/tbody/tr'):
                 item = row.xpath("td")
-                row_text = " ".join(row.css("* ::text").getall()).lower()
-                if ("postponed" in row_text) or ("canceled" in row_text):
-                    continue
                 title = self._parse_title(item)
                 if title is None:
                     continue
@@ -45,7 +42,10 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
                     source=self._parse_source(response),
                 )
 
-                meeting["status"] = self._get_status(meeting)
+                # if postponed or canceled appears in any of these columns, it means the
+                # meeting is canceled, so just pass in all the row text to _get_status
+                row_text = " ".join(row.css("* ::text").getall())
+                meeting["status"] = self._get_status(meeting, text=row_text)
                 meeting["id"] = self._get_id(meeting)
 
                 yield meeting

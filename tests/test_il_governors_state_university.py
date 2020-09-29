@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, COMMITTEE
+from city_scrapers_core.constants import BOARD, COMMITTEE, CANCELLED, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -39,11 +39,10 @@ def test_start():
     assert parsed_items[0]["start"] == datetime(2020, 1, 27, 9, 0)
     assert parsed_items[2]["start"] == datetime(2020, 2, 7, 9, 0)
     assert parsed_items[4]["start"] == datetime(2020, 2, 14, 8, 30)
-    # this will be 2020-05-15 if postponed events were properly filtered out
-    assert parsed_items[10]["start"] == datetime(2020, 5, 15, 9, 0)
+    assert parsed_items[12]["start"] == datetime(2020, 5, 15, 9, 0)
     # starting in 2018, sometimes dates do not have years. In case this starts up
     # again, check that these properly get 2018 as their year
-    assert parsed_items[27]["start"] == datetime(2018, 2, 22, 9, 0)
+    assert parsed_items[33]["start"] == datetime(2018, 2, 22, 9, 0)
 
 
 def test_end():
@@ -57,7 +56,9 @@ def test_time_notes():
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "passed"
+    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[10]["status"] == CANCELLED
+    assert parsed_items[22]["status"] == CANCELLED
 
 
 def test_location():
