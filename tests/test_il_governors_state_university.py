@@ -6,7 +6,8 @@ from city_scrapers_core.constants import BOARD, COMMITTEE, CANCELLED, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
-from city_scrapers.spiders.il_governors_state_university import IlGovernorsStateUniversitySpider
+from city_scrapers.spiders.il_governors_state_university \
+    import IlGovernorsStateUniversitySpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "il_governors_state_university.html"),
@@ -47,7 +48,7 @@ def test_start():
 
 def test_end():
     # unused
-    assert parsed_items[0]["end"] == None
+    assert parsed_items[0]["end"] is None
 
 
 def test_time_notes():
@@ -83,18 +84,28 @@ def test_source():
 def test_links():
     # normal fully populated row: one agenda, one minutes
     assert parsed_items[0]["links"] == [{
-        "href": "https://www.govst.edu/uploadedFiles/About/University_Governance/Board_of_Trustees/budget and finance committee agenda, 1-27-19, FINAL.pdf",
+        "href": ("https://www.govst.edu/uploadedFiles/About/University_"
+                 "Governance/Board_of_Trustees/budget and finance "
+                 "committee agenda, 1-27-19, FINAL.pdf"),
         "title": "Budget and Finance Committee Meeting Agenda, 1-27-20"
     }, {
-        "href": "https://www.govst.edu/uploadedFiles/About/University_Governance/Board_of_Trustees/approved minutes - b and f committee meeting, 1-27-20 - approved at 3-23-20 b and f committee meeting - FINAL.pdf",
+        "href": ("https://www.govst.edu/uploadedFiles/About/University_"
+                 "Governance/Board_of_Trustees/approved minutes - b and f "
+                 "committee meeting, 1-27-20 - approved at 3-23-20 b and f "
+                 "committee meeting - FINAL.pdf"),
         "title": "1-27-20 Budget and Finance Committee - approved meeting minutes"
     }]
     # agenda + notification in column 3
     assert parsed_items[5]["links"] == [{
-        "href": "https://www.govst.edu/uploadedFiles/About/University_Governance/Board_of_Trustees/agenda, executive committee meeting, 3-16-20(1).pdf",
+        "href": ("https://www.govst.edu/uploadedFiles/About/"
+                 "University_Governance/Board_of_Trustees/agenda, "
+                 "executive committee meeting, 3-16-20(1).pdf"),
         "title": "Executive Committee Meeting Agenda, 3-16-20"
     }, {
-        "href": "https://www.govst.edu/uploadedFiles/About/University_Governance/Board_of_Trustees/notification regarding march 16, 2020 executive committee meeting, 3-15-20 - FINAL.docx.pdf",
+        "href": ("https://www.govst.edu/uploadedFiles/About/"
+                 "University_Governance/Board_of_Trustees/notification "
+                 "regarding march 16, 2020 executive committee meeting, "
+                 "3-15-20 - FINAL.docx.pdf"),
         "title": "Notification Regarding March 16, 2020 Executive Committee Meeting"
     }]
 

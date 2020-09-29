@@ -14,7 +14,6 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
     base_url = "https://www.govst.edu"
     time_re = r"(?i)([01]?\d)(:?\d*)\s*([ap]\.?m\.?)"
 
-
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
@@ -53,13 +52,13 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
     def _parse_title(self, item):
         """Parse or generate meeting title. The inner html of the first column varies
         quite a bit - brs, divs, b tags - so figuring out what is the title based on
-        line position. Sometimes the "title" is only a date, so if all else fails, return
-        that.
+        line position. Sometimes the "title" is only a date, so if all else fails,
+        return that.
         Returns None if the title is 'Date', which indicates we're in a header row, or
         if the title is empty, which indicates we're in a blank row."""
         cell_text = item[0].css("* ::text").getall()
         clean_cell_text = [elt.strip() for elt in cell_text if len(elt.strip()) > 0]
-        if (len(clean_cell_text) == 0) or ("date" == clean_cell_text[0].lower().strip()):
+        if (len(clean_cell_text) == 0) or ("date" == clean_cell_text[0].lower()):
             return None
         if len(clean_cell_text) == 1:
             # then we either have no title or no date - just return whatever we have
@@ -82,18 +81,20 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
         """The dates appear in pretty variable formats, including in some cases without a year.
         This method normalizes."""
         clean_date = date.replace(",", "").replace(".", "").lower().strip()
-        # There was a stray "sept." in the data, although usually the month is fully spelled
-        # out. Use first three chars of the date string to get the month.
+        # There was a stray "sept." in the data, although usually the month is
+        # fully spelled out. Use first three chars of the date string to get the month.
         months = ["january", "february", "march", "april", "may", "june", "july",
                   "august", "september", "october", "november", "december"]
         month_map = {m[:3]: m for m in months}
-        month, day, year = re.findall(r"([a-z]+)\.?\s+(\d\d?),?\s*(\d\d\d\d)?", clean_date)[0]
+        month, day, year = re.findall(r"([a-z]+)\.?\s+(\d\d?),?\s*(\d\d\d\d)?",
+                                      clean_date)[0]
         month = month_map[month[:3]]
         year = year if len(year) == 4 else default_year
         return f"{month} {day} {year}"
 
     def _normalize_time(self, time_str):
-        """Normalize time format. Sometimes it comes with colons or periods, sometimes not"""
+        """Normalize time format. Sometimes it comes with colons or periods,
+        sometimes not"""
         times = re.findall(self.time_re, time_str)
         if len(times) == 0:
             return None
@@ -132,7 +133,8 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False. Doesn't seem to occur
-        for this website, with the possible exception of the retreats, which aren't quite all day"""
+        for this website, with the possible exception of the retreats, which aren't
+        quite all day"""
         return False
 
     def _parse_location(self, item):
@@ -176,7 +178,7 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
             for link_parent in item[col].xpath("a"):
                 link_ext = link_parent.css("::attr(href)").get()
                 if link_ext is not None:
-                    link = self.base_url+link_ext
+                    link = self.base_url + link_ext
                     title = link_parent.xpath("text()").get()
                     links.append({
                         "href": link,
