@@ -28,6 +28,9 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
             year = year_elt.get().replace("Meeting Dates for ", "").strip()
             for row in year_section.xpath('div[@class="content"]/table/tbody/tr'):
                 item = row.xpath("td")
+                row_text = " ".join(row.css("* ::text").getall()).lower()
+                if ("postponed" in row_text) or ("canceled" in row_text):
+                    continue
                 title = self._parse_title(item)
                 if title is None:
                     continue
@@ -109,8 +112,8 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
         return f"{hour}:{minute} {ampm}"
 
     def _parse_start(self, item, default_year):
-        """Parse start datetime as a naive datetime object. If the meeting was
-        postponed or cancelled, return None"""
+        """Parse start datetime as a naive datetime object."""
+
         # try to find the date in the first column, and if it isn't there, fall back
         # to the third
         day = " ".join(item[0].css("* ::text").getall())
@@ -118,8 +121,6 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
             day = " ".join(item[2].css("* ::text").getall())
         clean_day = self._normalize_date(day, default_year)
         time = " ".join(item[1].css("* ::text").getall()).lower()
-        if ("postponed" in time) or ("canceled" in time):
-            return None
         clean_time = self._normalize_time(time)
         if clean_time is not None:
             return datetime.strptime(f"{clean_day} {clean_time}", "%B %d %Y %I:%M %p")
@@ -178,14 +179,15 @@ class GovernorsStateUniversitySpider(CityScrapersSpider):
         links = []
         # the links to the agenda, if present, are in the third and fourth columns
         for col in [2, 3]:
-            link_ext = item[col].css("a::attr(href)").get()
-            if link_ext is not None:
-                link = self.base_url+link_ext
-                title = item[col].xpath("a/text()").get()
-                links.append({
-                    "href": link,
-                    "title": title
-                })
+            for link_parent in item[col].xpath("a"):
+                link_ext = link_parent.css("::attr(href)").get()
+                if link_ext is not None:
+                    link = self.base_url+link_ext
+                    title = link_parent.xpath("text()").get()
+                    links.append({
+                        "href": link,
+                        "title": title
+                    })
         return links
 
     def _parse_source(self, response):
