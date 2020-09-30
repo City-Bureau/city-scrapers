@@ -55,7 +55,7 @@ A. We have ongoing conversations about what sort of data we should collect and h
 
 B. Research sources for public meetings. Answer questions like: Are we scraping events from the right websites? Are there local agencies that we're missing? Should events be updated manually or by a scraper? [Triage events sources on these issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22non-coding%3A+triage+events+source%22).
 
-## Support this work
+## How you can support this work
 
 This project is organized and maintained by [City Bureau](http://www.citybureau.org/).
 
