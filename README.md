@@ -45,7 +45,7 @@ We hope that working with us will fill experience gaps (like using git/GitHub, w
 2. Read about [how we collaborate](https://github.com/City-Bureau/city-scrapers/blob/main/CONTRIBUTING.md) and review our [Code of Conduct](https://github.com/City-Bureau/city-scrapers/blob/main/CODE_OF_CONDUCT.md).
 3. Check out our [documentation](https://cityscrapers.org/docs/development/), and get started with [Installation](https://cityscrapers.org/docs/development/#installation) and [Contributing a spider](https://cityscrapers.org/docs/development/#contribute).
 
-We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on Slack for support if you need it.
+We ask all new contributors to start by writing a spider and it's documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on Slack for support if you need it.
 
 ## Don't want to code?
 
