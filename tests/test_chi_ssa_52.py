@@ -9,8 +9,7 @@ from freezegun import freeze_time
 from city_scrapers.spiders.chi_ssa_52 import ChiSsa52Spider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_52.html"),
-    url="https://www.51ststreetchicago.com/about.html",
+    join(dirname(__file__), "files", "chi_ssa_52.html"), url="https://www.51ststreetchicago.com/about.html",
 )
 spider = ChiSsa52Spider()
 
@@ -22,25 +21,26 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+# def test_tests():
+#     print("Please write some tests for this spider or at least disable this one.")
+#     assert False
 
 
 """
 Uncomment below
 """
 
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+
+def test_title():
+    assert parsed_items[0]["title"] == "SSA # 52 SCHEDULED MEETING DATES 2019"
 
 
 # def test_description():
 #     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_start():
+    assert parsed_items[0]["start"] == datetime(2020, 2, 18, 1, 30)
 
 
 # def test_end():
