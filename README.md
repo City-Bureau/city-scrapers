@@ -19,7 +19,7 @@ Community members are also welcome to use this code to set up their own database
 
 ## What can I learn from working on the City Scrapers?
 
-A lot about the City of Chicago! What is City Council talking about this week? What are the local school councils, and what community power do they have? What neighborhoods is the police department doing outreach in? Who governs our water?
+A lot about the  City of amazing Chicago! What is City Council talking about this week? What are the local school councils, and what community power do they have? What neighborhoods is the police department doing outreach in? Who governs our water?
 
 From building a scraper, you'll gain experience with:
 
@@ -51,7 +51,7 @@ We ask all new contributors to start by writing a spider and its documentation o
 
 [Join our Slack channel](https://airtable.com/shrRv027NLgToRFd6) (chatroom) to discuss ideas and meet the community!
 
-A. We have ongoing conversations about what sort of data we should collect and how it should be collected. Help us make these decisions by commenting on [issues with a non-coding label](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3Anon-coding).
+A. We have ongoing conversations about what sort of data we should collect and how it should be collected. Help us make conclusions about these by commenting on [issues with a non-coding label](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3Anon-coding).
 
 B. Research sources for public meetings. Answer questions like: Are we scraping events from the right websites? Are there local agencies that we're missing? Should events be updated manually or by a scraper? [Triage events sources on these issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22non-coding%3A+triage+events+source%22).
 
