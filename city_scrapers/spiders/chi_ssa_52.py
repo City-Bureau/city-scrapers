@@ -68,7 +68,13 @@ class ChiSsa52Spider(CityScrapersSpider):
             month_day = meet[2]
             year = meet[3][:4]
             time = meet[3][4:]
-            payload = {"day_week": day_week, "month": month, "month_day": month_day, "year": year, "time": time}
+            payload = {
+                "day_week": day_week,
+                "month": month,
+                "month_day": month_day,
+                "year": year,
+                "time": time,
+            }
 
         if len(meet) == 6:
             day_week = meet[0]
@@ -119,12 +125,16 @@ class ChiSsa52Spider(CityScrapersSpider):
         ]
 
         try:
-            date = datetime.strptime(f"{item['month_day']} {item['month']}, {item['year']}", "%d %B, %Y")
+            date = datetime.strptime(
+                f"{item['month_day']} {item['month']}, {item['year']}", "%d %B, %Y"
+            )
         except ValueError:
             for month in months:
                 ratio = SequenceMatcher(None, month, item["month"]).ratio()
                 if ratio > 0.5:
-                    date = datetime.strptime(f"{item['month_day']} {month}, {item['year']}", "%d %B, %Y")
+                    date = datetime.strptime(
+                        f"{item['month_day']} {month}, {item['year']}", "%d %B, %Y"
+                    )
 
         time = item["time"].split(":")  # [0] = hours, [1] = minutes
         date = date.replace(hour=int(time[0]), minute=int(time[1]))

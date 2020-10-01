@@ -1,15 +1,14 @@
 from datetime import datetime
 from os.path import dirname, join
 
-import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_ssa_52 import ChiSsa52Spider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_52.html"), url="https://www.51ststreetchicago.com/about.html",
+    join(dirname(__file__), "files", "chi_ssa_52.html"),
+    url="https://www.51ststreetchicago.com/about.html",
 )
 spider = ChiSsa52Spider()
 
