@@ -11,7 +11,6 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
     agency = "Governors State University"
     timezone = "America/Chicago"
     start_urls = ["https://www.govst.edu/BOT-Meetings/"]
-    base_url = "https://www.govst.edu"
     time_re = r"(?i)([01]?\d)(:?\d*)\s*([ap]\.?m\.?)"
 
     def parse(self, response):
@@ -37,7 +36,7 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
                     all_day=self._parse_all_day(item),
                     time_notes=self._parse_time_notes(item),
                     location=self._parse_location(item),
-                    links=self._parse_links(item),
+                    links=self._parse_links(item, response),
                     source=self._parse_source(response),
                 )
 
@@ -49,21 +48,39 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
 
                 yield meeting
 
+    def _clean_igsu_title(self, title):
+        """Reformat title to conform to project naming standards"""
+        if not title.startswith("Special"):
+            return re.sub(r"\s*Meeting\s*$", "", title)
+        return title
+
     def _parse_title(self, item):
         """Parse or generate meeting title. The inner html of the first column varies
         quite a bit - brs, divs, b tags - so figuring out what is the title based on
         line position. Sometimes the "title" is only a date, so if all else fails,
         return that.
         Returns None if the title is 'Date', which indicates we're in a header row, or
-        if the title is empty, which indicates we're in a blank row."""
+        if the title is empty, which indicates we're in a blank row.
+        If returning a string, strip 'Meeting' from the end."""
         cell_text = item[0].css("* ::text").getall()
         clean_cell_text = [elt.strip() for elt in cell_text if len(elt.strip()) > 0]
         if (len(clean_cell_text) == 0) or ("date" == clean_cell_text[0].lower()):
             return None
         if len(clean_cell_text) == 1:
-            # then we either have no title or no date - just return whatever we have
-            return clean_cell_text[0]
-        return " ".join(clean_cell_text[1:])
+            # then we either have no title or no date - or, occasionally, we have a
+            # comma-separated title and date. First check for \d\d\d\d under the
+            # assumption that this ends the date, and see if the remainder of the
+            # string is non-empty. Failing that, check if there are numbers,
+            # and if so assume it's a date and return Board of Trustees. Otherwise,
+            # return the line, assuming the whole thing is the title.
+            possible_title = clean_cell_text[0]
+            title_match = re.findall(r"\d\d\d\d\s+(.*)", possible_title)
+            if len(title_match) > 0:
+                return self._clean_igsu_title(title_match[0])
+            if re.search(r"\d", clean_cell_text[0]):
+                return "Board of Trustees"
+            return self._clean_igsu_title(clean_cell_text[0])
+        return self._clean_igsu_title(" ".join(clean_cell_text[1:]))
 
     def _parse_description(self, item):
         """Parse or generate meeting description. Not available for this website."""
@@ -152,38 +169,62 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        location = item[1].css("* ::text").getall()
-        # remove time if present
-        location[0] = re.sub(self.time_re, "", location[0])
-        location = [loc.strip() for loc in location if len(loc.strip()) > 0]
+        unclean_location_cell_content = item[1].css("* ::text").getall()
+        # remove time if present, and clean
+        location_cell_content = []
+        for line in unclean_location_cell_content:
+            line = re.sub(self.time_re, "", line)
+            line = line.strip().strip("-").strip()
+            if len(line) > 0:
+                location_cell_content.append(line)
+        # It's not obvious whether the first line of the location_cell_content
+        # is a location name or address, so the rest of this method uses heuristics
+        # for this
+        default_name = "Governors State University"
+        default_address = "1 University Pkwy,\nUniversity Park, IL 60484"
+        name, address = default_name, default_address
+        # If the event was postponed or canceled, we will handle that in the
+        # event status, and can just use the defaults here
+        for elt in location_cell_content:
+            if ("postponed" in elt.lower()) or ("canceled" in elt.lower()):
+                return {"address": default_address, "name": default_name}
+        # If there is no name, just the address, we'll use the first line
+        # of the address as the name.
+        if len(location_cell_content) > 0:
+            name = location_cell_content[0]
         # no obvious way to differentiate location names from addresses other than
         # presence of numbers. We'll assume that the first line is title-only if it
         # contains no numbers, otherwise that it begins the address.
-        # If there is no name, just the address, we'll use the first line
-        # of the address as the name. If there is no address, use the Governors State
-        # University address as the address. If after removing the time there is no
-        # information at all, we'll use "Governors State University" as the name
-        name = "Governors State University"
-        address = "1 University Pkwy,\nUniversity Park, IL 60484"
-        if len(location) > 0:
-            name = location[0]
         if re.search(r"\d", name):
-            address = "\n".join(location)
-        elif len(location) > 1:
-            address = "\n".join(location[1:])
+            address = "\n".join(location_cell_content)
+        elif len(location_cell_content) > 1:
+            address = "\n".join(location_cell_content[1:])
+        # Room may end up in either the name or address; if it's present, we want to
+        # make sure it's part of the address. Sometimes room numbers appear without
+        # room, as a single word (see G330 in 2017) so handle them the same way
+        if "room " in address.lower():
+            address = address + "\n" + default_address
+        if "room " in name.lower():
+            if "room " not in address.lower():
+                address = name + "\n" + address
+            name = default_name
         # special case for covid -- make sure zoom meetings don't show the university
         # address!
         if ("zoom" in name.lower()) or ("zoom" in address.lower()):
             address = "Zoom"
             name = "Zoom"
-        elif "location" in name.lower():
+        elif "location tbd" in name.lower():
             address = name
+        # in some cases a one-word "address" like G330 in 2017 can make it through,
+        # so fall back to the default here as well
+        elif len(address.split()) == 1:
+            address = address + "\n" + default_address
         return {
             "address": address,
             "name": name,
         }
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
         links = []
         # the links to the agenda, if present, are in the third and fourth columns
@@ -191,7 +232,7 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
             for link_parent in item[col].xpath("a"):
                 link_ext = link_parent.css("::attr(href)").get()
                 if link_ext is not None:
-                    link = self.base_url + link_ext
+                    link = response.urljoin(link_ext)
                     title = link_parent.xpath("text()").get()
                     links.append({"href": link, "title": title})
         return links

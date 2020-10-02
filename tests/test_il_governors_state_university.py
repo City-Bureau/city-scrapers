@@ -26,11 +26,15 @@ freezer.stop()
 
 def test_title():
     # br-separated
-    assert parsed_items[0]["title"] == "Budget and Finance Committee Meeting"
+    assert parsed_items[0]["title"] == "Budget and Finance Committee"
     # div-separated
-    assert parsed_items[2]["title"] == "Human Resources Committee Meeting"
-    # no title, we fall back to date
-    assert parsed_items[4]["title"] == "February 14, 2020"
+    assert parsed_items[2]["title"] == "Human Resources Committee"
+    # no title, only date, we fall back to default
+    assert parsed_items[4]["title"] == "Board of Trustees"
+    # comma-separated
+    assert parsed_items[17]["title"] == "Annual Retreat"
+    # special board meeting keeps the word "meeting"
+    assert parsed_items[1]["title"] == "Special Board Meeting"
 
 
 def test_description():
@@ -73,6 +77,16 @@ def test_location():
         "address": "70 W. Madison Street\nSuite 4300\nChicago, IL",
     }
     assert parsed_items[7]["location"] == {"name": "Zoom", "address": "Zoom"}
+    # check room reformatting
+    assert parsed_items[41]["location"] == {
+        "name": "Governors State University",
+        "address": "Room D34000\n1 University Pkwy,\nUniversity Park, IL 60484",
+    }
+    # check postponement reformatting
+    assert parsed_items[10]["location"] == {
+        "name": "Governors State University",
+        "address": "1 University Pkwy,\nUniversity Park, IL 60484",
+    }
 
 
 def test_source():
