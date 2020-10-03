@@ -13,8 +13,10 @@ class ChiStateUniversitySpider(CityScrapersSpider):
     name = "chi_state_university"
     agency = "Chicago State University"
     timezone = "America/Chicago"
-    start_urls = [f"https://www.csu.edu/boardoftrustees/\
-        meetingagendas/year{date.today().year}.htm"]
+    start_urls = [
+        f"https://www.csu.edu/boardoftrustees/\
+        meetingagendas/year{date.today().year}.htm"
+    ]
 
     def parse(self, response):
         """
@@ -27,7 +29,7 @@ class ChiStateUniversitySpider(CityScrapersSpider):
         yield scrapy.Request(
             "https://www.csu.edu/boardoftrustees/dates.htm",
             callback=self._parse_meetings,
-            dont_filter=True
+            dont_filter=True,
         )
 
     def _parse_minutes(self, response):
@@ -45,8 +47,11 @@ class ChiStateUniversitySpider(CityScrapersSpider):
                         dateStr = re.sub(",", " ", dateStr)
                         dateStr = re.sub(r"\s+", " ", dateStr)
 
-                        commonStrings = \
-                            ["Standing Committee", "Special Board", "Full Board"]
+                        commonStrings = [
+                            "Standing Committee",
+                            "Special Board",
+                            "Full Board",
+                        ]
 
                         for i in commonStrings:
                             if i in title:
@@ -114,13 +119,12 @@ class ChiStateUniversitySpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         text = item.xpath(".//text()").extract()[0]
-        text = text.replace("\xa0", " ").replace(
-            "@", "").replace(",", "").replace(".", "")
+        text = (
+            text.replace("\xa0", " ").replace("@", "").replace(",", "").replace(".", "")
+        )
 
         days = {m.lower() for m in day_name}
-        dayMatch = next(
-            (word for word in text.split() if word.lower() in days), None
-        )
+        dayMatch = next((word for word in text.split() if word.lower() in days), None)
         if dayMatch:
             text = text.replace(dayMatch, "")
         text = re.sub(r"\s+", " ", text).strip()
@@ -131,20 +135,20 @@ class ChiStateUniversitySpider(CityScrapersSpider):
                 textParts.append(word)
             if word.isnumeric():
                 textParts.append(word)
-            if ':' in word:
+            if ":" in word:
                 textParts.append(word)
-            if word in ['am', 'pm']:
+            if word in ["am", "pm"]:
                 textParts.append(word)
         dateStr = []
         for word in textParts:
             if word not in dateStr:
                 dateStr.append(word)
-        dateStr = ' '.join(dateStr)
+        dateStr = " ".join(dateStr)
 
         try:
             start = datetime.strptime(dateStr, "%B %d %Y %I:%M %p")
         except ValueError:
-            start = datetime.strptime(dateStr , "%B %d %Y")
+            start = datetime.strptime(dateStr, "%B %d %Y")
 
         return start
 
