@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from os.path import dirname, join
 
 import pytest
@@ -12,11 +12,18 @@ test_response = file_response(
     join(dirname(__file__), "files", "chi_state_university.html"),
     url="https://www.csu.edu/boardoftrustees/dates.htm",
 )
+test_minutes_response = file_response(
+    join(dirname(__file__), "files", "chi_state_university.html"),
+    url=f"https://www.csu.edu/boardoftrustees/\
+        meetingagendas/year{date.today().year}.htm",
+)
 spider = ChiStateUniversitySpider()
 
 freezer = freeze_time("2020-09-15")
 freezer.start()
-parsed_items = [item for item in spider.parse(test_response)]
+
+spider.minutes_map = spider._parse_minutes(test_minutes_response)
+parsed_items = [item for item in spider._parse_meetings(test_response)]
 freezer.stop()
 
 expected = {
@@ -43,7 +50,7 @@ expected = {
 
 
 def test_items():
-    assert len(parsed_items) == 12
+    assert len(parsed_items) == 24
 
 
 def test_title():
