@@ -14,8 +14,7 @@ class ChiStateUniversitySpider(CityScrapersSpider):
     agency = "Chicago State University"
     timezone = "America/Chicago"
     start_urls = [
-        f"https://www.csu.edu/boardoftrustees/\
-        meetingagendas/year{date.today().year}.htm"
+        f"https://www.csu.edu/boardoftrustees/meetingagendas/year{date.today().year}.htm"  # noqa
     ]
 
     def parse(self, response):
@@ -29,7 +28,6 @@ class ChiStateUniversitySpider(CityScrapersSpider):
         yield scrapy.Request(
             "https://www.csu.edu/boardoftrustees/dates.htm",
             callback=self._parse_meetings,
-            dont_filter=True,
         )
 
     def _parse_minutes(self, response):
@@ -95,7 +93,6 @@ class ChiStateUniversitySpider(CityScrapersSpider):
                     )
                     meeting["status"] = self._get_status(meeting)
                     meeting["id"] = self._get_id(meeting)
-
                     yield meeting
 
     def _parse_description(self, item):
@@ -111,11 +108,9 @@ class ChiStateUniversitySpider(CityScrapersSpider):
         return description
 
     def _parse_classification(self, title):
-        if "board" in title.lower():
-            return BOARD
         if "committee" in title.lower():
             return COMMITTEE
-        return ""
+        return BOARD
 
     def _parse_start(self, item):
         text = item.xpath(".//text()").extract()[0]
