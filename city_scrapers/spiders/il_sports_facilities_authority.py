@@ -24,12 +24,11 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         self._validate_location(response)
 
         item = response.css(".wpb_wrapper .inner-text h2::text").getall()[0]
-        meeting_title, _, next_meeting_time = item.partition(":")
         meeting = Meeting(
-            title=meeting_title,
+            title=self._parse_next_title(item),
             description="",
             classification=BOARD,
-            start=self._parse_next_start(next_meeting_time),
+            start=self._parse_next_start(item),
             end=None,
             all_day=False,
             time_notes="",
@@ -72,9 +71,15 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         parts = item.css("::text").get().split()
         return " ".join(parts[:-1])
 
+    def _parse_next_title(self, item):
+        """Parse or generate meeting title."""
+        meeting_title, _, next_meeting_time = item.partition(":")
+        return meeting_title
+
     def _parse_next_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        return parse(item)
+        _, _, next_meeting_time = item.partition(":")
+        return parse(next_meeting_time)
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
