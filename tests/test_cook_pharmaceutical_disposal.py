@@ -50,7 +50,8 @@ def test_time_notes():
 def test_id():
     assert (
         parsed_items[0]["id"]
-        == "cook_pharmaceutical_disposal/201912101300/x/cook_county_safe_disposal_of_pharmaceuticals_advisory_committee"
+        == "cook_pharmaceutical_disposal/201912101300/x/"
+        + "cook_county_safe_disposal_of_pharmaceuticals_advisory_committee"
     )
 
 
@@ -75,7 +76,8 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href": "https://www.cookcountysheriff.org/wp-content/uploads/2019/11/Dec.-10-2019-Advisory-Committee-Meeting-Agenda.pdf",
+            "href": "https://www.cookcountysheriff.org/wp-content/uploads/"
+            + "2019/11/Dec.-10-2019-Advisory-Committee-Meeting-Agenda.pdf",
             "title": "Dec. 10 2019 Advisory Committee Meeting Agenda",
         }
     ]

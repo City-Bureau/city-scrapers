@@ -22,7 +22,8 @@ class CookPharmaceuticalDisposalSpider(CityScrapersSpider):
 
         # Link to current meeting shown as a single image
         # In case you want to proceed with image OCR
-        # image_url = base_url + response.xpath("//div[@class='col-sm-12 ']/h1/img/@src").get()
+        # image_url = base_url +
+        #    response.xpath("//div[@class='col-sm-12 ']/h1/img/@src").get()
         # image_response = requests.get(image_url)
         # print(image_to_string(Image.open(BytesIO(image_response.content)),lang='eng'))
 
