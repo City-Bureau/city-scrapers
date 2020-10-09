@@ -10,8 +10,8 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
     timezone = "America/Chicago"
     start_urls = ["https://www.isfauthority.com/governance/board-meetings/"]
     location = {
-        "name": "Authority offices",
-        "address": "Guaranteed Rate Field, 333 West 35th Street, Chicago, IL",
+        "name": "Authority offices, Guaranteed Rate Field",
+        "address": "333 W 35th St, Chicago, IL 60616",
     }
 
     def parse(self, response):
