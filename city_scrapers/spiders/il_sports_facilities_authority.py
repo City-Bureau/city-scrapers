@@ -27,7 +27,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         meeting = Meeting(
             title=self._parse_next_title(item),
             description="",
-            classification=BOARD,
+            classification=self._parse_classification(item),
             start=self._parse_next_start(item),
             end=None,
             all_day=False,
@@ -46,7 +46,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
             meeting = Meeting(
                 title=self._parse_title(item),
                 description="",
-                classification=self._parse_classification(item),
+                classification=self._parse_classification(item.css("::text").get()),
                 start=self._parse_start(item),
                 end=None,
                 all_day=False,
@@ -99,7 +99,6 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         return links
 
     def _parse_classification(self, item):
-        meeting_title = item.css("::text").get()
-        if "Board" in meeting_title:
+        if "Board" in item:
             return BOARD
         return COMMITTEE
