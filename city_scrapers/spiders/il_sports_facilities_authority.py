@@ -70,7 +70,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_title(self, meeting_title):
         """Parse or generate meeting title."""
-        if "Committee" not in meeting_title:
+        if "Committee" not in meeting_title and "Special" not in meeting_title:
             return "Board of Directors"
         if "Meeting" in meeting_title and "Special" not in meeting_title:
             meeting_title = meeting_title.replace("Meeting", "").strip()

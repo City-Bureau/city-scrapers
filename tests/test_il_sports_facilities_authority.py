@@ -30,6 +30,7 @@ def test_count():
 
 def test_title():
     assert parsed_items[1]["title"] == "Board of Directors"
+    assert parsed_items[-2]["title"] == "Special Board Meeting"
 
 
 @pytest.mark.parametrize("item", parsed_items)
