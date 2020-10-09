@@ -44,7 +44,9 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
         for item in response.css(".wpb_wrapper p")[2:]:
             meeting = Meeting(
-                title=self._parse_title(" ".join(item.css("::text").get().split()[:-1])),
+                title=self._parse_title(
+                    " ".join(item.css("::text").get().split()[:-1])
+                ),
                 description="",
                 classification=self._parse_classification(item.css("::text").get()),
                 start=self._parse_start(item),
