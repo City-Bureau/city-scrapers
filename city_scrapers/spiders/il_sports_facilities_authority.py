@@ -25,7 +25,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
         item = response.css(".wpb_wrapper .inner-text h2::text").getall()[0]
         meeting = Meeting(
-            title=self._parse_next_title(item),
+            title=self._parse_title(item.partition(":")[0]),
             description="",
             classification=self._parse_classification(item),
             start=self._parse_next_start(item),
@@ -44,7 +44,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
         for item in response.css(".wpb_wrapper p")[2:]:
             meeting = Meeting(
-                title=self._parse_title(item),
+                title=self._parse_title(" ".join(item.css("::text").get().split()[:-1])),
                 description="",
                 classification=self._parse_classification(item.css("::text").get()),
                 start=self._parse_start(item),
@@ -66,14 +66,12 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         if "Guaranteed Rate Field" not in location_text:
             raise ValueError("Meeting location has changed")
 
-    def _parse_title(self, item):
+    def _parse_title(self, meeting_title):
         """Parse or generate meeting title."""
-        parts = item.css("::text").get().split()
-        return " ".join(parts[:-1])
-
-    def _parse_next_title(self, item):
-        """Parse or generate meeting title."""
-        meeting_title, _, next_meeting_time = item.partition(":")
+        if "Committee" not in meeting_title:
+            return "Board of Directors"
+        if "Meeting" in meeting_title and "Special" not in meeting_title:
+            meeting_title = meeting_title.replace("Meeting", "").strip()
         return meeting_title
 
     def _parse_next_start(self, item):
