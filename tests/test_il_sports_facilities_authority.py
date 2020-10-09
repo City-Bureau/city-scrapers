@@ -29,7 +29,7 @@ def test_count():
 
 
 def test_title():
-    assert parsed_items[1]["title"] == "Board Meeting"
+    assert parsed_items[1]["title"] == "Board of Directors"
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -49,13 +49,13 @@ def test_time_notes(item):
 @pytest.mark.parametrize("item", parsed_items)
 def test_location(item):
     assert item["location"] == {
-        "name": "Authority offices",
-        "address": "Guaranteed Rate Field, 333 West 35th Street, Chicago, IL",
+        "name": "Authority offices, Guaranteed Rate Field",
+        "address": "333 W 35th St, Chicago, IL 60616",
     }
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == BOARD
+    assert parsed_items[0]["classification"] == COMMITTEE
     assert parsed_items[1]["classification"] == BOARD
     assert parsed_items[5]["classification"] == COMMITTEE
 
