@@ -102,16 +102,14 @@ class ChiSsa52Spider(CityScrapersSpider):
 
         try:
             date = datetime.strptime(
-                f"{item[2]} {item[1]} {item[3]} {time}",
-                "%d %B %Y %I:%M %p",
+                f"{item[2]} {item[1]} {item[3]} {time}", "%d %B %Y %I:%M %p",
             )
         except ValueError:
             for month in months:
                 ratio = SequenceMatcher(None, month, item[1]).ratio()
                 if ratio > 0.5:
                     date = datetime.strptime(
-                        f"{item[2]} {month} {item[3]} {time}",
-                        "%d %B %Y %I:%M %p",
+                        f"{item[2]} {month} {item[3]} {time}", "%d %B %Y %I:%M %p",
                     )
         return date
 
