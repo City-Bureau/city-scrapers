@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == COMMISSION
+    assert parsed_items[0]["title"] == "Commission"
 
 
 def test_description():

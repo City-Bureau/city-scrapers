@@ -69,8 +69,7 @@ class ChiSsa52Spider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        # item = item.replace("\xa0", "").strip()
-        return COMMISSION
+        return "Commission"
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -102,14 +101,16 @@ class ChiSsa52Spider(CityScrapersSpider):
 
         try:
             date = datetime.strptime(
-                f"{item[2]} {item[1]} {item[3]} {time}", "%d %B %Y %I:%M %p",
+                f"{item[2]} {item[1]} {item[3]} {time}",
+                "%d %B %Y %I:%M %p",
             )
         except ValueError:
             for month in months:
                 ratio = SequenceMatcher(None, month, item[1]).ratio()
                 if ratio > 0.5:
                     date = datetime.strptime(
-                        f"{item[2]} {month} {item[3]} {time}", "%d %B %Y %I:%M %p",
+                        f"{item[2]} {month} {item[3]} {time}",
+                        "%d %B %Y %I:%M %p",
                     )
         return date
 
