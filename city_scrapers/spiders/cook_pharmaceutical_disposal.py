@@ -14,21 +14,10 @@ class CookPharmaceuticalDisposalSpider(CityScrapersSpider):
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
         """
-        self.base_url = "https://www.cookcountysheriff.org"
-
-        # Link to current meeting shown as a single image
-        # In case you want to proceed with image OCR
-        # image_url = base_url +
-        #    response.xpath("//div[@class='col-sm-12 ']/h1/img/@src").get()
-        # image_response = requests.get(image_url)
-        # print(image_to_string(Image.open(BytesIO(image_response.content)),lang='eng'))
-
         # Scraping past meetings
         for item in response.xpath("//div[@class='col-sm-12 ']/p"):
+            self._ignore = False
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
@@ -38,18 +27,19 @@ class CookPharmaceuticalDisposalSpider(CityScrapersSpider):
                 all_day=self._parse_all_day(item),
                 time_notes=self._parse_time_notes(item),
                 location=self._parse_location(item),
-                links=self._parse_links(item),
+                links=self._parse_links(item, response),
                 source=self._parse_source(response),
             )
 
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
 
-            yield meeting
+            if self._ignore is False:
+                yield meeting
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return "Cook County Safe Disposal of Pharmaceuticals Advisory Committee"
+        return "Safe Disposal of Pharmaceuticals Advisory Committee"
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -75,6 +65,8 @@ class CookPharmaceuticalDisposalSpider(CityScrapersSpider):
         else:
             date_str = report_desc[-2] + report_desc[-1][:-4]
             date_obj = datetime.strptime(date_str, "%m%y").date()
+            # Dates cannot be retrieved, ignore meeting
+            self._ignore = True
         return datetime.combine(date_obj, time(13))
 
     def _parse_end(self, item):
@@ -83,7 +75,7 @@ class CookPharmaceuticalDisposalSpider(CityScrapersSpider):
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
-        return "See agenda to confirm times"
+        return "See agenda to confirm exact times"
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
@@ -92,18 +84,18 @@ class CookPharmaceuticalDisposalSpider(CityScrapersSpider):
     def _parse_location(self, item):
         """Parse or generate location."""
         return {
-            "address": "Conference Room of 704 Daley Center, Chicago, Illinois 60602",
-            "name": "Conference Room of 704 Daley Center",
+            "address": "50 W Washington St, Room 407, Chicago, IL 60602",
+            "name": "Daley Center",
         }
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Parse or generate links."""
         links = list()
         for report_obj in item.xpath(".//a/@href"):
             report_desc = report_obj.get().split("/")[-1]
             links.append(
                 {
-                    "href": self.base_url + report_obj.get(),
+                    "href": response.urljoin(report_obj.get()),
                     "title": report_desc[:-4].replace("-", " "),
                 }
             )

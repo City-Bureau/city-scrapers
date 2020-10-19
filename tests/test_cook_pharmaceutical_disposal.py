@@ -27,7 +27,7 @@ freezer.stop()
 def test_title():
     assert (
         parsed_items[0]["title"]
-        == "Cook County Safe Disposal of Pharmaceuticals Advisory Committee"
+        == "Safe Disposal of Pharmaceuticals Advisory Committee"
     )
 
 
@@ -44,14 +44,14 @@ def test_end():
 
 
 def test_time_notes():
-    assert parsed_items[0]["time_notes"] == "See agenda to confirm times"
+    assert parsed_items[0]["time_notes"] == "See agenda to confirm exact times"
 
 
 def test_id():
     assert (
         parsed_items[0]["id"]
         == "cook_pharmaceutical_disposal/201912101300/x/"
-        + "cook_county_safe_disposal_of_pharmaceuticals_advisory_committee"
+        + "safe_disposal_of_pharmaceuticals_advisory_committee"
     )
 
 
@@ -61,8 +61,8 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "address": "Conference Room of 704 Daley Center, Chicago, Illinois 60602",
-        "name": "Conference Room of 704 Daley Center",
+        "address": "50 W Washington St, Room 407, Chicago, IL 60602",
+        "name": "Daley Center",
     }
 
 
