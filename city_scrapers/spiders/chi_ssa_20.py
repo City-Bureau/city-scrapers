@@ -16,12 +16,17 @@ class ChiSsa20Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".meetings"):
+
+        #for item in response.css(".meetings"):
+        response_items = response.xpath("//h3/text()")
+        for item in response_items:
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
                 classification=self._parse_classification(item),
+
                 start=self._parse_start(item),
+
                 end=self._parse_end(item),
                 all_day=self._parse_all_day(item),
                 time_notes=self._parse_time_notes(item),
@@ -49,6 +54,8 @@ class ChiSsa20Spider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
+        return None
+
         return None
 
     def _parse_end(self, item):
