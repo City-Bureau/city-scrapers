@@ -17,20 +17,31 @@ class ChiSsa20Spider(CityScrapersSpider):
         needs.
         """
 
-        response_items = response.xpath("//*[contains(@class, 'et_pb_text_inner')]")
-        full_h3 = response.xpath('//h3')
-        print(full_h3)
+#        Currently working:
+#        response_items = response.xpath("//*[contains(@class, 'et_pb_text_inner')]//text()")
+
+
+#        response_items = response.xpath("//*[contains(@class, 'et_pb_text_inner')]")
+        h3s = (response.xpath("//h3"))
+       
+#       response_items = response.xpath("//h3[contains(@h3, 'SSA Meetings')]") 
+        #response_items = response.xpath("//h3[.='2019 SSA Meetings']") 
+        #response_items = response.xpath("//*[contains(//h3, 'SSA Meetings')]").getall
+        #response_items = response.xpath('//h3')
+#        full_h3 = response.xpath('//h3')
+#        print(full_h3)
 
 #        for item, key in enumerate(response_items):
-#            print("item is %s and key is %s" %(item, key))
             
         #h3_xpath = response_items.xpath("//*[contains(@h3, 'SSA Meetings')]")
-        h3_xpath = response_items.xpath('//h3')
-        #print(h3_xpath)
+#        h3_xpath = response_items.xpath('//h3/text()')
+#        print(h3_xpath)
+#        for item in response_items:
+#          print("This is an item %s" %item)
+        print(h3s)
 
 
 
-            #h3_xpath = key.xpath('@h3').get()
 #            meeting = Meeting(
 #                title=self._parse_title(item),
 #                description=self._parse_description(item),
