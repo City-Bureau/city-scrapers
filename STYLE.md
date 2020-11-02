@@ -1,26 +1,26 @@
-Style Guide
+#Style Guide
 
   This file is a style guide pertaining to the work done in the City Scrapers' repository. The content of this file outlines exactly how to format and document he   code within this project. Please follow these guidelines to ensure that the repository is easily understood and more efficient. These guidelines closely follow     the PEP8 guidelines.
 
-Comments
+##Comments
 
-  Single line comments should be made using a single # sign. No indentation should be present.
+  *Single line comments should be made using a single # sign. No indentation should be present.
 
-  Multi-line comments should be made using ''' to begin the comment and ''' to end the comment.
+  *Multi-line comments should be made using ''' to begin the comment and ''' to end the comment.
 
-Functions
+##Functions
 
-  Functions should never use complex data types as parameters.
+  *Functions should never use complex data types as parameters.
   
-  Functions should not have any spacing in the function signature.
+  *Functions should not have any spacing in the function signature.
   
-  Function parameters should never be reassigned.
+  *Function parameters should never be reassigned.
   
-  Functions should be called with the parameter names specified.
+  *Functions should be called with the parameter names specified.
   
-  Functions should be broken down into digestable blocks, ideally in blocks where all the code pertains to the same thing.
+  *Functions should be broken down into digestable blocks, ideally in blocks where all the code pertains to the same thing.
 
-Naming
+##Naming
 
   All entities needing a name in the project should be named used relavent names that portray the use or purpose of the entity.
   
@@ -32,17 +32,17 @@ Naming
   
   Classes should be named using Pascal Case where there is no seperation between words and the first letter of each word is capatilized.
   
-Comparison Operators
+##Comparison Operators
 
   Be as concise as possible with boolean operators.
   
   Ternary expressions should not be nested.
 
-Classes
+##Classes
 
   Do not use duplicate class members.
 
-Indentation
+##Indentation
 
   Use only soft tabs for indentation.
 
@@ -50,13 +50,13 @@ Indentation
   
   Indent the code within loops and if statements using a soft tab.
   
-Data Types
+##Data Types
 
   When accessing a primitive type, work on its direct value.
   
   When accessing a complex type, work on its referenced value.
 
-Whitespace
+##Whitespace
 
   Use soft tabs to indent code blocks within a function.
   
