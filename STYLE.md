@@ -4,21 +4,21 @@
 
 ##Comments
 
-  *Single line comments should be made using a single # sign. No indentation should be present.
+  Single line comments should be made using a single # sign. No indentation should be present.
 
-  *Multi-line comments should be made using ''' to begin the comment and ''' to end the comment.
+  Multi-line comments should be made using ''' to begin the comment and ''' to end the comment.
 
 ##Functions
 
-  *Functions should never use complex data types as parameters.
+  Functions should never use complex data types as parameters.
   
-  *Functions should not have any spacing in the function signature.
+  Functions should not have any spacing in the function signature.
   
-  *Function parameters should never be reassigned.
+  Function parameters should never be reassigned.
   
-  *Functions should be called with the parameter names specified.
+  Functions should be called with the parameter names specified.
   
-  *Functions should be broken down into digestable blocks, ideally in blocks where all the code pertains to the same thing.
+  Functions should be broken down into digestable blocks, ideally in blocks where all the code pertains to the same thing.
 
 ##Naming
 
