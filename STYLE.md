@@ -7,6 +7,20 @@
   - Single line comments should be made using a single # sign. No indentation should be present.
 
   - Multi-line comments should be made using ''' to begin the comment and ''' to end the comment.
+  
+## Documentation
+
+  - Documentation including the README.md file should follow the same format as this style guide.
+  
+  - The main title should be the largest heading size, which is a single #.
+  
+  - Each subtitle under that should have ##.
+  
+  - A subitle under a subtitle should use ###.
+  
+  - Blocks of writing should use - or * to create a bulleted list.
+  
+  - Numbered lists should use numbers instead of - or *.
 
 ## Functions
 
