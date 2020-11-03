@@ -1,3 +1,4 @@
+import re
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -12,97 +13,75 @@ class ChiSsa20Spider(CityScrapersSpider):
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
         """
 
-#        Currently working:
-#        response_items = response.xpath("//*[contains(@class, 'et_pb_text_inner')]//text()")
+        h3 = response.xpath("//h3")
+        for entry_key, entry in enumerate(h3):
+            entry_str = entry.xpath("./text()").extract_first()
 
+            if entry_str and  "ssa meetings" in entry_str.lower():
 
-#        response_items = response.xpath("//*[contains(@class, 'et_pb_text_inner')]")
-        h3s = (response.xpath("//h3"))
-       
-#       response_items = response.xpath("//h3[contains(@h3, 'SSA Meetings')]") 
-        #response_items = response.xpath("//h3[.='2019 SSA Meetings']") 
-        #response_items = response.xpath("//*[contains(//h3, 'SSA Meetings')]").getall
-        #response_items = response.xpath('//h3')
-#        full_h3 = response.xpath('//h3')
-#        print(full_h3)
+                    meeting = Meeting(
+                    title=self._parse_title(entry),
+                    description=self._parse_description(entry),
+                    classification=self._parse_classification(entry),
+                    #start=self._parse_start(entry),
+                    end=self._parse_end(entry),
+                    all_day=self._parse_all_day(entry),
+                    time_notes=self._parse_time_notes(entry),
+                    location=self._parse_location(entry),
+                    links=self._parse_links(entry),
+                    source=self._parse_source(response),
+                    )
 
-#        for item, key in enumerate(response_items):
-            
-        #h3_xpath = response_items.xpath("//*[contains(@h3, 'SSA Meetings')]")
-#        h3_xpath = response_items.xpath('//h3/text()')
-#        print(h3_xpath)
-#        for item in response_items:
-#          print("This is an item %s" %item)
-        print(h3s)
+                    print(self._parse_start(entry))
 
-
-
-#            meeting = Meeting(
-#                title=self._parse_title(item),
-#                description=self._parse_description(item),
-#                classification=self._parse_classification(item),
-#
-#                start=self._parse_start(item),
-#
-#                end=self._parse_end(item),
-#                all_day=self._parse_all_day(item),
-#                time_notes=self._parse_time_notes(item),
-#                location=self._parse_location(item),
-#                links=self._parse_links(item),
-#                source=self._parse_source(response),
-#            )
-#
-#            meeting["status"] = self._get_status(meeting)
-#            meeting["id"] = self._get_id(meeting)
+#                    meeting["status"] = self._get_status(meeting)
+#                    meeting["id"] = self._get_id(meeting)
 
 #            yield meeting
 
-#    def _parse_title(self, item):
-#        """Parse or generate meeting title."""
-#        return ""
-#
-#    def _parse_description(self, item):
-#        """Parse or generate meeting description."""
-#        return ""
-#
-#    def _parse_classification(self, item):
-#        """Parse or generate classification from allowed options."""
-#        return NOT_CLASSIFIED
-#
-#    def _parse_start(self, item):
-#        """Parse start datetime as a naive datetime object."""
-#        return None
-#
-#        return None
-#
-#    def _parse_end(self, item):
-#        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-#        return None
-#
-#    def _parse_time_notes(self, item):
-#        """Parse any additional notes on the timing of the meeting"""
-#        return ""
-#
-#    def _parse_all_day(self, item):
-#        """Parse or generate all-day status. Defaults to False."""
-#        return False
-#
-#    def _parse_location(self, item):
-#        """Parse or generate location."""
-#        return {
-#            "address": "",
-#            "name": "",
-#        }
-#
-#    def _parse_links(self, item):
-#        """Parse or generate links."""
-#        return [{"href": "", "title": ""}]
-#
-#    def _parse_source(self, response):
-#        """Parse or generate source."""
-#        return response.url
+    def _parse_title(self, item):
+        """Parse or generate meeting title."""
+        return ""
+
+    def _parse_description(self, item):
+        """Parse or generate meeting description."""
+        return ""
+
+    def _parse_classification(self, item):
+        """Parse or generate classification from allowed options."""
+        return NOT_CLASSIFIED
+
+    def _parse_start(self, item):
+     #   """Parse start datetime as a naive datetime object."""
+        #if "SSA 20" in item.xpath("following-sibling::p/strong/text()").extract():
+        #    return True
+        return item
+
+    def _parse_end(self, item):
+        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
+        return None
+
+    def _parse_time_notes(self, item):
+        """Parse any additional notes on the timing of the meeting"""
+        return ""
+
+    def _parse_all_day(self, item):
+        """Parse or generate all-day status. Defaults to False."""
+        return False
+
+    def _parse_location(self, item):
+        """Parse or generate location."""
+        return {
+            "address": "",
+            "name": "",
+        }
+
+    def _parse_links(self, item):
+        """Parse or generate links."""
+        return [{"href": "", "title": ""}]
+
+    def _parse_source(self, response):
+        """Parse or generate source."""
+        return response.url
