@@ -136,3 +136,4 @@ logs/*.log
 
 # Vim
 *.swp
+*.swo
