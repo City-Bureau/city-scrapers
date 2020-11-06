@@ -22,18 +22,12 @@ class ChiZoningBoardSpider(CityScrapersSpider):
         needs.
         """
         last_year = datetime.today().replace(year=datetime.today().year - 1)
-
-        """ this calls a method bellow, which then returns its meeting_xpath
-            which is put into the 'columns' variable 
-        """
         columns = self.parse_meetings(response)
         for column in columns:
             year = column.xpath("preceding::strong[1]/text()").re_first(r"(\d{4})(.*)")
             meetings = column.xpath("text()[normalize-space()]").extract()
             for item in meetings:
-                print('!!!! %s ' %item)
                 if not item.strip():
-                    print('!!!! this item was not stripped %s !!!!' %item)
                     continue
                 start = self._parse_start(item, year)
                 if start < last_year and not self.settings.getbool(
@@ -65,8 +59,6 @@ class ChiZoningBoardSpider(CityScrapersSpider):
             //td[preceding::p/strong[1]/text()[
                 contains(., "Meeting Schedule")
                 ]]"""
-        #print('This is what parse_meeting is returning %s' %(response.xpath(meeting_xpath)))
-        print('This is what parse_meeting is returning %s' %(response.xpath(meeting_xpath)))
         return response.xpath(meeting_xpath)
 
     @staticmethod
