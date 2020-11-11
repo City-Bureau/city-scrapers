@@ -64,7 +64,7 @@ def test_status():
 def test_location():
     assert parsed_items[0]["location"] == {
         "name": "Southwest Home Equity Assurance office",
-        "address": "5334 W. 65th Street in Chicago, Illinois",
+        "address": "5334 W 65th St Chicago, IL 60638",
     }
 
 

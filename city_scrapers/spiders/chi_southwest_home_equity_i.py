@@ -25,7 +25,7 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
     start_urls = ["https://swhomeequity.com/agenda-%26-minutes"]
     location = {
         "name": "Southwest Home Equity Assurance office",
-        "address": "5334 W. 65th Street in Chicago, Illinois",
+        "address": "5334 W 65th St Chicago, IL 60638",
     }
 
     def parse(self, response):
@@ -46,21 +46,13 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
                 minutes_contents = None
 
             meeting = Meeting(
-                title=(
-                    self._parse_title(minutes_contents)
-                    if minutes_contents
-                    else "Board Meeting"
-                ),
+                title="Governing Commission",
                 description="",
                 classification=COMMISSION,
                 start=self._parse_start(agenda_node),
                 end=None,
                 all_day=False,
-                time_notes=(
-                    self._parse_time_notes(minutes_contents)
-                    if minutes_contents
-                    else None
-                ),
+                time_notes="See links for details",
                 location=self.location,
                 links=self._parse_links([agenda_node, minutes_node]),
                 source=self._parse_source(response),
@@ -118,7 +110,9 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
 
     def _get_link(self, node):
         url = node.xpath("a/@href").get()
-        if url:
+        if url and url.startswith("http"):
+            return url
+        elif url and not url.startswith("http"):
             return "https:" + url
         else:
             return None
