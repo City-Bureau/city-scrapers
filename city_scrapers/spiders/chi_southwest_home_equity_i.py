@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from io import BytesIO
 
 import requests
@@ -40,11 +40,6 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
                 "following-sibling::div[@data-ux=\"GridCell\"][contains(., 'Minutes')]"
             )
 
-            if self._get_link(minutes_node):
-                minutes_contents = self.parse_pdf(self._get_link(minutes_node))
-            else:
-                minutes_contents = None
-
             meeting = Meeting(
                 title="Governing Commission",
                 description="",
@@ -77,22 +72,43 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
 
     def _parse_start(self, node):
         # Try to get date from title
+        date_str = self.find_date_in_title(node)
+        if date_str is not None:
+            date_obj = self._convert_date_str(date_str)
+            print(date_obj)
+            return date_obj
+        else:
+            return None
+
+    def _convert_date_str(self, date_str):
         try:
-            date_str = self.find_date_in_title(node)
             date_object = datetime.strptime(date_str, "%B %d %Y")
-        except (RuntimeError, ValueError):
+        # If we only have the month and year
+        except ValueError:
             try:
-                date_str = self.find_date_in_content(node)
-                date_object = datetime.strptime(date_str, "%B %d %Y")
-            except (RuntimeError, ValueError):
+                date_object = datetime.strptime(date_str, "%B %Y")
+            except ValueError:
+                # If that doesn't work, return None
                 return None
+        return datetime.combine(date_object, time(18, 30, 0))
 
-        try:
-            start_time = self.find_time(node)
-            return date_object + start_time
+    def find_date_in_title(self, node):
+        text = node.xpath("string(.)").get()
+        text_block = text.replace("\n", "")
+        return self._use_date_regex(text_block)
 
-        except (RuntimeError, ValueError):
-            return date_object + timedelta(hours=18, minutes=30)
+    def _use_date_regex(self, text):
+
+        month_ind = re.search(MONTH_REGEX, text, flags=re.I)
+        if month_ind is None:
+            return None
+        year_ind = re.search(r"\d{4}", text[month_ind.start() :])
+        if year_ind is None:
+            return None
+        date_str = text[
+            month_ind.start() : (month_ind.start() + year_ind.end())
+        ].replace(",", "")
+        return date_str
 
     def _parse_links(self, nodes):
         links = []
@@ -105,63 +121,25 @@ class ChiSouthwestHomeEquityISpider(CityScrapersSpider):
 
     def _get_name(self, node):
         name = node.xpath("string(.)").get()
-        name = name.replace("(pdf)Download", "")
-        return name
+        if name.lower().find("minutes") > -1:
+            return "Minutes"
+        elif name.lower().find("agenda") > -1:
+            return "Agenda"
+        else:
+            return None
 
     def _get_link(self, node):
         url = node.xpath("a/@href").get()
         if url and url.startswith("http"):
             return url
-        elif url and not url.startswith("http"):
+        # Unusual format but many links on this website
+        # unfortunately begin this way
+        elif url and url.startswith("//"):
             return "https:" + url
+        elif url:
+            return "https://" + url
         else:
             return None
 
     def _parse_source(self, response):
         return response.url
-
-    def find_date_in_title(self, node):
-        text = self._get_name(node)
-        text_block = text.replace("\n", "")
-        return self._use_date_regex(text_block)
-
-    def find_date_in_content(self, node):
-        content = self.parse_pdf(self._get_link(node))
-        content = content.replace("\n", "")
-        return self._use_date_regex(content)
-
-    def find_time(self, node):
-        content = self.parse_pdf(self._get_link(node))
-        content = content.replace("\n", "")
-        time_str = self._use_time_regex(content)
-        dt = datetime.strptime(time_str, "%I:%M %p")
-        return timedelta(hours=dt.hour, minutes=dt.minute)
-
-    def _use_date_regex(self, text):
-
-        month_ind = re.search(MONTH_REGEX, text, flags=re.I)
-        if month_ind is None:
-            raise RuntimeError("No month found")
-        year_ind = re.search(r"\d{4}", text[month_ind.start() :])
-        if year_ind is None:
-            raise RuntimeError("No year found")
-        date_str = text[
-            month_ind.start() : (month_ind.start() + year_ind.end())
-        ].replace(",", "")
-        return date_str
-
-    def _use_time_regex(self, text):
-
-        time_ind = re.search(TIME_REGEX, text, flags=re.I)
-        if time_ind is None:
-            raise RuntimeError("No time found")
-        time_str = text[time_ind.start() : time_ind.end()]
-        return time_str
-
-    def _parse_time_notes(self, text):
-        c_t_o = re.search(r"CALL TO ORDER", text)
-        commissioners = re.search(r"COMMIS(S)?IONER(S)? IN ATTENDANCE", text)
-        if c_t_o and commissioners:
-            return text[c_t_o.end() : commissioners.start()].replace("\n", "").strip()
-        else:
-            return None
