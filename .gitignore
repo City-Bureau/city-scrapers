@@ -133,7 +133,3 @@ src/
 logs/*.log
 
 # output files: local gitignore added to city_scrapers/local_outputs/
-
-# Vim
-*.swp
-*.swo

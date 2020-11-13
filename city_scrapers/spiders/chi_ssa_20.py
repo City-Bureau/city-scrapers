@@ -1,7 +1,8 @@
-import re
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+import re
+import w3lib.html as w3
 
 
 class ChiSsa20Spider(CityScrapersSpider):
@@ -11,15 +12,34 @@ class ChiSsa20Spider(CityScrapersSpider):
     start_urls = ["https://www.mpbhba.org/business-resources/"]
 
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
-        """
 
+        #debug
+        print('!!begin!!')
 
-        for h3 in response.xpath("//h3"):
-           entry_str = h3.xpath("./text()").extract_first()
-           if entry_str and "ssa meetings" in entry_str.lower():
-              print(h3)
+        base = response.xpath(
+               "//*[self::p or self::strong or self::h3]/text()").getall()
+
+        # remove lines from our section backward 
+        # "ssa meetings" is where our interest begins
+        base = [ re.sub(r"\s+", " ", item).lower() for item in base ]
+
+        for index, line in enumerate(base):
+            if 'ssa meetings' in line:
+                del base[:index]
+
+        # remove lines from our section onward
+        # in this case, "ssa 64" and following entries
+        # we don't care for. 
+        for index, line in enumerate(base):
+            if 'ssa 64' in line:
+                del base[index:]
+
+        # debug: print what we hold
+        for item in base:
+            print(item)
+
+        # debug
+        print('!!end!!')
 
 #              meeting = Meeting(
 #              title=self._parse_title(entry),
