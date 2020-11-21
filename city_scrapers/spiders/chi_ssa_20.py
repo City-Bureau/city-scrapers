@@ -19,10 +19,11 @@ class ChiSsa20Spider(CityScrapersSpider):
         base = response.xpath(
                "//*[self::p or self::strong or self::h3]/text()").getall()
 
-        # remove lines from our section backward 
-        # "ssa meetings" is where our interest begins
+        # remove whitespaces, convert all to lowercase
         base = [ re.sub(r"\s+", " ", item).lower() for item in base ]
 
+        # remove lines from our section backward 
+        # "ssa meetings" is where our interest begins
         for index, line in enumerate(base):
             if 'ssa meetings' in line:
                 del base[:index]
