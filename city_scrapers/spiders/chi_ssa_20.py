@@ -38,6 +38,9 @@ class ChiSsa20Spider(CityScrapersSpider):
 
         
         for item in base: 
+            # don't hand off empty lines to methods
+            if re.match(r'^\s*$', item):
+                continue
 
             meeting = Meeting(
 #              title=self._parse_title(entry),
@@ -80,17 +83,22 @@ class ChiSsa20Spider(CityScrapersSpider):
          # 'beverly' will remove lines containing the location
          # 'ssa' will remove other lines we don't need
          if not any(word in item for word in ['beverly', 'ssa']):
-            try:
-                print('attempting', item)
-                item = re.sub(r'([,\.])', '', item)
+
+
+                item = re.sub(r'([,\.])', '', item).strip()
                 date_object=datetime.strptime(item, "%A %B %d %I %p")
-                print('!!!!!!!!!!!!')
                 print(type(date_object))
-            except ValueError:
-                print('passed due to valueError')
-                pass
 
 
+#            try:
+#                print('attempting', item)
+#                item = re.sub(r'([,\.])', '', item)
+#                date_object=datetime.strptime(item, "%A %B %d %I %p")
+#                print('!!!!!!!!!!!!')
+#                print(type(date_object))
+#            except ValueError:
+#                print('passed due to valueError')
+#                pass
 
 #        return None
 
