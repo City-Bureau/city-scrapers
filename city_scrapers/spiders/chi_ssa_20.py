@@ -41,6 +41,8 @@ class ChiSsa20Spider(CityScrapersSpider):
             # don't hand off empty lines to methods
             if re.match(r'^\s*$', item):
                 continue
+            
+            print('now passing', item)
 
             meeting = Meeting(
 #              title=self._parse_title(entry),
@@ -77,18 +79,29 @@ class ChiSsa20Spider(CityScrapersSpider):
         return NOT_CLASSIFIED
 
     def _parse_start(self, item):
+  
+         # Year:
+         # catches the line '2019 ssa meetings' as it's the only
+         # one with four digits starting it, then extracts those
+         # four digits with re.match() to provide us with a date
+         # string we can work with.
+         if re.match('^\D*\d{4}\D*$', item):
+             year = re.match('^\d{4}', item)[0]
 
+         # Date:
          # we only care for lines containing the dates,
          # e.g "wednesday, june 5, 9 a.m."
          # 'beverly' will remove lines containing the location
          # 'ssa' will remove other lines we don't need
          if not any(word in item for word in ['beverly', 'ssa']):
 
-
+                # remove commas and dots in order to nicely format for
+                # strptime(), the strip() is for final whitespace removal
+                # if no strip(), strptime() will reject the string as not
+                # formatted sufficiently
                 item = re.sub(r'([,\.])', '', item).strip()
                 date_object=datetime.strptime(item, "%A %B %d %I %p")
                 print(type(date_object))
-
 
 #            try:
 #                print('attempting', item)
