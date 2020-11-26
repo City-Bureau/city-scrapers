@@ -14,9 +14,6 @@ class ChiSsa20Spider(CityScrapersSpider):
 
     def parse(self, response):
 
-        #debug
-        #print('\n','!!!begin!!!')
-
         base = response.xpath(
                "//*[self::p or self::strong or self::h3]/text()").getall()
 
@@ -38,7 +35,7 @@ class ChiSsa20Spider(CityScrapersSpider):
 
         
         for item in base: 
-            # don't hand off empty lines to methods
+            # don't pass empty lines to methods
             if re.match(r'^\s*$', item):
                 continue
             
@@ -62,9 +59,6 @@ class ChiSsa20Spider(CityScrapersSpider):
 #
 #           yield meeting
 
-        # debug
-        #print('!!!end!!!', '\n')
-
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -81,39 +75,30 @@ class ChiSsa20Spider(CityScrapersSpider):
     def _parse_start(self, item):
   
          # Year:
-         # catches the line '2019 ssa meetings' as it's the only
+         # Catches the line '2019 ssa meetings' as it's the only
          # one with four digits starting it, then extracts those
          # four digits with re.match() to provide us with a date
-         # string we can work with.
+         # integer we can work with.
          if re.match('^\D*\d{4}\D*$', item):
              year = re.match('^\d{4}', item)[0]
 
          # Date:
-         # we only care for lines containing the dates,
+         # Now, We only care for lines containing the dates,
          # e.g "wednesday, june 5, 9 a.m."
          # 'beverly' will remove lines containing the location
          # 'ssa' will remove other lines we don't need
          if not any(word in item for word in ['beverly', 'ssa']):
 
-                # remove commas and dots in order to nicely format for
-                # strptime(), the strip() is for final whitespace removal
+                # Remove commas and dots in order to nicely format for
+                # strptime()
+                # strip() is for final whitespace removal
                 # if no strip(), strptime() will reject the string as not
                 # formatted sufficiently
+                # Finally, concat date and year strings and pass to strptime()
                 item = re.sub(r'([,\.])', '', item).strip()
-                date_object=datetime.strptime(item, "%A %B %d %I %p")
-                print(type(date_object))
-
-#            try:
-#                print('attempting', item)
-#                item = re.sub(r'([,\.])', '', item)
-#                date_object=datetime.strptime(item, "%A %B %d %I %p")
-#                print('!!!!!!!!!!!!')
-#                print(type(date_object))
-#            except ValueError:
-#                print('passed due to valueError')
-#                pass
-
-#        return None
+                ready_date = item + ' ' + str(self.year)
+                date_object=datetime.strptime(ready_date, "%A %B %d %I %p %Y")
+                return(date_object)
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
