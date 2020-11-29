@@ -39,25 +39,27 @@ class ChiSsa20Spider(CityScrapersSpider):
             if re.match(r'^\s*$', item):
                 continue
             
-            print('now passing', item)
+            start = self._parse_start(item)
+            if not start:
+                continue
 
             meeting = Meeting(
-#              title=self._parse_title(entry),
-#              description=self._parse_description(entry),
-#              classification=self._parse_classification(entry),
-               start=self._parse_start(item),
-#              end=self._parse_end(entry),
-#              all_day=self._parse_all_day(entry),
-#              time_notes=self._parse_time_notes(entry),
-#              location=self._parse_location(entry),
-#              links=self._parse_links(entry),
-#              source=self._parse_source(response),
+              title=self._parse_title(item),
+              description=self._parse_description(item),
+              classification=self._parse_classification(item),
+              start=start,
+              end=self._parse_end(item),
+              all_day=self._parse_all_day(item),
+              time_notes=self._parse_time_notes(item),
+              location=self._parse_location(item),
+              links=self._parse_links(item),
+              source=self._parse_source(response),
             )
-#
-#           meeting["status"] = self._get_status(meeting)
-#           meeting["id"] = self._get_id(meeting)
-#
-#           yield meeting
+
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
+
+            yield meeting
 
 
     def _parse_title(self, item):
