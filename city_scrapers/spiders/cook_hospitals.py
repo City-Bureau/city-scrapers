@@ -64,7 +64,14 @@ class CookHospitalsSpider(CityScrapersSpider):
     def _parse_start(item):
         """Get start datetime from item's text"""
         date_str = (
-            item.css("td:first-child::text").extract_first().strip().replace(" - ", " ")
+            (
+                item.css("td:first-child::text")
+                .extract_first()
+                .strip()
+                .replace(" - ", " ")
+            )
+            .split("**")[0]
+            .strip()
         )
         try:
             return datetime.strptime(date_str, "%B %d, %Y %I:%M %p")
