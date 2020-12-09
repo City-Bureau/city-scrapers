@@ -43,8 +43,9 @@ class IlLiquorControlSpider(CityScrapersSpider):
                     r"[Mm]inute.*", "", past_meeting_text
                 ).strip()
                 minutes_href = past_meeting.attrib["href"]
+                # Handle typo
                 dt_object = datetime.datetime.strptime(
-                    past_meeting_date_str, "%B %d, %Y"
+                    past_meeting_date_str.replace("member", "ember"), "%B %d, %Y"
                 )
                 meeting_url = (
                     "https://www2.illinois.gov/ilcc/Events/Pages/Board-"
