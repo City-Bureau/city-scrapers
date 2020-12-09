@@ -78,7 +78,7 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
             if temp_address[0][0].isdigit():
                 name = ""
                 address = self.remove_special_chars("".join(temp_address))
-            elif "zoom" in temp_address.lower():
+            elif "virtual" in " ".join(temp_address).lower():
                 return {"name": "Virtual meeting via Zoom", "address": ""}
             else:
                 [name, address] = "".join(temp_address).split("\n", 1)
