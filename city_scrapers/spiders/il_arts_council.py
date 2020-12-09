@@ -1,3 +1,4 @@
+import re
 import unicodedata
 from datetime import datetime as dt
 
@@ -22,6 +23,13 @@ class IlArtsCouncilSpider(CityScrapersSpider):
         for table in response.xpath("//table/tbody"):
             year = self._get_year(table)
             for item in table.xpath("./tr")[1::]:
+                if "Date" in " ".join(item.css("td *::text").extract()):
+                    continue
+                if len(item.css("td[colspan]")) > 0:
+                    year = re.search(
+                        r"\d{4}", " ".join(item.css("p *::text").extract())
+                    ).group()
+                    continue
                 meeting = Meeting(
                     title=self._parse_title(item),
                     description=self._parse_description(item),
@@ -96,7 +104,7 @@ class IlArtsCouncilSpider(CityScrapersSpider):
             "name": "TBA",
         }
 
-        if "TBA" in location:
+        if not location or "TBA" in location:
             return tba
 
         elif "JRTC" in location:
@@ -125,5 +133,5 @@ class IlArtsCouncilSpider(CityScrapersSpider):
     def _get_year(self, item):
         """Gets the year for the meeting."""
         year_xpath = "../preceding-sibling::p/strong/text()"
-        year_text = item.xpath(year_xpath)[-1].get()
+        year_text = item.xpath(year_xpath)[-1].get().strip()
         return year_text[0:4]
