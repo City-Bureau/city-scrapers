@@ -22,27 +22,16 @@ class ChiSsa20Spider(CityScrapersSpider):
             "//*[self::p or self::strong or self::h3]/text()"
         ).getall()
 
-        # remove whitespaces, convert all to lowercase
         base = [re.sub(r"\s+", " ", item).lower() for item in base]
 
-        # remove lines from our section backward
-        # "ssa meetings" is where our interest begins
         for index, line in enumerate(base):
             if "ssa meetings" in line:
                 del base[:index]
 
-        # remove lines from our section onward
-        # in this case, "ssa 64" and following entries
-        # we don't care for.
         for index, line in enumerate(base):
             if "ssa 64" in line:
                 del base[index:]
 
-        # Year:
-        # Catches the line '2019 ssa meetings' as it's the only
-        # one with four digits starting it, then extracts those
-        # four digits with re.match() to provide us with a date
-        # string we can work with.
         for item in base:
             if re.match(r"^\D*\d{4}\D*$", item):
                 year = re.match(r"^\d{4}", item)[0]
@@ -89,19 +78,7 @@ class ChiSsa20Spider(CityScrapersSpider):
 
     def _parse_start(self, item, year):
 
-        # Date:
-        # Now, We only care for lines containing the dates,
-        # e.g "wednesday, june 5, 9 a.m."
-        # 'beverly' will remove lines containing the location
-        # 'ssa' will remove other lines we don't need
         if not any(word in item for word in ["beverly", "ssa"]):
-
-            # Remove commas and dots in order to nicely format for
-            # strptime()
-            # strip() is for final whitespace removal
-            # if no strip(), strptime() will reject the string as not
-            # formatted sufficiently
-            # Finally, concat date and year strings and pass to strptime()
             item = re.sub(r"([,\.])", "", item).strip()
             ready_date = item + " " + year
             date_object = datetime.strptime(ready_date, "%A %B %d %I %p %Y")
