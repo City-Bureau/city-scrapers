@@ -1,6 +1,14 @@
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from scrapy.utils.response import open_in_browser
+from pdfminer.high_level import extract_text_to_fp
+from pdfminer.layout import LAParams
+from io import BytesIO, StringIO
+
+import scrapy
+import re
+
 
 
 class IlSexOffenderManagementSpider(CityScrapersSpider):
@@ -16,26 +24,55 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".meetings"):
-            meeting = Meeting(
-                title=self._parse_title(item),
-                description=self._parse_description(item),
-                classification=self._parse_classification(item),
-                start=self._parse_start(item),
-                end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
-                links=self._parse_links(item),
-                source=self._parse_source(response),
-            )
 
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
+        for link in response.css("#ctl00_PlaceHolderMain_ctl01__ControlWrapper_RichHtmlField a"):
+            link_text = " ".join(link.css("*::text").extract())
+            if "Meeting" not in link_text:
+                continue
+            if "Agenda" in link_text:
+                yield scrapy.Request(
+                    response.urljoin(link.attrib["href"]),
+                    callback=self._parse_documents,
+                    dont_filter=True,
+                )
 
-            yield meeting
+    def _parse_documents(self, response):
+        """Parse meeting information from agenda PDF"""
 
-    def _parse_title(self, item):
+        cleanText = self._cleanUpPDF(response)
+
+        meeting = None
+        # meeting = Meeting(
+        #     title="SEX OFFENDER MANAGEMENT BOARD",
+        #     description="N/A",
+        #     classification=BOARD,
+        #     status = self._parse_status,
+        #     start= self._parse_start(response),
+        #     end=self._parse_end(response),
+        #     all_day=False,
+        #     time_notes="See agenda to confirm details",
+        #     location=self._parse_location(response),
+        #     source=self.start_urls[0],
+        # )
+
+        yield meeting
+
+    def _cleanUpPDF(self, response):
+        """Clean up PDF and return text string"""
+        import pdb; pdb.set_trace();
+
+        lp = LAParams(line_margin=0.1)
+        out_str = StringIO()
+        extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
+        pdf_text = out_str.getvalue().replace("\n", "")
+        # Remove duplicate characters not followed by lowercase (as in 5:00pm)
+        clean_text = re.sub(r"([A-Z0-9:])\1(?![a-z])", r"\1", pdf_text, flags=re.M)
+        # Remove duplicate spaces
+        clean_text = re.sub(r"\s+", " ", clean_text)
+        # year_str = re.search(r"\d{4}", clean_text).group()
+        return clean_text
+
+    def _parse_status(self, item):
         """Parse or generate meeting title."""
         return ""
 
@@ -70,9 +107,6 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
             "name": "",
         }
 
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
 
     def _parse_source(self, response):
         """Parse or generate source."""
