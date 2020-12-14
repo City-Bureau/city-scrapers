@@ -1,19 +1,19 @@
 from datetime import datetime
-from operator import itemgetter
 from os.path import dirname, join
 
-import pytest
 from city_scrapers_core.constants import BOARD, CANCELLED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
-from city_scrapers.spiders.il_sex_offender_management import IlSexOffenderManagementSpider
+from city_scrapers.spiders.il_sex_offender_management import (
+    IlSexOffenderManagementSpider,
+)
 
-#import pdb; pdb.set_trace();
 test_pdf_response = file_response(
     join(dirname(__file__), "files", "il_sex_offender_management.pdf"),
     url=(
-        "https://www2.illinois.gov/idoc/Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf"
+        "https://www2.illinois.gov/idoc/Documents/"
+        + "SOMB%20Meeting%20Agenda%202019%20August.pdf"
     ),
     mode="rb",
 )
@@ -30,13 +30,16 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 # make sure example pdf was able to be scraped by crawler from website
-assert ("https://www2.illinois.gov/idoc/Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf" in str(parsed_items[0]))
+ref = (
+    "https://www2.illinois.gov/idoc/"
+    + "Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf"
+)
+assert ref in str(parsed_items[0])
 
 # check if meeting object created from PDF is correct
 parsed_items = [item for item in spider._parse_documents(test_pdf_response)]
 
 freezer.stop()
-
 
 
 def test_title():
@@ -60,7 +63,8 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_sex_offender_management/201908011030/x/sex_offender_management_board"
+    id = "il_sex_offender_management/201908011030/x/sex_offender_management_board"
+    assert parsed_items[0]["id"] == id
 
 
 def test_status():
@@ -68,21 +72,20 @@ def test_status():
 
 
 def test_location():
-    assert parsed_items[0]["location"] == {
-        "name": "Meeting Cancelled",
-        "address": ""
-    }
+    assert parsed_items[0]["location"] == {"name": "Meeting Cancelled", "address": ""}
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://www2.illinois.gov/idoc/Pages/SexOffenderManagementBoard.aspx"
+    ref = "https://www2.illinois.gov/idoc/Pages/SexOffenderManagementBoard.aspx"
+    assert parsed_items[0]["source"] == ref
 
 
 def test_links():
-    assert parsed_items[0]["links"] == {
-      "href": "https://www2.illinois.gov/idoc/Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf",
-      "title": "Meeting Agenda"
-    }
+    ref = (
+        "https://www2.illinois.gov/idoc/Documents/"
+        + "SOMB%20Meeting%20Agenda%202019%20August.pdf"
+    )
+    assert parsed_items[0]["links"] == {"href": ref, "title": "Meeting Agenda"}
 
 
 def test_classification():
