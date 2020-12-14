@@ -157,6 +157,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
                 return None
 
     def _get_datetime_obj(self, date_str, time_str):
+        """Return Naive Datetime object from date and time strings passed in"""
         pattern = re.compile(r"[0-2]?[0-9]:[0-9][0-9][a-zA-Z][a-zA-Z]")
         time_str = pattern.search(time_str).group()
         # standardize time by converting to military time
