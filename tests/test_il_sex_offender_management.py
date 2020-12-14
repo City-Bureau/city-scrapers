@@ -30,16 +30,16 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 # make sure correct number of meetings are extracted
-# discludes most recent video meeting link since it
-# is not an agenda PDF
-assert len(parsed_items) == 29
+assert len(parsed_items) == 30
 
 # make sure example pdf was able to be scraped by crawler from website
 ref = (
     "https://www2.illinois.gov/idoc/"
     + "Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf"
 )
-assert ref in str(parsed_items[0])
+
+# should be the second scraped meeting
+assert ref in str(parsed_items[1])
 
 # check if meeting object created from PDF is correct
 parsed_items = [item for item in spider._parse_documents(test_pdf_response)]

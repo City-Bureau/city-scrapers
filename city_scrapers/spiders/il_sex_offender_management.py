@@ -1,5 +1,6 @@
+import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO, StringIO
 
 import scrapy
@@ -14,6 +15,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
     name = "il_sex_offender_management"
     agency = "Illinois Sex Offender Management Board"
     timezone = "America/Chicago"
+    custom_settings = {"ROBOTSTXT_OBEY": False}
     start_urls = [
         "https://www2.illinois.gov/idoc/" + "Pages/SexOffenderManagementBoard.aspx"
     ]
@@ -39,6 +41,59 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
                     callback=self._parse_documents,
                     dont_filter=True,
                 )
+            # special case where link to video was uploaded rather than agenda
+            if "WebEx" in link_text:
+                yield scrapy.Request(
+                    link.attrib["href"], callback=self._parse_meta_video
+                )
+
+    def _parse_meta_video(self, response):
+        """Parse through meta of response in JSON if link provided rather than PDF"""
+        meta_text = response.css(
+            "[type='application/json']:not(#bootstrapData)::text"
+        ).extract_first()
+        if not meta_text:
+            return
+        meta_text = meta_text.strip()
+        clean_text_vid = json.loads(meta_text)
+
+        start_time, end_time = self._video_start_end_time(clean_text_vid)
+
+        meeting = Meeting(
+            title="SEX OFFENDER MANAGEMENT BOARD",
+            description="",
+            classification=BOARD,
+            start=start_time,
+            end=end_time,
+            all_day=False,
+            time_notes="",
+            location={
+                "address": response.urljoin(""),
+                "name": "WebEx Meeting (See meeting links to confirm)",
+            },
+            links={"title": "WebEx Meeting Link", "href": response.urljoin("")},
+            source=self.start_urls[0],
+        )
+        meeting["status"] = self._get_status(meeting)
+        meeting["id"] = self._get_id(meeting)
+
+        yield meeting
+
+    def _video_start_end_time(self, clean_text_vid):
+        """Parse through JSON and return start, end naive datetime objects"""
+
+        # Get date time formatted as '2020-09-16 13:00'
+        date_time = clean_text_vid["meetingData"]["startTime"][:-3]
+
+        # get meeting duration in a list of [hours,minutes]
+        scheduled_duration = clean_text_vid["meetingData"]["scheduledDuration"]
+
+        # create start and end time datetime naive objects
+        start_time = datetime.strptime("{}".format(date_time), "%Y-%m-%d %H:%M")
+
+        end_time = start_time + timedelta(minutes=scheduled_duration)
+
+        return start_time, end_time
 
     def _parse_documents(self, response):
         """Parse meeting information from agenda PDF"""
