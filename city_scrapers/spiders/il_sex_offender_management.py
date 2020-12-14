@@ -1,9 +1,9 @@
-from city_scrapers_core.constants import BOARD
+from city_scrapers_core.constants import BOARD, CANCELLED, PASSED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from scrapy.utils.response import open_in_browser
 from pdfminer.high_level import extract_text_to_fp
 from pdfminer.layout import LAParams
+from datetime import datetime
 from io import BytesIO, StringIO
 
 import scrapy
@@ -30,6 +30,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
             if "Meeting" not in link_text:
                 continue
             if "Agenda" in link_text:
+                # scrape agenda pdf for meeting information
                 yield scrapy.Request(
                     response.urljoin(link.attrib["href"]),
                     callback=self._parse_documents,
@@ -39,28 +40,53 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
     def _parse_documents(self, response):
         """Parse meeting information from agenda PDF"""
 
+        links_dict =  {
+                        "title": "Meeting Agenda",
+                        "href": response.urljoin(""),
+                     }
         cleanText = self._cleanUpPDF(response)
 
-        meeting = None
-        # meeting = Meeting(
-        #     title="SEX OFFENDER MANAGEMENT BOARD",
-        #     description="N/A",
-        #     classification=BOARD,
-        #     status = self._parse_status,
-        #     start= self._parse_start(response),
-        #     end=self._parse_end(response),
-        #     all_day=False,
-        #     time_notes="See agenda to confirm details",
-        #     location=self._parse_location(response),
-        #     source=self.start_urls[0],
-        # )
+        #import pdb; pdb.set_trace();
+
+        if self._parse_status(cleanText) == CANCELLED:
+            meeting = Meeting(
+                title="SEX OFFENDER MANAGEMENT BOARD",
+                description="",
+                classification=BOARD,
+                start=self._parse_start(cleanText),
+                end=self._parse_end(cleanText),
+                all_day=False,
+                time_notes="See agenda to confirm details",
+                location={
+                    "address": "",
+                    "name": "Meeting Cancelled",
+                },
+                links=links_dict,
+                source=self.start_urls[0]
+            )
+            meeting["status"] = self._get_status(meeting, text="Meeting is cancelled")
+            meeting["id"] = self._get_id(meeting)
+
+        else:
+            meeting = Meeting(
+                title="SEX OFFENDER MANAGEMENT BOARD",
+                description="",
+                classification=BOARD,
+                start= self._parse_start(cleanText),
+                end=self._parse_end(cleanText),
+                all_day=False,
+                time_notes="See agenda to confirm details",
+                location=self._parse_location(cleanText),
+                links=links_dict,
+                source=self.start_urls[0]
+            )
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
 
         yield meeting
 
     def _cleanUpPDF(self, response):
-        """Clean up PDF and return text string"""
-        import pdb; pdb.set_trace();
-
+        """Clean up and return text string of PDF"""
         lp = LAParams(line_margin=0.1)
         out_str = StringIO()
         extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
@@ -69,45 +95,92 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         clean_text = re.sub(r"([A-Z0-9:])\1(?![a-z])", r"\1", pdf_text, flags=re.M)
         # Remove duplicate spaces
         clean_text = re.sub(r"\s+", " ", clean_text)
-        # year_str = re.search(r"\d{4}", clean_text).group()
         return clean_text
 
-    def _parse_status(self, item):
-        """Parse or generate meeting title."""
-        return ""
+    def _parse_status(self, cleanText):
+        """Check if meeting was/is cancelled."""
+        if "meeting is cancelled" in cleanText.lower():
+            return CANCELLED
+        # I went through every agenda PDF, for meetings that weren't either
+        # cancelled or moved, the agenda began with "Welcome/Roll Call"
+        if "Welcome/Roll Call" not in cleanText:
+            return CANCELLED
+        return PASSED
 
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
 
-    def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
-        return NOT_CLASSIFIED
-
-    def _parse_start(self, item):
+    def _parse_start(self, cleanText):
         """Parse start datetime as a naive datetime object."""
-        return None
+        date_str = self._get_meeting_date(cleanText)
+        time_str = self._get_start_end_time(cleanText)
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+        # if meeting is cancelled or no time is provided, default is 12:00
+        if time_str is None:
+            return self._get_datetime_obj(date_str, "12:00")
+        return self._get_datetime_obj(date_str, time_str[:7])
 
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
+    def _parse_end(self, cleanText):
+        """Parse end datetime as a naive datetime object."""
+        date_str = self._get_meeting_date(cleanText)
+        time_str = self._get_start_end_time(cleanText)
+        # if meeting is cancelled or no time is provided, default is 12:00
+        if time_str is None:
+            return self._get_datetime_obj(date_str, "12:00")
+        return self._get_datetime_obj(date_str, time_str[7:])
 
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
+    def _get_meeting_date(self, cleanText):
+        """Parse meeting agenda for 'Month Day, Year' and returns group"""
+        pattern = re.compile(
+            "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|"
+            "Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|"
+            "Dec(ember)?)\s+\d{1,2},\s+\d{4}")
+        return pattern.search(cleanText).group()
 
-    def _parse_location(self, item):
+    def _get_start_end_time(self, cleanText):
+        """Parse start and end time of meeting from agenda and returns group"""
+        pattern = re.compile(
+                                "[0-2]?[0-9]:[0-9][0-9][a-zA-Z][a-zA-Z]-"
+                                "[0-2]?[0-9]:[0-9][0-9][a-zA-Z][a-zA-Z]"
+                            )
+        return pattern.search(cleanText).group()
+
+    def _get_datetime_obj(self, date_str, time_str):
+        pattern = re.compile("[0-2]?[0-9]:[0-9][0-9][a-zA-Z][a-zA-Z]")
+        time_str = pattern.search(time_str).group()
+        # standardize time by converting to military time
+        time_str = datetime.strptime(time_str, '%I:%M%p').strftime('%H:%M')
+        return datetime.strptime(
+            "{} {}".format(date_str, time_str), "%B %d, %Y %H:%M"
+        )
+
+
+    def _parse_location(self, cleanText):
         """Parse or generate location."""
+        # there were different locations depending on if the meeting was
+        # a video conference, a phone conference, or a physical location.
+        # I hardcoded in the most frequent addresses as there were quite a few
+        # different locations, but I have made sure to note that one should conirm
+        # the address is indeed correct before using.
+
+        name = ""
+        address = ""
+
+        if "video conference" in cleanText.lower():
+            name = """Video Conference (see meeting links to confirm address since
+            it often changes and there can be more than one meeting method)"""
+            address = """IDOC, 1301 Concordia Court, Executive Building Conference Room, Springfield
+                        and/or IDOC 100 West Randolph, Suite 4-20 Chicago, IL 60601"""
+
+        elif "location" in cleanText.lower():
+            name = """Physical Location (see meeting links to confirm address since
+            it often changes and there can be more than one meeting method)"""
+            address = "Illinois State Police, 800 Old Airport Road, Pontiac"
+
+        elif "phone conference" in cleanText.lower():
+            name = """Phone Conference (see meeting links to confirm address since
+            it often changes and there can be more than one meeting method)"""
+            address = "Call in number: 888-494-4032  Pass Code: 7094957981"
+
         return {
-            "address": "",
-            "name": "",
+            "address": name,
+            "name": address,
         }
-
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
