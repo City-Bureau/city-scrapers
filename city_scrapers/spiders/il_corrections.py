@@ -1,3 +1,6 @@
+import re
+import scrapy
+
 from io import BytesIO, StringIO
 from datetime import datetime, timedelta
 
@@ -16,6 +19,8 @@ class IlCorrectionsSpider(CityScrapersSpider):
 
     def __init__(self):
         self.links = {}
+        self.url_base = "https://www2.illinois.gov"
+        self.pdf_text = "yo"
 
     def parse(self, response):
         """
@@ -26,69 +31,84 @@ class IlCorrectionsSpider(CityScrapersSpider):
         """
         # Gather Meeting Dates/Links
         self.links = self._parse_all_links(response)
-        
+        print(response.url)
 
-          # Parse 1 document - ideally Agenda
-          # get start/end time (re), combine with date
-          # Title - switch on existence of subcomittee
-          # Location
-          # source = response.url
+        for date in self.links.keys():
+            print(date)
+            return self._meeting(date)
 
+    def _meeting(self, date):
+        print("meeting")
+        self.pdf_text = self._get_meeting_pdf(date)
+        print(self.pdf_text)
         meeting = Meeting(
-            title=self._parse_title(item),
+            title=self._parse_title(),
             description="",
-            classification=self._parse_classification(item),
-            start=self._parse_start(item),
-            end=self._parse_end(item),
+            classification="ADVISORY_COMMITTEE",
+            start=self._parse_times(date),
+            end=self._parse_times(date, False),
             all_day=False,
             time_notes="",
-            location=self._parse_location(item),
-            links=self._parse_links(item),
-            source=self._parse_source(response),
+            #location=self._parse_location(item),
+            links=self._parse_links(date),
+            source=start_urls[0],
         )
 
         meeting["status"] = self._get_status(meeting)
         meeting["id"] = self._get_id(meeting)
 
-        yield meeting
+        return meeting
+
+    def _get_meeting_pdf(self, date):
+        print("meeting pdf")
+        if "Agenda" in self.links[date].keys():
+            yield scrapy.Request(
+                self.links[date]["Agenda"],
+                callback=self._parse_pdf
+            )
+        elif "Minutes" in self.links[date].keys():
+            yield scrapy.Request(
+                self.links[date]["Minutes"],
+                callback=self._parse_pdf
+            )
 
 
-    def _parse_pdf(self, item):
+    def _parse_pdf(self, response):
         """Parse dates and details from schedule PDF"""
+        print("prase pdf)")
         lp = LAParams(line_margin=0.1)
         out_str = StringIO()
         extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
-        pdf_text = out_str.getvalue().replace("\n", "")
+        pdf_text = out_str.getvalue()
+        print("pdf_text")
+        print(pdf_text)
+        yield pdf_text
 
-        return pdf_text
-
-    def _parse_title(self, item):
+    def _parse_title(self):
         """Parse or generate meeting title."""
-        return ""
+        title = "Adult Advisory Board Meeting"
 
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
+        if "subcommittee" in self.pdf_text.lower():
+            title = "Adult Advisory Board / Women's Subcommittee Meeting"
+        return title
 
-    def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
-        return ADVISORY_COMMITTEE
-
-    def _parse_start(self, item):
+    def _parse_times(self, date, start=True):
         """Parse start datetime as a naive datetime object."""
-        return None
+        print(self.pdf_text)
+        times = re.findall("(\d{1,2}:\d{2} ?(am|a\.m\.|pm|p\.m\.))", self.pdf_text.lower())
+        print(times)
+        start_time = times[0][0]
+        end_time = times[1][0]
 
-    def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
+        # Add conversion to datetime object
+        if start:
+            return start_time
+        else:
+            return end_time
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
         return ""
-
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
 
     def _parse_location(self, item):
         """Parse or generate location."""
@@ -105,16 +125,18 @@ class IlCorrectionsSpider(CityScrapersSpider):
             [12][0-9]|0?[1-9])/(?:[0-9]{2})?[0-9]{2})""")
 
             if date is not None:
-                if date not in self.links.keys():
-                    self.links[date] = []
+                if date not in self.links:
+                    self.links[date] = {}
                 for item in ["Notice", "Agenda", "Minutes"]:
                     if item in link.attrib['href']:
-                        self.links[date].append({"title": item,
-                                                 "href": link.attrib['href']})
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        return [{"href": "", "title": ""}]
+                        self.links[date][item] = self.url_base + link.attrib['href']
 
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url
+        return self.links
+
+    def _parse_links(self, date):
+        """Parse or generate links."""
+        link_list = []
+        for key, value in self.links[date].items():
+            self.links[date].append({"title": key,
+                                     "href": value})
+        return link_list
