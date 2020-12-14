@@ -110,18 +110,18 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         date_str = self._get_meeting_date(clean_text)
         time_str = self._get_start_end_time(clean_text)
 
-        # if meeting is cancelled or no time is provided, default is 12:00
+        # if meeting is cancelled or no time is provided, default is 12:00am
         if time_str is None:
-            return self._get_datetime_obj(date_str, "12:00")
+            return self._get_datetime_obj(date_str, "12:00am")
         return self._get_datetime_obj(date_str, time_str[:7])
 
     def _parse_end(self, clean_text):
         """Parse end datetime as a naive datetime object."""
         date_str = self._get_meeting_date(clean_text)
         time_str = self._get_start_end_time(clean_text)
-        # if meeting is cancelled or no time is provided, default is 12:00
+        # if meeting is cancelled or no time is provided, default is 12:00am
         if time_str is None:
-            return self._get_datetime_obj(date_str, "12:00")
+            return self._get_datetime_obj(date_str, "12:00am")
         return self._get_datetime_obj(date_str, time_str[7:])
 
     def _get_meeting_date(self, clean_text):
@@ -139,7 +139,22 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
             r"[0-2]?[0-9]:[0-9][0-9][a-zA-Z][a-zA-Z]-"
             r"[0-2]?[0-9]:[0-9][0-9][a-zA-Z][a-zA-Z]"
         )
-        return pattern.search(clean_text).group()
+        if pattern.search(clean_text) is not None:
+            return pattern.search(clean_text).group()
+        else:
+            # in a few specific agendas there are times formatted as '9-10am'
+            # instead of 9:00am-10:00am or 09:00am-10:00am
+            pattern = re.compile(r"[0-2]?[0-9]-[0-9]?[0-9][a-zA-Z][a-zA-Z]")
+            if pattern.search(clean_text) is not None:
+                # re-make string to 09:00am-10:00am format from '9-10am'
+                new_string = pattern.search(clean_text).group()
+                suffix = new_string[-2:]
+                start = new_string.split("-")[0] + ":00" + suffix
+                end = new_string.split("-")[1][:-2] + ":00" + suffix
+                new_string = start + "-" + end
+                return new_string
+            else:
+                return None
 
     def _get_datetime_obj(self, date_str, time_str):
         pattern = re.compile(r"[0-2]?[0-9]:[0-9][0-9][a-zA-Z][a-zA-Z]")
