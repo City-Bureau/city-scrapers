@@ -58,7 +58,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
                 end=self._parse_end(clean_text),
                 all_day=False,
                 time_notes="See agenda to confirm details",
-                location={"address": "", "name": "Meeting Cancelled",},
+                location={"address": "", "name": "Meeting Cancelled"},
                 links=links_dict,
                 source=self.start_urls[0],
             )
@@ -175,7 +175,4 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
             it often changes and there can be more than one meeting method)"""
             address = "Call in number: 888-494-4032  Pass Code: 7094957981"
 
-        return {
-            "address": name,
-            "name": address,
-        }
+        return {"address": name, "name": address}
