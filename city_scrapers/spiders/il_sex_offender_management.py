@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from io import BytesIO, StringIO
 
 import scrapy
-from city_scrapers_core.constants import BOARD, CANCELLED, PASSED
+from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from pdfminer.high_level import extract_text_to_fp
@@ -17,8 +17,9 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     custom_settings = {"ROBOTSTXT_OBEY": False}
     start_urls = [
-        "https://www2.illinois.gov/idoc/" + "Pages/SexOffenderManagementBoard.aspx"
-    ]
+        "https://www2.illinois.gov/idoc/Pages/SexOffenderManagementBoard.aspx"
+    ]  # noqa
+    meeting_minutes = []
 
     def parse(self, response):
         """
@@ -27,14 +28,22 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-
-        for link in response.css(
-            "#ctl00_PlaceHolderMain_ctl01" + "__ControlWrapper_RichHtmlField a"
-        ):
+        # first go through and gather list of lists for meeting minutes
+        for link in response.css(".soi-article-content a"):
             link_text = " ".join(link.css("*::text").extract())
-            if "Meeting" not in link_text:
+            if ("meeting minutes") in link_text.lower():
+                # create new list holding meeting minutes date and link
+                date_time_obj = self._get_datetime_obj_meeting_minutes(
+                    link_text
+                )  # noqa
+                href = response.urljoin(link.attrib["href"])
+                self.meeting_minutes.append([date_time_obj, href])
+
+        for link in response.css(".soi-article-content a"):
+            link_text = " ".join(link.css("*::text").extract())
+            if "meeting" not in link_text.lower():
                 continue
-            if "Agenda" in link_text:
+            if "agenda" in link_text.lower():
                 # scrape agenda pdf for meeting information
                 yield scrapy.Request(
                     response.urljoin(link.attrib["href"]),
@@ -42,7 +51,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
                     dont_filter=True,
                 )
             # special case where link to video was uploaded rather than agenda
-            if "WebEx" in link_text:
+            if "webex" in link_text.lower():
                 yield scrapy.Request(
                     link.attrib["href"], callback=self._parse_meta_video
                 )
@@ -50,7 +59,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
     def _parse_meta_video(self, response):
         """Parse through meta of response in JSON if link provided rather than PDF"""
         meta_text = response.css(
-            "[type='application/json']:not(#bootstrapData)::text"
+            "[type='application/json']#extendedData::text"
         ).extract_first()
         if not meta_text:
             return
@@ -60,7 +69,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         start_time, end_time = self._video_start_end_time(clean_text_vid)
 
         meeting = Meeting(
-            title="SEX OFFENDER MANAGEMENT BOARD",
+            title="MANAGEMENT BOARD",
             description="",
             classification=BOARD,
             start=start_time,
@@ -68,11 +77,11 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
             all_day=False,
             time_notes="",
             location={
-                "address": response.urljoin(""),
+                "address": "",
                 "name": "WebEx Meeting (See meeting links to confirm)",
             },
-            links={"title": "WebEx Meeting Link", "href": response.urljoin("")},
-            source=self.start_urls[0],
+            links=self._make_links(None, start_time),
+            source=response.url,
         )
         meeting["status"] = self._get_status(meeting)
         meeting["id"] = self._get_id(meeting)
@@ -82,10 +91,10 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
     def _video_start_end_time(self, clean_text_vid):
         """Parse through JSON and return start, end naive datetime objects"""
 
-        # Get date time formatted as '2020-09-16 13:00'
+        # get date time formatted as '2020-09-16 13:00'
         date_time = clean_text_vid["meetingData"]["startTime"][:-3]
 
-        # get meeting duration in a list of [hours,minutes]
+        # get meeting duration represented in minutes
         scheduled_duration = clean_text_vid["meetingData"]["scheduledDuration"]
 
         # create start and end time datetime naive objects
@@ -100,43 +109,45 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
 
         links_dict = {
             "title": "Meeting Agenda",
-            "href": response.urljoin(""),
+            "href": response.url,
         }
         clean_text = self._cleanUpPDF(response)
 
-        if self._parse_status(clean_text) == CANCELLED:
-            meeting = Meeting(
-                title="SEX OFFENDER MANAGEMENT BOARD",
-                description="",
-                classification=BOARD,
-                start=self._parse_start(clean_text),
-                end=self._parse_end(clean_text),
-                all_day=False,
-                time_notes="See agenda to confirm details",
-                location={"address": "", "name": "Meeting Cancelled"},
-                links=links_dict,
-                source=self.start_urls[0],
-            )
-            meeting["status"] = self._get_status(meeting, text="Meeting is cancelled")
-            meeting["id"] = self._get_id(meeting)
+        start_time = self._parse_start(clean_text)
 
-        else:
-            meeting = Meeting(
-                title="SEX OFFENDER MANAGEMENT BOARD",
-                description="",
-                classification=BOARD,
-                start=self._parse_start(clean_text),
-                end=self._parse_end(clean_text),
-                all_day=False,
-                time_notes="See agenda to confirm details",
-                location=self._parse_location(clean_text),
-                links=links_dict,
-                source=self.start_urls[0],
-            )
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
+        meeting = Meeting(
+            title="MANAGEMENT BOARD",
+            description="",
+            classification=BOARD,
+            start=start_time,
+            end=self._parse_end(clean_text),
+            all_day=False,
+            time_notes="See agenda to confirm details",
+            location=self._parse_location(clean_text),
+            links=self._make_links(links_dict, start_time),
+            source=self.start_urls[0],
+        )
+        meeting["status"] = self._get_status(meeting, text=clean_text)
+        meeting["id"] = self._get_id(meeting)
 
         yield meeting
+
+    def _make_links(self, agenda_dict, date_time_obj):
+        """Make list of agenda and minutes(if applicable)."""
+        links = []
+        if agenda_dict is not None:
+            links.append(agenda_dict)
+        for meeting in self.meeting_minutes:
+            if date_time_obj.date() == meeting[0].date():
+                # account for training meetings
+                if "training" in agenda_dict["href"].lower():
+                    if "training" in meeting[1].lower():
+                        minutes_dict = {"title": "Meeting Minutes", "href": meeting[1]}
+                        links.append(minutes_dict)
+                elif "training" not in meeting[1].lower():
+                    minutes_dict = {"title": "Meeting Minutes", "href": meeting[1]}
+                    links.append(minutes_dict)
+        return links
 
     def _cleanUpPDF(self, response):
         """Clean up and return text string of PDF"""
@@ -149,16 +160,6 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         # Remove duplicate spaces
         clean_text = re.sub(r"\s+", " ", clean_text)
         return clean_text
-
-    def _parse_status(self, clean_text):
-        """Check if meeting was/is cancelled."""
-        if "meeting is cancelled" in clean_text.lower():
-            return CANCELLED
-        # I went through every agenda PDF, for meetings that weren't either
-        # cancelled or moved, the agenda began with "Welcome/Roll Call"
-        if "Welcome/Roll Call" not in clean_text:
-            return CANCELLED
-        return PASSED
 
     def _parse_start(self, clean_text):
         """Parse start datetime as a naive datetime object."""
@@ -219,31 +220,15 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         time_str = datetime.strptime(time_str, "%I:%M%p").strftime("%H:%M")
         return datetime.strptime("{} {}".format(date_str, time_str), "%B %d, %Y %H:%M")
 
+    def _get_datetime_obj_meeting_minutes(self, link_text):
+        """ Make datetime object for meeting minutes"""
+        date = self._get_meeting_date(link_text)
+        # tested, this will return the datetime object correct regardless
+        # if given full month is given and regardless of capitilization
+        date_time_obj = datetime.strptime("{}".format(date), "%B %d, %Y")
+        return date_time_obj
+
     def _parse_location(self, clean_text):
         """Parse or generate location."""
-        # there were different locations depending on if the meeting was
-        # a video conference, a phone conference, or a physical location.
-        # I hardcoded in the most frequent addresses as there were quite a few
-        # different locations, but I have made sure to note that one should conirm
-        # the address is indeed correct before using.
-
-        name = ""
-        address = ""
-
-        if "video conference" in clean_text.lower():
-            name = """Video Conference (see meeting links to confirm address since
-            it often changes and there can be more than one meeting method)"""
-            address = """IDOC, 1301 Concordia Court, Executive Building Conference Room, Springfield
-                        and/or IDOC 100 West Randolph, Suite 4-20 Chicago, IL 60601"""
-
-        elif "location" in clean_text.lower():
-            name = """Physical Location (see meeting links to confirm address since
-            it often changes and there can be more than one meeting method)"""
-            address = "Illinois State Police, 800 Old Airport Road, Pontiac"
-
-        elif "phone conference" in clean_text.lower():
-            name = """Phone Conference (see meeting links to confirm address since
-            it often changes and there can be more than one meeting method)"""
-            address = "Call in number: 888-494-4032  Pass Code: 7094957981"
-
-        return {"address": name, "name": address}
+        # Extreme variability in location, default to see meeting details
+        return {"address": "", "name": "See meeting details"}

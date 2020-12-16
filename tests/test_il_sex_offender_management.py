@@ -12,8 +12,7 @@ from city_scrapers.spiders.il_sex_offender_management import (
 test_pdf_response = file_response(
     join(dirname(__file__), "files", "il_sex_offender_management.pdf"),
     url=(
-        "https://www2.illinois.gov/idoc/Documents/"
-        + "SOMB%20Meeting%20Agenda%202019%20August.pdf"
+        "https://www2.illinois.gov/idoc/Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf"  # noqa
     ),
     mode="rb",
 )
@@ -33,10 +32,7 @@ parsed_items = [item for item in spider.parse(test_response)]
 assert len(parsed_items) == 30
 
 # make sure example pdf was able to be scraped by crawler from website
-ref = (
-    "https://www2.illinois.gov/idoc/"
-    + "Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf"
-)
+ref = "https://www2.illinois.gov/idoc/Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf"  # noqa
 
 # should be the second scraped meeting
 assert ref in str(parsed_items[1])
@@ -48,7 +44,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "SEX OFFENDER MANAGEMENT BOARD"
+    assert parsed_items[0]["title"] == "MANAGEMENT BOARD"
 
 
 def test_description():
@@ -68,7 +64,7 @@ def test_time_notes():
 
 
 def test_id():
-    id = "il_sex_offender_management/201908011030/x/sex_offender_management_board"
+    id = "il_sex_offender_management/201908011030/x/management_board"
     assert parsed_items[0]["id"] == id
 
 
@@ -77,7 +73,7 @@ def test_status():
 
 
 def test_location():
-    assert parsed_items[0]["location"] == {"name": "Meeting Cancelled", "address": ""}
+    assert parsed_items[0]["location"] == {"name": "See meeting details", "address": ""}
 
 
 def test_source():
@@ -86,11 +82,8 @@ def test_source():
 
 
 def test_links():
-    ref = (
-        "https://www2.illinois.gov/idoc/Documents/"
-        + "SOMB%20Meeting%20Agenda%202019%20August.pdf"
-    )
-    assert parsed_items[0]["links"] == {"href": ref, "title": "Meeting Agenda"}
+    ref = "https://www2.illinois.gov/idoc/Documents/SOMB%20Meeting%20Agenda%202019%20August.pdf"  # noqa
+    assert parsed_items[0]["links"] == [{"title": "Meeting Agenda", "href": ref}]
 
 
 def test_classification():
