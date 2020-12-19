@@ -25,30 +25,32 @@ class IlFinanceAuthoritySpider(CityScrapersSpider):
             pdf_link = self._get_pdf_link(item)
             if pdf_link is None or not pdf_link.endswith(".pdf"):
                 continue
-            date = self._parse_date(item)
             title = self._parse_title(item)
-            meeting_info_dict = dict()
-            meeting_info_dict["title"] = title
-            meeting_info_dict["date"] = date
+            date = self._parse_date(item)
 
             yield scrapy.Request(
                 response.urljoin(pdf_link),
                 callback=self._parse_schedule,
                 dont_filter=True,
-                meta={"meeting_info_dict": meeting_info_dict},
+                meta={"title": title, "date": date},
             )
 
     def _parse_schedule(self, response):
         """Parse PDF and then yield to meeting items"""
-        location, time = self._parse_agenda_pdf(response)
-        meeting_info_dict = response.meta["meeting_info_dict"]
-        meeting_info_dict["location"] = location
-        meeting_info_dict["time"] = time
+        pdf_text = self._parse_agenda_pdf(response)
+        location = self._parse_location(pdf_text)
+        time = self._parse_start(pdf_text)
+        meeting_dict = dict()
+        meeting_dict["title"] = response.meta["title"]
+        meeting_dict["date"] = response.meta["date"]
+        meeting_dict["location"] = location
+        meeting_dict["time"] = time
+
         yield scrapy.Request(
             response.url,
             callback=self._parse_meeting,
             dont_filter=True,
-            meta={"meeting_info_dict": meeting_info_dict},
+            meta={"meeting_dict": meeting_dict},
         )
 
     def _parse_agenda_pdf(self, response):
@@ -68,12 +70,38 @@ class IlFinanceAuthoritySpider(CityScrapersSpider):
             clean_text = re.sub(r"\s+", " ", pdf_content)
             # Remove underscores
             clean_text = re.sub(r"_*", "", clean_text)
+            return clean_text
 
-            location = self._parse_location(clean_text)
-            time = self._parse_start(clean_text)
-            return location, time
         except PDFSyntaxError as e:
             print("~~Error: " + str(e))
+
+    def _parse_meeting(self, response):
+        meeting_dict = response.meta["meeting_dict"]
+        title = meeting_dict["title"]
+        date = meeting_dict["date"]
+        time = meeting_dict["time"]
+        location = meeting_dict["location"]
+
+        meeting = Meeting(
+            title=title,
+            description="",
+            classification=self._parse_classification(title),
+            start=self._meeting_datetime(date, time),
+            end=None,
+            all_day=False,
+            time_notes="",
+            location=location,
+            links=self._parse_links(response.url, title),
+            source=self._parse_source(response),
+        )
+        meeting["status"] = self._get_status(meeting)
+        meeting["id"] = self._get_id(meeting)
+        yield meeting
+
+    def _meeting_datetime(self, date, time):
+        meeting_start = date + " " + time
+        meeting_start = meeting_start.replace(", ", ",").strip()
+        return datetime.strptime(meeting_start, "%b %d,%Y %I:%M %p")
 
     def _get_pdf_link(self, item):
         pdf_tag = item.css("td:nth-child(4) > a")
@@ -111,36 +139,6 @@ class IlFinanceAuthoritySpider(CityScrapersSpider):
             name = "Name Not Found"
         return {"address": address, "name": name}
 
-    def _parse_meeting(self, response):
-        meeting_info_dict = response.meta["meeting_info_dict"]
-        title = meeting_info_dict["title"]
-        date = meeting_info_dict["date"]
-        time = meeting_info_dict["time"]
-        location = meeting_info_dict["location"]
-
-        meeting_start = date + " " + time
-        meeting_start = meeting_start.replace(", ", ",").strip()
-
-        meeting = Meeting(
-            title=title,
-            description=self._parse_description(),
-            classification=self._parse_classification(title),
-            start=datetime.strptime(meeting_start, "%b %d,%Y %I:%M %p"),
-            end=None,
-            all_day=False,
-            time_notes=self._parse_time_notes(),
-            location=location,
-            links=self._parse_links(response.url, title),
-            source=self._parse_source(response),
-        )
-        meeting["status"] = self._get_status(meeting)
-        meeting["id"] = self._get_id(meeting)
-        yield meeting
-
-    def _parse_description(self):
-        """Pase or generate meeting description."""
-        return ""
-
     def _parse_date(self, item):
         """Parse start datetime as a naive datetime object."""
         try:
@@ -150,7 +148,6 @@ class IlFinanceAuthoritySpider(CityScrapersSpider):
             return ""
 
     def _parse_start(self, pdf_content):
-        """Parse start datetime as a naive datetime object."""
         try:
             time = re.findall(r"\d{1,2}:\d{2}\s?(?:A.M.|P.M.|PM|AM)", pdf_content)[0]
             return time
@@ -160,10 +157,6 @@ class IlFinanceAuthoritySpider(CityScrapersSpider):
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return None
-
-    def _parse_time_notes(self):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
