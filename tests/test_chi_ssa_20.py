@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "SSA 20"
+    assert parsed_items[0]["title"] == "Commission"
 
 
 def test_description():
@@ -46,8 +46,8 @@ def test_time_notes():
 
 def test_id():
     meeting_ids = [
-        "chi_ssa_20/201906050900/x/ssa_20",
-        "chi_ssa_20/201907100900/x/ssa_20",
+        "chi_ssa_20/201906050900/x/commission",
+        "chi_ssa_20/201907100900/x/commission",
     ]
     for i in range(len(parsed_items)):
         assert parsed_items[i]["id"] == meeting_ids[i]
@@ -59,8 +59,8 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": "Beverly Bank & Trust,",
-        "address": "10258 s. Western ave.",
+        "name": "Beverly Bank & Trust",
+        "address": "10258 S Western Ave, Chicago, IL 60643",
     }
 
 
@@ -73,7 +73,7 @@ def test_links():
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
+    assert parsed_items[0]["classification"] == COMMISSION
 
 
 @pytest.mark.parametrize("item", parsed_items)
