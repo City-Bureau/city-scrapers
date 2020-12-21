@@ -1,5 +1,6 @@
 import json
 import re
+from collections import defaultdict
 from datetime import datetime, timedelta
 from io import BytesIO, StringIO
 
@@ -18,7 +19,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
     custom_settings = {"ROBOTSTXT_OBEY": False}
     start_urls = [
         "https://www2.illinois.gov/idoc/Pages/SexOffenderManagementBoard.aspx"
-    ]  # noqa
+    ]
     meeting_minutes = []
 
     def parse(self, response):
@@ -31,7 +32,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         # first go through and gather list of lists for meeting minutes
         for link in response.css(".soi-article-content a"):
             link_text = " ".join(link.css("*::text").extract())
-            if ("meeting minutes") in link_text.lower():
+            if "meeting minutes" in link_text.lower():
                 # create new list holding meeting minutes date and link
                 date_time_obj = self._get_datetime_obj_meeting_minutes(
                     link_text
@@ -61,15 +62,26 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         meta_text = response.css(
             "[type='application/json']#extendedData::text"
         ).extract_first()
+
+        # if no meta data at all, do nothing
         if not meta_text:
             return
+
         meta_text = meta_text.strip()
         clean_text_vid = json.loads(meta_text)
 
+        # recent runs have empty dictionary as metadata, do nothing
+        if not bool(clean_text_vid):
+            return
+
         start_time, end_time = self._video_start_end_time(clean_text_vid)
 
+        # create new default dict for links
+        link_map = defaultdict(list)
+        link_map["current_iteration"].extend(self._make_links(None, start_time))
+
         meeting = Meeting(
-            title="MANAGEMENT BOARD",
+            title="Management Board",
             description="",
             classification=BOARD,
             start=start_time,
@@ -80,7 +92,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
                 "address": "",
                 "name": "WebEx Meeting (See meeting links to confirm)",
             },
-            links=self._make_links(None, start_time),
+            links=link_map["current_iteration"],
             source=response.url,
         )
         meeting["status"] = self._get_status(meeting)
@@ -111,12 +123,15 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
             "title": "Meeting Agenda",
             "href": response.url,
         }
-        clean_text = self._cleanUpPDF(response)
-
+        clean_text = self._clean_up_pdf(response)
         start_time = self._parse_start(clean_text)
 
+        # create new default dict for links
+        link_map = defaultdict(list)
+        link_map["current_iteration"].extend(self._make_links(links_dict, start_time))
+
         meeting = Meeting(
-            title="MANAGEMENT BOARD",
+            title="Management Board",
             description="",
             classification=BOARD,
             start=start_time,
@@ -124,7 +139,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
             all_day=False,
             time_notes="See agenda to confirm details",
             location=self._parse_location(clean_text),
-            links=self._make_links(links_dict, start_time),
+            links=link_map["current_iteration"],
             source=self.start_urls[0],
         )
         meeting["status"] = self._get_status(meeting, text=clean_text)
@@ -149,7 +164,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
                     links.append(minutes_dict)
         return links
 
-    def _cleanUpPDF(self, response):
+    def _clean_up_pdf(self, response):
         """Clean up and return text string of PDF"""
         lp = LAParams(line_margin=0.1)
         out_str = StringIO()

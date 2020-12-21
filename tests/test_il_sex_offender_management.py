@@ -28,7 +28,7 @@ freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
 
-# make sure correct number of meetings are extracted
+# make sure correct number of meetings are found
 assert len(parsed_items) == 30
 
 # make sure example pdf was able to be scraped by crawler from website
@@ -44,7 +44,7 @@ freezer.stop()
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "MANAGEMENT BOARD"
+    assert parsed_items[0]["title"] == "Management Board"
 
 
 def test_description():
