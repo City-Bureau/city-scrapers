@@ -57,14 +57,13 @@ class IlCorrectionsSpider(CityScrapersSpider):
             end=self._parse_times(date, False),
             all_day=False,
             time_notes="",
-            #location=self._parse_location(item),
+            location=self._parse_location(),
             links=self._parse_links(date),
             source=response.url,
         )
 
         meeting["status"] = self._get_status(meeting)
         meeting["id"] = self._get_id(meeting)
-        print(meeting)
         yield meeting
 
 
@@ -75,13 +74,13 @@ class IlCorrectionsSpider(CityScrapersSpider):
         out_str = StringIO()
         extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
         pdf_text = out_str.getvalue()
-        return pdf_text
+        return pdf_text.lower()
 
     def _parse_title(self):
         """Parse or generate meeting title."""
         title = "Adult Advisory Board Meeting"
 
-        if "subcommittee" in self.pdf_text.lower():
+        if "subcommittee" in self.pdf_text:
             title = "Adult Advisory Board / Women's Subcommittee Meeting"
         return title
 
@@ -93,28 +92,47 @@ class IlCorrectionsSpider(CityScrapersSpider):
 
         # Add conversion to datetime object
         if start:
-            try:
-                time = datetime.strptime(f"{date} {start_time}", "%B %d, %Y %I:%M%p")
-            except ValueError:
-                time = datetime.strptime(f"{date} {start_time}", "%B %d, %Y %I:%M %p")
+            return self._try_time_format(date, start_time)
         else:
-            try:
-                time = datetime.strptime(f"{date} {end_time}", "%B %d, %Y %I:%M%p")
-            except ValueError:
-                time = datetime.strptime(f"{date} {end_time}", "%B %d, %Y %I:%M %p")
+            return self._try_time_format(date, end_time)
 
         return time
 
-    def _parse_time_notes(self, item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
+    def _try_time_format(self, date, time):
+        """Try time formatting with and without spacing"""
+        try:
+            time_object = datetime.strptime(f"{date} {time}", "%B %d, %Y %I:%M%p")
+        except ValueError:
+            time_object = datetime.strptime(f"{date} {time}", "%B %d, %Y %I:%M %p")
 
-    def _parse_location(self, item):
+        return time_object
+
+    def _parse_location(self):
         """Parse or generate location."""
-        return {
-            "address": "",
-            "name": "",
+
+        location_lookup = {
+            "logan correctional center": {
+                "address": "1096 1350th St, Lincoln, IL 62656",
+                "name": "Logan Correctional Center"
+            },
+            "vandalia correctional center": {
+                "address": "US-51, Vandalia, IL 62471",
+                "name": "Vandalia Correctional Center"
+            },
+            "thompson center": {
+                "address": "100 W. Randolph, Suite 4-200, Chicago, IL 60601",
+                "name": "James R. Thompson Center"
+            },
+            "joliet treatment center": {
+                "address": "2848 McDonough St, Joliet, IL 60431",
+                "name": "Joliet Treatment Center"
+            }
         }
+
+        for location in location_lookup.keys():
+            if location in self.pdf_text:
+                return location_lookup[location]
+
     def _parse_all_links(self, response):
         """ Gather dates, links """
         for link in response.css('a'):
