@@ -20,7 +20,7 @@ class IlCorrectionsSpider(CityScrapersSpider):
     def __init__(self):
         self.links = {}
         self.url_base = "https://www2.illinois.gov"
-        self.pdf_text = "yo"
+        self.pdf_text = ""
 
     def parse(self, response):
         """
@@ -31,16 +31,24 @@ class IlCorrectionsSpider(CityScrapersSpider):
         """
         # Gather Meeting Dates/Links
         self.links = self._parse_all_links(response)
-        print(response.url)
 
         for date in self.links.keys():
-            print(date)
-            return self._meeting(date)
+            if "Agenda" in self.links[date].keys():
+                yield scrapy.Request(
+                    self.links[date]["Agenda"],
+                    callback=self._meeting,
+                    cb_kwargs=dict(date=date)
+                )
+            elif "Minutes" in self.links[date].keys():
+                yield scrapy.Request(
+                    self.links[date]["Minutes"],
+                    callback=self._meeting,
+                    cb_kwargs=dict(date=date)
+                )
 
-    def _meeting(self, date):
+    def _meeting(self, response, date):
         print("meeting")
-        self.pdf_text = self._get_meeting_pdf(date)
-        print(self.pdf_text)
+        self.pdf_text = self._parse_pdf(response)
         meeting = Meeting(
             title=self._parse_title(),
             description="",
@@ -51,26 +59,13 @@ class IlCorrectionsSpider(CityScrapersSpider):
             time_notes="",
             #location=self._parse_location(item),
             links=self._parse_links(date),
-            source=start_urls[0],
+            source=response.url,
         )
 
         meeting["status"] = self._get_status(meeting)
         meeting["id"] = self._get_id(meeting)
-
-        return meeting
-
-    def _get_meeting_pdf(self, date):
-        print("meeting pdf")
-        if "Agenda" in self.links[date].keys():
-            yield scrapy.Request(
-                self.links[date]["Agenda"],
-                callback=self._parse_pdf
-            )
-        elif "Minutes" in self.links[date].keys():
-            yield scrapy.Request(
-                self.links[date]["Minutes"],
-                callback=self._parse_pdf
-            )
+        print(meeting)
+        yield meeting
 
 
     def _parse_pdf(self, response):
@@ -80,9 +75,7 @@ class IlCorrectionsSpider(CityScrapersSpider):
         out_str = StringIO()
         extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
         pdf_text = out_str.getvalue()
-        print("pdf_text")
-        print(pdf_text)
-        yield pdf_text
+        return pdf_text
 
     def _parse_title(self):
         """Parse or generate meeting title."""
@@ -94,17 +87,23 @@ class IlCorrectionsSpider(CityScrapersSpider):
 
     def _parse_times(self, date, start=True):
         """Parse start datetime as a naive datetime object."""
-        print(self.pdf_text)
         times = re.findall("(\d{1,2}:\d{2} ?(am|a\.m\.|pm|p\.m\.))", self.pdf_text.lower())
-        print(times)
-        start_time = times[0][0]
-        end_time = times[1][0]
+        start_time = times[0][0].replace(".", "")
+        end_time = times[1][0].replace(".", "")
 
         # Add conversion to datetime object
         if start:
-            return start_time
+            try:
+                time = datetime.strptime(f"{date} {start_time}", "%B %d, %Y %I:%M%p")
+            except ValueError:
+                time = datetime.strptime(f"{date} {start_time}", "%B %d, %Y %I:%M %p")
         else:
-            return end_time
+            try:
+                time = datetime.strptime(f"{date} {end_time}", "%B %d, %Y %I:%M%p")
+            except ValueError:
+                time = datetime.strptime(f"{date} {end_time}", "%B %d, %Y %I:%M %p")
+
+        return time
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
@@ -137,6 +136,6 @@ class IlCorrectionsSpider(CityScrapersSpider):
         """Parse or generate links."""
         link_list = []
         for key, value in self.links[date].items():
-            self.links[date].append({"title": key,
-                                     "href": value})
+            link_list.append({"title": key,
+                              "href": value})
         return link_list
