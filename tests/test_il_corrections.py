@@ -9,7 +9,7 @@ from city_scrapers.spiders.il_corrections import IlCorrectionsSpider
 
 test_pdf_response = file_response(
     join(dirname(__file__), "files", "il_corrections.pdf"),
-    url="https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/" \
+    url="https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/"
     "Agenda%20-%20November%204th-2019.pdf",
     mode="rb",
 )
@@ -57,8 +57,7 @@ def test_end():
 
 def test_id():
     assert (
-        test_meeting["id"]
-        == "il_corrections/201911041030/x/" \
+        test_meeting["id"] == "il_corrections/201911041030/x/"
         "adult_advisory_board_women_s_subcommittee_meeting"
     )
 
@@ -77,7 +76,7 @@ def test_location():
 def test_source():
     assert (
         test_meeting["source"]
-        == "https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/" \
+        == "https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/"
         "Agenda%20-%20November%204th-2019.pdf"
     )
 
@@ -85,7 +84,7 @@ def test_source():
 def test_links():
     assert test_meeting["links"] == [
         {
-            "href": "https://www2.illinois.gov/idoc/aboutus/advisoryboard/" \
+            "href": "https://www2.illinois.gov/idoc/aboutus/advisoryboard/"
             "Documents/Agenda%20-%20November%204th-2019.pdf",
             "title": "Agenda",
         }
