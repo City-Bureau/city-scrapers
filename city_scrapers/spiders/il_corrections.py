@@ -1,10 +1,9 @@
 import re
-import scrapy
-
+from datetime import datetime
 from io import BytesIO, StringIO
-from datetime import datetime, timedelta
 
-from city_scrapers_core.constants import NOT_CLASSIFIED
+import scrapy
+from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from pdfminer.high_level import extract_text_to_fp
@@ -15,7 +14,9 @@ class IlCorrectionsSpider(CityScrapersSpider):
     name = "il_corrections"
     agency = "Illinois Department of Corrections Advisory Board"
     timezone = "America/Chicago"
-    start_urls = ["https://www2.illinois.gov/idoc/aboutus/advisoryboard/Pages/default.aspx"]
+    start_urls = [
+        "https://www2.illinois.gov/idoc/aboutus/advisoryboard/Pages/default.aspx"
+    ]
 
     def __init__(self):
         self.links = {}
@@ -37,13 +38,13 @@ class IlCorrectionsSpider(CityScrapersSpider):
                 yield scrapy.Request(
                     self.links[date]["Agenda"],
                     callback=self._meeting,
-                    cb_kwargs=dict(date=date)
+                    cb_kwargs=dict(date=date),
                 )
             elif "Minutes" in self.links[date].keys():
                 yield scrapy.Request(
                     self.links[date]["Minutes"],
                     callback=self._meeting,
-                    cb_kwargs=dict(date=date)
+                    cb_kwargs=dict(date=date),
                 )
 
     def _meeting(self, response, date):
@@ -51,7 +52,7 @@ class IlCorrectionsSpider(CityScrapersSpider):
         meeting = Meeting(
             title=self._parse_title(),
             description="",
-            classification="ADVISORY_COMMITTEE",
+            classification=ADVISORY_COMMITTEE,
             start=self._parse_times(date),
             end=self._parse_times(date, False),
             all_day=False,
@@ -64,7 +65,6 @@ class IlCorrectionsSpider(CityScrapersSpider):
         meeting["status"] = self._get_status(meeting)
         meeting["id"] = self._get_id(meeting)
         yield meeting
-
 
     def _parse_pdf(self, response):
         """Parse dates and details from schedule PDF"""
@@ -95,8 +95,6 @@ class IlCorrectionsSpider(CityScrapersSpider):
         else:
             return self._try_time_format(date, end_time)
 
-        return time
-
     def _try_time_format(self, date, time):
         """Try time formatting with and without spacing"""
         try:
@@ -112,24 +110,21 @@ class IlCorrectionsSpider(CityScrapersSpider):
         location_lookup = {
             "logan correctional center": {
                 "address": "1096 1350th St, Lincoln, IL 62656",
-                "name": "Logan Correctional Center"
+                "name": "Logan Correctional Center",
             },
             "vandalia correctional center": {
                 "address": "US-51, Vandalia, IL 62471",
-                "name": "Vandalia Correctional Center"
+                "name": "Vandalia Correctional Center",
             },
             "thompson center": {
                 "address": "100 W. Randolph, Suite 4-200, Chicago, IL 60601",
-                "name": "James R. Thompson Center"
+                "name": "James R. Thompson Center",
             },
             "joliet treatment center": {
                 "address": "2848 McDonough St, Joliet, IL 60431",
-                "name": "Joliet Treatment Center"
+                "name": "Joliet Treatment Center",
             },
-            "no known location": {
-                "name": "TBD",
-                "address": ""
-            }
+            "no known location": {"name": "TBD", "address": ""},
         }
 
         for location in location_lookup.keys():
@@ -140,18 +135,20 @@ class IlCorrectionsSpider(CityScrapersSpider):
 
     def _parse_all_links(self, response):
         """ Gather dates, links """
-        for link in response.css('a'):
-            date = link.re_first(r"""((Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|
+        for link in response.css("a"):
+            date = link.re_first(
+                r"""((Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|
             May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|
             Dec(ember)?)\s+\d{1,2},\s+\d{4})|((1[0-2]|0?[1-9])/(3[01]|
-            [12][0-9]|0?[1-9])/(?:[0-9]{2})?[0-9]{2})""")
+            [12][0-9]|0?[1-9])/(?:[0-9]{2})?[0-9]{2})"""
+            )
 
             if date is not None:
                 if date not in self.links:
                     self.links[date] = {}
                 for item in ["Notice", "Agenda", "Minutes"]:
-                    if item in link.attrib['href']:
-                        self.links[date][item] = self.url_base + link.attrib['href']
+                    if item in link.attrib["href"]:
+                        self.links[date][item] = self.url_base + link.attrib["href"]
 
         return self.links
 
@@ -159,6 +156,5 @@ class IlCorrectionsSpider(CityScrapersSpider):
         """Parse or generate links."""
         link_list = []
         for key, value in self.links[date].items():
-            link_list.append({"title": key,
-                              "href": value})
+            link_list.append({"title": key, "href": value})
         return link_list

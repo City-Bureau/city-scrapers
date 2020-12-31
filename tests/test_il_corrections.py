@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -32,12 +32,15 @@ test_meeting = next(test_generator)
 
 freezer.stop()
 
+
 def meeting_count(parsed_dates):
     assert len(parsed_dates) == 26
 
 
 def test_title():
-    assert test_meeting["title"] == "Adult Advisory Board / Women's Subcommittee Meeting"
+    assert (
+        test_meeting["title"] == "Adult Advisory Board / Women's Subcommittee Meeting"
+    )
 
 
 def test_description():
@@ -51,8 +54,12 @@ def test_start():
 def test_end():
     assert test_meeting["end"] == datetime(2019, 11, 4, 12, 0)
 
+
 def test_id():
-    assert test_meeting["id"] == "il_corrections/201911041030/x/adult_advisory_board_women_s_subcommittee_meeting"
+    assert (
+        test_meeting["id"]
+        == "il_corrections/201911041030/x/adult_advisory_board_women_s_subcommittee_meeting"
+    )
 
 
 def test_status():
@@ -62,22 +69,29 @@ def test_status():
 def test_location():
     assert test_meeting["location"] == {
         "address": "1096 1350th St, Lincoln, IL 62656",
-        "name": "Logan Correctional Center"
+        "name": "Logan Correctional Center",
     }
 
 
 def test_source():
-    assert test_meeting["source"] == "https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/Agenda%20-%20November%204th-2019.pdf"
+    assert (
+        test_meeting["source"]
+        == "https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/Agenda%20-%20November%204th-2019.pdf"
+    )
 
 
 def test_links():
     assert test_meeting["links"] == [
-           {'href': 'https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/Agenda%20-%20November%204th-2019.pdf',
-            'title': 'Agenda'}]
+        {
+            "href": "https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/Agenda%20-%20November%204th-2019.pdf",
+            "title": "Agenda",
+        }
+    ]
 
 
 def test_classification():
-    assert test_meeting["classification"] == "ADVISORY_COMMITTEE"
+    assert test_meeting["classification"] == ADVISORY_COMMITTEE
+
 
 def test_all_day():
     assert test_meeting["all_day"] is False
