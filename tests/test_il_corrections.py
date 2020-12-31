@@ -8,79 +8,76 @@ from freezegun import freeze_time
 
 from city_scrapers.spiders.il_corrections import IlCorrectionsSpider
 
+test_pdf_response = file_response(
+    join(dirname(__file__), "files", "il_corrections.pdf"),
+    url="https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/Agenda%20-%20November%204th-2019.pdf",
+    mode="rb",
+)
+
+print(test_pdf_response)
+
 test_response = file_response(
     join(dirname(__file__), "files", "il_corrections.html"),
     url="https://www2.illinois.gov/idoc/aboutus/advisoryboard/Pages/default.aspx",
 )
+
 spider = IlCorrectionsSpider()
 
 freezer = freeze_time("2020-12-08")
 freezer.start()
 
-parsed_items = [item for item in spider.parse(test_response)]
+parsed_dates = spider._parse_all_links(test_response)
+test_generator = spider._meeting(test_pdf_response, "November 4, 2019")
+test_meeting = next(test_generator)
 
 freezer.stop()
 
-
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
+def meeting_count(parsed_dates):
+    assert len(parsed_dates) == 26
 
 
-"""
-Uncomment below
-"""
-
-# def test_title():
-#     assert parsed_items[0]["title"] == "EXPECTED TITLE"
+def test_title():
+    assert test_meeting["title"] == "Adult Advisory Board / Women's Subcommittee Meeting"
 
 
-# def test_description():
-#     assert parsed_items[0]["description"] == "EXPECTED DESCRIPTION"
+def test_description():
+    assert test_meeting["description"] == ""
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_start():
+    assert test_meeting["start"] == datetime(2019, 11, 4, 10, 30)
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_end():
+    assert test_meeting["end"] == datetime(2019, 11, 4, 12, 0)
+
+def test_id():
+    assert test_meeting["id"] == "il_corrections/201911041030/x/adult_advisory_board_women_s_subcommittee_meeting"
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_status():
+    assert test_meeting["status"] == "passed"
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_location():
+    assert test_meeting["location"] == {
+        "address": "1096 1350th St, Lincoln, IL 62656",
+        "name": "Logan Correctional Center"
+    }
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_source():
+    assert test_meeting["source"] == "https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/Agenda%20-%20November%204th-2019.pdf"
 
 
-# def test_location():
-#     assert parsed_items[0]["location"] == {
-#         "name": "EXPECTED NAME",
-#         "address": "EXPECTED ADDRESS"
-#     }
+def test_links():
+    assert test_meeting["links"] == [
+           {'href': 'https://www2.illinois.gov/idoc/aboutus/advisoryboard/Documents/Agenda%20-%20November%204th-2019.pdf',
+            'title': 'Agenda'}]
 
 
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+def test_classification():
+    assert test_meeting["classification"] == "ADVISORY_COMMITTEE"
 
-
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
-
-
-# def test_classification():
-#     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
-
-
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+def test_all_day():
+    assert test_meeting["all_day"] is False

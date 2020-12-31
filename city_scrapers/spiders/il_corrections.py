@@ -47,7 +47,6 @@ class IlCorrectionsSpider(CityScrapersSpider):
                 )
 
     def _meeting(self, response, date):
-        print("meeting")
         self.pdf_text = self._parse_pdf(response)
         meeting = Meeting(
             title=self._parse_title(),
@@ -86,7 +85,7 @@ class IlCorrectionsSpider(CityScrapersSpider):
 
     def _parse_times(self, date, start=True):
         """Parse start datetime as a naive datetime object."""
-        times = re.findall("(\d{1,2}:\d{2} ?(am|a\.m\.|pm|p\.m\.))", self.pdf_text.lower())
+        times = re.findall(r"(\d{1,2}:\d{2} ?(am|a\.m\.|pm|p\.m\.))", self.pdf_text)
         start_time = times[0][0].replace(".", "")
         end_time = times[1][0].replace(".", "")
 
@@ -126,6 +125,10 @@ class IlCorrectionsSpider(CityScrapersSpider):
             "joliet treatment center": {
                 "address": "2848 McDonough St, Joliet, IL 60431",
                 "name": "Joliet Treatment Center"
+            },
+            "no known location": {
+                "name": "TBD",
+                "address": ""
             }
         }
 
@@ -133,10 +136,12 @@ class IlCorrectionsSpider(CityScrapersSpider):
             if location in self.pdf_text:
                 return location_lookup[location]
 
+        return location_lookup["no known location"]
+
     def _parse_all_links(self, response):
         """ Gather dates, links """
         for link in response.css('a'):
-            date = link.re_first("""((Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|
+            date = link.re_first(r"""((Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|
             May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|
             Dec(ember)?)\s+\d{1,2},\s+\d{4})|((1[0-2]|0?[1-9])/(3[01]|
             [12][0-9]|0?[1-9])/(?:[0-9]{2})?[0-9]{2})""")
