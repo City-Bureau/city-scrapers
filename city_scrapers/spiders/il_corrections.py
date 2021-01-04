@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from io import BytesIO, StringIO
+from collections import defaultdict
 
 import scrapy
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
@@ -21,7 +22,6 @@ class IlCorrectionsSpider(CityScrapersSpider):
     def __init__(self):
         self.links = {}
         self.url_base = "https://www2.illinois.gov"
-        self.pdf_text = ""
 
     def parse(self, response):
         """
@@ -48,16 +48,16 @@ class IlCorrectionsSpider(CityScrapersSpider):
                 )
 
     def _meeting(self, response, date):
-        self.pdf_text = self._parse_pdf(response)
+        pdf_text = self._parse_pdf(response)
         meeting = Meeting(
-            title=self._parse_title(),
+            title=self._parse_title(pdf_text),
             description="",
             classification=ADVISORY_COMMITTEE,
-            start=self._parse_times(date),
-            end=self._parse_times(date, False),
+            start=self._parse_times(date, pdf_text),
+            end=self._parse_times(date, pdf_text, False),
             all_day=False,
             time_notes="",
-            location=self._parse_location(),
+            location=self._parse_location(pdf_text),
             links=self._parse_links(date),
             source=response.url,
         )
@@ -68,24 +68,23 @@ class IlCorrectionsSpider(CityScrapersSpider):
 
     def _parse_pdf(self, response):
         """Parse dates and details from schedule PDF"""
-        print("prase pdf)")
         lp = LAParams(line_margin=0.1)
         out_str = StringIO()
         extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
         pdf_text = out_str.getvalue()
         return pdf_text.lower()
 
-    def _parse_title(self):
+    def _parse_title(self, pdf_text):
         """Parse or generate meeting title."""
         title = "Adult Advisory Board Meeting"
 
-        if "subcommittee" in self.pdf_text:
+        if "subcommittee" in pdf_text:
             title = "Adult Advisory Board / Women's Subcommittee Meeting"
         return title
 
-    def _parse_times(self, date, start=True):
+    def _parse_times(self, date, pdf_text, start=True):
         """Parse start datetime as a naive datetime object."""
-        times = re.findall(r"(\d{1,2}:\d{2} ?(am|a\.m\.|pm|p\.m\.))", self.pdf_text)
+        times = re.findall(r"(\d{1,2}:\d{2} ?(am|a\.m\.|pm|p\.m\.))", pdf_text)
         start_time = times[0][0].replace(".", "")
         end_time = times[1][0].replace(".", "")
 
@@ -104,7 +103,7 @@ class IlCorrectionsSpider(CityScrapersSpider):
 
         return time_object
 
-    def _parse_location(self):
+    def _parse_location(self, pdf_text):
         """Parse or generate location."""
 
         location_lookup = {
@@ -128,13 +127,14 @@ class IlCorrectionsSpider(CityScrapersSpider):
         }
 
         for location in location_lookup.keys():
-            if location in self.pdf_text:
+            if location in pdf_text:
                 return location_lookup[location]
 
         return location_lookup["no known location"]
 
     def _parse_all_links(self, response):
         """ Gather dates, links """
+        link_dict = defaultdict(dict)
         for link in response.css("a"):
             date = link.re_first(
                 r"""((Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|
@@ -144,13 +144,11 @@ class IlCorrectionsSpider(CityScrapersSpider):
             )
 
             if date is not None:
-                if date not in self.links:
-                    self.links[date] = {}
                 for item in ["Notice", "Agenda", "Minutes"]:
                     if item in link.attrib["href"]:
-                        self.links[date][item] = self.url_base + link.attrib["href"]
+                        link_dict[date][item] = self.url_base + link.attrib["href"]
 
-        return self.links
+        return link_dict
 
     def _parse_links(self, date):
         """Parse or generate links."""

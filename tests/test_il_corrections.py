@@ -14,8 +14,6 @@ test_pdf_response = file_response(
     mode="rb",
 )
 
-print(test_pdf_response)
-
 test_response = file_response(
     join(dirname(__file__), "files", "il_corrections.html"),
     url="https://www2.illinois.gov/idoc/aboutus/advisoryboard/Pages/default.aspx",
@@ -33,9 +31,8 @@ test_meeting = next(test_generator)
 freezer.stop()
 
 
-def meeting_count(parsed_dates):
-    assert len(parsed_dates) == 26
-
+def test_meeting_count():
+    assert len(parsed_dates) == 41
 
 def test_title():
     assert (
