@@ -1,3 +1,4 @@
+import logging
 import os
 
 # Scrapy settings for city_scrapers project
@@ -52,3 +53,5 @@ EXTENSIONS = {
 }
 
 CLOSESPIDER_ERRORCOUNT = 5
+
+logging.getLogger("pdfminer").propagate = False
