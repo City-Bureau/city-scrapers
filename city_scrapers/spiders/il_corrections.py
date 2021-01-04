@@ -1,7 +1,7 @@
 import re
+from collections import defaultdict
 from datetime import datetime
 from io import BytesIO, StringIO
-from collections import defaultdict
 
 import scrapy
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
