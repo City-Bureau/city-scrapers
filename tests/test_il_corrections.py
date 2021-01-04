@@ -24,7 +24,7 @@ spider = IlCorrectionsSpider()
 freezer = freeze_time("2020-12-08")
 freezer.start()
 
-parsed_dates = spider._parse_all_links(test_response)
+spider.links = spider._parse_all_links(test_response)
 test_generator = spider._meeting(test_pdf_response, "November 4, 2019")
 test_meeting = next(test_generator)
 
@@ -32,7 +32,7 @@ freezer.stop()
 
 
 def test_meeting_count():
-    assert len(parsed_dates) == 41
+    assert len(spider.links) == 40
 
 
 def test_title():
