@@ -34,6 +34,7 @@ freezer.stop()
 def test_meeting_count():
     assert len(parsed_dates) == 41
 
+
 def test_title():
     assert (
         test_meeting["title"] == "Adult Advisory Board / Women's Subcommittee Meeting"
