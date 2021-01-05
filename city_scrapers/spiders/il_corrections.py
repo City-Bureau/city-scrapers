@@ -81,14 +81,20 @@ class IlCorrectionsSpider(CityScrapersSpider):
     def _parse_times(self, date, pdf_text, start=True):
         """Parse start datetime as a naive datetime object."""
         times = re.findall(r"(\d{1,2}:\d{2} ?(am|a\.m\.|pm|p\.m\.))", pdf_text)
-        start_time = times[0][0].replace(".", "")
-        end_time = times[1][0].replace(".", "")
 
         # Add conversion to datetime object
         if start:
+            try:
+                start_time = times[0][0].replace(".", "")
+            except IndexError:
+                start_time = "12:00am"
             return self._try_time_format(date, start_time)
         else:
-            return self._try_time_format(date, end_time)
+            try:
+                end_time = times[1][0].replace(".", "")
+                return self._try_time_format(date, end_time)
+            except IndexError:
+                return None
 
     def _try_time_format(self, date, time):
         """Try time formatting with and without spacing"""
