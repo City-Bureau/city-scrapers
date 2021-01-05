@@ -64,7 +64,7 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Historic_Preservation/Agendas/draft_ccl_010721.pdf",
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Historic_Preservation/Agendas/draft_ccl_010721.pdf",  # noqa
             "title": "Draft Agenda",
         },
     ]

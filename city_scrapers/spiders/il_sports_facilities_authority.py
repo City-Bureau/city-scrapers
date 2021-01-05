@@ -1,7 +1,7 @@
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from dateutil.parser import parse
+from dateutil.parser import ParserError, parse
 
 
 class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
@@ -23,7 +23,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         """
         self._validate_location(response)
 
-        item = response.css(".wpb_wrapper .inner-text h2::text").getall()[0]
+        item = response.css("#post-area h2::text").getall()[0]
         meeting = Meeting(
             title=self._parse_title(item.partition(":")[0]),
             description="",
@@ -42,14 +42,17 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
         yield meeting
 
-        for item in response.css(".wpb_wrapper p")[2:]:
+        for item in response.css("#post-area p"):
+            start = self._parse_start(item)
+            if not start:
+                continue
             meeting = Meeting(
                 title=self._parse_title(
                     " ".join(item.css("::text").get().split()[:-1])
                 ),
                 description="",
                 classification=self._parse_classification(item.css("::text").get()),
-                start=self._parse_start(item),
+                start=start,
                 end=None,
                 all_day=False,
                 time_notes="",
@@ -64,7 +67,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
             yield meeting
 
     def _validate_location(self, response):
-        location_text = response.css(".wpb_wrapper p strong::text").getall()[1]
+        location_text = " ".join(response.css("#post-area strong::text").getall())
         if "Guaranteed Rate Field" not in location_text:
             raise ValueError("Meeting location has changed")
 
@@ -84,7 +87,12 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
         parts = item.css("::text").get().split()
-        return parse(parts[-1])
+        if len(parts) == 0:
+            return
+        try:
+            return parse(parts[-1])
+        except ParserError:
+            return
 
     def _parse_links(self, item):
         """Parse or generate links."""
