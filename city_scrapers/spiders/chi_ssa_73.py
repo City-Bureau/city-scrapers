@@ -80,6 +80,11 @@ class ChiSsa73Spider(CityScrapersSpider):
                 "address": "1700 S. Wentworth Avenue, Chicago, Illinois",
                 "name": "Leonard M. Louie Fieldhouse",
             }
+        elif "Zoom" in response.text:
+            return {
+                "address": "",
+                "name": "Zoom",
+            }
         else:
             raise ValueError("Meeting address has changed")
 

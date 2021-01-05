@@ -159,6 +159,6 @@ class ChiLandmarkCommissionSpider(CityScrapersSpider):
         return links
 
     def _validate_location(self, response):
-        desc_str = " ".join(response.css(".col-xs-12 p::text").extract())
+        desc_str = " ".join(response.css(".page-description-above p::text").extract())
         if "201-A" not in desc_str:
             raise ValueError("Meeting location has changed")

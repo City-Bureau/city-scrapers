@@ -18,11 +18,14 @@ class CookPharmaceuticalDisposalSpider(CityScrapersSpider):
         # Scraping past meetings
         for item in response.xpath("//div[@class='col-sm-12 ']/p"):
             self._ignore = False
+            start = self._parse_start(item)
+            if not start:
+                continue
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
                 classification=self._parse_classification(item),
-                start=self._parse_start(item),
+                start=start,
                 end=self._parse_end(item),
                 all_day=self._parse_all_day(item),
                 time_notes=self._parse_time_notes(item),
@@ -54,7 +57,10 @@ class CookPharmaceuticalDisposalSpider(CityScrapersSpider):
         # Dates are not correct for some meetings as they
         # are not provided in the URL
         # Dates format is not consistent in the URLs
-        report_obj = item.xpath(".//a/@href")[0]
+        report_links = item.xpath(".//a/@href")
+        if len(report_links) == 0:
+            return
+        report_obj = report_links[0]
         report_desc = report_obj.get().split("/")[-1].split("-")
         if report_desc[2].isdigit():
             date_str = report_desc[0][:-1] + report_desc[1] + report_desc[2]
