@@ -21,7 +21,6 @@ class IlCorrectionsSpider(CityScrapersSpider):
 
     def __init__(self):
         self.links = {}
-        self.url_base = "https://www2.illinois.gov"
 
     def parse(self, response):
         """
@@ -146,7 +145,7 @@ class IlCorrectionsSpider(CityScrapersSpider):
             if date is not None:
                 for item in ["Notice", "Agenda", "Minutes"]:
                     if item in link.attrib["href"]:
-                        link_dict[date][item] = self.url_base + link.attrib["href"]
+                        link_dict[date][item] = response.urljoin(link.attrib["href"])
 
         return link_dict
 
