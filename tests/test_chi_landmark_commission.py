@@ -68,6 +68,7 @@ def test_links():
             "title": "Draft Agenda",
         },
     ]
+
     assert parsed_items[-1]["links"] == [
         {
             "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Historic_Preservation/Publications/CCL_Permit_Hearing_Emergency_Rules_Final_Draft_July_27_2020_RL_final_signed.pdf",  # noqa
