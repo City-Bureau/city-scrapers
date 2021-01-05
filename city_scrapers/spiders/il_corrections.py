@@ -19,9 +19,6 @@ class IlCorrectionsSpider(CityScrapersSpider):
         "https://www2.illinois.gov/idoc/aboutus/advisoryboard/Pages/default.aspx"
     ]
 
-    def __init__(self):
-        self.links = {}
-
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
