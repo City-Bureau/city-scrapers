@@ -27,7 +27,7 @@ class ChiSsa27Spider(CityScrapersSpider):
     def parse(self, response):
         """   `parse` should always `yield` Meeting items. """
         self.minutes_list = self.get_minutes_panel_items(response)
-        self._validate_locations(response)
+        location = self._parse_location(response)
         commission_path = "div #content-232764 div.panel-body p"
 
         for item in response.css(commission_path)[1:]:  # main
@@ -47,7 +47,7 @@ class ChiSsa27Spider(CityScrapersSpider):
                 end=None,
                 all_day=False,
                 time_notes="",
-                location=self.location,
+                location=location,
                 links=links,
                 source=response.url,
             )
@@ -148,13 +148,16 @@ class ChiSsa27Spider(CityScrapersSpider):
         except ValueError:
             return
 
-    def _validate_locations(self, response):
+    def _parse_location(self, response):
         commission_path = (
             "#content-232764 div.panel-body > p:nth-child(1) > strong::text"
         )
         commission_addy = response.css(commission_path).get()
-        if commission_addy.find("Sheil") < 0:  # fail
-            raise ValueError("Commission Meeting location has changed")
+        if "Sheil" in commission_addy:
+            return self.location
+        if "Zoom" in commission_addy:
+            return {"name": "Zoom", "address": ""}
+        raise ValueError("Meeting location has changed")
 
     def _parse_classification(self, title):
         """Parse or generate classification from allowed options."""
