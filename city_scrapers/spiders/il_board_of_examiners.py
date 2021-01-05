@@ -72,16 +72,19 @@ class IlBoardOfExaminersSpider(CityScrapersSpider):
 
     def _parse_location(self, item):
         """Parse or generate location."""
-        temp_address = item.css(".minuteLocation p::text").extract()
+        addr_list = item.css(".minuteLocation p::text").extract()
+        addr_str = " ".join(addr_list).strip()
         [name, address] = ["", ""]
-        if temp_address:
-            if temp_address[0][0].isdigit():
+        if addr_list:
+            if addr_str[0][0].isdigit():
                 name = ""
-                address = self.remove_special_chars("".join(temp_address))
-            elif "zoom" in temp_address.lower():
+                address = re.sub(r"\s(?=,)", "", self.remove_special_chars(addr_str))
+            elif "virtual" in addr_str.lower() or "zoom" in addr_str.lower():
                 return {"name": "Virtual meeting via Zoom", "address": ""}
+            elif len(addr_list) == 1:
+                return {"name": "See meeting details", "address": ""}
             else:
-                [name, address] = "".join(temp_address).split("\n", 1)
+                [name, address] = "".join(addr_list).split("\n", 1)
                 name = self.remove_special_chars(name)
                 address = self.remove_special_chars(address)
         return {

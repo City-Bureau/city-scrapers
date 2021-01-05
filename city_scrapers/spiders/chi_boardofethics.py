@@ -18,17 +18,21 @@ class ChiBoardOfEthicsSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for date_table in response.css(".page-full-description-above .col-xs-12 table"):
-            header = (
-                date_table.xpath("./preceding-sibling::*")
-                .css("h2::text, h3::text")[-1]
-                .extract()
-            )
-            description = re.sub(
-                r"\s+",
-                " ",
-                date_table.xpath("./preceding-sibling::p/text()")[-1].extract() or "",
-            )
+        headers = (
+            response.css(".page-full-description-above .col-xs-12")
+            .css("h2 *::text, h3 *::text")
+            .extract()
+        )
+        descriptions = (
+            response.css(".page-full-description-above .col-xs-12")
+            .css("p *::text")
+            .extract()
+        )
+        for idx, date_table in enumerate(
+            response.css(".page-full-description-above .col-xs-12 table")
+        ):
+            header = headers[idx]
+            description = re.sub(r"\s+", " ", descriptions[idx])
             location = self._parse_location(description)
             for meeting_date in date_table.css("tbody tr td::text").extract():
                 if not meeting_date.strip():

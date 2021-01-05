@@ -23,8 +23,8 @@ class IlLotterySpider(CityScrapersSpider):
         needs.
         """
 
-        if "122 South Michigan Avenue, 19th Floor" not in response.text:
-            raise ValueError("Meeting address has changed")
+        # if "122 South Michigan Avenue, 19th Floor" not in response.text:
+        #     raise ValueError("Meeting address has changed")
 
         upcoming_meetings = self._parse_upcoming_meetings(response)
         past_meetings = self._parse_past_meetings(response)
@@ -48,10 +48,11 @@ class IlLotterySpider(CityScrapersSpider):
                 end=None,
                 all_day=False,
                 time_notes="",
-                location={
-                    "name": "Chicago Lottery Office",
-                    "address": "122 South Michigan Avenue, 19th Floor, Chicago, IL 60603",  # noqa
-                },
+                location={"name": "Virtual", "address": ""},
+                # location={
+                #     "name": "Chicago Lottery Office",
+                #     "address": "122 South Michigan Avenue, 19th Floor, Chicago, IL 60603",  # noqa
+                # },
                 source=response.url,
             )
             meeting["id"] = self._get_id(meeting)

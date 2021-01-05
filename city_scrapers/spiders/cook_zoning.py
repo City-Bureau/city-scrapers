@@ -11,10 +11,11 @@ class CookZoningSpider(CityScrapersSpider):
     agency = "Cook County Zoning Board of Appeals"
     timezone = "America/Chicago"
     start_urls = ["https://www.cookcountyil.gov/agency/zoning-board-appeals-0"]
-    location = {
-        "name": "County Administration Building",
-        "address": "69 W Washington St 22nd Floor Conference Room, Chicago, IL 60602",
-    }
+    location = {"name": "Virtual", "address": ""}
+    # location = {
+    #     "name": "County Administration Building",
+    #     "address": "69 W Washington St 22nd Floor Conference Room, Chicago, IL 60602",
+    # }
 
     def parse(self, response):
         """
@@ -23,7 +24,7 @@ class CookZoningSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        self._validate_location(response)
+        # self._validate_location(response)
         hearing_list = response.css(".field-item ul")[1]
         for item in hearing_list.css("li"):
             item_text = " ".join(item.css("*::text").extract())
@@ -54,11 +55,11 @@ class CookZoningSpider(CityScrapersSpider):
         date_obj = datetime.strptime(date_str, "%B %d %Y").date()
         return datetime.combine(date_obj, time(13))
 
-    def _validate_location(self, response):
-        """Check if the meeting location has changed"""
-        text = " ".join(response.css(".field-item p::text").extract())
-        if "69 W" not in text:
-            raise ValueError("Meeting location has changed")
+    # def _validate_location(self, response):
+    #     """Check if the meeting location has changed"""
+    #     text = " ".join(response.css(".field-item p::text").extract())
+    #     if "69 W" not in text:
+    #         raise ValueError("Meeting location has changed")
 
     def _parse_links(self, item):
         """Parse or generate links."""

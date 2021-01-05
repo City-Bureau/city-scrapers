@@ -14,7 +14,7 @@ test_response = file_response(
 )
 spider = IlGamingBoardSpider()
 
-freezer = freeze_time("2019-06-04")
+freezer = freeze_time("2020-12-09")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 10
+    assert len(parsed_items) == 9
 
 
 def test_title():
@@ -35,7 +35,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 1, 30, 9)
+    assert parsed_items[0]["start"] == datetime(2020, 1, 30, 9)
 
 
 def test_end():
@@ -48,7 +48,7 @@ def test_time_notes():
 
 def test_id():
     assert (
-        parsed_items[0]["id"] == "il_gaming_board/201901300900/x/riverboat_video_gaming"
+        parsed_items[0]["id"] == "il_gaming_board/202001300900/x/riverboat_video_gaming"
     )
 
 
@@ -69,20 +69,20 @@ def test_source():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatAgenda.pdf",  # noqa
-            "title": "Agenda: Riverboat",
+            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20200130CombinedAgenda.pdf",  # noqa
+            "title": "Open Meeting Agenda",
         },
         {
-            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatMinutes.pdf",  # noqa
-            "title": "Minutes: Riverboat",
+            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20200130RiverboatAudio.mp3",  # noqa
+            "title": "Casino Audio",
         },
         {
-            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130RiverboatAudio.mp3",  # noqa
-            "title": "Audio: Riverboat",
+            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20200130VideoAudio.mp3",  # noqa
+            "title": "Video Audio",
         },
         {
-            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20190130VideoAudio.mp3",  # noqa
-            "title": "Audio: Video Gaming",
+            "href": "http://www.igb.illinois.gov/FilesBoardMeeting/20200130CombinedMinutes.pdf",  # noqa
+            "title": "Open Meeting Minutes",
         },
     ]
 

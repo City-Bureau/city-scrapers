@@ -25,9 +25,14 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
         description = " ".join(
             response.css(".vc_col-sm-6 .wpb_wrapper p *::text").extract()
         )
+        location = self.location
         # Cancelled meetings don't show the address,
         # but otherwise should be in the description
-        if "cancel" not in description.lower() and "301 East Cermak" not in description:
+        if "virtual" in description.lower():
+            location = {"name": "Virtual", "address": ""}
+        elif (
+            "cancel" not in description.lower() and "301 East Cermak" not in description
+        ):
             raise ValueError("Meeting location has changed")
         for item in response.css(".supsystic-table tr")[3:]:
             title = self._parse_title(item)
@@ -40,7 +45,7 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
                 end=None,
                 all_day=False,
                 time_notes="Refer to notice for start time",
-                location=self.location,
+                location=location,
                 links=self._parse_links(item),
                 source=response.url,
             )

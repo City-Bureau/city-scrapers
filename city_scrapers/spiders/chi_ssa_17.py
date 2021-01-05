@@ -58,10 +58,10 @@ class ChiSsa17Spider(CityScrapersSpider):
         dt_str = re.sub(
             r"([\.\*,]|\s(?=[apm]{2}$))", "", item.xpath("./text()").extract_first()
         ).strip()
-        date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2}( \d{4})?", dt_str)
+        date_match = re.search(r"[A-Z][a-z]{2,8} \d{1,2}[a-z]*,?( \d{4})?", dt_str)
         if not date_match:
             return
-        date_str = date_match.group()
+        date_str = re.sub(r"(?<=\d)[a-z]+", "", date_match.group())
         if not re.search(r"\d{1,2} \d{4}", date_str):
             year_str = re.search(r"\d{4}", header).group()
             date_str += " " + year_str
@@ -84,7 +84,9 @@ class ChiSsa17Spider(CityScrapersSpider):
         minutes_list = minutes_header.xpath("following-sibling::ul")[0].css("a")
 
         for minutes in minutes_list:
-            minutes_text = minutes.xpath("./text()").extract_first()
+            minutes_text = re.sub(
+                r"(?<=\d)[a-z]+", "", minutes.xpath("./text()").extract_first()
+            )
             minutes_date = datetime.strptime(
                 ", ".join(minutes_text.split(", ")[-2:]), "%B %d, %Y",
             ).date()

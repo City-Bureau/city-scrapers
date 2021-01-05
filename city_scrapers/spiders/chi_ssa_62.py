@@ -89,7 +89,11 @@ class ChiSsa62Spider(CityScrapersSpider):
             return datetime.combine(ddate, time()), None
         ttimes = times.split("-")
         ampm = ttimes[0].split(" ")[1]
-        starttime = datetime.strptime(ttimes[0].strip(), "%I:%M %p").time()
+        try:
+            starttime = datetime.strptime(ttimes[0].strip(), "%I:%M %p").time()
+        except ValueError:
+            # Ignoring error with Halloween
+            return None, None
         start = datetime.combine(ddate, starttime)
         if len(ttimes) > 1:
             if not ("a" in ttimes[1] or "p" in ttimes[1]):

@@ -76,7 +76,8 @@ class ChiSsa5Spider(CityScrapersSpider):
             if not text:
                 continue
             start = self._parse_start(text, minutes=True)
-
+            if not start:
+                continue
             links = [{"href": item.attrib["href"], "title": "Minutes"}]
             date_match = [
                 idx

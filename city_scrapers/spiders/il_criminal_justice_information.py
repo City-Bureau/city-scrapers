@@ -25,7 +25,7 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
     }
 
     def parse(self, response):
-        """
+        """.
         `parse` should always `yield` Meeting items.
 
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
@@ -47,6 +47,8 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
                 row_loc = location
                 row_end_str = end_str
                 start, asterisks = self._parse_start(row, start_str)
+                if not start:
+                    continue
                 # Check if asterisks exist and strikethrough not present
                 if (
                     asterisks
@@ -125,6 +127,8 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
         if asterisks:
             asterisks = asterisks.group()
             date_str = date_str.replace(asterisks, "")
+        if not date_str.strip():
+            return None, None
         start = self._parse_dt_str(date_str, time_str)
         return start, asterisks
 
