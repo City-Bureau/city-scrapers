@@ -60,7 +60,7 @@ class ChiPoliceBoardSpider(CityScrapersSpider):
         """
         loc_text = " ".join(response.xpath("//strong/text()").extract())
         if "3510 South" not in loc_text:
-            raise ValueError("Meeting location has changed")
+            return {"address": "", "name": "See source for details"}
         return {
             "address": "3510 S Michigan Ave, Chicago IL 60653",
             "name": "Chicago Public Safety Headquarters",
