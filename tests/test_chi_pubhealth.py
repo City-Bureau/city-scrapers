@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, PASSED
+from city_scrapers_core.constants import BOARD, TENTATIVE
 from city_scrapers_core.utils import file_response
 
 from city_scrapers.spiders.chi_pubhealth import ChiPubHealthSpider
@@ -10,7 +10,7 @@ from city_scrapers.spiders.chi_pubhealth import ChiPubHealthSpider
 test_response = file_response(
     join(dirname(__file__), "files", "chi_pubhealth.html"),
     url=(
-        "https://www.chicago.gov/city/en/depts/cdph/supp_info/boh/2018-board-of-health-meetings.html"  # noqa
+        "https://www.chicago.gov/city/en/depts/cdph/supp_info/boh/2021-board-of-health-meetings.html"  # noqa
     ),
 )
 spider = ChiPubHealthSpider()
@@ -27,7 +27,7 @@ def test_unique_id_count():
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "Board of Health Meeting"
+    assert parsed_items[0]["title"] == "Board of Health"
 
 
 def test_description():
@@ -35,7 +35,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2018, 1, 17, 9)
+    assert parsed_items[0]["start"] == datetime(2021, 1, 20, 9)
 
 
 def test_end():
@@ -43,26 +43,15 @@ def test_end():
 
 
 def test_id():
-    assert (
-        parsed_items[0]["id"] == "chi_pubhealth/201801170900/x/board_of_health_meeting"
-    )
+    assert parsed_items[0]["id"] == "chi_pubhealth/202101200900/x/board_of_health"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [
-        {
-            "title": "Agenda",
-            "href": "https://www.chicago.gov/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Agenda_Jan172018.pdf",  # noqa
-        },
-        {
-            "title": "Minutes",
-            "href": "https://www.chicago.gov/content/dam/city/depts/cdph/policy_planning/Board_of_Health/BOH_Minutes_Jan172018.pdf",  # noqa
-        },
-    ]
+    assert parsed_items[0]["links"] == []
 
 
 @pytest.mark.parametrize("item", parsed_items)

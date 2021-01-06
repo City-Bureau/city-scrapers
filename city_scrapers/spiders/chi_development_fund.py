@@ -24,7 +24,7 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
         needs.
         """
         last_year = datetime.today().year - 1
-        for column in response.css(".col-xs-12 td p"):
+        for column in response.css(".col-12 td p"):
             for meeting_str in re.split(r"\<br *\/?\>", column.extract()):
                 item = Selector(text=meeting_str)
                 start = self._parse_start(item)
