@@ -16,7 +16,7 @@ test_response = file_response(
 spider = ChiDevelopmentFundSpider()
 spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
-freezer = freeze_time("2020-08-06")
+freezer = freeze_time("2021-01-06")
 freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
