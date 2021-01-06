@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMISSION, PASSED
+from city_scrapers_core.constants import COMMISSION, TENTATIVE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
@@ -40,11 +40,11 @@ freezer.stop()
 
 
 def test_meeting_count():
-    assert len(parsed_items) == 22
+    assert len(parsed_items) == 28
 
 
 def test_unique_id():
-    assert len(set([item["id"] for item in parsed_items])) == 22
+    assert len(set([item["id"] for item in parsed_items])) == 28
 
 
 def test_title():
@@ -56,7 +56,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2020, 1, 23, 10, 0)
+    assert parsed_items[0]["start"] == datetime(2021, 2, 18, 10, 0)
     assert parsed_detail["start"] == datetime(2020, 2, 5, 10)
 
 
@@ -65,11 +65,11 @@ def test_end():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_plan_commission/202001231000/x/commission"
+    assert parsed_items[0]["id"] == "chi_plan_commission/202102181000/x/commission"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
 def test_location():
@@ -81,16 +81,7 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [
-        {
-            "href": "https://chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Jan_2020_Agenda.pdf",  # noqa
-            "title": "Agenda ",
-        },
-        {
-            "href": "https://chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Jan_2020_Map_rev.pdf",  # noqa
-            "title": "Map",
-        },
-    ]
+    assert parsed_items[0]["links"] == []
     assert parsed_detail["links"] == [
         {
             "href": "https://www.chicago.gov/content/dam/city/depts/dcd/supp_info/woodlawn/woodlawn_report_draft_01_29_2020.pdf",  # noqa

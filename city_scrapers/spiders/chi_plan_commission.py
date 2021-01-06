@@ -25,7 +25,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
         needs.
         """
         last_year = datetime.today().replace(year=datetime.today().year - 1)
-        for meeting_group in response.css(".page-full-description table[cellspacing]"):
+        for meeting_group in response.css(".page-description table[cellspacing]"):
             year_str = meeting_group.xpath("preceding::strong[1]/text()").re_first(
                 r"\d{4}"
             )
@@ -71,8 +71,12 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
 
     def _parse_detail(self, response, **kwargs):
         start = self._parse_detail_start(response, kwargs["start"])
-        detail_text = " ".join(response.css(".col-xs-12 > p *::text").extract())
-        if "121 N" not in detail_text and "virtual" not in detail_text.lower():
+        detail_text = " ".join(response.css(".col-12 > p *::text").extract())
+        if "virtual" in detail_text.lower():
+            location = {"name": "Virtual, see meeting details", "address": ""}
+        elif "121 N" in detail_text:
+            location = self.location
+        else:
             raise ValueError("Meeting location has changed")
         meeting = Meeting(
             title="Commission",
@@ -82,7 +86,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
             end=None,
             time_notes="",
             all_day=False,
-            location=self.location,
+            location=location,
             source=response.url,
             links=self._parse_detail_links(response),
         )
