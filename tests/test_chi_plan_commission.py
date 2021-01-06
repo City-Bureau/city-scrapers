@@ -88,8 +88,16 @@ def test_links():
             "title": 'Draft "Woodlawn Plan Consolidation Report"',
         },
         {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/woodlawn_plan_presentation.pdf",  # noqa
+            "title": "Presentation",
+        },
+        {
             "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/5616_s_maryland.pdf",  # noqa
             "title": "PD Amendment Application",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/5615_s_maryland_pres.pdf",  # noqa
+            "title": "Presentation",
         },
         {
             "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/808_n_cleveland.pdf",  # noqa
@@ -100,24 +108,56 @@ def test_links():
             "title": "PD Amendment Application",
         },
         {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/180_n_ada_pres.pdf",  # noqa
+            "title": "Presentation",
+        },
+        {
             "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/1150_w_lake.pdf",  # noqa
             "title": "PD Application",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/1150_w_lake_pres.pdf",  # noqa
+            "title": "Presentation",
         },
         {
             "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/725_w_randolph.pdf",  # noqa
             "title": "PD Amendment Application",
         },
         {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/725_w_randolph_pres.pdf",  # noqa
+            "title": "Presentation",
+        },
+        {
             "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/777_n_franklin.pdf",  # noqa
             "title": "PD Application",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/749_n_franklin_pres.pdf",  # noqa
+            "title": "Presentation",
         },
         {
             "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/141_w_diversey.pdf",  # noqa
             "title": "LPO Application",
         },
         {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/141_w_diversey_pres.pdf",  # noqa
+            "title": "Presentation",
+        },
+        {
             "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Feb_2020_Public_Notice.pdf",  # noqa
             "title": "Public Notice",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/feb_2020_agenda.pdf",  # noqa
+            "title": "Agenda",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/feb_2020_map.pdf",  # noqa
+            "title": "Map",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/CPC_Feb_2020_Minutes-draft.pdf",  # noqa
+            "title": "Minutes",
         },
     ]
 

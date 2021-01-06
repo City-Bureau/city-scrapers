@@ -114,7 +114,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
         return links
 
     def _parse_detail_start(self, response, start):
-        detail_text = " ".join(response.css(".col-xs-12 > p *::text").extract())
+        detail_text = " ".join(response.css(".col-12 > p *::text").extract())
         time_strs = re.findall(
             r"(\d{1,2}(\:\d{2})?\s+[apm\.]{2,4})", detail_text, flags=re.I
         )
@@ -131,7 +131,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
 
     def _parse_detail_links(self, response):
         links = []
-        for link in response.css(".page-full-description-above a"):
+        for link in response.css(".page-description-above a"):
             title_str = re.sub(
                 r"\s+", " ", " ".join(link.css("*::text").extract())
             ).strip()

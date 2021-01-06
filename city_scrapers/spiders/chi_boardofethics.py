@@ -64,8 +64,7 @@ class ChiBoardOfEthicsSpider(CityScrapersSpider):
 
     @staticmethod
     def _parse_location(text):
-        name = re.compile(r"(held at the) (?P<name>.*?),(?P<address>.*).")
-        matches = name.search(text)
+        matches = re.search(r"(held at the) (?P<name>.*?)[\.,](?P<address>.*)\.?", text)
         location_name = matches.group("name").strip()
         address = matches.group("address").strip()
         return {
