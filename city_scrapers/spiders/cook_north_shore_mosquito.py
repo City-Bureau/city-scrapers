@@ -24,35 +24,43 @@ class CookNorthShoreMosquitoSpider(CityScrapersSpider):
         needs.
         """
         self._validate_location(response)
-        cal_title = response.css(".entry-content h2::text").extract_first()
-        year_str = re.search(r"\d{4}", cal_title).group()
+        headers = response.css(".entry-content h2::text").extract()[:2]
+        meeting_groups = response.css(".entry-content h2 + ul")[:2]
+        for header, meeting_group in zip(headers, meeting_groups):
+            year_str = re.search(r"\d{4}", header).group()
+            for item in meeting_group.css("li"):
+                start = self._parse_start(item, year_str)
+                if not start:
+                    continue
+                meeting = Meeting(
+                    title="Board of Trustees",
+                    description="",
+                    classification=BOARD,
+                    start=start,
+                    end=None,
+                    all_day=False,
+                    location=self.location,
+                    links=self._parse_links(item),
+                    source=response.url,
+                )
 
-        for item in response.css(".entry-content li li"):
-            meeting = Meeting(
-                title="Board of Trustees",
-                description="",
-                classification=BOARD,
-                start=self._parse_start(item, year_str),
-                end=None,
-                all_day=False,
-                location=self.location,
-                links=self._parse_links(item),
-                source=response.url,
-            )
+                meeting["status"] = self._get_status(
+                    meeting, text=item.css("::text").extract_first()
+                )
+                meeting["id"] = self._get_id(meeting)
 
-            meeting["status"] = self._get_status(
-                meeting, text=item.css("::text").extract_first()
-            )
-            meeting["id"] = self._get_id(meeting)
-
-            yield meeting
+                yield meeting
 
     def _parse_start(self, item, year_str):
         """Parse start datetime as a naive datetime object."""
-        date_str = re.search(
+        date_match = re.search(
             r"[A-Za-z]{3,10} \d{1,2}", item.css("::text").extract_first()
-        ).group()
-        return datetime.strptime(" ".join([date_str, year_str, "7pm"]), "%B %d %Y %I%p")
+        )
+        if not date_match:
+            return
+        return datetime.strptime(
+            " ".join([date_match.group(), year_str, "7pm"]), "%B %d %Y %I%p"
+        )
 
     def _validate_location(self, response):
         """Parse or generate location."""
