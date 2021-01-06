@@ -14,7 +14,7 @@ test_response = file_response(
 )
 spider = ChiStandardsTestsSpider()
 
-freezer = freeze_time("2019-10-19")
+freezer = freeze_time("2020-01-06")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
