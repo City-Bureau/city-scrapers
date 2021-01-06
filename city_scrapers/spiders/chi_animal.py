@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
@@ -21,10 +22,20 @@ class ChiAnimalSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css(".page-full-description ul li"):
+        for item in response.css(".page-description ul li"):
             start_str = "".join(item.xpath(".//text()").extract()).strip()
+            dt_matches = [
+                m[0]
+                for m in re.findall(
+                    r"([A-Z][a-z]{2,9},? \d\d?,? \d{4}( - \d\d?:?\d?\d?\s?[apm]{2}?))",  # noqa
+                    start_str.replace(".", ""),
+                )
+            ]
+            if not len(dt_matches) > 0:
+                continue
+            dt_str = dt_matches[-1]
             try:
-                start_dt = dateparse(start_str)
+                start_dt = dateparse(dt_str)
             except ValueError:
                 continue
 
@@ -40,10 +51,21 @@ class ChiAnimalSpider(CityScrapersSpider):
                     "name": "David R. Lee Animal Care Center",
                     "address": "2741 S. Western Ave, Chicago, IL 60608",
                 },
-                links=[],
+                links=self._parse_links(item, response),
                 source=response.url,
             )
             meeting["id"] = self._get_id(meeting)
             meeting["status"] = self._get_status(meeting, text=start_str)
 
             yield meeting
+
+    def _parse_links(self, item, response):
+        links = []
+        for link in item.css("a"):
+            links.append(
+                {
+                    "title": " ".join(link.css("*::text").extract()).strip(),
+                    "href": response.urljoin(link.attrib["href"]),
+                }
+            )
+        return links
