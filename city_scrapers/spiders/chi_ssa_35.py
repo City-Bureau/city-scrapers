@@ -1,12 +1,8 @@
 from datetime import datetime
-from io import BytesIO, StringIO
 
-import requests
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from pdfminer.high_level import extract_text_to_fp
-from pdfminer.layout import LAParams
 
 
 class ChiSsa35Spider(CityScrapersSpider):
