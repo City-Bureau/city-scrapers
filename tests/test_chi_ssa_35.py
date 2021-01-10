@@ -45,8 +45,8 @@ def test_status():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": "Lincoln Park Chamber of Commerce",
-        "address": "Lincoln Park Chamber of Commerce, 2468 N. Lincoln, Chicago",
+        "name": "Confirm with agency",
+        "address": "",
     }
 
 

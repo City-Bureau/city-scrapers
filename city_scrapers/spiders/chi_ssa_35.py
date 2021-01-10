@@ -26,15 +26,16 @@ class ChiSsa35Spider(CityScrapersSpider):
         needs.
         """
         content_div = response.css("div.content_block.content.background_white")
-        _ = content_div.css("h4::text").getall()
         dates = content_div.css("ol").css("li::text").getall()
+        dates = self._add_year_to_date_item(dates)
+
         urls = content_div.css("a")
         content = list(zip(dates, urls[: len(dates)]))
 
-        for item in content[:1]:
+        for item in content:
             meeting = Meeting(
                 title=self._parse_title(item),
-                description=self._parse_description(item),
+                description="",
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
                 end=self._parse_end(item),
@@ -54,40 +55,39 @@ class ChiSsa35Spider(CityScrapersSpider):
         """Parse or generate meeting title."""
         return "Commission"
 
-    def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        item_url = item[1].css("::attr(href)").get()
-        response = requests.get(item_url)
-
-        lp = LAParams(line_margin=0.1)
-        output_str = StringIO()
-        extract_text_to_fp(BytesIO(response.content), output_str, laparams=lp)
-        pdf_text = output_str.getvalue().replace("\n", "")
-
-        return pdf_text
-
     def _parse_classification(self, item):
         """Parse or generate classification from allowed options."""
         return COMMISSION
 
+    def _add_year_to_date_item(self, date_items):
+        new_dates = []
+        current_year = datetime.today().year + 1
+
+        for item in date_items:
+            if "January" in item:
+                current_year -= 1
+                new_dates.append(f"{item} {current_year}")
+            else:
+                new_dates.append(f"{item} {current_year}")
+        return new_dates
+
     def _clean_date_item(self, date_item):
         date_item = date_item.split()
 
-        if len(date_item) == 5:
-            date_item[-1] = date_item[-1].replace(")", "")
-            date_item[-2] = date_item[-2].replace("(", "")
-            date_item.append(f"{datetime.today().year}")
+        if len(date_item) == 6:
+            date_item[-2] = date_item[-2].replace(")", "")
+            date_item[-3] = date_item[-3].replace("(", "")
 
-        elif len(date_item) == 3:
-            date_item.append("09:00 am")
-            date_item.append(f"{datetime.today().year}")
+        elif len(date_item) == 4:
+            date_item.insert(len(date_item) - 1, "09:00 am")
 
+        del date_item[0]
         return " ".join(date_item)
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
         date_item = self._clean_date_item(item[0])
-        date_obj = datetime.strptime(date_item, "%A, %B %d %H:%M %p %Y")
+        date_obj = datetime.strptime(date_item, "%B %d %I:%M %p %Y")
 
         return date_obj
 
@@ -106,8 +106,8 @@ class ChiSsa35Spider(CityScrapersSpider):
     def _parse_location(self, item):
         """Parse or generate location."""
         return {
-            "address": "Lincoln Park Chamber of Commerce, 2468 N. Lincoln, Chicago",
-            "name": "Lincoln Park Chamber of Commerce",
+            "address": "",
+            "name": "Confirm with agency",
         }
 
     def _parse_links(self, item):
