@@ -40,6 +40,11 @@ class IlLaborSpider(CityScrapersSpider):
             start = self._parse_start(item)
             if not start:
                 continue
+            # Links can be reused, so add query string to URL
+            links = []
+            for link in agenda_map[title]:
+                link["href"] += f"?dt={start.strftime('%Y-%m-%d')}"
+                links.append(link)
             meeting = Meeting(
                 title=title,
                 description="",
@@ -49,7 +54,7 @@ class IlLaborSpider(CityScrapersSpider):
                 time_notes="",
                 all_day=False,
                 location=self._parse_location(item),
-                links=agenda_map[title],
+                links=links,
                 source=response.url,
             )
             meeting["status"] = self._get_status(
@@ -68,7 +73,7 @@ class IlLaborSpider(CityScrapersSpider):
         if not date_match:
             return
         year_str = str(datetime.now().year)
-        year_match = re.search(r"\d{4}", date_line)
+        year_match = re.search(r"20\d{2}", date_line)
         if year_match:
             year_str = year_match.group()
 
@@ -77,7 +82,10 @@ class IlLaborSpider(CityScrapersSpider):
         time_str = "12:00am"
         if time_match:
             time_str = re.sub(r"[ \.]", "", time_match.group())
-        return datetime.strptime(" ".join([date_str, time_str]), "%B %d %Y %I:%M%p")
+        try:
+            return datetime.strptime(" ".join([date_str, time_str]), "%B %d %Y %I:%M%p")
+        except ValueError:
+            return
 
     def _parse_location(self, item):
         addr_matches = re.findall(r"^\d+ .*$", item, flags=re.M | re.DOTALL)
