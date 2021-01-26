@@ -22,7 +22,6 @@ class ChiSsa20Spider(CityScrapersSpider):
             "//*[self::p or self::strong or self::h3]/text()"
         ).getall()
 
-
         for index, line in enumerate(base):
             if "ssa meetings" in line.lower():
                 del base[:index]
@@ -36,7 +35,6 @@ class ChiSsa20Spider(CityScrapersSpider):
                 year = re.match(r"^\d{4}", item)[0]
 
         for item in base:
-
             item = re.sub(r"\s+", " ", item).lower()
 
             if re.match(r"^\s*$", item):
@@ -58,11 +56,10 @@ class ChiSsa20Spider(CityScrapersSpider):
                 links=self._parse_links(item),
                 source=self._parse_source(response),
             )
-
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
-
             yield meeting
+
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
@@ -77,7 +74,6 @@ class ChiSsa20Spider(CityScrapersSpider):
         return COMMISSION
 
     def _parse_start(self, item, year):
-
         if not any(word in item for word in ["beverly", "ssa"]):
             item=(re.sub(r"(^[a-z]+,\s+)" , "", item).strip())
             item=re.sub(r"[,\.]", "", item)
