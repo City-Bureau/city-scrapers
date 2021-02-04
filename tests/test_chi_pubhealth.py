@@ -4,6 +4,7 @@ from os.path import dirname, join
 import pytest
 from city_scrapers_core.constants import BOARD, TENTATIVE
 from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_pubhealth import ChiPubHealthSpider
 
@@ -14,7 +15,13 @@ test_response = file_response(
     ),
 )
 spider = ChiPubHealthSpider()
+
+freezer = freeze_time("2020-12-01")
+freezer.start()
+
 parsed_items = [item for item in spider.parse(test_response)]
+
+freezer.stop()
 
 
 def test_meeting_count():
