@@ -1,0 +1,11 @@
+[flake8]
+ignore = E203,E741,W503,W504
+exclude =
+    .git,
+    .venv,
+    venv,
+    docs,
+    */__pycache__/*,
+    tests/files/*,
+    tests/cassettes/*,
+max-line-length = 88
