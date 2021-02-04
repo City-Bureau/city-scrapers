@@ -20,7 +20,7 @@ class ChiCityCouncilSpider(LegistarSpider):
         needs.
         """
         three_months_ago = datetime.today() - timedelta(days=90)
-        for event, _ in events:
+        for event in events:
             start = self.legistar_start(event)
             if not start or (
                 start < three_months_ago
