@@ -9,12 +9,12 @@ class CookWaterSpider(LegistarSpider):
     name = "cook_water"
     agency = "Metropolitan Water Reclamation District of Greater Chicago"
     event_timezone = "America/Chicago"
-    start_urls = ["https://mwrd.legistar.com"]
+    start_urls = ["https://mwrd.legistar.com/Calendar.aspx"]
     address = "100 East Erie Street Chicago, IL 60611"
 
     def parse_legistar(self, events):
         three_months_ago = datetime.today() - timedelta(days=90)
-        for event, _ in events:
+        for event in events:
             title = self._parse_title(event)
             start = self.legistar_start(event)
             if (

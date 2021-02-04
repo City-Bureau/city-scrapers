@@ -14,7 +14,7 @@ class CookForestPreservesSpider(LegistarSpider):
 
     def parse_legistar(self, events):
         three_months_ago = datetime.today() - timedelta(days=90)
-        for event, _ in events:
+        for event in events:
             start = self.legistar_start(event)
             if not start or (
                 start < three_months_ago
@@ -54,6 +54,8 @@ class CookForestPreservesSpider(LegistarSpider):
         address = item.get("Meeting Location", None)
         if address:
             address = re.sub(
-                r"\s+", " ", re.sub(r"(\n)|(--em--)|(--em)|(em--)", " ", address),
+                r"\s+",
+                " ",
+                re.sub(r"(\n)|(--em--)|(--em)|(em--)", " ", address),
             ).strip()
         return {"address": address, "name": ""}
