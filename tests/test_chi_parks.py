@@ -61,11 +61,7 @@ def test_status():
 
 def test_location():
     assert parsed_items[1]["location"] == {
-        "address": (
-            "Board Room ADMINISTRATION BUILDING AT 541 "
-            "NORTH FAIRBANKS COURT, CHICAGO, ILLINOIS 60611 "
-            "8TH FLOOR BOARD ROOM"
-        ),
+        "address": "Board Room\n--em--ADMINISTRATION BUILDING AT 541 NORTH FAIRBANKS COURT, \r\nCHICAGO, ILLINOIS 60611 \r\n8TH FLOOR BOARD ROOM--em--",  # noqa
         "name": "",
     }
 

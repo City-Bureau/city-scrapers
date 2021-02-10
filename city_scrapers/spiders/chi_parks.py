@@ -1,4 +1,3 @@
-import re
 from datetime import datetime, timedelta
 
 from city_scrapers_core.constants import BOARD, FORUM
@@ -34,7 +33,7 @@ class ChiParksSpider(LegistarSpider):
                 source=self.legistar_source(event),
             )
             meeting["status"] = self._get_status(
-                meeting, text=event["Meeting Location"]
+                meeting, text=meeting["location"]["address"]
             )
             meeting["id"] = self._get_id(meeting)
             yield meeting
@@ -43,8 +42,15 @@ class ChiParksSpider(LegistarSpider):
         """
         Parse or generate location.
         """
+        loc_item = item.get("Meeting Location", "")
+        if isinstance(loc_item, dict):
+            loc_str = loc_item.get("label", "")
+        else:
+            loc_str = loc_item
+        if "Virtual" in loc_str:
+            return {"name": "Virtual", "address": ""}
         return {
-            "address": self.clean_html(item.get("Meeting Location", None)),
+            "address": loc_str,
             "name": "",
         }
 
@@ -63,13 +69,3 @@ class ChiParksSpider(LegistarSpider):
             return FORUM
         return BOARD
 
-    @staticmethod
-    def clean_html(html):
-        """
-        Clean up HTML artifacts.
-        """
-        if html is None:
-            return None
-        else:
-            clean = re.sub(r"\s*(\r|\n|(--em--))+\s*", " ", html)
-            return clean.strip()
