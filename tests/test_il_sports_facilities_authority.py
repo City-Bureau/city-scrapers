@@ -16,7 +16,7 @@ test_response = file_response(
 )
 spider = IlSportsFacilitiesAuthoritySpider()
 
-freezer = freeze_time("2020-10-06")
+freezer = freeze_time("2021-02-10")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -25,7 +25,7 @@ freezer.stop()
 
 
 def test_count():
-    assert len(parsed_items) == 40
+    assert len(parsed_items) == 44
 
 
 def test_title():
@@ -39,7 +39,7 @@ def test_description(item):
 
 
 def test_start():
-    assert parsed_items[1]["start"] == datetime(2020, 9, 17, 0, 0)
+    assert parsed_items[1]["start"] == datetime(2021, 5, 27, 10, 0)
 
 
 @pytest.mark.parametrize("item", parsed_items)
@@ -56,9 +56,8 @@ def test_location(item):
 
 
 def test_classification():
-    assert parsed_items[0]["classification"] == COMMITTEE
     assert parsed_items[1]["classification"] == BOARD
-    assert parsed_items[5]["classification"] == COMMITTEE
+    assert parsed_items[-1]["classification"] == COMMITTEE
 
 
 @pytest.mark.parametrize("item", parsed_items)
