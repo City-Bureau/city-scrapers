@@ -102,12 +102,12 @@ class ChiSsa4Spider(CityScrapersSpider):
 
     def _parse_location(self, response):
         """Parse or generate location."""
-        name = response.css("dd.tribe-venue::text").get()
-        street = response.css("span.tribe-street-address::text").get() + " "
-        locality = response.css("span.tribe-locality::text").get() + ", "
-        region = response.css("abbr.tribe-region::text").get() + " "
-        postal_code = response.css("span.tribe-postal-code::text").get() + " "
-        country = response.css("span.tribe-country-name::text").get()
+        name = response.css("dd.tribe-venue::text").get("")
+        street = response.css("span.tribe-street-address::text").get("") + " "
+        locality = response.css("span.tribe-locality::text").get("") + ", "
+        region = response.css("abbr.tribe-region::text").get("") + " "
+        postal_code = response.css("span.tribe-postal-code::text").get("") + " "
+        country = response.css("span.tribe-country-name::text").get("")
         address = "".join([street, locality, region, postal_code, country])
 
         return {
