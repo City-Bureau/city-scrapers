@@ -60,7 +60,10 @@ class IlPortDistrictSpider(CityScrapersSpider):
         strong_meetings = list(zip(strong_meetings[0::2], strong_meetings[1::2]))
 
         additional_info = response.xpath("//p[contains(text(), '*')]/text()").extract()
-        changed_meeting_time = re.findall(r"\d{1,2}:\d{2}am|pm", additional_info[2])[0]
+        changed_meeting_time = None
+        changed_time_matches = re.findall(r"\d{1,2}:\d{2}am|pm", additional_info[2])
+        if len(changed_time_matches):
+            changed_meeting_time = changed_time_matches[0]
 
         self._validate_location(response)
 
