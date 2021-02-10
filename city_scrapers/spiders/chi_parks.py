@@ -68,4 +68,3 @@ class ChiParksSpider(LegistarSpider):
         if "hearing" in item["Name"].lower():
             return FORUM
         return BOARD
-
