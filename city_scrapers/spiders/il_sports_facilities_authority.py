@@ -23,24 +23,26 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
         """
         self._validate_location(response)
 
-        item = response.css("#post-area h2::text").getall()[0]
-        meeting = Meeting(
-            title=self._parse_title(item.partition(":")[0]),
-            description="",
-            classification=self._parse_classification(item),
-            start=self._parse_next_start(item),
-            end=None,
-            all_day=False,
-            time_notes="",
-            location=self.location,
-            links=[],
-            source=response.url,
-        )
+        for item in response.css("#post-area h2 b *::text").extract():
+            if "Dates" in item or not item.strip():
+                continue
+            meeting = Meeting(
+                title=self._parse_title(item.partition(":")[0]),
+                description="",
+                classification=BOARD,
+                start=self._parse_next_start(item),
+                end=None,
+                all_day=False,
+                time_notes="",
+                location=self.location,
+                links=[],
+                source=response.url,
+            )
 
-        meeting["status"] = self._get_status(meeting)
-        meeting["id"] = self._get_id(meeting)
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
 
-        yield meeting
+            yield meeting
 
         for item in response.css("#post-area p"):
             start = self._parse_start(item)
@@ -81,8 +83,7 @@ class IlSportsFacilitiesAuthoritySpider(CityScrapersSpider):
 
     def _parse_next_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        _, _, next_meeting_time = item.partition(":")
-        return parse(next_meeting_time)
+        return parse(" ".join(item.split("–")[:-1]))
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
