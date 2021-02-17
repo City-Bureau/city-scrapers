@@ -15,7 +15,7 @@ test_response = file_response(
 )
 spider = ChiSsa35Spider()
 
-freezer = freeze_time("2020-10-28")
+freezer = freeze_time("2021-1-17")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
@@ -28,7 +28,7 @@ def test_title():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2020, 1, 28, 9, 0)
+    assert parsed_items[0]["start"] == datetime(2021, 1, 26)
 
 
 def test_time_notes():
@@ -36,11 +36,11 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_ssa_35/202001280900/x/commission"
+    assert parsed_items[0]["id"] == "chi_ssa_35/202101260000/x/commission"
 
 
 def test_status():
-    assert parsed_items[0]["status"] == "passed"
+    assert parsed_items[0]["status"] == "tentative"
 
 
 def test_location():
@@ -60,11 +60,7 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == [
-        {
-            "href": "https://www.lincolnparkchamber.com/wp-content/"
-            + "uploads/2020/03/January-2020-Lincoln-SSA-35-2015-Meeting-Agenda.pdf",
-            "title": "January 28, 2020",
-        }
+        {"href": None, "title": "Tuesday January 26 2021",}
     ]
 
 
