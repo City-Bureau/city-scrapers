@@ -60,7 +60,7 @@ def test_source():
 
 def test_links():
     assert parsed_items[0]["links"] == [
-        {"href": None, "title": "Tuesday January 26 2021",}
+        {"href": None, "title": "Tuesday January 26 2021"}
     ]
 
 
