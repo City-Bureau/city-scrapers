@@ -24,7 +24,7 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
                 continue
             meeting = Meeting(
                 title=self._parse_title(item),
-                description="Upcoming Events",
+                description="",
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
                 end=self._parse_end(item),
@@ -45,7 +45,7 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
                 continue
             meeting = Meeting(
                 title=self._parse_title(item),
-                description="Past Meetings",
+                description="",
                 classification=self._parse_classification(item),
                 start=self._parse_start(item),
                 end=self._parse_end(item),
@@ -99,7 +99,7 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
         """Parse or generate location."""
         if len(item.xpath("ul/li/text()")) <= 2:
             return {
-                "name": "Meeting place not mentioned",
+                "name": "See meeting details",
                 "address": "",
             }
         addr = (
