@@ -15,7 +15,6 @@ class ChiSsa35Spider(CityScrapersSpider):
     ]
 
     def parse(self, response):
-        content = []
         _year = None
         _type = ""
         _description = ""
@@ -24,7 +23,7 @@ class ChiSsa35Spider(CityScrapersSpider):
         inner_elements = content_div.css("h4, li, p")
 
         for element in inner_elements:
-            element_content = {}
+            meeting_content = {}
 
             if "<h4>" in element.get():
                 # Type here could be Schedule, Agendas or Minutes
@@ -42,36 +41,36 @@ class ChiSsa35Spider(CityScrapersSpider):
                 )
 
             if "<li>" in element.get():
-                element_content["date"] = element.css("::text").get()
+                meeting_content["date"] = element.css("::text").get()
                 if "href" in element.get():
-                    element_content["url"] = element.css("a::attr(href)").get()
+                    meeting_content["url"] = element.css("a::attr(href)").get()
 
             if "<p><a" in element.get():
-                element_content["date"] = element.css("::text").get()
-                element_content["url"] = element.css("a::attr(href)").get()
+                meeting_content["date"] = element.css("::text").get()
+                meeting_content["url"] = element.css("a::attr(href)").get()
 
-            element_content["description"] = _description
-            element_content["type"] = _type
-            element_content["year"] = _year
-            content.append(element_content)
+            meeting_content["description"] = _description
+            meeting_content["type"] = _type
+            meeting_content["year"] = _year
 
-        self._add_year_to_date_item(content)
-        self._parse_date_to_datetime(content)
-
-        for item in content:
-            if "date" not in item:
+            if "date" not in meeting_content:
                 continue
+            else:
+                meeting_content["date"] = self._add_year_to_date_item(meeting_content)
+                meeting_content["date_obj"] = self._parse_date_to_datetime(
+                    meeting_content
+                )
 
             meeting = Meeting(
-                title=self._parse_title(item),
-                description=self._parse_description(item),
-                classification=self._parse_classification(item),
-                start=self._parse_start(item),
-                end=self._parse_end(item),
-                all_day=self._parse_all_day(item),
-                time_notes=self._parse_time_notes(item),
-                location=self._parse_location(item),
-                links=self._parse_links(item),
+                title=self._parse_title(meeting_content),
+                description=self._parse_description(meeting_content),
+                classification=self._parse_classification(meeting_content),
+                start=self._parse_start(meeting_content),
+                end=self._parse_end(meeting_content),
+                all_day=self._parse_all_day(meeting_content),
+                time_notes=self._parse_time_notes(meeting_content),
+                location=self._parse_location(meeting_content),
+                links=self._parse_links(meeting_content),
                 source=self._parse_source(response),
             )
 
@@ -81,27 +80,25 @@ class ChiSsa35Spider(CityScrapersSpider):
             yield meeting
 
     def _add_year_to_date_item(self, content):
-        for item in content:
-            if "date" in item:
-                if str(item["year"]) not in item["date"]:
-                    item["date"] = f"{item['date']} {item['year']}"
+        if "date" in content:
+            _date = content["date"]
 
-                item["date"] = item["date"].replace(",", "")
-                item["date"] = item["date"].strip()
+            if str(content["year"]) not in content["date"]:
+                _date = f"{content['date']} {content['year']}"
+
+            _date = _date.replace(",", "")
+            return _date.strip()
 
     def _parse_date_to_datetime(self, content):
-        for item in content:
-            if "date" in item:
-                _date = item["date"].split()
+        if "date" in content:
+            _date = content["date"].split()
 
-                if len(_date) == 3:
-                    item["date_obj"] = datetime.strptime(item["date"], "%B %d %Y")
-                elif len(_date) == 4:
-                    item["date_obj"] = datetime.strptime(item["date"], "%A %B %d %Y")
-                elif len(_date) == 6:
-                    item["date_obj"] = datetime.strptime(
-                        item["date"], "%A %B %d (%I:%M %p) %Y"
-                    )
+            if len(_date) == 3:
+                return datetime.strptime(content["date"], "%B %d %Y")
+            elif len(_date) == 4:
+                return datetime.strptime(content["date"], "%A %B %d %Y")
+            elif len(_date) == 6:
+                return datetime.strptime(content["date"], "%A %B %d (%I:%M %p) %Y")
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
