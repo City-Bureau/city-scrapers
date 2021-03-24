@@ -4,6 +4,7 @@ from datetime import datetime
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from scrapy import Selector
 
 
 class ChiPoliceBoardSpider(CityScrapersSpider):
@@ -23,28 +24,30 @@ class ChiPoliceBoardSpider(CityScrapersSpider):
         location = self._parse_location(response)
         start_time = self._parse_start_time(response)
 
-        for item in response.xpath('//p[contains(@style,"padding-left")]'):
-            start_date = self._parse_start_date(item, year)
-            if not start_date:
-                continue
-            meeting = Meeting(
-                title="Police Board",
-                description="",
-                classification=BOARD,
-                start=datetime.combine(start_date, start_time),
-                end=None,
-                time_notes="",
-                all_day=False,
-                location=location,
-                links=self._parse_links(item, response),
-                source=response.url,
-            )
-            meeting["id"] = self._get_id(meeting)
-            meeting["status"] = self._get_status(meeting)
-            yield meeting
+        for row in response.xpath('//p[contains(@style,"padding-left")]').extract():
+            for block in row.split("<br>"):
+                item = Selector(text=block)
+                start_date = self._parse_start_date(item, year)
+                if not start_date:
+                    continue
+                meeting = Meeting(
+                    title="Police Board",
+                    description="",
+                    classification=BOARD,
+                    start=datetime.combine(start_date, start_time),
+                    end=None,
+                    time_notes="",
+                    all_day=False,
+                    location=location,
+                    links=self._parse_links(item, response),
+                    source=response.url,
+                )
+                meeting["id"] = self._get_id(meeting)
+                meeting["status"] = self._get_status(meeting)
+                yield meeting
 
     def _parse_links(self, item, response):
-        anchors = item.xpath("a")
+        anchors = item.css("a")
         return [
             {
                 "href": response.urljoin(link.xpath("@href").extract_first("")),
