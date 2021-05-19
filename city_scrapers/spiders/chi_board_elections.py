@@ -131,30 +131,19 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
 
     def _parse_start(self, date_str, meeting_text):
         """Parse start datetime"""
-        date_str = date_str.replace("\xa0", " ")
-        if len(date_str.split(", ")) > 2:
-            date_str = ", ".join(date_str.split(", ")[1:])
-        time_str = "9:30 AM"
-        if "7 " in meeting_text:
-            time_str = re.search(r"7\s+[apmAPM\.]{2,4}", meeting_text).group(0)
-            time_str = time_str.replace("7 ", "7:00 ")
-        if ":" not in date_str or meeting_text:
-            dt_str = "{} on {}".format(time_str, date_str)
-        else:
-            dt_str = date_str
         dt_str = (
-            dt_str.replace(".", "")
+            date_str.replace(".", "")
             .replace("am", "AM")
             .replace("pm", "PM")
             .replace("Sept", "Sep")
         )
-        sep_str = "on"
-        if "on" not in dt_str:
+        sep_str = "at"
+        if "at" not in dt_str:
             sep_str = "-"
         try:
-            dt = datetime.strptime(dt_str, f"%b %d, %Y {sep_str} %I:%M %p")
+            dt = datetime.strptime(dt_str, f"%b %d, %Y at %I:%M %p")
         except ValueError:  # Some months are abbreviated, some are not
-            dt = datetime.strptime(dt_str, f"%B %d, %Y {sep_str} %I:%M %p")
+            dt = datetime.strptime(dt_str, f"%B %d, %Y at %I:%M %p")
         return dt
 
     def _parse_links(self, response, meeting=None, start=None):
