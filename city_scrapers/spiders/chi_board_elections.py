@@ -40,13 +40,13 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
         yield from self._parse_pdf(response)
         body_text = self.pdf_text
         
-        # Will return full dates, like "9:30 a.m. on Dec. 11, 2018"
+        # Will return full dates, like "May 11, 2021 at 10:00 A.M."
         date_pattern = re.compile(r"((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}\s+at\s+\d+:\d+\s+\w.M.)")
         date_strs = re.findall(date_pattern, body_text)
 
         # Has meeting location
-        # Check for 69 (in 69 W Washington) in any of the strings, raise error if not
-        # present and location may have changed
+        # Check for 69 West Washington in the extracted PDF body_text, 
+        # raise error if not present and location may have changed
         if not search("69 West Washington", body_text):
             raise ValueError("The meeting address may have changed")
 
