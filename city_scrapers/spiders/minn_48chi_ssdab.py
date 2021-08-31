@@ -42,7 +42,7 @@ class Minn48chiSsdabSpider(CityScrapersSpider):
                 time_notes="",
                 location=self._parse_location(item),
                 links=self._parse_links(item),
-                source=self._parse_source(response),
+                source=self.base_url,
             )
 
             if item["Cancelled"]:
@@ -104,4 +104,4 @@ class Minn48chiSsdabSpider(CityScrapersSpider):
         """
         Parse source from base URL and event link
         """
-        return "https://lims.minneapolismn.gov/Download/CommitteeReport/"
+        return ""

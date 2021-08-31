@@ -101,8 +101,3 @@ class MinnEsssdabSpider(CityScrapersSpider):
                 }
             )
 
-    def _parse_source(self, item):
-        """
-        Parse source from base URL and event link
-        """
-        return "https://lims.minneapolismn.gov/Download/CommitteeReport/"

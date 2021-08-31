@@ -27,7 +27,7 @@ class MinnEpbSpider(CityScrapersSpider):
                 time_notes=self._parse_time_notes(item),
                 location=self._parse_location(item),
                 links=self._parse_links(item),
-                source=self._parse_source(response),
+                source=self.base_url,
             )
 
             meeting["status"] = self._get_status(meeting)
