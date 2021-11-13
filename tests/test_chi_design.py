@@ -44,9 +44,13 @@ parsed_items = [item for meeting in test_response_meetings for item in spider.pa
 freezer.stop()
 
 
-@pytest.mark.xfail(raises=AssertionError)
-def test_finds_all_meetings():
-    assert len(parsed_items) == 7
+def test_finds_all_meeting_links():
+    requests_followed = spider.parse(test_response_main)
+    assert len(list(requests_followed)) == 4
+
+
+def test_finds_all_meetings_in_a_meeting_page():
+    assert len(parsed_items) == 3
 
 
 def test_title():
@@ -65,8 +69,8 @@ def test_description():
     assert parsed_items[1]["description"] == description
 
 
-# def test_start():
-#     assert parsed_items[0]["start"] == datetime(2019, 1, 1, 0, 0)
+def test_start():
+    assert parsed_items[0]["start"] == datetime(2021, 8, 11, 13, 30)
 
 
 # def test_end():
