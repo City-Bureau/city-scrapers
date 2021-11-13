@@ -1,6 +1,5 @@
-import datetime
 import re
-
+from datetime import datetime, timedelta
 from city_scrapers_core.constants import ADVISORY_COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -66,21 +65,6 @@ class ChiDesignSpider(CityScrapersSpider):
                                                      month_string=year_month_string,
                                                      day_string=day_time_string,
                                                      time_string=day_time_string)
-
-    @staticmethod
-    def _parse_end(item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return None
-
-    @staticmethod
-    def _parse_time_notes(item):
-        """Parse any additional notes on the timing of the meeting"""
-        return ""
-
-    @staticmethod
-    def _parse_all_day(item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
 
     @staticmethod
     def _parse_location(response):
@@ -152,7 +136,7 @@ class DateTimeFormatter:
 
     @classmethod
     def _get_time(cls, string):
-        time_re = re.compile("(\d{1,2})(?::(\d{1,2}))? (am|pm)", re.IGNORECASE)
+        time_re = re.compile(r"(\d{1,2})(?::(\d{1,2}))? (am|pm)", re.IGNORECASE)
         result = time_re.search(string)
         hour, minute, am_pm = result.groups()
         hour = cls._pad_with_a_zero(hour)
@@ -163,9 +147,9 @@ class DateTimeFormatter:
     @staticmethod
     def _date_time_format(year, month, day, hour, minute, am_pm):
         date_string = f"{year}:{month}:{day}:{hour}:{minute}"
-        date_time_obj = datetime.datetime.strptime(date_string, "%Y:%B:%d:%H:%M")
+        date_time_obj = datetime.strptime(date_string, "%Y:%B:%d:%H:%M")
         if am_pm == "pm":
-            return date_time_obj + datetime.timedelta(hours=12)
+            return date_time_obj + timedelta(hours=12)
         return date_time_obj
 
     @staticmethod
