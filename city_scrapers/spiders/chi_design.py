@@ -25,37 +25,37 @@ class ChiDesignSpider(CityScrapersSpider):
                                        callback=self.parse_meeting)
 
     def parse_meeting(self, response):
-        descriptions = response.css("td:nth-child(2) p::text").getall()
-        locations = response.css("td:nth-child(1) p").getall()
-
         meeting = Meeting(
             title="Committee on Design",
             description=self._parse_description(response),
             classification=ADVISORY_COMMITTEE,
             start=self._parse_start(response),
-            end=self._parse_end(response),
-            all_day=self._parse_all_day(response),
-            time_notes=self._parse_time_notes(response),
+            end=None,
+            all_day=False,
+            time_notes="",
             location=self._parse_location(response),
             links=self._parse_links(response),
             source=self._parse_source(response),
         )
-        # meeting["status"] = self._get_status(meeting)
-        # meeting["id"] = self._get_id(meeting)
+        meeting["status"] = self._get_status(meeting)
+        meeting["id"] = self._get_id(meeting)
 
         yield meeting
 
-    def _get_meeting_links(self, response):
+    @staticmethod
+    def _get_meeting_links(response):
         meetings = response.css("td p a")
         meeting_links = [link for link in meetings if link.css("::text").get() == "Agenda"]
         return meeting_links
 
-    def _parse_description(self, response):
+    @staticmethod
+    def _parse_description(response):
         descriptions = response.css("td:nth-child(2) p::text").getall()
         descriptions = '\n'.join(descriptions)
         return descriptions
 
-    def _parse_start(self, response):
+    @staticmethod
+    def _parse_start(response):
         """Parse start datetime as a naive datetime object."""
         year_month_string = response.css(".page-heading::text").get()
 
@@ -67,19 +67,23 @@ class ChiDesignSpider(CityScrapersSpider):
                                                      day_string=day_time_string,
                                                      time_string=day_time_string)
 
-    def _parse_end(self, item):
+    @staticmethod
+    def _parse_end(item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return None
 
-    def _parse_time_notes(self, item):
+    @staticmethod
+    def _parse_time_notes(item):
         """Parse any additional notes on the timing of the meeting"""
         return ""
 
-    def _parse_all_day(self, item):
+    @staticmethod
+    def _parse_all_day(item):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    def _parse_location(self, response):
+    @staticmethod
+    def _parse_location(response):
         """Parse or generate location."""
         location_string = response.css(".col-12 > p:nth-child(1)").get()
         location_string = remove_tags(location_string)
@@ -90,12 +94,18 @@ class ChiDesignSpider(CityScrapersSpider):
             "name": "",
             }
 
-
-    def _parse_links(self, item):
+    @staticmethod
+    def _parse_links(response):
         """Parse or generate links."""
-        return [{"href": "", "title": ""}]
+        links = response.css(".page-description-above a")
+        relative_hrefs = links.css("::attr(href)").getall()
+        links_title = links.css("::text").getall()
+        assert len(relative_hrefs) == len(links_title)
+        full_href = [response.urljoin(relative_href) for relative_href in relative_hrefs]
+        return [{"href": link_href, "title": link_title} for link_href, link_title in zip(full_href, links_title)]
 
-    def _parse_source(self, response):
+    @staticmethod
+    def _parse_source(response):
         """Parse or generate source."""
         return response.url
 

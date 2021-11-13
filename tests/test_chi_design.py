@@ -3,7 +3,7 @@ from os.path import dirname, join
 
 import pytest
 from city_scrapers_core.utils import file_response
-from city_scrapers_core.constants import ADVISORY_COMMITTEE
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, PASSED
 from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_design import ChiDesignSpider
@@ -18,10 +18,11 @@ test_response_meeting_august = file_response(
     url="https://www.chicago.gov/city/en/depts/dcd/supp_info/committee-on-design/august-2021.html",
 )
 
-test_response_meeting_september = file_response(
-    join(dirname(__file__), "files", "chi_design_september.html"),
-    url="https://www.chicago.gov/city/en/depts/dcd/supp_info/committee-on-design/september-2021-committee-on-design-meeting.html",
+test_response_meeting_november = file_response(
+    join(dirname(__file__), "files", "chi_design_november.html"),
+    url="https://www.chicago.gov/city/en/depts/dcd/supp_info/committee-on-design/november-2021.html",
 )
+
 
 # test_response_meeting_october = file_response(
 #     join(dirname(__file__), "files", "chi_design_october.html"),
@@ -33,7 +34,7 @@ test_response_meeting_september = file_response(
 #     url="https://www.chicago.gov/city/en/depts/dcd/supp_info/committee-on-design/november-2021.html",
 # )
 
-test_response_meetings = [test_response_meeting_august, test_response_meeting_september]
+test_response_meetings = [test_response_meeting_august, test_response_meeting_november]
 spider = ChiDesignSpider()
 
 freezer = freeze_time("2021-11-11")
@@ -79,20 +80,20 @@ def test_start():
     assert parsed_items[0]["start"] == datetime(2021, 8, 11, 13, 30)
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_end():
+    assert parsed_items[0]["end"] is None
 
 
-# def test_time_notes():
-#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
+def test_time_notes():
+    assert parsed_items[0]["time_notes"] == ""
 
 
-# def test_id():
-#     assert parsed_items[0]["id"] == "EXPECTED ID"
+def test_id():
+    assert parsed_items[0]["id"] == "chi_design/202108111330/x/committee_on_design"
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_status():
+    assert parsed_items[0]["status"] == PASSED
 
 
 def test_location():
@@ -102,20 +103,40 @@ def test_location():
     }
 
 
-# def test_source():
-#     assert parsed_items[0]["source"] == "EXPECTED URL"
+def test_source():
+    assert parsed_items[0]["source"] == test_response_meeting_august.url
 
 
-# def test_links():
-#     assert parsed_items[0]["links"] == [{
-#       "href": "EXPECTED HREF",
-#       "title": "EXPECTED TITLE"
-#     }]
+def test_links():
+    assert parsed_items[1]["links"] == [{
+        "href": "https://livestream.com/accounts/28669066/events/9117952",
+        "title": "will be live streamed"
+    }, {
+        "href": "https://us06web.zoom.us/j/84508604903",
+        "title": "Zoom session"
+    }, {
+        "href": "https://www.chicago.gov/content/dam/city/depts/dcd/cod/ag_isw_cod.pdf",
+        "title": "Draft Presentation"
+    }, {
+        "href": "https://www.chicago.gov/content/dam/city/depts/dcd/cod/eng_isw_cod.pdf",
+        "title": "Draft Presentation"
+    }, {
+        "href": "https://www.chicago.gov/content/dam/city/depts/dcd/cod/111021_cod_agenda.pdf",
+        "title": "Agenda"
+    }, {
+        "href": "https://livestream.com/accounts/28669066/events/9117952",
+        "title": "Live Stream"
+    }, {
+        "href": "https://us06web.zoom.us/j/84508604903",
+        "title": "Join Zoom, Passcode: 492217"
+    },
+
+    ]
 
 
 def test_classification():
     assert parsed_items[0]["classification"] == ADVISORY_COMMITTEE
 
-# @pytest.mark.parametrize("item", parsed_items)
-# def test_all_day(item):
-#     assert item["all_day"] is False
+
+def test_all_day():
+    assert parsed_items[0]["all_day"] is False
