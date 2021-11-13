@@ -28,28 +28,32 @@ class ChiDesignSpider(CityScrapersSpider):
         descriptions = response.css("td:nth-child(2) p::text").getall()
         locations = response.css("td:nth-child(1) p").getall()
 
-        for description, location in zip(descriptions, locations):
-            meeting = Meeting(
-                title="Committee on Design",
-                description=description,
-                classification=ADVISORY_COMMITTEE,
-                start=self._parse_start(response),
-                end=self._parse_end(response),
-                all_day=self._parse_all_day(response),
-                time_notes=self._parse_time_notes(response),
-                location=self._parse_location(location),
-                links=self._parse_links(response),
-                source=self._parse_source(response),
-            )
-            # meeting["status"] = self._get_status(meeting)
-            # meeting["id"] = self._get_id(meeting)
+        meeting = Meeting(
+            title="Committee on Design",
+            description=self._parse_description(response),
+            classification=ADVISORY_COMMITTEE,
+            start=self._parse_start(response),
+            end=self._parse_end(response),
+            all_day=self._parse_all_day(response),
+            time_notes=self._parse_time_notes(response),
+            location=self._parse_location(response),
+            links=self._parse_links(response),
+            source=self._parse_source(response),
+        )
+        # meeting["status"] = self._get_status(meeting)
+        # meeting["id"] = self._get_id(meeting)
 
-            yield meeting
+        yield meeting
 
     def _get_meeting_links(self, response):
         meetings = response.css("td p a")
         meeting_links = [link for link in meetings if link.css("::text").get() == "Agenda"]
         return meeting_links
+
+    def _parse_description(self, response):
+        descriptions = response.css("td:nth-child(2) p::text").getall()
+        descriptions = '\n'.join(descriptions)
+        return descriptions
 
     def _parse_start(self, response):
         """Parse start datetime as a naive datetime object."""
@@ -75,15 +79,17 @@ class ChiDesignSpider(CityScrapersSpider):
         """Parse or generate all-day status. Defaults to False."""
         return False
 
-    def _parse_location(self, item):
+    def _parse_location(self, response):
         """Parse or generate location."""
-        item = item.lstrip("<p>")
-        item = item.rstrip("</p>")
-        item = item.replace("<br>", "")
+        location_string = response.css(".col-12 > p:nth-child(1)").get()
+        location_string = remove_tags(location_string)
+        if location_string.find("virtually") == -1:
+            raise ValueError("Location has changed")
         return {
-            "address": item,
+            "address": "Virtual Meeting",
             "name": "",
-        }
+            }
+
 
     def _parse_links(self, item):
         """Parse or generate links."""
