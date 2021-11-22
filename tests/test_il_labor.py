@@ -46,7 +46,7 @@ def test_id():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href": "https://www.illinois.gov/ilrb/Documents/LPAgenda.pdf",
+            "href": "https://www.illinois.gov/ilrb/Documents/LPAgenda.pdf?dt=2018-12-11",  # noqa
             "title": "Agenda",
         }
     ]

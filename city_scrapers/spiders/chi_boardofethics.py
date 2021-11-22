@@ -18,17 +18,19 @@ class ChiBoardOfEthicsSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for date_table in response.css(".page-full-description-above .col-xs-12 table"):
-            header = (
-                date_table.xpath("./preceding-sibling::*")
-                .css("h2::text, h3::text")[-1]
-                .extract()
-            )
-            description = re.sub(
-                r"\s+",
-                " ",
-                date_table.xpath("./preceding-sibling::p/text()")[-1].extract() or "",
-            )
+        headers = (
+            response.css(".page-description-above .col-12")
+            .css("h2 *::text, h3 *::text")
+            .extract()
+        )
+        descriptions = (
+            response.css(".page-description-above .col-12").css("p *::text").extract()
+        )
+        for idx, date_table in enumerate(
+            response.css(".page-description-above .col-12 table")
+        ):
+            header = headers[idx]
+            description = re.sub(r"\s+", " ", descriptions[idx])
             location = self._parse_location(description)
             for meeting_date in date_table.css("tbody tr td::text").extract():
                 if not meeting_date.strip():
@@ -56,14 +58,13 @@ class ChiBoardOfEthicsSpider(CityScrapersSpider):
         header_year_match = re.search(r"\d{4}", header)
         date_year_match = re.search(r"\d{4}", date_str)
         if header_year_match and not date_year_match:
-            date_str += ", {}".format(header_year_match.group())
+            date_str += f", {header_year_match.group()}"
         time_match = re.search(r"(1[0-2]|0?[1-9]):([0-5][0-9])( ?[AP]M)?", description)
-        return dateutil.parser.parse("{} {}".format(date_str, time_match.group(0)))
+        return dateutil.parser.parse(f"{date_str} {time_match.group(0)}")
 
     @staticmethod
     def _parse_location(text):
-        name = re.compile(r"(held at the) (?P<name>.*?),(?P<address>.*).")
-        matches = name.search(text)
+        matches = re.search(r"(held at the) (?P<name>.*?)[\.,](?P<address>.*)\.?", text)
         location_name = matches.group("name").strip()
         address = matches.group("address").strip()
         return {
@@ -73,9 +74,7 @@ class ChiBoardOfEthicsSpider(CityScrapersSpider):
 
     def _parse_links(self, start, response):
         links = []
-        for link_el in response.css(
-            ".page-full-description a[title$='{}']".format(start.year)
-        ):
+        for link_el in response.css(f".page-description a[title$='{start.year}']"):
             if start.strftime("%B") in link_el.xpath("./text()").extract_first():
                 links.append(
                     {

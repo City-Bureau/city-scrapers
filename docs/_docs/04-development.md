@@ -168,7 +168,7 @@ $ pipenv run isort .
 $ pipenv run black .
 ```
 
-Most text editors can be configured to fix style issues for you based off of the configuration settings in `setup.cfg`. See an example of this for VSCode in [Setup Help](/docs/setup-help/).
+Most text editors can be configured to fix style issues for you based off of the configuration settings in `pyproject.toml` and `.flake8`. See an example of this for VSCode in [Setup Help](/docs/setup-help/).
 
 ### Building a spider
 

@@ -1,9 +1,10 @@
 from datetime import datetime
 from os.path import dirname, join
 
-import pytest
-from city_scrapers_core.constants import ADVISORY_COMMITTEE, PASSED
+import pytest  # noqa
+from city_scrapers_core.constants import ADVISORY_COMMITTEE, CANCELLED
 from city_scrapers_core.utils import file_response
+from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_animal import ChiAnimalSpider
 
@@ -12,66 +13,67 @@ test_response = file_response(
     url="https://chicago.gov/city/en/depts/cacc/supp_info/public_notice.html",
 )
 spider = ChiAnimalSpider()
+
+
+freezer = freeze_time("2020-01-06")
+freezer.start()
+
 parsed_items = [item for item in spider.parse(test_response)]
+
+freezer.stop()
 
 
 def test_len():
-    assert len(parsed_items) == 3
+    assert len(parsed_items) == 5
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2017, 9, 21)
+    assert parsed_items[0]["start"] == datetime(2020, 3, 19, 8, 30)
 
 
 def test_end():
-    assert parsed_items[0]["end"] == datetime(2017, 9, 21, 3)
+    assert parsed_items[0]["end"] == datetime(2020, 3, 19, 11, 30)
 
 
 def test_time_notes():
     assert parsed_items[0]["time_notes"] == "Estimated 3 hour duration"
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_all_day(item):
-    assert item["all_day"] is False
+def test_all_day():
+    assert parsed_items[0]["all_day"] is False
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_class(item):
-    assert item["classification"] == ADVISORY_COMMITTEE
+def test_classification():
+    assert parsed_items[0]["classification"] == ADVISORY_COMMITTEE
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_title(item):
-    assert item["title"] == "Advisory Board"
+def test_title():
+    assert parsed_items[0]["title"] == "Advisory Board"
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_description(item):
-    assert item["description"] == ""
+def test_description():
+    assert parsed_items[0]["description"] == ""
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_location(item):
-    assert item["location"] == {
+def test_location():
+    assert parsed_items[0]["location"] == {
         "address": "2741 S. Western Ave, Chicago, IL 60608",
         "name": "David R. Lee Animal Care Center",
     }
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_status(item):
-    assert item["status"] == PASSED
+def test_status():
+    assert parsed_items[0]["status"] == CANCELLED
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_sources(item):
-    assert (
-        item["source"]
-        == "https://chicago.gov/city/en/depts/cacc/supp_info/public_notice.html"
-    )
+def test_source():
+    assert parsed_items[0]["source"] == test_response.url
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_links(item):
-    assert len(item["links"]) == 0
+def test_links():
+    assert parsed_items[2]["links"] == [
+        {
+            "href": "https://vimeo.com/449924512",
+            "title": "Recorded video link to the meeting held on August 20th",
+        }
+    ]

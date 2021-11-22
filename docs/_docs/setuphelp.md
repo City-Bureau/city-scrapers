@@ -64,7 +64,7 @@ You can see installation instructions for Pipenv in the [Installing Pipenv](http
 
 ### Configuring your code editor
 
-Most text editors can be configured to fix code style issues for you based off of the configuration settings in `setup.cfg`. Here's an example for VSCode using the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} (which can be modified/added at `.vscode/settings.json` in your project directory):
+Most text editors can be configured to fix code style issues for you based off of the configuration settings in `pyproject.toml` and `.flake8`. Here's an example for VSCode using the [standard Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python){:target="\_blank"} (which can be modified/added at `.vscode/settings.json` in your project directory):
 
 ```json
 {
@@ -72,7 +72,7 @@ Most text editors can be configured to fix code style issues for you based off o
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
   "python.envFile": "${workspaceRoot}/.env",
-  "python.linting.flake8Args": ["--config", "${workspaceRoot}/setup.cfg"],
+  "python.linting.flake8Args": ["--config", "${workspaceRoot}/.flake8"],
   "python.formatting.provider": "black",
   "python.formatting.blackPath": "${workspaceFolder}/.venv/bin/black",
   "python.formatting.blackArgs": [
@@ -80,7 +80,7 @@ Most text editors can be configured to fix code style issues for you based off o
   ],
   "python.sortImports.path": "${workspaceRoot}/.venv/bin/isort",
   "python.sortImports.args": [
-    "--settings-path=${workspaceFolder}/setup.cfg"
+    "--settings-path=${workspaceFolder}/pyproject.toml"
   ],
   "[python]": {
     "editor.codeActionsOnSave": {
@@ -92,4 +92,4 @@ Most text editors can be configured to fix code style issues for you based off o
 }
 ```
 
-This configuration will run linting and style checks for you, and also make necessary changes automatically any time you save. Packages are available for [Atom](https://atom.io/packages/linter-flake8){:target="\_blank"} and [Sublime Text](https://fosstack.com/setup-sublime-python/){:target="\_blank"} as well.
+This configuration will run linting and style checks for you, and also make necessary changes automatically any time you save. Packages are available for [Atom](https://atom.io/packages/linter-flake8){:target="\_blank"} and [Sublime Text](https://janikarhunen.fi/three-steps-to-lint-python-3-6-in-sublime-text){:target="\_blank"} as well.

@@ -44,7 +44,11 @@ class IlElectionsSpider(CityScrapersSpider):
             parsed_date = datetime.strptime(date, "%a, %B %d, %Y").date()
             link = minute.css("::attr(href)").extract_first()
             qs = parse_qs(urlparse(link).query)
-            self.meeting_minutes[parsed_date] = qs["Doc"][0]
+            if "Doc" in qs:
+                doc_link = qs["Doc"][0]
+            else:
+                doc_link = link
+            self.meeting_minutes[parsed_date] = doc_link
 
     def _parse_addresses(self, response):
         addresses = dict()
@@ -101,10 +105,18 @@ class IlElectionsSpider(CityScrapersSpider):
 
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
-        date_str = item.css("td")[0].css("::text").extract_first().strip()
+        date_str = re.sub(
+            r"^[A-Z][a-z]{2}.?, ",
+            "",
+            item.css("td")[0].css("::text").extract_first().strip(),
+        )
         raw_time_str = item.css("td")[1].css("::text").extract_first().strip()
-        time_str = re.sub(r"(?<=\d)\.(?=\d)", ":", raw_time_str).replace(".", "")
-        return datetime.strptime(f"{date_str} {time_str}", "%a, %B %d, %Y %I:%M %p")
+        time_str = (
+            re.sub(r"(?<=\d)\.(?=\d)", ":", raw_time_str)
+            .replace(".", "")
+            .replace("110", "10")
+        )
+        return datetime.strptime(f"{date_str} {time_str}", "%B %d, %Y %I:%M %p")
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -131,7 +143,11 @@ class IlElectionsSpider(CityScrapersSpider):
         href = item.css("td")[0].css("::attr(href)").extract_first()
         if href:
             qs = parse_qs(urlparse(href).query)
-            links.append({"href": response.urljoin(qs["Doc"][0]), "title": "Agenda"})
+            if "Doc" in qs:
+                doc_link = qs["Doc"][0]
+            else:
+                doc_link = href
+            links.append({"href": response.urljoin(doc_link), "title": "Agenda"})
 
         if start.date() in self.meeting_minutes:
             links.append(

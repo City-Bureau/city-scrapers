@@ -1,20 +1,19 @@
+import html
+import json
 import re
 from datetime import datetime
 
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from scrapy import Selector
 
 
 class ChiSsa25Spider(CityScrapersSpider):
     name = "chi_ssa_25"
     agency = "Chicago Special Service Area #25 Little Village"
     timezone = "America/Chicago"
-    start_urls = [
-        "http://littlevillagechamber.org/{}-meetings-minutes/".format(
-            datetime.now().year
-        )
-    ]
+    start_urls = ["https://littlevillagechamber.org/ssa-25/meetings-minutes/"]
 
     def parse(self, response):
         """
@@ -23,64 +22,79 @@ class ChiSsa25Spider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for item in response.css("table:first-of-type tr:not(:first-child)"):
-            start, end = self._parse_start_end(item)
-            meeting = Meeting(
-                title=self._parse_title(item),
-                description="",
-                classification=COMMISSION,
-                start=start,
-                end=end,
-                time_notes="",
-                all_day=False,
-                location=self._parse_location(item),
-                links=self._parse_links(response, item),
-                source=response.url,
+        yield from self._parse_events(response)
+        # Only parse one previous page of results in addition to the main page
+        for prev_link in response.css("a.tribe-events-c-nav__prev"):
+            yield response.follow(prev_link.attrib["href"], callback=self._parse_events)
+
+    def _parse_events(self, response):
+        for event_link in response.css(
+            "a.tribe-events-calendar-list__event-title-link"
+        ):
+            yield response.follow(
+                event_link.attrib["href"], callback=self._parse_detail
             )
 
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
-
-            yield meeting
-
-    def _parse_title(self, item):
-        meeting_type = item.css("td:nth-of-type(4)::text").extract_first()
-        return "Commission: {}".format(meeting_type)
-
-    def _parse_start_end(self, item):
-        """Parse start and end datetimes"""
-        year = datetime.now().year
-        date_text = "".join(item.css("td:first-of-type *::text").extract())
-        date_str = "{} {}".format(re.search(r".* \d{1,2}", date_text).group(), year)
-        time_str = "".join(item.css("td:nth-of-type(2) *::text").extract())
-        duration_str = re.sub(r"[APM]{2}", "", time_str)
-        am_pm = re.search(r"[APM]{2}", time_str).group()
-        start_str, end_str = [s.strip() for s in duration_str.split("–")]
-        start = datetime.strptime(
-            "{} {}{}".format(date_str, start_str, am_pm), "%B %d %Y %I:%M%p"
+    def _parse_detail(self, response):
+        schema_text = response.css(
+            "[type='application/ld+json']:not(.yoast-schema-graph)::text"
+        ).extract_first()
+        if not schema_text:
+            return
+        schema_data = json.loads(schema_text)[0]
+        meeting = Meeting(
+            title=schema_data["name"],
+            description=self._parse_description(schema_data),
+            classification=COMMISSION,
+            start=self._parse_dt_str(schema_data["startDate"]),
+            end=self._parse_dt_str(schema_data["endDate"]),
+            time_notes="",
+            all_day=False,
+            location=self._parse_location(schema_data),
+            links=self._parse_links(response),
+            source=schema_data["url"],
         )
-        end = datetime.strptime(
-            "{} {}{}".format(date_str, end_str, am_pm), "%B %d %Y %I:%M%p"
-        )
-        return start, end
+        meeting["status"] = self.get_status(meeting)
+        meeting["id"] = self.get_id(meeting)
+
+        yield meeting
+
+    def _parse_description(self, item):
+        desc_sel = Selector(text=html.unescape(item.get("description", "")))
+        return re.sub(
+            r"\s+", " ", " ".join(desc_sel.css("*::text").extract()).replace("\\n", "")
+        ).strip()
+
+    def _parse_dt_str(self, dt_str):
+        return datetime.strptime(dt_str[:-6], "%Y-%m-%dT%H:%M:%S")
 
     def _parse_location(self, item):
-        """Parse location from table row"""
-        loc_items = item.css("td:nth-of-type(3) *::text").extract()
-        loc_name, addr_list = loc_items[0], loc_items[1:]
-        # Get ordinal suffix like 'th' or 'nd' to remove excess space later
-        loc_ord = [t for t in addr_list if re.match(r"[a-z]{2}", t)]
-        addr = " ".join(addr_list)
-        for o in loc_ord:
-            addr = addr.replace(" " + o, o)
-        if "Chicago" not in addr:
-            addr += " Chicago, IL"
-        addr = re.sub(r"\s+", " ", addr).strip()
-        return {"name": loc_name, "address": addr}
+        location = item["location"]
+        if "conference call" in location["name"].lower() or "Zoom" in location["name"]:
+            return {
+                "name": "Conference Call",
+                "address": "",
+            }
+        loc_addr = location["address"]
+        addr_str = " ".join(
+            [
+                loc_addr["streetAddress"],
+                f"{loc_addr.get('addressLocality', 'Chicago')}, {loc_addr.get('addressRegion', 'IL')}",  # noqa
+                loc_addr["postalCode"],
+            ]
+        )
+        return {"name": location["name"], "address": addr_str}
 
-    def _parse_links(self, response, item):
+    def _parse_links(self, response):
         """Parse or generate links"""
-        minutes_link = item.css("td:last-of-type a::attr(href)").extract_first()
-        if minutes_link:
-            return [{"href": response.urljoin(minutes_link), "title": "Minutes"}]
-        return []
+        links = []
+        for link in response.css("#primary .fl-row-content-wrap a.uabb-button"):
+            link_text = " ".join(link.css("*::text").extract())
+            if "minutes" in link_text.lower():
+                link_title = "Minutes"
+            else:
+                link_title = link_text.strip()
+            links.append(
+                {"title": link_title, "href": response.urljoin(link.attrib["href"])}
+            )
+        return links

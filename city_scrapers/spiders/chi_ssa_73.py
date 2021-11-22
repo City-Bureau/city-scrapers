@@ -20,12 +20,12 @@ class ChiSsa73Spider(CityScrapersSpider):
         needs.
         """
 
-        linksList = self._get_links(response)
+        links_list = self._get_links(response)
         location = self._parse_location(response)
-        idsList = []
-        startTime = self._parse_time(response)
+        ids_list = []
+        start_time = self._parse_time(response)
         for item in response.css("article p"):
-            start = self._parse_start(item, startTime)
+            start = self._parse_start(item, start_time)
             if not start:
                 continue
             meeting = Meeting(
@@ -37,37 +37,39 @@ class ChiSsa73Spider(CityScrapersSpider):
                 all_day=False,
                 time_notes="",
                 location=location,
-                links=self._parse_links(item, start, linksList),
+                links=self._parse_links(item, start, links_list),
                 source=response.url,
             )
 
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
-            if meeting["id"] in idsList:
+            if meeting["id"] in ids_list:
                 continue
             else:
-                idsList.append(meeting["id"])
+                ids_list.append(meeting["id"])
 
             yield meeting
 
-    def _parse_start(self, item, startTime):
+    def _parse_start(self, item, start_time):
         """
         Parse start date and time.
         """
         date_str = item.css("*::text").extract_first()
+        if not date_str:
+            return
         date_match = re.search(r"\w{3,9} \d{1,2}, \d{4}", date_str)
         if date_match:
             parsed_date = datetime.strptime(date_match.group(), "%B %d, %Y")
-            return datetime.combine(parsed_date.date(), startTime.time())
+            return datetime.combine(parsed_date.date(), start_time.time())
 
     def _parse_time(self, response):
-        firstLine = response.css("article p").extract_first()
-        time_match = re.search(r"\d{1,2}:\d{2} [ap]\.m", firstLine)
+        first_line = response.css("article p").extract_first()
+        time_match = re.search(r"\d{1,2}:\d{2} [ap]\.m", first_line)
         if time_match:
-            tempStr = time_match.group()
-            tempStr = tempStr.replace(".", "")
-            tempStr = tempStr.upper()
-            return datetime.strptime(tempStr, "%I:%M %p")
+            temp_str = time_match.group()
+            temp_str = temp_str.replace(".", "")
+            temp_str = temp_str.upper()
+            return datetime.strptime(temp_str, "%I:%M %p")
         else:
             return time(18, 30)
 
@@ -80,36 +82,41 @@ class ChiSsa73Spider(CityScrapersSpider):
                 "address": "1700 S. Wentworth Avenue, Chicago, Illinois",
                 "name": "Leonard M. Louie Fieldhouse",
             }
+        elif "Zoom" in response.text:
+            return {
+                "address": "",
+                "name": "Zoom",
+            }
         else:
             raise ValueError("Meeting address has changed")
 
     def _get_links(self, response):
-        linksList = []
+        links_list = []
         for item in response.css("a"):
-            newDict = {}
-            addLink = False
+            new_dict = {}
+            add_link = False
             if "Agenda" in item.extract():
-                newDict["title"] = "Agenda"
-                addLink = True
+                new_dict["title"] = "Agenda"
+                add_link = True
             elif "Minutes" in item.extract():
-                newDict["title"] = "Minutes"
-                addLink = True
-            if addLink:
-                newDict["href"] = item.attrib["href"]
-                rawRef = item.css("*::text").extract_first()
-                newDict["date"] = rawRef.split()[1]
-                linksList.append(newDict)
-        return linksList
+                new_dict["title"] = "Minutes"
+                add_link = True
+            if add_link:
+                new_dict["href"] = item.attrib["href"]
+                raw_ref = item.css("*::text").extract_first()
+                new_dict["date"] = raw_ref.split()[1]
+                links_list.append(new_dict)
+        return links_list
 
-    def _parse_links(self, item, start, linksList):
+    def _parse_links(self, item, start, links_list):
         """Parse or generate links."""
-        resultList = []
-        targetStr1 = start.strftime("%m-%d-%Y").replace(" 0", " ")
-        targetStr2 = start.strftime("%m-%d-%y").replace(" 0", " ")
-        for item in linksList:
-            if item["date"] in targetStr1 or item["date"] in targetStr2:
-                newDict = {}
-                newDict["href"] = item["href"]
-                newDict["title"] = item["title"]
-                resultList.append(newDict)
-        return resultList
+        result_list = []
+        target_str_1 = start.strftime("%m-%d-%Y").replace(" 0", " ")
+        target_str_2 = start.strftime("%m-%d-%y").replace(" 0", " ")
+        for item in links_list:
+            if item["date"] in target_str_1 or item["date"] in target_str_2:
+                new_dict = {}
+                new_dict["href"] = item["href"]
+                new_dict["title"] = item["title"]
+                result_list.append(new_dict)
+        return result_list

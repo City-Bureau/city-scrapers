@@ -5,6 +5,7 @@ import dateutil.parser
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from scrapy import Selector
 
 
 class ChiDevelopmentFundSpider(CityScrapersSpider):
@@ -22,23 +23,18 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        columns = self.parse_meetings(response)
-        last_year = datetime.today().replace(year=datetime.today().year - 1)
-        for column in columns:
-            meeting_date_xpath = """text()[normalize-space()]|
-                                    p/text()[normalize-space()]|
-                                    ul//text()[normalize-space()]"""
-            meetings = column.xpath(meeting_date_xpath).extract()
-            meetings = self.format_meetings(meetings)
-            for item in meetings:
+        last_year = datetime.today().year - 1
+        for column in response.css(".col-12 td p"):
+            for meeting_str in re.split(r"\<br *\/?\>", column.extract()):
+                item = Selector(text=meeting_str)
                 start = self._parse_start(item)
                 if start is None or (
-                    start < last_year
+                    start.year < last_year
                     and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
                 ):
                     continue
                 meeting = Meeting(
-                    title=self._parse_title(item),
+                    title=self._parse_title(meeting_str),
                     description="",
                     classification=COMMISSION,
                     start=start,
@@ -50,30 +46,15 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
                         "address": "121 N LaSalle St, Room 1000, Chicago, IL 60602",
                     },
                     source=response.url,
-                    links=self._parse_links(column, item, response),
+                    links=self._parse_links(item, response),
                 )
                 meeting["id"] = self._get_id(meeting)
-                meeting["status"] = self._get_status(meeting)
+                meeting["status"] = self._get_status(meeting, text=meeting_str)
                 yield meeting
 
     @staticmethod
-    def format_meetings(meetings):
-        # translate and filter out non-printable spaces
-        meetings = [meeting.replace("\xa0", " ").strip() for meeting in meetings]
-        meetings = list(filter(None, meetings))
-        return meetings
-
-    @staticmethod
-    def parse_meetings(response):
-        meeting_xpath = """
-                //td[preceding::strong[1]/text()[
-                    contains(., "Meetings")
-                    ]]"""
-        return response.xpath(meeting_xpath)
-
-    @staticmethod
-    def _parse_title(meeting):
-        if "advisory" in meeting.lower():
+    def _parse_title(meeting_str):
+        if "advisory" in meeting_str.lower():
             return "Advisory Board"
         return "Board of Directors"
 
@@ -81,30 +62,19 @@ class ChiDevelopmentFundSpider(CityScrapersSpider):
     def _parse_start(meeting):
         # Not all dates on site a valid dates (e.g. Jan. 2011), so try to parse
         # and return none if not possible
-        clean_str = re.sub(r"[\.,]", "", meeting)
+        clean_str = re.sub(r"[\.,]", "", " ".join(meeting.css("*::text").extract()))
         date_str = re.search(r"[a-zA-z]{1,10} \d{1,2} \d{4}", clean_str)
         if not date_str:
             return
         return dateutil.parser.parse(date_str.group())
 
-    def _parse_links(self, item, meeting, response):
-        """
-        Find <a> tags where 1st, non-blank, preceding text = meeting (e.g. 'Jan 16')
-        site is pretty irregular and text is sometimes nested, so check siblings
-        children for meeting name if not found for sibling
-        """
-        anchor_xpath = """
-            //a[preceding-sibling::text()[normalize-space()][1][contains(., "{}")]]
-        """.format(
-            meeting
-        )
-        documents = item.xpath(anchor_xpath)
-        if len(documents) >= 0:
-            return [
-                {
-                    "href": response.urljoin(document.xpath("@href").extract_first()),
-                    "title": document.xpath("text()").extract_first(),
-                }
-                for document in documents
-            ]
-        return []
+    def _parse_links(self, item, response):
+        links = []
+        for link in item.css("a"):
+            link_title = link.attrib["title"]
+            if "Agenda" in link_title:
+                link_title = "Agenda"
+            links.append(
+                {"title": link_title, "href": response.urljoin(link.attrib["href"])}
+            )
+        return links

@@ -1,3 +1,5 @@
+import re
+
 import dateutil.parser
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
@@ -84,7 +86,9 @@ class ChiSsa21Spider(CityScrapersSpider):
     def _parse_date(self, item):
         raw_date = item.xpath("strong/text()").extract_first()
         if raw_date:
-            return dateutil.parser.parse(raw_date)
+            # Remove strings like "(Pending)"
+            date_str = re.sub(r"\(.*\)", "", raw_date).strip()
+            return dateutil.parser.parse(date_str)
 
     def _parse_location(self, item):
         """

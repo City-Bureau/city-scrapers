@@ -26,7 +26,7 @@ class ChiPoliceSpider(CityScrapersSpider):
         needs.
         """
         try:
-            data = json.loads(response.body_as_unicode())
+            data = json.loads(response.text)
         except json.decoder.JSONDecodeError:
             return
 

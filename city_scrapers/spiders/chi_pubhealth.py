@@ -39,17 +39,11 @@ class ChiPubHealthSpider(CityScrapersSpider):
         title = response.xpath('//h1[@class="page-heading"]/text()').extract_first()
 
         # Extract year and meeting name from title like "2017 Board of Health Meetings"
-        parts = re.match(r"(\d{4}) (.*?)s", title)
-        self.year = int(parts.group(1))
-        title = parts.group(2)
+        year_match = re.match(r"\d{4}", title)
+        self.year = int(year_match.group())
 
         # The description and meeting dates are a series of p elements
-        p = response.xpath(
-            '//div[contains(@class, "page-full-description-above")]/div/div/p'
-        )
-
-        for idx, item in enumerate(p, start=1):
-
+        for idx, item in enumerate(response.css(".page-description-above p"), start=1):
             if idx == 1:
                 # Description is the first p element
                 description = item.xpath("text()").extract_first()
@@ -62,7 +56,7 @@ class ChiPubHealthSpider(CityScrapersSpider):
                 continue
 
             meeting = Meeting(
-                title=title,
+                title="Board of Health",
                 description="",
                 classification=BOARD,
                 start=self._parse_start(item),

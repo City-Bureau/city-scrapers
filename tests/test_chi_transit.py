@@ -82,11 +82,11 @@ def test_documents():
     assert parsed_items[0]["links"] == [
         {
             "title": "Meeting Notice",
-            "href": "http://www.transitchicago.com/assets/1/21/061818_ERR_Notice.pdf?20564",  # noqa
+            "href": "https://www.transitchicago.com/assets/1/21/061818_ERR_Notice.pdf?20564",  # noqa
         },
         {
             "title": "Agenda",
-            "href": "http://www.transitchicago.com/assets/1/21/061818_ERR_Agenda.pdf?20565",  # noqa
+            "href": "https://www.transitchicago.com/assets/1/21/061818_ERR_Agenda.pdf?20565",  # noqa
         },
     ]
 

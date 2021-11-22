@@ -146,10 +146,13 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
             .replace("pm", "PM")
             .replace("Sept", "Sep")
         )
+        sep_str = "on"
+        if "on" not in dt_str:
+            sep_str = "-"
         try:
-            dt = datetime.strptime(dt_str, "%I:%M %p on %b %d, %Y")
+            dt = datetime.strptime(dt_str, f"%I:%M %p {sep_str} %b %d, %Y")
         except ValueError:  # Some months are abbreviated, some are not
-            dt = datetime.strptime(dt_str, "%I:%M %p on %B %d, %Y")
+            dt = datetime.strptime(dt_str, f"%I:%M %p {sep_str} %B %d, %Y")
         return dt
 
     def _parse_links(self, response, meeting=None, start=None):

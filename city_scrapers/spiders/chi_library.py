@@ -30,7 +30,9 @@ class ChiLibrarySpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        year = response.css("div.entry-content h2::text").extract_first()
+        year = re.search(
+            r"\d+", response.css("#content h1::text").extract_first()
+        ).group()
         for item in response.css("div.entry-content p"):
             if len(item.css("strong")) == 0:
                 continue
@@ -56,9 +58,15 @@ class ChiLibrarySpider(CityScrapersSpider):
         Parse or generate location. Url, latitutde and longitude are all
         optional and may be more trouble than they're worth to collect.
         """
-        addr_str = "{} Chicago, IL".format(item.css("::text")[-1].extract().strip())
+        addr_str = item.css("::text")[-1].extract().strip()
+        if "virtual" in addr_str.lower():
+            return {
+                "name": "Virtual",
+                "address": "",
+            }
+        addr_str = "{} Chicago, IL".format(addr_str)
         return {
-            "name": item.css("a::text").extract_first(),
+            "name": item.css("a::text").extract_first() or "",
             "address": addr_str,
         }
 

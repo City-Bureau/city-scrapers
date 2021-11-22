@@ -14,7 +14,7 @@ class CookBoardSpider(LegistarSpider):
 
     def parse_legistar(self, events):
         three_months_ago = datetime.today() - timedelta(days=90)
-        for event, _ in events:
+        for event in events:
             title = self._parse_title(event)
             start = self.legistar_start(event)
             if not start or (
@@ -35,7 +35,7 @@ class CookBoardSpider(LegistarSpider):
                 source=self.legistar_source(event),
             )
             meeting["status"] = self._get_status(
-                meeting, text=event["Meeting Location"]
+                meeting, text=str(event["Meeting Location"])
             )
             meeting["id"] = self._get_id(meeting)
             yield meeting
@@ -54,7 +54,9 @@ class CookBoardSpider(LegistarSpider):
         """
         Parse or generate location.
         """
-        address = item.get("Meeting Location", None)
+        address = item.get("Meeting Location")
+        if isinstance(address, dict):
+            address = address.get("label", "")
         if address:
             address = re.sub(
                 r"\s+", " ", re.sub(r"(\n)|(--em--)|(--em)|(em--)", " ", address),

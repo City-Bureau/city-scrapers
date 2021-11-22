@@ -23,7 +23,7 @@ freezer.stop()
 
 
 def test_items():
-    assert len(parsed_items) == 14
+    assert len(parsed_items) == 12
 
 
 def test_title():
@@ -33,12 +33,12 @@ def test_title():
 def test_description():
     assert (
         parsed_items[-1]["description"]
-        == "All 2020 Meetings will be held at 3:00 PM and typically last about 2 hours. Meetings are held at the City of Chicago Board of Ethics, 740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488"  # noqa
+        == "All meetings will be held at 3:00 PM and typically last about 2 hours. Meetings are held at the City of Chicago Board of Ethics. 740 N. Sedgwick, Ste. 500, Chicago, IL 60654-8488"  # noqa
     )
 
 
 def test_start():
-    assert parsed_items[-1]["start"] == datetime(2020, 12, 14, 15, 0)
+    assert parsed_items[-1]["start"] == datetime(2021, 12, 13, 15, 0)
 
 
 def test_end():
@@ -47,7 +47,7 @@ def test_end():
 
 def test_id():
     assert (
-        parsed_items[0]["id"] == "chi_boardofethics/201911151200/x/board_of_directors"
+        parsed_items[0]["id"] == "chi_boardofethics/202101111500/x/board_of_directors"
     )
 
 

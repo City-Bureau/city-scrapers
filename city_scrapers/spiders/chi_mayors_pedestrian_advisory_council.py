@@ -9,7 +9,7 @@ class ChiMayorsPedestrianAdvisoryCouncilSpider(
     name = "chi_mayors_pedestrian_advisory_council"
     agency = "Chicago Mayor's Pedestrian Advisory Council"
     start_urls = [
-        "http://chicagocompletestreets.org/getinvolved/mayors-advisory-councils/mpac-meeting-archives/"  # noqa
+        "https://chicagocompletestreets.org/sample-page-2/mayors-advisory-councils/mpac-meeting-archives/"  # noqa
     ]
     title = "Mayor's Pedestrian Advisory Council"
     location = {

@@ -35,8 +35,8 @@ class ChiTransitSpider(CityScrapersSpider):
                     time_notes="End estimated 3 hours after start time",
                     all_day=False,
                     location=self._parse_location(item),
-                    links=self._parse_links(item),
-                    source=self._parse_source(response),
+                    links=self._parse_links(item, response),
+                    source=response.url,
                 )
                 meeting["status"] = self._get_status(meeting)
                 meeting["id"] = self._get_id(meeting)
@@ -80,15 +80,14 @@ class ChiTransitSpider(CityScrapersSpider):
         """Parse or generate meeting title."""
         return item.css("td:nth-child(3)::text").extract_first()
 
-    def _parse_links(self, item):
+    def _parse_links(self, item, response):
         """Add meeting notice and agenda to links"""
         links = []
-        link_items = item.css("td:last-child a")
-        for link in link_items:
+        for link in item.css("td:last-child a"):
             links.append(
                 {
-                    "href": self.base_url + link.xpath("./@href").extract_first(),
-                    "title": link.xpath("./text()").extract_first(),
+                    "href": response.urljoin(link.attrib["href"]),
+                    "title": " ".join(link.css("*::text").extract()).strip(),
                 }
             )
         return links
@@ -110,7 +109,3 @@ class ChiTransitSpider(CityScrapersSpider):
     def _parse_end(self, start_datetime):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return start_datetime + timedelta(hours=3)
-
-    def _parse_source(self, response):
-        """Parse or generate source."""
-        return response.url

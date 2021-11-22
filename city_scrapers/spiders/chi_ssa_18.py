@@ -28,8 +28,8 @@ class ChiSsa18Spider(CityScrapersSpider):
             '//*[@id="page_content_wrapper"]/div/div/div/div[1]/div[3]'
         )
 
-        self._validate_location(table)
         self._validate_meeting_times(table)
+        location = self._parse_location(table)
 
         for item in table.xpath(".//h3 | .//p"):
             if "h3" in item.get():
@@ -58,7 +58,7 @@ class ChiSsa18Spider(CityScrapersSpider):
                         end=self._parse_end(converted_date),
                         all_day=self._parse_all_day(item),
                         time_notes="",
-                        location=self.location,
+                        location=location,
                         links=self._parse_links(split_string),
                         source=self._parse_source(response),
                     )
@@ -68,12 +68,15 @@ class ChiSsa18Spider(CityScrapersSpider):
 
                     yield meeting
 
-    def _validate_location(self, item):
+    def _parse_location(self, item):
         location_test = item.get()
+        if "Zoom" in location_test:
+            return {"name": "", "address": ""}
         if "3656 N Halsted" not in location_test:
             raise ValueError("Meeting location has changed")
         elif "Conference Room 200" not in location_test:
             raise ValueError("Meeting location has changed")
+        return self.location
 
     def _validate_meeting_times(self, item):
         meeting_time = item.get()

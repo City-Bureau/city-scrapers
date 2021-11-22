@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 88
-target-version = ['py37']
+target-version = ['py38']
 exclude = '''
 /(
     \.git
@@ -13,3 +13,26 @@ exclude = '''
   | tests/files
 )/
 '''
+
+[tool.pytest.ini_options]
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+
+[tool.isort]
+default_section = "THIRDPARTY"
+known_first_party = ["city_scrapers"]
+skip_glob = [
+    "*/.venv/*",
+    "*/tests/files/*",
+]
+sections = [
+  "FUTURE",
+  "STDLIB",
+  "THIRDPARTY",
+  "FIRSTPARTY",
+  "LOCALFOLDER",
+]
+multi_line_output = 3
+line_length = 88
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true

@@ -54,7 +54,9 @@ class CookHumanRightsSpider(CityScrapersSpider):
         formatted_date = response.meta.get("formatted_date")
         link = response.xpath("//a[contains(@href, 'default/files')]")
         link_path = link.xpath("./@href").extract_first()
-        self.link_map[formatted_date].append({"title": "Minutes", "href": link_path})
+        self.link_map[formatted_date].append(
+            {"title": "Minutes", "href": response.urljoin(link_path)}
+        )
 
     def _parse_meetings_page(self, response):
         """
@@ -182,9 +184,7 @@ class CookHumanRightsSpider(CityScrapersSpider):
         address = response.xpath(
             '//div[@class="field event-location"]/descendant::*/text()'
         ).extract()
-        for word in ["Location:", ", ", " "]:
-            address.remove(word)
-        address = " ".join(address)
+        address = " ".join([w for w in address if w not in ["Location:", ", ", " "]])
         if "Virtual Meeting" in address:
             return {
                 "address": "",

@@ -70,9 +70,7 @@ class CookBoardEthicsSpider(CityScrapersSpider):
         address = response.xpath(
             '//div[@class="field event-location"]/descendant::*/text()'
         ).extract()
-        for word in ["Location:", ", ", " "]:
-            address.remove(word)
-        address = " ".join(address)
+        address = " ".join([w for w in address if w not in ["Location:", ", ", " "]])
         return {
             "address": address,
             "name": "",
@@ -145,11 +143,10 @@ class CookBoardEthicsSpider(CityScrapersSpider):
         return datetime.strptime("{} {}".format(date, end_time), "%B %d, %Y %I:%M%p")
 
     def _parse_links(self, response):
-        files = response.css("span.file a")
         return [
             {
-                "href": f.xpath("./@href").extract_first(),
-                "title": f.xpath("./text()").extract_first(),
+                "href": response.urljoin(link.attrib["href"]),
+                "title": link.xpath("./text()").extract_first(),
             }
-            for f in files
+            for link in response.css("span.file a")
         ]

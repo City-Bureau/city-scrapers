@@ -12,7 +12,7 @@ from city_scrapers.spiders.cook_forest_preserves import CookForestPreservesSpide
 freezer = freeze_time("2018-12-19")
 freezer.start()
 
-with open(join(dirname(__file__), "files", "cook_forest_preserve.json"), "r") as f:
+with open(join(dirname(__file__), "files", "cook_forest_preserves.json"), "r") as f:
     test_response = json.load(f)
 
 spider = CookForestPreservesSpider()

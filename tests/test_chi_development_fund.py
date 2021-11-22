@@ -16,18 +16,18 @@ test_response = file_response(
 spider = ChiDevelopmentFundSpider()
 spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
-freezer = freeze_time("2018-05-01")
+freezer = freeze_time("2021-01-06")
 freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
 def test_meeting_count():
-    assert len(parsed_items) == 6
+    assert len(parsed_items) == 4
 
 
 def test_unique_id_count():
-    assert len(set([item["id"] for item in parsed_items])) == 6
+    assert len(set([item["id"] for item in parsed_items])) == 4
 
 
 def test_title():
@@ -39,7 +39,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2018, 4, 18)
+    assert parsed_items[0]["start"] == datetime(2020, 5, 14)
 
 
 def test_end():
@@ -51,7 +51,7 @@ def test_time_notes():
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_development_fund/201804180000/x/advisory_board"
+    assert parsed_items[0]["id"] == "chi_development_fund/202005140000/x/advisory_board"
 
 
 def test_status():
@@ -75,7 +75,7 @@ def test_sources():
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "href": "https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDF_Advisor_Board_Agenda_April_2018.pdf",  # noqa
+            "href": "https://www.chicago.gov/content/dam/city/depts/dcd/agendas/CDF_Advisory_Board_Agenda_May_2020.pdf",  # noqa
             "title": "Agenda",
         }
     ]

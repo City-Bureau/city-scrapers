@@ -38,7 +38,7 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
             link_text = " ".join(link.css("*::text").extract())
             if "Board" in link_text and "Schedule" in link_text:
                 schedule_link = link.attrib["href"]
-            elif "Minutes" in link_text:
+            elif "CCHR Board Meeting Information" in link_text:
                 self.docs_link = link.attrib["href"]
         if schedule_link and self.docs_link:
             yield scrapy.Request(
@@ -131,6 +131,14 @@ class ChiHumanRelationsSpider(CityScrapersSpider):
             )
         return link_map
 
+    def _parse_location(self, text):
+        if "Zoom" in text:
+            return {
+                "name": "Zoom (see website for details)",
+                "address": "",
+            }
+        return self.location
+
     def _validate_location(self, text):
-        if "740" not in text:
+        if "740" not in text and "Zoom" not in text:
             raise ValueError("Meeting location has changed")

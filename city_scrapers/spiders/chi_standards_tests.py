@@ -43,9 +43,7 @@ class ChiStandardsTestsSpider(CityScrapersSpider):
                 yield meeting
 
     def get_year_month_pairs(self, response):
-        container = response.xpath(
-            "//div[@class='container-fluid page-full-description']"
-        )
+        container = response.css(".page-description")
         years = [i.get() for i in container.xpath(".//p/strong/text()") if i.get()]
         months = [i for i in container.xpath(".//table")]
         if len(years) == len(months):

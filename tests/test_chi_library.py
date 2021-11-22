@@ -33,11 +33,11 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 1, 15, 9)
+    assert parsed_items[0]["start"] == datetime(2021, 1, 26, 9)
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_library/201901150900/x/board_of_directors"
+    assert parsed_items[0]["id"] == "chi_library/202101260900/x/board_of_directors"
 
 
 def test_status():
@@ -50,20 +50,20 @@ def test_all_day():
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "address": "400 S. State Street Chicago, IL",
-        "name": "Harold Washington Library Center",
+        "address": "",
+        "name": "Virtual",
     }
 
 
 def test_links():
     assert parsed_items[0]["links"] == [
         {
+            "href": "https://www.chipublib.org/news/board-of-directors-meeting-agenda-january-26-2021/",  # noqa
             "title": "Agenda",
-            "href": "https://www.chipublib.org/news/board-of-directors-meeting-agenda-january-15-2019/",  # noqa
         },
         {
+            "href": "https://www.chipublib.org/news/board-of-directors-meeting-minutes-january-26-2021/",  # noqa
             "title": "Minutes",
-            "href": "https://www.chipublib.org/news/board-of-directors-meeting-minutes-january-15-2019/",  # noqa
         },
     ]
 
