@@ -6,6 +6,9 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
+
+
+
 class ChiPubHealthSpider(CityScrapersSpider):
     name = "chi_pubhealth"
     agency = "Chicago Department of Public Health"
@@ -22,7 +25,9 @@ class ChiPubHealthSpider(CityScrapersSpider):
         standard_url = "https://www.chicago.gov/city/en/depts/cdph/supp_info/boh/{}-board-of-health-meetings.html"  # noqa
         url_variant_1 = "https://www.chicago.gov/city/en/depts/cdph/supp_info/boh/{}-board-of-health.html"  # noqa
 
+        # current_year = 2021
         current_year = datetime.now().year
+
 
         return [
             standard_url.format(current_year),
@@ -45,21 +50,27 @@ class ChiPubHealthSpider(CityScrapersSpider):
         # The description and meeting dates are a series of p elements
         for idx, item in enumerate(response.css(".page-description-above p"), start=1):
             if idx == 1:
+                # inspect_response(response, self)
                 # Description is the first p element
-                description = item.xpath("text()").extract_first()
-                if "333 S" not in description:
-                    raise ValueError("Meeting location has changed")
+                description = item.xpath("text()").getall()
+                # description = item.xpath("text()").extract_first()
+                if "333 S" not in description[1]:
+                    raise ValueError(description)
                 continue
 
             # Skip empty rows
             if not item.css("*::text").extract_first().strip():
                 continue
 
+            start = self._parse_start(item)
+            if start is None:
+                continue
+
             meeting = Meeting(
                 title="Board of Health",
                 description="",
                 classification=BOARD,
-                start=self._parse_start(item),
+                start=start,
                 end=None,
                 time_notes="",
                 all_day=False,
@@ -86,24 +97,33 @@ class ChiPubHealthSpider(CityScrapersSpider):
         if not date_text:
             # Past meetings are links to the agenda
             date_text = item.xpath("a/text()").extract_first()
-
+        if date_text is None:
+            return None
         # Remove extra whitespace characters
-        date_text = re.sub(r"\s+", " ", date_text).strip()
+        date_text = re.sub(r"\s+", " ", str(date_text)).strip()
+
+
 
         # Handle typos like "December18"
-        if re.match(r"[a-zA-Z]+\d+", date_text):
+        if re.match(r"[a-zA-Z]+\d+", str(date_text)):
             date_match = re.search(r"(?P<month>[a-zA-Z]+)(?P<day>\d+)", date_text)
             date_text = "{} {}".format(
                 date_match.group("month"), date_match.group("day")
             )
         # Extract date formatted like "January 12"
+
         return datetime.strptime(date_text, "%B %d")
+
 
     def _parse_start(self, item):
         """
         Parse the meeting date and set start time to 9am.
         """
         datetime_obj = self._parse_date(item)
+
+        if datetime_obj is None:
+            return None
+
         return datetime(self.year, datetime_obj.month, datetime_obj.day, 9)
 
     def _parse_links(self, item, response):
