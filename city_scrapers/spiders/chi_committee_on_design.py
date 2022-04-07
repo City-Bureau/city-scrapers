@@ -1,3 +1,5 @@
+from re import T
+from datetime import datetime
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -17,13 +19,38 @@ class ChiCommitteeOnDesignSpider(CityScrapersSpider):
         needs.
         """
 
+        #parse years
+        years = response.css("strong::text").getall()
+        years = years[3:]
+        years = [i[0:4] for i in years]
+        print(years)
 
-        # selectors = response.xpath(" ")
+        #parse dates
+        tablecount = 0
+        for table in response.css("table"):
+            total = []
+            for item in table.css("td"):
+                #continue from here
+                # print(item.getall())
+                dates = item.css("p::text").getall()
+                for i in range(len(dates)):
+                    curr = dates[i]
+                    d = curr.strip()
+                    d = d.rstrip("\xa0")
+                    dates[i] = d
+                for d in dates:
+                    if d[0] == "•":
+                        dates.remove(d)
+                total += dates
+            # years[tablecount] = curr year, then loop through total then for each datetime, check if it past tensrt, if not then we create the meeting object
+            year = years[tablecount]
+            # for meet in total:
+        
 
-        for item in response.css("td"):
-            #continue from here
-            print("our table")
-            print(item.get())
+            # dates2 = [i for i in dates if i[0] != "\\"]
+            # print(dates)
+            # for detail in item.css("p::text"):
+            #     print(detail.getall())
             # meeting = Meeting(
             #     title=self._parse_title(item),
             #     description=self._parse_description(item),
