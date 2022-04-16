@@ -1,5 +1,6 @@
-from pickle import FALSE, TRUE
 from datetime import datetime
+from pickle import FALSE, TRUE
+
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -50,19 +51,19 @@ class ChiCommitteeOnDesignSpider(CityScrapersSpider):
             for i in range(len(total)):
                 meet = total[i]  # current meeting we are working with
                 canceled = FALSE
-                splitMeet = meet.split()
+                split_meet = meet.split()
                 # meeting string is in format "month day" or "month day canceled"
-                if len(splitMeet) > 2:
-                    if splitMeet[2].strip() == "Canceled":
+                if len(split_meet) > 2:
+                    if split_meet[2].strip() == "Canceled":
                         canceled = TRUE
-                        meet = splitMeet[0] + " " + splitMeet[1]
+                        meet = split_meet[0] + " " + split_meet[1]
                     else:  # if not "canceled", it is unexpected so we throw an error
                         raise ValueError("Unknown addition to date time")
                 clean_date = total_clean_dates[i]
                 clean_date_list = clean_date.split('"')
-                agendaLink = ""
+                agenda_link = ""
                 if len(clean_date_list) > 1:
-                    agendaLink = clean_date_list[1]
+                    agenda_link = clean_date_list[1]
 
                 meeting = Meeting(
                     title=self._parse_title(),
@@ -73,7 +74,7 @@ class ChiCommitteeOnDesignSpider(CityScrapersSpider):
                     all_day=self._parse_all_day(),
                     time_notes=self._parse_time_notes(),
                     location=self._parse_location(),
-                    links=self._parse_links(response, agendaLink),
+                    links=self._parse_links(response, agenda_link),
                     source=self._parse_source(response),
                 )
                 # check that meeting is in the future, else do not yield the meeting
