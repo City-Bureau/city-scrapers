@@ -6,9 +6,6 @@ from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
 
-
-
-
 class ChiPubHealthSpider(CityScrapersSpider):
     name = "chi_pubhealth"
     agency = "Chicago Department of Public Health"
@@ -27,7 +24,6 @@ class ChiPubHealthSpider(CityScrapersSpider):
 
         # current_year = 2021
         current_year = datetime.now().year
-
 
         return [
             standard_url.format(current_year),
@@ -102,8 +98,6 @@ class ChiPubHealthSpider(CityScrapersSpider):
         # Remove extra whitespace characters
         date_text = re.sub(r"\s+", " ", str(date_text)).strip()
 
-
-
         # Handle typos like "December18"
         if re.match(r"[a-zA-Z]+\d+", str(date_text)):
             date_match = re.search(r"(?P<month>[a-zA-Z]+)(?P<day>\d+)", date_text)
@@ -113,7 +107,6 @@ class ChiPubHealthSpider(CityScrapersSpider):
         # Extract date formatted like "January 12"
 
         return datetime.strptime(date_text, "%B %d")
-
 
     def _parse_start(self, item):
         """
