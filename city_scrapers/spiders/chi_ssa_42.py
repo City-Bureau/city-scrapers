@@ -28,7 +28,8 @@ class ChiSsa42Spider(CityScrapersSpider):
             yield meeting
 
         yield scrapy.Request(
-            "https://ssa42.org/minutes-of-meetings/", callback=self._parse_meetings,
+            "https://ssa42.org/minutes-of-meetings/",
+            callback=self._parse_meetings,
         )
 
     def _parse_meetings(self, response, upcoming=False):
@@ -81,7 +82,9 @@ class ChiSsa42Spider(CityScrapersSpider):
         if date_match:
             try:
                 date_str = re.sub(
-                    r"(?<=\d)[a-z]{2}", "", date_match.group().replace(",", ""),
+                    r"(?<=\d)[a-z]{2}",
+                    "",
+                    date_match.group().replace(",", ""),
                 )
                 dt = datetime.strptime(date_str, "%B %d %Y").date()
             except ValueError:

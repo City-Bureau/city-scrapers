@@ -54,6 +54,8 @@ class CookForestPreservesSpider(LegistarSpider):
         address = item.get("Meeting Location", None)
         if address:
             address = re.sub(
-                r"\s+", " ", re.sub(r"(\n)|(--em--)|(--em)|(em--)", " ", address),
+                r"\s+",
+                " ",
+                re.sub(r"(\n)|(--em--)|(--em)|(em--)", " ", address),
             ).strip()
         return {"address": address, "name": ""}

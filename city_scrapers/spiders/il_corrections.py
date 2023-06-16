@@ -135,7 +135,7 @@ class IlCorrectionsSpider(CityScrapersSpider):
         return location_lookup["no known location"]
 
     def _parse_all_links(self, response):
-        """ Gather dates, links """
+        """Gather dates, links"""
         link_dict = defaultdict(dict)
         for link in response.css("a"):
             date = link.re_first(

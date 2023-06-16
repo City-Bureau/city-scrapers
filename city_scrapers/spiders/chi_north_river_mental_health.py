@@ -34,7 +34,6 @@ class ChiNorthRiverMentalHealthSpider(CityScrapersSpider):
 
     def _parse_minutes(self, response):
         for item in response.xpath('.//div[@class="wsite-section-elements"]//a'):
-
             valid_start = self._minutes_parse_start(item)
             if not valid_start:
                 continue

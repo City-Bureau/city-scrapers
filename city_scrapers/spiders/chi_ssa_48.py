@@ -26,7 +26,6 @@ class ChiSsa48Spider(CityScrapersSpider):
         meeting_links = response.xpath("//div[@class='meeting-minutes-block']")
 
         for item_date, item_info in zip(meeting_date, meeting_info):
-
             start_time, end_time = self._parse_start_end(
                 item_date, item_info, meeting_year
             )

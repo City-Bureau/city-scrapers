@@ -27,7 +27,9 @@ class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
                 continue
 
             req = scrapy.Request(
-                item["source"], callback=self._parse_detail, dont_filter=True,
+                item["source"],
+                callback=self._parse_detail,
+                dont_filter=True,
             )
             req.meta["item"] = item
             yield req

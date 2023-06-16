@@ -236,7 +236,7 @@ class IlSexOffenderManagementSpider(CityScrapersSpider):
         return datetime.strptime("{} {}".format(date_str, time_str), "%B %d, %Y %H:%M")
 
     def _get_datetime_obj_meeting_minutes(self, link_text):
-        """ Make datetime object for meeting minutes"""
+        """Make datetime object for meeting minutes"""
         date = self._get_meeting_date(link_text)
         # tested, this will return the datetime object correct regardless
         # if given full month is given and regardless of capitilization

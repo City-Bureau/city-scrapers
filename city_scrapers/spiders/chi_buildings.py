@@ -60,7 +60,9 @@ class ChiBuildingsSpider(CityScrapersSpider):
 
                 # Request each relevant event page, including current data in meta attr
                 req = scrapy.Request(
-                    item["url"], callback=self._parse_event, dont_filter=True,
+                    item["url"],
+                    callback=self._parse_event,
+                    dont_filter=True,
                 )
                 req.meta["meeting"] = meeting
                 req.meta["category"] = item["category"]

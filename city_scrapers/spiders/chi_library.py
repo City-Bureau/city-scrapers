@@ -84,7 +84,10 @@ class ChiLibrarySpider(CityScrapersSpider):
         agenda_url = (
             "https://www.chipublib.org/news/board-of-directors-"
             "meeting-agenda-{}-{date.day}-{date.year}/"
-        ).format(start_time.strftime("%B").lower(), date=start_time,)
+        ).format(
+            start_time.strftime("%B").lower(),
+            date=start_time,
+        )
         minutes_url = agenda_url.replace("agenda", "minutes")
         agenda_res = self.session.get(agenda_url)
         minutes_res = self.session.get(minutes_url)

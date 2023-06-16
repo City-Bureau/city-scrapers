@@ -31,7 +31,6 @@ class ChiStateUniversitySpider(CityScrapersSpider):
         )
 
     def _parse_minutes(self, response):
-
         minutes_map = defaultdict(list)
 
         for data in response.xpath("/html/body/div/div[4]/div/div[1]/div"):
@@ -159,7 +158,6 @@ class ChiStateUniversitySpider(CityScrapersSpider):
         return notes
 
     def _parse_location(self, item):
-
         return {
             "address": "9501 S. King Drive Chicago, IL 60628",
             "name": "Room 15, 4th Floor, Gwendolyn Brooks Library Auditorium",
@@ -170,7 +168,6 @@ class ChiStateUniversitySpider(CityScrapersSpider):
             raise ValueError("Meeting location has changed")
 
     def _parse_links(self, item, title, start):
-
         try:
             link = item.xpath(".//a").attrib["href"]
         except KeyError:

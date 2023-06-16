@@ -27,13 +27,11 @@ class IlHealthFacilitiesSpider(CityScrapersSpider):
             inner_link_element = link_element.css("h3")
 
             if inner_link_element:
-
                 href = link_element.attrib["href"]
 
                 parsed_links.append(href)
 
         for link in parsed_links:
-
             yield scrapy.http.Request(link, callback=self.parse_event_page)
 
     def parse_event_page(self, response):
@@ -177,15 +175,15 @@ class IlHealthFacilitiesSpider(CityScrapersSpider):
 
         links = [
             {
-                "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Board-Meetings.aspx",
+                "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Board-Meetings.aspx",  # noqa
                 "title": "Board and Subcommittee Meetings",
             },
             {
-                "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Previous-Meetings.aspx",
+                "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Previous-Meetings.aspx",  # noqa
                 "title": "Previous Meeting",
             },
             {
-                "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Public-Hearing.aspx",
+                "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Public-Hearing.aspx",  # noqa
                 "title": "Public Hearings",
             },
         ]

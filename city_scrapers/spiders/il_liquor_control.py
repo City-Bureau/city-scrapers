@@ -159,8 +159,8 @@ class IlLiquorControlSpider(CityScrapersSpider):
         }
 
     def _parse_link(self, response, dt_object, minutes_href):
-        """Use agenda_href if it is found from detail page. If not, try href using formatting
-        datetime."""
+        """Use agenda_href if it is found from detail page.
+        If not, try href using formatting datetime."""
         links = []
         agenda_href = response.css("div.item.link-item.bullet a::attr(href)").extract()
         if agenda_href:

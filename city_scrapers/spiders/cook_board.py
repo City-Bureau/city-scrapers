@@ -59,7 +59,9 @@ class CookBoardSpider(LegistarSpider):
             address = address.get("label", "")
         if address:
             address = re.sub(
-                r"\s+", " ", re.sub(r"(\n)|(--em--)|(--em)|(em--)", " ", address),
+                r"\s+",
+                " ",
+                re.sub(r"(\n)|(--em--)|(--em)|(em--)", " ", address),
             ).strip()
         return {"address": address, "name": ""}
 

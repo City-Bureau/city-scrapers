@@ -50,7 +50,9 @@ class ChiSsa61Spider(CityScrapersSpider):
         time_match = re.search(r"\d{1,2}:\d{2}[ pam\.]{2,5}", text)
         try:
             date_str = re.sub(
-                r"(?<=\d)[a-z]{2}", "", date_match.group().replace(",", ""),
+                r"(?<=\d)[a-z]{2}",
+                "",
+                date_match.group().replace(",", ""),
             )
             dt = datetime.strptime(date_str, "%B %d %Y").date()
         except (AttributeError, ValueError):

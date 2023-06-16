@@ -21,7 +21,6 @@ class ChiSsa23Spider(CityScrapersSpider):
     time = "4:00 pm"
 
     def parse(self, response):
-
         address_text = response.xpath('//div[@class = "address"][1]/text()').extract()[
             1
         ]
@@ -43,7 +42,6 @@ class ChiSsa23Spider(CityScrapersSpider):
             test_year = entry_str[0:4]
 
             if "Schedule" in entry_str:
-
                 for item in entry.xpath(
                     "following-sibling::ol[1]//li//text()"
                 ).getall():
@@ -57,13 +55,11 @@ class ChiSsa23Spider(CityScrapersSpider):
                     }
 
             elif "Agendas" in entry_str or "Minutes" in entry_str:
-
                 # Only consider ps between two h4s
                 for p in entry.xpath(
                     "following-sibling::p[count(preceding-sibling::h4)=" "$entry_cnt]",
                     entry_cnt=entry_cnt,
                 ):
-
                     # The  non-breaking space signals the end of the meeting lists
                     if (
                         p.xpath("./text()")
@@ -72,7 +68,6 @@ class ChiSsa23Spider(CityScrapersSpider):
                         break
 
                     for item in p.xpath("./a"):
-
                         item_str = item.xpath("./text()").extract_first()
                         date, start, end = self._parse_date_start_end(
                             item_str, test_year
@@ -82,11 +77,9 @@ class ChiSsa23Spider(CityScrapersSpider):
                         links = self._parse_links(item_links, entry_str)
 
                         if date in meetings:
-
                             meetings[date]["links"].extend(links)
 
                         else:
-
                             meetings[date] = {
                                 "start": start,
                                 "end": end,
@@ -95,7 +88,6 @@ class ChiSsa23Spider(CityScrapersSpider):
 
         # Create the meeting objects
         for key, item in meetings.items():
-
             if item["start"] < last_year and not self.settings.getbool(
                 "CITY_SCRAPERS_ARCHIVE"
             ):

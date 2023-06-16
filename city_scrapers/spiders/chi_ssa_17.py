@@ -88,7 +88,8 @@ class ChiSsa17Spider(CityScrapersSpider):
                 r"(?<=\d)[a-z]+", "", minutes.xpath("./text()").extract_first()
             )
             minutes_date = datetime.strptime(
-                ", ".join(minutes_text.split(", ")[-2:]), "%B %d, %Y",
+                ", ".join(minutes_text.split(", ")[-2:]),
+                "%B %d, %Y",
             ).date()
             minutes_dict[minutes_date] = [
                 {"href": minutes.attrib["href"], "title": "Minutes"}

@@ -43,7 +43,6 @@ class ChiSsa22Spider(CityScrapersSpider):
                     entry_cnt=entry_cnt,
                 ):
                     for item in ul.xpath("./li"):
-
                         item_str = " ".join(
                             item.xpath("./text()").extract_first().split(" ")[0:2]
                         )
@@ -53,7 +52,6 @@ class ChiSsa22Spider(CityScrapersSpider):
                         meetings[date] = {"start": start, "links": []}
 
                         for a in item.xpath("./a"):
-
                             item_str = a.xpath("./text()").extract_first()
                             item_links = a.xpath("@href").extract()
                             meetings[date]["links"].extend(
@@ -62,7 +60,6 @@ class ChiSsa22Spider(CityScrapersSpider):
 
         # Create the meeting objects
         for key, item in meetings.items():
-
             if item["start"] < last_year and not self.settings.getbool(
                 "CITY_SCRAPERS_ARCHIVE"
             ):

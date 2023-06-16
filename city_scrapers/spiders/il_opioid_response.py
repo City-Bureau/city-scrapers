@@ -102,7 +102,6 @@ class IlOpioidResponseSpider(CityScrapersSpider):
         date_match = self._get_date(item)
 
         if date_match:
-
             datestr = date_match.group(0)
             date_indices = [
                 i
@@ -115,7 +114,6 @@ class IlOpioidResponseSpider(CityScrapersSpider):
                 minutes = response.xpath("//p//a")[minutes_idx]
 
                 if datestr in minutes.get():
-
                     minutes = {
                         "href": response.urljoin(minutes.xpath("@href").get()),
                         "title": minutes.xpath("text()").get(),

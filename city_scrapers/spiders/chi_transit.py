@@ -56,7 +56,9 @@ class ChiTransitSpider(CityScrapersSpider):
         # Always 537 W Lake, so handle that if provided (but allow for change)
         if location_str and (
             re.search(
-                r"567 (W.|W|West) Lake.*|board\s?room", location_str, re.IGNORECASE,
+                r"567 (W.|W|West) Lake.*|board\s?room",
+                location_str,
+                re.IGNORECASE,
             )
             or re.search(r"cta.*board.*room", location_str, re.IGNORECASE)
         ):

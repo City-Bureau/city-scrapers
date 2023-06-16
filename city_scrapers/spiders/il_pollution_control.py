@@ -32,7 +32,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        """ Overridden `from_crawler` to connect `spider_idle` signal. """
+        """Overridden `from_crawler` to connect `spider_idle` signal."""
         spider = super().from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_idle, signal=scrapy.signals.spider_idle)
         return spider
@@ -62,7 +62,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             yield scrapy.Request(agenda_url, callback=self._parse_agenda)
 
     def _parse_minutes(self, response):
-        """ Traverse tree of URLs and populate self.minutes_map """
+        """Traverse tree of URLs and populate self.minutes_map"""
         for item in response.xpath("//td[@class='name']/a"):
             try:
                 href = item.xpath("@href")[0].get()
@@ -195,7 +195,7 @@ class IlPollutionControlSpider(CityScrapersSpider):
             }
 
     def _parse_links(self, meeting):
-        """ Associate Meeting objects with previously-scraped links """
+        """Associate Meeting objects with previously-scraped links"""
         links = list()
         key = meeting["start"].date()
         if key in self.minutes_map:

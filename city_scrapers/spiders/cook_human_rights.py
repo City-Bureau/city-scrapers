@@ -76,7 +76,7 @@ class CookHumanRightsSpider(CityScrapersSpider):
             )
 
     def _parse_events_page(self, response):
-        """ parse the calendar page to find human rights  commitee meetings """
+        """parse the calendar page to find human rights  commitee meetings"""
         for url in self._get_event_urls(response):
             yield scrapy.Request(url, callback=self._parse_event, dont_filter=True)
 

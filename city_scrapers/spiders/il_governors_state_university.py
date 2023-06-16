@@ -95,7 +95,8 @@ class IlGovernorsStateUniversitySpider(CityScrapersSpider):
         return BOARD
 
     def _normalize_date(self, date, default_year):
-        """The dates appear in pretty variable formats, including in some cases without a year.
+        """The dates appear in pretty variable formats,
+        including in some cases without a year.
         This method normalizes."""
         clean_date = date.replace(",", "").replace(".", "").lower().strip()
         # There was a stray "sept." in the data, although usually the month is

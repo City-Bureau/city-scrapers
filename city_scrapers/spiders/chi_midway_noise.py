@@ -191,7 +191,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         return candidates
 
     def _clean_bad_chars(self, text):
-        """ Remove unwanted unicode characters (only one found so far). """
+        """Remove unwanted unicode characters (only one found so far)."""
         return text.replace("\u200b", "")
 
     def _build_link_dict(self, url):

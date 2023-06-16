@@ -25,7 +25,7 @@ class ChiSsa27Spider(CityScrapersSpider):
     }
 
     def parse(self, response):
-        """   `parse` should always `yield` Meeting items. """
+        """`parse` should always `yield` Meeting items."""
         self.minutes_list = self.get_minutes_panel_items(response)
         location = self._parse_location(response)
         commission_path = "div #content-232764 div.panel-body p"
@@ -78,7 +78,6 @@ class ChiSsa27Spider(CityScrapersSpider):
             paragraphs = paragraphs[1:]
 
         for p in paragraphs:
-
             href = p.css("a::attr(href)").get()
             tmp_list = p.css("*::text").getall()
             if len(tmp_list) == 0 or not tmp_list[0].strip():
