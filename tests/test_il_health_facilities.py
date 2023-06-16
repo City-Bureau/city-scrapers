@@ -16,21 +16,21 @@ test_response = file_response(
     url="https://www2.illinois.gov/sites/hfsrb/events/Pages/Board-Meetings.aspx",
 )
 
-# The crawler for il_health_facilities grabs information from some pages that are linked to
-# from the original page.  As such, we need to test the adjacent links as well
+# The crawler for il_health_facilities grabs information from some pages that are
+# linked to from the original page.
+# As such, we need to test the adjacent links as well
 
 adjacent_links = [
-    "https://www2.illinois.gov/sites/hfsrb/events/Pages/March-21%202023-State-Board-Meeting.aspx",
-    "https://www2.illinois.gov/sites/hfsrb/events/Pages/May-9-2023-State-Board-Meeting.aspx",
-    "https://www2.illinois.gov/sites/hfsrb/events/Pages/June-27-2023%20State%20Board%20Meeting.aspx",
-    "https://www2.illinois.gov/sites/hfsrb/events/Pages/August-15-2023-State-Board-Meeting.aspx",
-    "https://www2.illinois.gov/sites/hfsrb/events/Pages/October-3-2023-State-Board-Meeting.aspx",
-    "https://www2.illinois.gov/sites/hfsrb/events/Pages/December-5-2023%20State%20Board%20Meeting.aspx",
+    "https://www2.illinois.gov/sites/hfsrb/events/Pages/March-21%202023-State-Board-Meeting.aspx",  # noqa
+    "https://www2.illinois.gov/sites/hfsrb/events/Pages/May-9-2023-State-Board-Meeting.aspx",  # noqa
+    "https://www2.illinois.gov/sites/hfsrb/events/Pages/June-27-2023%20State%20Board%20Meeting.aspx",  # noqa
+    "https://www2.illinois.gov/sites/hfsrb/events/Pages/August-15-2023-State-Board-Meeting.aspx",  # noqa
+    "https://www2.illinois.gov/sites/hfsrb/events/Pages/October-3-2023-State-Board-Meeting.aspx",  # noqa
+    "https://www2.illinois.gov/sites/hfsrb/events/Pages/December-5-2023%20State%20Board%20Meeting.aspx",  # noqa
 ]
 
 
 def mock_scrapy_request(link, callback):
-
     with open(
         join(dirname(__file__), "files", "il_health_facilities_helper.html"), "rb"
     ) as f:
@@ -46,7 +46,6 @@ def mock_scrapy_request(link, callback):
 
 @patch("scrapy.http.Request", mock_scrapy_request)
 def generate_parsed_items():
-
     freezer = freeze_time("2023-02-09")
     freezer.start()
 
@@ -65,19 +64,16 @@ def test_num_meetings_found():
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_title(item):
-
     assert item["title"] == "March 21, 2023 State Board Meeting"
 
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_description(item):
-
     assert item["description"] == ""
 
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_start(item):
-
     assert item["start"].strftime("%Y_%B_%d_%I_%M_%p") == "2023_March_21_09_00_AM"
 
 
@@ -88,7 +84,6 @@ def test_end(item):
 
 @pytest.mark.parametrize("item", parsed_items)
 def test_time_notes(item):
-
     assert item["time_notes"] == ""
 
 
@@ -124,15 +119,15 @@ def test_source(item):
 def test_links(item):
     assert item["links"] == [
         {
-            "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Board-Meetings.aspx",
+            "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Board-Meetings.aspx",  # noqa
             "title": "Board and Subcommittee Meetings",
         },
         {
-            "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Previous-Meetings.aspx",
+            "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Previous-Meetings.aspx",  # noqa
             "title": "Previous Meeting",
         },
         {
-            "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Public-Hearing.aspx",
+            "href": "https://www2.illinois.gov/sites/hfsrb/events/Pages/Public-Hearing.aspx",  # noqa
             "title": "Public Hearings",
         },
     ]

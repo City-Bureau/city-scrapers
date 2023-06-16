@@ -9,7 +9,8 @@ from freezegun import freeze_time
 from city_scrapers.spiders.chi_ssa_24 import ChiSsa24Spider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_ssa_24.html"), url="https://rpba.org/ssa-24/",
+    join(dirname(__file__), "files", "chi_ssa_24.html"),
+    url="https://rpba.org/ssa-24/",
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "chi_ssa_24_detail.html"),

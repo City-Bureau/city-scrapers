@@ -60,7 +60,6 @@ def test_source():
 
 
 def test_links():
-
     assert parsed_items[0]["links"] == [
         {
             "href": "http://www.chipabf.org/ChicagoPolicePension/PDF/Agenda/2019/2019AGENDA01.pdf",  # noqa

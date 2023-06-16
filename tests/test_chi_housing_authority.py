@@ -20,7 +20,8 @@ NOTICE_URL = "http://www.thecha.org/about/board-meetings-agendas-and-resolutions
 MINUTES_URL = "http://www.thecha.org/doing-business/contracting-opportunities/view-all/Board%20Meeting"  # noqa
 
 upcoming_response = file_response(
-    join(dirname(__file__), "files", "chi_housing_authority.html"), url=UPCOMING_URL,
+    join(dirname(__file__), "files", "chi_housing_authority.html"),
+    url=UPCOMING_URL,
 )
 notice_response = file_response(
     join(dirname(__file__), "files", "chi_housing_authority_notice.html"),

@@ -89,7 +89,8 @@ def test_all_day(item):
 # previous meeting minutes
 prev_url = "https://www2.illinois.gov/sites/ppb/Pages/board_minutes.aspx"
 test_response2 = file_response(
-    join(dirname(__file__), "files", "il_procurement_policy_prev.html"), url=prev_url,
+    join(dirname(__file__), "files", "il_procurement_policy_prev.html"),
+    url=prev_url,
 )
 parsed_items_prev = sorted(
     [item for item in spider._prev_meetings(test_response2)], key=itemgetter("start")

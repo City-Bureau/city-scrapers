@@ -27,7 +27,8 @@ freezer.start()
 
 spider._parse_schedule_pdf(test_pdf_response)
 parsed_items = sorted(
-    [item for item in spider._parse_documents(test_response)], key=itemgetter("start"),
+    [item for item in spider._parse_documents(test_response)],
+    key=itemgetter("start"),
 )
 
 freezer.stop()
