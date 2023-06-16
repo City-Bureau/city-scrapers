@@ -94,6 +94,8 @@ celerybeat-schedule
 *.launch
 .settings/
 *.sublime-workspace
+*swo
+*swp
 
 # virtualenv
 .venv
