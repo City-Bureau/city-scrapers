@@ -22,6 +22,7 @@ def decode_value(value):
 
 
 def generate_start_urls(url):
+    return [f"{url}/DC001.html"]
     return [
         f"{url}/DC{district:03}.html"
         for district in range(1, 26)
@@ -43,7 +44,9 @@ class ChiPoliceDistrictCouncilsSpider(CityScrapersSpider):
             if "notices-and-agendas" in url:
                 url_text = item.css("p > a::text").get().strip()
                 yield response.follow(
-                    url, callback=self._parse_meeting, meta={"url_text": url_text}
+                    url,
+                    callback=self._parse_meeting,
+                    meta={"url_text": url_text, "source": response.url},
                 )
 
     def _parse_meeting(self, response):
@@ -64,7 +67,7 @@ class ChiPoliceDistrictCouncilsSpider(CityScrapersSpider):
             time_notes="",
             location={},
             links=self._parse_links(response),
-            source=self._parse_source(response),
+            source=response.meta["source"],
         )
         if not pdf == {}:
             meeting["description"] = self._parse_description(pdf)
@@ -111,7 +114,7 @@ class ChiPoliceDistrictCouncilsSpider(CityScrapersSpider):
         district = int(urllib.parse.urlparse(url).path.split("/")[7].split("-")[-1])
 
         meeting_type = self._parse_meeting_type(item)
-        subtitle = f"{district} {meeting_type}" if meeting_type else district
+        subtitle = f"{district:03} {meeting_type}" if meeting_type else f"{district:03}"
 
         return f"Chicago Police District Council {subtitle} Meeting"
 
@@ -188,6 +191,3 @@ class ChiPoliceDistrictCouncilsSpider(CityScrapersSpider):
 
     def _parse_links(self, response):
         return [{"href": response.url, "title": "agenda"}]
-
-    def _parse_source(self, response):
-        return response.url
