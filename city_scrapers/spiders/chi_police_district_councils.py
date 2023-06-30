@@ -22,7 +22,6 @@ def decode_value(value):
 
 
 def generate_start_urls(url):
-    return [f"{url}/DC001.html"]
     return [
         f"{url}/DC{district:03}.html"
         for district in range(1, 26)
