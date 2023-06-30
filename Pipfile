@@ -10,7 +10,7 @@ requests = "*"
 scrapy = "*"
 scrapy-sentry = "*"
 scrapy-wayback-middleware = "*"
-city-scrapers-core = {extras = ["azure"],version = "*"}
+city-scrapers-core = {ref = "main", git = "https://github.com/City-Bureau/city-scrapers-core.git", extras = ["azure"]}
 pypiwin32 = {version = "*",sys_platform = "== 'win32'"}
 pdfminer-six = "*"
 
