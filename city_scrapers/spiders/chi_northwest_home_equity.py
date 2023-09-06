@@ -12,7 +12,7 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
     start_urls = ["https://nwheap.com/category/meet-minutes-and-agendas/"]
      
         
-    def parse(self, response, url_to_local=None):
+    def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
 
@@ -21,8 +21,6 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
         """
         for link in response.css('div.em-events-widget a::attr(href)').getall():
             if link != 'https://nwheap.com/events/':
-                if url_to_local:
-                    link = "file:\\"+url_to_local[link]
                 yield scrapy.Request(link, callback=self.parse_page)
 
     def parse_page(self, response):
@@ -40,7 +38,7 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
         )
         meeting["id"] = self._get_id(meeting)
         meeting["status"] = self._get_status(meeting)
-        yield meeting
+        return meeting
        
         # for item in response.css(".meetings"):
         #     meeting = Meeting(

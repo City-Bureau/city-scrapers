@@ -5,6 +5,7 @@ import pytest
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+import json
 
 from city_scrapers.spiders.chi_northwest_home_equity import ChiNorthwestHomeEquitySpider
 
@@ -13,26 +14,27 @@ test_response = file_response(
     url="https://nwheap.com/category/meet-minutes-and-agendas/",
 )
 
-url_to_local = {"https://nwheap.com/category/meet-minutes-and-agendas/": "chi_northwest_home_equity.html",
-                "https://nwheap.com/events/governing-commissioners-public-meeting-18/": "1.html",
-                "https://nwheap.com/events/governing-commissioners-public-meeting-17/": "2.html",
-                "https://nwheap.com/events/governing-commissioners-public-meeting-16/": "3.html",
-                "https://nwheap.com/events/governing-commissioners-public-meeting-15/": "4.html",
-                "https://nwheap.com/events/governing-commissioners-public-meeting-14/": "5.html",
-                "https://nwheap.com/events/governing-commissioners-public-meeting-13/": "6.html",
-                "https://nwheap.com/events/governing-commissioners-public-meeting-12/": "7.html",}
+url_to_local = json.loads(open(join(dirname(__file__), "files", "chi_northwest_home_equity", "url_to_local.json")).read())
 
 for link, local in url_to_local.items():
-    url_to_local[link] = join(dirname(__file__), "files", local)
+    url_to_local[link] = join(dirname(__file__), "files", "chi_northwest_home_equity", local)
 
 spider = ChiNorthwestHomeEquitySpider()
 
-freezer = freeze_time("2023-09-04")
-freezer.start()
+class MockRequest:
+    def __call__(self, url, callback):
+        return callback(self._request(url))
+    def _request(self, url):
+        return file_response(url_to_local[url], url=url)
 
-
-
-freezer.stop()
+@pytest.fixture()
+def parsed_items(monkeypatch):
+    freezer = freeze_time("2023-09-04")
+    freezer.start()
+    monkeypatch.setattr("scrapy.Request", MockRequest())
+    parsed_items = list(spider.parse(test_response))
+    freezer.stop()
+    return parsed_items
 
 
 # def test_tests():
@@ -44,21 +46,21 @@ freezer.stop()
 Uncomment below
 """
 
-def test_title():
+def test_title(parsed_items):
     assert parsed_items[0]["title"] == "Governing Commissioners Public Meeting"
 
 
-def test_description():
+def test_description(parsed_items):
     assert parsed_items[0]["description"] == ""
 
 #{"title": "Governing Commissioners Public Meeting", "description": "", "classification": "Commission", "start": "2022-12-15 18:30:00", "end": "2022-12-15 19:30:00", "all_day": false, "time_notes": "", "location": {"address": "Northwest Home Equity Assurance Program", "name": ""}, "links": [{"href": "", "title": ""}], "source": "https://nwheap.com/events/governing-commissioners-public-meeting-12/", "id": "chi_northwest_home_equity/202212151830/x/governing_commissioners_public_meeting", "status": "passed"},
 
-def test_start():
-    assert parsed_items[0]["start"] == datetime(2022, 12, 15, 18, 30)
+def test_start(parsed_items):
+    assert parsed_items[0]["start"] == datetime(2023, 10, 19, 18, 30)
 
 
-def test_end():
-    assert parsed_items[0]["end"] == datetime(2022, 12, 15, 19, 30)
+def test_end(parsed_items):
+    assert parsed_items[0]["end"] == datetime(2023, 10, 19, 19, 30)
 
 
 # def test_time_notes():
