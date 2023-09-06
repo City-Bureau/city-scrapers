@@ -1,17 +1,18 @@
+import datetime as dt
+import re
+
+import scrapy
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-import scrapy
-import re
-import datetime as dt
+
 
 class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
     name = "chi_northwest_home_equity"
     agency = "Chicago Northwest Home Equity"
     timezone = "America/Chicago"
     start_urls = ["https://nwheap.com/category/meet-minutes-and-agendas/"]
-     
-        
+
     def parse(self, response):
         """
         `parse` should always `yield` Meeting items.
@@ -39,25 +40,6 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
         meeting["id"] = self._get_id(meeting)
         meeting["status"] = self._get_status(meeting)
         return meeting
-       
-        # for item in response.css(".meetings"):
-        #     meeting = Meeting(
-        #         title=self._parse_title(item),
-        #         description=self._parse_description(item),
-        #         classification=self._parse_classification(item),
-        #         start=self._parse_start(item),
-        #         end=self._parse_end(item),
-        #         all_day=self._parse_all_day(item),
-        #         time_notes=self._parse_time_notes(item),
-        #         location=self._parse_location(item),
-        #         links=self._parse_links(item),
-        #         source=self._parse_source(response),
-        #     )
-
-            # meeting["status"] = self._get_status(meeting)
-            # meeting["id"] = self._get_id(meeting)
-
-            # yield meeting
 
     def _parse_title(self, item):
         return item.css("h1.entry-title::text").get()
@@ -118,4 +100,3 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
         if start_time:
             return dt.datetime.strptime(f"{date} {start}", "%m/%d/%Y %I:%M %p")
         return dt.datetime.strptime(f"{date} {end}", "%m/%d/%Y %I:%M %p")
-
