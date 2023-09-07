@@ -19,10 +19,8 @@ url_to_local = json.loads(open(join(path_to_json, "url_to_local.json")).read())
 
 for link, local in url_to_local.items():
     url_to_local[link] = join(
-        dirname(__file__),
-        "files",
-        "chi_northwest_home_equity",
-        local)
+        dirname(__file__), "files", "chi_northwest_home_equity", local
+    )
 
 spider = ChiNorthwestHomeEquitySpider()
 
@@ -68,7 +66,7 @@ def test_end(parsed_items):
 def test_location(parsed_items):
     assert parsed_items[0]["location"] == {
         "name": "",
-        "address": "3234 N. Central Ave."
+        "address": "3234 N. Central Ave.",
     }
 
 
@@ -92,10 +90,12 @@ def test_status(parsed_items):
 
 
 def test_links(parsed_items):
-    assert parsed_items[0]["links"] == [{
-        "href": "https://nwheap.com/locations/3234-n-central-ave/",
-        "title": "3234 N. Central Ave."
-    }]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://nwheap.com/locations/3234-n-central-ave/",
+            "title": "3234 N. Central Ave.",
+        }
+    ]
 
 
 def test_classification(parsed_items):

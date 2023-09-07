@@ -14,8 +14,8 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
     start_urls = ["https://nwheap.com/category/meet-minutes-and-agendas/"]
 
     def parse(self, response):
-        for link in response.css('div.em-events-widget a::attr(href)').getall():
-            if link != 'https://nwheap.com/events/':
+        for link in response.css("div.em-events-widget a::attr(href)").getall():
+            if link != "https://nwheap.com/events/":
                 yield scrapy.Request(link, callback=self.parse_page)
 
     def parse_page(self, response):
@@ -74,7 +74,7 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
 
     def _parse_date(self, item, start_time=True):
         date = item.css('p:contains("Date/Time")').get()
-        date_match = re.search(r'(\d{1,2}/\d{1,2}/\d{4})', date)
+        date_match = re.search(r"(\d{1,2}/\d{1,2}/\d{4})", date)
         date = date_match.group(0)
 
         time = item.css('p > strong:contains("Date/Time") ~ *::text').get()
