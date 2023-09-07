@@ -65,7 +65,9 @@ class ChiNorthwestHomeEquitySpider(CityScrapersSpider):
         }
 
     def _parse_links(self, item):
-        return [{"href": "", "title": ""}]
+        loc_link = item.css('p > strong:contains("Location") ~ a::attr(href)').get()
+        title = item.css('p > strong:contains("Location") ~ a::text').get()
+        return [{"href": loc_link, "title": title}]
 
     def _parse_source(self, response):
         return response.url

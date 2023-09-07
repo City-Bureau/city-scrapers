@@ -93,8 +93,8 @@ def test_status(parsed_items):
 
 def test_links(parsed_items):
     assert parsed_items[0]["links"] == [{
-        "href": "",
-        "title": ""
+        "href": "https://nwheap.com/locations/3234-n-central-ave/",
+        "title": "3234 N. Central Ave."
     }]
 
 
