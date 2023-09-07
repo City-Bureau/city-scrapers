@@ -83,7 +83,7 @@ def test_time_notes(parsed_items):
 
 def test_id(parsed_items):
     base = "chi_northwest_home_equity/202310191830/x/"
-    id = base + "governing_commissioners_public_meeting_18"
+    id = base + "governing_commissioners_public_meeting"
     assert parsed_items[0]["id"] == id
 
 
