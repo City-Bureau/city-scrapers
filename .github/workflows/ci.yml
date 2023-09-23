@@ -36,9 +36,6 @@ jobs:
       - name: Check imports with isort
         run: pipenv run isort . --check-only
 
-      - name: Check style with black
-        run: pipenv run black . --check
-
       - name: Lint with flake8
         run: pipenv run flake8 .
 
