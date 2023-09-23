@@ -37,7 +37,7 @@ jobs:
         run: pipenv run isort . --check-only
 
       - name: Check style with black
-        run: pipenv run black . --check
+        run: pipenv run black . --check-only
 
       - name: Lint with flake8
         run: pipenv run flake8 .
