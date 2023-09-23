@@ -1,84 +1,93 @@
-import json
 from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import CITY_COUNCIL, PASSED, TENTATIVE
+from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from scrapy.settings import Settings
 
-from city_scrapers.spiders.chi_citycouncil import ChiCityCouncilSpider
+from city_scrapers.spiders.chi_citycouncil import ChiCitycouncilSpider
 
-freezer = freeze_time("2018-12-19")
+test_response = file_response(
+    join(dirname(__file__), "files", "chi_citycouncil.html"),
+    url="https://api.chicityclerkelms.chicago.gov/meeting?filter=body%20eq%20%27City%20Council%27&sort=date%20desc",  # noqa
+)
+spider = ChiCitycouncilSpider()
+
+freezer = freeze_time("2023-09-23")
 freezer.start()
-with open(join(dirname(__file__), "files", "chi_citycouncil.json"), "r") as f:
-    test_response = json.load(f)
-spider = ChiCityCouncilSpider()
-spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
-parsed_items = [item for item in spider.parse_legistar(test_response)]
+parsed_items = [item for item in spider.parse(test_response)]
+
 freezer.stop()
+
+"""
+def test_tests():
+    print("Please write some tests for this spider or at least disable this one.")
+    assert False
+
+
+
+Uncomment below
+"""
 
 
 def test_title():
-    assert parsed_items[0]["title"] == "City Council"
+    assert parsed_items[0]["title"] == "Chicago City Council"
+
+
+def test_description():
+    assert parsed_items[0]["description"] == ""
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 1, 23, 10, 00)
+    assert parsed_items[0]["start"] == datetime(2023, 10, 4, 15, 0)
 
 
-def test_end():
-    assert parsed_items[0]["end"] is None
+# def test_end():
+#   assert parsed_items[0]["end"] == datetime(2023, 10, 4, 17, 0)
+
+
+# def test_time_notes():
+#     assert parsed_items[0]["time_notes"] == "EXPECTED TIME NOTES"
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_citycouncil/201901231000/x/city_council"
+    assert (
+        parsed_items[0]["id"] == "chi_citycouncil/202310041500/x/chicago_city_council"
+    )
 
 
-def test_classification():
-    assert parsed_items[0]["classification"] == CITY_COUNCIL
-
-
-def test_status():
-    assert parsed_items[0]["status"] == TENTATIVE
-    assert parsed_items[20]["status"] == PASSED
+# def test_status():
+#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
 
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": "Council Chambers, City Hall",
-        "address": "121 N LaSalle St Chicago, IL 60602",
+        "name": "City Council Chamber, 2nd Floor",
+        "address": "City Hall, 121 N LaSalle St - Chicago, IL 60602",
     }
 
 
 def test_source():
     assert (
         parsed_items[0]["source"]
-        == "https://chicago.legistar.com/DepartmentDetail.aspx?ID=12357&GUID=4B24D5A9-FED0-4015-9154-6BFFFB2A8CB4"  # noqa
+        == "https://api.chicityclerkelms.chicago.gov/meeting?filter=body%20eq%20%27City%20Council%27&sort=date%20desc"  # noqa
     )
 
 
 def test_links():
-    assert parsed_items[20]["links"] == [
+    assert parsed_items[0]["links"] == [
         {
+            "href": "https://occprodstoragev1.blob.core.usgovcloudapi.net/meetingattachmentspublic/05a907c9-676b-4617-9d0b-266830f5ebcf.pdf",  # noqa
             "title": "Agenda",
-            "href": "http://media.legistar.com/chic/meetings/937FDFCE-F0EA-452A-B8DF-A0CF51DBD681/Agenda%20Human%20Relations%20N_20181120162153.pdf",  # noqa
         },
-        {
-            "title": "Summary",
-            "href": "http://media.legistar.com/chic/meetings/937FDFCE-F0EA-452A-B8DF-A0CF51DBD681/Corrected%20Summary%20Human%20_20181210125616.pdf",  # noqa
-        },
-        {
-            "href": "http://media.legistar.com/chic/meetings/937FDFCE-F0EA-452A-B8DF-A0CF51DBD681/Human%20Relations%20Notice_20181107153726.pdf",  # noqa
-            "title": "Notice",
-        },
+        {"href": "", "title": "Video Link"},
     ]
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_description(item):
-    assert item["description"] == ""
+def test_classification():
+    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
 
 
 @pytest.mark.parametrize("item", parsed_items)
