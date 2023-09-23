@@ -9,14 +9,12 @@ class ChiCitycouncilSpider(CityScrapersSpider):
     name = "chi_citycouncil"
     agency = "Chicago City Council"
     timezone = "America/Chicago"
-    start_urls = [
-        "https://api.chicityclerkelms.chicago.gov/meeting?filter=body%20eq%20%27City%20Council%27&sort=date%20desc"  # noqa
-    ]
+    start_urls = ["https://chicityclerkelms.chicago.gov/Meetings/"]
 
     def parse(self, response):
 
         # The API endpoint
-        url = "https://api.chicityclerkelms.chicago.gov/meeting?filter=body%20eq%20%27City%20Council%27&sort=date%20desc"  # noqa
+        url = "https://api.chicityclerkelms.chicago.gov/meeting"  # noqa
 
         # A GET request to the API
         response = requests.get(url)
@@ -44,7 +42,8 @@ class ChiCitycouncilSpider(CityScrapersSpider):
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
-        return "Chicago City Council"
+        title = item["body"]
+        return title
 
     def _parse_description(self, item):
         """Parse or generate meeting description."""
@@ -69,7 +68,7 @@ class ChiCitycouncilSpider(CityScrapersSpider):
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
-        return ""
+        return "Please double check the meeting time on the meeting page."
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
@@ -84,16 +83,13 @@ class ChiCitycouncilSpider(CityScrapersSpider):
 
     def _parse_links(self, item):
         """Parse or generate links."""
-        agenda_link = str(item["files"])
-        agenda_link2 = "https:" + agenda_link.split("https:")[1]
-        agenda_link3 = agenda_link2.split(".pdf")[0] + ".pdf"
 
-        video_link = str(item["videoLink"])
+        meetind_id = item["meetingId"]
+        meeting_page = (
+            "https://chicityclerkelms.chicago.gov/Meeting/?meetingId=" + meetind_id
+        )
 
-        return [
-            {"href": agenda_link3, "title": "Agenda"},
-            {"href": video_link, "title": "Video Link"},
-        ]
+        return [{"href": meeting_page, "title": "Meeting Page"}]
 
     def _parse_source(self, response):
         """Parse or generate source."""
