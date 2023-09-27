@@ -31,10 +31,10 @@ jobs:
           sudo openvpn --config /etc/openvpn/ovpn.conf --daemon
           sleep 120
 
-      - name: Set up Python 3.8
+      - name: Set up Python 3.9
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install Pipenv
         uses: dschep/install-pipenv-action@v1
@@ -42,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: pipenv sync
         env:
-          PIPENV_DEFAULT_PYTHON_VERSION: 3.8
+          PIPENV_DEFAULT_PYTHON_VERSION: 3.9
 
       - name: Run scrapers
         run: |
