@@ -86,7 +86,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
         yield from meeting_list
 
     def _parse_title(self, item):
-        if type(item) == Selector:
+        if isinstance(item, Selector):
             item = item.get()
         text = self._clean_bad_chars(item)
         desc = ""
@@ -113,7 +113,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
 
     def _parse_date(self, item):
         """Parse the meeting date."""
-        if type(item) == Selector:
+        if isinstance(item, Selector):
             # Scheduled meetings have only text; past meetings have <td> tags.
             if "<td>" in item.get():
                 item = item.xpath(".//td/text()").get()
@@ -135,7 +135,7 @@ class ChiMidwayNoiseSpider(CityScrapersSpider):
     def _parse_links(self, item, response):
         """Parse or generate links."""
         documents = []
-        if type(item) == Selector:
+        if isinstance(item, Selector):
             relative_urls = item.xpath(".//a/@href").extract()
             for relative_url in relative_urls:
                 documents.append(self._build_link_dict(response.urljoin(relative_url)))
