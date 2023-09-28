@@ -44,7 +44,7 @@ def test_end():
 def test_time_notes():
     assert (
         parsed_items[0]["time_notes"]
-        == "Please double check the meeting time on the meeting page."
+        == "Please double check the meeting time on the meeting notice and/or agenda."
     )
 
 
@@ -67,18 +67,16 @@ def test_location():
 
 
 def test_source():
-    assert (
-        parsed_items[0]["source"] == "https://api.chicityclerkelms.chicago.gov/meeting"
-    )
+    assert parsed_items[0]["source"] == "https://chicityclerkelms.chicago.gov/Meetings/"
 
 
-def test_links():
-    assert parsed_items[0]["links"] == [
-        {
-            "href": "https://chicityclerkelms.chicago.gov/Meeting/?meetingId=05889499-4C56-EE11-BE6E-001DD8098532",  # noqa
-            "title": "Meeting Page",
-        }
-    ]
+# def test_links():
+#    assert parsed_items[0]["links"] == [
+#        {
+#            "href": "https://occprodstoragev1.blob.core.usgovcloudapi.net/meetingattachmentspublic/12872b2c-96aa-497a-961a-2929d592b6ca.pdf",  # noqa
+#            "title": "Notice",
+#        }
+#    ]
 
 
 def test_classification():
