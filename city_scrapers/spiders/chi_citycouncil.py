@@ -1,4 +1,3 @@
-import requests
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -9,14 +8,9 @@ class ChiCitycouncilSpider(CityScrapersSpider):
     name = "chi_citycouncil"
     agency = "Chicago City Council"
     timezone = "America/Chicago"
-    start_urls = ["https://chicityclerkelms.chicago.gov/Meetings/"]
+    start_urls = ["https://api.chicityclerkelms.chicago.gov/meeting"]
 
     def parse(self, response):
-        # The API endpoint
-        url = "https://api.chicityclerkelms.chicago.gov/meeting"  # noqa
-
-        # A GET request to the API
-        response = requests.get(url)
         response_json = response.json()
 
         for item in response_json["data"]:

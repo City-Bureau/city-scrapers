@@ -2,15 +2,15 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
+from city_scrapers_core.constants import NOT_CLASSIFIED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
 from city_scrapers.spiders.chi_citycouncil import ChiCitycouncilSpider
 
 test_response = file_response(
-    join(dirname(__file__), "files", "chi_citycouncil.html"),
-    url="https://chicityclerkelms.chicago.gov/Meetings/",
+    join(dirname(__file__), "files", "chi_citycouncil.json"),
+    url="https://api.chicityclerkelms.chicago.gov/meeting",
 )
 spider = ChiCitycouncilSpider()
 
@@ -20,14 +20,6 @@ freezer.start()
 parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
-
-
-"""
-def test_tests():
-    print("Please write some tests for this spider or at least disable this one.")
-    assert False
-Uncomment below
-"""
 
 
 def test_title():
@@ -45,8 +37,8 @@ def test_start():
     assert parsed_items[0]["start"] == datetime(2023, 10, 12, 15, 0)
 
 
-# def test_end():
-#     assert parsed_items[0]["end"] == datetime(2019, 1, 1, 0, 0)
+def test_end():
+    assert parsed_items[0]["end"] is None
 
 
 def test_time_notes():
@@ -63,8 +55,8 @@ def test_id():
     )
 
 
-# def test_status():
-#     assert parsed_items[0]["status"] == "EXPECTED STATUS"
+def test_status():
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
 def test_location():
