@@ -12,7 +12,6 @@ class ChiCitycouncilSpider(CityScrapersSpider):
     start_urls = ["https://chicityclerkelms.chicago.gov/Meetings/"]
 
     def parse(self, response):
-
         # The API endpoint
         url = "https://api.chicityclerkelms.chicago.gov/meeting"  # noqa
 
@@ -21,7 +20,6 @@ class ChiCitycouncilSpider(CityScrapersSpider):
         response_json = response.json()
 
         for item in response_json["data"]:
-
             meeting = Meeting(
                 title=self._parse_title(item),
                 description=self._parse_description(item),
