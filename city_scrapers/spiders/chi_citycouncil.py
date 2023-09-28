@@ -24,7 +24,7 @@ class ChiCitycouncilSpider(CityScrapersSpider):
                 time_notes=self._parse_time_notes(item),
                 location=self._parse_location(item),
                 links=self._parse_links(item),
-                source=self._parse_source(response),
+                source="https://chicityclerkelms.chicago.gov/Meetings/",
             )
 
             meeting["status"] = self._get_status(meeting)
@@ -60,7 +60,9 @@ class ChiCitycouncilSpider(CityScrapersSpider):
 
     def _parse_time_notes(self, item):
         """Parse any additional notes on the timing of the meeting"""
-        return "Please double check the meeting time on the meeting page."
+        return (
+            "Please double check the meeting time on the meeting notice and/or agenda."
+        )
 
     def _parse_all_day(self, item):
         """Parse or generate all-day status. Defaults to False."""
@@ -75,13 +77,48 @@ class ChiCitycouncilSpider(CityScrapersSpider):
 
     def _parse_links(self, item):
         """Parse or generate links."""
+        notice_link = ""
+        agenda_link = ""
+        summary_link = ""
+        other_link = ""
 
-        meetind_id = item["meetingId"]
-        meeting_page = (
-            "https://chicityclerkelms.chicago.gov/Meeting/?meetingId=" + meetind_id
-        )
+        # list of dicts, where each dict is a meeting document
+        for i in item["files"]:
+            # now have a single dict
+            print(i)
+            try:
+                if i.get("attachmentType") == "Agenda":
+                    agenda_link = i.get("path")
+            except:  # noqa
+                continue
 
-        return [{"href": meeting_page, "title": "Meeting Page"}]
+        for i in item["files"]:
+            try:
+                if i.get("attachmentType") == "Notice":
+                    notice_link = i.get("path")
+            except:  # noqa
+                continue
+
+        for i in item["files"]:
+            try:
+                if i.get("attachmentType") == "Summary":
+                    summary_link = i.get("path")
+            except:  # noqa
+                continue
+
+        for i in item["files"]:
+            try:
+                if i.get("attachmentType") == "Other":
+                    other_link = i.get("path")
+            except:  # noqa
+                continue
+
+        return [
+            {"href": notice_link, "title": "Notice"},
+            {"href": agenda_link, "title": "Agenda"},
+            {"href": summary_link, "title": "Summary"},
+            {"href": other_link, "title": "Other"},
+        ]
 
     def _parse_source(self, response):
         """Parse or generate source."""
