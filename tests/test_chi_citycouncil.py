@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime  # noqa
 from os.path import dirname, join
 
 import pytest
