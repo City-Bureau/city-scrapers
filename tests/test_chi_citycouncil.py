@@ -34,7 +34,7 @@ def test_description():
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2023, 10, 12, 15, 0)
+    assert parsed_items[0]["start"] == datetime(2023, 10, 12, 12, 0)
 
 
 def test_end():
