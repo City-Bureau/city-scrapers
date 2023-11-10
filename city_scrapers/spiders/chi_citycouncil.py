@@ -51,8 +51,14 @@ class ChiCitycouncilSpider(CityScrapersSpider):
 
         date = full_date.split("T")[0]
         time = full_date.split("T")[1]
-        time2 = time.split("+")[0]
-        return parser().parse(date + " " + time2)
+        time = time.split("+")[0]
+
+        # as of 11/10/2023 the returned time is 5 hrs ahead of actual meeting time
+
+        adjusted_hour = int(time.split(":")[0]) - 5
+        adjusted_time = str(adjusted_hour) + ":" + time.split(":", 1)[1]
+        # print(adjusted_time)
+        return parser().parse(date + " " + adjusted_time)
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
@@ -85,7 +91,7 @@ class ChiCitycouncilSpider(CityScrapersSpider):
         # list of dicts, where each dict is a meeting document
         for i in item["files"]:
             # now have a single dict
-            print(i)
+            # print(i)
             try:
                 if i.get("attachmentType") == "Agenda":
                     agenda_link = i.get("path")
