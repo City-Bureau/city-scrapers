@@ -4,7 +4,6 @@ from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 from dateutil import tz
-from dateutil.parser import parser
 
 
 class ChiCitycouncilSpider(CityScrapersSpider):
@@ -51,29 +50,9 @@ class ChiCitycouncilSpider(CityScrapersSpider):
     def _parse_start(self, item):
         """Parse start datetime as a naive datetime object."""
         # as of 11/10/2023, the returned time is in UTC timezone
-
-        # retieve meeting date and time
-        full_date = item["date"]
-        # print(full_date)
-
-        # convert datetime from UTC to CST time
-        # turn datetime object into datetime timzone aware object
-        from_zone = tz.gettz("UTC")
-        to_zone = tz.gettz("CST")
-
-        utc = datetime.strptime(full_date.split("+")[0] + "Z", "%Y-%m-%dT%H:%M:%SZ")
-        utc = utc.replace(tzinfo=from_zone)
-        cst = utc.astimezone(to_zone)
-        # print(utc)
-        # print(cst)
-
-        # extract the individual date and time as strings
-        # get date component
-        date = cst.strftime("%m/%d/%Y %H:%M:%S").split(" ")[0]
-        # get time component
-        time = cst.strftime("%m/%d/%Y %H:%M:%S").split(" ")[1]
-
-        return parser().parse(date + " " + time)
+        start_time = datetime.strptime(item["date"], "%Y-%m-%dT%H:%M:%S%z")
+        chicago_time = start_time.astimezone(tz.gettz("America/Chicago"))
+        return chicago_time.replace(tzinfo=None)
 
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
