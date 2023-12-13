@@ -31,7 +31,7 @@ scrapy crawl <spider_name>
 scrapy crawl chi_citycouncil
 ```
 
-Alternatively, you can watch this [three minute video](https://www.youtube.com/watch?v=4Z3zXQYJXZc) to see how to run a scraper.
+Alternatively, you can watch this [three minute video](https://www.youtube.com/watch?v=UgroG8CARWc) to see how to run a scraper.
 
 ## About this project
 
