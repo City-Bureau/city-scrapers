@@ -3,7 +3,7 @@
 [![CI build status](https://github.com/City-Bureau/city-scrapers/workflows/CI/badge.svg)](https://github.com/City-Bureau/city-scrapers/actions?query=workflow%3ACI)
 [![Cron build status](https://github.com/City-Bureau/city-scrapers/workflows/Cron/badge.svg)](https://github.com/City-Bureau/city-scrapers/actions?query=workflow%3ACron)
 
-A collection of scrapers for public meetings in Illinois, with a particular focus on Chicago.
+A collection of scrapers for public meetings in Cook County and Chicago, Illinois. Also includes scrapers for meetings of Illinois state boards.
 
 ## Getting Started
 
