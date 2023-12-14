@@ -43,10 +43,8 @@ class IlCommerceSpider(CityScrapersSpider):
             links=self._parse_links(panel, response),
             source=response.url,
         )
-
-        meeting["status"] = self._get_status(
-            meeting, text=" ".join(response.css(".col-sm-12 *::text").extract())
-        )
+        status_str = " ".join(response.css("h3 *::text").extract())
+        meeting["status"] = self._get_status(meeting, text=status_str)
         meeting["id"] = self._get_id(meeting)
 
         yield meeting
