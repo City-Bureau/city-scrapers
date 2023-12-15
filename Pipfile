@@ -4,20 +4,21 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-python-dateutil = "*"
-pytz = "*"
-requests = "*"
-scrapy = "*"
-scrapy-sentry = {ref = "v1", git = "https://github.com/City-Bureau/scrapy-sentry.git"}
-scrapy-wayback-middleware = "*"
+python-dateutil = "==2.8"
 city-scrapers-core = {ref = "main", git = "https://github.com/City-Bureau/city-scrapers-core.git", extras = ["azure"]}
-pypiwin32 = {version = "*",sys_platform = "== 'win32'"}
-pdfminer-six = "*"
+scrapy-sentry = {ref = "v1", git = "https://github.com/City-Bureau/scrapy-sentry.git"}
+scrapy = "==2.11"
+requests = "==2.31"
+scrapy-wayback-middleware = "==0.3.3"
+pdfminer-six = "==20221105"
 
 [dev-packages]
-freezegun = "*"
-pytest = "*"
-"flake8" = "*"
-isort = "*"
-black = "*"
-pre-commit = "*"
+freezegun = "==1.3.1"
+pytest = "==7.4.3"
+flake8 = "==6.1"
+isort = "==5.13"
+black = "==23.12"
+pre-commit = "==3.6"
+
+[requires]
+python_version = "3.11"
