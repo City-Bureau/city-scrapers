@@ -12,7 +12,7 @@ class IlCommerceSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     start_urls = [
         # Returns a page with 32 days of meetings from today's date, including today.
-        "https://www.icc.illinois.gov/meetings?dts=32&scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True"
+        "https://www.icc.illinois.gov/meetings?dts=32&scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True"  # noqa
     ]
 
     def parse(self, response):

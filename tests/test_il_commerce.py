@@ -10,7 +10,7 @@ from city_scrapers.spiders.il_commerce import IlCommerceSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "il_commerce.html"),
-    url="https://www.icc.illinois.gov/meetings?dts=32&scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True",
+    url="https://www.icc.illinois.gov/meetings?dts=32&scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True",  # noqa
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "il_commerce_detail.html"),
@@ -77,19 +77,19 @@ def test_source():
 def test_links():
     assert parsed_item["links"] == [
         {
-            "href": "https://www.icc.illinois.gov/efiling/agenda/public/coverletter?agid=21912",
+            "href": "https://www.icc.illinois.gov/efiling/agenda/public/coverletter?agid=21912",  # noqa
             "title": "Public Utility Cover Letter",
         },
         {
-            "href": "https://www.icc.illinois.gov/efiling/agenda/public/agendareport?agid=21912",
+            "href": "https://www.icc.illinois.gov/efiling/agenda/public/agendareport?agid=21912",  # noqa
             "title": "Regular Open Meeting Agenda",
         },
         {
-            "href": "https://www.icc.illinois.gov/efiling/agenda/public/coverletter?agid=21938",
+            "href": "https://www.icc.illinois.gov/efiling/agenda/public/coverletter?agid=21938",  # noqa
             "title": "Transportation Cover Letter",
         },
         {
-            "href": "https://www.icc.illinois.gov/efiling/agenda/public/agendareport?agid=21938",
+            "href": "https://www.icc.illinois.gov/efiling/agenda/public/agendareport?agid=21938",  # noqa
             "title": "Bench Agenda",
         },
     ]
