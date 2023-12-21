@@ -25,9 +25,7 @@ class IlCommerceSpider(CityScrapersSpider):
         event_links = response.css(".p-2 a.day")
         for event_link in event_links:
             href = event_link.attrib["href"]
-            yield response.follow(
-                href, callback=self._parse_event_page
-            )
+            yield response.follow(href, callback=self._parse_event_page)
 
     def _parse_event_page(self, response):
         panel = response.css(".soi-icc-container .col-12")

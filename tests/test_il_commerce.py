@@ -55,8 +55,7 @@ def test_time_notes():
 
 def test_id():
     assert (
-        parsed_item["id"]
-        == "il_commerce/202312141130/x/regular_open_meeting"  # noqa
+        parsed_item["id"] == "il_commerce/202312141130/x/regular_open_meeting"  # noqa
     )
 
 
