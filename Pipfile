@@ -11,7 +11,6 @@ scrapy = "*"
 scrapy-sentry = {ref = "v1", git = "https://github.com/City-Bureau/scrapy-sentry.git"}
 scrapy-wayback-middleware = "*"
 city-scrapers-core = {ref = "main", git = "https://github.com/City-Bureau/city-scrapers-core.git", extras = ["azure"]}
-pypiwin32 = {version = "*",sys_platform = "== 'win32'"}
 pdfminer-six = "*"
 
 [dev-packages]
