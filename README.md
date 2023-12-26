@@ -67,31 +67,19 @@ Please note that if you're running this project on a Windows machine, you may ne
 
 ## About this project
 
-### Who are the City Bureau Documenters, and why do they want to scrape websites?
+### What is City Scrapers?
 
-Public meetings are important spaces for democracy where any resident can participate and hold public figures accountable. [City Bureau's Documenters program](https://www.documenters.org/) pays community members an hourly wage to inform and engage their communities by attending and documenting public meetings.
+This repo part of an initiative to scrape, store and publish meeting information for public meetings across the U.S. It's coordinated by the [City Bureau Documenters program](https://www.documenters.org/) and heavily driven by community contributions. We welcome contributions from everyone, especially those with less experience in tech and journalism.
 
-How does the Documenters program know when meetings are happening? It isn’t easy! These events are spread across dozens of websites, rarely in useful data formats.
+### Why public meetings?
 
-That’s why City Bureau is working together with a team of civic coders to develop and coordinate the City Scrapers, a community open source project to scrape and store these meetings in a central database.
+Public meetings are important spaces for democracy where any resident can participate and hold public figures accountable. Unfortunately, with the collapse of local news media in the U.S., hundreds of public meetings happen every week with no journalists in attendance. This means that residents are often unaware of the decisions being made in their area.
 
-### What are the City Scrapers?
+[City Bureau's Documenters program](https://www.documenters.org/) pays community members, called Documenters, an hourly wage to inform and engage their communities by attending and documenting public meetings.
 
-The City Scrapers collect information about public meetings. Every day, the City Scrapers go out and fetch information about new meetings from the Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them.
+How do Documenters know when meetings are happening? It isn’t easy! Meeting information is typically spread across dozens of websites and rarely in useful data formats. This project was started in order to automatically fetch meeting information and store it in a central database so that a person doesn't have to do it.
 
-Community members are also welcome to use this code to set up their own databases.
-
-### What can I learn from working on the City Scrapers?
-
-A lot about the City of Chicago! What is City Council talking about this week? What are the local school councils, and what community power do they have? What neighborhoods is the police department doing outreach in? Who governs our water?
-
-From building a scraper, you'll gain experience with:
-
-- how the web works (HTTP requests and responses, reading HTML)
-- writing functions and tests in Python
-- version control and collaborative coding (git and Github)
-- a basic data file format (JSON), working with a schema and data validation
-- problem-solving, finding patterns, designing robust code
+The scrapers in this repo fetch information about new meetings from the Chicago city council's website, the local school council's website, the Chicago police department's website, and many more.
 
 ### How can I set up City Scrapers for my area?
 
