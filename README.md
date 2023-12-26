@@ -35,6 +35,36 @@ scrapy crawl chi_citycouncil -O citycouncil.json
 
 Alternatively, you can watch this [three minute video](https://www.youtube.com/watch?v=UgroG8CARWc) to see how to run a scraper.
 
+### Test
+
+1. If the virtual environment is not already active, activate it:
+
+```bash
+pipenv shell
+```
+
+2. Run all tests:
+```bash
+pytest
+```
+
+3. Run tests for a specific spider:
+```bash
+pytest tests/test_<spider_name>.py
+```
+
+#### Example
+
+To run tests for the `chi_citycouncil` spider:
+
+```bash
+pytest tests/test_chi_citycouncil.py
+```
+
+### Windows support
+
+Please note that if you're running this project on a Windows machine, you may need to install additional dependencies, such as [pywin32](https://pypi.org/project/pywin32/) or [pypiwin32](https://pypi.org/project/pypiwin32/).
+
 ## About this project
 
 ### Who are the City Bureau Documenters, and why do they want to scrape websites?
