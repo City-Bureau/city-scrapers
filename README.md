@@ -69,7 +69,7 @@ Please note that if you're running this project on a Windows machine, you may ne
 
 ### What is City Scrapers?
 
-This repo part of an initiative to scrape, store and publish meeting information for public meetings across the U.S. It's coordinated by the [City Bureau Documenters program](https://www.documenters.org/) and heavily driven by community contributions. We welcome contributions from everyone, especially those with less experience in tech and journalism.
+This repo part of an initiative to scrape, store and publish meeting information for public meetings across the U.S. It's coordinated by the [City Bureau Documenters program](https://www.documenters.org/) and heavily driven by the open source community. We welcome contributions from everyone, especially those with little or no experience in tech and journalism.
 
 ### Why public meetings?
 
@@ -77,27 +77,23 @@ Public meetings are important spaces for democracy where any resident can partic
 
 [City Bureau's Documenters program](https://www.documenters.org/) pays community members, called Documenters, an hourly wage to inform and engage their communities by attending and documenting public meetings.
 
-How do Documenters know when meetings are happening? It isn’t easy! Meeting information is typically spread across dozens of websites and rarely in useful data formats. This project was started in order to automatically fetch meeting information and store it in a central database so that a person doesn't have to do it.
+A major challenge for Documenters is finding out when and where public meetings are happening and what's being discussed. Meeting information is typically spread across dozens of local government websites and rarely in useful data formats. This project was started in order to automatically fetch meeting information and store it in a central database so that a person doesn't have to do it manually.
 
-The scrapers in this repo fetch information about new meetings from the Chicago city council's website, the local school council's website, the Chicago police department's website, and many more.
+In this repo, our scrapers fetch information about new meetings from the websites of the Chicago City Council, the Chicago Police Department, the Chicago Board of Education, and many more. Information about these meetings is published on [City Bureau's Documenters website](https://www.documenters.org/), where it can be used by Documenters and other residents.
 
-### How can I set up City Scrapers for my area?
+### How can I help?
 
-This repo is focused on Chicago, but you can set up City Scrapers for your area by following the instructions in the [City-Bureau/city-scrapers-template](https://github.com/city-bureau/city-scrapers-template) repo.
+We welcome all contributions, including bug fixes, documentation improvements, and new scraper builds.
 
-### Community Mission
+Since local government websites can change without warning, we particularly appreciate contributions that fix our scrapers when they break. 
 
-The City Bureau Labs community welcomes contributions from everyone. We prioritize learning and leadership opportunities for under-represented individuals in tech and journalism.
-
-We hope that working with us will fill experience gaps (like using git/GitHub, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both our community and Chicago’s tech and media scenes at large.
-
-### Ready to code with us?
+If you want to help:
 
 1. [Fill out this form](https://airtable.com/shrRv027NLgToRFd6) to join our Slack channel and meet the community.
 2. Read about [how we collaborate](https://github.com/City-Bureau/city-scrapers/blob/main/CONTRIBUTING.md) and review our [Code of Conduct](https://github.com/City-Bureau/city-scrapers/blob/main/CODE_OF_CONDUCT.md).
 3. Check out our [documentation](https://cityscrapers.org/docs/development/), and get started with [Installation](https://cityscrapers.org/docs/development/#installation) and [Contributing a spider](https://cityscrapers.org/docs/development/#contribute).
 
-We ask all new contributors to start by writing a spider and its documentation or fixing a bug in an existing one in order to gain familiarity with our code and culture. Reach out on Slack for support if you need it.
+We ask all new contributors to start by writing a spider and its documentation or fixing a bug in order to gain familiarity with our code and culture. Reach out on Slack for support if you need it.
 
 ### Don't want to code?
 
@@ -106,6 +102,10 @@ We ask all new contributors to start by writing a spider and its documentation o
 A. We have ongoing conversations about what sort of data we should collect and how it should be collected. Help us make these decisions by commenting on [issues with a non-coding label](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3Anon-coding).
 
 B. Research sources for public meetings. Answer questions like: Are we scraping events from the right websites? Are there local agencies that we're missing? Should events be updated manually or by a scraper? [Triage events sources on these issues](https://github.com/City-Bureau/city-scrapers/issues?q=is%3Aissue+is%3Aopen+label%3A%22non-coding%3A+triage+events+source%22).
+
+### Community Mission
+
+We hope that working with us will fill experience gaps (like using git/GitHub, working with data, or having your ideas taken seriously), so that more under-represented people will become decision-makers in both their community and the tech and media scenes at large.
 
 ### Support this work
 
