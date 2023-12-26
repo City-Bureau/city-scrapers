@@ -11,7 +11,8 @@ class IlCommerceSpider(CityScrapersSpider):
     agency = "Illinois Commerce Commission"
     timezone = "America/Chicago"
     start_urls = [
-        "https://www.icc.illinois.gov/meetings/default.aspx?dts=32&et=1&et=5&et=3"
+        # Returns a page with 32 days of meetings from today's date, including today.
+        "https://www.icc.illinois.gov/meetings?dts=32&scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True"  # noqa
     ]
 
     def parse(self, response):
@@ -21,44 +22,36 @@ class IlCommerceSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        for nav_link in response.css(".col-sm-7 a.btn"):
-            if "?bd=" in nav_link.attrib["href"]:
-                yield response.follow(
-                    nav_link.attrib["href"], callback=self._parse_events_page
-                )
+        event_links = response.css(".p-2 a.day")
+        for event_link in event_links:
+            href = event_link.attrib["href"]
+            yield response.follow(href, callback=self._parse_event_page)
 
-        yield from self._parse_events_page(response)
-
-    def _parse_events_page(self, response):
-        for item in response.css(".panel-body a"):
-            yield response.follow(item.attrib["href"], callback=self._parse_detail)
-
-    def _parse_detail(self, response):
+    def _parse_event_page(self, response):
+        panel = response.css(".soi-icc-container .col-12")
         title = self._parse_title(response)
         meeting = Meeting(
             title=title,
-            description=self._parse_description(response),
+            description=self._parse_description(panel),
             classification=self._parse_classification(title),
-            start=self._parse_start(response),
+            start=self._parse_start(panel),
             end=None,
             all_day=False,
             time_notes="",
-            location=self._parse_location(response),
-            links=self._parse_links(response),
+            location=self._parse_location(panel),
+            links=self._parse_links(panel, response),
             source=response.url,
         )
-
-        meeting["status"] = self._get_status(
-            meeting, text=" ".join(response.css(".col-sm-12 *::text").extract())
-        )
+        status_str = " ".join(response.css("h3 *::text").extract())
+        meeting["status"] = self._get_status(meeting, text=status_str)
         meeting["id"] = self._get_id(meeting)
 
         yield meeting
 
-    def _parse_title(self, response):
+    def _parse_title(self, selector):
         """Parse or generate meeting title."""
         title_str = re.sub(
-            r"\s+", " ", " ".join(response.css(".soi-container h2 *::text").extract())
+            r"\s+", " ", " ".join(selector.css(".soi-container h2 *::text").extract())
         ).strip()
         return re.sub(
             r"(Illinois Commerce Commission|(?=Committee )Committee Meeting$)",
@@ -66,10 +59,10 @@ class IlCommerceSpider(CityScrapersSpider):
             title_str,
         ).strip()
 
-    def _parse_description(self, response):
+    def _parse_description(self, selector):
         """Parse or generate meeting description."""
         return re.sub(
-            r"\s+", " ", " ".join(response.css(".col-sm-12 > p *::text").extract())
+            r"\s+", " ", " ".join(selector.css(".mt-4+ p *::text").extract())
         ).strip()
 
     def _parse_classification(self, title):
@@ -80,18 +73,23 @@ class IlCommerceSpider(CityScrapersSpider):
             return COMMITTEE
         return COMMISSION
 
-    def _parse_start(self, response):
+    def _parse_start(self, selector):
         """Parse start datetime as a naive datetime object."""
-        start_str = " ".join(response.css("h3.mt-4 *::text").extract())
+        start_str = " ".join(selector.css("h3.mt-4 *::text").extract())
         dt_str = re.search(
             r"[A-Z][a-z]{2,8} \d{1,2}, \d{4} \d{1,2}:\d{2} [APM]{2}", start_str
         ).group()
         return datetime.strptime(dt_str, "%B %d, %Y %I:%M %p")
 
-    def _parse_location(self, response):
+    def _parse_location(self, selector):
         """Parse or generate location."""
-        location_block = response.css(".row.mt-4 > .col-12")[0]
-        location_items = location_block.css("p *::text").extract()
+        location_block = selector.css(".row.mt-4 > .col-12")
+        if len(location_block) == 0:
+            return {
+                "address": "",
+                "name": "TBD",
+            }
+        location_items = location_block[0].css("p *::text").extract()
         addr_items = [
             i.strip() for i in location_items if "Building" not in i and i.strip()
         ]
@@ -103,14 +101,17 @@ class IlCommerceSpider(CityScrapersSpider):
             "name": " ".join(name_items),
         }
 
-    def _parse_links(self, response):
+    def _parse_links(self, selector, response):
         """Parse or generate links."""
-        links = []
-        for link in response.css(".row.mt-4 .list-unstyled a"):
-            links.append(
+        links = selector.css(".row.mt-4 .list-unstyled a")
+        urls = []
+        if not links:
+            return urls
+        for link in links:
+            urls.append(
                 {
                     "title": " ".join(link.css("*::text").extract()).strip(),
                     "href": response.urljoin(link.attrib["href"]),
                 }
             )
-        return links
+        return urls
