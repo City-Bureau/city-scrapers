@@ -25,10 +25,12 @@ pipenv shell
 scrapy crawl <spider_name>
 ```
 
-3. For example, to trigger the `chi_citycouncil` spider to scrape Chicago City Council meeting information run:
+#### Example
+
+To trigger the `chi_citycouncil` spider to scrape Chicago City Council meeting information and output the results to a JSON file:
 
 ```bash
-scrapy crawl chi_citycouncil
+scrapy crawl chi_citycouncil -O citycouncil.json
 ```
 
 Alternatively, you can watch this [three minute video](https://www.youtube.com/watch?v=UgroG8CARWc) to see how to run a scraper.
