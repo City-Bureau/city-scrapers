@@ -46,6 +46,8 @@ DOWNLOADER_MIDDLEWARES = {
     "scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware": 543,
 }
 
+
+
 COMMANDS_MODULE = "city_scrapers_core.commands"
 
 EXTENSIONS = {
@@ -55,3 +57,13 @@ EXTENSIONS = {
 CLOSESPIDER_ERRORCOUNT = 5
 
 logging.getLogger("pdfminer").propagate = False
+
+# scrapy-playwright settings
+PLAYWRIGHT_BROWSER_TYPE = "firefox"
+
+DOWNLOAD_HANDLERS = {
+    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+}
+
+TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
