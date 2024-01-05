@@ -38,7 +38,6 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
             meeting["id"] = self._get_id(meeting)
             yield meeting
 
-
     def _parse_title(self, event):
         return event.css("article > h3 > span::text").extract_first()
 
