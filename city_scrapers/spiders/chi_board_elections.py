@@ -35,6 +35,8 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
             links=self._parse_links(event),
             source=response.url,
         )
+        meeting["status"] = self._get_status(meeting)
+        meeting["id"] = self._get_id(meeting)
         yield meeting
 
     def _parse_title(self, event):
