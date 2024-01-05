@@ -56,12 +56,12 @@ def test_end():
 def test_id():
     assert (
         parsed_items[0]["id"]
-        == "chi_board_elections/202401051000/x/chicago_electoral_board_meeting_january_5_2023"
-    )  # noqa
+        == "chi_board_elections/202401051000/x/chicago_electoral_board_meeting_january_5_2023"  # noqa
+    )
     assert (
         parsed_items[1]["id"]
         == "chi_board_elections/202312291000/x/regular_board_meeting_december_29_2023"
-    )  # noqa
+    )
 
 
 def test_status():

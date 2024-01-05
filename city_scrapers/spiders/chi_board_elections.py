@@ -62,9 +62,9 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
 
     def _get_status(self, item: Mapping, text: str = "") -> str:
         """
-        We need to override the parent class's handling of cancellation because this agency
-        uses the word "rescheduled" in titles to indicate a meeting has been set to a new date,
-        not cancelled.
+        We need to override the parent class's handling of cancellation because
+        this agency uses the word "rescheduled" in titles to indicate a meeting
+        has been set to a new date, not cancelled.
         """
         meeting_text = " ".join(
             [item.get("title", ""), item.get("description", ""), text]
