@@ -14,7 +14,7 @@ test_response = file_response(
 )
 spider = ChiBoardElectionsSpider()
 
-freezer = freeze_time("2018-11-30")
+freezer = freeze_time("2024-01-02")
 freezer.start()
 
 parsed_items = [item for item in spider.parse(test_response)]
