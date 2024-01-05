@@ -1,7 +1,8 @@
 import re
 from datetime import datetime
+from typing import Mapping
 
-from city_scrapers_core.constants import COMMISSION
+from city_scrapers_core.constants import COMMISSION, CANCELLED, PASSED, TENTATIVE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
@@ -19,25 +20,24 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
     }
 
     def parse(self, response):
-        event = response.css(
-            ".block-views.block-views-blockboard-meeting-next-meeting > div > div"
-        )
+        events = response.css(".views-row article")
+        for event in events:
+            meeting = Meeting(
+                title=self._parse_title(event),
+                description="",
+                classification=COMMISSION,
+                start=self._parse_start(event),
+                end=None,
+                time_notes="",
+                all_day=False,
+                location=self.location,
+                links=self._parse_links(event),
+                source=response.url,
+            )
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
+            yield meeting
 
-        meeting = Meeting(
-            title=self._parse_title(event),
-            description="",
-            classification=COMMISSION,
-            start=self._parse_start(event),
-            end=None,
-            time_notes="",
-            all_day=False,
-            location=self.location,
-            links=self._parse_links(event),
-            source=response.url,
-        )
-        meeting["status"] = self._get_status(meeting)
-        meeting["id"] = self._get_id(meeting)
-        yield meeting
 
     def _parse_title(self, event):
         return event.css("article > h3 > span::text").extract_first()
@@ -60,3 +60,18 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
                 }
             )
         return links
+
+    def _get_status(self, item: Mapping, text: str = "") -> str:
+        """
+        We need to override the parent class's handling of cancellation because this agency
+        uses the word "rescheduled" in titles to indicate a meeting has been set to a new date,
+        not cancelled.
+        """
+        meeting_text = " ".join(
+            [item.get("title", ""), item.get("description", ""), text]
+        ).lower()
+        if any(word in meeting_text for word in ["cancel", "postpone"]):
+            return CANCELLED
+        if item["start"] < datetime.now():
+            return PASSED
+        return TENTATIVE
