@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from typing import Mapping
 
-from city_scrapers_core.constants import COMMISSION, CANCELLED, PASSED, TENTATIVE
+from city_scrapers_core.constants import CANCELLED, COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
 
