@@ -1,7 +1,6 @@
 name: Github Action to keep workflow alive
 on:
-  schedule:
-    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
   prevent-workflow-disable:
