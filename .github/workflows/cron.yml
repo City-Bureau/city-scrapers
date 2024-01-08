@@ -1,8 +1,6 @@
 name: Cron
 
 on:
-  schedule:
-    - cron: "12 8 * * *"
   workflow_dispatch:
 
 env:
@@ -22,39 +20,8 @@ env:
   OPENVPN_CONFIG: ${{ secrets.OPENVPN_CONFIG }}
 
 jobs:
-  crawl:
+  prevent-workflow-disable:
+    name: Prevent workflow disable
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-
-      - name: Connect to OpenVPN
-        run: |
-          sudo apt-get install -y openvpn
-          echo "$OPENVPN_USER" | sudo tee -a /etc/openvpn/client/auth
-          echo "$OPENVPN_PASS" | sudo tee -a /etc/openvpn/client/auth
-          echo "$OPENVPN_CONFIG" | sudo tee -a /etc/openvpn/ovpn.conf
-          sudo openvpn --config /etc/openvpn/ovpn.conf --daemon
-          sleep 120
-
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.9
-
-      - name: Install Pipenv
-        uses: dschep/install-pipenv-action@v1
-
-      - name: Install dependencies
-        run: pipenv sync
-        env:
-          PIPENV_DEFAULT_PYTHON_VERSION: 3.9
-
-      - name: Run scrapers
-        run: |
-          export PYTHONPATH=$(pwd):$PYTHONPATH
-          ./.deploy.sh
-
-      - name: Combine output feeds
-        run: |
-          export PYTHONPATH=$(pwd):$PYTHONPATH
-          pipenv run scrapy combinefeeds -s LOG_ENABLED=False
+        - uses: gautamkrishnar/keepalive-workflow@v1
