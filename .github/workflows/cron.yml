@@ -61,3 +61,6 @@ jobs:
 
       - name: Prevent workflow deactivation
         uses: gautamkrishnar/keepalive-workflow@v1
+        with:
+          committer_username: "citybureau-bot"
+          committer_email: "documenters@citybureau.org"
