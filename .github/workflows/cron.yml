@@ -29,5 +29,5 @@ jobs:
         - uses: gautamkrishnar/keepalive-workflow@v1
           with:
             time_elapsed: 0
-            committer_username: "SimmonsRitchie"
-            committer_email: "37225902+SimmonsRitchie@users.noreply.github.com"
+            committer_username: "FakeAccount"
+            committer_email: "fakeemail@email.com"
