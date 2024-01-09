@@ -58,3 +58,9 @@ jobs:
         run: |
           export PYTHONPATH=$(pwd):$PYTHONPATH
           pipenv run scrapy combinefeeds -s LOG_ENABLED=False
+
+      - name: Prevent workflow deactivation
+        uses: gautamkrishnar/keepalive-workflow@v1
+        with:
+          committer_username: "citybureau-bot"
+          committer_email: "documenters@citybureau.org"
