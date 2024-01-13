@@ -1,18 +1,21 @@
 import re
+from re import search
 from datetime import datetime, timedelta
+from io import BytesIO, StringIO
 
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-
+from pdfminer.high_level import extract_text_to_fp
+from pdfminer.layout import LAParams
 
 class ChiBoardElectionsSpider(CityScrapersSpider):
     name = "chi_board_elections"
     agency = "Chicago Board of Elections"
     timezone = "America/Chicago"
     start_urls = [
-        "https://app.chicagoelections.com/pages/en/board-meetings.aspx",
         "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx",
+        "https://app.chicagoelections.com/documents/general/Standard-Board-Meeting-Notice.pdf",
     ]
     location = {
         "address": "8th Floor Office, 69 W. Washington St. Chicago, IL 60602",
@@ -34,18 +37,17 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
             yield from self._next_meeting(response)
 
     def _next_meeting(self, response):
-        text = response.xpath("//text()").extract()
-        # Will return full dates, like "9:30 a.m. on Dec. 11, 2018"
-        date_strs = [
-            re.search(r"\d{1,2}:.*20\d{2}", x).group(0)
-            for x in text
-            if re.search(r"\d{1,2}:.*20\d{2}", x)
-        ]
+        yield from self._parse_pdf(response)
+        body_text = self.pdf_text
+        
+        # Will return full dates, like "May 11, 2021 at 10:00 A.M."
+        date_pattern = re.compile(r"((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}\s+at\s+\d+:\d+\s+\w.M.)")
+        date_strs = re.findall(date_pattern, body_text)
+
         # Has meeting location
-        body_text = response.xpath('//div[@class="copy"]/text()').extract()
-        # Check for 69 (in 69 W Washington) in any of the strings, raise error if not
-        # present and location may have changed
-        if not any("69" in text for text in body_text):
+        # Check for 69 West Washington in the extracted PDF body_text, 
+        # raise error if not present and location may have changed
+        if not search("69 West Washington", body_text):
             raise ValueError("The meeting address may have changed")
 
         for date_str in date_strs:
@@ -129,30 +131,19 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
 
     def _parse_start(self, date_str, meeting_text):
         """Parse start datetime"""
-        date_str = date_str.replace("\xa0", " ")
-        if len(date_str.split(", ")) > 2:
-            date_str = ", ".join(date_str.split(", ")[1:])
-        time_str = "9:30 AM"
-        if "7 " in meeting_text:
-            time_str = re.search(r"7\s+[apmAPM\.]{2,4}", meeting_text).group(0)
-            time_str = time_str.replace("7 ", "7:00 ")
-        if ":" not in date_str or meeting_text:
-            dt_str = "{} on {}".format(time_str, date_str)
-        else:
-            dt_str = date_str
         dt_str = (
-            dt_str.replace(".", "")
+            date_str.replace(".", "")
             .replace("am", "AM")
             .replace("pm", "PM")
             .replace("Sept", "Sep")
         )
-        sep_str = "on"
-        if "on" not in dt_str:
+        sep_str = "at"
+        if "at" not in dt_str:
             sep_str = "-"
         try:
-            dt = datetime.strptime(dt_str, f"%I:%M %p {sep_str} %b %d, %Y")
+            dt = datetime.strptime(dt_str, f"%b %d, %Y at %I:%M %p")
         except ValueError:  # Some months are abbreviated, some are not
-            dt = datetime.strptime(dt_str, f"%I:%M %p {sep_str} %B %d, %Y")
+            dt = datetime.strptime(dt_str, f"%B %d, %Y at %I:%M %p")
         return dt
 
     def _parse_links(self, response, meeting=None, start=None):
@@ -183,3 +174,10 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
                 videolink = re.search(r'"h.+"', meeting).group(0).strip('"')
                 return [{"href": videolink, "title": "Video"}]
         return []
+
+    def _parse_pdf(self, response):
+        lp = LAParams(line_margin=5.0)
+        out_str = StringIO()
+        extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
+        self.pdf_text = re.sub(r"\s+", " ", out_str.getvalue()).strip()
+        yield self.pdf_text
