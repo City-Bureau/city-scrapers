@@ -28,17 +28,23 @@ def test_meeting_count():
 
 def test_title():
     assert (
-        parsed_items[0]["title"] == "Rescheduled Regular Board Meeting - January 12, 2024"
+        parsed_items[0]["title"]
+        == "Rescheduled Regular Board Meeting - January 12, 2024"
     )
     assert (
-        parsed_items[1]["title"]
-        == "Chicago Electoral Board Meeting - January 12, 2024"
+        parsed_items[1]["title"] == "Chicago Electoral Board Meeting - January 12, 2024"
     )
 
 
 def test_description():
-    assert parsed_items[0]["description"] == "The next Regular Board meeting of the Board of Election Commissioners has been rescheduled to Friday, January 12, 2024 at 10:00 a.m."
-    assert parsed_items[1]["description"] == "The next Chicago Electoral Board Meeting will be held on Friday, January 12, 2024 at 10:30am."
+    assert (
+        parsed_items[0]["description"]
+        == "The next Regular Board meeting of the Board of Election Commissioners has been rescheduled to Friday, January 12, 2024 at 10:00 a.m."  # noqa
+    )
+    assert (
+        parsed_items[1]["description"]
+        == "The next Chicago Electoral Board Meeting will be held on Friday, January 12, 2024 at 10:30am."  # noqa
+    )
 
 
 def test_start():
@@ -58,14 +64,14 @@ def test_id():
     )
     assert (
         parsed_items[1]["id"]
-        == "chi_board_elections/202401121030/x/chicago_electoral_board_meeting_january_12_2024"
+        == "chi_board_elections/202401121030/x/chicago_electoral_board_meeting_january_12_2024"  # noqa
     )
 
 
 def test_status():
     assert parsed_items[0]["status"] == TENTATIVE
     # Item 2 is the first item in the list that has a status of PASSED
-    assert parsed_items[2]["status"] == PASSED 
+    assert parsed_items[2]["status"] == PASSED
 
 
 def test_location():

@@ -40,7 +40,7 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
 
     def _parse_title(self, event):
         return event.css("article > h3 > span::text").extract_first()
-    
+
     def _parse_description(self, event):
         return event.css("p::text").get()
 
@@ -51,7 +51,7 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
         if not time_match:
             raise ValueError("Meeting start time not found")
         standardized_time = time_match.group().replace(" ", "").replace(".", "").lower()
-        
+
         # get date
         title = self._parse_title(event)
         date_match = re.search(r"\w+\s\d+,\s\d{4}", title)
@@ -60,8 +60,8 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
         date_str = date_match.group()
 
         # Combine
-        date_obj = datetime.strptime(date_str, '%B %d, %Y')
-        time_obj = datetime.strptime(standardized_time, '%I:%M%p')
+        date_obj = datetime.strptime(date_str, "%B %d, %Y")
+        time_obj = datetime.strptime(standardized_time, "%I:%M%p")
         start_time = datetime.combine(date_obj.date(), time_obj.time())
         return start_time
 
