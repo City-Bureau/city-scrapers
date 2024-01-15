@@ -24,7 +24,7 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
         for event in events:
             meeting = Meeting(
                 title=self._parse_title(event),
-                description="",
+                description=self._parse_description(event),
                 classification=COMMISSION,
                 start=self._parse_start(event),
                 end=None,
@@ -40,6 +40,9 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
 
     def _parse_title(self, event):
         return event.css("article > h3 > span::text").extract_first()
+    
+    def _parse_description(self, event):
+        return event.css("p::text").get()
 
     def _parse_start(self, event):
         date_string = event.css(".board-meeting--teaser p::text").extract_first()
