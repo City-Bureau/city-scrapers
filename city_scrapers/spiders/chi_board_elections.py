@@ -45,11 +45,24 @@ class ChiBoardElectionsSpider(CityScrapersSpider):
         return event.css("p::text").get()
 
     def _parse_start(self, event):
-        date_string = event.css(".board-meeting--teaser p::text").extract_first()
-        date = re.search(r"\w+\s\d+,\s\d{4}", date_string).group()
-        start_time = datetime.strptime(date, "%B %d, %Y").replace(
-            hour=10, minute=0, second=0
-        )
+        # get time
+        description = self._parse_description(event)
+        time_match = re.search(r"\d{1,2}:\d{2}\s?[ap]\.?m\.?", description)
+        if not time_match:
+            raise ValueError("Meeting start time not found")
+        standardized_time = time_match.group().replace(" ", "").replace(".", "").lower()
+        
+        # get date
+        title = self._parse_title(event)
+        date_match = re.search(r"\w+\s\d+,\s\d{4}", title)
+        if not date_match:
+            raise ValueError("Meeting date not found")
+        date_str = date_match.group()
+
+        # Combine
+        date_obj = datetime.strptime(date_str, '%B %d, %Y')
+        time_obj = datetime.strptime(standardized_time, '%I:%M%p')
+        start_time = datetime.combine(date_obj.date(), time_obj.time())
         return start_time
 
     def _parse_links(self, event):
