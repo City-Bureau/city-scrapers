@@ -2,72 +2,116 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import COMMISSION, PASSED
+from city_scrapers_core.constants import COMMISSION, PASSED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
-from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_board_elections import ChiBoardElectionsSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_board_elections.html"),
-    url="https://app.chicagoelections.com/pages/en/board-meetings.aspx",
+    url="https://chicagoelections.gov/about-board/board-meetings",
 )
 spider = ChiBoardElectionsSpider()
-spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
-freezer = freeze_time("2018-11-30")
+freezer = freeze_time("2024-01-06")
 freezer.start()
 
-parsed_items = [item for item in spider._next_meeting(test_response)]
+parsed_items = [item for item in spider.parse(test_response)]
 
 freezer.stop()
 
 
+def test_meeting_count():
+    assert len(parsed_items) == 7
+
+
 def test_title():
-    assert parsed_items[0]["title"] == "Electoral Board"
+    assert (
+        parsed_items[0]["title"]
+        == "Rescheduled Regular Board Meeting - January 12, 2024"
+    )
+    assert (
+        parsed_items[1]["title"] == "Chicago Electoral Board Meeting - January 12, 2024"
+    )
 
 
 def test_description():
-    assert parsed_items[0]["description"] == ""
+    assert (
+        parsed_items[0]["description"]
+        == "The next Regular Board meeting of the Board of Election Commissioners has been rescheduled to Friday, January 12, 2024 at 10:00 a.m."  # noqa
+    )
+    assert (
+        parsed_items[1]["description"]
+        == "The next Chicago Electoral Board Meeting will be held on Friday, January 12, 2024 at 10:30am."  # noqa
+    )
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2018, 11, 27, 9, 30)
+    assert parsed_items[0]["start"] == datetime(2024, 1, 12, 10, 0)
+    assert parsed_items[1]["start"] == datetime(2024, 1, 12, 10, 30)
 
 
 def test_end():
     assert parsed_items[0]["end"] is None
+    assert parsed_items[1]["end"] is None
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "chi_board_elections/201811270930/x/electoral_board"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_board_elections/202401121000/x/regular_board_meeting_january_12_2024"  # noqa
+    )
+    assert (
+        parsed_items[1]["id"]
+        == "chi_board_elections/202401121030/x/chicago_electoral_board_meeting_january_12_2024"  # noqa
+    )
 
 
 def test_status():
-    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[0]["status"] == TENTATIVE
+    # Item 2 is the first item in the list that has a status of PASSED
+    assert parsed_items[2]["status"] == PASSED
 
 
 def test_location():
     assert parsed_items[0]["location"] == {
-        "address": "8th Floor Office, 69 W. Washington St. Chicago, IL 60602",
-        "name": "Cook County Administration Building",
+        "name": "Board's Conference Room",
+        "address": "Suite 800, 69 West Washington Street, Chicago, Illinois",
     }
 
 
 def test_source():
     assert (
         parsed_items[0]["source"]
-        == "https://app.chicagoelections.com/pages/en/board-meetings.aspx"
+        == "https://chicagoelections.gov/about-board/board-meetings"
     )
 
 
 def test_links():
     assert parsed_items[0]["links"] == [
         {
-            "title": "Agenda",
-            "href": "https://app.chicagoelections.com/documents/general/Standard-Board-Meeting-Agenda.pdf?date=20181127",  # noqa
-        }
+            "title": "Board Meeting Public Notice - January 12, 2024.pdf",
+            "href": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-01/Board Meeting Public Notice - January 12, 2024_0.pdf",  # noqa
+        },
+        {
+            "title": "Board Meeting Agenda - January 12, 2024.pdf",
+            "href": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-01/Board Meeting Agenda - January 12, 2024_0.pdf",  # noqa
+        },
+        {
+            "title": "Board Meeting Video - January 12, 2024",
+            "href": "https://www.youtube.com/watch?v=x9HJVhbxTPw",  # noqa
+        },
+    ]
+    assert parsed_items[1]["links"] == [
+        {
+            "title": "Electoral Board Meeting Notice - January 12, 2024.pdf",
+            "href": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-01/Electoral Board Meeting Notice - January 12, 2024.pdf",  # noqa
+        },
+        {
+            "title": "Electoral Board Meeting Agenda - January 12, 2024 Revised.pdf",
+            "href": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-01/Electoral Board Meeting Agenda - January 12, 2024 Revised.pdf",  # noqa
+        },
     ]
 
 
@@ -79,81 +123,3 @@ def test_all_day(item):
 @pytest.mark.parametrize("item", parsed_items)
 def test_classification(item):
     assert item["classification"] is COMMISSION
-
-
-# Previous meetings on different page
-prev_url = "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx"
-test_response_prev = file_response(
-    join(dirname(__file__), "files", "chi_board_elections_prev.html"), url=prev_url
-)
-
-freezer.start()
-
-parsed_items_prev = [item for item in spider._prev_meetings(test_response_prev)]
-
-freezer.stop()
-
-
-def test_count():
-    assert len(parsed_items_prev) == 12
-
-
-def test_title_prev():
-    assert parsed_items_prev[0]["title"] == "Electoral Board"
-
-
-def test_description_prev():
-    assert parsed_items_prev[0]["description"] == ""
-
-
-def test_start_prev():
-    assert parsed_items_prev[0]["start"] == datetime(2018, 11, 27, 9, 30)
-
-
-def test_end_prev():
-    assert parsed_items_prev[0]["end"] is None
-
-
-def test_id_prev():
-    assert (
-        parsed_items_prev[0]["id"]
-        == "chi_board_elections/201811270930/x/electoral_board"
-    )
-
-
-def test_status_prev():
-    assert parsed_items_prev[0]["status"] == PASSED
-
-
-def test_location_prev():
-    assert parsed_items_prev[0]["location"] == {
-        "address": "8th Floor Office, 69 W. Washington St. Chicago, IL 60602",
-        "name": "Cook County Administration Building",
-    }
-
-
-def test_source_prev():
-    assert (
-        parsed_items_prev[0]["source"]
-        == "https://app.chicagoelections.com/pages/en/meeting-minutes-and-videos.aspx"
-    )
-
-
-def test_links_prev():
-    assert parsed_items_prev[4]["links"] == [
-        {
-            "title": "Minutes",
-            "href": "https://app.chicagoelections.com/documents/general/BoardMeetingMinutes-2018-10-30.pdf",  # noqa
-        },
-        {"title": "Video", "href": "https://youtu.be/AKFNigWEkc0"},
-    ]
-
-
-@pytest.mark.parametrize("item", parsed_items_prev)
-def test_all_day_prev(item):
-    assert item["all_day"] is False
-
-
-@pytest.mark.parametrize("item", parsed_items_prev)
-def test_classification_prev(item):
-    assert item["classification"] == COMMISSION
