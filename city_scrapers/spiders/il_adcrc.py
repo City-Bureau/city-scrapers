@@ -36,7 +36,7 @@ class IlAdcrcSpider(CityScrapersSpider):
                 classification=COMMISSION,
                 start=self._parse_datetime(item["start"]),
                 end=self._parse_datetime(item["end"]),
-                all_day=self._parse_all_day(item),
+                all_day=False,
                 time_notes="",
                 location=self._parse_location(item),
                 links=self._parse_links(item),
@@ -64,10 +64,6 @@ class IlAdcrcSpider(CityScrapersSpider):
     def _parse_datetime(self, datetime_str):
         """Parse start datetime as a naive datetime object."""
         return datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S.%f")
-
-    def _parse_all_day(self, item):
-        """Parse or generate all-day status. Defaults to False."""
-        return False
 
     def _parse_location(self, item):
         """Parse or generate location."""
