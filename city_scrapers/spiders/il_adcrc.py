@@ -15,8 +15,8 @@ class IlAdcrcSpider(CityScrapersSpider):
 
     def parse(self, response):
         """
-        Retrieve the upcoming meetings URL from the main page, which is a JSON feed,
-        and then parse the JSON to get the meeting details.
+        Retrieve the URL to the upcoming meetings JSON feed from the main
+        page and then follow that URL to parse the feed.
         """
         upcoming_meetings_url = response.css(
             ".cmp-news-feed::attr(data-news-feed-url)"
@@ -92,12 +92,14 @@ class IlAdcrcSpider(CityScrapersSpider):
         ]
 
     def _parse_source(self, response):
-        """Parse or generate source."""
+        """Generate source."""
         return response.url
 
     def _get_status(self, meeting, item):
-        """Checks the cancelation status first and then passes a "canceled" string
-        to the parent's _get_status method so we can rely on default status handling."""
+        """Checks the canceledEvent property first and then passes a
+        "canceled" string to the parent class's _get_status method so
+        we can rely on default status handling.
+        """
         if item.get("canceledEvent") and item["canceledEvent"] == "true":
             return super()._get_status(meeting, text="canceled")
         return super()._get_status(meeting)
