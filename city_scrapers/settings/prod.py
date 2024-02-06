@@ -14,7 +14,7 @@ ITEM_PIPELINES = {
 SENTRY_DSN = os.getenv("SENTRY_DSN")
 
 EXTENSIONS = {
-    "scrapy_sentry.extensions.Errors": 10,
+    "scrapy_sentry_errors.extensions.Errors": 10,
     "city_scrapers_core.extensions.AzureBlobStatusExtension": 100,
     "scrapy.extensions.closespider.CloseSpider": None,
 }
