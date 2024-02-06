@@ -69,9 +69,11 @@ class ChiSsa34Spider(CityScrapersSpider):
         for link in response.css("a[href*='{}']".format(start.strftime("%Y-%m%d"))):
             links.append(
                 {
-                    "title": "Agenda"
-                    if "agenda" in link.attrib["href"].lower()
-                    else "Minutes",
+                    "title": (
+                        "Agenda"
+                        if "agenda" in link.attrib["href"].lower()
+                        else "Minutes"
+                    ),
                     "href": link.attrib["href"],
                 }
             )

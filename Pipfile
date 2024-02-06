@@ -8,7 +8,7 @@ python-dateutil = "*"
 pytz = "*"
 requests = "*"
 scrapy = "*"
-scrapy-sentry = {ref = "v1", git = "https://github.com/City-Bureau/scrapy-sentry.git"}
+scrapy-sentry-errors = "1.0.0"
 scrapy-wayback-middleware = "*"
 city-scrapers-core = {ref = "main", git = "https://github.com/City-Bureau/city-scrapers-core.git", extras = ["azure"]}
 pdfminer-six = "*"
@@ -21,3 +21,6 @@ pytest = "*"
 isort = "*"
 black = "*"
 pre-commit = "*"
+
+[requires]
+python_version = "3.9"
