@@ -12,6 +12,7 @@ scrapy-sentry-errors = "1.0.0"
 scrapy-wayback-middleware = "*"
 city-scrapers-core = {ref = "main", git = "https://github.com/City-Bureau/city-scrapers-core.git", extras = ["azure"]}
 pdfminer-six = "*"
+bs4 = "*"
 
 [dev-packages]
 freezegun = "*"
