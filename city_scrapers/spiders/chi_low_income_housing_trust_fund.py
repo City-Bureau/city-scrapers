@@ -1,137 +1,108 @@
 import re
-from datetime import datetime
+from datetime import date, datetime
 
-import scrapy
+import pytz
 from city_scrapers_core.constants import BOARD, COMMITTEE, NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from icalendar import Calendar
 
 
 class ChiLowIncomeHousingTrustFundSpider(CityScrapersSpider):
     name = "chi_low_income_housing_trust_fund"
     agency = "Chicago Low-Income Housing Trust Fund"
     timezone = "America/Chicago"
-    start_urls = ["http://www.clihtf.org/about-us/upcomingevents/"]
+    start_urls = ["https://clihtf.org/?post_type=tribe_events&ical=1&eventDisplay=list"]
 
     def parse(self, response):
         """
-        `parse` should always `yield` Meeting items.
-
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
+        Parse the .ics file and handle data irregularities.
         """
-        items = self._parse_calendar(response)
-        for item in items:
-            # Drop empty links
-            if "http" not in item["source"]:
-                continue
+        cleaned_content = self.clean_ics_data(response.text)
+        try:
+            cal = Calendar.from_ical(cleaned_content)
+        except Exception as e:
+            self.logger.error("Error parsing iCalendar data: %s", e)
+            self.logger.error(
+                "Response content: %s", response.text[:500]
+            )  # Log first 500 chars
+            raise
 
-            req = scrapy.Request(
-                item["source"],
-                callback=self._parse_detail,
-                dont_filter=True,
-            )
-            req.meta["item"] = item
-            yield req
-
-        # Only go to the next page once, so if query parameters are set, exit
-        if "?month" not in response.url:
-            yield self._parse_next(response)
-
-    def _parse_next(self, response):
-        """
-        Get next page. You must add logic to `next_url` and
-        return a scrapy request.
-        """
-        next_url = response.css(".calendar-next a::attr(href)").extract_first()
-        return scrapy.Request(next_url, callback=self.parse, dont_filter=True)
-
-    def _parse_calendar(self, response):
-        """Parse items on the main calendar page"""
-        items = []
-        for item in response.css(
-            ".day-with-date:not(.no-events), .current-day:not(.no-events)"
-        ):
-            title = self._parse_title(item)
-            if "training" in title.lower():
-                continue
-            description = self._parse_description(item)
-            items.append(
-                Meeting(
-                    title=title,
-                    description=description,
-                    classification=self._parse_classification(title),
-                    all_day=False,
-                    links=[],
+        for component in cal.walk():
+            # This agency has many 'Administrative Day' events that
+            # are not actual meetings
+            if (
+                component.name == "VEVENT"
+                and "Administrative Day" not in component.get("summary")
+            ):
+                meeting = Meeting(
+                    title=component.get("summary").strip(),
+                    description=component.get("description", "").strip() or "",
+                    classification=self._parse_classification(component.get("summary")),
+                    start=self._to_naive(component.get("dtstart").dt),
+                    end=self._to_naive(component.get("dtend").dt),
+                    all_day=self._is_all_day(
+                        component.get("dtstart").dt, component.get("dtend").dt
+                    ),
                     time_notes="",
-                    source=self._parse_source(item, response.url),
+                    location=self._parse_location(component),
+                    links=[
+                        {
+                            "href": component.get("url", "").strip(),
+                            "title": "Event Details",
+                        }
+                    ],
+                    source=response.url,
                 )
-            )
-        return items
+                meeting["status"] = self._get_status(meeting)
+                meeting["id"] = self._get_id(meeting)
+                yield meeting
 
-    def _parse_detail(self, response):
-        """Parse detail page for additional information"""
-        meeting = response.meta.get("item", {})
-        meeting.update(self._parse_start_end_time(response))
-        meeting["location"] = self._parse_location(response)
-        meeting["status"] = self._get_status(meeting)
-        meeting["id"] = self._get_id(meeting)
-        return meeting
-
-    def _parse_title(self, item):
-        """Parse or generate event title"""
-        return item.css(".event-title::text").extract_first()
-
-    def _parse_description(self, item):
-        """Parse or generate event description"""
-        return (
-            item.xpath(
-                './/span[@class="event-content-break"]/following-sibling::text()'
-            ).extract_first()
-            or ""
+    def clean_ics_data(self, ics_content):
+        """Handles a quirk in the ICS file where VTIMEZONE blocks are formatted
+        improperly and cause icalendar parsing errors."""
+        normalized_content = ics_content.replace("\r\n", "\n")
+        cleaned_content = re.sub(
+            r"BEGIN:VTIMEZONE.*?END:VTIMEZONE\n",
+            "",
+            normalized_content,
+            flags=re.DOTALL,
         )
+        return cleaned_content
 
     def _parse_classification(self, title):
-        """Parse or generate classification (e.g. board, committee, etc)"""
-        if "board" in title.lower():
-            return BOARD
-        if "committe" in title.lower():
+        if "committee" in title.lower():
             return COMMITTEE
+        elif "board" in title.lower():
+            return BOARD
         return NOT_CLASSIFIED
 
-    def _parse_start_end_time(self, response):
-        """Parse start and end datetimes"""
-        time_str = response.css(".cc-panel .cc-block > span::text").extract_first()
-        time_str = re.sub(r"\s+", " ", time_str)
-        date_str = re.search(r"(?<=day, ).*(?= fro)", time_str).group().strip()
-        start_str = re.search(r"(?<=from ).*(?= to)", time_str).group().strip()
-        end_str = re.search(r"(?<=to ).*(?= \w{3})", time_str).group().strip()
-        date_obj = datetime.strptime(date_str, "%B %d, %Y").date()
-        start_time = datetime.strptime(start_str, "%I:%M %p").time()
-        end_time = datetime.strptime(end_str, "%I:%M %p").time()
-        return {
-            "start": datetime.combine(date_obj, start_time),
-            "end": datetime.combine(date_obj, end_time),
-        }
+    def _to_naive(self, dt):
+        """Convert timezone-aware datetime to naive datetime in the local timezone,
+        or return the date object if it's a date."""
+        print("dt: ", dt)
+        local_timezone = pytz.timezone(
+            self.timezone
+        )  # Ensure you are using the spider's timezone
+        if isinstance(dt, datetime):
+            if dt.tzinfo is not None:
+                return dt.astimezone(local_timezone).replace(tzinfo=None)
+            return dt
+        elif isinstance(dt, date):
+            # Convert date to datetime for uniform handling
+            return datetime.combine(dt, datetime.min.time(), tzinfo=None)
+        return dt
 
-    def _parse_location(self, response):
-        """Parse or generate location"""
-        addr_sel = response.css(
-            ".cc-panel .cc-block:nth-child(2) > span:nth-of-type(2)::text"
-        )
-        if not addr_sel:
-            addr_sel = response.css("#span_event_where_multiline p:first-of-type::text")
-        addr_lines = addr_sel.extract()
-        return {
-            "address": " ".join(
-                [re.sub(r"\s+", " ", line).strip() for line in addr_lines]
-            ),
-            "name": "",
-        }
+    def _is_all_day(self, start, end):
+        """Check if the event is an all-day event."""
+        return type(start) is date and (end - start).days == 1
 
-    def _parse_source(self, item, response_url):
-        """Parse or generate source"""
-        item_link = item.css(".calnk > a::attr(href)").extract_first()
-        if item_link:
-            return item_link
-        return response_url
+    def _parse_location(self, component):
+        """Parse or generate location."""
+        location = component.get("location", "")
+        if not location:
+            return {
+                "name": "Chicago Low-Income Housing Trust Fund",
+                "address": "77 West Washington Street, Suite 719, Chicago, IL 60602",
+            }
+        return {"name": location, "address": ""}

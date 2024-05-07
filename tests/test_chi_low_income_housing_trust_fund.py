@@ -1,8 +1,8 @@
 from datetime import datetime
 from os.path import dirname, join
 
-import pytest
-from city_scrapers_core.constants import BOARD, COMMITTEE, PASSED
+import pytest  # noqa
+from city_scrapers_core.constants import NOT_CLASSIFIED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -10,73 +10,78 @@ from city_scrapers.spiders.chi_low_income_housing_trust_fund import (
     ChiLowIncomeHousingTrustFundSpider,
 )
 
-freezer = freeze_time("2018-10-31")
+# Simulate the current date at the time of testing
+freezer = freeze_time("2024-05-07")
 freezer.start()
+
+# Initialize the spider
 spider = ChiLowIncomeHousingTrustFundSpider()
+# Simulate a file response with a sample ics file
 cal_res = file_response(
-    join(dirname(__file__), "files", "chi_low_income_housing_trust_fund.html")
+    join(dirname(__file__), "files", "chi_low_income_housing_trust_fund.ics"),
+    url="https://clihtf.org/?post_type=tribe_events&ical=1&eventDisplay=list",
 )
-parsed_items = []
-for item in spider._parse_calendar(cal_res):
-    detail_res = file_response(
-        join(
-            dirname(__file__), "files", "chi_low_income_housing_trust_fund_detail.html"
-        )
-    )
-    detail_res.meta["item"] = item
-    parsed_items.append(spider._parse_detail(detail_res))
+parsed_items = [item for item in spider.parse(cal_res)]
+
 freezer.stop()
 
 
+# Test for event title
 def test_title():
-    assert parsed_items[0]["title"] == "Finance Committee"
-    assert parsed_items[1]["title"] == "Allocations Committee"
-    assert parsed_items[2]["title"] == "Board Meeting"
+    assert parsed_items[0]["title"] == "Outreach Meeting"
 
 
+# Test for event start datetime
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2018, 10, 4, 10, 0)
+    assert parsed_items[0]["start"] == datetime(2024, 5, 9, 8, 30)
 
 
+# Test for event end datetime
 def test_end():
-    assert parsed_items[0]["end"] == datetime(2018, 10, 4, 11, 0)
+    assert parsed_items[0]["end"] == datetime(2024, 5, 9, 9, 30)
 
 
+# Test for unique event ID
 def test_id():
-    assert parsed_items[0]["id"] == (
-        "chi_low_income_housing_trust_fund/201810041000/x/finance_committee"
+    assert (
+        parsed_items[0]["id"]
+        == "chi_low_income_housing_trust_fund/202405090830/x/outreach_meeting"
     )
 
 
+# Test for classification of the event
 def test_classification():
-    assert parsed_items[0]["classification"] == COMMITTEE
-    assert parsed_items[2]["classification"] == BOARD
+    assert parsed_items[0]["classification"] == NOT_CLASSIFIED
 
 
+# Test for event status
 def test_status():
-    assert parsed_items[0]["status"] == PASSED
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
+# Test for event description
 def test_description():
-    assert parsed_items[0]["description"] == (
-        "Meeting of the CLIHTF Finance Committee.  To attend, send Name and "
-        "Planned Attendance Date to info@chicagotrustfund.org.  Regular "
-        "Meeting Location:  Chicago City Hall, Rm. 1006c."
-    )
+    assert parsed_items[0]["description"] == ""
 
 
+# Test for location details
 def test_location():
     assert parsed_items[0]["location"] == {
-        "address": "121 N. La Salle - Room 1006 Chicago, IL 60602",
-        "name": "",
+        "name": "Chicago Low-Income Housing Trust Fund",
+        "address": "77 West Washington Street, Suite 719, Chicago, IL 60602",
     }
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_links(item):
-    assert item["links"] == []
+# Test for links associated with the event
+def test_links():
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://clihtf.org/event/outreach-meeting-4/",
+            "title": "Event Details",
+        }
+    ]
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_all_day(item):
-    assert item["all_day"] is False
+# Test if the event is marked as all day
+def test_all_day():
+    assert parsed_items[0]["all_day"] is False
