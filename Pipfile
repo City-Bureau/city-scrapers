@@ -13,6 +13,7 @@ scrapy-wayback-middleware = "*"
 city-scrapers-core = {ref = "main", git = "https://github.com/City-Bureau/city-scrapers-core.git", extras = ["azure"]}
 pdfminer-six = "*"
 bs4 = "*"
+icalendar = "*"
 
 [dev-packages]
 freezegun = "*"
