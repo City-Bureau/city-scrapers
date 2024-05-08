@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import BOARD, CANCELLED, PASSED, TENTATIVE
+from city_scrapers_core.constants import BOARD, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -14,80 +14,68 @@ test_response = file_response(
 )
 spider = IlPollutionControlSpider()
 
-freezer = freeze_time("2019-10-03")
+freezer = freeze_time(datetime(2024, 5, 8, 11, 10))
 freezer.start()
 
-parsed_items = [item for item in spider._parse_json(test_response)]
-spider.minutes_map = {
-    datetime(
-        2019, 1, 17
-    ).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"  # noqa
-}
-spider.agenda_map = {
-    datetime(
-        2019, 10, 3
-    ).date(): "https://pcb.illinois.gov/documents/dsweb/Get/Document-53692/"
-}
-
-for item in parsed_items:
-    item["links"] = spider._parse_links(item)
-
+parsed_items = [item for item in spider.parse(test_response)]
+parsed_item = parsed_items[0]
 freezer.stop()
 
 
-def test_count():
-    assert len(parsed_items) == 30
+def test_title():
+    assert parsed_item["title"] == "Board Meeting"
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_title(item):
-    assert item["title"] == "Board Meeting"
+def test_description():
+    assert (
+        parsed_item["description"]
+        == "Board Meeting IPCB Office 1021 N Grand Ave E - Room 1244 N (First Floor)Springfield, Illinois- and -MICHAEL A BILANDIC BUILDING160 N. LASALLE - Room N505Chicago, Illinois"  # noqa
+    )
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2019, 5, 23, 11, 0)
+    assert parsed_item["start"] == datetime(2023, 5, 18, 11, 0)
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_end(item):
-    assert item["end"] is None
+def test_end():
+    assert parsed_item["end"] == datetime(2023, 5, 18, 11, 0)
+
+
+def test_time_notes():
+    assert parsed_item["time_notes"] == ""
 
 
 def test_id():
-    assert parsed_items[0]["id"] == "il_pollution_control/201905231100/x/board_meeting"
+    assert parsed_item["id"] == "il_pollution_control/202305181100/x/board_meeting"
 
 
 def test_status():
-    expected_counts = {CANCELLED: 2, PASSED: 22, TENTATIVE: 6}
-    actual_counts = {}
-    for key in expected_counts:
-        actual_counts[key] = len(
-            [item for item in parsed_items if item["status"] == key]
-        )
-        assert actual_counts[key] == expected_counts[key]
+    assert parsed_item["status"] == PASSED
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_location(item):
-    assert item["location"]["name"] == "Chicago IPCB Office"
+def test_location():
+    assert parsed_item["location"] == {
+        "name": "",
+        "address": "IPCB Office \n1021 N Grand Ave E - Room 1244 N (First Floor)\nSpringfield, Illinois\n- and -\nMICHAEL A BILANDIC BUILDING\n160 N. LASALLE - Room N505\nChicago, Illinois",  # noqa
+    }
 
 
-@pytest.mark.parametrize("item", parsed_items)
-def test_source(item):
-    assert item["source"] == "https://pcb.illinois.gov/ClerksOffice/Calendar"
+def test_source():
+    assert parsed_item["source"] == "https://pcb.illinois.gov/ClerksOffice/Calendar"
 
 
 def test_links():
-    minutes_url = "https://pcb.illinois.gov/documents/dsweb/Get/Document-99687/1-17-2019 draft2.pdf"  # noqa
-    assert parsed_items[2]["links"][0]["href"] == minutes_url
+    assert parsed_item["links"] == [
+        {"title": "Agendas", "href": "https://pcb.illinois.gov/CurrentAgendas"},
+        {
+            "title": "Meeting minutes",
+            "href": "https://pcb.illinois.gov/ClerksOffice/MeetingMinutes",
+        },
+    ]
 
-    agenda_url = "https://pcb.illinois.gov/documents/dsweb/Get/Document-53692/"
-    assert parsed_items[14]["links"][0]["href"] == agenda_url
 
-
-@pytest.mark.parametrize("item", parsed_items)
-def test_classification(item):
-    assert item["classification"] == BOARD
+def test_classification():
+    assert parsed_item["classification"] == BOARD
 
 
 @pytest.mark.parametrize("item", parsed_items)
