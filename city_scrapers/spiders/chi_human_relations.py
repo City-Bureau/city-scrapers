@@ -1,144 +1,62 @@
-import re
-from collections import defaultdict
-from datetime import datetime, timedelta
-from io import BytesIO, StringIO
-
-import scrapy
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
-from pdfminer.high_level import extract_text_to_fp
-from pdfminer.layout import LAParams
+from dateutil.parser import parse as date_parse
 
 
 class ChiHumanRelationsSpider(CityScrapersSpider):
     name = "chi_human_relations"
     agency = "Chicago Commission on Human Relations"
     timezone = "America/Chicago"
-    start_urls = ["https://www.chicago.gov/city/en/depts/cchr.html"]
+    start_urls = [
+        "https://www.chicago.gov/city/en/depts/cchr/supp_info/BoardMeetingInformation.html"  # noqa
+    ]
+    title = "Chicago Commission on Human Relations Board Meeting"
     location = {
-        "name": "",
+        "name": "Chicago Commission on Human Relations - board room",
         "address": "740 N Sedgwick St, 4th Floor Boardroom, Chicago, IL 60654",
     }
-
-    def __init__(self, *args, **kwargs):
-        self.meeting_starts = []
-        self.docs_link = ""
-        super().__init__(*args, **kwargs)
+    links = [
+        {
+            "title": "Meeting materials",
+            "href": "https://www.chicago.gov/city/en/depts/cchr/supp_info/BoardMeetingInformation.html",  # noqa
+        }
+    ]
 
     def parse(self, response):
-        """
-        `parse` should always `yield` Meeting items.
+        for header in response.css("h5 strong"):
+            text = header.xpath("string()").get().strip()
+            if "next meeting" in text:
+                date_str = text.split("scheduled for")[-1].strip()
+                start = self._parse_start(date_str)
+                meeting = Meeting(
+                    title=self.title,
+                    description="",
+                    classification=COMMISSION,
+                    start=start,
+                    end=None,
+                    all_day=False,
+                    time_notes="",
+                    location=self.location,
+                    links=self.links,
+                    source=response.url,
+                )
+                # we provide additional text to _get_status to help determine
+                # if the meeting is cancelled or not
+                meeting["status"] = self._get_status(meeting, text=text)
+                meeting["id"] = self._get_id(meeting)
+                yield meeting
 
-        Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
-        needs.
+    def _parse_start(self, text):
         """
-        schedule_link = ""
-        for link in response.css(".related-links a"):
-            link_text = " ".join(link.css("*::text").extract())
-            if "Board" in link_text and "Schedule" in link_text:
-                schedule_link = link.attrib["href"]
-            elif "CCHR Board Meeting Information" in link_text:
-                self.docs_link = link.attrib["href"]
-        if schedule_link and self.docs_link:
-            yield scrapy.Request(
-                response.urljoin(schedule_link),
-                callback=self._parse_schedule,
-                dont_filter=True,
+        Expecting text like:
+        'The next meeting of the Chicago Commission on Human Relations is
+        scheduled for Thursday, May 9 at 9:30 a.m'
+        Parse the date and time from the text
+        """
+        if "scheduled for" not in text:
+            self.logger.error(
+                "Could not find 'scheduled for' in text – text format may have changed"  # noqa
             )
-        else:
-            raise ValueError("Required links not found")
-
-    def _parse_schedule(self, response):
-        """Parse PDF and then yield to documents page"""
-        self._parse_schedule_pdf(response)
-        yield scrapy.Request(
-            response.urljoin(self.docs_link),
-            callback=self._parse_documents,
-            dont_filter=True,
-        )
-
-    def _parse_schedule_pdf(self, response):
-        """Parse dates and details from schedule PDF"""
-        lp = LAParams(line_margin=0.1)
-        out_str = StringIO()
-        extract_text_to_fp(BytesIO(response.body), out_str, laparams=lp)
-        pdf_text = out_str.getvalue().replace("\n", "")
-        # Remove duplicate characters not followed by lowercase (as in 5:00pm)
-        clean_text = re.sub(r"([A-Z0-9:])\1(?![a-z])", r"\1", pdf_text, flags=re.M)
-        # Remove duplicate spaces
-        clean_text = re.sub(r"\s+", " ", clean_text)
-        year_str = re.search(r"\d{4}", clean_text).group()
-        self._validate_location(clean_text)
-
-        for date_str in re.findall(r"[A-Z]{3,10}\s+\d{1,2}(?!\d)", clean_text):
-            self.meeting_starts.append(self._parse_start(date_str, year_str))
-
-    def _parse_documents(self, response):
-        """Parse agenda and minutes page"""
-        link_map = self._parse_link_map(response)
-        for start in self.meeting_starts:
-            meeting = Meeting(
-                title="Board of Commissioners",
-                description="",
-                classification=COMMISSION,
-                start=start,
-                end=self._parse_end(start),
-                all_day=False,
-                time_notes="See agenda to confirm details",
-                location=self.location,
-                links=link_map[(start.month, start.year)],
-                source=self.start_urls[0],
-            )
-
-            meeting["status"] = self._get_status(meeting)
-            meeting["id"] = self._get_id(meeting)
-
-            yield meeting
-
-    def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
-        return COMMISSION
-
-    def _parse_start(self, date_str, year_str):
-        """Parse start datetime as a naive datetime object."""
-        return datetime.strptime(
-            "{} {} 15:30".format(date_str, year_str), "%B %d %Y %H:%M"
-        )
-
-    def _parse_end(self, start):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
-        return start + timedelta(hours=1, minutes=30)
-
-    def _parse_link_map(self, response):
-        """
-        Parse or generate links. Returns a dictionary of month, year tuples and link
-        lists
-        """
-        link_map = defaultdict(list)
-        for link in response.css(".page-full-description-above a"):
-            link_text = " ".join(link.css("*::text").extract()).strip()
-            link_date_match = re.search(r"[A-Z][a-z]{2,9} \d{4}", link_text)
-            if not link_date_match:
-                continue
-            link_date_str = link_date_match.group()
-            link_start = datetime.strptime(link_date_str, "%B %Y")
-            link_map[(link_start.month, link_start.year)].append(
-                {
-                    "title": "Agenda" if "Agenda" in link.attrib["href"] else "Minutes",
-                    "href": response.urljoin(link.attrib["href"]),
-                }
-            )
-        return link_map
-
-    def _parse_location(self, text):
-        if "Zoom" in text:
-            return {
-                "name": "Zoom (see website for details)",
-                "address": "",
-            }
-        return self.location
-
-    def _validate_location(self, text):
-        if "740" not in text and "Zoom" not in text:
-            raise ValueError("Meeting location has changed")
+        date_str = text.split("scheduled for")[-1].strip()
+        return date_parse(date_str)
