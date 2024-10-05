@@ -2,7 +2,6 @@ from datetime import datetime
 from os.path import dirname, join
 from city_scrapers_core.constants import BOARD, PASSED
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -67,19 +66,24 @@ def test_source():
 
 
 def test_links():
-    assert parsed_items[0]["links"] == [{
-      "href": "https://www.neiu.edu/sites/default/files/2024-09/2024.09.19.%20Agenda_FINAL.pdf",
-      "title": "Meeting Agenda"
-    },{
-      "href": "https://www.neiu.edu/sites/default/files/2024-09/2024.09.19.%20President%27s%20Report_combined.pdf",
-      "title": "President's Report to the Board"
-    },{
-      "href": "https://www.neiu.edu/sites/default/files/2024-09/Colorblind%20image_Page_3_0.jpg",
-      "title": "Markham Prairie Image - colorblind friendly"
-    },{
-      "href": "https://youtu.be/8PLfgYgandQ",
-      "title": "Meeting Video"
-    } ]
+    assert parsed_items[0]["links"] == [
+        {
+            "href": "https://www.neiu.edu/sites/default/files/2024-09/2024.09.19.%20Agenda_FINAL.pdf",
+            "title": "Meeting Agenda"
+        },
+        {
+            "href": "https://www.neiu.edu/sites/default/files/2024-09/2024.09.19.%20President%27s%20Report_combined.pdf",
+            "title": "President's Report to the Board"
+        },
+        {
+            "href": "https://www.neiu.edu/sites/default/files/2024-09/Colorblind%20image_Page_3_0.jpg",
+            "title": "Markham Prairie Image - colorblind friendly"
+        },
+        {
+            "href": "https://youtu.be/8PLfgYgandQ",
+            "title": "Meeting Video"
+        }
+    ]
 
 
 def test_classification():
