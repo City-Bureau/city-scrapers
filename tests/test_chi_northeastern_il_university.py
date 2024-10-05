@@ -1,11 +1,14 @@
 from datetime import datetime
 from os.path import dirname, join
-from city_scrapers_core.constants import BOARD, PASSED
+
 import pytest
+from city_scrapers_core.constants import BOARD, PASSED
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
-from city_scrapers.spiders.chi_northeastern_il_university import ChiNortheasternIlUniversitySpider
+from city_scrapers.spiders.chi_northeastern_il_university import (
+    ChiNortheasternIlUniversitySpider,
+)
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_northeastern_il_university.html"),
