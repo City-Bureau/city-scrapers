@@ -41,7 +41,7 @@ class ChiNortheasternIlUniversitySpider(CityScrapersSpider):
                 details = extract_text(BytesIO(res.content))
             # print("Details:", details)
             # pattern = re.compile("(.*\n?)(?=\s*Meeting)", re.MULTILINE)
-            pattern = re.compile("\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}", re.MULTILINE)
+            pattern = re.compile(r'\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}', re.MULTILINE)
             match = re.search(pattern, details).group(0).strip()
             print("MATCHES: " , match)
             print("REPLACE1: ", pattern)
@@ -97,7 +97,7 @@ class ChiNortheasternIlUniversitySpider(CityScrapersSpider):
         return COMMITTEE if "COMMITTEE" in item else BOARD
 
     def _parse_start(self, date, parse):
-        pattern = re.compile("\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}", re.MULTILINE)
+        pattern = re.compile(r'\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}', re.MULTILINE)
         replacementPattern = re.compile('[^0-9:].*')
         time = re.search(pattern, parse).group(0)
         midDay = re.search(replacementPattern, time).group(0)
@@ -113,9 +113,9 @@ class ChiNortheasternIlUniversitySpider(CityScrapersSpider):
         return datetime.strptime(fullDate, "%B %d, %Y %I:%M %p")
 
     def _parse_end(self, date, parse):
-        pattern = re.compile("\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}", re.MULTILINE)  
+        pattern = re.compile(r'\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}', re.MULTILINE)  
         replacementPattern = re.compile('[^0-9:].*')  
-        time = re.search(pattern, parse).group(0)      
+        time = re.findall(pattern, parse)[-1]      
         midDay = re.search(replacementPattern, time).group(0)
         trueTime = time.replace(midDay, " AM").strip() if "a" in midDay else time.replace(midDay, " PM").strip()
   
@@ -133,7 +133,7 @@ class ChiNortheasternIlUniversitySpider(CityScrapersSpider):
         return False
 
     def _parse_location(self, item):
-        pattern = re.compile("\d\d\d\d(.*\n?)(?=\s*Meeting)", re.MULTILINE)
+        pattern = re.compile(r'(\d\d\d\d.*\n?)(?=\s*Meeting)', re.MULTILINE)
         match = re.search(pattern, item)
         location = match.group(1).strip().split('|')
         print("LOCATIONS: " , location)
