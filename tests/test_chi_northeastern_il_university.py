@@ -22,13 +22,6 @@ parsed_items = [item for item in spider.parse(test_response)]
 freezer.stop()
 
 
-def test_tests():
-    pass
-
-"""
-Uncomment below
-"""
-
 def test_title():
     assert parsed_items[0]["title"] == "BOARD MEETING"
     assert parsed_items[1]["title"] == "FINANCE, BUILDINGS AND GROUNDS COMMITTEE MEETING"
