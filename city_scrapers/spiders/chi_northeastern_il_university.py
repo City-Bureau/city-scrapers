@@ -14,20 +14,21 @@ class ChiNortheasternIlUniversitySpider(CityScrapersSpider):
     agency = "Northeastern Illinois University"
     timezone = "America/Chicago"
     start_urls = [
-        "https://www.neiu.edu/about/board-of-trustees/board-meeting-materials"]
+        "https://www.neiu.edu/about/board-of-trustees/board-meeting-materials"
+    ]
 
     def parse(self, response):
         for meeting in response.css("div.board-meeting-materials-row.views-row"):
             head = meeting.css("h4.accordion::text").get().split()
             if len(head) >= 3:
-                date = ' '.join(head[:3])
-                title = ' '.join(head[3:]) if len(head) > 3 else ""
+                date = " ".join(head[:3])
+                title = " ".join(head[3:]) if len(head) > 3 else ""
             else:
                 date = head
                 title = ""
             links, agenda = self._parse_links(meeting)
             details = None
-            if (agenda):
+            if agenda:
                 res = requests.get(agenda)
                 details = extract_text(BytesIO(res.content))
             meeting = Meeting(
@@ -61,20 +62,32 @@ class ChiNortheasternIlUniversitySpider(CityScrapersSpider):
         return COMMITTEE if "COMMITTEE" in item else BOARD
 
     def _parse_start(self, date, parse):
-        p = re.compile(r'\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}', re.MULTILINE)
-        replacementPattern = re.compile('[^0-9:].*')
+        p = re.compile(
+            r"\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}", re.MULTILINE
+        )
+        replacementPattern = re.compile("[^0-9:].*")
         time = re.search(p, parse).group(0)
         midDay = re.search(replacementPattern, time).group(0)
-        trueTime = time.replace(midDay, " AM").strip() if "a" in midDay else time.replace(midDay, " PM").strip()
+        trueTime = (
+            time.replace(midDay, " AM").strip()
+            if "a" in midDay
+            else time.replace(midDay, " PM").strip()
+        )
         fullDate = date + " " + trueTime
         return datetime.strptime(fullDate, "%B %d, %Y %I:%M %p")
 
     def _parse_end(self, date, parse):
-        pattern = re.compile(r'\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}', re.MULTILINE)
-        replacementPattern = re.compile('[^0-9:].*')
+        pattern = re.compile(
+            r"\d{1,2}:\d{1,2}.[a-z]{0,1}\.{0,1}[a-z]{0,1}\.{0,1}", re.MULTILINE
+        )
+        replacementPattern = re.compile("[^0-9:].*")
         time = re.findall(pattern, parse)[-1]
         midDay = re.search(replacementPattern, time).group(0)
-        trueTime = time.replace(midDay, " AM").strip() if "a" in midDay else time.replace(midDay, " PM").strip()
+        trueTime = (
+            time.replace(midDay, " AM").strip()
+            if "a" in midDay
+            else time.replace(midDay, " PM").strip()
+        )
         fullDate = date + " " + trueTime
         return datetime.strptime(fullDate, "%B %d, %Y %I:%M %p")
 
@@ -85,9 +98,9 @@ class ChiNortheasternIlUniversitySpider(CityScrapersSpider):
         return False
 
     def _parse_location(self, item):
-        pattern = re.compile(r'(\d\d\d\d.*\n?)(?=\s*Meeting)', re.MULTILINE)
+        pattern = re.compile(r"(\d\d\d\d.*\n?)(?=\s*Meeting)", re.MULTILINE)
         match = re.search(pattern, item)
-        location = match.group(1).strip().split('|')
+        location = match.group(1).strip().split("|")
         return {
             "address": location[0].strip() + ", " + location[1].strip(),
             "name": location[2].strip(),
