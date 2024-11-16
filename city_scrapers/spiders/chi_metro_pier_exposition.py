@@ -1,4 +1,5 @@
 from datetime import datetime, time
+import dateutil.parser
 
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
@@ -72,8 +73,8 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
 
     def _parse_start(self, item, classification):
         """Parse start datetime as a naive datetime object."""
-        date_str = item.css("td::text").extract_first().strip()
-        date_obj = datetime.strptime(date_str, "%B %d, %Y").date()
+        date_str = item.css("td::text").extract_first().strip().split("*")[-1]
+        date_obj = dateutil.parser.parse(date_str)
         time_obj = time(9)
         if classification == COMMITTEE:
             time_obj = time(13, 30)
