@@ -58,15 +58,3 @@ jobs:
         run: |
           export PYTHONPATH=$(pwd):$PYTHONPATH
           pipenv run scrapy combinefeeds -s LOG_ENABLED=False
-
-  keepalive-workflow:
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Prevent workflow deactivation
-        uses: gautamkrishnar/keepalive-workflow@v2
-        with:
-          auto_write_check: "true"
-          workflow_files: "archive.yml"
