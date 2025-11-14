@@ -10,17 +10,20 @@ __author__ = "City Bureau / Documenters Network"
 
 from .analyzer import RepositoryAnalyzer
 from .classifier import StatusClassifier
-from .scorer import PriorityScorer, HarambeScorer
+from .scorer import PriorityScorer, HarambeScorer, EffortEstimator
 from .executor import ScraperExecutor
 from .github_client import GitHubClient
 from .reporter import ReportGenerator
+from .database import AnalysisDatabase
 
 __all__ = [
     "RepositoryAnalyzer",
     "StatusClassifier",
     "PriorityScorer",
     "HarambeScorer",
+    "EffortEstimator",
     "ScraperExecutor",
     "GitHubClient",
     "ReportGenerator",
+    "AnalysisDatabase",
 ]
