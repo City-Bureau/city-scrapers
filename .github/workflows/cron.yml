@@ -29,6 +29,7 @@ jobs:
 
       - name: Connect to OpenVPN
         run: |
+          sudo apt-get update
           sudo apt-get install -y openvpn
           echo "$OPENVPN_USER" | sudo tee -a /etc/openvpn/client/auth
           echo "$OPENVPN_PASS" | sudo tee -a /etc/openvpn/client/auth
