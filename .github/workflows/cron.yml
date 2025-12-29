@@ -59,3 +59,11 @@ jobs:
         run: |
           export PYTHONPATH=$(pwd):$PYTHONPATH
           pipenv run scrapy combinefeeds -s LOG_ENABLED=False
+
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
