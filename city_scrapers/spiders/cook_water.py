@@ -13,6 +13,11 @@ class CookWaterSpider(LegistarSpider):
     start_urls = ["https://mwrd.legistar.com/Calendar.aspx"]
     address = "100 East Erie Street Chicago, IL 60611"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.since_year = 2008
+        self.legistar_keys = set()
+
     def parse_legistar(self, events):
         three_months_ago = datetime.today() - timedelta(days=90)
         for event in events:
