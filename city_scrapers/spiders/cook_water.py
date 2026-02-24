@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 from city_scrapers_core.constants import BOARD, COMMITTEE, FORUM
@@ -41,6 +42,66 @@ class CookWaterSpider(LegistarSpider):
             meeting["status"] = self._get_status(meeting, event["Meeting Location"])
             meeting["id"] = self._get_id(meeting)
             yield meeting
+
+    def _parse_legistar_events(self, response):
+        events_table = response.css("table.rgMasterTable")[0]
+
+        headers = []
+        for header in events_table.css("th[class^='rgHeader']"):
+            header_text = (
+                " ".join(header.css("*::text").extract()).replace("&nbsp;", " ").strip()
+            )
+            header_inputs = header.css("input")
+            if header_text:
+                headers.append(header_text)
+            elif len(header_inputs) > 0:
+                headers.append(header_inputs[0].attrib["value"])
+            else:
+                headers.append(header.css("img")[0].attrib["alt"])
+
+        events = []
+        for row in events_table.css("tr.rgRow, tr.rgAltRow"):
+            try:
+                data = defaultdict(lambda: None)
+                for header, field in zip(headers, row.css("td")):
+                    field_text = (
+                        " ".join(field.css("*::text").extract())
+                        .replace("&nbsp;", " ")
+                        .strip()
+                    )
+                    url = None
+                    if len(field.css("a")) > 0:
+                        link_el = field.css("a")[0]
+                        if "onclick" in link_el.attrib and link_el.attrib[
+                            "onclick"
+                        ].startswith(("radopen('", "window.open", "OpenTelerikWindow")):
+                            url = response.urljoin(
+                                link_el.attrib["onclick"].split("'")[1]
+                            )
+                        elif "href" in link_el.attrib:
+                            url = response.urljoin(link_el.attrib["href"])
+                    if url:
+                        # Detect iCal by URL pattern, not header name
+                        if "View.ashx?M=IC" in url:
+                            header = "iCalendar"
+                            value = {"url": url}
+                        else:
+                            value = {"label": field_text, "url": url}
+                    else:
+                        value = field_text
+
+                    data[header] = value
+
+                ical_url = data.get("iCalendar", {}).get("url")
+                if ical_url is None or ical_url in self._scraped_urls:
+                    continue
+                else:
+                    self._scraped_urls.add(ical_url)
+                events.append(dict(data))
+            except Exception:
+                pass
+
+        return events
 
     def _parse_classification(self, name):
         """
