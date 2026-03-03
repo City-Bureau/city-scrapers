@@ -6,66 +6,110 @@ from city_scrapers_core.constants import COMMISSION, TENTATIVE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
+from scrapy.http import Request
 from scrapy.settings import Settings
 
 from city_scrapers.spiders.chi_plan_commission import ChiPlanCommissionSpider
 
 test_response = file_response(
     join(dirname(__file__), "files", "chi_plan_commission.html"),
-    url="https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html",
+    url="https://www.chicago.gov/city/en/depts/dcd/chicago-plan-commission/meetings--agendas---video-archives.html?wcmmode=disabled",
 )
 test_detail_response = file_response(
     join(dirname(__file__), "files", "chi_plan_commission_detail.html"),
-    url=(
-        "https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission/february-2020.html"  # noqa
-    ),
+    url="https://www.chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission/August_2025_Plan_Commission_Hearing.html",  # noqa
 )
+
 spider = ChiPlanCommissionSpider()
 spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
 
-freezer = freeze_time("2020-02-05")
+freezer = freeze_time("2026-03-02")
 freezer.start()
 
-parsed_items = [
-    item for item in spider.parse(test_response) if isinstance(item, Meeting)
-]
+parse_results = list(spider.parse(test_response))
+
+parsed_items = [x for x in parse_results if isinstance(x, Meeting)]
+parsed_requests = [x for x in parse_results if isinstance(x, Request)]
+
 parsed_detail = [
     item
-    for item in spider._parse_detail(
-        test_detail_response, start=datetime(2020, 2, 5, 10)
-    )
+    for item in spider._parse_detail(test_detail_response, start=datetime(2025, 8, 21, 10))
 ][0]
 
 freezer.stop()
 
 
-def test_meeting_count():
-    assert len(parsed_items) == 28
+def _sorted_by_start(items):
+    return sorted(items, key=lambda x: x["start"])
 
 
-def test_unique_id():
-    assert len(set([item["id"] for item in parsed_items])) == 28
+def test_main_page_total_outputs_cover_12_meetings():
+  
+    assert len(parsed_items) == 9
+    assert len(parsed_requests) == 13
+    assert len(parse_results) == 22
 
 
-def test_title():
+def test_2026_meeting_items_are_apr_through_dec():
+    expected_starts = [
+        datetime(2026, 4, 16, 10, 0),
+        datetime(2026, 5, 21, 10, 0),
+        datetime(2026, 6, 18, 10, 0),
+        datetime(2026, 7, 16, 10, 0),
+        datetime(2026, 8, 20, 10, 0),
+        datetime(2026, 9, 17, 10, 0),
+        datetime(2026, 10, 15, 10, 0),
+        datetime(2026, 11, 19, 10, 0),
+        datetime(2026, 12, 17, 10, 0),
+    ]
+    items = _sorted_by_start(parsed_items)
+    assert [i["start"] for i in items] == expected_starts
+
+
+def test_2026_detail_requests_are_jan_feb_mar():
+    urls = sorted([r.url for r in parsed_requests])
+    expected_urls = sorted([
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/January_2026_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/February_2026_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/March_2026_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/March_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/April_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/May_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/June_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/July_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/August_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/September_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/October_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/November_2025_Plan_Commission_Hearing.html",
+        "https://www.chicago.gov/content/city/en/depts/dcd/supp_info/chicago_plan_commission/December_2025_Plan_Commission_Hearing.html",
+    ])
+    assert urls == expected_urls
+
+
+def test_unique_id_for_meeting_items():
+    assert len(set([item["id"] for item in parsed_items])) == 9
+
+
+def test_title_description_defaults():
     assert parsed_items[0]["title"] == "Commission"
-
-
-def test_description():
     assert parsed_items[0]["description"] == ""
 
 
 def test_start():
-    assert parsed_items[0]["start"] == datetime(2021, 2, 18, 10, 0)
-    assert parsed_detail["start"] == datetime(2020, 2, 5, 10)
+    items = _sorted_by_start(parsed_items)
+    assert items[0]["start"] == datetime(2026, 4, 16, 10, 0)
+
+    assert parsed_detail["start"] == datetime(2025, 8, 21, 10)
 
 
 def test_end():
     assert parsed_items[0]["end"] is None
 
 
-def test_id():
-    assert parsed_items[0]["id"] == "chi_plan_commission/202102181000/x/commission"
+def test_id_format_matches_start_datetime():
+    for item in parsed_items:
+        dt_str = item["start"].strftime("%Y%m%d%H%M")
+        assert f"/{dt_str}/" in item["id"]
 
 
 def test_status():
@@ -84,80 +128,72 @@ def test_links():
     assert parsed_items[0]["links"] == []
     assert parsed_detail["links"] == [
         {
-            "href": "https://www.chicago.gov/content/dam/city/depts/dcd/supp_info/woodlawn/woodlawn_report_draft_01_29_2020.pdf",  # noqa
-            "title": 'Draft "Woodlawn Plan Consolidation Report"',
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/woodlawn_plan_presentation.pdf",  # noqa
-            "title": "Presentation",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/5616_s_maryland.pdf",  # noqa
-            "title": "PD Amendment Application",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/5615_s_maryland_pres.pdf",  # noqa
-            "title": "Presentation",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/808_n_cleveland.pdf",  # noqa
-            "title": "PD Amendment Application",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/180_n_ada.pdf",  # noqa
-            "title": "PD Amendment Application",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/180_n_ada_pres.pdf",  # noqa
-            "title": "Presentation",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/1150_w_lake.pdf",  # noqa
-            "title": "PD Application",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/1150_w_lake_pres.pdf",  # noqa
-            "title": "Presentation",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/725_w_randolph.pdf",  # noqa
-            "title": "PD Amendment Application",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/725_w_randolph_pres.pdf",  # noqa
-            "title": "Presentation",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/777_n_franklin.pdf",  # noqa
-            "title": "PD Application",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/749_n_franklin_pres.pdf",  # noqa
-            "title": "Presentation",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/141_w_diversey.pdf",  # noqa
-            "title": "LPO Application",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/141_w_diversey_pres.pdf",  # noqa
-            "title": "Presentation",
-        },
-        {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/CPC_Feb_2020_Public_Notice.pdf",  # noqa
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/7.31.2025_DRAFT_August_2025_PUBLIC_NOTICE.pdf",
             "title": "Public Notice",
         },
         {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/feb_2020_agenda.pdf",  # noqa
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/DRAFT_AUGUST_21_2025_Agenda.pdf",
             "title": "Agenda",
         },
         {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/feb_2020_map.pdf",  # noqa
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/Chicago_Plan_Commission_August_2025.pdf",
             "title": "Map",
         },
         {
-            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/02_2020/CPC_Feb_2020_Minutes-draft.pdf",  # noqa
-            "title": "Minutes",
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/Chicago_Plan_Commission_August_2025_with_Planning_Regions.pdf",
+            "title": "Planning Region Map",
+        },
+        {
+            "href": "https://youtube.com/watch?v=lhBdveUNxJQ",
+            "title": "Video",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/LPO_APP_790_6402-6420_S_Stony_Island_Ave.pdf",
+            "title": "LPO Application",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/6402-20_Stony_Island_Full_Packet_AS_FILED.pdf",
+            "title": "PD Application",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/20250821_6402-6420_S_Stony_Island_CPC_Presentation_R2.pdf",
+            "title": "Presentation",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/Written_Comments/6400_S_Stony_Island_Public_Comments_Against.pdf",
+            "title": "Public Comments - Against",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/Written_Comments/6400_S_Stony_Island_Public_Comments_Support.pdf",
+            "title": "Public Comments - Support",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/2025-07-29_FILED_Lakefront_Protection_Application_795.pdf",
+            "title": "LPO Application",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/2025.08.21_Metra_59th_&_60th_St_LPO_CPC_Presentation.pdf",
+            "title": "Presentation",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/Written_Comments/59th_Metra_Public_Comments_ALL.pdf",
+            "title": "Public Comments",
+        },
+        {
+            "href": "https://www.chicago.gov/city/en/depts/dcd/supp_info/major-taylor-trail-framework-plan.html",
+            "title": "https://www.chicago.gov/city/en/depts/dcd/supp_info/major-taylor-trail-framework-plan.html",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/2025_08_21_Major_Taylor_Trail%20Planning_CPC.pdf",
+            "title": "Presentation",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/Written_Comments/Major_Taylor_Trail_Framework_Public_Comments_ALL.pdf",
+            "title": "Public Comments",
+        },
+        {
+            "href": "https://www.chicago.gov/content/dam/city/depts/zlup/Planning_and_Policy/Agendas/cpc_materials/08_2025/Written_Comments/Major_Taylor_Trail_Consolidation_Public_Comments_ALL.pdf",
+            "title": "Public Comments",
         },
     ]
 
