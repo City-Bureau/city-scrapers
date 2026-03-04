@@ -13,14 +13,14 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
     agency = "Chicago Plan Commission"
     timezone = "America/Chicago"
     start_urls = [
-        "https://www.chicago.gov/city/en/depts/dcd/chicago-plan-commission/meetings--agendas---video-archives.html?wcmmode=disabled"
+        "https://www.chicago.gov/city/en/depts/dcd/chicago-plan-commission/meetings--agendas---video-archives.html?wcmmode=disabled"  # noqa
     ]
     custom_settings = {
         "ROBOTSTXT_OBEY": False,
         "DEFAULT_REQUEST_HEADERS": {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",  # noqa
             "Accept-Language": "en-US,en;q=0.9",
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",  # noqa
         },
     }
     location = {"name": "City Hall", "address": "121 N LaSalle St Chicago, IL 60602"}
@@ -32,14 +32,16 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        last_year = datetime.today().replace(year=datetime.today().year - 1)
+        last_year = datetime.today().replace(year=datetime.today().year - 2)
 
         table_groups = []
 
         current_year_heading = response.xpath(
             "//h3[contains(., 'Meeting Schedule')][1]"
         )
-        current_year_text = " ".join(current_year_heading.xpath(".//text()").getall()).strip()
+        current_year_text = " ".join(
+            current_year_heading.xpath(".//text()").getall()
+        ).strip()
         current_year_match = re.search(r"\b(\d{4})\b", current_year_text)
 
         if current_year_match:
@@ -72,26 +74,18 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
 
                     start = self._parse_start(item, year_str)
                     if start is None or (
-                        start < last_year and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
+                        start < last_year
+                        and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
                     ):
                         continue
 
-                    links = self._parse_links(item, response)
+                    detail_link = self._get_detail_link(item, response)
 
-                    detail_links = [
-                        link["href"]
-                        for link in links
-                        if link["href"].endswith(".html")
-                        and "postpone" not in link["title"].lower()
-                    ]
-
-                    if detail_links:
-                        detail_url = detail_links[0]
-
+                    if detail_link:
                         yield response.follow(
-                            detail_url,
+                            detail_link,
                             callback=self._parse_detail,
-                            cb_kwargs={"start": start, "list_links": links},
+                            cb_kwargs={"start": start},
                             headers=self.custom_settings["DEFAULT_REQUEST_HEADERS"],
                         )
                         continue
@@ -106,7 +100,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
                         all_day=False,
                         location=self.location,
                         source=response.url,
-                        links=links,
+                        links=[],
                     )
                     meeting["id"] = self._get_id(meeting)
                     meeting["status"] = self._get_status(meeting)
@@ -114,25 +108,8 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
 
     def _parse_detail(self, response, **kwargs):
         start = self._parse_detail_start(response, kwargs["start"])
-        list_links = kwargs.get("list_links", [])
 
         detail_links = self._parse_detail_links(response)
-
-        merged = []
-        seen = set()
-        
-        # Filter out agenda links from main page/html
-        filtered_list_links = [
-            link for link in list_links 
-            if "agenda" not in link["title"].lower()
-        ]
-        
-        for lnk in (filtered_list_links + detail_links):
-            href = lnk.get("href")
-            if not href or href in seen:
-                continue
-            seen.add(href)
-            merged.append(lnk)
 
         detail_text = " ".join(response.css(".col-12 > p *::text").extract())
         location = self.location
@@ -149,7 +126,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
             all_day=False,
             location=location,
             source=response.url,
-            links=merged,
+            links=detail_links,
         )
         meeting["id"] = self._get_id(meeting)
         meeting["status"] = self._get_status(meeting)
@@ -163,16 +140,18 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
             return
         return dateutil.parser.parse(" ".join([date_match.group(), year, "10:00am"]))
 
-    def _parse_links(self, item, response):
-        links = []
+    def _get_detail_link(self, item, response):
         for link in item.css("a"):
-            links.append(
-                {
-                    "title": re.sub(r"\s+", " ", " ".join(link.css("*::text").extract())).strip(),
-                    "href": response.urljoin(link.attrib["href"]),
-                }
-            )
-        return links
+            href = link.attrib.get("href")
+            if not href or not href.endswith(".html"):
+                continue
+
+            title = re.sub(r"\s+", " ", " ".join(link.css("*::text").extract())).strip()
+            if "postpone" in title.lower():
+                continue
+
+            return response.urljoin(href)
+        return None
 
     def _parse_detail_start(self, response, start):
         detail_text = " ".join(response.css(".col-12 > p *::text").extract())
@@ -194,7 +173,9 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
         links = []
         seen = set()
 
-        link_selectors = response.css('p[style*="text-align: center"] a') + response.css('td[style*="text-align: center"] a')
+        link_selectors = response.css(
+            'p[style*="text-align: center"] a'
+        ) + response.css('td[style*="text-align: center"] a')
 
         for link in link_selectors:
             href = link.attrib.get("href")
@@ -202,13 +183,14 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
                 continue
 
             href = response.urljoin(href)
-            title_str = re.sub(r"\s+", " ", " ".join(link.css("*::text").getall())).strip()
+            title_str = re.sub(
+                r"\s+", " ", " ".join(link.css("*::text").getall())
+            ).strip()
 
-            if (
-                not title_str
-                or "mailto:" in href
-                or href.endswith("/chicago_plan_commission.html")
-            ):
+            if not title_str:
+                title_str = href
+
+            if "mailto:" in href or href.endswith("/chicago_plan_commission.html"):
                 continue
 
             if href in seen:
