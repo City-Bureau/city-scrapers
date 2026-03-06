@@ -1,9 +1,12 @@
+import logging
 import re
 from datetime import datetime
 
 from city_scrapers_core.constants import COMMISSION
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
+logger = logging.getLogger(__name__)
 
 
 class ChiSsa51Spider(CityScrapersSpider):
@@ -80,4 +83,4 @@ class ChiSsa51Spider(CityScrapersSpider):
 
     def _validate_location(self, response):
         if "806 East" not in " ".join(response.css("div#element106 *::text").extract()):
-            raise ValueError("Meeting location has changed")
+            logger.warning("Meeting location has changed")

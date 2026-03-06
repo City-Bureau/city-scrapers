@@ -1,3 +1,4 @@
+import logging
 import re
 from collections import defaultdict
 from datetime import datetime
@@ -6,6 +7,8 @@ import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
+logger = logging.getLogger(__name__)
 
 
 class ChiTeacherPensionSpider(CityScrapersSpider):
@@ -123,7 +126,7 @@ class ChiTeacherPensionSpider(CityScrapersSpider):
                 "address": "425 S Financial Place, Suite 1500, Chicago, IL 60605",
             }
         if desc and not re.search(r"203 N[\.orth]*? LaSalle", desc):
-            raise ValueError("Meeting location has changed")
+            logger.warning("Meeting location has changed")
         return self.location
 
     def _parse_links(self, start, classification, source, item):
