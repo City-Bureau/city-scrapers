@@ -11,11 +11,15 @@ class CookWaterSpider(LegistarSpider):
     agency = "Metropolitan Water Reclamation District of Greater Chicago"
     event_timezone = "America/Chicago"
     start_urls = ["https://mwrd.legistar.com/Calendar.aspx"]
-    address = "100 East Erie Street Chicago, IL 60611"
+    location = {
+        "name": "Board Room",
+        "address": "100 East Erie Street Chicago, IL 60611",
+    }
+    link_types = ["Meeting Details", "Accessible Agenda", "Accessible Minutes"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.since_year = 2008
+        self.since_year = 2020
         self.legistar_keys = set()
 
     def parse_legistar(self, events):
@@ -40,7 +44,7 @@ class CookWaterSpider(LegistarSpider):
                 end=None,
                 time_notes="",
                 all_day=False,
-                location=self._parse_location(event),
+                location=self.location,
                 links=self.legistar_links(event),
                 source=self.legistar_source(event),
             )
@@ -117,16 +121,6 @@ class CookWaterSpider(LegistarSpider):
         if "hearing" in name.lower():
             return FORUM
         return BOARD
-
-    def _parse_location(self, item):
-        """
-        Parse or generate location. Url, latitutde and longitude are all
-        optional and may be more trouble than they're worth to collect.
-        """
-        return {
-            "name": item.get("Meeting Location", None),
-            "address": self.address,
-        }
 
     def _parse_title(self, item):
         """Parse or generate meeting title."""
