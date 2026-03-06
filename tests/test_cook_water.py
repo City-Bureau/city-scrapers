@@ -44,7 +44,7 @@ def test_id():
 
 
 def test_status():
-    assert parsed_items[19]["status"] == TENTATIVE
+    assert parsed_items[19]["status"] == PASSED
 
 
 def test_classification():
@@ -99,8 +99,8 @@ def test_title_not_study_session(item):
     assert item["title"] != "Study Session"
 
 
-def test_status():
-    assert parsed_items[-1]["status"] == PASSED
+def test_tentative_status():
+    assert parsed_items[0]["status"] == TENTATIVE
 
 
 @pytest.mark.parametrize("item", parsed_items)
