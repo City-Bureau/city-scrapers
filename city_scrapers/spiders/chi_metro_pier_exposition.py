@@ -1,8 +1,11 @@
+import logging
 from datetime import datetime, time
 
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
+logger = logging.getLogger(__name__)
 
 
 class ChiMetroPierExpositionSpider(CityScrapersSpider):
@@ -33,7 +36,7 @@ class ChiMetroPierExpositionSpider(CityScrapersSpider):
         elif (
             "cancel" not in description.lower() and "301 East Cermak" not in description
         ):
-            raise ValueError("Meeting location has changed")
+            logger.warning("Meeting location has changed")
         for item in response.css(".supsystic-table tr")[3:]:
             title = self._parse_title(item)
             classification = self._parse_classification(title)
