@@ -50,6 +50,9 @@ jobs:
         env:
           PIPENV_DEFAULT_PYTHON_VERSION: 3.11
 
+      - name: Install Playwright browsers
+        run: pipenv run playwright install firefox
+
       - name: Run scrapers
         run: |
           export PYTHONPATH=$(pwd):$PYTHONPATH
