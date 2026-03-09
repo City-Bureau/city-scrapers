@@ -12,6 +12,7 @@ class ChiTransitSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     base_url = "http://www.transitchicago.com"
     start_urls = ["https://www.transitchicago.com/board/notices-agendas-minutes/"]
+    custom_settings = {"ROBOTSTXT_OBEY": False}
 
     def parse(self, response):
         """
