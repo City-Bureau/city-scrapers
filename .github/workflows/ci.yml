@@ -33,6 +33,9 @@ jobs:
         env:
           PIPENV_DEFAULT_PYTHON_VERSION: ${{ matrix.python-version }}
 
+      - name: Install Playwright browsers
+        run: pipenv run playwright install firefox
+
       - name: Check imports with isort
         run: pipenv run isort . --check-only
 

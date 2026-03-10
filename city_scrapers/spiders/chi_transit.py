@@ -1,6 +1,7 @@
 import re
 from datetime import datetime, timedelta
 
+import scrapy
 from city_scrapers_core.constants import BOARD, COMMITTEE
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -12,6 +13,23 @@ class ChiTransitSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     base_url = "http://www.transitchicago.com"
     start_urls = ["https://www.transitchicago.com/board/notices-agendas-minutes/"]
+    custom_settings = {
+        # Playwright to bypass bot detection
+        "TWISTED_REACTOR": "twisted.internet.asyncioreactor.AsyncioSelectorReactor",
+        "DOWNLOAD_HANDLERS": {
+            "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+            "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+        },
+        "PLAYWRIGHT_BROWSER_TYPE": "firefox",
+        "DOWNLOAD_DELAY": 1,
+        "ROBOTSTXT_OBEY": False,
+        "USER_AGENT": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",  # noqa
+    }
+
+    def start_requests(self):
+        """Use Playwright to bypass bot detection on transitchicago.com."""
+        for url in self.start_urls:
+            yield scrapy.Request(url, callback=self.parse, meta={"playwright": True})
 
     def parse(self, response):
         """

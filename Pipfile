@@ -7,13 +7,16 @@ name = "pypi"
 python-dateutil = "*"
 pytz = "*"
 requests = "*"
-scrapy = "*"
+scrapy = "==2.11.2"
 scrapy-sentry-errors = "1.0.0"
 scrapy-wayback-middleware = "*"
 city-scrapers-core = {ref = "main", git = "https://github.com/City-Bureau/city-scrapers-core.git", extras = ["azure"]}
+lxml = "==5.3.0"
 pdfminer-six = "*"
 bs4 = "*"
 icalendar = "*"
+scrapy-playwright = "*"
+playwright = "*"
 
 [dev-packages]
 freezegun = "*"
