@@ -1,5 +1,5 @@
 #!/bin/bash
-pipenv run scrapy crawl chi_transit &
+pipenv run scrapy list | xargs -I {} pipenv run scrapy crawl {} &
 
 # Output to the screen every 9 minutes to prevent a timeout
 # https://stackoverflow.com/a/40800348
