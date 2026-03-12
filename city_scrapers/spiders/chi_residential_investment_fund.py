@@ -14,7 +14,7 @@ class ChiResidentialInvestmentFundSpider(CityScrapersSpider):
 
     _location = {
         "name": "City Hall, Rm. 1003A",
-        "address": "121 N LaSalle St, Room 1003A, Chicago, IL 60610",
+        "address": "121 N LaSalle St, Chicago, IL 60610",
     }
 
     def parse(self, response):
@@ -94,7 +94,7 @@ class ChiResidentialInvestmentFundSpider(CityScrapersSpider):
 
         for fmt in ("%B %d, %Y", "%b %d, %Y"):
             try:
-                return datetime.strptime(text, fmt).replace(hour=15)
+                return datetime.strptime(text, fmt)
             except ValueError:
                 continue
         return None

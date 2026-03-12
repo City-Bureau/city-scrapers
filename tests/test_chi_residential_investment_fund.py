@@ -39,7 +39,7 @@ def test_description(parsed_items):
 
 
 def test_start(parsed_items):
-    assert parsed_items[0]["start"] == datetime(2026, 1, 13, 15, 0)
+    assert parsed_items[0]["start"] == datetime(2026, 1, 13, 0, 0)
 
 
 def test_end(parsed_items):
@@ -57,7 +57,7 @@ def test_status(parsed_items):
 def test_location(parsed_items):
     assert parsed_items[0]["location"] == {
         "name": "City Hall, Rm. 1003A",
-        "address": "121 N LaSalle St, Room 1003A, Chicago, IL 60610",
+        "address": "121 N LaSalle St, Chicago, IL 60610",
     }
 
 
@@ -83,7 +83,7 @@ def test_links(parsed_items):
 def test_id(parsed_items):
     assert (
         parsed_items[0]["id"]
-        == "chi_residential_investment_fund/202601131500/x/board_meeting"
+        == "chi_residential_investment_fund/202601130000/x/board_meeting"
     )
 
 
@@ -97,7 +97,7 @@ def test_all_day(parsed_items):
 
 
 def test_aprli_typo_is_parsed(parsed_items):
-    assert parsed_items[3]["start"] == datetime(2026, 4, 14, 15, 0)
+    assert parsed_items[3]["start"] == datetime(2026, 4, 14, 0, 0)
 
 
 def test_unrelated_rich_text_block_is_ignored(parsed_items):
