@@ -1,8 +1,11 @@
+import logging
 from datetime import datetime
 
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
+logger = logging.getLogger(__name__)
 
 
 class ChiLaborRetirementFundSpider(CityScrapersSpider):
@@ -26,7 +29,7 @@ class ChiLaborRetirementFundSpider(CityScrapersSpider):
             response.css(".mainRail .block p:nth-child(1) *::text").extract()
         )
         if "321 N" not in description and "teleconference" not in description:
-            raise ValueError("Meeting location has changed")
+            logger.warning("Meeting location has changed")
         for item in response.css(".days"):
             meeting = Meeting(
                 title=self._parse_title(item),

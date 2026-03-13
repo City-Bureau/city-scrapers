@@ -1,9 +1,12 @@
+import logging
 import re
 from datetime import datetime, time
 
 from city_scrapers_core.constants import BOARD
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+
+logger = logging.getLogger(__name__)
 
 
 class IlGamingBoardSpider(CityScrapersSpider):
@@ -65,7 +68,7 @@ class IlGamingBoardSpider(CityScrapersSpider):
         """Confirm that the location has not changed"""
         description = " ".join(response.css(".contentBox > .line *::text").extract())
         if not re.search(r"160\s+N(orth)?\s+LaSalle", description):
-            raise ValueError("Meeting location may have changed")
+            logger.warning("Meeting location may have changed")
 
     def _parse_links(self, item, response):
         """Parse or generate links."""
