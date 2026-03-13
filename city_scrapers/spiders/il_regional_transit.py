@@ -2,9 +2,9 @@ from datetime import datetime
 
 import scrapy
 from city_scrapers_core.constants import (
+    ADVISORY_COMMITTEE,
     BOARD,
     COMMITTEE,
-    ADVISORY_COMMITTEE,
     NOT_CLASSIFIED,
 )
 from city_scrapers_core.items import Meeting
