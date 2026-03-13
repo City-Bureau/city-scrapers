@@ -13,8 +13,16 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
     agency = "Chicago Plan Commission"
     timezone = "America/Chicago"
     start_urls = [
-        "https://chicago.gov/city/en/depts/dcd/supp_info/chicago_plan_commission.html"
+        "https://www.chicago.gov/city/en/depts/dcd/chicago-plan-commission/meetings--agendas---video-archives.html?wcmmode=disabled"  # noqa
     ]
+    custom_settings = {
+        "ROBOTSTXT_OBEY": False,
+        "DEFAULT_REQUEST_HEADERS": {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",  # noqa
+            "Accept-Language": "en-US,en;q=0.9",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",  # noqa
+        },
+    }
     location = {"name": "City Hall", "address": "121 N LaSalle St Chicago, IL 60602"}
 
     def parse(self, response):
@@ -24,35 +32,64 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
         Change the `_parse_title`, `_parse_start`, etc methods to fit your scraping
         needs.
         """
-        last_year = datetime.today().replace(year=datetime.today().year - 1)
-        for meeting_group in response.css(".page-description table[cellspacing]"):
-            year_str = meeting_group.xpath("preceding::strong[1]/text()").re_first(
-                r"\d{4}"
-            )
+        last_year = datetime.today().replace(year=datetime.today().year - 2)
+
+        table_groups = []
+
+        current_year_heading = response.xpath(
+            "//h3[contains(., 'Meeting Schedule')][1]"
+        )
+        current_year_text = " ".join(
+            current_year_heading.xpath(".//text()").getall()
+        ).strip()
+        current_year_match = re.search(r"\b(\d{4})\b", current_year_text)
+
+        if current_year_match:
+            current_year = current_year_match.group(1)
+            current_year_table = current_year_heading.xpath("following::table[1]")
+            if current_year_table:
+                table_groups.append((current_year, current_year_table))
+
+        for card in response.css(".accordion-item.card"):
+            year_str = card.css(".cds-accordion-title::text").get()
+            if not year_str or not re.search(r"\d{4}", year_str):
+                continue
+
+            for tbl in card.css(".card-body table"):
+                table_groups.append((year_str.strip(), tbl))
+
+        for year_str, meeting_group in table_groups:
+            year_str = re.search(r"\d{4}", year_str).group()
+
             for column in meeting_group.css("td").extract():
                 for item_str in re.split(r"\<br\s*\/?\>", column):
                     item = Selector(text=item_str)
+
+                    item_text = " ".join(item.css("*::text").extract()).strip()
+                    if not item_text:
+                        continue
+
+                    if "postpon" in item_text.lower():
+                        continue
+
                     start = self._parse_start(item, year_str)
                     if start is None or (
                         start < last_year
                         and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
                     ):
                         continue
-                    links = self._parse_links(item, response)
-                    detail_links = [
-                        link["href"]
-                        for link in links
-                        if link["href"].endswith(".html")
-                        and "postpone" not in link["title"].lower()
-                    ]
-                    if len(detail_links) > 0:
-                        for link in detail_links:
-                            yield response.follow(
-                                link,
-                                callback=self._parse_detail,
-                                cb_kwargs={"start": start},
-                            )
+
+                    detail_link = self._get_detail_link(item, response)
+
+                    if detail_link:
+                        yield response.follow(
+                            detail_link,
+                            callback=self._parse_detail,
+                            cb_kwargs={"start": start},
+                            headers=self.custom_settings["DEFAULT_REQUEST_HEADERS"],
+                        )
                         continue
+
                     meeting = Meeting(
                         title="Commission",
                         description="",
@@ -63,7 +100,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
                         all_day=False,
                         location=self.location,
                         source=response.url,
-                        links=links,
+                        links=[],
                     )
                     meeting["id"] = self._get_id(meeting)
                     meeting["status"] = self._get_status(meeting)
@@ -71,13 +108,14 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
 
     def _parse_detail(self, response, **kwargs):
         start = self._parse_detail_start(response, kwargs["start"])
+
+        detail_links = self._parse_detail_links(response)
+
         detail_text = " ".join(response.css(".col-12 > p *::text").extract())
+        location = self.location
         if "virtual" in detail_text.lower():
             location = {"name": "Virtual, see meeting details", "address": ""}
-        elif "121 N" in detail_text:
-            location = self.location
-        else:
-            raise ValueError("Meeting location has changed")
+
         meeting = Meeting(
             title="Commission",
             description="",
@@ -88,7 +126,7 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
             all_day=False,
             location=location,
             source=response.url,
-            links=self._parse_detail_links(response),
+            links=detail_links,
         )
         meeting["id"] = self._get_id(meeting)
         meeting["status"] = self._get_status(meeting)
@@ -102,16 +140,18 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
             return
         return dateutil.parser.parse(" ".join([date_match.group(), year, "10:00am"]))
 
-    def _parse_links(self, item, response):
-        links = []
+    def _get_detail_link(self, item, response):
         for link in item.css("a"):
-            links.append(
-                {
-                    "title": " ".join(link.css("*::text").extract()),
-                    "href": response.urljoin(link.attrib["href"]),
-                }
-            )
-        return links
+            href = link.attrib.get("href")
+            if not href or not href.endswith(".html"):
+                continue
+
+            title = re.sub(r"\s+", " ", " ".join(link.css("*::text").extract())).strip()
+            if "postpone" in title.lower():
+                continue
+
+            return response.urljoin(href)
+        return None
 
     def _parse_detail_start(self, response, start):
         detail_text = " ".join(response.css(".col-12 > p *::text").extract())
@@ -131,18 +171,32 @@ class ChiPlanCommissionSpider(CityScrapersSpider):
 
     def _parse_detail_links(self, response):
         links = []
-        for link in response.css(".page-description-above a"):
-            title_str = re.sub(
-                r"\s+", " ", " ".join(link.css("*::text").extract())
-            ).strip()
-            if (
-                "mailto" in link.attrib["href"]
-                or link.attrib["href"].endswith("/chicago_plan_commission.html")
-                or not title_str
-            ):
+        seen = set()
+
+        link_selectors = response.css(
+            'p[style*="text-align: center"] a'
+        ) + response.css('td[style*="text-align: center"] a')
+
+        for link in link_selectors:
+            href = link.attrib.get("href")
+            if not href:
                 continue
 
-            links.append(
-                {"title": title_str, "href": response.urljoin(link.attrib["href"])}
-            )
+            href = response.urljoin(href)
+            title_str = re.sub(
+                r"\s+", " ", " ".join(link.css("*::text").getall())
+            ).strip()
+
+            if not title_str:
+                title_str = href
+
+            if "mailto:" in href or href.endswith("/chicago_plan_commission.html"):
+                continue
+
+            if href in seen:
+                continue
+            seen.add(href)
+
+            links.append({"title": title_str, "href": href})
+
         return links
