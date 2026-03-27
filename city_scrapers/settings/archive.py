@@ -1,6 +1,6 @@
 from .base import *  # noqa
 
-USER_AGENT = "City Scrapers [production mode]. Learn more and say hello at https://cityscrapers.org"  # noqa
+USER_AGENT = "City Scrapers [production mode]. Learn more and say hello at https://city-scrapers.org"  # noqa
 
 # Configure item pipelines
 ITEM_PIPELINES = {
