@@ -2,7 +2,7 @@
 
 Before contributing, please read our [code of conduct](./CODE_OF_CONDUCT.md).
 
-This is an overview of our process for contributions, but we have more information at [cityscrapers.org](https://cityscrapers.org/).
+This is an overview of our process for contributions, but we have more information at [city-scrapers.org](https://city-scrapers.org/).
 
 ## Communication
 
@@ -28,9 +28,9 @@ Interested in contributing to City Scrapers projects but you don't see issues th
 
 ### 2. Make changes
 
-We use the [GitHub flow](https://guides.github.com/introduction/flow/) for development where contributors fork their own copy of the code, create a new branch in git, make changes and then a pull request for those changes to be merged. More info on this process in the [development documentation](https://cityscrapers.org/docs/development/#contribute).
+We use the [GitHub flow](https://guides.github.com/introduction/flow/) for development where contributors fork their own copy of the code, create a new branch in git, make changes and then a pull request for those changes to be merged. More info on this process in the [development documentation](https://city-scrapers.org/docs/development/#contribute).
 
-Once you've been assigned to work on an issue, check out our [development documentation](https://cityscrapers.org/docs/development/) for more info on how set up your local environment and write a scraper.
+Once you've been assigned to work on an issue, check out our [development documentation](https://city-scrapers.org/docs/development/) for more info on how set up your local environment and write a scraper.
 
 ### 3. Open a pull request
 

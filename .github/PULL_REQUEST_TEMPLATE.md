@@ -10,7 +10,7 @@ All checks are run in [GitHub Actions](https://github.com/features/actions). You
 
 - [ ] Tests are implemented
 - [ ] All tests are passing
-- [ ] Style checks run (see [documentation](https://cityscrapers.org/docs/development/) for more details)
+- [ ] Style checks run (see [documentation](https://city-scrapers.org/docs/development/) for more details)
 - [ ] Style checks are passing
 - [ ] Code comments from template removed
 
