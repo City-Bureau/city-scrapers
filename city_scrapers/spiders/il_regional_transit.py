@@ -1,6 +1,6 @@
-import re
-from datetime import datetime, time, timedelta
+from datetime import datetime
 
+import scrapy
 from city_scrapers_core.constants import (
     ADVISORY_COMMITTEE,
     BOARD,
@@ -9,109 +9,194 @@ from city_scrapers_core.constants import (
 )
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from dateutil.parser import parse as dateparser
 
 
 class IlRegionalTransitSpider(CityScrapersSpider):
     name = "il_regional_transit"
     agency = "Regional Transportation Authority"
     timezone = "America/Chicago"
-    start_urls = [
-        "http://rtachicago.granicus.com/ViewPublisher.php?view_id=5",
-        "http://rtachicago.granicus.com/ViewPublisher.php?view_id=4",
-    ]
-    custom_settings = {"ROBOTSTXT_OBEY": False}
-    location = {
-        "name": "RTA Administrative Offices",
-        "address": "175 W. Jackson Blvd, Suite 1650, Chicago, IL 60604",
+    all_meetings_url = "https://www.rtachicago.org/about-rta/boards-and-committees/meeting-materials?year={year}"  # noqa
+    upcoming_meetings_url = "https://www.rtachicago.org/about-rta/boards-and-committees/meeting-materials"  # noqa
+
+    _location = {
+        "name": "RTA Headquarters",
+        "address": "175 W. Jackson Blvd., Chicago, IL 60604",
     }
 
-    def parse(self, response):
-        three_months_ago = datetime.now() - timedelta(days=90)
-        for item in response.css(".row:not(#search):not(.keywords)"):
-            start = self._parse_start(item)
-            if start is None or (
-                start < three_months_ago
-                and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
-            ):
-                continue
-            title = self._parse_title(item)
-            meeting = Meeting(
-                title=title,
-                description="",
-                classification=self._parse_classification(title),
-                start=start,
-                end=None,
-                time_notes="Initial meetings begin at 9:00am, with other daily meetings following",  # noqa
-                all_day=False,
-                location=self.location,
-                links=self._parse_links(item),
-                source=(
-                    "https://rtachicago.org/about-us/board-meetings/meetings-archive"
-                ),
+    _time_note = (
+        "Check the source page to confirm details on meeting time and location."
+    )
+
+    _start_time = "9:00 AM"
+
+    custom_settings = {"ROBOTSTXT_OBEY": False}
+
+    """
+    During building the scraper for this source, it was observed
+    that some meetings are listed in both the upcoming and archived
+    sections of the website. To avoid duplicates, a set is used to
+    track meetings that have already been scraped. The meeting title
+    and start time are combined to create a unique identifier for each
+    meeting, which is then stored in the set. Before yielding a
+    meeting, the scraper checks if it has already been seen and skips
+    it if it has.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._scraped_meetings = set()
+
+    def start_requests(self):
+        yield scrapy.Request(
+            url=self.upcoming_meetings_url,
+            callback=self._get_all_meetings,
+        )
+
+    def _get_all_meetings(self, response):
+        upcoming_section = response.css(
+            ".bg-rtadarkgray-500.w-full.grid.grid-cols-1.p-8.mb-12.border-t-4.border-rtayellow-500"  # noqa
+        )
+
+        yield from self.get_upcoming_meetings(upcoming_section)
+
+        current_year = datetime.now().year
+        for year in range(current_year - 5, current_year + 1):
+            yield scrapy.Request(
+                url=self.all_meetings_url.format(year=year),
+                callback=self.parse,
             )
-            meeting["id"] = self._get_id(meeting)
+
+    def get_upcoming_meetings(self, upcoming_section):
+        upcoming_meetings = self._parse_upcoming_meetings(upcoming_section)
+
+        for item in upcoming_meetings:
+            seen_meeting = str(item["start_time"]) + " " + item["title"]
+            if seen_meeting in self._scraped_meetings:
+                continue
+            self._scraped_meetings.add(seen_meeting)
+
+            meeting = Meeting(
+                title=item["title"],
+                description="",
+                classification=self._parse_classification(item),
+                start=item["start_time"],
+                end=None,
+                all_day=False,
+                time_notes=self._time_note,
+                location=item["location"],
+                links=item["links"],
+                source=self.upcoming_meetings_url,
+            )
+
             meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
+
             yield meeting
 
-    @staticmethod
-    def _parse_classification(name):
-        name = name.upper()
-        if "CITIZENS ADVISORY" in name:
+    def parse(self, response):
+        meetings = response.css(
+            ".grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-8.my-6"
+        )
+        archived_data = meetings.css(
+            ".bg-rtadarkgray-500.border-t-4.border-rtayellow-500.p-6"
+        )
+
+        archived_meetings = self._parse_archived_meetings(archived_data)
+
+        for item in archived_meetings:
+            seen_meeting = str(item["start_time"]) + " " + item["title"]
+            if seen_meeting in self._scraped_meetings:
+                continue
+            self._scraped_meetings.add(seen_meeting)
+
+            meeting = Meeting(
+                title=item["title"],
+                description="",
+                classification=self._parse_classification(item),
+                start=item["start_time"],
+                end=None,
+                all_day=False,
+                time_notes=self._time_note,
+                location=item["location"],
+                links=item["links"],
+                source=self.upcoming_meetings_url,
+            )
+
+            meeting["status"] = self._get_status(meeting)
+            meeting["id"] = self._get_id(meeting)
+
+            yield meeting
+
+    def _parse_upcoming_meetings(self, upcoming_data):
+        meetings = []
+
+        for event in upcoming_data:
+            title = event.css(
+                ".font-heading.text-xl.md\\:text-2xl.text-white.mb-2::text"
+            ).get()
+            start_time = event.css(".text-xl.text-rtayellow-500.mb-4::text").get()
+            location_strings = event.css("p.text-white.text-sm.mb-4::text").getall()
+            links = []
+
+            item = {
+                "title": title,
+                "start_time": self._parse_start(start_time),
+                "location": self._parse_location(location_strings),
+                "links": links,
+            }
+            meetings.append(item)
+        return meetings
+
+    def _parse_archived_meetings(self, archived_data):
+        meetings = []
+        for event in archived_data:
+            title = event.css(".text-base.text-rtayellow-500.mb-4::text").get()
+            start_time = event.css(".text-lg.text-white.mb-4::text").get()
+
+            item = {
+                "title": title,
+                "start_time": dateparser(
+                    f"{start_time} {self._start_time}"
+                    if title == "Board Meeting"
+                    else start_time
+                ),
+                "location": self._location,
+                "links": self._parse_links(event),
+            }
+            meetings.append(item)
+        return meetings
+
+    def _parse_location(self, strings):
+        return {
+            "name": strings[0].strip() if len(strings) > 0 else "",
+            "address": strings[1].strip() if len(strings) > 1 else "",
+        }
+
+    def _parse_classification(self, item):
+        title = item["title"].lower()
+        if "citizen advisory" in title:
             return ADVISORY_COMMITTEE
-        if "COMMITTEE" in name:
+        if "committee" in title:
             return COMMITTEE
-        if "BOARD" in name:
+        if "board" in title:
             return BOARD
         return NOT_CLASSIFIED
 
-    @staticmethod
-    def _parse_title(item):
-        name_text = item.css(".committee::text").extract_first()
-        name_text = name_text.split(" on ")[0].split(" (")[0]
-        name_text = re.sub(r"\d{1,2}:\d{2}\s+[APM]{2}", "", name_text)
-        return name_text.strip()
+    def _parse_start(self, item):
+        start = item.replace("Upcoming:", "").replace(": ", " ").strip()
+        return dateparser(start)
 
-    @staticmethod
-    def _parse_start(item):
-        """
-        Retrieve the event date, defaulting to 9:00am
-        """
-        date_str = " ".join(item.css("div:first-child::text").extract()).strip()
-        title_str = item.css(".committee::text").extract_first()
-        time_obj = time(9, 0)
-        time_match = re.search(r"\d{1,2}(:\d{2})? ?[apm\.]{2,4}", title_str)
-        if time_match:
-            time_str = re.sub(r"[\s\.]", "", time_match.group()).lower()
-            time_obj = datetime.strptime(time_str, "%I:%M%p").time()
-        date_obj = datetime.strptime(date_str, "%b %d, %Y").date()
-        return datetime.combine(date_obj, time_obj)
+    def _parse_links(self, item):
+        links = []
+        links_container = item.css(".grid.grid-cols-2 a::attr(href)").getall()
+        links_title = item.css(".grid.grid-cols-2 h2::text").getall()
 
-    @staticmethod
-    def _parse_links(item):
-        documents = []
-        for doc_link in item.css("a"):
-            if "onclick" in doc_link.attrib:
-                doc_url = re.search(
-                    r"(?<=window\.open\(\').+(?=\',)", doc_link.attrib["onclick"]
-                ).group()
-                if doc_url.startswith("//"):
-                    doc_url = "http:" + doc_url
-            else:
-                doc_url = doc_link.attrib["href"]
-            doc_note = doc_link.css("img::attr(alt)").extract_first()
-            # Default to link title if alt text for doc icon isn't available
-            if doc_note is None:
-                if "title" in doc_link.attrib:
-                    doc_note = doc_link.attrib["title"]
-                else:
-                    continue
-            if "listen" in doc_note.lower():
-                doc_note = "Audio"
-            elif "agenda" in doc_note.lower():
-                doc_note = "Agenda"
-            elif "minutes" in doc_note.lower():
-                doc_note = "Minutes"
-            elif "video" in doc_note.lower():
-                doc_note = "Video"
-            documents.append({"href": doc_url, "title": doc_note})
-        return documents
+        for link, title in zip(links_container, links_title):
+            links.append(
+                {
+                    "title": title,
+                    "href": link,
+                }
+            )
+        return links
