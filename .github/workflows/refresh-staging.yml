@@ -38,8 +38,8 @@ jobs:
           SKIPPED_PRS=""
           MERGED_PRS=""
 
-          PRS=$(gh pr list --state open --json number,author,isDraft \
-            --jq '[.[] | select(.author.is_bot == false and .isDraft == false)] | .[].number')
+          PRS=$(gh pr list --state open --json number,author,isDraft,createdAt \
+            --jq '[.[] | select(.author.is_bot == false and .isDraft == false and (.createdAt | startswith("2026")))] | .[].number')
 
           if [ -z "$PRS" ]; then
             echo "No open PRs to merge"
