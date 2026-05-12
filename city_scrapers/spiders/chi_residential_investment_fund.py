@@ -10,7 +10,7 @@ class ChiResidentialInvestmentFundSpider(CityScrapersSpider):
     name = "chi_residential_investment_fund"
     agency = "Chicago Residential Investment Fund (RIF)"
     timezone = "America/Chicago"
-    start_urls = ["https://www.chicagorif.com/about"]
+    start_urls = ["https://www.chicagorif.com/copy-of-about"]
 
     _location = {
         "name": "City Hall, Rm. 1003A",
