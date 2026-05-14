@@ -1,0 +1,95 @@
+{
+  "repo_name": "city-scrapers-atl",
+  "assessment_date": "2025-11-14T02:15:26.330116",
+  "summary": {
+    "total_scrapers": 3,
+    "functional": 0,
+    "failed": 3,
+    "success_rate": 0.0
+  },
+  "failure_breakdown": {
+    "NOT_EXECUTED": 3
+  },
+  "effort_summary": {
+    "total_hours_estimated": 0,
+    "by_tier": {
+      "TRIVIAL": 0,
+      "LOW": 0,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "VERY_HIGH": 0
+    }
+  },
+  "priority_distribution": {
+    "CRITICAL": 0,
+    "HIGH": 0,
+    "MEDIUM": 3,
+    "LOW": 0
+  },
+  "harambe_candidates": 0,
+  "strategic_assessment": {
+    "overall_health": "CRITICAL",
+    "recommended_approach": "Focus on medium priority scrapers for steady improvement",
+    "blocking_issues": [
+      "None identified"
+    ],
+    "estimated_recovery_time": "1 week with focused effort"
+  },
+  "scrapers": [
+    {
+      "repo_name": "city-scrapers-atl",
+      "scraper_name": "Virtual Event",
+      "file_path": "city_scrapers/spiders/atl_beltline.py",
+      "agency_name": "Atlanta BeltLine Inc.",
+      "start_urls": [
+        "https://beltline.org/wp-json/tribe/events/v1/events"
+      ],
+      "execution_results": {
+        "status": "NOT_EXECUTED",
+        "note": "API-only analysis, no execution performed"
+      },
+      "complexity_assessment": {
+        "lines_of_code": 72,
+        "complexity_rating": "simple",
+        "dependencies": [],
+        "last_modified": "2022-08-13T01:15:12Z"
+      }
+    },
+    {
+      "repo_name": "city-scrapers-atl",
+      "scraper_name": "atl_boe",
+      "file_path": "city_scrapers/spiders/atl_boe.py",
+      "agency_name": "Atlanta Board of Education",
+      "start_urls": [],
+      "execution_results": {
+        "status": "NOT_EXECUTED",
+        "note": "API-only analysis, no execution performed"
+      },
+      "complexity_assessment": {
+        "lines_of_code": 84,
+        "complexity_rating": "simple",
+        "dependencies": [],
+        "last_modified": "2024-05-10T18:36:48Z"
+      }
+    },
+    {
+      "repo_name": "city-scrapers-atl",
+      "scraper_name": "Zoning Committee",
+      "file_path": "city_scrapers/spiders/atl_city_council.py",
+      "agency_name": "Atlanta City Council: {}",
+      "start_urls": [],
+      "execution_results": {
+        "status": "NOT_EXECUTED",
+        "note": "API-only analysis, no execution performed"
+      },
+      "complexity_assessment": {
+        "lines_of_code": 36,
+        "complexity_rating": "simple",
+        "dependencies": [
+          "IQM2Mixin"
+        ],
+        "last_modified": "2022-08-31T01:41:12Z"
+      }
+    }
+  ]
+}
