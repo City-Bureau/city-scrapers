@@ -1,0 +1,11 @@
+name: Parse spiders
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "city_scrapers/spiders/**.py"
+
+jobs:
+  parse:
+    uses: City-Bureau/city-scrapers-core/.github/workflows/parse-spiders.yml@main
