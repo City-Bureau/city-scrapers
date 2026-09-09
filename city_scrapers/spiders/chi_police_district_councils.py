@@ -1,5 +1,6 @@
 import re
-from datetime import datetime, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import scrapy
 from city_scrapers_core.constants import COMMISSION
@@ -39,7 +40,7 @@ class ChiPoliceDistrictCouncilsSpider(CityScrapersSpider):
             self.logger.error("Could not find nonce on page: %s", response.url)
             return
         nonce = match.group(1)
-        now = datetime.now(timezone.utc).replace(tzinfo=None)
+        now = datetime.now(ZoneInfo(self.timezone)).replace(tzinfo=None)
         start_date = now - relativedelta(years=2)
         end_date = now + relativedelta(months=6)
 
