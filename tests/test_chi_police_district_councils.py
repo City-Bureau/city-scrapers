@@ -12,11 +12,6 @@ from city_scrapers.spiders.chi_police_district_councils import (
     ChiPoliceDistrictCouncilsSpider,
 )
 
-html_response = file_response(
-    join(dirname(__file__), "files", "chi_police_district_councils.html"),
-    url="https://ccpsa.chicago.gov/public-meeting-calendar/",
-)
-
 example_detail_page_response = file_response(
     join(
         dirname(__file__),

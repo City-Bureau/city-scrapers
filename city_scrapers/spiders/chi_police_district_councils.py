@@ -26,8 +26,6 @@ class ChiPoliceDistrictCouncilsSpider(CityScrapersSpider):
         re.IGNORECASE,
     )
 
-    ADDRESS_RE = re.compile(r"\b[A-Z]{2}\s+\d{5}\b")
-
     def start_requests(self):
         yield scrapy.Request(
             url=self.calendar_url,
