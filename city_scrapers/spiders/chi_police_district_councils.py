@@ -198,7 +198,7 @@ class ChiPoliceDistrictCouncilsSpider(CityScrapersSpider):
             if sep and not re.match(r"^\d", name):
                 return {
                     "name": name.strip(),
-                    "address": address.strip(),
+                    "address": address.replace(name, "").strip(),
                 }, ""
             return {
                 "name": "",
