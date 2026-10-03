@@ -13,7 +13,9 @@ That’s why City Bureau is working together with a team of civic coders to deve
 
 ## What are the City Scrapers?
 
-The City Scrapers collect information about public meetings. Every day, the City Scrapers go out and fetch information about new meetings from the Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them.
+The City Scrapers collect information about upcoming public meetings, for Documenters to use as a reference when they select their assignments. This information includes meeting dates, times, and locations, as well as brief overviews of what will happen at them and possibly who is expected to attend.
+
+Every day, the City Scrapers go out and fetch information about new meetings from the Chicago city council's website, the local school council's website, the Chicago police department's website, and many more. This happens automatically so that a person doesn't have to do it. The scrapers store all of the meeting information in a database for journalists at City Bureau to report on them.
 
 Community members are also welcome to use this code to set up their own databases.
 
