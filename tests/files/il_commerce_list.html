@@ -1,0 +1,1781 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN>
+<html lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Calendar</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/Content/Accessibility.css">
+    <link href="/Content/css/4.5.0?v=-TtCSAArshTG0UOrCBb_xIJ0Aa-ntAP53HDJ7xtTsCc1" rel="stylesheet"/>
+
+    <style>
+        .btn-circle.btn-xs {
+            width: 16px;
+            height: 16px;
+            padding: 0px 0px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .btn-circle:before, .btn-circle:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .btn-circle.plus:before, .btn-circle.plus:after {
+            background: white;
+            box-shadow: 1px 1px 1px #ffffff9e;
+        }
+
+        .btn-circle.plus:before {
+            width: 2px;
+            margin: 3px auto;
+        }
+
+        .btn-circle.plus:after {
+            margin: auto 3px;
+            height: 2px;
+            box-shadow: none;
+        }
+
+        .btn-circle.plus:before, .btn-circle.plus:after {
+            background: white;
+            box-shadow: 1px 1px 1px #ffffff9e;
+        }
+
+        .btn-circle.plus:before {
+            width: 2px;
+            margin: 3px auto;
+        }
+
+        .btn-circle.plus:after {
+            margin: auto 3px;
+            height: 2px;
+            box-shadow: none;
+        }
+
+
+        .btn-circle.exclamation:before, .btn-circle.exclamation:after {
+            content: "!"; /*background:white;*/
+            box-shadow: 1px 1px 1px #ffffff9e;
+        }
+
+        .btn-circle.exclamation:before {
+            margin-top: -6px; /*width: 2px; margin: 3px auto;*/
+        }
+
+        .btn-circle.exclamation:after { /*margin: auto 3px; height: 2px;*/
+            box-shadow: none;
+        }
+
+        .wgcurrent::before {
+            font-family: "bootstrap-icons";
+            content: "\f3ee";
+            font-weight: normal;
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+    </style>
+    
+    <link id="statuteReportsStyleSheet" href="/content/icc/bootstrap/4.5.0/css/icc-calendar.css" type="text/css" rel="stylesheet" />
+
+    
+    <!--[if lt IE 9]><script src="https://code.google.com/p/html5shiv/html5shiv.js"></script><![endif]-->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-36363678-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9RST29GB39"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-9RST29GB39');
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+    </script>
+    <script src="https://assets.adobedtm.com/c318d2739692/96e37aff7009/launch-4ef36d3c8aed.min.js" async></script>
+</head>
+<body id="Body1">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light soi-navbar soi-navbar-expand-lg soi-icc-navbar soi-icc-navbar-002 d-print-none">
+            <div class="container">
+                <a class="navbar-brand soi-navbar-brand soi-icc-navbar-brand-002 d-md-none" href="/"><img src="/images/icc-logo2020.png" class="d-inline-block align-top" alt="icc logo"></a>
+                <a class="navbar-brand soi-navbar-brand soi-icc-navbar-brand-002 d-none d-md-flex" href="/"><img src="/images/icc-logo2020.png" class="m-0" alt="icc logo"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav soi-navbar-nav soi-icc-navbar-nav col">
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/consumers" class="btn soi-navbar-btn soi-icc-navbar-btn">Consumers</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/complaints/" title="File a Complaint">File a Complaint</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/consumers/make-a-public-comment" title="Make a Public Comment">Make a Public Comment</a>
+									<a class="dropdown-item" href="https://plugin.illinois.gov/" title="Electric Choice">Electric Choice</a>
+									<a class="dropdown-item" href="/natural-gas-choice" title="Natural Gas Choice">Natural Gas Choice</a>
+									<a class="dropdown-item" href="/consumers" title="Financial Assistance Programs">Financial Assistance Programs</a>
+									<a class="dropdown-item" href="/consumers" title="Consumer Education">Consumer Education</a>
+									<a class="dropdown-item" href="/consumers" title="Energy Efficiency and Conservation">Energy Efficiency and Conservation</a>
+								</div>
+							</div>
+						</li>
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/publicutility/" class="btn soi-navbar-btn soi-icc-navbar-btn">Public Utilities</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/chief-clerk-office">Chief Clerk&#39;s Office</a>
+									<a class="dropdown-item" href="/home/one-call-enforcement">One-Call Education and Enforcement</a>
+									<a class="dropdown-item" href="/home/Illinois-Gas-Pipeline-Safety-Program">Pipeline Safety Program</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/authority/alternative-gas-suppliers">Alternative Gas Suppliers (AGS)</a>
+									<a class="dropdown-item" href="/authority/alternative-retail-electric-suppliers">Alternative Retail Electric Suppliers</a>
+									<a class="dropdown-item" href="/authority/electric-utility">Electric Utility</a>
+									<a class="dropdown-item" href="/authority/electric-vehicle-charging-station-installer">Electric Vehicle Charging Station Installer</a>
+									<a class="dropdown-item" href="/authority/energy-efficiency-measures-installer">Energy Efficiency Measures Installer</a>
+									<a class="dropdown-item" href="/authority/inter-exchange-carrier">Inter-Exchange Carrier</a>
+									<a class="dropdown-item" href="/authority/local-exchange-carrier">Local Exchange Carrier (LEC)</a>
+									<a class="dropdown-item" href="/authority/natural-gas-utility">Natural Gas Utility</a>
+									<a class="dropdown-item" href="/authority/sewer">Sewer</a>
+									<a class="dropdown-item" href="/authority/water">Water</a>
+									<a class="dropdown-item" href="/authority">View All Authorities</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/home/cybersecurityandriskmanagement">Office of Cybersecurity and Risk Management</a>
+									<a class="dropdown-item" href="/home/diversity-and-community-affairs">Office of Diversity and Community Affairs</a>
+									<a class="dropdown-item" href="/ormd/">Office of Retail Market Development</a>
+								</div>
+							</div>
+						</li>
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/transportation" class="btn soi-navbar-btn soi-icc-navbar-btn">Transportation</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/transportation/services">Transportation Services</a>
+									<a class="dropdown-item" href="/home/icc-police">ICC Police</a>
+									<a class="dropdown-item" href="/rail-safety" title="Rail Safety">Rail Safety</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/authority/brokers-license" title="Brokers">Broker's License</a>
+									<a class="dropdown-item" href="/authority/certificate-of-exemption">Certificate of Exemption</a>
+									<a class="dropdown-item" href="/authority/collateral-recovery" title="Collateral Recovery">Collateral Recovery</a>
+									<a class="dropdown-item" href="/authority/household-goods-movers" title="Household Goods Movers">Household Goods Movers</a>
+									<a class="dropdown-item" href="/authority/public-carrier-certificate">Public Carrier Certificate</a>
+									<a class="dropdown-item" href="/authority/relocation-towing" title="Relocation Towing">Relocation Towing</a>
+									<a class="dropdown-item" href="/authority/safety-relocator" title="Safety Relocator">Safety Relocator</a>
+									<a class="dropdown-item" href="/authority/unified-carrier-registration" title="UCR Registration">UCR Registration</a>
+									<a class="dropdown-item" href="/authority/warehousing" title="Warehousing">Warehousing</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/complaints/" title="File a Complaint">File A Complaint</a>
+								</div>
+							</div>
+						</li>
+
+
+
+						
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/about/News" class="btn soi-navbar-btn soi-icc-navbar-btn">News</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/about/Media-Resource">Media Resources</a>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/about" class="btn soi-navbar-btn soi-icc-navbar-btn">About</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/about/commissioners">Chairman and Commissioners</a>
+									<a class="dropdown-item" href="/about/diversity-and-inclusion">Diversity & Inclusion</a>
+									<a class="dropdown-item" href="/icc-authority">ICC Legal Authority and Administrative Rules</a>
+									<a class="dropdown-item" href="/about/oversight">ICC Oversight</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/about/contracts">Contracts and Solicitations</a>
+									<a class="dropdown-item" href="/about/employment">Employment Opportunities</a>
+									<a class="dropdown-item" href="/meetings/">Event Calendar</a>
+									<a class="dropdown-item" href="/forms">Forms</a>
+									<a class="dropdown-item" href="/about/FOIA">Freedom of Information Act</a>
+									<a class="dropdown-item" href="/icc-reports">ICC Reports</a>
+									<a class="dropdown-item" href="/about/news">News</a>
+									<a class="dropdown-item" href="/about/sunshine-project">Sunshine Project</a>
+									<a class="dropdown-item" href="/about/iitaa">Accessibility</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/home/centennial">History of the ICC</a>
+									<a class="dropdown-item" href="/about/contact-us">Contact Us</a>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/about/Media/" class="btn soi-navbar-btn soi-icc-navbar-btn">Listen Live</a>
+							</div>
+						</li>
+					</ul>
+					<div class="col align-self-center align-self-end p-0 my-2 my-lg-0 col-md-3">
+						<form action="/search/index" class="input-group input-group-sm" method="post"><input name="__RequestVerificationToken" type="hidden" value="4v9JIi6yOfE5atFfGj_4REFsMu2aWFM4qDNGNDQMFa_fsz3m_kmCkIrVJ9SEIA4VRCpcxgDNxDnygUyvOiNujwSuoew1" /><input aria-label="Search text" class="form-control text-box single-line" data-val="true" data-val-length="Search text length must be greater than or equal 3 characters." data-val-length-min="3" id="SimpleText" name="SimpleText" placeholder="Search text" type="text" value="" />    <div class="input-group-append">
+        <button class="btn btn-outline-secondary" style="color: #525252" id="SiteQuickSearchButton" type="submit" title="Go">Go</button>
+    </div>
+    <div class="form-group invisible">
+        <input class="invisible" data-val="true" data-val-length="If 1+1=7 then enter information otherwise don&#39;t" data-val-length-max="0" id="ChristopherRobinText" name="ChristopherRobinText" title="If 1+1=7 then enter information otherwise don&#39;t" type="hidden" value="" />
+    </div>
+</form>
+						<script type="text/javascript" src=https://cdn.weglot.us/weglot.min.js></script>
+						<script>
+							Weglot.initialize({
+								api_key: 'wg_2e318679a802513049c1f9951692e01b4'
+							});
+						</script>
+
+					</div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        
+
+<div class="soi-page-header soi-icc-page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <ol class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                </ol>
+                <h1>Event Calendar</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container soi-container soi-icc-container">
+    
+    <div class="row">
+        <div class="col-md-3 bg-light">
+            <div class="hidden-print">
+                <div class="soi-icc-calendar-mini">
+                    <div class="month">
+                        October 2026
+                        <a class="month-nav" href="/meetings?bd=639297792000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">&gt;</a>
+                        <a class="month-nav" href="/meetings?bd=639245088000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">&lt;</a>
+                    </div>
+                    <div class="days"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+                        <div class="days">
+<a class=" other-month" href="/meetings?bd=639260640000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">27</a><a class=" other-month" href="/meetings?bd=639261504000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">28</a><a class=" other-month" href="/meetings?bd=639262368000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">29</a><a class=" other-month" href="/meetings?bd=639263232000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">30</a><a class="" href="/meetings?bd=639264096000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">1</a><a class="" href="/meetings?bd=639264960000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">2</a><a class="" href="/meetings?bd=639265824000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">3</a>                        </div>
+                        <div class="days">
+<a class="" href="/meetings?bd=639266688000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">4</a><a class="" href="/meetings?bd=639267552000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">5</a><a class="" href="/meetings?bd=639268416000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">6</a><a class="" href="/meetings?bd=639269280000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">7</a><a class="" href="/meetings?bd=639270144000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">8</a><a class="today selected" href="/meetings?bd=639271008000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">9</a><a class=" selected" href="/meetings?bd=639271872000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">10</a>                        </div>
+                        <div class="days">
+<a class=" selected" href="/meetings?bd=639272736000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">11</a><a class=" selected" href="/meetings?bd=639273600000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">12</a><a class=" selected" href="/meetings?bd=639274464000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">13</a><a class=" selected" href="/meetings?bd=639275328000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">14</a><a class=" selected" href="/meetings?bd=639276192000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">15</a><a class=" selected" href="/meetings?bd=639277056000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">16</a><a class=" selected" href="/meetings?bd=639277920000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">17</a>                        </div>
+                        <div class="days">
+<a class=" selected" href="/meetings?bd=639278784000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">18</a><a class=" selected" href="/meetings?bd=639279648000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">19</a><a class=" selected" href="/meetings?bd=639280512000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">20</a><a class=" selected" href="/meetings?bd=639281376000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">21</a><a class=" selected" href="/meetings?bd=639282240000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">22</a><a class=" selected" href="/meetings?bd=639283104000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">23</a><a class=" selected" href="/meetings?bd=639283968000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">24</a>                        </div>
+                        <div class="days">
+<a class=" selected" href="/meetings?bd=639284832000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">25</a><a class=" selected" href="/meetings?bd=639285696000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">26</a><a class=" selected" href="/meetings?bd=639286560000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">27</a><a class=" selected" href="/meetings?bd=639287424000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">28</a><a class=" selected" href="/meetings?bd=639288288000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">29</a><a class=" selected" href="/meetings?bd=639289152000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">30</a><a class=" selected" href="/meetings?bd=639290016000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">31</a>                        </div>
+                    <div class="items-to-show">Items to Show</div>
+<form action="/meetings/index" class="" id="Form100" method="post">                        <div class="form-check soi-icc-calendar-mini-check">
+                            <input checked="checked" class="form-check-input" id="scm" name="scm" onchange="this.form.submit();" type="checkbox" value="true" /><input name="scm" type="hidden" value="false" />
+                            <label class="form-check-label" for="scm">Commission Meetings</label>
+                        </div>
+                        <div class="form-check soi-icc-calendar-mini-check">
+                            <input checked="checked" class="form-check-input" id="sps" name="sps" onchange="this.form.submit();" type="checkbox" value="true" /><input name="sps" type="hidden" value="false" />
+                            <label class="form-check-label" for="sps">Policy Sessions</label>
+                        </div>
+                        <div class="form-check soi-icc-calendar-mini-check">
+                            <input checked="checked" class="form-check-input" id="sh" name="sh" onchange="this.form.submit();" type="checkbox" value="true" /><input name="sh" type="hidden" value="false" />
+                            <label class="form-check-label" for="sh">Hearings</label>
+                        </div>
+                        <div class="form-check soi-icc-calendar-mini-check">
+                            <input class="form-check-input" id="ssh" name="ssh" onchange="this.form.submit();" type="checkbox" value="true" /><input name="ssh" type="hidden" value="false" />
+                            <label class="form-check-label" for="ssh">State Holidays</label>
+                        </div>
+                        <div class="form-check soi-icc-calendar-mini-check">
+                            <input checked="checked" class="form-check-input" id="sjc" name="sjc" onchange="this.form.submit();" type="checkbox" value="true" /><input name="sjc" type="hidden" value="false" />
+                            <label class="form-check-label" for="sjc">Underground Utility Damage Prevention Advisory Committee</label>
+                        </div>
+                        <div class="form-check soi-icc-calendar-mini-check">
+                            <input checked="checked" class="form-check-input" id="smceb" name="smceb" onchange="this.form.submit();" type="checkbox" value="true" /><input name="smceb" type="hidden" value="false" />
+                            <label class="form-check-label" for="smceb">Motor Carrier Employee Board</label>
+                        </div>
+                        <input id="beginDate" name="bd" type="hidden" value="639271008000000000" />
+                        <input id="daysToShow" name="dts" type="hidden" value="32" />
+</form>                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row hidden-print bg-light mb-3 py-3">
+                <div class="col-6">
+                    <a class="btn btn-sm btn-outline-secondary active" href="/meetings?bd=639271008000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">Today</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=639245088000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">&lt;-</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=639297792000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">-&gt;</a>
+                </div>
+                <div class="col-6 text-right">
+                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=639271008000000000&amp;dts=1&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">1 Day</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=639271008000000000&amp;dts=7&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">7 Day</a>
+                    
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="bg-light text-dark"><small>96 results</small></div>
+                    <ul class="list-unstyled soi-icc-card-list soi-icc-list-calendar soi-icc-list-striped soi-icc-list-striped-blue">
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>13</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151045">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0331                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 13, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>13</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151384">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0364                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 13, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>13</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151287">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0443                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 13, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>13</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151496">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Prehearing for 26-0585                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 13, 2026 1:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>13</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151477">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Prehearing for 26-0639                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 13, 2026 2:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>13</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151505">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0612                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 13, 2026 3:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49431">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T24-0107                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151478">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0402                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 10:00 AM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151220">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0439                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151438">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0599                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151479">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0600                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151457">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0516                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151434">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1106                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 1:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151476">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Prehearing for 26-0648                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 1:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151421">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0233                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 2:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>14</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151420">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0145                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 14, 2026 2:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/150893">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1046                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 9:00 AM
+                                                    <span class="d-block">Springfield - Hearing Room A</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/150894">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1047                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 9:00 AM
+                                                    <span class="d-block">Springfield - Hearing Room A</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/150895">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1048                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 9:00 AM
+                                                    <span class="d-block">Springfield - Hearing Room A</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151385">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 26-0364                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 9:00 AM
+                                                    <span class="d-block">Chicago - Main Hearing Room</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151046">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 26-0331                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 10:00 AM
+                                                    <span class="d-block">Chicago - N - 808</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151312">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0517                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151481">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0650                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151499">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Prehearing for 26-0657                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151498">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Prehearing for 26-0649                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151423">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1086                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 11:00 AM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/commission-meeting/21716">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Regular Open Meeting                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 11:30 AM
+                                                    <span class="d-block">Springfield - Hearing Room A, First Floor, Leland Building</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151387">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0264                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 1:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151347">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0022                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 1:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>15</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151194">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1014                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 15, 2026 1:30 PM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>16</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151386">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 26-0364                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 16, 2026 9:00 AM
+                                                    <span class="d-block">Chicago - Main Hearing Room</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>16</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151517">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0632                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 16, 2026 9:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>16</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151482">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Prehearing for 26-0647                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 16, 2026 10:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>19</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151068">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0236                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 19, 2026 1:30 PM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>20</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49449">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T25-0103                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 20, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>20</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151155">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 21-0259                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 20, 2026 10:00 AM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>20</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151495">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1086                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 20, 2026 10:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>20</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151516">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0523                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 20, 2026 2:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>20</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/motor-carrier-employee-board/21731">
+                                            <h2 class="h4">
+                                                Motor Carrier Employee Board<br />Motor Carrier Employee Board Meeting                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 20, 2026 2:00 PM
+                                                    <span class="d-block">Springfield - Transportation Information Center, First Floor, Leland Building</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>21</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49177">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T13-0048                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 21, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>21</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151510">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 20-0848                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 21, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>21</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151486">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0402                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 21, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>21</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151449">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for M2026-09834                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 21, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>21</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151106">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0379                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 21, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>21</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/julie-committee-meeting/223017">
+                                            <h2 class="h4">
+                                                Underground Utility Damage Prevention Advisory Committee<br />Committee Meeting                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 21, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>21</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49549">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T26-0049                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 21, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>21</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151500">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0576                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 21, 2026 2:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49450">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T24-0094                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49527">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T26-0004                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151461">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-0611                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151463">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0634                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151539">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 26-0354                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49528">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T26-0005                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 10:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/150993">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1019                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 10:30 AM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151493">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-0769                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49464">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T25-0021                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 11:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>22</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151540">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0238                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 22, 2026 1:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>23</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49432">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T25-0069                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 23, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>23</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151502">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0636                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 23, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>23</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151507">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0458                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 23, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>23</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49550">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T20-0058                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 23, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>26</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151535">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1094                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 26, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>26</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151537">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0157                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 26, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>26</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151489">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-0330                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 26, 2026 1:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>27</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151511">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0142                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 27, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>27</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151512">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0383                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 27, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>27</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151480">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0488                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 27, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>27</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151533">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0705                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 27, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>27</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151513">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0262                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 27, 2026 11:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>27</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151389">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0555                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 27, 2026 2:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>28</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151278">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 26-0498                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 28, 2026 10:00 AM
+                                                    <span class="d-block">Chicago - Main Hearing Room</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>28</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/150951">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1051                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 28, 2026 10:00 AM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>28</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/150952">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1052                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 28, 2026 10:30 AM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>28</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/case-schedule-event/49479">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Hearing for T25-0104                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 28, 2026 1:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>28</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151518">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1036                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 28, 2026 2:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>29</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151442">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0396                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 29, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>29</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151466">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0591                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 29, 2026 10:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>29</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/commission-meeting/21717">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Regular Open Meeting                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 29, 2026 11:30 AM
+                                                    <span class="d-block">Chicago - Eighth Floor, Bilandic Building</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>29</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151374">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Prehearing for 26-0562                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 29, 2026 1:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Oct - 2026</div><div>29</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151515">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0633                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            October 29, 2026 2:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>2</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151456">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0552                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 2, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>2</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151528">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0449                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 2, 2026 12:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>2</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151018">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0299                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 2, 2026 2:00 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>4</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151019">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 26-0299                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 4, 2026 9:00 AM
+                                                    <span class="d-block">Springfield - Hearing Room A</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>4</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151294">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0425                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 4, 2026 10:00 AM
+                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>4</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151529">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1096                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 4, 2026 11:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>4</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151412">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0551                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 4, 2026 1:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>5</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151020">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 26-0299                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 5, 2026 9:00 AM
+                                                    <span class="d-block">Springfield - Hearing Room A</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>5</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151281">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 25-1051                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 5, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>5</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151509">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-0999                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 5, 2026 10:00 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>5</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151501">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0265                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 5, 2026 10:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>5</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151282">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 25-1052                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 5, 2026 10:30 AM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>5</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/commission-meeting/21718">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Regular Open Meeting                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 5, 2026 11:30 AM
+                                                    <span class="d-block">Springfield - Hearing Room A, First Floor, Leland Building</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>5</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151431">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0123                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 5, 2026 1:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>5</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151534">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Status for 26-0100                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 5, 2026 3:30 PM
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
+                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
+                                    <div class="card-header"><div>Nov - 2026</div><div>6</div></div>
+                                    <div class="card-body p-0 pl-2 align-text-top">
+                                        <a class="day" href="/meetings/meeting/hearing/151021">
+                                            <h2 class="h4">
+                                                Illinois Commerce Commission<br />Evidentiary for 26-0299                                            </h2>
+                                        </a>
+                                        <h3 class="h5 mt-3">
+                                            November 6, 2026 9:00 AM
+                                                    <span class="d-block">Springfield - Hearing Room A</span>
+                                                                                    </h3>
+                                    </div>
+                                </div>
+                            </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-lg-4 text-center">
+                    <ul class="list-unstyled pb-2 border-bottom">
+                        <li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/meetings/calendar/commission-meeting">Commission Meeting Calendar</a></li>
+                        <li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/meetings/list/commission-meeting">Commission Meeting List</a></li>
+                        <li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/meetings/list/policy-session">Policy Session List</a></li>
+                    </ul>
+                    <ul class="list-unstyled pb-2 border-bottom">
+<li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/downloads/public/puWeeklyDocket/20261012.pdf" title="October 12, 2026 Public Utility Docket">October 12, 2026 Public Utility Docket</a></li><li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/downloads/public/trWeeklyDocket/20261012.pdf" title="October 12, 2026 Transportation Docket">October 12, 2026 Transportation Docket</a></li><li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/downloads/public/puWeeklyDocket/20261005.pdf" title="October 5, 2026 Public Utility Docket">October 5, 2026 Public Utility Docket</a></li><li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/downloads/public/trWeeklyDocket/20261005.pdf" title="October 5, 2026 Transportation Docket">October 5, 2026 Transportation Docket</a></li>                    </ul>                    <ul class="list-unstyled">
+                        <li><a class="btn btn-outline-secondary btn-block" href="/About/Media">Meeting Webcast</a></li>
+                    </ul>
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </main>
+    <footer id="footer" class="d-print-none">
+        <div class="soi-footer mt-4">
+            <h2 class="sr-only">Footer</h2>
+            <div class="soi-footer-agency">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Office Locations</h3>
+                            <a class="nav-link" href="https://www.google.com/maps/place/527+East+Capitol+Avenue,Springfield,IL">Leland Building <span class="noicon">527 East Capitol Avenue, Springfield, IL 62701</span></a>
+                            <a class="nav-link" href="https://www.google.com/maps/place/160+North+LaSalle+Street,Chicago,IL">Michael A. Bilandic Building <span class="noicon">160 North LaSalle, Ste. C-800, Chicago, IL 60601</span></a>
+                            <a class="nav-link" href="https://www.google.com/maps/place/9511+Harrison+St,+Des+Plaines,+IL+60016/">Compliance Office <span class="noicon">9511 Harrison, Des Plaines, IL 60016</span></a>
+                        </div>
+                        <div class="col-md-3">
+                            <h3>Useful Links</h3>
+                            <a class="nav-link" href="/privacy.htm">Privacy</a>
+                            <a class="nav-link" href="/about/contact-us">Contact Us</a>
+                            <a class="nav-link" href="/about/FOIA">Freedom of Information Act</a>
+                            <a class="nav-link" href="/about/news">News</a>
+                            <a class="nav-link" href="/meetings/"><i class="icomoon-calendar"></i>Event Calendar</a>
+                            <a class="nav-link" href="/about/employment"><i class="icomoon-user-tie"></i>Employment Opportunities</a>
+                        </div>
+                        <div class="col-md-3">
+                            <h3>Stay Connected</h3>
+                            <div class="soi-icc-socialfollow soi-icc-socialfollow-48 w-100 text-center text-lg-right mt-2">
+                                <a class="twitter mr-2" href="https://twitter.com/ILCommerceComm" title="twitter"></a>
+                                <a class="youtube mr-2" href="https://www.youtube.com/channel/UCH8WDc1Dq0RUzqBzqUTMQFA" title="YouTube"></a>
+                                <a class="linkedin" href="https://www.linkedin.com/in/illinois-commerce-commission-865672161" title="LinkedIn"></a>
+                            </div><br />
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="soi-footer-state py-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9 p-0"><a title="Illinois.gov" href="//www.illinois.gov/" target="_blank"><img alt="Illinois.gov" src="//webservices.illinois.gov/CDN/Content/images/IllinoisGov.png"></a><ul class="list-unstyled list-inline m-0"><li class="list-inline-item"><a class="nav-link" href="//www.dhs.state.il.us/page.aspx?item=32765" target="_blank">Web Accessibility</a></li><li class="list-inline-item"><a class="nav-link" href="//cmsapps.illinois.gov/TeleDirectory" target="_blank">State Phone Directory</a></li><li class="list-inline-item"><a class="nav-link" href="https://www.illinois.gov/about/privacy.html">Illinois Privacy Info</a></li></ul></div>
+                        <div class="col-md-3 p-0 pt-2 text-center text-md-right soi-footer-governor-copyright"><a class="nav-link p-0 soi-footer-governor" href="https://www2.illinois.gov/sites/gov" target="_blank">Governor JB Pritzker</a>&copy; 2026 <a class="nav-link d-inline-block p-0 soi-footer-copyright" href="//www.illinois.gov/" target="_blank">State of Illinois</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    
+    
+    <script src="/bundles/clipboardjs?v=qxQpK7WptfsnHcDMKhG557lgeW4AOvV21Bizlhd6QC81"></script>
+
+    
+    
+    <script async src=https://siteimproveanalytics.com/js/siteanalyze_6284073.js></script>
+</body>
+</html>
