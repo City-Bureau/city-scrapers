@@ -73,14 +73,17 @@ def test_location():
 
 
 def test_source():
-    assert parsed_items[0]["source"] == "https://agency.icjia-api.cloud/graphql"  # noqa
+    assert (
+        parsed_items[0]["source"]
+        == "https://icjia.illinois.gov/news/meetings/traffic-and-pedestrian-stop-statistical-study-task-force-july-25-2024/"  # noqa
+    )
 
 
 def test_links():
     assert parsed_items[0]["links"] == [
         {
             "href": "https://agency.icjia-api.cloud/uploads/Traffic_Data_Stop_Task_Force_Agenda_07_24_24_KA_TL_df57bde328.pdf",  # noqa
-            "title": "Traffic Data Stop Task Force Agenda 07-24-24 KA TL.pdf",
+            "title": "Traffic Data Stop Task Force Agenda 07-24-24 KA TL",
         }
     ]
 
@@ -91,3 +94,25 @@ def test_classification():
 
 def test_all_day():
     assert parsed_items[0]["all_day"] is False
+
+
+@pytest.mark.parametrize(
+    "name,expected",
+    [
+        ("Budget Committee Agenda 082726.pdf", "Budget Committee Agenda"),
+        (
+            "ICJIA Authority Board Agenda - 10.08.2026.pdf",
+            "ICJIA Authority Board Agenda",
+        ),
+        (
+            "ICJIA Violence Prevention Ad Hoc Committee Agenda 8-13-26.pdf",
+            "ICJIA Violence Prevention Ad Hoc Committee Agenda",
+        ),
+        (
+            "Missing and Murdered Task Force Agenda 7.13.2026.pdf",
+            "Missing and Murdered Task Force Agenda",
+        ),
+    ],
+)
+def test_parse_link_title(name, expected):
+    assert spider._parse_link_title(name) == expected

@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
 
@@ -20,6 +21,8 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
     agency = "Illinois Criminal Justice Information Authority"
     timezone = "America/Chicago"
     attachments_base_url = "https://agency.icjia-api.cloud"
+    meetings_base_url = "https://icjia.illinois.gov/news/meetings/"
+    custom_settings = {"ROBOTSTXT_OBEY": False}
 
     def start_requests(self):
         """
@@ -117,7 +120,7 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
                     "address": "",
                 },
                 links=self._parse_links(item),
-                source=response.url,
+                source=self._parse_source(item),
             )
             meeting["status"] = self._get_status(meeting)
             meeting["id"] = self._get_id(meeting)
@@ -128,6 +131,8 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
         Parse ISO string into datetime, convert to local timezone,
         then create timezone naive datetime object.
         """
+        if not dt_str:
+            return None
         dt = parser.parse(dt_str)
         local_tz = gettz(self.timezone)
         local_dt = dt.astimezone(local_tz)
@@ -146,6 +151,12 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
         }
         return category_map.get(title, COMMISSION)
 
+    def _parse_source(self, meeting):
+        """
+        Build the meeting's page URL on the agency website from its slug field.
+        """
+        return urljoin(self.meetings_base_url, f"{meeting['slug']}/")
+
     def _parse_links(self, meeting):
         # Extracting links from attachments and external
         links = []
@@ -154,10 +165,21 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
             links.append(
                 {
                     "href": urljoin(self.attachments_base_url, attachment["url"]),
-                    "title": attachment["name"],
+                    "title": self._parse_link_title(attachment["name"]),
                 }
             )
         external = meeting.get("external", {})
         if external:
             links.append({"href": external["url"], "title": external["title"]})
         return links
+
+    def _parse_link_title(self, name):
+        """
+        Clean up an attachment file name.
+        """
+        title = re.sub(r"\.\w+$", "", name)
+        title = title.replace("_", " ")
+        title = re.sub(
+            r"[\s-]*(\d{6}|\d{8}|\d{1,2}[.-]\d{1,2}[.-]\d{2,4})\s*$", "", title
+        )
+        return re.sub(r"\s+", " ", title).strip()
