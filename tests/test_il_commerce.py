@@ -5,6 +5,7 @@ import pytest
 from city_scrapers_core.constants import (
     ADVISORY_COMMITTEE,
     BOARD,
+    CANCELLED,
     COMMISSION,
     FORUM,
     PASSED,
@@ -21,7 +22,8 @@ DEFAULT_LOCATION = {
     "address": "527 East Capitol Avenue, Springfield, IL 62701",
 }
 
-LIST_URL = "https://www.icc.illinois.gov/meetings?dts=32&scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True"  # noqa
+# The June 2026 calendar month the list fixture was saved from
+LIST_URL = "https://www.icc.illinois.gov/meetings?scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True&dts=32&bd=639158688000000000"  # noqa
 MEETING_URL = "https://www.icc.illinois.gov/meetings/meeting/"
 
 
@@ -63,20 +65,22 @@ def public_forum_item(spider):
     return _parse_detail(spider, "il_commerce_public_forum.html", "hearing/151131")[0]
 
 
-def _detail_page(heading, location="", description=""):
+def _detail_page(
+    heading, location="", description="", when="September 14, 2026 at 10:00 AM"
+):
     """
-    A detail page with the structure of the ICC's own pages, for location and title
-    variants that differ from the saved pages only in a few lines.
+    A detail page with the structure of the ICC's own pages, for location, title
+    and status variants that differ from the saved pages only in a few lines.
     """
     body = """
         <div class="container soi-container soi-icc-container"><div class="row">
         <div class="col-12">
             <h2>{}</h2>
-            <h3 class="mt-4">September 14, 2026 at 10:00 AM</h3>
+            <h3 class="mt-4">{}</h3>
             <p>{}</p>
             <div class="row mt-4"><div class="col-12">{}</div></div>
         </div></div></div>
-    """.format(heading, description, location)
+    """.format(heading, when, description, location)
     return HtmlResponse(url=MEETING_URL + "hearing/1", body=body.encode())
 
 
@@ -117,6 +121,22 @@ VARIANT_PAGES = {
     ),
     "case_schedule": _detail_page(
         ICC_HEADING.format("Hearing for T26-0001"), description="Status Hearing"
+    ),
+    # The case summary of 25-0999 mentions "cancelation", but the hearing is on
+    "description_mentions_cancel": _detail_page(
+        ICC_HEADING.format("Status for 25-0999"),
+        "<h4>Illinois Commerce Commission</h4>",
+        "Giovanni Colon -vs- Northern Illinois Gas Company d/b/a Nicor Gas Company "
+        "Complaint as to refusal to restore gas service based on unverified "
+        "allegation of unauthorized reconnection/tampering and cancelation of "
+        "approved deferred payment arrangement in River Grove, Illinois.",
+        when="November 5, 2026 at 10:00 AM",
+    ),
+    "cancelled": _detail_page(
+        ICC_HEADING.format("Status for 26-0425"),
+        "<h4>Illinois Commerce Commission</h4>",
+        when='November 4, 2026 at 10:00 AM <span class="d-block text-danger '
+        'font-weight-bold">Cancelled</span>',
     ),
 }
 
@@ -317,9 +337,24 @@ def test_start_request_begins_one_year_back(start_request):
     assert len(start_request) == 1
     request = start_request[0]
     # 2025-10-01 00:00 in .NET ticks, the format of the calendar's own links
-    assert "bd=638948736000000000" in request.url
-    assert "dts=32" in request.url
+    assert request.url == (
+        "https://www.icc.illinois.gov/meetings?scm=True&sps=True&sh=True&sjc=True"
+        "&ssh=False&smceb=True&dts=32&bd=638948736000000000"
+    )
     assert request.cb_kwargs == {"month": datetime(2025, 10, 1)}
+
+
+def test_no_unused_start_urls():
+    # start_requests builds every request from base_url
+    assert "start_urls" not in vars(IlCommerceSpider)
+
+
+def test_start_request_uses_local_date(spider):
+    # 03:00 UTC on October 1 is still September 30 in Chicago
+    with freeze_time("2026-10-01 03:00"):
+        request = list(spider.start_requests())[0]
+    assert request.cb_kwargs == {"month": datetime(2025, 9, 1)}
+    assert request.url.endswith("&bd=638922816000000000")
 
 
 def test_month_requests_next_month(spider, month_list_body):
@@ -353,3 +388,33 @@ def test_undated_page_logs_and_skips(spider, caplog):
     with caplog.at_level("WARNING"):
         assert list(spider._parse_event_page(response)) == []
     assert "Could not parse start time" in caplog.text
+
+
+def test_description_mentioning_cancel_is_not_cancelled(variant_items):
+    assert variant_items["description_mentions_cancel"]["status"] == TENTATIVE
+
+
+def test_cancelled_heading(variant_items):
+    item = variant_items["cancelled"]
+    assert item["status"] == CANCELLED
+    assert item["title"] == "Status for 26-0425"
+
+
+@pytest.mark.parametrize(
+    "utc_now,status",
+    [
+        # 7:30 PM in Chicago, before the 8 PM meeting
+        ("2026-10-09 00:30", TENTATIVE),
+        # 8:30 PM in Chicago, after it
+        ("2026-10-09 01:30", PASSED),
+    ],
+)
+def test_status_uses_local_time(spider, utc_now, status):
+    response = _detail_page(
+        ICC_HEADING.format("Status for 26-0001"),
+        "<h4>Illinois Commerce Commission</h4>",
+        when="October 8, 2026 at 8:00 PM",
+    )
+    with freeze_time(utc_now):
+        item = list(spider._parse_event_page(response))[0]
+    assert item["status"] == status

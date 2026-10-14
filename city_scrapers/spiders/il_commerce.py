@@ -1,13 +1,17 @@
 import re
 from datetime import datetime
 
+import pytz
 import scrapy
 from city_scrapers_core.constants import (
     ADVISORY_COMMITTEE,
     BOARD,
+    CANCELLED,
     COMMISSION,
     COMMITTEE,
     FORUM,
+    PASSED,
+    TENTATIVE,
 )
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
@@ -23,9 +27,8 @@ class IlCommerceSpider(CityScrapersSpider):
     name = "il_commerce"
     agency = "Illinois Commerce Commission"
     timezone = "America/Chicago"
-    base_url = "https://www.icc.illinois.gov/meetings?scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True"  # noqa
-    # Month view (dts=32) of the calendar page
-    start_urls = [base_url + "&dts=32"]
+    # Month view (dts=32) of the calendar page, starting at begin date `bd`
+    base_url = "https://www.icc.illinois.gov/meetings?scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True&dts=32&bd={bd}"  # noqa
     default_location = {
         "name": "Illinois Commerce Commission",
         "address": "527 East Capitol Avenue, Springfield, IL 62701",
@@ -37,15 +40,23 @@ class IlCommerceSpider(CityScrapersSpider):
         With dts=32 and a `bd` begin date, the calendar shows the whole month that
         contains `bd`.
         """
-        month = (datetime.now() - relativedelta(years=1)).replace(day=1)
-        yield self._month_request(month)
+        year_ago = self._local_now() - relativedelta(years=1)
+        yield self._month_request(datetime(year_ago.year, year_ago.month, 1))
+
+    def _local_now(self):
+        """
+        The current naive datetime in the spider's timezone. Scraped start times
+        are naive local times, so comparing them against a bare datetime.now()
+        would use the UTC clock of the GitHub Actions runner.
+        """
+        return datetime.now(tz=pytz.timezone(self.timezone)).replace(tzinfo=None)
 
     def _month_request(self, month):
         """Request the calendar month starting at `month`, with `bd` in ticks."""
         seconds = int((month - datetime(1970, 1, 1)).total_seconds())
         ticks = TICKS_AT_EPOCH + seconds * 10**7
         return scrapy.Request(
-            "{}&bd={}&dts=32".format(self.base_url, ticks),
+            self.base_url.format(bd=ticks),
             callback=self.parse,
             cb_kwargs={"month": month},
         )
@@ -62,7 +73,7 @@ class IlCommerceSpider(CityScrapersSpider):
             yield response.follow(href, callback=self._parse_event_page)
         if month is None:
             return
-        is_future = month > datetime.now()
+        is_future = month > self._local_now()
         if not event_links and not is_future:
             self.logger.warning("No meetings found on %s", response.url)
         if event_links or not is_future:
@@ -120,6 +131,22 @@ class IlCommerceSpider(CityScrapersSpider):
         meeting["id"] = self._get_id(meeting)
 
         yield meeting
+
+    def _get_status(self, item, text=""):
+        """
+        Only the title and the heading's status text are checked for cancellation
+        keywords. Hearing descriptions summarize the case and can mention words like
+        "cancelation" for meetings that are going ahead. The passed/tentative check
+        uses the local time instead of the base class's datetime.now().
+        """
+        status = super()._get_status(
+            {"title": item["title"], "start": item["start"]}, text=text
+        )
+        if status == CANCELLED:
+            return CANCELLED
+        if item["start"] < self._local_now():
+            return PASSED
+        return TENTATIVE
 
     def _parse_title(self, selector):
         """
