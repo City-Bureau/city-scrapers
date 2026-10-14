@@ -320,6 +320,12 @@ def test_case_schedule_without_location(variant_items):
 
 
 def test_unexpected_location_format_logs(spider, caplog):
+    """
+    caplog is pytest's built-in fixture that captures log records. at_level
+    collects WARNING and above while parsing, so caplog.text shows whether the
+    spider warned about a location it couldn't split, instead of passing the
+    oddity along silently. The tests below use it the same way.
+    """
     response = _detail_page(
         ICC_HEADING.format("Hearing for 26-0001"),
         "<h4>Illinois Commerce Commission</h4><p>Springfield, IL 62701</p>",
