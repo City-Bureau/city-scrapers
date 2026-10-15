@@ -38,7 +38,7 @@ jobs:
           python-version: 3.11
 
       - name: Install Pipenv
-        uses: dschep/install-pipenv-action@v1
+        run: pip install pipenv
 
       - name: Install dependencies
         run: pipenv sync
