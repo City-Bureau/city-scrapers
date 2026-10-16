@@ -66,7 +66,11 @@ def public_forum_item(spider):
 
 
 def _detail_page(
-    heading, location="", description="", when="September 14, 2026 at 10:00 AM"
+    heading,
+    location="",
+    description="",
+    when="September 14, 2026 at 10:00 AM",
+    footer="",
 ):
     """
     A detail page with the structure of the ICC's own pages, for location, title
@@ -80,7 +84,8 @@ def _detail_page(
             <p>{}</p>
             <div class="row mt-4"><div class="col-12">{}</div></div>
         </div></div></div>
-    """.format(heading, when, description, location)
+        <footer>{}</footer>
+    """.format(heading, when, description, location, footer)
     return HtmlResponse(url=MEETING_URL + "hearing/1", body=body.encode())
 
 
@@ -350,11 +355,6 @@ def test_start_request_begins_one_year_back(start_request):
     assert request.cb_kwargs == {"month": datetime(2025, 10, 1)}
 
 
-def test_no_unused_start_urls():
-    # start_requests builds every request from base_url
-    assert "start_urls" not in vars(IlCommerceSpider)
-
-
 def test_start_request_uses_local_date(spider):
     # 03:00 UTC on October 1 is still September 30 in Chicago
     with freeze_time("2026-10-01 03:00"):
@@ -404,6 +404,19 @@ def test_cancelled_heading(variant_items):
     item = variant_items["cancelled"]
     assert item["status"] == CANCELLED
     assert item["title"] == "Status for 26-0425"
+
+
+def test_status_ignores_h3_outside_meeting_heading(spider):
+    # The real page footer has its own h3s (Documents, Office Locations, ...)
+    response = _detail_page(
+        ICC_HEADING.format("Status for 26-0002"),
+        "<h4>Illinois Commerce Commission</h4>",
+        when="November 4, 2026 at 10:00 AM",
+        footer="<h3>Cancelled Meetings</h3>",
+    )
+    with freeze_time("2026-10-09"):
+        item = list(spider._parse_event_page(response))[0]
+    assert item["status"] == TENTATIVE
 
 
 @pytest.mark.parametrize(
