@@ -29,9 +29,11 @@ class IlCommerceSpider(CityScrapersSpider):
     timezone = "America/Chicago"
     # Month view (dts=32) of the calendar page, starting at begin date `bd`
     base_url = "https://www.icc.illinois.gov/meetings?scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True&dts=32&bd={bd}"  # noqa
+    # The ICC has offices in Springfield and Chicago, and pages that only name the
+    # Commission don't say which one, so the address is left empty
     default_location = {
         "name": "Illinois Commerce Commission",
-        "address": "527 East Capitol Avenue, Springfield, IL 62701",
+        "address": "",
     }
 
     def start_requests(self):
@@ -206,14 +208,13 @@ class IlCommerceSpider(CityScrapersSpider):
         """
         Parse location. A full location starts with the street and ends with the
         city, which make up the address, and the lines between them are the name.
-        The state is written as "IL" to match the default location, since some pages
-        spell out "Illinois".
+        The state is written as "IL", since some pages spell out "Illinois".
         That is usually three lines, but some Chicago hearings split building,
         floor and room into separate lines. A Webex meeting lists Webex as the middle
         line but is held online, so its address is left empty. Pages that only say
         "Illinois Commerce Commission", or show no location at all, are checked for
-        a venue in the description, and otherwise get the Commission's Springfield
-        office. Other one-line locations, such as a video conference, keep that line
+        a venue in the description, and otherwise get the Commission's name with no
+        address. Other one-line locations, such as a video conference, keep that line
         as the name.
         """
         location_block = selector.css(".row.mt-4 > .col-12")
@@ -250,7 +251,7 @@ class IlCommerceSpider(CityScrapersSpider):
         paragraph of the description instead: the venue name, the street, any room,
         then the city, one per line. A forum held as a webinar says it takes place
         via WebEx, so it gets the same empty address as other Webex meetings. Any
-        other page gets the Commission's Springfield office.
+        other page gets the Commission's name with no address.
         """
         description = selector.css(".mt-4+ p").get() or ""
         last_paragraph = re.split(r"<br>\s*<br>", description)[-1]

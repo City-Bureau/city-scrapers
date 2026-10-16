@@ -17,10 +17,7 @@ from scrapy.http import HtmlResponse
 
 from city_scrapers.spiders.il_commerce import IlCommerceSpider
 
-DEFAULT_LOCATION = {
-    "name": "Illinois Commerce Commission",
-    "address": "527 East Capitol Avenue, Springfield, IL 62701",
-}
+DEFAULT_LOCATION = {"name": "Illinois Commerce Commission", "address": ""}
 
 # The June 2026 calendar month the list fixture was saved from
 LIST_URL = "https://www.icc.illinois.gov/meetings?scm=True&sps=True&sh=True&sjc=True&ssh=False&smceb=True&dts=32&bd=639158688000000000"  # noqa
