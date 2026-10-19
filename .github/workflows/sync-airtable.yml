@@ -1,0 +1,19 @@
+name: Sync spiders to Airtable
+
+on:
+  workflow_run:
+    workflows: ["Parse spiders"]
+    types: [completed]
+
+jobs:
+  sync:
+    # Only run if the "parse-spiders.yml" (consumer) workflow succeeded.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: City-Bureau/city-scrapers-core/.github/workflows/sync-airtable.yml@main
+    with:
+      parse-run-id: ${{ github.event.workflow_run.id }}
+      CS_AIRTABLE_BASE_ID: ${{ vars.CS_AIRTABLE_BASE_ID }}
+      CS_SLUGS_TABLE_ID: ${{ vars.CS_SLUGS_TABLE_ID }}
+      CS_BACKLOG_TABLE_ID: ${{ vars.CS_BACKLOG_TABLE_ID }}
+    secrets:
+      CS_AIRTABLE_PAT: ${{ secrets.CS_AIRTABLE_PAT }}
