@@ -175,15 +175,12 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
             reverse=True,
         )
         description = texts[0]
-        if re.search(self.online_keywords, description, re.I):
-            link = self._parse_online_link(meeting)
+        search_text = "\n\n".join(texts)
+        if re.search(self.online_keywords, search_text, re.I):
+            link = self._parse_online_link(search_text)
             if link and link not in description:
                 description = f"{description}\n\nMeeting link: {link}"
-        location = (
-            self._parse_location(texts[0])
-            or self._parse_location(texts[1])
-            or dict(self.default_location)
-        )
+        location = self._parse_location(search_text) or dict(self.default_location)
         return description, location
 
     def _clean_text(self, text):
@@ -192,11 +189,10 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
         """
         return (text or "").replace("**", "").strip()
 
-    def _parse_online_link(self, meeting):
+    def _parse_online_link(self, text):
         """
         Find the online meeting link. It's usually only in the body, not the summary.
         """
-        text = f"{meeting['summary'] or ''}\n{meeting.get('body') or ''}"
         match = re.search(r"https?://\S*(?:webex|zoom|teams)\S*", text, re.I)
         return match.group(0) if match else None
 
@@ -211,8 +207,13 @@ class IlCriminalJusticeInformationSpider(CityScrapersSpider):
         )
         if numbered:
             return self._build_location(numbered.group(1))
-        # City lines: "Chicago: Building, Street"
-        city_line = re.search(r"^\s*(Chicago|Springfield):\s*(.+)$", text, re.M)
+        # City labels: "Chicago: Building, Street", possibly followed on the same
+        # line by "Springfield: Building, Street". Only the first one is used.
+        city_line = re.search(
+            r"\b(Chicago|Springfield):\s*(.+?)(?=\s+(?:Chicago|Springfield):|$)",
+            text,
+            re.M,
+        )
         if city_line:
             city, value = city_line.groups()
             location = self._build_location(value)
