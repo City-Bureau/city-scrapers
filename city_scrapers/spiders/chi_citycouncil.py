@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import NOT_CLASSIFIED
@@ -11,6 +12,10 @@ class ChiCitycouncilSpider(CityScrapersSpider):
     agency = "Chicago City Council"
     timezone = "America/Chicago"
     start_urls = ["https://api.chicityclerkelms.chicago.gov/meeting"]
+    default_location = {
+        "address": "121 N LaSalle St - Chicago, IL 60602",
+        "name": "City Council Chamber, 2nd Floor, City Hall",
+    }
 
     def parse(self, response):
         response_json = response.json()
@@ -29,7 +34,7 @@ class ChiCitycouncilSpider(CityScrapersSpider):
                 source="https://chicityclerkelms.chicago.gov/Meetings/",
             )
 
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(meeting, text=item.get("status") or "")
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
@@ -69,11 +74,18 @@ class ChiCitycouncilSpider(CityScrapersSpider):
         return False
 
     def _parse_location(self, item):
-        """Parse or generate location."""
-        return {
-            "address": "City Hall, 121 N LaSalle St - Chicago, IL 60602",
-            "name": "City Council Chamber, 2nd Floor",
-        }
+        """Split the source location at the street address, e.g. "Room 201A, 2nd
+        Floor, City Hall, 121 North LaSalle Street - Chicago, IL 60602". Falls back
+        to the Council Chamber when the source has no street address."""
+        parts = [p.strip() for p in (item.get("location") or "").split(",")]
+        for idx, part in enumerate(parts):
+            if re.match(r"\d+\s", part):
+                name = ", ".join(parts[:idx])
+                # Committee rooms are sometimes listed as a bare number ("201A")
+                if re.match(r"\d", name):
+                    name = f"Room {name}"
+                return {"name": name, "address": ", ".join(parts[idx:])}
+        return self.default_location
 
     def _parse_links(self, item):
         """Parse or generate links."""
