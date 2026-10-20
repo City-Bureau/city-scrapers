@@ -2,7 +2,7 @@ from datetime import datetime  # noqa
 from os.path import dirname, join
 
 import pytest
-from city_scrapers_core.constants import NOT_CLASSIFIED, TENTATIVE
+from city_scrapers_core.constants import CANCELLED, NOT_CLASSIFIED, TENTATIVE
 from city_scrapers_core.utils import file_response
 from freezegun import freeze_time
 
@@ -59,11 +59,57 @@ def test_status():
     assert parsed_items[0]["status"] == TENTATIVE
 
 
+def test_status_cancelled():
+    assert parsed_items[1]["status"] == CANCELLED
+    assert parsed_items[13]["status"] == CANCELLED
+
+
+def test_status_rescheduled_is_not_cancelled():
+    # "REVISED MEETING TIME IS 1:00 pm": the meeting happens at its new time
+    assert parsed_items[6]["status"] == TENTATIVE
+    # "Original meeting scheduled for September 27, 2023"
+    assert parsed_items[14]["status"] == TENTATIVE
+
+
 def test_location():
     assert parsed_items[0]["location"] == {
-        "name": "City Council Chamber, 2nd Floor",
-        "address": "City Hall, 121 N LaSalle St - Chicago, IL 60602",
+        "name": "City Council Chamber, 2nd Fl, City Hall",
+        "address": "121 N LaSalle St - Chicago, IL 60602",
     }
+
+
+def test_location_committee_room():
+    assert parsed_items[26]["location"] == {
+        "name": "Room 201A, 2nd Fl, City Hall",
+        "address": "121 N. LaSalle St - Chicago, IL 60602",
+    }
+
+
+def test_location_bare_room_number():
+    item = {"location": "201A, 2nd Floor, City Hall, 121 North LaSalle Street"}
+    assert spider._parse_location(item) == {
+        "name": "Room 201A, 2nd Floor, City Hall",
+        "address": "121 North LaSalle Street",
+    }
+
+
+def test_location_street_number_range():
+    item = {"location": "Conference Center, 121-123 N LaSalle St, Chicago, IL"}
+    assert spider._parse_location(item) == {
+        "name": "Conference Center",
+        "address": "121-123 N LaSalle St, Chicago, IL",
+    }
+
+
+def test_location_offsite():
+    assert parsed_items[71]["location"] == {
+        "name": "Credit Union 1 Arena (UIC Pavilion)",
+        "address": "525 S Racine Ave, Chicago, IL 60607",
+    }
+
+
+def test_location_without_street_address():
+    assert parsed_items[72]["location"] == spider.default_location
 
 
 def test_source():
@@ -77,6 +123,13 @@ def test_source():
 #            "title": "Notice",
 #        }
 #    ]
+
+
+def test_video_link():
+    assert {
+        "href": "https://vimeo.com/manage/videos/868378239",
+        "title": "Video",
+    } in parsed_items[12]["links"]
 
 
 def test_classification():

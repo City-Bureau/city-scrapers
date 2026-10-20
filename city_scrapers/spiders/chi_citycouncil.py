@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from city_scrapers_core.constants import NOT_CLASSIFIED
@@ -11,6 +12,12 @@ class ChiCitycouncilSpider(CityScrapersSpider):
     agency = "Chicago City Council"
     timezone = "America/Chicago"
     start_urls = ["https://api.chicityclerkelms.chicago.gov/meeting"]
+    # Written the way the API writes it, so a fallback doesn't create a second
+    # Location for the same room on Documenters
+    default_location = {
+        "address": "121 North LaSalle Street - Chicago, IL 60602",
+        "name": "City Council Chamber, 2nd Floor, City Hall",
+    }
 
     def parse(self, response):
         response_json = response.json()
@@ -29,7 +36,9 @@ class ChiCitycouncilSpider(CityScrapersSpider):
                 source="https://chicityclerkelms.chicago.gov/Meetings/",
             )
 
-            meeting["status"] = self._get_status(meeting)
+            meeting["status"] = self._get_status(
+                meeting, text=self._parse_status_text(item)
+            )
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
@@ -54,6 +63,13 @@ class ChiCitycouncilSpider(CityScrapersSpider):
         chicago_time = start_time.astimezone(tz.gettz("America/Chicago"))
         return chicago_time.replace(tzinfo=None)
 
+    def _parse_status_text(self, item):
+        """Only the clerk's "Cancelled" status means the meeting is off. A
+        "Rescheduled" entry is usually the meeting that does happen, at its new
+        time; the vacated slot gets its own "Cancelled" entry."""
+        status = item.get("status") or ""
+        return status if "cancel" in status.lower() else ""
+
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return None
@@ -69,11 +85,19 @@ class ChiCitycouncilSpider(CityScrapersSpider):
         return False
 
     def _parse_location(self, item):
-        """Parse or generate location."""
-        return {
-            "address": "City Hall, 121 N LaSalle St - Chicago, IL 60602",
-            "name": "City Council Chamber, 2nd Floor",
-        }
+        """Split the source location at the street address, e.g. "Room 201A, 2nd
+        Floor, City Hall, 121 North LaSalle Street - Chicago, IL 60602". Falls back
+        to the Council Chamber when the source has no street address."""
+        parts = [p.strip() for p in (item.get("location") or "").split(",")]
+        for idx, part in enumerate(parts):
+            # A street number, or a range like "121-123"
+            if re.match(r"\d+(-\d+)?\s", part):
+                name = ", ".join(parts[:idx])
+                # Committee rooms are sometimes listed as a bare number ("201A")
+                if re.match(r"\d", name):
+                    name = f"Room {name}"
+                return {"name": name, "address": ", ".join(parts[idx:])}
+        return self.default_location
 
     def _parse_links(self, item):
         """Parse or generate links."""
@@ -113,7 +137,9 @@ class ChiCitycouncilSpider(CityScrapersSpider):
             except:  # noqa
                 continue
 
+        video_link = item.get("videoLink") or ""
         return [
+            {"href": video_link, "title": "Video"},
             {"href": notice_link, "title": "Notice"},
             {"href": agenda_link, "title": "Agenda"},
             {"href": summary_link, "title": "Summary"},
