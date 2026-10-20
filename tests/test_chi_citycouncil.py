@@ -125,6 +125,13 @@ def test_source():
 #    ]
 
 
+def test_video_link():
+    assert {
+        "href": "https://vimeo.com/manage/videos/868378239",
+        "title": "Video",
+    } in parsed_items[12]["links"]
+
+
 def test_classification():
     assert parsed_items[0]["classification"] == NOT_CLASSIFIED
 

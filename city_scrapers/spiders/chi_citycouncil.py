@@ -137,7 +137,9 @@ class ChiCitycouncilSpider(CityScrapersSpider):
             except:  # noqa
                 continue
 
+        video_link = item.get("videoLink") or ""
         return [
+            {"href": video_link, "title": "Video"},
             {"href": notice_link, "title": "Notice"},
             {"href": agenda_link, "title": "Agenda"},
             {"href": summary_link, "title": "Summary"},
