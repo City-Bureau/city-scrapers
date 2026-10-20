@@ -12,8 +12,10 @@ class ChiCitycouncilSpider(CityScrapersSpider):
     agency = "Chicago City Council"
     timezone = "America/Chicago"
     start_urls = ["https://api.chicityclerkelms.chicago.gov/meeting"]
+    # Written the way the API writes it, so a fallback doesn't create a second
+    # Location for the same room on Documenters
     default_location = {
-        "address": "121 N LaSalle St - Chicago, IL 60602",
+        "address": "121 North LaSalle Street - Chicago, IL 60602",
         "name": "City Council Chamber, 2nd Floor, City Hall",
     }
 
@@ -34,7 +36,9 @@ class ChiCitycouncilSpider(CityScrapersSpider):
                 source="https://chicityclerkelms.chicago.gov/Meetings/",
             )
 
-            meeting["status"] = self._get_status(meeting, text=item.get("status") or "")
+            meeting["status"] = self._get_status(
+                meeting, text=self._parse_status_text(item)
+            )
             meeting["id"] = self._get_id(meeting)
 
             yield meeting
@@ -59,6 +63,13 @@ class ChiCitycouncilSpider(CityScrapersSpider):
         chicago_time = start_time.astimezone(tz.gettz("America/Chicago"))
         return chicago_time.replace(tzinfo=None)
 
+    def _parse_status_text(self, item):
+        """Only the clerk's "Cancelled" status means the meeting is off. A
+        "Rescheduled" entry is usually the meeting that does happen, at its new
+        time; the vacated slot gets its own "Cancelled" entry."""
+        status = item.get("status") or ""
+        return status if "cancel" in status.lower() else ""
+
     def _parse_end(self, item):
         """Parse end datetime as a naive datetime object. Added by pipeline if None"""
         return None
@@ -79,7 +90,8 @@ class ChiCitycouncilSpider(CityScrapersSpider):
         to the Council Chamber when the source has no street address."""
         parts = [p.strip() for p in (item.get("location") or "").split(",")]
         for idx, part in enumerate(parts):
-            if re.match(r"\d+\s", part):
+            # A street number, or a range like "121-123"
+            if re.match(r"\d+(-\d+)?\s", part):
                 name = ", ".join(parts[:idx])
                 # Committee rooms are sometimes listed as a bare number ("201A")
                 if re.match(r"\d", name):

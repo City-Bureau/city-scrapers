@@ -61,7 +61,14 @@ def test_status():
 
 def test_status_cancelled():
     assert parsed_items[1]["status"] == CANCELLED
-    assert parsed_items[6]["status"] == CANCELLED
+    assert parsed_items[13]["status"] == CANCELLED
+
+
+def test_status_rescheduled_is_not_cancelled():
+    # "REVISED MEETING TIME IS 1:00 pm": the meeting happens at its new time
+    assert parsed_items[6]["status"] == TENTATIVE
+    # "Original meeting scheduled for September 27, 2023"
+    assert parsed_items[14]["status"] == TENTATIVE
 
 
 def test_location():
@@ -83,6 +90,14 @@ def test_location_bare_room_number():
     assert spider._parse_location(item) == {
         "name": "Room 201A, 2nd Floor, City Hall",
         "address": "121 North LaSalle Street",
+    }
+
+
+def test_location_street_number_range():
+    item = {"location": "Conference Center, 121-123 N LaSalle St, Chicago, IL"}
+    assert spider._parse_location(item) == {
+        "name": "Conference Center",
+        "address": "121-123 N LaSalle St, Chicago, IL",
     }
 
 
