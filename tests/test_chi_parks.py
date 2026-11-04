@@ -70,7 +70,7 @@ def spider():
 
 
 def test_count(parsed_items):
-    assert len(parsed_items) == 8
+    assert len(parsed_items) == 21
 
 
 def test_archive_count(archive_items):
@@ -92,7 +92,7 @@ def test_description(parsed_items):
 
 def test_start(parsed_items):
     assert parsed_items[0]["start"] == datetime(2026, 12, 9, 9, 0)
-    assert parsed_items[-1]["start"] == datetime(2026, 8, 12, 9, 0)
+    assert parsed_items[-1]["start"] == datetime(2026, 1, 21, 9, 0)
 
 
 def test_end(parsed_items):

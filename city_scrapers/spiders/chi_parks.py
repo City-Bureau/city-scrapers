@@ -33,13 +33,14 @@ class ChiParksSpider(LegistarSpider):
     def parse_legistar(self, events):
         if not events:
             self.logger.warning("No Legistar events to parse")
-        three_months_ago = datetime.now(self.tzinfo).replace(tzinfo=None) - timedelta(
-            days=90
+        # Skip meetings more than 1 year old unless the archive setting is enabled.
+        twelve_months = datetime.now(self.tzinfo).replace(tzinfo=None) - timedelta(
+            days=365
         )
         for event in events:
             start, time_notes = self._parse_start(event)
             if not start or (
-                start < three_months_ago
+                start < twelve_months
                 and not self.settings.getbool("CITY_SCRAPERS_ARCHIVE")
             ):
                 continue
