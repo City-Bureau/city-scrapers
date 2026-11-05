@@ -77,6 +77,22 @@ def test_archive_count(archive_items):
     assert len(archive_items) == 21
 
 
+def test_one_year_lookback():
+    spider = ChiParksSpider()
+    spider.settings = Settings(values={"CITY_SCRAPERS_ARCHIVE": False})
+    events = [
+        {
+            "Name": "Board of Commissioners",
+            "Meeting Date": date,
+            "Meeting Time": "9:00 AM",
+        }
+        for date in ["11/3/2025", "11/1/2025"]
+    ]
+    with freeze_time("2026-11-02"):
+        items = list(spider.parse_legistar(events))
+    assert [item["start"] for item in items] == [datetime(2025, 11, 3, 9, 0)]
+
+
 def test_title(parsed_items):
     assert parsed_items[0]["title"] == "Board of Commissioners"
     assert parsed_items[2]["title"] == "Board of Commissioners: Public Hearing"
@@ -287,3 +303,16 @@ def test_rescheduled_meeting_is_not_cancelled(spider):
         item = next(spider.parse_legistar([event]))
     assert item["status"] == PASSED
     assert item["location"] == ADMIN_BUILDING
+
+
+def test_rescheduled_virtual_meeting_is_not_cancelled(spider):
+    event = {
+        "Name": "Budget Forum",
+        "Meeting Date": "9/17/2026",
+        "Meeting Time": "6:00 PM",
+        "Meeting Location": "PUBLIC BUDGET FORUM (VIRTUAL) Rescheduled from 9/10. Microsoft Teams Meeting link: https://teams.microsoft.com/meet/1",  # noqa
+    }
+    with freeze_time("2026-11-02"):
+        item = next(spider.parse_legistar([event]))
+    assert item["status"] == PASSED
+    assert item["description"].startswith("Rescheduled from 9/10.")

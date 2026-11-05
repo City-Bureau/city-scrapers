@@ -31,6 +31,7 @@ class ChiParksSpider(LegistarSpider):
     admin_building = "Chicago Park District Administration Building"
 
     def parse_legistar(self, events):
+        """Build a Meeting from each Legistar calendar row."""
         if not events:
             self.logger.warning("No Legistar events to parse")
         # Skip meetings more than 1 year old unless the archive setting is enabled.
@@ -59,9 +60,11 @@ class ChiParksSpider(LegistarSpider):
                 source=self.legistar_source(event),
             )
             # "RESCHEDULED" labels the new date of a meeting that was held, so it
-            # must not count as a cancellation
+            # must not count as a cancellation. The description comes from the
+            # location text, so it's left out to keep "rescheduled" from matching.
             meeting["status"] = self._get_status(
-                meeting, text=location_text.lower().replace("rescheduled", "")
+                {**meeting, "description": ""},
+                text=location_text.lower().replace("rescheduled", ""),
             )
 
             meeting["id"] = self._get_id(meeting)
