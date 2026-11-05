@@ -3,12 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Calendar</title>
+    <title>Regular Open Meeting</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
-    <link href="/Content/css/4.5.0?v=QhWO6Nynys8mzumhnfGyzV6zagr7W0E-XrH7USLNVwg1" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/Content/Accessibility.css">
+    <link href="/Content/css/4.5.0?v=-TtCSAArshTG0UOrCBb_xIJ0Aa-ntAP53HDJ7xtTsCc1" rel="stylesheet"/>
 
     <style>
         .btn-circle.btn-xs {
@@ -76,10 +78,26 @@
         .btn-circle.exclamation:after { /*margin: auto 3px; height: 2px;*/
             box-shadow: none;
         }
+
+        .wgcurrent::before {
+            font-family: "bootstrap-icons";
+            content: "\f3ee";
+            font-weight: normal;
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+    </style>
+    <style>
+    .soi-icc-google-map-image a img {
+    border:2px solid blue;
+}
+
+.soi-icc-google-map-image a:hover img {
+    border:2px solid red;
+}
     </style>
     
-    <link id="statuteReportsStyleSheet" href="/content/icc/bootstrap/4.5.0/css/icc-calendar.css" type="text/css" rel="stylesheet" />
-
     
     <!--[if lt IE 9]><script src="https://code.google.com/p/html5shiv/html5shiv.js"></script><![endif]-->
     <script>
@@ -117,101 +135,122 @@
                 <a class="navbar-brand soi-navbar-brand soi-icc-navbar-brand-002 d-none d-md-flex" href="/"><img src="/images/icc-logo2020.png" class="m-0" alt="icc logo"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav soi-navbar-nav soi-icc-navbar-nav col">
-                        <li class="nav-item">
-                            <div class="btn-group">
-                                <a href="/consumers" class="btn soi-navbar-btn soi-icc-navbar-btn">Consumers</a>
-                                <button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/complaints/" title="File a Complaint">File a Complaint</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/consumers/make-a-public-comment" title="Make a Public Comment">Make a Public Comment</a>
-                                    <a class="dropdown-item" href="https://plugin.illinois.gov/" title="Electric Choice">Electric Choice</a>
-                                    <a class="dropdown-item" href="/natural-gas-choice" title="Natural Gas Choice">Natural Gas Choice</a>
-                                    <a class="dropdown-item" href="/consumers" title="Financial Assistance Programs">Financial Assistance Programs</a>
-                                    <a class="dropdown-item" href="/consumers" title="Consumer Education">Consumer Education</a>
-                                    <a class="dropdown-item" href="/consumers" title="Energy Efficiency and Conservation">Energy Efficiency and Conservation</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="btn-group">
-                                <a href="/publicutility/" class="btn soi-navbar-btn soi-icc-navbar-btn">Public Utility</a>
-                                <button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/chief-clerk-office">Chief Clerk&#39;s Office</a>
-                                    <a class="dropdown-item" href="/home/one-call-enforcement">One-Call Enforcement</a>
-                                    <a class="dropdown-item" href="/home/Illinois-Gas-Pipeline-Safety-Program">Pipeline Safety Program</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/authority/alternative-gas-suppliers">Alternative Gas Suppliers (AGS)</a>
-                                    <a class="dropdown-item" href="/authority/alternative-retail-electric-suppliers">Alternative Retail Electric Suppliers</a>
-                                    <a class="dropdown-item" href="/authority/electric-utility">Electric Utility</a>
-                                    <a class="dropdown-item" href="/authority/electric-vehicle-charging-station-installer">Electric Vehicle Charging Station Installer</a>
-                                    <a class="dropdown-item" href="/authority/energy-efficiency-measures-installer">Energy Efficiency Measures Installer</a>
-                                    <a class="dropdown-item" href="/authority/inter-exchange-carrier">Inter-Exchange Carrier</a>
-                                    <a class="dropdown-item" href="/authority/local-exchange-carrier">Local Exchange Carrier (LEC)</a>
-                                    <a class="dropdown-item" href="/authority/natural-gas-utility">Natural Gas Utility</a>
-                                    <a class="dropdown-item" href="/authority/sewer">Sewer</a>
-                                    <a class="dropdown-item" href="/authority/water">Water</a>
-                                    <a class="dropdown-item" href="/authority">View All Authorities</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/home/cybersecurityandriskmanagement">Office of Cybersecurity and Risk Management</a>
-                                    <a class="dropdown-item" href="/home/diversity-and-community-affairs">Office of Diversity and Community Affairs</a>
-                                    <a class="dropdown-item" href="/ormd/">Office of Retail Market Development</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="btn-group">
-                                <a href="/transportation" class="btn soi-navbar-btn soi-icc-navbar-btn">Transportation</a>
-                                <button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/transportation/services">Transportation Services</a>
-                                    <a class="dropdown-item" href="/home/icc-police">ICC Police</a>
-                                    <a class="dropdown-item" href="/rail-safety" title="Rail Safety">Rail Safety</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/authority/brokers-license" title="Brokers">Broker's License</a>
-                                    <a class="dropdown-item" href="/authority/certificate-of-exemption">Certificate of Exemption</a>
-                                    <a class="dropdown-item" href="/authority/collateral-recovery" title="Collateral Recovery">Collateral Recovery</a>
-                                    <a class="dropdown-item" href="/authority/household-goods-movers" title="Household Goods Movers">Household Goods Movers</a>
-                                    <a class="dropdown-item" href="/authority/public-carrier-certificate">Public Carrier Certificate</a>
-                                    <a class="dropdown-item" href="/authority/relocation-towing" title="Relocation Towing">Relocation Towing</a>
-                                    <a class="dropdown-item" href="/authority/safety-relocator" title="Safety Relocator">Safety Relocator</a>
-                                    <a class="dropdown-item" href="/authority/unified-carrier-registration" title="UCR Registration">UCR Registration</a>
-                                    <a class="dropdown-item" href="/authority/warehousing" title="Warehousing">Warehousing</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/complaints/" title="File a Complaint">File A Complaint</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="btn-group">
-                                <a href="/about" class="btn soi-navbar-btn soi-icc-navbar-btn">About</a>
-                                <button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/about/commissioners">Chairman and Commissioners</a>
-                                    <a class="dropdown-item" href="/about/diversity-and-inclusion">Diversity & Inclusion</a>
-                                    <a class="dropdown-item" href="/icc-authority">ICC Legal Authority and Administrative Rules</a>
-                                    <a class="dropdown-item" href="/about/oversight">ICC Oversight</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/about/contracts">Contracts and Solicitations</a>
-                                    <a class="dropdown-item" href="/about/employment">Employment Opportunities</a>
-                                    <a class="dropdown-item" href="/meetings/">Event Calendar</a>
-                                    <a class="dropdown-item" href="/forms">Forms</a>
-                                    <a class="dropdown-item" href="/about/FOIA">Freedom of Information Act</a>
-                                    <a class="dropdown-item" href="/icc-reports">ICC Reports</a>
-                                    <a class="dropdown-item" href="/about/news">News</a>
-                                    <a class="dropdown-item" href="/about/sunshine-project">Sunshine Project</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/home/centennial">History of the ICC</a>
-                                    <a class="dropdown-item" href="/about/contact-us">Contact Us</a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+					<ul class="navbar-nav soi-navbar-nav soi-icc-navbar-nav col">
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/consumers" class="btn soi-navbar-btn soi-icc-navbar-btn">Consumers</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/complaints/" title="File a Complaint">File a Complaint</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/consumers/make-a-public-comment" title="Make a Public Comment">Make a Public Comment</a>
+									<a class="dropdown-item" href="https://plugin.illinois.gov/" title="Electric Choice">Electric Choice</a>
+									<a class="dropdown-item" href="/natural-gas-choice" title="Natural Gas Choice">Natural Gas Choice</a>
+									<a class="dropdown-item" href="/consumers" title="Financial Assistance Programs">Financial Assistance Programs</a>
+									<a class="dropdown-item" href="/consumers" title="Consumer Education">Consumer Education</a>
+									<a class="dropdown-item" href="/consumers" title="Energy Efficiency and Conservation">Energy Efficiency and Conservation</a>
+								</div>
+							</div>
+						</li>
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/publicutility/" class="btn soi-navbar-btn soi-icc-navbar-btn">Public Utilities</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/chief-clerk-office">Chief Clerk&#39;s Office</a>
+									<a class="dropdown-item" href="/home/one-call-enforcement">One-Call Education and Enforcement</a>
+									<a class="dropdown-item" href="/home/Illinois-Gas-Pipeline-Safety-Program">Pipeline Safety Program</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/authority/alternative-gas-suppliers">Alternative Gas Suppliers (AGS)</a>
+									<a class="dropdown-item" href="/authority/alternative-retail-electric-suppliers">Alternative Retail Electric Suppliers</a>
+									<a class="dropdown-item" href="/authority/electric-utility">Electric Utility</a>
+									<a class="dropdown-item" href="/authority/electric-vehicle-charging-station-installer">Electric Vehicle Charging Station Installer</a>
+									<a class="dropdown-item" href="/authority/energy-efficiency-measures-installer">Energy Efficiency Measures Installer</a>
+									<a class="dropdown-item" href="/authority/inter-exchange-carrier">Inter-Exchange Carrier</a>
+									<a class="dropdown-item" href="/authority/local-exchange-carrier">Local Exchange Carrier (LEC)</a>
+									<a class="dropdown-item" href="/authority/natural-gas-utility">Natural Gas Utility</a>
+									<a class="dropdown-item" href="/authority/sewer">Sewer</a>
+									<a class="dropdown-item" href="/authority/water">Water</a>
+									<a class="dropdown-item" href="/authority">View All Authorities</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/home/cybersecurityandriskmanagement">Office of Cybersecurity and Risk Management</a>
+									<a class="dropdown-item" href="/home/diversity-and-community-affairs">Office of Diversity and Community Affairs</a>
+									<a class="dropdown-item" href="/ormd/">Office of Retail Market Development</a>
+								</div>
+							</div>
+						</li>
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/transportation" class="btn soi-navbar-btn soi-icc-navbar-btn">Transportation</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/transportation/services">Transportation Services</a>
+									<a class="dropdown-item" href="/home/icc-police">ICC Police</a>
+									<a class="dropdown-item" href="/rail-safety" title="Rail Safety">Rail Safety</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/authority/brokers-license" title="Brokers">Broker's License</a>
+									<a class="dropdown-item" href="/authority/certificate-of-exemption">Certificate of Exemption</a>
+									<a class="dropdown-item" href="/authority/collateral-recovery" title="Collateral Recovery">Collateral Recovery</a>
+									<a class="dropdown-item" href="/authority/household-goods-movers" title="Household Goods Movers">Household Goods Movers</a>
+									<a class="dropdown-item" href="/authority/public-carrier-certificate">Public Carrier Certificate</a>
+									<a class="dropdown-item" href="/authority/relocation-towing" title="Relocation Towing">Relocation Towing</a>
+									<a class="dropdown-item" href="/authority/safety-relocator" title="Safety Relocator">Safety Relocator</a>
+									<a class="dropdown-item" href="/authority/unified-carrier-registration" title="UCR Registration">UCR Registration</a>
+									<a class="dropdown-item" href="/authority/warehousing" title="Warehousing">Warehousing</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/complaints/" title="File a Complaint">File A Complaint</a>
+								</div>
+							</div>
+						</li>
+
+
+
+						
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/about/News" class="btn soi-navbar-btn soi-icc-navbar-btn">News</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/about/Media-Resource">Media Resources</a>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/about" class="btn soi-navbar-btn soi-icc-navbar-btn">About</a>
+								<button type="button" class="btn soi-navbar-btn soi-icc-navbar-btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="/about/commissioners">Chairman and Commissioners</a>
+									<a class="dropdown-item" href="/about/diversity-and-inclusion">Diversity & Inclusion</a>
+									<a class="dropdown-item" href="/icc-authority">ICC Legal Authority and Administrative Rules</a>
+									<a class="dropdown-item" href="/about/oversight">ICC Oversight</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/about/contracts">Contracts and Solicitations</a>
+									<a class="dropdown-item" href="/about/employment">Employment Opportunities</a>
+									<a class="dropdown-item" href="/meetings/">Event Calendar</a>
+									<a class="dropdown-item" href="/forms">Forms</a>
+									<a class="dropdown-item" href="/about/FOIA">Freedom of Information Act</a>
+									<a class="dropdown-item" href="/icc-reports">ICC Reports</a>
+									<a class="dropdown-item" href="/about/news">News</a>
+									<a class="dropdown-item" href="/about/sunshine-project">Sunshine Project</a>
+									<a class="dropdown-item" href="/about/iitaa">Accessibility</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="/home/centennial">History of the ICC</a>
+									<a class="dropdown-item" href="/about/contact-us">Contact Us</a>
+								</div>
+							</div>
+						</li>
+
+						<li class="nav-item">
+							<div class="btn-group">
+								<a href="/about/Media/" class="btn soi-navbar-btn soi-icc-navbar-btn">Listen Live</a>
+							</div>
+						</li>
+					</ul>
 					<div class="col align-self-center align-self-end p-0 my-2 my-lg-0 col-md-3">
-						<form action="/search/index" class="input-group input-group-sm" method="post"><input name="__RequestVerificationToken" type="hidden" value="L2pQrwJ9ckJawawXaytz2WK6qw8QHRGXxEKlgVyE7Q73aPJuD9P5Vuwz6_d8OV922W0pf8kSDTrTPEQVQRbrdqAu7ng1" /><input aria-label="Search text" class="form-control text-box single-line" data-val="true" data-val-length="Search text length must be greater than or equal 3 characters." data-val-length-min="3" id="SimpleText" name="SimpleText" placeholder="Search text" type="text" value="" />    <div class="input-group-append">
-        <button class="btn btn-light btn-outline-secondary" id="SiteQuickSearchButton" type="submit" title="Go">Go</button>
+						<form action="/search/index" class="input-group input-group-sm" method="post"><input name="__RequestVerificationToken" type="hidden" value="9zqpuR1P5dRYKaKWgHVB8isFsLIfPriFMLn_kmRhGst0f0WEdRFnHf5SuR05udfwgAhXSpQSomVIA_YK_Uc7efGtGnU1" /><input aria-label="Search text" class="form-control text-box single-line" data-val="true" data-val-length="Search text length must be greater than or equal 3 characters." data-val-length-min="3" id="SimpleText" name="SimpleText" placeholder="Search text" type="text" value="" />    <div class="input-group-append">
+        <button class="btn btn-outline-secondary" style="color: #525252" id="SiteQuickSearchButton" type="submit" title="Go">Go</button>
     </div>
     <div class="form-group invisible">
         <input class="invisible" data-val="true" data-val-length="If 1+1=7 then enter information otherwise don&#39;t" data-val-length-max="0" id="ChristopherRobinText" name="ChristopherRobinText" title="If 1+1=7 then enter information otherwise don&#39;t" type="hidden" value="" />
@@ -229,7 +268,8 @@
             </div>
         </nav>
     </header>
-    
+    <main>
+        
 
 <div class="soi-page-header soi-icc-page-header">
     <div class="container">
@@ -237,1183 +277,64 @@
             <div class="col-12">
                 <ol class="breadcrumb">
                     <li><a href="/">Home</a></li>
+                    <li><a href="/meetings/">Event Calendar</a></li>
                 </ol>
-                <h1>Event Calendar</h1>
+                <h1>Regular Open Meeting</h1>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container soi-container soi-icc-container">
-    
     <div class="row">
-        <div class="col-md-3 bg-light">
-            <nav class="hidden-print">
-                <div class="soi-icc-calendar-mini">
-                    <div class="month">
-                        December 2023
-                        <a class="month-nav" href="/meetings?bd=638396640000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">&gt;</a>
-                        <a class="month-nav" href="/meetings?bd=638343936000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">&lt;</a>
+        <div class="col-12">
+            <h2>
+                Illinois Commerce Commission
+
+                <span class="d-block">
+Regular Open Meeting                </span>
+
+            </h2>
+
+            <h3 class="mt-4">
+                
+                October 15, 2026 at 11:30 AM
+            </h3>
+
+
+
+
+                <div class="row mt-4">
+                        <div class="col-12 col-sm-5">
+                            <h4>Illinois Commerce Commission</h4>
+
+                                <p>
+527 East Capitol Avenue<br />
+
+
+
+
+Hearing Room A, First Floor, Leland Building<br />
+
+                                        <span>Springfield, Illinois 62701</span>
+                                </p>
+                        </div>
+                </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h3>Documents</h3>
+                            <ul class="list-unstyled">
+                                    <li><a href="/attachments/print/coverletter?agid=22192" title="Cover Letter"> Transportation Cover Letter </a></li>
+                                    <li><a href="/attachments/print/agendareport?agid=22192" title="Bench Agenda"> Bench Agenda </a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="days"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
-                        <div class="days">
-<a class=" other-month" href="/meetings?bd=638365536000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">26</a><a class=" other-month" href="/meetings?bd=638366400000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">27</a><a class=" other-month" href="/meetings?bd=638367264000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">28</a><a class=" other-month" href="/meetings?bd=638368128000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">29</a><a class=" other-month" href="/meetings?bd=638368992000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">30</a><a class=" selected" href="/meetings?bd=638369856000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">1</a><a class=" selected" href="/meetings?bd=638370720000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">2</a>                        </div>
-                        <div class="days">
-<a class=" selected" href="/meetings?bd=638371584000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">3</a><a class=" selected" href="/meetings?bd=638372448000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">4</a><a class=" selected" href="/meetings?bd=638373312000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">5</a><a class=" selected" href="/meetings?bd=638374176000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">6</a><a class=" selected" href="/meetings?bd=638375040000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">7</a><a class=" selected" href="/meetings?bd=638375904000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">8</a><a class=" selected" href="/meetings?bd=638376768000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">9</a>                        </div>
-                        <div class="days">
-<a class=" selected" href="/meetings?bd=638377632000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">10</a><a class=" selected" href="/meetings?bd=638378496000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">11</a><a class=" selected" href="/meetings?bd=638379360000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">12</a><a class=" selected" href="/meetings?bd=638380224000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">13</a><a class=" selected" href="/meetings?bd=638381088000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">14</a><a class=" selected" href="/meetings?bd=638381952000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">15</a><a class=" selected" href="/meetings?bd=638382816000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">16</a>                        </div>
-                        <div class="days">
-<a class="today selected" href="/meetings?bd=638383680000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">17</a><a class=" selected" href="/meetings?bd=638384544000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">18</a><a class=" selected" href="/meetings?bd=638385408000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">19</a><a class=" selected" href="/meetings?bd=638386272000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">20</a><a class=" selected" href="/meetings?bd=638387136000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">21</a><a class=" selected" href="/meetings?bd=638388000000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">22</a><a class=" selected" href="/meetings?bd=638388864000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">23</a>                        </div>
-                        <div class="days">
-<a class=" selected" href="/meetings?bd=638389728000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">24</a><a class=" selected" href="/meetings?bd=638390592000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">25</a><a class=" selected" href="/meetings?bd=638391456000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">26</a><a class=" selected" href="/meetings?bd=638392320000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">27</a><a class=" selected" href="/meetings?bd=638393184000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">28</a><a class=" selected" href="/meetings?bd=638394048000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">29</a><a class=" selected" href="/meetings?bd=638394912000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">30</a>                        </div>
-                        <div class="days">
-<a class=" selected" href="/meetings?bd=638395776000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">31</a><a class=" other-month" href="/meetings?bd=638396640000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">1</a><a class=" other-month" href="/meetings?bd=638397504000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">2</a><a class=" other-month" href="/meetings?bd=638398368000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">3</a><a class=" other-month" href="/meetings?bd=638399232000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">4</a><a class=" other-month" href="/meetings?bd=638400096000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">5</a><a class=" other-month" href="/meetings?bd=638400960000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">6</a>                        </div>
-                    <div class="items-to-show">Items to Show</div>
-<form action="/meetings/index" class="" id="Form100" method="post">                        <div class="form-check soi-icc-calendar-mini-check">
-                            <input checked="checked" class="form-check-input" id="scm" name="scm" onchange="this.form.submit();" type="checkbox" value="true" /><input name="scm" type="hidden" value="false" />
-                            <label class="form-check-label" for="scm">Commission Meetings</label>
-                        </div>
-                        <div class="form-check soi-icc-calendar-mini-check">
-                            <input checked="checked" class="form-check-input" id="sps" name="sps" onchange="this.form.submit();" type="checkbox" value="true" /><input name="sps" type="hidden" value="false" />
-                            <label class="form-check-label" for="sps">Policy Sessions</label>
-                        </div>
-                        <div class="form-check soi-icc-calendar-mini-check">
-                            <input checked="checked" class="form-check-input" id="sh" name="sh" onchange="this.form.submit();" type="checkbox" value="true" /><input name="sh" type="hidden" value="false" />
-                            <label class="form-check-label" for="sh">Hearings</label>
-                        </div>
-                        <div class="form-check soi-icc-calendar-mini-check">
-                            <input class="form-check-input" id="ssh" name="ssh" onchange="this.form.submit();" type="checkbox" value="true" /><input name="ssh" type="hidden" value="false" />
-                            <label class="form-check-label" for="ssh">State Holidays</label>
-                        </div>
-                        <div class="form-check soi-icc-calendar-mini-check">
-                            <input checked="checked" class="form-check-input" id="sjc" name="sjc" onchange="this.form.submit();" type="checkbox" value="true" /><input name="sjc" type="hidden" value="false" />
-                            <label class="form-check-label" for="sjc">Underground Utility Damage Prevention Advisory Committee</label>
-                        </div>
-                        <div class="form-check soi-icc-calendar-mini-check">
-                            <input checked="checked" class="form-check-input" id="smceb" name="smceb" onchange="this.form.submit();" type="checkbox" value="true" /><input name="smceb" type="hidden" value="false" />
-                            <label class="form-check-label" for="smceb">Motor Carrier Employee Board</label>
-                        </div>
-                        <input id="beginDate" name="bd" type="hidden" value="638369856000000000" />
-                        <input id="daysToShow" name="dts" type="hidden" value="32" />
-</form>                </div>
-            </nav>
-        </div>
-        <div class="col-md-9">
-            <div class="row hidden-print bg-light mb-3 py-3">
-                <div class="col-6">
-                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=638383680000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">Today</a>
-                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=638343936000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">&lt;</a>
-                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=638396640000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">&gt;</a>
-                </div>
-                <div class="col-6 text-right">
-                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=638369856000000000&amp;dts=1&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">1 Day</a>
-                    <a class="btn btn-sm btn-outline-secondary" href="/meetings?bd=638369856000000000&amp;dts=7&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">7 Day</a>
-                    <a class="btn btn-sm btn-outline-secondary active" href="/meetings?bd=638369856000000000&amp;dts=32&amp;scm=True&amp;sps=True&amp;sh=True&amp;ssh=False&amp;sjc=True&amp;smceb=True">Month</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-lg-8">
-                    <div class="bg-light text-dark"><small>74 results</small></div>
-                    <ul class="list-unstyled soi-icc-card-list soi-icc-list-calendar soi-icc-list-striped soi-icc-list-striped-blue">
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>1</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138543">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0623                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 1, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>4</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138564">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for 23-0367                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 4, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>4</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138537">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for M2023-15348                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 4, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>4</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138501">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0305                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 4, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>5</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138025">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for 17-0137                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 5, 2023 10:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>5</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138536">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for M2023-15349                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 5, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>5</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138559">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for 23-0702                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 5, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>5</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138274">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0443                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 5, 2023 1:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>6</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138402">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0622                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 6, 2023 10:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>6</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138026">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for 17-0137                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 6, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>6</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138545">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for 23-0652                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 6, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>6</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138546">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for 23-0673                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 6, 2023 10:30 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>6</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138432">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0623                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 6, 2023 10:30 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>6</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138362">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0539                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 6, 2023 1:00 PM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>6</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138416">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0524                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 6, 2023 1:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>6</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138417">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0525                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 6, 2023 1:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138376">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0228                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 9:30 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/case-schedule-event/44670">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for T21-0099                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 10:00 AM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138027">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for 17-0137                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 10:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138216">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for 23-0412                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138217">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for 23-0413                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138446">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for M2022-00745                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138573">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Prehearing for 23-0761                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138551">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0556                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 10:30 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138492">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0295                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 11:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138511">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Prehearing for 23-0731                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138487">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0541                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 1:00 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138567">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0708                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 1:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>7</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138610">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for M2023-11055                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 7, 2023 2:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138558">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for 23-0469                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 9:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138499">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0653                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138479">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for M2023-12783                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138384">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0591                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 10:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/case-schedule-event/45044">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for T23-0028                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 10:30 AM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138202">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 22-0780                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 11:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138578">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 22-0494                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138547">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for 22-0676                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 11:30 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138548">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for 22-0677                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 11:30 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138587">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 21-0719                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 1:00 PM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138413">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0535                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 1:00 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138467">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0553                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 1:00 PM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138621">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 22-0634                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 1:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>12</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138577">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 22-0779                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 12, 2023 2:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>13</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138599">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0730                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 13, 2023 10:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>13</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138601">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Prehearing for 23-0770                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 13, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>13</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138238">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0001                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 13, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>13</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138306">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0537                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 13, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>13</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/case-schedule-event/45075">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for T23-0078                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 13, 2023 1:30 PM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>13</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138495">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0285                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 13, 2023 1:30 PM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>13</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/case-schedule-event/45076">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for T23-0079                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 13, 2023 2:00 PM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>13</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/case-schedule-event/45077">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for T23-0080                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 13, 2023 2:30 PM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138593">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0747                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 9:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/137728">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for Administrative Citation Hearing                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 10:00 AM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138396">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0610                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 10:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138549">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0719                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138560">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for 22-0676                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138561">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for 22-0677                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138512">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0516                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/commission-meeting/21537">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Regular Open Meeting                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 11:30 AM
-                                                    <span class="d-block">Chicago - Eighth Floor, State of Illinois Building</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/137729">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Evidentiary for Administrative Citation Hearing                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 11:30 AM
-                                                    <span class="d-block">Springfield - Hearing Room A</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>14</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138485">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0494                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 14, 2023 1:00 PM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>19</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138609">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for M2022-05348                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 19, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>19</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138589">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Prehearing for 23-0744                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 19, 2023 11:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>19</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138572">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Prehearing for 23-0720                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 19, 2023 11:00 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>19</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138529">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0425                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 19, 2023 1:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>19</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/motor-carrier-employee-board/21553">
-                                            <h2 class="h4">
-                                                Motor Carrier Employee Board<br />Motor Carrier Employee Board Meeting                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 19, 2023 2:00 PM
-                                                    <span class="d-block">Springfield - Transportation Information Center, First Floor, Leland Building</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>20</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/case-schedule-event/45033">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for T23-0077                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 20, 2023 10:00 AM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>20</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138539">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0180                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 20, 2023 10:00 AM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>20</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/case-schedule-event/45130">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for T23-0090                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 20, 2023 11:00 AM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>20</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138583">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for M2023-13283                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 20, 2023 2:30 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>21</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138580">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0647                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 21, 2023 9:30 AM
-                                            <span class="h5 mt-3 text-danger d-block">Cancelled</span>                                        </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>21</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/case-schedule-event/45062">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for T23-0053                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 21, 2023 10:00 AM
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>21</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138602">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Hearing for M2023-10752                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 21, 2023 1:00 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="soi-icc-card-list-item soi-icc-list-calendar-item mb-3">
-                                <div class="card soi-icc-card-calendar soi-icc-card-calendar-secondary mb-0 p-2">
-                                    <div class="card-header"><div>Dec - 2023</div><div>21</div></div>
-                                    <div class="card-body p-0 pl-2 align-text-top">
-                                        <a class="day" href="/meetings/meeting/hearing/138624">
-                                            <h2 class="h4">
-                                                Illinois Commerce Commission<br />Status for 23-0541                                            </h2>
-                                        </a>
-                                        <h3 class="h5 mt-3">
-                                            December 21, 2023 1:00 PM
-                                                    <span class="d-block">WebEx</span>
-                                                                                    </h3>
-                                    </div>
-                                </div>
-                            </li>
-                    </ul>
-                </div>
-                <div class="col-12 col-lg-4 text-center">
-                    <ul class="list-unstyled pb-2 border-bottom">
-                        <li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/meetings/calendar/commission-meeting">Commission Meeting Calendar</a></li>
-                        <li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/meetings/list/commission-meeting">Commission Meeting List</a></li>
-                        <li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/meetings/list/policy-session">Policy Session List</a></li>
-                    </ul>
-                    <ul class="list-unstyled pb-2 border-bottom">
-<li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/downloads/public/puWeeklyDocket/20231218.pdf" title="December 18, 2023 Public Utility Docket">December 18, 2023 Public Utility Docket</a></li><li class="mb-2"><a class="btn btn-outline-secondary btn-block" href="/downloads/public/trWeeklyDocket/20231218.pdf" title="December 18, 2023 Transportation Docket">December 18, 2023 Transportation Docket</a></li>                    </ul>                    <ul class="list-unstyled">
-                        <li><a class="btn btn-outline-secondary btn-block" href="/About/Media">Meeting Webcast</a></li>
-                    </ul>
-                 </div>
-            </div>
+
         </div>
     </div>
 </div>
-
+    </main>
     <footer id="footer" class="d-print-none">
         <div class="soi-footer mt-4">
             <h2 class="sr-only">Footer</h2>
@@ -1424,7 +345,7 @@
                             <h3>Office Locations</h3>
                             <a class="nav-link" href="https://www.google.com/maps/place/527+East+Capitol+Avenue,Springfield,IL">Leland Building <span class="noicon">527 East Capitol Avenue, Springfield, IL 62701</span></a>
                             <a class="nav-link" href="https://www.google.com/maps/place/160+North+LaSalle+Street,Chicago,IL">Michael A. Bilandic Building <span class="noicon">160 North LaSalle, Ste. C-800, Chicago, IL 60601</span></a>
-                            <a class="nav-link" href="https://www.google.com/maps/place/9511+West+Harrison,Des+Plaines,IL">Compliance Office <span class="noicon">9511 West Harrison, Des Plaines, IL 60016</span></a>
+                            <a class="nav-link" href="https://www.google.com/maps/place/9511+Harrison+St,+Des+Plaines,+IL+60016/">Compliance Office <span class="noicon">9511 Harrison, Des Plaines, IL 60016</span></a>
                         </div>
                         <div class="col-md-3">
                             <h3>Useful Links</h3>
@@ -1451,7 +372,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-9 p-0"><a title="Illinois.gov" href="//www.illinois.gov/" target="_blank"><img alt="Illinois.gov" src="//webservices.illinois.gov/CDN/Content/images/IllinoisGov.png"></a><ul class="list-unstyled list-inline m-0"><li class="list-inline-item"><a class="nav-link" href="//www.dhs.state.il.us/page.aspx?item=32765" target="_blank">Web Accessibility</a></li><li class="list-inline-item"><a class="nav-link" href="//cmsapps.illinois.gov/TeleDirectory" target="_blank">State Phone Directory</a></li><li class="list-inline-item"><a class="nav-link" href="https://www.illinois.gov/about/privacy.html">Illinois Privacy Info</a></li></ul></div>
-                        <div class="col-md-3 p-0 pt-2 text-center text-md-right soi-footer-governor-copyright"><a class="nav-link p-0 soi-footer-governor" href="https://www2.illinois.gov/sites/gov" target="_blank">Governor JB Pritzker</a>&copy; 2023 <a class="nav-link d-inline-block p-0 soi-footer-copyright" href="//www.illinois.gov/" target="_blank">State of Illinois</a></div>
+                        <div class="col-md-3 p-0 pt-2 text-center text-md-right soi-footer-governor-copyright"><a class="nav-link p-0 soi-footer-governor" href="https://www2.illinois.gov/sites/gov" target="_blank">Governor JB Pritzker</a>&copy; 2026 <a class="nav-link d-inline-block p-0 soi-footer-copyright" href="//www.illinois.gov/" target="_blank">State of Illinois</a></div>
                     </div>
                 </div>
             </div>
