@@ -37,6 +37,12 @@ TABLE_SNIPPET = """
     <td>9:00 AM</td>
     <td>REGULAR BOARD MEETING<br>Chicago Park District Administration Building<br>
       4830 South Western Avenue, Chicago, IL 60609</td>
+  </tr><tr class="rgAltRow">
+    <td>Budget Forum</td>
+    <td>12/10/2026</td>
+    <td></td>
+    <td>6:00 PM</td>
+    <td>PUBLIC BUDGET FORUM (VIRTUAL)</td>
   </tr></tbody>
 </table>
 """
@@ -175,11 +181,14 @@ def test_all_day(archive_items):
 def test_ical_column_with_blank_sort_buttons(spider):
     response = HtmlResponse(url=CALENDAR_URL, body=TABLE_SNIPPET, encoding="utf-8")
     events = spider._parse_legistar_events(response)
-    assert len(events) == 1
+    assert len(events) == 2
     assert events[0]["iCalendar"] == {
         "url": "https://chicagoparkdistrict.legistar.com/View.ashx?M=IC&ID=1&GUID=A"
     }
     assert events[0]["Meeting Date"] == "12/9/2026"
+    # A row without an iCalendar link is kept, not dropped as the core does
+    assert "iCalendar" not in events[1]
+    assert events[1]["Meeting Date"] == "12/10/2026"
 
 
 def test_missing_table_logs_warning(spider, caplog):
@@ -303,6 +312,19 @@ def test_rescheduled_meeting_is_not_cancelled(spider):
         item = next(spider.parse_legistar([event]))
     assert item["status"] == PASSED
     assert item["location"] == ADMIN_BUILDING
+
+
+def test_original_date_of_rescheduled_meeting_is_cancelled(spider):
+    # The site marks the original date of a moved meeting as cancelled
+    event = {
+        "Name": "Board of Commissioners",
+        "Meeting Date": "12/9/2026",
+        "Meeting Time": "9:00 AM",
+        "Meeting Location": "Cancelled the meeting is being rescheduled for December 16, 2026 at 9:00 AM",  # noqa
+    }
+    with freeze_time("2026-11-02"):
+        item = next(spider.parse_legistar([event]))
+    assert item["status"] == CANCELLED
 
 
 def test_rescheduled_virtual_meeting_is_not_cancelled(spider):
