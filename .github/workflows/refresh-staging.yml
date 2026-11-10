@@ -163,7 +163,7 @@ jobs:
 
   crawl:
     needs: merge-and-prepare
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     env:
       CITY_SCRAPERS_ENV: staging
